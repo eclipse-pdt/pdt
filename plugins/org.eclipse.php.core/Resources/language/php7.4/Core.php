@@ -2,6 +2,9 @@
 
 // Start of Core v.7.4.2
 
+namespace {
+
+
 class stdClass  {
 }
 
@@ -1886,5 +1889,8 @@ define ('PHP_CLI_PROCESS_TITLE', true);
 define ('STDIN', "Resource id #1");
 define ('STDOUT', "Resource id #2");
 define ('STDERR', "Resource id #3");
+
+
+}
 
 // End of Core v.7.4.2

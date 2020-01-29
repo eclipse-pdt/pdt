@@ -2,6 +2,9 @@
 
 // Start of curl v.7.4.0
 
+namespace {
+
+
 /**
  * CURLFile should be used to upload a file with
  * CURLOPT_POSTFIELDS.
@@ -4834,5 +4837,8 @@ define ('CURLOPT_TLS13_CIPHERS', 10276);
  */
 define ('CURL_VERSION_ALTSVC', 16777216);
 define ('CURLOPT_SAFE_UPLOAD', -1);
+
+
+}
 
 // End of curl v.7.4.0

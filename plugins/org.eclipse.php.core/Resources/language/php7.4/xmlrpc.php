@@ -2,6 +2,9 @@
 
 // Start of xmlrpc v.7.4.0
 
+namespace {
+
+
 /**
  * Generates XML for a PHP value
  * @link http://www.php.net/manual/en/function.xmlrpc-encode.php
@@ -140,5 +143,8 @@ function xmlrpc_server_add_introspection_data ($server, array $desc) {}
  * @return bool 
  */
 function xmlrpc_server_register_introspection_callback ($server, string $function) {}
+
+
+}
 
 // End of xmlrpc v.7.4.0

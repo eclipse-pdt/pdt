@@ -2,6 +2,9 @@
 
 // Start of sodium v.7.4.0
 
+namespace {
+
+
 /**
  * @link http://www.php.net/manual/en/class.sodiumexception.php
  */
@@ -1240,5 +1243,8 @@ define ('SODIUM_BASE64_VARIANT_ORIGINAL', 1);
 define ('SODIUM_BASE64_VARIANT_ORIGINAL_NO_PADDING', 3);
 define ('SODIUM_BASE64_VARIANT_URLSAFE', 5);
 define ('SODIUM_BASE64_VARIANT_URLSAFE_NO_PADDING', 7);
+
+
+}
 
 // End of sodium v.7.4.0

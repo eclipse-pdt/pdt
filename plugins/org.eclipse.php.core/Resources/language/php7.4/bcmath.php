@@ -1,6 +1,9 @@
 <?php
 
-// Start of bcmath v.7.4.0
+// Start of bcmath v.7.4.2
+
+namespace {
+
 
 /**
  * Add two arbitrary precision numbers
@@ -110,4 +113,7 @@ function bccomp (string $left_operand, string $right_operand, int $scale = null)
  */
 function bcpowmod (string $base, string $exponent, string $modulus, int $scale = null) {}
 
-// End of bcmath v.7.4.0
+
+}
+
+// End of bcmath v.7.4.2

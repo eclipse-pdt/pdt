@@ -1,6 +1,9 @@
 <?php
 
-// Start of Phar v.7.4.0
+// Start of Phar v.7.4.2
+
+namespace {
+
 
 /**
  * The PharException class provides a phar-specific exception class
@@ -2031,4 +2034,7 @@ class PharFileInfo extends SplFileInfo  {
 	public function __toString () {}
 
 }
-// End of Phar v.7.4.0
+
+}
+
+// End of Phar v.7.4.2

@@ -2,6 +2,9 @@
 
 // Start of sockets v.7.4.0
 
+namespace {
+
+
 /**
  * Runs the select() system call on the given arrays of sockets with a specified timeout
  * @link http://www.php.net/manual/en/function.socket-select.php
@@ -1807,5 +1810,8 @@ define ('IPV6_RECVHOPLIMIT', 21);
 define ('IPV6_HOPLIMIT', 21);
 define ('IPV6_RECVTCLASS', 40);
 define ('IPV6_TCLASS', 39);
+
+
+}
 
 // End of sockets v.7.4.0

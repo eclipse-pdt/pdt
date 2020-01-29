@@ -1,6 +1,9 @@
 <?php
 
-// Start of ctype v.7.4.0
+// Start of ctype v.7.4.2
+
+namespace {
+
 
 /**
  * Check for alphanumeric character(s)
@@ -108,4 +111,7 @@ function ctype_upper (string $text) {}
  */
 function ctype_xdigit (string $text) {}
 
-// End of ctype v.7.4.0
+
+}
+
+// End of ctype v.7.4.2

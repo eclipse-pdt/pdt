@@ -2,6 +2,9 @@
 
 // Start of odbc v.7.4.0
 
+namespace {
+
+
 /**
  * Toggle autocommit behaviour
  * @link http://www.php.net/manual/en/function.odbc-autocommit.php
@@ -1051,5 +1054,8 @@ define ('SQL_ENSURE', 1);
  * @link http://www.php.net/manual/en/uodbc.constants.php
  */
 define ('SQL_QUICK', 0);
+
+
+}
 
 // End of odbc v.7.4.0

@@ -2,6 +2,9 @@
 
 // Start of json v.7.4.2
 
+namespace {
+
+
 /**
  * Objects implementing JsonSerializable
  * can customize their JSON representation when encoded with
@@ -364,5 +367,8 @@ define ('JSON_ERROR_INVALID_PROPERTY_NAME', 9);
  * @link http://www.php.net/manual/en/json.constants.php
  */
 define ('JSON_ERROR_UTF16', 10);
+
+
+}
 
 // End of json v.7.4.2

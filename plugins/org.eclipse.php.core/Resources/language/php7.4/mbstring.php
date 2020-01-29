@@ -2,6 +2,9 @@
 
 // Start of mbstring v.7.4.0
 
+namespace {
+
+
 /**
  * Perform case folding on a string
  * @link http://www.php.net/manual/en/function.mb-convert-case.php
@@ -1368,5 +1371,8 @@ define ('MB_CASE_FOLD_SIMPLE', 7);
  * @link http://www.php.net/manual/en/mbstring.constants.php
  */
 define ('MB_ONIGURUMA_VERSION', "6.9.3");
+
+
+}
 
 // End of mbstring v.7.4.0

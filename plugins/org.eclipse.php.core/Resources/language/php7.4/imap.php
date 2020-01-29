@@ -2,6 +2,9 @@
 
 // Start of imap v.7.4.0
 
+namespace {
+
+
 /**
  * Open an IMAP stream to a mailbox
  * @link http://www.php.net/manual/en/function.imap-open.php
@@ -2123,5 +2126,8 @@ define ('IMAP_GC_ENV', 2);
  * @link http://www.php.net/manual/en/imap.constants.php
  */
 define ('IMAP_GC_TEXTS', 4);
+
+
+}
 
 // End of imap v.7.4.0

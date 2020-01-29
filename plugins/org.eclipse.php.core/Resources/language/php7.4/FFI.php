@@ -2,10 +2,12 @@
 
 // Start of FFI v.7.4.0
 
+namespace FFI {
+
 /**
- * @link http://www.php.net/manual/en/class.ffi\exception.php
+ * @link http://www.php.net/manual/en/class.ffi-exception.php
  */
-class FFI_Exception extends Error implements Throwable {
+class Exception extends \Error implements \Throwable {
 	protected $message;
 	protected $code;
 	protected $file;
@@ -42,9 +44,9 @@ class FFI_Exception extends Error implements Throwable {
 }
 
 /**
- * @link http://www.php.net/manual/en/class.ffi\parserexception.php
+ * @link http://www.php.net/manual/en/class.ffi-parserexception.php
  */
-final class FFI_ParserException extends FFI\Exception implements Throwable {
+final class ParserException extends \FFI\Exception implements \Throwable {
 	protected $message;
 	protected $code;
 	protected $file;
@@ -79,6 +81,11 @@ final class FFI_ParserException extends FFI\Exception implements Throwable {
 	public function __toString () {}
 
 }
+
+
+}
+
+namespace {
 
 /**
  * Objects of this class are created by the factory methods FFI::cdef,
@@ -159,63 +166,63 @@ final class FFI  {
 	 * when no longer needed.
 	 * @param bool $persistent [optional] Whether to allocate the C data structure permanently on the system heap (using 
 	 * malloc), or on the PHP request heap (using emalloc).
-	 * @return mixed the freshly created FFI\CData object.
+	 * @return FFI\CData the freshly created FFI\CData object.
 	 */
 	public static function new ($type, bool $owned = null, bool $persistent = null) {}
 
 	/**
 	 * Releases an unmanaged data structure
 	 * @link http://www.php.net/manual/en/ffi.free.php
-	 * @param mixed $ptr The handle of the unmanaged pointer to a C data structure.
+	 * @param FFI\CData $ptr The handle of the unmanaged pointer to a C data structure.
 	 * @return void 
 	 */
-	public static function free (&$ptr) {}
+	public static function free (FFI\CData &$ptr) {}
 
 	/**
 	 * Performs a C type cast
 	 * @link http://www.php.net/manual/en/ffi.cast.php
 	 * @param mixed $type A valid C declaration as string, or an instance of FFI\CType
 	 * which has already been created.
-	 * @param mixed $ptr The handle of the pointer to a C data structure.
-	 * @return mixed the freshly created FFI\CData object.
+	 * @param FFI\CData $ptr The handle of the pointer to a C data structure.
+	 * @return FFI\CData the freshly created FFI\CData object.
 	 */
-	public static function cast ($type, &$ptr) {}
+	public static function cast ($type, FFI\CData &$ptr) {}
 
 	/**
 	 * Creates an FFI\CType object from a C declaration
 	 * @link http://www.php.net/manual/en/ffi.type.php
 	 * @param mixed $type A valid C declaration as string, or an instance of FFI\CType
 	 * which has already been created.
-	 * @return mixed the freshly created FFI\CType object.
+	 * @return FFI\CType the freshly created FFI\CType object.
 	 */
 	public static function type ($type) {}
 
 	/**
 	 * Gets the FFI\CType of FFI\CData
 	 * @link http://www.php.net/manual/en/ffi.typeof.php
-	 * @param mixed $ptr The handle of the pointer to a C data structure.
-	 * @return mixed the FFI\CType object representing the type of the given
+	 * @param FFI\CData $ptr The handle of the pointer to a C data structure.
+	 * @return FFI\CType the FFI\CType object representing the type of the given
 	 * FFI\CData object.
 	 */
-	public static function typeof (&$ptr) {}
+	public static function typeof (FFI\CData &$ptr) {}
 
 	/**
 	 * Dynamically constructs a new C array type
 	 * @link http://www.php.net/manual/en/ffi.arraytype.php
-	 * @param mixed $type A valid C declaration as string, or an instance of FFI\CType
+	 * @param FFI\CType $type A valid C declaration as string, or an instance of FFI\CType
 	 * which has already been created.
 	 * @param array $dims The dimensions of the type as array.
-	 * @return mixed the freshly created FFI\CType object.
+	 * @return FFI\CType the freshly created FFI\CType object.
 	 */
-	public static function arrayType ($type, array $dims) {}
+	public static function arrayType (FFI\CType $type, array $dims) {}
 
 	/**
 	 * Creates an unmanaged pointer to C data
 	 * @link http://www.php.net/manual/en/ffi.addr.php
-	 * @param mixed $ptr The handle of the pointer to a C data structure.
-	 * @return mixed the freshly created FFI\CData object.
+	 * @param FFI\CData $ptr The handle of the pointer to a C data structure.
+	 * @return FFI\CData the freshly created FFI\CData object.
 	 */
-	public static function addr (&$ptr) {}
+	public static function addr (FFI\CData &$ptr) {}
 
 	/**
 	 * Gets the size of C data or types
@@ -237,12 +244,12 @@ final class FFI  {
 	/**
 	 * Copies one memory area to another
 	 * @link http://www.php.net/manual/en/ffi.memcpy.php
-	 * @param mixed $dst The start of the memory area to copy to.
+	 * @param FFI\CData $dst The start of the memory area to copy to.
 	 * @param mixed $src The start of the memory area to copy from.
 	 * @param int $size The number of bytes to copy.
 	 * @return void 
 	 */
-	public static function memcpy (&$dst, &$src, int $size) {}
+	public static function memcpy (FFI\CData &$dst, &$src, int $size) {}
 
 	/**
 	 * Compares memory areas
@@ -260,33 +267,38 @@ final class FFI  {
 	/**
 	 * Fills a memory area
 	 * @link http://www.php.net/manual/en/ffi.memset.php
-	 * @param mixed $ptr The start of the memory area to fill.
+	 * @param FFI\CData $ptr The start of the memory area to fill.
 	 * @param int $ch The byte to fill with.
 	 * @param int $size The number of bytes to fill.
 	 * @return void 
 	 */
-	public static function memset (&$ptr, int $ch, int $size) {}
+	public static function memset (FFI\CData &$ptr, int $ch, int $size) {}
 
 	/**
 	 * Creates a PHP string from a memory area
 	 * @link http://www.php.net/manual/en/ffi.string.php
-	 * @param mixed $ptr The start of the memory area from which to create a string.
+	 * @param FFI\CData $ptr The start of the memory area from which to create a string.
 	 * @param int $size [optional] The number of bytes to copy to the string.
 	 * If size is omitted, ptr must be a zero terminated
 	 * array of C chars.
 	 * @return string The freshly created PHP string.
 	 */
-	public static function string (&$ptr, int $size = null) {}
+	public static function string (FFI\CData &$ptr, int $size = null) {}
 
 	/**
 	 * Checks whether a FFI\CData is a null pointer
 	 * @link http://www.php.net/manual/en/ffi.isnull.php
-	 * @param mixed $ptr The handle of the pointer to a C data structure.
+	 * @param FFI\CData $ptr The handle of the pointer to a C data structure.
 	 * @return bool whether a FFI\CData is a null pointer.
 	 */
-	public static function isNull (&$ptr) {}
+	public static function isNull (FFI\CData &$ptr) {}
 
 }
+
+
+}
+
+namespace FFI {
 
 /**
  * FFI\CData objects can be used in a number of ways as a regular
@@ -326,14 +338,17 @@ final class FFI  {
  * Noteable limitations are that FFI\CData instances do not support
  * isset, empty and unset,
  * and that wrapped C structs and unions do not implement Traversable.
- * @link http://www.php.net/manual/en/class.ffi\cdata.php
+ * @link http://www.php.net/manual/en/class.ffi-cdata.php
  */
-final class FFI_CData  {
+final class CData  {
 }
 
 /**
- * @link http://www.php.net/manual/en/class.ffi\ctype.php
+ * @link http://www.php.net/manual/en/class.ffi-ctype.php
  */
-final class FFI_CType  {
+final class CType  {
 }
+
+}
+
 // End of FFI v.7.4.0

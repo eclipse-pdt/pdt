@@ -2,6 +2,9 @@
 
 // Start of fileinfo v.7.4.0
 
+namespace {
+
+
 /**
  * This class provides an object oriented interface into the fileinfo
  * functions.
@@ -189,5 +192,8 @@ define ('FILEINFO_RAW', 256);
  * @link http://www.php.net/manual/en/fileinfo.constants.php
  */
 define ('FILEINFO_EXTENSION', 16777216);
+
+
+}
 
 // End of fileinfo v.7.4.0

@@ -2,6 +2,9 @@
 
 // Start of shmop v.7.4.0
 
+namespace {
+
+
 /**
  * Create or open shared memory block
  * @link http://www.php.net/manual/en/function.shmop-open.php
@@ -93,5 +96,8 @@ function shmop_write ($shmid, string $data, int $offset) {}
  * @return bool true on success or false on failure
  */
 function shmop_delete ($shmid) {}
+
+
+}
 
 // End of shmop v.7.4.0

@@ -2,6 +2,9 @@
 
 // Start of xdebug v.2.9.1
 
+namespace {
+
+
 function xdebug_get_stack_depth () {}
 
 function xdebug_get_function_stack () {}
@@ -155,5 +158,8 @@ define ('XDEBUG_PATH_WHITELIST', 1);
 define ('XDEBUG_PATH_BLACKLIST', 2);
 define ('XDEBUG_NAMESPACE_WHITELIST', 17);
 define ('XDEBUG_NAMESPACE_BLACKLIST', 18);
+
+
+}
 
 // End of xdebug v.2.9.1

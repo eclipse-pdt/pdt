@@ -2,6 +2,9 @@
 
 // Start of xsl v.7.4.0
 
+namespace {
+
+
 /**
  * @link http://www.php.net/manual/en/class.xsltprocessor.php
  */
@@ -214,5 +217,8 @@ define ('LIBEXSLT_VERSION', 820);
  * @link http://www.php.net/manual/en/xsl.constants.php
  */
 define ('LIBEXSLT_DOTTED_VERSION', "0.8.20");
+
+
+}
 
 // End of xsl v.7.4.0

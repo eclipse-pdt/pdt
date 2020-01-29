@@ -1,6 +1,9 @@
 <?php
 
-// Start of session v.7.4.0
+// Start of session v.7.4.2
+
+namespace {
+
 
 /**
  * SessionHandlerInterface is an
@@ -570,4 +573,7 @@ define ('PHP_SESSION_NONE', 1);
  */
 define ('PHP_SESSION_ACTIVE', 2);
 
-// End of session v.7.4.0
+
+}
+
+// End of session v.7.4.2

@@ -1,6 +1,9 @@
 <?php
 
-// Start of xmlreader v.7.4.0
+// Start of xmlreader v.7.4.2
+
+namespace {
+
 
 /**
  * The XMLReader extension is an XML Pull parser. The reader acts as a 
@@ -345,4 +348,7 @@ class XMLReader  {
 	public function expand (DOMNode $basenode = null) {}
 
 }
-// End of xmlreader v.7.4.0
+
+}
+
+// End of xmlreader v.7.4.2

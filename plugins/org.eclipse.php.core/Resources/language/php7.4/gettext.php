@@ -2,6 +2,9 @@
 
 // Start of gettext v.7.4.0
 
+namespace {
+
+
 /**
  * Sets the default domain
  * @link http://www.php.net/manual/en/function.textdomain.php
@@ -98,5 +101,8 @@ function dcngettext (string $domain, string $msgid1, string $msgid2, int $n, int
  * @return string A string on success.
  */
 function bind_textdomain_codeset (string $domain, string $codeset) {}
+
+
+}
 
 // End of gettext v.7.4.0

@@ -1,5 +1,8 @@
 <?php
 
+namespace {
+
+
 
 /**
  * The full path and filename of the file with symlinks resolved. If used inside an include,
@@ -50,3 +53,5 @@ define ('__DIR__', null);
  * @link http://www.php.net/manual/en/language.constants.php
  */
 define ('__NAMESPACE__', null);
+
+}

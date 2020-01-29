@@ -2,6 +2,9 @@
 
 // Start of Reflection v.7.4.2
 
+namespace {
+
+
 /**
  * The ReflectionException class.
  * @link http://www.php.net/manual/en/class.reflectionexception.php
@@ -2617,4 +2620,7 @@ class ReflectionReference  {
 	private function __construct () {}
 
 }
+
+}
+
 // End of Reflection v.7.4.2

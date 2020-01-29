@@ -1,6 +1,9 @@
 <?php
 
-// Start of SimpleXML v.7.4.0
+// Start of SimpleXML v.7.4.2
+
+namespace {
+
 
 /**
  * Represents an element in an XML document.
@@ -419,4 +422,7 @@ function simplexml_load_string (string $data, string $class_name = null, int $op
  */
 function simplexml_import_dom (DOMNode $node, string $class_name = null) {}
 
-// End of SimpleXML v.7.4.0
+
+}
+
+// End of SimpleXML v.7.4.2

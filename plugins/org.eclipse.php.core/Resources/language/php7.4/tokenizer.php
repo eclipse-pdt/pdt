@@ -1,6 +1,9 @@
 <?php
 
-// Start of tokenizer v.7.4.0
+// Start of tokenizer v.7.4.2
+
+namespace {
+
 
 /**
  * Split given source into PHP tokens
@@ -169,4 +172,7 @@ define ('T_BAD_CHARACTER', 395);
 define ('T_DOUBLE_COLON', 390);
 define ('TOKEN_PARSE', 1);
 
-// End of tokenizer v.7.4.0
+
+}
+
+// End of tokenizer v.7.4.2

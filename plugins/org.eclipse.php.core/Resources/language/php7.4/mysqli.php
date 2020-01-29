@@ -2,6 +2,9 @@
 
 // Start of mysqli v.7.4.0
 
+namespace {
+
+
 /**
  * The mysqli exception handling class.
  * @link http://www.php.net/manual/en/class.mysqli_sql_exception.php
@@ -2528,5 +2531,8 @@ define ('MYSQLI_TRANS_COR_RELEASE', 4);
  * @link http://www.php.net/manual/en/mysqli.constants.php
  */
 define ('MYSQLI_TRANS_COR_NO_RELEASE', 8);
+
+
+}
 
 // End of mysqli v.7.4.0

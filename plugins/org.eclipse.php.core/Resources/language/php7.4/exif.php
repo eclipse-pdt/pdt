@@ -2,6 +2,9 @@
 
 // Start of exif v.7.4.0
 
+namespace {
+
+
 /**
  * Reads the EXIF headers from an image file
  * @link http://www.php.net/manual/en/function.exif-read-data.php
@@ -130,5 +133,8 @@ function exif_imagetype (string $filename) {}
  * @link http://www.php.net/manual/en/exif.constants.php
  */
 define ('EXIF_USE_MBSTRING', 1);
+
+
+}
 
 // End of exif v.7.4.0

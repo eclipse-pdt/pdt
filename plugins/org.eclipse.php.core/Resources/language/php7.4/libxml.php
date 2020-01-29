@@ -1,6 +1,9 @@
 <?php
 
-// Start of libxml v.7.4.0
+// Start of libxml v.7.4.2
+
+namespace {
+
 
 /**
  * Contains various information about errors thrown by libxml. The error codes
@@ -311,4 +314,7 @@ define ('LIBXML_ERR_ERROR', 2);
  */
 define ('LIBXML_ERR_FATAL', 3);
 
-// End of libxml v.7.4.0
+
+}
+
+// End of libxml v.7.4.2

@@ -1,6 +1,9 @@
 <?php
 
-// Start of iconv v.7.4.0
+// Start of iconv v.7.4.2
+
+namespace {
+
 
 /**
  * Convert string to requested character encoding
@@ -395,4 +398,7 @@ define ('ICONV_MIME_DECODE_STRICT', 1);
  */
 define ('ICONV_MIME_DECODE_CONTINUE_ON_ERROR', 2);
 
-// End of iconv v.7.4.0
+
+}
+
+// End of iconv v.7.4.2

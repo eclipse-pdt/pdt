@@ -1,6 +1,9 @@
 <?php
 
-// Start of readline v.7.4.0
+// Start of readline v.7.4.2
+
+namespace {
+
 
 /**
  * Reads a line
@@ -84,4 +87,7 @@ function readline_completion_function (callable $function) {}
  */
 define ('READLINE_LIB', "libedit");
 
-// End of readline v.7.4.0
+
+}
+
+// End of readline v.7.4.2

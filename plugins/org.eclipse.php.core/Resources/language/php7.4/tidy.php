@@ -2,6 +2,9 @@
 
 // Start of tidy v.7.4.0
 
+namespace {
+
+
 /**
  * An HTML node in an HTML file, as detected by tidy.
  * @link http://www.php.net/manual/en/class.tidy.php
@@ -1495,5 +1498,8 @@ define ('TIDY_NODETYPE_PHP', 12);
  * @link http://www.php.net/manual/en/tidy.constants.php
  */
 define ('TIDY_NODETYPE_XMLDECL', 13);
+
+
+}
 
 // End of tidy v.7.4.0

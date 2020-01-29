@@ -2,6 +2,9 @@
 
 // Start of openssl v.7.4.0
 
+namespace {
+
+
 /**
  * Retrieve the available certificate locations
  * @link http://www.php.net/manual/en/function.openssl-get-cert-locations.php
@@ -1184,5 +1187,8 @@ define ('OPENSSL_DONT_ZERO_PAD_KEY', 4);
  * @link http://www.php.net/manual/en/openssl.constants.php
  */
 define ('OPENSSL_TLSEXT_SERVER_NAME', 1);
+
+
+}
 
 // End of openssl v.7.4.0

@@ -1,6 +1,9 @@
 <?php
 
-// Start of calendar v.7.4.0
+// Start of calendar v.7.4.2
+
+namespace {
+
 
 /**
  * Converts Julian Day Count to Gregorian date
@@ -381,4 +384,7 @@ define ('CAL_JEWISH_ADD_ALAFIM', 4);
  */
 define ('CAL_JEWISH_ADD_GERESHAYIM', 8);
 
-// End of calendar v.7.4.0
+
+}
+
+// End of calendar v.7.4.2

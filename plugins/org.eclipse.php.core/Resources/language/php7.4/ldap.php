@@ -2,6 +2,9 @@
 
 // Start of ldap v.7.4.0
 
+namespace {
+
+
 /**
  * Connect to an LDAP server
  * @link http://www.php.net/manual/en/function.ldap-connect.php
@@ -1666,5 +1669,8 @@ define ('LDAP_CONTROL_VLVREQUEST', "2.16.840.1.113730.3.4.9");
  * @link http://www.php.net/manual/en/ldap.constants.php
  */
 define ('LDAP_CONTROL_VLVRESPONSE', "2.16.840.1.113730.3.4.10");
+
+
+}
 
 // End of ldap v.7.4.0

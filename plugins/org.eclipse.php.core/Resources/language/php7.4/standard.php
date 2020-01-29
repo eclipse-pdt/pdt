@@ -2,6 +2,9 @@
 
 // Start of standard v.7.4.2
 
+namespace {
+
+
 class __PHP_Incomplete_Class  {
 }
 
@@ -11994,5 +11997,8 @@ define ('DNS_ANY', 268435456);
  * @link http://www.php.net/manual/en/network.constants.php
  */
 define ('DNS_ALL', 251721779);
+
+
+}
 
 // End of standard v.7.4.2

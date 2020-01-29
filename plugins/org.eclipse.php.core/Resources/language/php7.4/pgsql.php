@@ -2,6 +2,9 @@
 
 // Start of pgsql v.7.4.0
 
+namespace {
+
+
 /**
  * Open a PostgreSQL connection
  * @link http://www.php.net/manual/en/function.pg-connect.php
@@ -1906,5 +1909,8 @@ define ('PGSQL_DML_ASYNC', 1024);
  * @link http://www.php.net/manual/en/pgsql.constants.php
  */
 define ('PGSQL_DML_STRING', 2048);
+
+
+}
 
 // End of pgsql v.7.4.0

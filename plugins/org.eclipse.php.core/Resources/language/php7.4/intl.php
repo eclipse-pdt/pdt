@@ -2,6 +2,9 @@
 
 // Start of intl v.7.4.0
 
+namespace {
+
+
 /**
  * Provides string comparison capability with support for appropriate
  * locale-sensitive sort orderings.
@@ -6415,5 +6418,8 @@ define ('IDNA_ERROR_LABEL_HAS_DOT', 512);
 define ('IDNA_ERROR_INVALID_ACE_LABEL', 1024);
 define ('IDNA_ERROR_BIDI', 2048);
 define ('IDNA_ERROR_CONTEXTJ', 4096);
+
+
+}
 
 // End of intl v.7.4.0

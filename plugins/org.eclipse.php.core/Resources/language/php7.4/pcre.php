@@ -1,6 +1,9 @@
 <?php
 
-// Start of pcre v.7.4.0
+// Start of pcre v.7.4.2
+
+namespace {
+
 
 /**
  * Perform a regular expression match
@@ -713,4 +716,7 @@ define ('PCRE_VERSION_MAJOR', 10);
 define ('PCRE_VERSION_MINOR', 33);
 define ('PCRE_JIT_SUPPORT', true);
 
-// End of pcre v.7.4.0
+
+}
+
+// End of pcre v.7.4.2

@@ -2,6 +2,9 @@
 
 // Start of SPL v.7.4.2
 
+namespace {
+
+
 /**
  * Exception that represents error in the program logic. This kind of
  * exception should lead directly to a fix in your code.
@@ -7589,5 +7592,8 @@ function iterator_count ($iterator) {}
  * @return int the iteration count.
  */
 function iterator_apply ($iterator, callable $function, array $args = null) {}
+
+
+}
 
 // End of SPL v.7.4.2

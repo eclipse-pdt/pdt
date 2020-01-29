@@ -2,6 +2,9 @@
 
 // Start of date v.7.4.2
 
+namespace {
+
+
 /**
  * DateTimeInterface is meant so that both DateTime and DateTimeImmutable can
  * be type hinted for. It is not possible to implement this interface with
@@ -2563,5 +2566,8 @@ define ('SUNFUNCS_RET_STRING', 1);
  * @link http://www.php.net/manual/en/datetime.constants.php
  */
 define ('SUNFUNCS_RET_DOUBLE', 2);
+
+
+}
 
 // End of date v.7.4.2

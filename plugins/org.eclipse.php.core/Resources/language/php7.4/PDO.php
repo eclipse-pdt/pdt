@@ -1,6 +1,9 @@
 <?php
 
-// Start of PDO v.7.4.0
+// Start of PDO v.7.4.2
+
+namespace {
+
 
 /**
  * Represents an error raised by PDO. You should not throw a
@@ -831,4 +834,7 @@ final class PDORow  {
 
 function pdo_drivers () {}
 
-// End of PDO v.7.4.0
+
+}
+
+// End of PDO v.7.4.2

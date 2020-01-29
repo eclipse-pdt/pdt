@@ -2,6 +2,9 @@
 
 // Start of gd v.7.4.0
 
+namespace {
+
+
 /**
  * Retrieve information about the currently installed GD library
  * @link http://www.php.net/manual/en/function.gd-info.php
@@ -2383,5 +2386,8 @@ define ('PNG_FILTER_PAETH', 128);
  * @link http://www.php.net/manual/en/image.constants.php
  */
 define ('PNG_ALL_FILTERS', 248);
+
+
+}
 
 // End of gd v.7.4.0

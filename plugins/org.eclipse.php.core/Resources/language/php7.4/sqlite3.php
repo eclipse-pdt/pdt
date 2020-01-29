@@ -2,6 +2,9 @@
 
 // Start of sqlite3 v.7.4.0
 
+namespace {
+
+
 /**
  * A class that interfaces SQLite 3 databases.
  * @link http://www.php.net/manual/en/class.sqlite3.php
@@ -699,5 +702,8 @@ define ('SQLITE3_OPEN_CREATE', 4);
  * @link http://www.php.net/manual/en/sqlite3.constants.php
  */
 define ('SQLITE3_DETERMINISTIC', 2048);
+
+
+}
 
 // End of sqlite3 v.7.4.0

@@ -2,6 +2,9 @@
 
 // Start of gmp v.7.4.0
 
+namespace {
+
+
 /**
  * A GMP number. These objects support overloaded
  * arithmetic,
@@ -696,5 +699,8 @@ define ('GMP_BIG_ENDIAN', 8);
  * @link http://www.php.net/manual/en/gmp.constants.php
  */
 define ('GMP_NATIVE_ENDIAN', 16);
+
+
+}
 
 // End of gmp v.7.4.0

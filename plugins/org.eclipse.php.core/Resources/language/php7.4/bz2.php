@@ -2,6 +2,9 @@
 
 // Start of bz2 v.7.4.0
 
+namespace {
+
+
 /**
  * Opens a bzip2 compressed file
  * @link http://www.php.net/manual/en/function.bzopen.php
@@ -121,5 +124,8 @@ function bzcompress (string $source, int $blocksize = null, int $workfactor = nu
  * @return mixed The decompressed string, or an error number if an error occurred.
  */
 function bzdecompress (string $source, int $small = null) {}
+
+
+}
 
 // End of bz2 v.7.4.0

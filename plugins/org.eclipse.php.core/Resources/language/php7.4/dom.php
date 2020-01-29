@@ -2,6 +2,9 @@
 
 // Start of dom v.20031129
 
+namespace {
+
+
 /**
  * DOM operations raise exceptions under particular circumstances, i.e.,
  * when an operation is impossible to perform for logical reasons.
@@ -4576,5 +4579,8 @@ define ('DOM_INVALID_ACCESS_ERR', 15);
  * @link http://www.php.net/manual/en/dom.constants.php
  */
 define ('DOM_VALIDATION_ERR', 16);
+
+
+}
 
 // End of dom v.20031129

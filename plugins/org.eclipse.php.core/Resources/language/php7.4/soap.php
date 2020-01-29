@@ -2,6 +2,9 @@
 
 // Start of soap v.7.4.0
 
+namespace {
+
+
 /**
  * The SoapClient class provides a client for SOAP 1.1, SOAP 1.2 servers. It can be used in WSDL
  * or non-WSDL mode.
@@ -862,5 +865,8 @@ define ('SOAP_SSL_METHOD_SSLv3', 2);
  * @link http://www.php.net/manual/en/soap.constants.php
  */
 define ('SOAP_SSL_METHOD_SSLv23', 3);
+
+
+}
 
 // End of soap v.7.4.0
