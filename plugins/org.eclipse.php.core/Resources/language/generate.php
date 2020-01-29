@@ -4,6 +4,8 @@
  * It builds PHP functions according to the loaded extensions in running PHP,
  * using complementary information gathered from PHP.net documentation
  *
+ * <b>This script was formatted using PDT's PSR-2 built-in profile.</b>
+ *
  * @author Michael Spector <michael@zend.com>
  * @author Thierry Blind <thierryblind@msn.com>
  */
@@ -84,6 +86,11 @@ $processedFunctions = array();
 $processedClasses = array();
 $processedConstants = array();
 
+$handleNamespaces = version_compare(phpversion(), "5.3.0") >= 0;
+$currentNamespace = '';
+$addGlobalNSPrefix = '';
+$countNamespacesInCurrentFile = 0;
+
 if (! is_dir($phpDir)) {
     if (! mkdir($phpDir)) {
         echo "Failed to create output directory.";
@@ -93,6 +100,7 @@ if (! is_dir($phpDir)) {
 
 if (! $splitFiles) {
     begin_file_output();
+    open_namespace('');
 }
 $extensions = get_loaded_extensions();
 foreach ($extensions as $extName) {
@@ -107,6 +115,10 @@ foreach ($extensions as $extName) {
 
 if ($splitFiles) {
     begin_file_output();
+    open_namespace('');
+} elseif ($currentNamespace !== '') {
+    close_namespace();
+    open_namespace('');
 }
 $intFunctions = get_defined_functions();
 foreach ($intFunctions["internal"] as $intFunction) {
@@ -125,6 +137,11 @@ foreach ($intClasses as $intClass) {
 }
 
 print "\n";
+if ($currentNamespace !== '') {
+    close_namespace();
+    open_namespace('');
+}
+
 $constants = get_defined_constants(true);
 $intConstants = isset($constants["internal"]) ? $constants["internal"] : array();
 // add magic constants:
@@ -143,6 +160,7 @@ foreach ($intConstants as $name => $value) {
     }
 }
 
+close_namespace($countNamespacesInCurrentFile == 1);
 finish_file_output("{$phpDir}/basic.php");
 
 // Create .list file
@@ -185,10 +203,20 @@ function make_funckey_from_str($name)
  */
 function clean_php_identifier($name, $isInPhpdoc = false, $removeDollars = false)
 {
-    if ($isInPhpdoc) {
-        $name = preg_replace('/[^\$\w\\_\|\[\]]+/', '_', $name);
+    global $handleNamespaces;
+
+    if ($handleNamespaces) {
+        if ($isInPhpdoc) {
+            $name = preg_replace('/[^\\\\$\w_|[\\]]+/', '_', $name);
+        } else {
+            $name = preg_replace('/[^\\\\$\w_]+/', '_', $name);
+        }
     } else {
-        $name = preg_replace('/[^\$\w\\_]+/', '_', $name);
+        if ($isInPhpdoc) {
+            $name = preg_replace('/[^$\w_|[\\]]+/', '_', $name);
+        } else {
+            $name = preg_replace('/[^$\w_]+/', '_', $name);
+        }
     }
     if ($removeDollars) {
         $name = str_replace('$', '', $name);
@@ -568,7 +596,13 @@ function parse_phpdoc_constants($phpdocDir)
  */
 function print_extension($extRef)
 {
-    print "\n// Start of {$extRef->getName()} v.{$extRef->getVersion()}\n";
+    global $splitFiles;
+    global $countNamespacesInCurrentFile;
+
+    if ($splitFiles) {
+        print "\n// Start of {$extRef->getName()} v.{$extRef->getVersion()}\n";
+        open_namespace('');
+    }
 
     // process classes:
     $classesRef = $extRef->getClasses();
@@ -594,7 +628,10 @@ function print_extension($extRef)
         print "\n";
     }
 
-    print "// End of {$extRef->getName()} v.{$extRef->getVersion()}\n";
+    if ($splitFiles) {
+        close_namespace($countNamespacesInCurrentFile == 1);
+        print "// End of {$extRef->getName()} v.{$extRef->getVersion()}\n";
+    }
 }
 
 /**
@@ -608,9 +645,29 @@ function print_extension($extRef)
 function print_class($classRef, $tabs = 0)
 {
     global $processedClasses;
-    $processedClasses[strtolower($classRef->getName())] = true;
+    global $currentNamespace;
+    global $addGlobalNSPrefix;
+    global $handleNamespaces;
+    $classRefName = $classRef->getName();
+    $className = strtolower($classRefName);
+    $processedClasses[$className] = true;
 
     print "\n";
+    if ($handleNamespaces) {
+        $lastBackslashIdx = strrpos($classRefName, '\\');
+        if ($lastBackslashIdx !== false) {
+            $newNamespace = substr($classRefName, 0, $lastBackslashIdx);
+            if (strcasecmp($currentNamespace, $newNamespace) != 0) {
+                close_namespace();
+                open_namespace($newNamespace);
+            }
+        } elseif ($currentNamespace !== '') {
+            close_namespace();
+            open_namespace('');
+        }
+    } else {
+        $lastBackslashIdx = false;
+    }
     print_doccomment($classRef, $tabs);
     print_tabs($tabs);
     if ($classRef->isFinal())
@@ -619,12 +676,16 @@ function print_class($classRef, $tabs = 0)
         print "abstract ";
 
     print $classRef->isInterface() ? "interface " : "class ";
-    print clean_php_identifier($classRef->getName()) . " ";
+    if ($lastBackslashIdx !== false) {
+        print clean_php_identifier(substr($classRef->getName(), $lastBackslashIdx + 1)) . " ";
+    } else {
+        print clean_php_identifier($classRef->getName()) . " ";
+    }
 
     // print out parent class
     $parentClassRef = $classRef->getParentClass();
     if ($parentClassRef) {
-        print "extends {$parentClassRef->getName()} ";
+        print "extends {$addGlobalNSPrefix}{$parentClassRef->getName()} ";
     }
 
     // print out interfaces
@@ -636,7 +697,7 @@ function print_class($classRef, $tabs = 0)
             if ($i ++ > 0) {
                 print ", ";
             }
-            print "{$interfaceRef->getName()}";
+            print "{$addGlobalNSPrefix}{$interfaceRef->getName()}";
         }
     }
     print " {\n";
@@ -662,7 +723,6 @@ function print_class($classRef, $tabs = 0)
         print "\n";
     }
 
-    $className = strtolower($classRef->getName());
     if ($className == "DomDocument") {
         echo "DomDocument";
     }
@@ -683,7 +743,11 @@ function print_class($classRef, $tabs = 0)
                     print " * " . newline_to_phpdoc($doc, $tabs + 1) . "\n";
                     print_tabs($tabs + 1);
                     if (clean_php_identifier($field['type'], true) === $field['type']) {
-                        print " * @var " . $field['type'] . "\n";
+                        if ($addGlobalNSPrefix === '\\' && class_exists($field['type'])) {
+                            print " * @var {$addGlobalNSPrefix}{$field['type']}\n";
+                        } else {
+                            print " * @var {$field['type']}\n";
+                        }
                     } else {
                         print " * @var mixed\n";
                     }
@@ -726,7 +790,7 @@ function print_class($classRef, $tabs = 0)
                 continue;
             }
             $printedMethods[$cleanMName] = $methodRef;
-            print_function($methodRef, $tabs + 1);
+            print_function($methodRef, $tabs + 1, true);
         }
         print "\n";
     }
@@ -752,15 +816,32 @@ function print_property($propertyRef, $tabs = 0)
     print "\${$propertyRef->getName()};\n";
 }
 
-function print_function($functionRef, $tabs = 0)
+function print_function($functionRef, $tabs = 0, $isMethod = false)
 {
     global $functionsDoc;
     global $processedFunctions;
-
+    global $currentNamespace;
+    global $addGlobalNSPrefix;
+    global $handleNamespaces;
     $funckey = make_funckey_from_ref($functionRef);
     $processedFunctions[$funckey] = true;
 
     print "\n";
+    if (! $isMethod && $handleNamespaces) {
+        $lastBackslashIdx = strrpos($funckey, '\\');
+        if ($lastBackslashIdx !== false) {
+            $newNamespace = substr($funckey, 0, $lastBackslashIdx);
+            if (strcasecmp($currentNamespace, $newNamespace) != 0) {
+                close_namespace();
+                open_namespace($newNamespace);
+            }
+        } elseif ($currentNamespace !== '') {
+            close_namespace();
+            open_namespace('');
+        }
+    } else {
+        $lastBackslashIdx = false;
+    }
     print_doccomment($functionRef, $tabs);
     print_tabs($tabs);
     if (! ($functionRef instanceof ReflectionFunction)) {
@@ -771,7 +852,11 @@ function print_function($functionRef, $tabs = 0)
     if ($functionRef->returnsReference()) {
         print "&";
     }
-    print "{$functionRef->getName()} (";
+    if ($lastBackslashIdx !== false) {
+        print substr($functionRef->getName(), $lastBackslashIdx + 1) . " (";
+    } else {
+        print "{$functionRef->getName()} (";
+    }
     $parameters = isset($functionsDoc[$funckey]['parameters']) ? $functionsDoc[$funckey]['parameters'] : null;
     if ($parameters) {
         print_parameters($parameters);
@@ -793,6 +878,7 @@ function print_function($functionRef, $tabs = 0)
  */
 function print_parameters($parameters)
 {
+    global $addGlobalNSPrefix;
     $i = 0;
     foreach ($parameters as $parameter) {
         if ($parameter['name'] != "...") {
@@ -807,8 +893,8 @@ function print_parameters($parameters)
             if ($type) {
                 $lowerType = strtolower($type);
                 if (class_exists($type) && clean_php_identifier($type) === $type) {
-                    print "{$type} ";
-                } else if ((version_compare(phpversion(), "5.1.0") >= 0 && ($lowerType == "array")) || (version_compare(phpversion(), "5.4.0") >= 0 && ($lowerType == "callable")) || (version_compare(phpversion(), "7.0.0") >= 0 && ($lowerType == "bool" || $lowerType == "float" || $lowerType == "int" || $lowerType == "string"))) {
+                    print "{$addGlobalNSPrefix}{$type} ";
+                } elseif ((version_compare(phpversion(), "5.1.0") >= 0 && ($lowerType == "array")) || (version_compare(phpversion(), "5.4.0") >= 0 && ($lowerType == "callable")) || (version_compare(phpversion(), "7.0.0") >= 0 && ($lowerType == "bool" || $lowerType == "float" || $lowerType == "int" || $lowerType == "string"))) {
                     print "{$lowerType} ";
                 }
             }
@@ -839,13 +925,18 @@ function print_parameters($parameters)
  */
 function print_parameters_ref($paramsRef)
 {
+    global $addGlobalNSPrefix;
     $i = 0;
     foreach ($paramsRef as $paramRef) {
         if ($paramRef->isArray()) {
             print "array ";
         } else {
             if (($className = get_parameter_classname($paramRef)) && clean_php_identifier($className) === $className) {
-                print "{$className} ";
+                if ($addGlobalNSPrefix === '\\' && class_exists($className)) {
+                    print "{$addGlobalNSPrefix}{$className} ";
+                } else {
+                    print "{$className} ";
+                }
             }
         }
         $name = $paramRef->getName() ? $paramRef->getName() : "var" . ($i + 1);
@@ -864,7 +955,7 @@ function print_parameters_ref($paramsRef)
             print "\${$name}";
             if ($paramRef->allowsNull()) {
                 print " = null";
-            } else if ($paramRef->isDefaultValueAvailable() || $paramRef->isOptional()) {
+            } elseif ($paramRef->isDefaultValueAvailable() || $paramRef->isOptional()) {
                 $value = "null";
                 if ($paramRef->isDefaultValueAvailable()) {
                     $value = $paramRef->getDefaultValue();
@@ -927,17 +1018,17 @@ function escape_const_value($value)
 {
     if (is_resource($value)) {
         $value = "\"${value}\"";
-    } else if (! is_numeric($value) && ! is_bool($value) && $value !== null) {
+    } elseif (! is_numeric($value) && ! is_bool($value) && $value !== null) {
         if ($value === '\\') {
             $value = '"' . addcslashes($value, "\\\"\r\n\t") . '"';
         } else {
             $value = '"' . addcslashes($value, "\"\r\n\t") . '"';
         }
-    } else if ($value === null) {
+    } elseif ($value === null) {
         $value = "null";
-    } else if ($value === false) {
+    } elseif ($value === false) {
         $value = "false";
-    } else if ($value === true) {
+    } elseif ($value === true) {
         $value = "true";
     }
     return $value;
@@ -987,6 +1078,9 @@ function print_modifiers($ref, $excludeModifierKeywords = array())
  */
 function make_url($id)
 {
+    // Handle namespaced classes:
+    $id = str_replace('\\', '-', $id);
+
     return "http://www.php.net/manual/en/{$id}.php";
 }
 
@@ -1002,12 +1096,13 @@ function print_doccomment($ref, $tabs = 0)
 {
     global $functionsDoc;
     global $classesDoc;
+    global $addGlobalNSPrefix;
 
     $docComment = $ref->getDocComment();
     if ($docComment) {
         print_tabs($tabs);
         print "{$docComment}\n";
-    } else if ($ref instanceof ReflectionClass) {
+    } elseif ($ref instanceof ReflectionClass) {
         $refname = strtolower($ref->getName());
         if (isset($classesDoc[$refname]) && $classesDoc[$refname]) {
             print_tabs($tabs);
@@ -1026,7 +1121,7 @@ function print_doccomment($ref, $tabs = 0)
             print_tabs($tabs);
             print " */\n";
         }
-    } else if ($ref instanceof ReflectionFunctionAbstract) {
+    } elseif ($ref instanceof ReflectionFunctionAbstract) {
         $funckey = make_funckey_from_ref($ref);
         $returntype = isset($functionsDoc[$funckey]['returntype']) ? $functionsDoc[$funckey]['returntype'] : null;
         $desc = isset($functionsDoc[$funckey]['quickref']) ? $functionsDoc[$funckey]['quickref'] : null;
@@ -1052,7 +1147,11 @@ function print_doccomment($ref, $tabs = 0)
                 foreach ($parameters as $parameter) {
                     print_tabs($tabs);
                     if (clean_php_identifier($parameter['type'], true) === $parameter['type']) {
-                        print " * @param {$parameter['type']} \${$parameter['name']}";
+                        if ($addGlobalNSPrefix === '\\' && class_exists($parameter['type'])) {
+                            print " * @param {$addGlobalNSPrefix}{$parameter['type']} \${$parameter['name']}";
+                        } else {
+                            print " * @param {$parameter['type']} \${$parameter['name']}";
+                        }
                     } else {
                         print " * @param mixed \${$parameter['name']}";
                     }
@@ -1071,7 +1170,11 @@ function print_doccomment($ref, $tabs = 0)
                     print " * @param";
                     if ($className = get_parameter_classname($paramRef)) {
                         if (clean_php_identifier($className, true) === $className) {
-                            print " {$className}";
+                            if ($addGlobalNSPrefix === '\\' && class_exists($className)) {
+                                print " {$addGlobalNSPrefix}{$className}";
+                            } else {
+                                print " {$className}";
+                            }
                         } else {
                             print " mixed";
                         }
@@ -1092,7 +1195,11 @@ function print_doccomment($ref, $tabs = 0)
                 print_tabs($tabs);
                 $returntype = rewrite_phpdoc_return_types($funckey, $returntype);
                 if (clean_php_identifier($returntype, true) === $returntype) {
-                    print " * @return {$returntype} {$returndoc}\n";
+                    if ($addGlobalNSPrefix === '\\' && class_exists($returntype)) {
+                        print " * @return {$addGlobalNSPrefix}{$returntype} {$returndoc}\n";
+                    } else {
+                        print " * @return {$returntype} {$returndoc}\n";
+                    }
                 } else {
                     print " * @return mixed {$returndoc}\n";
                 }
@@ -1104,7 +1211,7 @@ function print_doccomment($ref, $tabs = 0)
             print_tabs($tabs);
             print " */\n";
         }
-    } else if ($ref instanceof ReflectionProperty) {
+    } elseif ($ref instanceof ReflectionProperty) {
         // TODO complete phpdoc for fields detected by reflection
     }
 }
@@ -1185,6 +1292,8 @@ function get_parameter_classname(ReflectionParameter $paramRef)
  */
 function begin_file_output()
 {
+    global $countNamespacesInCurrentFile;
+    $countNamespacesInCurrentFile = 0;
     ob_start();
     print "<?php\n";
 }
@@ -1197,6 +1306,8 @@ function begin_file_output()
  */
 function finish_file_output($filename)
 {
+    global $countNamespacesInCurrentFile;
+    $countNamespacesInCurrentFile = 0;
     // if (file_exists ($filename)) {
     // rename ($filename, "{$filename}.bak");
     // }
@@ -1303,6 +1414,71 @@ function load_entities()
     }
 
     return $result;
+}
+
+function open_namespace($namespace)
+{
+    global $handleNamespaces;
+    global $currentNamespace;
+    global $addGlobalNSPrefix;
+    global $countNamespacesInCurrentFile;
+    if (! $handleNamespaces) {
+        return;
+    }
+    $countNamespacesInCurrentFile ++;
+    // Buffer the namespace declaration and its content
+    // so they can both be dropped when the namespaced content is empty.
+    ob_start();
+    if ($namespace !== '') {
+        $currentNamespace = $namespace;
+        $addGlobalNSPrefix = '\\';
+        print "\nnamespace {$currentNamespace} {\n\n";
+    } else {
+        $currentNamespace = '';
+        $addGlobalNSPrefix = '';
+        print "\nnamespace {\n\n";
+    }
+    ob_start();
+}
+
+/**
+ * NB: setting $removeEnglobingNamespaceDeclaration to true should
+ * only be used when there's a single namespace declaration in currently generated PHP file
+ * and when this single namespace declaration is specifically a global namespace declaration.
+ *
+ * @param boolean $removeEnglobingNamespaceDeclaration
+ */
+function close_namespace($removeEnglobingNamespaceDeclaration = false)
+{
+    global $handleNamespaces;
+    global $currentNamespace;
+    global $addGlobalNSPrefix;
+    global $countNamespacesInCurrentFile;
+    if (! $handleNamespaces) {
+        return;
+    }
+    if (trim(ob_get_contents()) !== '') {
+        $currentNamespace = '';
+        $addGlobalNSPrefix = '';
+        if ($removeEnglobingNamespaceDeclaration) {
+            // discard namespace declaration
+            $countNamespacesInCurrentFile --;
+            // keep content of namespace block...
+            $innerContent = ob_get_flush();
+            // ...but drop surrounding namespace declaration
+            ob_end_clean();
+            print $innerContent;
+        } else {
+            ob_end_flush();
+            print "\n}\n\n";
+            ob_end_flush();
+        }
+    } else {
+        // discard namespace declaration
+        $countNamespacesInCurrentFile --;
+        ob_end_clean();
+        ob_end_clean();
+    }
 }
 
 function load_xml($str)
