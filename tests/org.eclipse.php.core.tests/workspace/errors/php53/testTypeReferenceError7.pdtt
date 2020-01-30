@@ -12,4 +12,5 @@ echo E_ALL;
 func();
 
 --EXPECT--
+[line=5, start=46, end=51] \name cannot be resolved to a type
 [line=7, start=74, end=75] A cannot be resolved to a type
