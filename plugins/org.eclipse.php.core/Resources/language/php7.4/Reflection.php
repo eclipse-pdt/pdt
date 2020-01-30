@@ -2285,7 +2285,7 @@ class ReflectionProperty implements Reflector {
 	/**
 	 * Gets a property's type
 	 * @link http://www.php.net/manual/en/reflectionproperty.gettype.php
-	 * @return mixed a ReflectionType if the property has a type,
+	 * @return ReflectionType|null a ReflectionType if the property has a type,
 	 * and null otherwise.
 	 */
 	public function getType () {}
