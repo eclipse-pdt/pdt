@@ -1,0 +1,28 @@
+--TEST--
+Bug 559672 - Improper validation: The import namespace is never used
+--FILE0--
+<?php
+namespace Test;
+
+const FOO = 1;
+?>
+--FILE1--
+<?php
+namespace Test2;
+
+const FOO = 1;
+?>
+--FILE--
+<?php
+namespace Bar;
+
+use Test as AC;
+use Test2 as AC2;
+
+$t1 = AC\FOO;
+
+echo $t1;
+
+
+--EXPECT--
+[line=5, start=42, end=47] The import Test2 is never used
