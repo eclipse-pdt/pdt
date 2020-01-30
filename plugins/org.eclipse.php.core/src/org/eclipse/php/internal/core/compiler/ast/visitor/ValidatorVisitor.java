@@ -252,6 +252,8 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 	public boolean visit(FullyQualifiedReference node) throws Exception {
 		if (node.getElementType() == FullyQualifiedReference.T_TYPE) {
 			return visit((TypeReference) node);
+		} else {
+			visit(node.getNamespace(), ProblemSeverities.Error, false);
 		}
 		return super.visit(node);
 	}
