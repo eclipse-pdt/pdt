@@ -1097,6 +1097,10 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 		if (astNode == null || astNode instanceof Scalar || astNode instanceof ConstantReference) {
 			return;
 		}
+		if (astNode instanceof FullyQualifiedReference
+				&& ((FullyQualifiedReference) astNode).getElementType() == FullyQualifiedReference.T_CONSTANT) {
+			return;
+		}
 		if (astNode instanceof Quote) {
 			for (ASTNode expr : ((Quote) astNode).getExpressions()) {
 				validateConstantExpression(expr, allowArray);
