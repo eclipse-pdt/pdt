@@ -1,0 +1,14 @@
+--TEST--
+Test correct constants
+--FILE--
+<?php
+namespace Foo {
+    const TEST = 1;
+
+}
+namespace Bar {
+    const TEST = \Foo\TEST;
+    const TEST2 = \CURLE_OUT_OF_MEMORY;
+}
+?>
+--EXPECT--
