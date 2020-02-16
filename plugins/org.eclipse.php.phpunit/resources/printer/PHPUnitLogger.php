@@ -53,7 +53,161 @@ if (class_exists('PHP_Timer')) {
 } elseif(class_exists('PHPUnit\SebastianBergmann\Timer\Timer')) {
     class_alias('PHPUnit\SebastianBergmann\Timer\Timer', 'Timer');
 }
-if (_RUNNER_VERSION  >= 7) {
+if (_RUNNER_VERSION  >= 9) {
+    $logger = <<<'LOGGER'
+    class PHPUnitLogger extends \PHPUnit\TextUI\DefaultResultPrinter implements TestListener, \PHPUnit\TextUI\ResultPrinter
+    {
+        protected $loggers = array();
+        public function printResult(\PHPUnit\Framework\TestResult $result): void
+        {
+        }
+    
+        /**
+         * Handler for 'start class' event.
+         */
+        protected function startClass(string $name): void
+        {
+            $this->write($this->currentTestClassPrettified . "\n");
+        }
+    
+        /**
+         * Handler for 'on test' event.
+         */
+        protected function onTest(string $name, bool $success = true): void
+        {
+            if ($success) {
+                $this->write(' [x] ');
+            } else {
+                $this->write(' [ ] ');
+            }
+    
+            $this->write($name . "\n");
+        }
+    
+        /**
+         * Handler for 'end class' event.
+         */
+        protected function endClass(string $name): void
+        {
+            $this->write("\n");
+        }
+        public function __construct($out = null)
+        {
+            parent::__construct('php://stdout', true);
+            class_alias('PHPUnit\Framework\ExceptionWrapper', 'ExceptionWrapper');
+            class_alias('PHPUnit\Util\Blacklist', 'Blacklist');
+            $this->loggers = array(
+                new PHPUnitEclipseLogger()
+            );
+        }
+        
+        public function setAutoFlush(bool $autoFlush): void
+        {
+            parent::setAutoFlush($autoFlush);
+            foreach ($this->loggers as $logger) {
+                $logger->setAutoFlush($autoFlush);
+            }
+        }
+        
+        public function flush(): void
+        {
+            parent::flush();
+            foreach ($this->loggers as $logger) {
+                $logger->flush();
+            }
+        }
+        
+        public function incrementalFlush(): void
+        {
+            parent::incrementalFlush();
+            foreach ($this->loggers as $logger) {
+                $logger->incrementalFlush();
+            }
+        }
+        
+        public function addError(Test $test, Throwable $t, float $time): void
+        {
+            parent::addError($test, $t, $time);
+            foreach ($this->loggers as $logger) {
+                $logger->addError($test, $t, $time);
+            }
+        }
+        
+        public function addWarning(Test $test, Warning $e, float $time): void
+        {
+            parent::addWarning($test, $e, $time);
+            foreach ($this->loggers as $logger) {
+                $logger->addWarning($test, $e, $time);
+            }
+        }
+        
+        public function addFailure(Test $test, AssertionFailedError $e, float $time): void
+        {
+            parent::addFailure($test, $e, $time);
+            foreach ($this->loggers as $logger) {
+                $logger->addFailure($test, $e, $time);
+            }
+        }
+        
+        public function addIncompleteTest(Test $test, Throwable $t, float $time): void
+        {
+            parent::addIncompleteTest($test, $t, $time);
+            foreach ($this->loggers as $logger) {
+                $logger->addIncompleteTest($test, $t, $time);
+            }
+        }
+        
+        public function addRiskyTest(Test $test, Throwable $t, float $time): void
+        {
+            parent::addRiskyTest($test, $t, $time);
+            foreach ($this->loggers as $logger) {
+                $logger->addRiskyTest($test, $t, $time);
+            }
+        }
+        
+        public function addSkippedTest(Test $test, Throwable $t, float $time): void
+        {
+            parent::addSkippedTest($test, $t, $time);
+            foreach ($this->loggers as $logger) {
+                $logger->addSkippedTest($test, $t, $time);
+            }
+        }
+        
+        public function startTestSuite(TestSuite $suite): void
+        {
+            parent::startTestSuite($suite);
+            foreach ($this->loggers as $logger) {
+                $logger->startTestSuite($suite);
+            }
+        }
+        
+        public function endTestSuite(TestSuite $suite): void
+        {
+            parent::endTestSuite($suite);
+            foreach ($this->loggers as $logger) {
+                $logger->endTestSuite($suite);
+            }
+        }
+        
+        public function startTest(Test $test): void
+        {
+            parent::startTest($test);
+        
+            foreach ($this->loggers as $logger) {
+                $logger->startTest($test);
+            }
+        }
+        
+        public function endTest(Test $test, float $time): void
+        {
+            parent::endTest($test, $time);
+            foreach ($this->loggers as $logger) {
+                $logger->endTest($test, $time);
+            }
+        }
+    }
+LOGGER;
+} elseif (_RUNNER_VERSION  >= 7) {
     $logger = <<<'LOGGER'
     class PHPUnitLogger extends TextPrinter implements TestListener
     {
