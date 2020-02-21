@@ -59,6 +59,8 @@ public class FunctionHighlighting extends AbstractSemanticHighlighting {
 				if (!keywords.getKeywordNames().contains(name.toLowerCase())) {
 					highlight(functionName);
 				}
+			} else if (functionName instanceof ParenthesisExpression) {
+				// do nothing
 			} else {
 				highlight(functionName);
 			}
