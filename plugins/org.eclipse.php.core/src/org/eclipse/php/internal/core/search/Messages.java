@@ -13,7 +13,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.search;
 
-import com.ibm.icu.text.MessageFormat;
+import java.text.MessageFormat;
 
 /**
  * Helper class to format message strings.

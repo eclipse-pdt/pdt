@@ -22,7 +22,7 @@ import org.eclipse.php.internal.debug.ui.Logger;
 import org.eclipse.php.internal.debug.ui.breakpoint.provider.DefaultPHPBreakpointProvider;
 import org.eclipse.ui.texteditor.IMarkerUpdater;
 
-import com.ibm.icu.text.MessageFormat;
+import java.text.MessageFormat;
 
 /**
  * Responsible for update the PHPConditionalBreakpointMarker info while saving

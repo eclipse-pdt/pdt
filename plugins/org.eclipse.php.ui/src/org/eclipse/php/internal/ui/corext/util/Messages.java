@@ -13,9 +13,9 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.corext.util;
 
-import org.eclipse.osgi.util.NLS;
+import java.text.MessageFormat;
 
-import com.ibm.icu.text.MessageFormat;
+import org.eclipse.osgi.util.NLS;
 
 public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "org.eclipse.php.internal.ui.corext.util.messages"; //$NON-NLS-1$

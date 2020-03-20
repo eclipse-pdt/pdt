@@ -13,13 +13,13 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.preferences;
 
+import java.util.Locale;
+
 import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
-
-import com.ibm.icu.util.ULocale;
 
 public class CorePreferenceConstants {
 
@@ -33,7 +33,7 @@ public class CorePreferenceConstants {
 	 * Initializes the given preference store with the default values.
 	 * 
 	 * @param store
-	 *                  the preference store to be initialized
+	 *            the preference store to be initialized
 	 */
 	public static void initializeDefaultValues() {
 		IEclipsePreferences node = DefaultScope.INSTANCE.getNode(PHPCorePlugin.ID);
@@ -52,8 +52,8 @@ public class CorePreferenceConstants {
 		node.put(PHPCoreConstants.FORMATTER_INDENTATION_ARRAY_INIT_SIZE,
 				PHPCoreConstants.DEFAULT_INDENTATION_ARRAY_INIT_SIZE);
 		node.putBoolean(PHPCoreConstants.CODEGEN_ADD_COMMENTS, false);
-		node.put(PHPCoreConstants.WORKSPACE_DEFAULT_LOCALE, ULocale.getDefault().toString());
-		node.put(PHPCoreConstants.WORKSPACE_LOCALE, ULocale.getDefault().toString());
+		node.put(PHPCoreConstants.WORKSPACE_DEFAULT_LOCALE, Locale.getDefault().toString());
+		node.put(PHPCoreConstants.WORKSPACE_LOCALE, Locale.getDefault().toString());
 		node.putBoolean(PHPCoreConstants.CODEASSIST_ADDIMPORT, true);
 		node.putBoolean(PHPCoreConstants.CODEASSIST_FILL_ARGUMENT_NAMES, true);
 		node.putBoolean(PHPCoreConstants.CODEASSIST_GUESS_METHOD_ARGUMENTS, true);

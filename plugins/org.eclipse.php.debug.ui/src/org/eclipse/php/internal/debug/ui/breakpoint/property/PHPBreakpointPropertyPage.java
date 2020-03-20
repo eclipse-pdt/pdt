@@ -26,7 +26,7 @@ import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.IWorkbenchPropertyPage;
 import org.eclipse.ui.dialogs.PropertyPage;
 
-import com.ibm.icu.text.MessageFormat;
+import java.text.MessageFormat;
 
 public class PHPBreakpointPropertyPage extends PropertyPage implements IWorkbenchPropertyPage {
 

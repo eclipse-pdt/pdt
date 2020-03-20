@@ -29,6 +29,7 @@ package org.eclipse.php.internal.ui.preferences;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.Collator;
 import java.util.*;
 import java.util.List;
 import java.util.Map.Entry;
@@ -97,8 +98,6 @@ import org.eclipse.wst.sse.ui.internal.preferences.ui.ColorHelper;
 import org.eclipse.wst.sse.ui.internal.util.EditorUtility;
 import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
 import org.osgi.service.prefs.BackingStoreException;
-
-import com.ibm.icu.text.Collator;
 
 /**
  * A preference page to configure our XML syntax color. It resembles the JDT and

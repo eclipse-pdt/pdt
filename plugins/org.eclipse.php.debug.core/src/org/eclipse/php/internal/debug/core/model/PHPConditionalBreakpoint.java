@@ -26,7 +26,7 @@ import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
 
-import com.ibm.icu.text.MessageFormat;
+import java.text.MessageFormat;
 
 public class PHPConditionalBreakpoint extends PHPLineBreakpoint {
 

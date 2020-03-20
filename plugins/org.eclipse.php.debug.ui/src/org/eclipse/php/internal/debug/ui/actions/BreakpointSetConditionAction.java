@@ -43,7 +43,7 @@ import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 
-import com.ibm.icu.text.MessageFormat;
+import java.text.MessageFormat;
 
 public class BreakpointSetConditionAction implements IObjectActionDelegate {
 

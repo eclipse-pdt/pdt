@@ -18,7 +18,7 @@ import org.eclipse.ltk.core.refactoring.Change;
 import org.eclipse.ltk.core.refactoring.NullChange;
 import org.eclipse.php.internal.debug.core.model.PHPLineBreakpoint;
 
-import com.ibm.icu.text.MessageFormat;
+import java.text.MessageFormat;
 
 /**
  * A change to delete a breakpoint. Currently used for undo. When undoing a

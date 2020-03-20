@@ -118,7 +118,7 @@ import org.eclipse.wst.sse.ui.internal.projection.AbstractStructuredFoldingStrat
 import org.eclipse.wst.sse.ui.internal.reconcile.ReconcileAnnotationKey;
 import org.eclipse.wst.sse.ui.internal.reconcile.TemporaryAnnotation;
 
-import com.ibm.icu.text.BreakIterator;
+import java.text.BreakIterator;
 
 public class PHPStructuredEditor extends StructuredTextEditor {
 

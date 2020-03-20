@@ -24,7 +24,7 @@ import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpThread;
 import org.eclipse.php.internal.debug.ui.Logger;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIMessages;
 
-import com.ibm.icu.text.MessageFormat;
+import java.text.MessageFormat;
 
 /**
  * Renders PHP debug elements

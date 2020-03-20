@@ -13,11 +13,10 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.text;
 
+import java.text.BreakIterator;
 import java.text.CharacterIterator;
 
 import org.eclipse.core.runtime.Assert;
-
-import com.ibm.icu.text.BreakIterator;
 
 /**
  * Breaks php text into word starts, also stops at line start and end. No
@@ -26,8 +25,8 @@ import com.ibm.icu.text.BreakIterator;
 public class PHPWordIterator extends BreakIterator {
 
 	/**
-	 * The underlying php break iterator. It returns all breaks, including before
-	 * and after every whitespace.
+	 * The underlying php break iterator. It returns all breaks, including
+	 * before and after every whitespace.
 	 */
 	private PHPBreakIterator fIterator;
 	/** The current index for the stateful operations. */

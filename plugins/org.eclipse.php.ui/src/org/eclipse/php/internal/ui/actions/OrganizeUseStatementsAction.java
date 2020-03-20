@@ -14,6 +14,7 @@ package org.eclipse.php.internal.ui.actions;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.text.Collator;
 import java.util.Comparator;
 
 import org.eclipse.dltk.annotations.Nullable;
@@ -43,8 +44,6 @@ import org.eclipse.php.internal.ui.util.PHPElementNameMatchLabelProvider;
 import org.eclipse.php.ui.editor.SharedASTProvider;
 import org.eclipse.ui.*;
 import org.eclipse.ui.progress.IProgressService;
-
-import com.ibm.icu.text.Collator;
 
 /**
  * Our sample action implements workbench action delegate. The action proxy will

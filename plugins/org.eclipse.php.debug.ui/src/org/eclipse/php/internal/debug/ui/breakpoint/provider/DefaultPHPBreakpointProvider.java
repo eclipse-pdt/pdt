@@ -48,7 +48,7 @@ import org.eclipse.ui.IURIEditorInput;
 import org.eclipse.wst.sse.ui.internal.StructuredResourceMarkerAnnotationModel;
 import org.eclipse.wst.sse.ui.internal.provisional.extensions.ISourceEditingTextTools;
 
-import com.ibm.icu.text.MessageFormat;
+import java.text.MessageFormat;
 
 public class DefaultPHPBreakpointProvider implements IPHPBreakpointProvider, IExecutableExtension {
 

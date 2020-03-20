@@ -42,7 +42,7 @@ import org.eclipse.php.internal.debug.core.zend.communication.DebuggerCommunicat
 import org.eclipse.php.internal.debug.core.zend.debugger.*;
 import org.eclipse.swt.widgets.Display;
 
-import com.ibm.icu.text.MessageFormat;
+import java.text.MessageFormat;
 
 public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 

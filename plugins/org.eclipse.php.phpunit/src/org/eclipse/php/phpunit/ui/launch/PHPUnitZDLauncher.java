@@ -47,7 +47,7 @@ import org.eclipse.php.phpunit.PHPUnitPlugin;
 import org.eclipse.php.phpunit.launch.PHPUnitLaunchAttributes;
 import org.eclipse.swt.widgets.Display;
 
-import com.ibm.icu.text.MessageFormat;
+import java.text.MessageFormat;
 
 public class PHPUnitZDLauncher extends PHPUnitBasicLauncher {
 

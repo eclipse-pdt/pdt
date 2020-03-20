@@ -13,6 +13,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.workingset;
 
+import java.text.Collator;
 import java.util.*;
 import java.util.List;
 
@@ -44,8 +45,6 @@ import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.*;
 import org.eclipse.ui.dialogs.IWorkingSetNewWizard;
 import org.eclipse.ui.dialogs.SelectionDialog;
-
-import com.ibm.icu.text.Collator;
 
 public final class ConfigureWorkingSetAssignementAction extends SelectionDispatchAction {
 
@@ -237,7 +236,8 @@ public final class ConfigureWorkingSetAssignementAction extends SelectionDispatc
 		private static final String DIALOG_SETTINGS_SECTION = "WorkingSetModelAwareSelectionDialog"; //$NON-NLS-1$
 
 		/**
-		 * Key associated with the 'Show Only PE Visible Working Sets' check box.
+		 * Key associated with the 'Show Only PE Visible Working Sets' check
+		 * box.
 		 * 
 		 * @since 3.5
 		 */
