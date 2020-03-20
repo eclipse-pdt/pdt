@@ -14,6 +14,7 @@
 package org.eclipse.php.internal.ui.preferences.includepath;
 
 import java.lang.reflect.InvocationTargetException;
+import java.text.MessageFormat;
 import java.util.*;
 import java.util.Map.Entry;
 
@@ -659,8 +660,8 @@ public class PHPLibrariesWorkbookPage extends BuildPathBasePage {
 		NewContainerDialog dialog = new NewContainerDialog(getShell(), title, currProject, getUsedContainers(existing),
 				existing);
 		IPath projpath = currProject.getFullPath();
-		dialog.setMessage(org.eclipse.dltk.internal.corext.util.Messages
-				.format(NewWizardMessages.LibrariesWorkbookPage_NewClassFolderDialog_description, projpath.toString()));
+		dialog.setMessage(MessageFormat.format(NewWizardMessages.LibrariesWorkbookPage_NewClassFolderDialog_description,
+				projpath.toString()));
 		if (dialog.open() == Window.OK) {
 			IFolder folder = dialog.getFolder();
 			return new BPListElement[] { newBPLibraryElement(folder, false) };

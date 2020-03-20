@@ -11,6 +11,8 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.refactor.processors;
 
+import java.text.MessageFormat;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.Assert;
@@ -21,7 +23,6 @@ import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.corext.refactoring.RefactoringCoreMessages;
 import org.eclipse.dltk.internal.corext.refactoring.changes.UndoDeleteResourceChange;
 import org.eclipse.dltk.internal.corext.refactoring.util.ModelElementUtil;
-import org.eclipse.dltk.internal.corext.util.Messages;
 import org.eclipse.ltk.core.refactoring.Change;
 import org.eclipse.ltk.core.refactoring.NullChange;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
@@ -43,7 +44,7 @@ public class DeleteSourceManipulationChange extends AbstractDeleteChange {
 	 */
 	@Override
 	public String getName() {
-		return Messages.format(RefactoringCoreMessages.DeleteSourceManipulationChange_0, getElementName());
+		return MessageFormat.format(RefactoringCoreMessages.DeleteSourceManipulationChange_0, getElementName());
 	}
 
 	@Override

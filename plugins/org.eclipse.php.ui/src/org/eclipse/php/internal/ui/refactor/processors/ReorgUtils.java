@@ -12,6 +12,7 @@
 package org.eclipse.php.internal.ui.refactor.processors;
 
 import java.net.URI;
+import java.text.MessageFormat;
 import java.util.*;
 
 import org.eclipse.core.resources.IFile;
@@ -24,7 +25,6 @@ import org.eclipse.dltk.internal.core.ExternalSourceModule;
 import org.eclipse.dltk.internal.corext.refactoring.RefactoringCoreMessages;
 import org.eclipse.dltk.internal.corext.refactoring.util.ModelElementUtil;
 import org.eclipse.dltk.internal.corext.refactoring.util.ResourceUtil;
-import org.eclipse.dltk.internal.corext.util.Messages;
 import org.eclipse.ui.IWorkingSet;
 
 public class ReorgUtils {
@@ -85,13 +85,13 @@ public class ReorgUtils {
 	public static String getName(IModelElement element) throws ModelException {
 		String pattern = createNamePattern(element);
 		String[] args = createNameArguments(element);
-		return Messages.format(pattern, args);
+		return MessageFormat.format(pattern, args);
 	}
 
 	public static String getName(IResource resource) {
 		String pattern = createNamePattern(resource);
 		String[] args = createNameArguments(resource);
-		return Messages.format(pattern, args);
+		return MessageFormat.format(pattern, args);
 	}
 
 	private static String[] createNameArguments(IResource resource) {

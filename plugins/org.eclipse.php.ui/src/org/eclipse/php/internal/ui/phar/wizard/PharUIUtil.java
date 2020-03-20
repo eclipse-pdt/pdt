@@ -13,6 +13,7 @@
 package org.eclipse.php.internal.ui.phar.wizard;
 
 import java.io.File;
+import java.text.MessageFormat;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
@@ -25,7 +26,6 @@ import org.eclipse.dltk.core.IBuildpathEntry;
 import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
 import org.eclipse.dltk.internal.core.ZipArchiveFile;
 import org.eclipse.dltk.internal.core.util.Util;
-import org.eclipse.dltk.internal.corext.util.Messages;
 import org.eclipse.dltk.internal.ui.IDLTKStatusConstants;
 import org.eclipse.dltk.internal.ui.wizards.buildpath.BPListElement;
 import org.eclipse.dltk.ui.viewsupport.BasicElementLabels;
@@ -48,7 +48,7 @@ public class PharUIUtil {
 			return false;
 		}
 		return queryDialog(parent, PharPackagerMessages.JarPackage_confirmReplace_title,
-				Messages.format(PharPackagerMessages.JarPackage_confirmReplace_message,
+				MessageFormat.format(PharPackagerMessages.JarPackage_confirmReplace_message,
 						BasicElementLabels.getPathLabel(filePath, isOSPath)));
 	}
 
@@ -72,7 +72,7 @@ public class PharUIUtil {
 		if (parent == null) {
 			return false;
 		}
-		return queryDialog(parent, PharPackagerMessages.JarPackage_confirmCreate_title, Messages.format(
+		return queryDialog(parent, PharPackagerMessages.JarPackage_confirmCreate_title, MessageFormat.format(
 				PharPackagerMessages.JarPackage_confirmCreate_message, BasicElementLabels.getPathLabel(directory)));
 	}
 
@@ -112,9 +112,10 @@ public class PharUIUtil {
 				} else {
 					IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 					IResource file = root.findMember(path);
-					pharFile = Util.toLocalFile(file.getLocationURI(), null/*
-																			 * no progress availaible
-																			 */);
+					pharFile = Util.toLocalFile(file.getLocationURI(),
+							null/*
+								 * no progress availaible
+								 */);
 				}
 
 				if (pharFile == null || !pharFile.exists()) {

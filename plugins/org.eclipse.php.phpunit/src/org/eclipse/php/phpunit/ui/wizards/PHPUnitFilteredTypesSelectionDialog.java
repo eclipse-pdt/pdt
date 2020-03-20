@@ -28,7 +28,6 @@ import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
 import org.eclipse.dltk.core.index2.search.ModelAccess;
 import org.eclipse.dltk.core.search.*;
 import org.eclipse.dltk.internal.core.search.DLTKSearchTypeNameMatch;
-import org.eclipse.dltk.internal.corext.util.Messages;
 import org.eclipse.dltk.internal.corext.util.OpenTypeHistory;
 import org.eclipse.dltk.internal.corext.util.Strings;
 import org.eclipse.dltk.internal.corext.util.TypeFilter;
@@ -115,20 +114,20 @@ public class PHPUnitFilteredTypesSelectionDialog extends FilteredItemsSelectionD
 	 * @param multi
 	 *            <code>true</code> if multiple selection is allowed
 	 * @param context
-	 *            context used to execute long-running operations associated with
-	 *            this dialog
+	 *            context used to execute long-running operations associated
+	 *            with this dialog
 	 * @param scope
 	 *            scope used when searching for types
 	 * @param elementKinds
-	 *            flags defining nature of searched elements; the only valid values
-	 *            are: <code>IJavaSearchConstants.TYPE</code>
+	 *            flags defining nature of searched elements; the only valid
+	 *            values are: <code>IJavaSearchConstants.TYPE</code>
 	 *            <code>IJavaSearchConstants.ANNOTATION_TYPE</code>
 	 *            <code>IJavaSearchConstants.INTERFACE</code>
 	 *            <code>IJavaSearchConstants.ENUM</code>
 	 *            <code>IJavaSearchConstants.CLASS_AND_INTERFACE</code>
-	 *            <code>IJavaSearchConstants.CLASS_AND_ENUM</code>. Please note that
-	 *            the bitwise OR combination of the elementary constants is not
-	 *            supported.
+	 *            <code>IJavaSearchConstants.CLASS_AND_ENUM</code>. Please note
+	 *            that the bitwise OR combination of the elementary constants is
+	 *            not supported.
 	 */
 	public PHPUnitFilteredTypesSelectionDialog(Shell parent, boolean multi, IRunnableContext context,
 			IDLTKSearchScope scope, int elementKinds, IDLTKLanguageToolkit toolkit) {
@@ -143,22 +142,22 @@ public class PHPUnitFilteredTypesSelectionDialog extends FilteredItemsSelectionD
 	 * @param multi
 	 *            <code>true</code> if multiple selection is allowed
 	 * @param context
-	 *            context used to execute long-running operations associated with
-	 *            this dialog
+	 *            context used to execute long-running operations associated
+	 *            with this dialog
 	 * @param scope
 	 *            scope used when searching for types. If the scope is
-	 *            <code>null</code>, then workspace is scope is used as default, and
-	 *            the user can choose a working set as scope.
+	 *            <code>null</code>, then workspace is scope is used as default,
+	 *            and the user can choose a working set as scope.
 	 * @param elementKinds
-	 *            flags defining nature of searched elements; the only valid values
-	 *            are: <code>IJavaSearchConstants.TYPE</code>
+	 *            flags defining nature of searched elements; the only valid
+	 *            values are: <code>IJavaSearchConstants.TYPE</code>
 	 *            <code>IJavaSearchConstants.ANNOTATION_TYPE</code>
 	 *            <code>IJavaSearchConstants.INTERFACE</code>
 	 *            <code>IJavaSearchConstants.ENUM</code>
 	 *            <code>IJavaSearchConstants.CLASS_AND_INTERFACE</code>
-	 *            <code>IJavaSearchConstants.CLASS_AND_ENUM</code>. Please note that
-	 *            the bitwise OR combination of the elementary constants is not
-	 *            supported.
+	 *            <code>IJavaSearchConstants.CLASS_AND_ENUM</code>. Please note
+	 *            that the bitwise OR combination of the elementary constants is
+	 *            not supported.
 	 * @param extension
 	 *            an extension of the standard type selection dialog; See
 	 *            {@link TypeSelectionExtension}
@@ -413,11 +412,12 @@ public class PHPUnitFilteredTypesSelectionDialog extends FilteredItemsSelectionD
 			String packPattern = typeSearchFilter.getPackagePattern();
 
 			/*
-			 * Setting the filter into match everything mode avoids filtering twice by the
-			 * same pattern (the search engine only provides filtered matches). For the case
-			 * when the pattern is a camel case pattern with a terminator, the filter is not
-			 * set to match everything mode because jdt.core's SearchPattern does not
-			 * support that case.
+			 * Setting the filter into match everything mode avoids filtering
+			 * twice by the same pattern (the search engine only provides
+			 * filtered matches). For the case when the pattern is a camel case
+			 * pattern with a terminator, the filter is not set to match
+			 * everything mode because jdt.core's SearchPattern does not support
+			 * that case.
 			 */
 			int matchRule = typeSearchFilter.getMatchRule();
 			if (matchRule == SearchPattern.RULE_CAMELCASE_MATCH) {
@@ -459,7 +459,7 @@ public class PHPUnitFilteredTypesSelectionDialog extends FilteredItemsSelectionD
 			IType type = ((TypeNameMatch) item).getType();
 			if (!type.exists()) {
 				return new Status(IStatus.ERROR, DLTKUIPlugin.getPluginId(), IStatus.ERROR,
-						Messages.format(DLTKUIMessages.FilteredTypesSelectionDialog_error_type_doesnot_exist,
+						MessageFormat.format(DLTKUIMessages.FilteredTypesSelectionDialog_error_type_doesnot_exist,
 								((TypeNameMatch) item).getFullyQualifiedName()),
 						null);
 			}
@@ -481,8 +481,8 @@ public class PHPUnitFilteredTypesSelectionDialog extends FilteredItemsSelectionD
 	}
 
 	/*
-	 * We only have to ensure history consistency here since the search engine takes
-	 * care of working copies.
+	 * We only have to ensure history consistency here since the search engine
+	 * takes care of working copies.
 	 */
 	private static class ConsistencyRunnable implements IRunnableWithProgress {
 		private IDLTKUILanguageToolkit tookit;
@@ -721,7 +721,7 @@ public class PHPUnitFilteredTypesSelectionDialog extends FilteredItemsSelectionD
 		}
 
 		private String getFormattedLabel(String name) {
-			return Messages.format(DLTKUIMessages.FilteredTypesSelectionDialog_library_name_format, name);
+			return MessageFormat.format(DLTKUIMessages.FilteredTypesSelectionDialog_library_name_format, name);
 		}
 
 		public String getText(Object element) {
@@ -807,7 +807,8 @@ public class PHPUnitFilteredTypesSelectionDialog extends FilteredItemsSelectionD
 		 * (non-Javadoc)
 		 * 
 		 * @seeorg.eclipse.ui.dialogs.FilteredItemsSelectionDialog.ItemsFilter#
-		 * isSubFilter (org.eclipse.ui.dialogs.FilteredItemsSelectionDialog.ItemsFilter)
+		 * isSubFilter
+		 * (org.eclipse.ui.dialogs.FilteredItemsSelectionDialog.ItemsFilter)
 		 */
 		@Override
 		public boolean isSubFilter(ItemsFilter filter) {
@@ -918,8 +919,9 @@ public class PHPUnitFilteredTypesSelectionDialog extends FilteredItemsSelectionD
 		 * Set filter to "match everything" mode.
 		 * 
 		 * @param matchEverything
-		 *            if <code>true</code>, {@link #matchItem(Object)} always returns
-		 *            true. If <code>false</code>, the filter is enabled.
+		 *            if <code>true</code>, {@link #matchItem(Object)} always
+		 *            returns true. If <code>false</code>, the filter is
+		 *            enabled.
 		 */
 		public void setMatchEverythingMode(boolean matchEverything) {
 			this.fMatchEverything = matchEverything;
@@ -1025,8 +1027,9 @@ public class PHPUnitFilteredTypesSelectionDialog extends FilteredItemsSelectionD
 
 	/**
 	 * A <code>TypeSearchRequestor</code> collects matches filtered using
-	 * <code>TypeItemsFilter</code>. The attached content provider is filled on the
-	 * basis of the collected entries (instances of <code>TypeNameMatch</code>).
+	 * <code>TypeItemsFilter</code>. The attached content provider is filled on
+	 * the basis of the collected entries (instances of
+	 * <code>TypeNameMatch</code>).
 	 */
 	private class TypeSearchRequestor extends TypeNameMatchRequestor {
 
@@ -1248,7 +1251,8 @@ public class PHPUnitFilteredTypesSelectionDialog extends FilteredItemsSelectionD
 		}
 
 		/**
-		 * Stores contents of the local history into persistent history container.
+		 * Stores contents of the local history into persistent history
+		 * container.
 		 */
 		private synchronized void persistHistory() {
 			if (getReturnCode() == OK) {

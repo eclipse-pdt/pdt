@@ -16,6 +16,7 @@ package org.eclipse.php.internal.ui.wizards;
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +26,6 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.*;
 import org.eclipse.dltk.core.*;
-import org.eclipse.dltk.internal.corext.util.Messages;
 import org.eclipse.dltk.internal.ui.util.CoreUtility;
 import org.eclipse.dltk.internal.ui.wizards.BuildpathDetector;
 import org.eclipse.dltk.internal.ui.wizards.NewWizardMessages;
@@ -383,7 +383,7 @@ public class PHPProjectWizardSecondPage extends CapabilityConfigurationPage impl
 			return bak;
 		} catch (IOException e) {
 			IStatus status = new Status(IStatus.ERROR, DLTKUIPlugin.PLUGIN_ID, IStatus.ERROR,
-					Messages.format(NewWizardMessages.ScriptProjectWizardSecondPage_problem_backup, name), e);
+					MessageFormat.format(NewWizardMessages.ScriptProjectWizardSecondPage_problem_backup, name), e);
 			throw new CoreException(status);
 		}
 	}
@@ -467,15 +467,15 @@ public class PHPProjectWizardSecondPage extends CapabilityConfigurationPage impl
 	 * configured. No natures are added.
 	 * 
 	 * @param project
-	 *                        The handle of the project to create.
+	 *            The handle of the project to create.
 	 * @param locationURI
-	 *                        The location of the project or <code>null</code> to
-	 *                        create the project in the workspace
+	 *            The location of the project or <code>null</code> to create the
+	 *            project in the workspace
 	 * @param monitor
-	 *                        a progress monitor to report progress or
-	 *                        <code>null</code> if progress reporting is not desired
+	 *            a progress monitor to report progress or <code>null</code> if
+	 *            progress reporting is not desired
 	 * @throws CoreException
-	 *                           if the project couldn't be created
+	 *             if the project couldn't be created
 	 * @see org.eclipse.core.resources.IProjectDescription#setLocationURI(java.net.URI)
 	 * 
 	 */

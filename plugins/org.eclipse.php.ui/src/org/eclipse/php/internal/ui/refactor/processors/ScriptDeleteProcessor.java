@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.refactor.processors;
 
+import java.text.MessageFormat;
 import java.util.*;
 
 import org.eclipse.core.filebuffers.FileBuffers;
@@ -34,7 +35,6 @@ import org.eclipse.dltk.internal.corext.refactoring.tagging.ICommentProvider;
 import org.eclipse.dltk.internal.corext.refactoring.util.ModelElementUtil;
 import org.eclipse.dltk.internal.corext.refactoring.util.ResourceUtil;
 import org.eclipse.dltk.internal.corext.refactoring.util.TextChangeManager;
-import org.eclipse.dltk.internal.corext.util.Messages;
 import org.eclipse.dltk.internal.corext.util.Resources;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.ltk.core.refactoring.Change;
@@ -209,7 +209,8 @@ public final class ScriptDeleteProcessor extends DeleteProcessor implements ICom
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.dltk.internal.corext.refactoring.base.Refactoring#checkInput
+	 * @see
+	 * org.eclipse.dltk.internal.corext.refactoring.base.Refactoring#checkInput
 	 * (org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	@Override
@@ -305,10 +306,10 @@ public final class ScriptDeleteProcessor extends DeleteProcessor implements ICom
 				LocationKind.NORMALIZE);
 		if (buffer != null && buffer.isDirty()) {
 			if (buffer.isStateValidated() && buffer.isSynchronized()) {
-				result.addWarning(Messages.format(RefactoringCoreMessages.ScriptDeleteProcessor_unsaved_changes,
+				result.addWarning(MessageFormat.format(RefactoringCoreMessages.ScriptDeleteProcessor_unsaved_changes,
 						file.getFullPath().toString()));
 			} else {
-				result.addFatalError(Messages.format(RefactoringCoreMessages.ScriptDeleteProcessor_unsaved_changes,
+				result.addFatalError(MessageFormat.format(RefactoringCoreMessages.ScriptDeleteProcessor_unsaved_changes,
 						file.getFullPath().toString()));
 			}
 		}
@@ -317,8 +318,8 @@ public final class ScriptDeleteProcessor extends DeleteProcessor implements ICom
 	/*
 	 * The set of elements that will eventually be deleted may be very different
 	 * from the set originally selected - there may be fewer, more or different
-	 * elements. This method is used to calculate the set of elements that will be
-	 * deleted - if necessary, it asks the user.
+	 * elements. This method is used to calculate the set of elements that will
+	 * be deleted - if necessary, it asks the user.
 	 */
 	private void recalculateElementsToDelete() throws CoreException {
 		// the sequence is critical here
@@ -328,27 +329,41 @@ public final class ScriptDeleteProcessor extends DeleteProcessor implements ICom
 		}
 
 		removeElementsWithParentsInSelection(); /*
-												 * ask before adding empty cus - you don't want to ask if you, for
-												 * example deletethe package, in which the cus live
+												 * ask before adding empty cus -
+												 * you don't want to ask if you,
+												 * for example deletethe
+												 * package, in which the cus
+												 * live
 												 */
 		removeUnconfirmedFoldersThatContainSourceFolders(); /*
-															 * a selected folder may be a parent of a source folder we
-															 * must inform the user about it and ask if ok to delete the
-															 * folder
+															 * a selected folder
+															 * may be a parent
+															 * of a source
+															 * folder we must
+															 * inform the user
+															 * about it and ask
+															 * if ok to delete
+															 * the folder
 															 */
 		removeUnconfirmedReferencedArchives();
 		addEmptySourceModulesToDelete();
 		removeScriptElementsChildrenOfScriptElements();/*
-														 * because adding cus may create elements (types in cus)whose
-														 * parents are in selection
+														 * because adding cus
+														 * may create elements
+														 * (types in cus)whose
+														 * parents are in
+														 * selection
 														 */
 		confirmDeletingReadOnly(); /*
-									 * after empty cus - you want to ask for all cus that are to be deleted
+									 * after empty cus - you want to ask for all
+									 * cus that are to be deleted
 									 */
 
 		addDeletableParentPackagesOnPackageDeletion(); /*
-														 * do not change the sequence in fScriptElements after this
-														 * method
+														 * do not change the
+														 * sequence in
+														 * fScriptElements after
+														 * this method
 														 */
 	}
 
@@ -460,8 +475,8 @@ public final class ScriptDeleteProcessor extends DeleteProcessor implements ICom
 	}
 
 	/**
-	 * Returns true if this initially selected package is really deletable (if it
-	 * has non-selected subpackages, it may only be cleared).
+	 * Returns true if this initially selected package is really deletable (if
+	 * it has non-selected subpackages, it may only be cleared).
 	 * 
 	 */
 	private boolean canRemoveCompletely(IScriptFolder pack, List<?> packagesToDelete) throws ModelException {
@@ -476,8 +491,8 @@ public final class ScriptDeleteProcessor extends DeleteProcessor implements ICom
 
 	/**
 	 * Adds deletable parent packages of the fragment "frag" to the list
-	 * "deletableParentPackages"; also adds the resources of those packages to the
-	 * set "resourcesToDelete".
+	 * "deletableParentPackages"; also adds the resources of those packages to
+	 * the set "resourcesToDelete".
 	 * 
 	 */
 	private void addDeletableParentPackages(IScriptFolder frag, List<?> initialPackagesToDelete,
@@ -488,7 +503,7 @@ public final class ScriptDeleteProcessor extends DeleteProcessor implements ICom
 					RefactoringCoreMessages.ScriptDeleteProcessor_confirm_linked_folder_delete, false,
 					IReorgQueries.CONFIRM_DELETE_LINKED_PARENT);
 			if (!query.confirm(
-					Messages.format(RefactoringCoreMessages.ScriptDeleteProcessor_delete_linked_folder_question,
+					MessageFormat.format(RefactoringCoreMessages.ScriptDeleteProcessor_delete_linked_folder_question,
 							new String[] { frag.getResource().getName() }))) {
 				return;
 			}
@@ -570,7 +585,7 @@ public final class ScriptDeleteProcessor extends DeleteProcessor implements ICom
 		if (referencingProjects.isEmpty() || root == null || !root.exists() || !root.isArchive()) {
 			return false;
 		}
-		String question = Messages.format(RefactoringCoreMessages.DeleteRefactoring_3, root.getElementName());
+		String question = MessageFormat.format(RefactoringCoreMessages.DeleteRefactoring_3, root.getElementName());
 		return !query.confirm(question, referencingProjects.toArray());
 	}
 
@@ -584,7 +599,8 @@ public final class ScriptDeleteProcessor extends DeleteProcessor implements ICom
 			if (resource instanceof IFolder) {
 				IFolder folder = (IFolder) resource;
 				if (containsSourceFolder(folder)) {
-					String question = Messages.format(RefactoringCoreMessages.DeleteRefactoring_5, folder.getName());
+					String question = MessageFormat.format(RefactoringCoreMessages.DeleteRefactoring_5,
+							folder.getName());
 					if (!query.confirm(question)) {
 						foldersToSkip.add(folder);
 					}

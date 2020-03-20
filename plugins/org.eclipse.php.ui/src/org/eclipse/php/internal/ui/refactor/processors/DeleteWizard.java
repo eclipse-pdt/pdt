@@ -11,10 +11,11 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.refactor.processors;
 
+import java.text.MessageFormat;
+
 import org.eclipse.core.resources.IResource;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.corext.refactoring.util.ModelElementUtil;
-import org.eclipse.dltk.internal.corext.util.Messages;
 import org.eclipse.dltk.internal.ui.refactoring.MessageWizardPage;
 import org.eclipse.dltk.internal.ui.refactoring.RefactoringMessages;
 import org.eclipse.dltk.internal.ui.refactoring.reorg.ReorgQueries;
@@ -83,10 +84,10 @@ public class DeleteWizard extends RefactoringWizard {
 				if (1 == numberOfSelectedElements()) {
 					String pattern = createConfirmationStringForOneElement();
 					String name = getNameOfSingleSelectedElement();
-					return Messages.format(pattern, new String[] { name });
+					return MessageFormat.format(pattern, new String[] { name });
 				} else {
 					String pattern = createConfirmationStringForManyElements();
-					return Messages.format(pattern, new String[] { String.valueOf(numberOfSelectedElements()) });
+					return MessageFormat.format(pattern, new String[] { String.valueOf(numberOfSelectedElements()) });
 				}
 			} catch (ModelException e) {
 				// http://bugs.eclipse.org/bugs/show_bug.cgi?id=19253
@@ -111,9 +112,9 @@ public class DeleteWizard extends RefactoringWizard {
 		}
 
 		/**
-		 * Adds the "delete subpackages" checkbox to the composite. Note that this code
-		 * assumes that the control of the parent is a Composite with GridLayout and a
-		 * horizontal span of 2.
+		 * Adds the "delete subpackages" checkbox to the composite. Note that
+		 * this code assumes that the control of the parent is a Composite with
+		 * GridLayout and a horizontal span of 2.
 		 * 
 		 * @see MessageWizardPage#createControl(Composite)
 		 */

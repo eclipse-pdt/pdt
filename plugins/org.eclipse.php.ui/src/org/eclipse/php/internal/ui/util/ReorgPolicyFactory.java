@@ -27,7 +27,6 @@ import org.eclipse.dltk.internal.corext.refactoring.reorg.IReorgPolicy.IMovePoli
 import org.eclipse.dltk.internal.corext.refactoring.util.ModelElementUtil;
 import org.eclipse.dltk.internal.corext.refactoring.util.ResourceUtil;
 import org.eclipse.dltk.internal.corext.refactoring.util.TextChangeManager;
-import org.eclipse.dltk.internal.corext.util.Messages;
 import org.eclipse.ltk.core.refactoring.Change;
 import org.eclipse.ltk.core.refactoring.CompositeChange;
 import org.eclipse.ltk.core.refactoring.NullChange;

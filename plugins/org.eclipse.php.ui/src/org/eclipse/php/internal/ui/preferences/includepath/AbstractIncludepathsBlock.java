@@ -14,6 +14,7 @@
 package org.eclipse.php.internal.ui.preferences.includepath;
 
 import java.net.URI;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -22,7 +23,6 @@ import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.*;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.core.BuildpathEntry;
-import org.eclipse.dltk.internal.corext.util.Messages;
 import org.eclipse.dltk.internal.ui.dialogs.StatusUtil;
 import org.eclipse.dltk.internal.ui.util.CoreUtility;
 import org.eclipse.dltk.internal.ui.wizards.NewWizardMessages;
@@ -214,22 +214,22 @@ public abstract class AbstractIncludepathsBlock extends BuildpathsBlock {
 	}
 
 	/**
-	 * Initializes the buildpath for the given project. Multiple calls to init are
-	 * allowed, but all existing settings will be cleared and replace by the given
-	 * or default paths.
+	 * Initializes the buildpath for the given project. Multiple calls to init
+	 * are allowed, but all existing settings will be cleared and replace by the
+	 * given or default paths.
 	 * 
 	 * @param jproject
 	 *            The java project to configure. Does not have to exist.
 	 * @param outputLocation
-	 *            The output location to be set in the page. If <code>null</code> is
-	 *            passed, jdt default settings are used, or - if the project is an
-	 *            existing script project- the output location of the existing
-	 *            project
+	 *            The output location to be set in the page. If
+	 *            <code>null</code> is passed, jdt default settings are used, or
+	 *            - if the project is an existing script project- the output
+	 *            location of the existing project
 	 * @param buildpathEntries
-	 *            The buildpath entries to be set in the page. If <code>null</code>
-	 *            is passed, jdt default settings are used, or - if the project is
-	 *            an existing script project - the buildpath entries of the existing
-	 *            project
+	 *            The buildpath entries to be set in the page. If
+	 *            <code>null</code> is passed, jdt default settings are used, or
+	 *            - if the project is an existing script project - the buildpath
+	 *            entries of the existing project
 	 */
 	@Override
 	public void init(IScriptProject jproject, IBuildpathEntry[] buildpathEntries) {
@@ -337,8 +337,8 @@ public abstract class AbstractIncludepathsBlock extends BuildpathsBlock {
 
 	// -------- public api --------
 	/**
-	 * @return Returns the script project. Can return <code>null<code> if the page
-	 *         has not been initialized.
+	 * @return Returns the script project. Can return <code>null<code> if the
+	 *         page has not been initialized.
 	 */
 	@Override
 	public IScriptProject getScriptProject() {
@@ -346,8 +346,8 @@ public abstract class AbstractIncludepathsBlock extends BuildpathsBlock {
 	}
 
 	/**
-	 * @return Returns the current class path (raw). Note that the entries returned
-	 *         must not be valid.
+	 * @return Returns the current class path (raw). Note that the entries
+	 *         returned must not be valid.
 	 */
 	@Override
 	public IBuildpathEntry[] getRawBuildPath() {
@@ -467,19 +467,19 @@ public abstract class AbstractIncludepathsBlock extends BuildpathsBlock {
 		}
 		if (nEntriesMissing > 0) {
 			if (nEntriesMissing == 1 && entryMissing != null) {
-				fPathStatus.setWarning(Messages.format(NewWizardMessages.BuildPathsBlock_warning_EntryMissing,
+				fPathStatus.setWarning(MessageFormat.format(NewWizardMessages.BuildPathsBlock_warning_EntryMissing,
 						entryMissing.getPath().toString()));
 			} else {
-				fPathStatus.setWarning(Messages.format(NewWizardMessages.BuildPathsBlock_warning_EntriesMissing,
+				fPathStatus.setWarning(MessageFormat.format(NewWizardMessages.BuildPathsBlock_warning_EntriesMissing,
 						String.valueOf(nEntriesMissing)));
 			}
 		}
 		if (nEntriesInvalid > 0) {
 			if (nEntriesInvalid == 1 && entryInvalid != null) {
-				fPathStatus.setError(Messages.format(IncludePathMessages.BuildPathsBlock_warning_EntryInvalid,
+				fPathStatus.setError(MessageFormat.format(IncludePathMessages.BuildPathsBlock_warning_EntryInvalid,
 						entryInvalid.getPath().toString()));
 			} else {
-				fPathStatus.setError(Messages.format(IncludePathMessages.BuildPathsBlock_warning_EntriesInvalid,
+				fPathStatus.setError(MessageFormat.format(IncludePathMessages.BuildPathsBlock_warning_EntriesInvalid,
 						String.valueOf(nEntriesInvalid)));
 			}
 		}

@@ -26,7 +26,6 @@ import org.eclipse.dltk.internal.corext.refactoring.reorg.IConfirmQuery;
 import org.eclipse.dltk.internal.corext.refactoring.reorg.IReorgQueries;
 import org.eclipse.dltk.internal.corext.refactoring.reorg.ReorgUtils;
 import org.eclipse.dltk.internal.corext.refactoring.util.ResourceUtil;
-import org.eclipse.dltk.internal.corext.util.Messages;
 
 class OverwriteHelper {
 	private Object fDestination;
