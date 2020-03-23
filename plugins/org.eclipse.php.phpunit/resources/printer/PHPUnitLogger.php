@@ -25,9 +25,9 @@ if (class_exists('PHPUnit_Util_Printer')) {
     class_alias('PHPUnit_Framework_Error_Warning', 'Error_Warning');
     class_alias('PHPUnit_Framework_Error_Notice', 'Error_Notice');
     class_alias('PHPUnit_Framework_Error_Deprecated', 'Error_Deprecated');
-    list($version) = explode('.', PHPUnit_Runner_Version::id());
+    list ($version) = explode('.', PHPUnit_Runner_Version::id());
 
-    define('_RUNNER_VERSION', (int)$version);
+    define('_RUNNER_VERSION', (int) $version);
 } else {
     class_alias('PHPUnit\Util\Printer', 'Printer');
     class_alias('PHPUnit\Framework\TestListener', 'TestListener');
@@ -42,18 +42,18 @@ if (class_exists('PHPUnit_Util_Printer')) {
     class_alias('PHPUnit\Framework\Error\Warning', 'Error_Warning');
     class_alias('PHPUnit\Framework\Error\Notice', 'Error_Notice');
     class_alias('PHPUnit\Framework\Error\Deprecated', 'Error_Deprecated');
-    list($version) = explode('.', PHPUnit\Runner\Version::id());
+    list ($version) = explode('.', PHPUnit\Runner\Version::id());
 
-    define('_RUNNER_VERSION', (int)$version);
+    define('_RUNNER_VERSION', (int) $version);
 }
 if (class_exists('PHP_Timer')) {
     class_alias('PHP_Timer', 'Timer');
 } elseif (class_exists('SebastianBergmann\Timer\Timer')) {
     class_alias('SebastianBergmann\Timer\Timer', 'Timer');
-} elseif(class_exists('PHPUnit\SebastianBergmann\Timer\Timer')) {
+} elseif (class_exists('PHPUnit\SebastianBergmann\Timer\Timer')) {
     class_alias('PHPUnit\SebastianBergmann\Timer\Timer', 'Timer');
 }
-if (_RUNNER_VERSION  >= 9) {
+if (_RUNNER_VERSION >= 9) {
     $logger = <<<'LOGGER'
     class PHPUnitLogger extends \PHPUnit\TextUI\DefaultResultPrinter implements TestListener, \PHPUnit\TextUI\ResultPrinter
     {
@@ -207,7 +207,7 @@ if (_RUNNER_VERSION  >= 9) {
         }
     }
 LOGGER;
-} elseif (_RUNNER_VERSION  >= 7) {
+} elseif (_RUNNER_VERSION >= 7) {
     $logger = <<<'LOGGER'
     class PHPUnitLogger extends TextPrinter implements TestListener
     {
@@ -576,6 +576,7 @@ LOGGER;
 }
 // eval is evil but we need it to avoid syntax errors
 eval($logger);
+
 class PHPUnitEclipseLogger
 {
 
@@ -609,7 +610,7 @@ class PHPUnitEclipseLogger
 
     public function startTest(Test $test)
     {
-        ZendPHPUnitErrorHandlerTracer::getInstance()->start();
+        ZendPHPUnitErrorHandlerTracer::getInstance()->start($test);
         $this->cleanTest();
         $this->writeTest($test, 'start', true);
     }
@@ -660,8 +661,7 @@ class PHPUnitEclipseLogger
     {}
 
     public function flush()
-    {
-    }
+    {}
 
     public function getWrappedTrace($e)
     {
@@ -806,10 +806,9 @@ class PHPUnitEclipseLogger
             if ($this->exception instanceof ExpectationFailedException) {
                 if (method_exists($this->exception, "getDescription")) {
                     $message = $this->exception->getDescription();
-                } else
-                    if (method_exists($this->exception, "getMessage")) { // PHPUnit 3.6.3
-                        $message = $this->exception->getMessage();
-                    }
+                } else if (method_exists($this->exception, "getMessage")) { // PHPUnit 3.6.3
+                    $message = $this->exception->getMessage();
+                }
                 if (method_exists($this->exception, "getComparisonFailure") && method_exists($this->exception->getComparisonFailure(), "getDiff")) {
                     $diff = $this->exception->getComparisonFailure()->getDiff();
                 }
@@ -950,10 +949,10 @@ class ZendPHPUnitErrorHandlerTracer extends ZendPHPUnitErrorHandler
         return $return;
     }
 
-    public function start()
+    public function start(Test $test)
     {
         $this->warnings = array();
-        parent::start();
+        parent::start($test);
     }
 
     public function stop()
@@ -969,6 +968,16 @@ class ZendPHPUnitErrorHandler
 {
 
     private static $ZendPHPUnitErrorHandler;
+
+    private $convertErrors = false;
+
+    private $convertNotices = false;
+
+    private $convertDeprecations = false;
+
+    private $convertWarnings = false;
+
+    private $test;
 
     /**
      *
@@ -987,46 +996,61 @@ class ZendPHPUnitErrorHandler
         if (! ($errno & error_reporting())) {
             return false;
         }
-
         // handle errors same as PHPUnit_Util_ErrorHandler
         if ($errfile === __FILE__ || (stripos($errfile, dirname(dirname(__FILE__))) === 0 && $errno !== E_USER_NOTICE)) {
             return true;
         } elseif ($errno === E_NOTICE || $errno === E_USER_NOTICE || $errno === E_STRICT) {
-            if (Error_Notice::$enabled !== true) {
+            if (! $this->convertNotices) {
                 return false;
             }
             $exception = 'Error_Notice';
-        } elseif ($errno == E_WARNING) {
-            if (Error_Warning::$enabled !== TRUE) {
+        } elseif ($errno == E_WARNING || $errno == E_USER_WARNING) {
+            if (! $this->convertWarnings) {
                 return FALSE;
             }
 
             $exception = 'Error_Warning';
         } elseif ($errno == E_NOTICE) {
-            //trigger_error($errstr, E_USER_NOTICE);
             return FALSE;
         } elseif ($errno === E_DEPRECATED || $errno === E_USER_DEPRECATED) {
-            if (Error_Deprecated::$enabled !== true) {
+            if (! $this->convertDeprecations) {
                 return false;
             }
             $exception = 'Error_Deprecated';
         } else {
+            if (! $this->convertErrors) {
+                return false;
+            }
             $exception = 'Error_Error';
         }
 
-        throw new $exception($errstr, $errno, $errfile, $errline, $trace = null);
+        throw new $exception($errstr, $errno, $errfile, $errline);
     }
 
-    public function start()
+    public function start(Test $test)
     {
+        $this->test = $test;
         set_error_handler(array(
             &$this,
             'handle'
         ));
+        $ref = new ReflectionClass('Error_Notice');
+        if ($ref->hasProperty('enabled')) {
+            $this->convertErrors = true;
+            $this->convertWarnings = Error_Warning::$enabled === true;
+            $this->convertNotices = Error_Notice::$enabled === true;
+            $this->convertDeprecations = Error_Deprecated::$enabled === true;
+        } elseif ($test->getTestResultObject() != null) {
+            $this->convertErrors = $test->getTestResultObject()->getConvertErrorsToExceptions();
+            $this->convertWarnings = $test->getTestResultObject()->getConvertWarningsToExceptions();
+            $this->convertNotices = $test->getTestResultObject()->getConvertNoticesToExceptions();
+            $this->convertDeprecations = $test->getTestResultObject()->getConvertDeprecationsToExceptions();
+        }
     }
 
     public function stop()
     {
+        $this->test = null;
         restore_error_handler();
     }
 }
@@ -1038,7 +1062,6 @@ class ZendPHPUnitUserErrorException extends Exception
 function filterTrace($trace)
 {
     $filteredTrace = array();
-
 
     $blacklist = null;
     if (class_exists('Blacklist')) {
@@ -1056,7 +1079,7 @@ function filterTrace($trace)
                     $class = new ReflectionClass($frame['class']);
                     $frame['file'] = $class->getFileName();
                     $method = $class->getMethod($frame['function']);
-                    if (!isset($frame['line'])){
+                    if (! isset($frame['line'])) {
                         $frame['line'] = $method->getStartLine();
                     }
                 } catch (ReflectionException $re) {
