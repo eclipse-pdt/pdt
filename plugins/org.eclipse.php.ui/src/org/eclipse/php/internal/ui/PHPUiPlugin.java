@@ -55,7 +55,6 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.preferences.ScopedPreferenceStore;
 import org.eclipse.ui.texteditor.ConfigurationElementSorter;
 import org.eclipse.wst.html.core.text.IHTMLPartitions;
-import org.eclipse.wst.jsdt.core.ITypeRoot;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredPartitioning;
 import org.osgi.framework.BundleContext;
 
@@ -182,11 +181,11 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 	}
 
 	/**
-	 * Returns an image descriptor for the image file at the given plug-in relative
-	 * path.
+	 * Returns an image descriptor for the image file at the given plug-in
+	 * relative path.
 	 * 
 	 * @param path
-	 *                 the path
+	 *            the path
 	 * @return the image descriptor
 	 */
 	public static ImageDescriptor getImageDescriptor(String path) {
@@ -363,9 +362,11 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 
 	/**
 	 * Returns the registry of the extensions to the
-	 * <code>org.eclipse.php.ui.phpFoldingStructureProvider</code> extension point.
+	 * <code>org.eclipse.php.ui.phpFoldingStructureProvider</code> extension
+	 * point.
 	 * 
-	 * @return the registry of contributed <code>IPHPFoldingStructureProvider</code>
+	 * @return the registry of contributed
+	 *         <code>IPHPFoldingStructureProvider</code>
 	 * @since 3.1
 	 */
 	public synchronized PHPFoldingStructureProviderRegistry getFoldingStructureProviderRegistry() {
@@ -416,8 +417,8 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 	/**
 	 * Resets the PHP editor text hovers contributed to the workbench.
 	 * <p>
-	 * This will force a rebuild of the descriptors the next time a client asks for
-	 * them.
+	 * This will force a rebuild of the descriptors the next time a client asks
+	 * for them.
 	 * </p>
 	 * 
 	 * @since 2.1
@@ -479,12 +480,13 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 	}
 
 	/**
-	 * Returns the {@link ITypeRoot} wrapped by the given editor input.
+	 * Returns the {@link ISourceModule} wrapped by the given editor input.
 	 * 
 	 * @param editorInput
-	 *                        the editor input
-	 * @return the {@link ITypeRoot} wrapped by <code>editorInput</code> or
-	 *         <code>null</code> if the editor input does not stand for a ITypeRoot
+	 *            the editor input
+	 * @return the {@link ISourceModule} wrapped by <code>editorInput</code> or
+	 *         <code>null</code> if the editor input does not stand for a
+	 *         ITypeRoot
 	 * 
 	 * @since 3.4
 	 */
@@ -509,8 +511,8 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 	}
 
 	/**
-	 * Returns the current active formatter. In case of a PHP formatter it should
-	 * also implement IFormatterProcessorFactory.
+	 * Returns the current active formatter. In case of a PHP formatter it
+	 * should also implement IFormatterProcessorFactory.
 	 * 
 	 * @return
 	 */
@@ -534,7 +536,8 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 	}
 
 	/**
-	 * Returns the image registry that keeps its images on the local file system.
+	 * Returns the image registry that keeps its images on the local file
+	 * system.
 	 * 
 	 * @return the image registry
 	 */
