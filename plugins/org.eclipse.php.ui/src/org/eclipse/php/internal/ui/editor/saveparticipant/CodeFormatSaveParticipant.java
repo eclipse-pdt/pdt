@@ -36,7 +36,6 @@ import org.eclipse.php.internal.core.preferences.PreferencesSupport;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 import org.eclipse.text.edits.MultiTextEdit;
-import org.eclipse.wst.jsdt.internal.ui.javaeditor.saveparticipant.SaveParticipantDescriptor;
 
 public class CodeFormatSaveParticipant implements IPostSaveListener {
 
@@ -54,8 +53,6 @@ public class CodeFormatSaveParticipant implements IPostSaveListener {
 
 	/**
 	 * Preference prefix that is appended to the id of
-	 * {@link SaveParticipantDescriptor save participants}.
-	 * 
 	 * <p>
 	 * Value is of type <code>Boolean</code>.
 	 * </p>

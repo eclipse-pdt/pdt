@@ -58,7 +58,10 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.*;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Link;
 import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.WorkspaceModifyDelegatingOperation;
@@ -97,7 +100,6 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 	private NameGroup fNameGroup;
 	private DetectGroup fDetectGroup;
 	private VersionGroup fVersionGroup;
-	private JavaScriptSupportGroup fJavaScriptSupportGroup;
 	private LayoutGroup fLayoutGroup;
 	private LocationGroup fPHPLocationGroup;
 	private WorkingSetGroup fWorkingSetGroup;
@@ -136,7 +138,6 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 			}
 		};
 		fLayoutGroup = new LayoutGroup(composite);
-		fJavaScriptSupportGroup = new JavaScriptSupportGroup(composite, this);
 
 		createWorkingSetGroup(composite, ((PHPProjectCreationWizard) getWizard()).getSelection(),
 				new String[] { IWorkingSetIds.PHP_ID, IWorkingSetIds.RESOURCE_ID, IWorkingSetIds.TASK_ID });
@@ -360,54 +361,6 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 		}
 
 		return file.canWrite();
-	}
-
-	/**
-	 * GUI for controlling whether a new PHP project should include JavaScript
-	 * support or not
-	 * 
-	 * @author alon
-	 * 
-	 */
-	public class JavaScriptSupportGroup implements SelectionListener {
-
-		private final Group fGroup;
-		protected Button fEnableJavaScriptSupport;
-
-		public boolean shouldSupportJavaScript() {
-			return PHPUiPlugin.getDefault().getPreferenceStore()
-					.getBoolean((PreferenceConstants.JavaScriptSupportEnable));
-		}
-
-		public JavaScriptSupportGroup(Composite composite, WizardPage projectWizardFirstPage) {
-			final int numColumns = 3;
-			fGroup = new Group(composite, SWT.NONE);
-			fGroup.setFont(composite.getFont());
-
-			fGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-			fGroup.setLayout(new GridLayout(numColumns, false));
-			fGroup.setText(PHPUIMessages.JavaScriptSupportGroup_OptionBlockTitle);
-
-			fEnableJavaScriptSupport = new Button(fGroup, SWT.CHECK | SWT.RIGHT);
-			fEnableJavaScriptSupport.setText(PHPUIMessages.JavaScriptSupportGroup_EnableSupport);
-			fEnableJavaScriptSupport.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false));
-			fEnableJavaScriptSupport.addSelectionListener(this);
-			fEnableJavaScriptSupport.setSelection(PHPUiPlugin.getDefault().getPreferenceStore()
-					.getBoolean((PreferenceConstants.JavaScriptSupportEnable)));
-		}
-
-		@Override
-		public void widgetDefaultSelected(SelectionEvent e) {
-		}
-
-		@Override
-		public void widgetSelected(SelectionEvent e) {
-		}
-
-		public boolean getSelection() {
-			return fEnableJavaScriptSupport.getSelection();
-		}
-
 	}
 
 	/**
@@ -906,18 +859,11 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 
 	public void performFinish(IProgressMonitor monitor) {
 		Display.getDefault().asyncExec(() -> {
-			PHPUiPlugin.getDefault().getPreferenceStore().setValue((PreferenceConstants.JavaScriptSupportEnable),
-					fJavaScriptSupportGroup.getSelection());
 			IWorkingSet[] workingSets = fWorkingSetGroup.getSelectedWorkingSets();
 			((NewElementWizard) getWizard()).getWorkbench().getWorkingSetManager().addToWorkingSets(getProjectHandle(),
 					workingSets);
 
 		});
-	}
-
-	public boolean shouldSupportJavaScript() {
-
-		return fJavaScriptSupportGroup != null && fJavaScriptSupportGroup.shouldSupportJavaScript();
 	}
 
 	public boolean isDefaultVersionSelected() {
@@ -941,10 +887,6 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 
 	protected VersionGroup getVersionGroup() {
 		return fVersionGroup;
-	}
-
-	protected JavaScriptSupportGroup getJavaScriptSupportGroup() {
-		return fJavaScriptSupportGroup;
 	}
 
 }
