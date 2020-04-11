@@ -29,6 +29,7 @@ import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ModelException;
+import org.eclipse.dltk.internal.core.ModelManager;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.codeassist.CompletionCompanion;
@@ -161,6 +162,7 @@ public class CodeAssistScopeTests {
 	@BeforeList
 	public void setUpSuite() throws Exception {
 		TestUtils.disableColliders(ColliderType.ALL);
+		ModelManager.getModelManager().getIndexManager().disable();
 		project = TestUtils.createProject("CodeAssistScopeTests_" + version.toString());
 		ProjectOptions.setPHPVersion(version, project);
 	}
@@ -169,6 +171,7 @@ public class CodeAssistScopeTests {
 	public void tearDownSuite() throws Exception {
 		TestUtils.deleteProject(project);
 		TestUtils.enableColliders(ColliderType.ALL);
+		ModelManager.getModelManager().getIndexManager().enable();
 	}
 
 	@Test

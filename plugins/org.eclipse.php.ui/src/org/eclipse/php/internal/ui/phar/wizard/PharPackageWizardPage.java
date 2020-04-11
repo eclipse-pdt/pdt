@@ -29,6 +29,7 @@ import org.eclipse.dltk.internal.ui.navigator.ScriptExplorerContentProvider;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.dltk.ui.ModelElementSorter;
 import org.eclipse.dltk.ui.PreferenceConstants;
+import org.eclipse.dltk.ui.ProblemsLabelDecorator;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.IMessageProvider;
@@ -57,7 +58,6 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.ElementTreeSelectionDialog;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import org.eclipse.ui.dialogs.WizardExportResourcesPage;
-import org.eclipse.wst.jsdt.ui.ProblemsLabelDecorator;
 
 public class PharPackageWizardPage extends WizardExportResourcesPage implements IPharWizardPage {
 
@@ -704,8 +704,8 @@ public class PharPackageWizardPage extends WizardExportResourcesPage implements 
 	}
 
 	/**
-	 * Open an appropriate destination browser so that the user can specify a source
-	 * to import from
+	 * Open an appropriate destination browser so that the user can specify a
+	 * source to import from
 	 */
 	protected void handleDestinationBrowseButtonPressed() {
 		FileDialog dialog = new FileDialog(getContainer().getShell(), SWT.SAVE);
@@ -810,8 +810,8 @@ public class PharPackageWizardPage extends WizardExportResourcesPage implements 
 	}
 
 	/**
-	 * Answer the contents of the destination specification widget. If this value
-	 * does not have the required suffix then add it first.
+	 * Answer the contents of the destination specification widget. If this
+	 * value does not have the required suffix then add it first.
 	 * 
 	 * @return java.lang.String
 	 */
@@ -952,8 +952,8 @@ public class PharPackageWizardPage extends WizardExportResourcesPage implements 
 	}
 
 	/**
-	 * Returns a boolean indicating whether the passed File handle is is valid and
-	 * available for use.
+	 * Returns a boolean indicating whether the passed File handle is is valid
+	 * and available for use.
 	 * 
 	 * @param targetFile
 	 *            the target
@@ -1036,8 +1036,8 @@ public class PharPackageWizardPage extends WizardExportResourcesPage implements 
 	}
 
 	/**
-	 * Computes and returns the elements as resources. The underlying resource is
-	 * used for Java elements.
+	 * Computes and returns the elements as resources. The underlying resource
+	 * is used for Java elements.
 	 * 
 	 * @param elements
 	 *            elements for which to retrieve the resources from
@@ -1201,8 +1201,8 @@ public class PharPackageWizardPage extends WizardExportResourcesPage implements 
 	}
 
 	/**
-	 * Answer a boolean indicating whether the passed child is a descendent of one
-	 * or more members of the passed resources collection
+	 * Answer a boolean indicating whether the passed child is a descendent of
+	 * one or more members of the passed resources collection
 	 * 
 	 * @return boolean
 	 * @param resources

@@ -55,7 +55,6 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.texteditor.ITextEditor;
-import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.web.ui.SetupProjectsWizzard;
 import org.eclipse.wst.sse.core.internal.parser.ForeignRegion;
 import org.eclipse.wst.sse.core.internal.provisional.events.RegionChangedEvent;
@@ -79,8 +78,8 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 	public static final int SHOW_OUTLINE = 51;
 
 	/**
-	 * Text operation code for requesting the outline for the element at the current
-	 * position.
+	 * Text operation code for requesting the outline for the element at the
+	 * current position.
 	 */
 	public static final int OPEN_STRUCTURE = 52;
 
@@ -88,6 +87,8 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 	 * Text operation code for requesting the hierarchy for the current input.
 	 */
 	public static final int SHOW_HIERARCHY = 53;
+
+	private static final String JS_NATURE = "org.eclipse.wst.jsdt.core.jsNature"; //$NON-NLS-1$ ;
 
 	private static final String FORMAT_DOCUMENT_TEXT = SSEUIMessages.Format_Document_UI_;
 
@@ -118,9 +119,9 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 	}
 
 	/**
-	 * This method overrides WST since sometimes we get a subset of the document and
-	 * NOT the whole document, although the case is FORMAT_DOCUMENT. In all other
-	 * cases we call the parent method.
+	 * This method overrides WST since sometimes we get a subset of the document
+	 * and NOT the whole document, although the case is FORMAT_DOCUMENT. In all
+	 * other cases we call the parent method.
 	 */
 	@Override
 	public void doOperation(int operation) {
@@ -202,8 +203,7 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 						if (modelElement != null) {
 							IScriptProject scriptProject = modelElement.getScriptProject();
 							project = scriptProject.getProject();
-							if (project != null && project.isAccessible()
-									&& project.getNature(JavaScriptCore.NATURE_ID) == null) {
+							if (project != null && project.isAccessible() && project.getNature(JS_NATURE) == null) {
 								hasJavaScriptNature = false;
 							}
 						}
@@ -211,20 +211,26 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 
 					// open dialog if required
 					if (isJavaScriptRegion && !hasJavaScriptNature) {
-						Shell activeWorkbenchShell = PHPUiPlugin.getActiveWorkbenchShell();
-						// Pop a question dialog - if the user selects 'Yes' JS
-						// Support is added, otherwise no change
-						int addJavaScriptSupport = OptionalMessageDialog.open("PROMPT_ADD_JAVASCRIPT_SUPPORT", //$NON-NLS-1$
-								activeWorkbenchShell, PHPUIMessages.PHPStructuredTextViewer_0, null,
-								PHPUIMessages.PHPStructuredTextViewer_1, OptionalMessageDialog.QUESTION,
-								new String[] { IDialogConstants.YES_LABEL, IDialogConstants.NO_LABEL }, 0);
-
-						// run the JSDT action for adding the JS nature
-						if (addJavaScriptSupport == 0 && project != null) {
+						try {
 							SetupProjectsWizzard wiz = new SetupProjectsWizzard();
-							wiz.setActivePart(null, this.getTextEditor());
-							wiz.selectionChanged(null, new StructuredSelection(project));
-							wiz.run(null);
+							Shell activeWorkbenchShell = PHPUiPlugin.getActiveWorkbenchShell();
+							// Pop a question dialog - if the user selects 'Yes'
+							// JS
+							// Support is added, otherwise no change
+							int addJavaScriptSupport = OptionalMessageDialog.open("PROMPT_ADD_JAVASCRIPT_SUPPORT", //$NON-NLS-1$
+									activeWorkbenchShell, PHPUIMessages.PHPStructuredTextViewer_0, null,
+									PHPUIMessages.PHPStructuredTextViewer_1, OptionalMessageDialog.QUESTION,
+									new String[] { IDialogConstants.YES_LABEL, IDialogConstants.NO_LABEL }, 0);
+
+							// run the JSDT action for adding the JS nature
+							if (addJavaScriptSupport == 0 && project != null) {
+
+								wiz.setActivePart(null, this.getTextEditor());
+								wiz.selectionChanged(null, new StructuredSelection(project));
+								wiz.run(null);
+							}
+						} catch (NoClassDefFoundError e) {
+
 						}
 					}
 				} catch (CoreException e) {
@@ -299,11 +305,11 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 	 * Deletes the selection and sets the caret before the deleted range.
 	 * 
 	 * @param selection
-	 *                       the selection to delete
+	 *            the selection to delete
 	 * @param textWidget
-	 *                       the widget
+	 *            the widget
 	 * @throws BadLocationException
-	 *                                  on document access failure
+	 *             on document access failure
 	 * @since 3.5
 	 */
 	private void deleteSelection(ITextSelection selection, StyledText textWidget) throws BadLocationException {
@@ -313,7 +319,8 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.wst.sse.ui.internal.StructuredTextViewer#canDoOperation(int)
+	 * @see
+	 * org.eclipse.wst.sse.ui.internal.StructuredTextViewer#canDoOperation(int)
 	 */
 	@Override
 	public boolean canDoOperation(int operation) {
@@ -363,9 +370,9 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 	 * 
 	 * @see org.eclipse.jface.text.source.projection.ProjectionViewer#addVerticalRulerColumn(org.eclipse.jface.text.source.IVerticalRulerColumn)
 	 * 
-	 *      This method is only called to add Projection ruler column. It's actually
-	 *      a hack to override Projection presentation (information control) in
-	 *      order to enable syntax highlighting
+	 *      This method is only called to add Projection ruler column. It's
+	 *      actually a hack to override Projection presentation (information
+	 *      control) in order to enable syntax highlighting
 	 */
 	@Override
 	public void addVerticalRulerColumn(IVerticalRulerColumn column) {
@@ -408,8 +415,8 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 	}
 
 	/**
-	 * We override this function in order to use content assist for php and not use
-	 * the default one dictated by StructuredTextViewerConfiguration
+	 * We override this function in order to use content assist for php and not
+	 * use the default one dictated by StructuredTextViewerConfiguration
 	 */
 	@Override
 	public void configure(SourceViewerConfiguration configuration) {
@@ -536,12 +543,13 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 	}
 
 	/**
-	 * Prepends the text presentation listener at the beginning of the viewer's list
-	 * of text presentation listeners. If the listener is already registered with
-	 * the viewer this call moves the listener to the beginning of the list.
+	 * Prepends the text presentation listener at the beginning of the viewer's
+	 * list of text presentation listeners. If the listener is already
+	 * registered with the viewer this call moves the listener to the beginning
+	 * of the list.
 	 * 
 	 * @param listener
-	 *                     the text presentation listener
+	 *            the text presentation listener
 	 * @since 3.0
 	 */
 	@Override
@@ -559,15 +567,13 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 
 	/**
 	 * Sends out a text selection changed event to all registered listeners and
-	 * registers the selection changed event to be sent out to all post selection
-	 * listeners.
+	 * registers the selection changed event to be sent out to all post
+	 * selection listeners.
 	 * 
 	 * @param offset
-	 *                   the offset of the newly selected range in the visible
-	 *                   document
+	 *            the offset of the newly selected range in the visible document
 	 * @param length
-	 *                   the length of the newly selected range in the visible
-	 *                   document
+	 *            the length of the newly selected range in the visible document
 	 */
 	@Override
 	protected void selectionChanged(int offset, int length) {
