@@ -211,26 +211,27 @@ public class CodeAssistTests {
 	private int createFiles(PdttFile pdttFile) throws Exception {
 		final String cursor = getCursor(pdttFile) != null ? getCursor(pdttFile) : DEFAULT_CURSOR;
 		String data = pdttFile.getFile();
-		String[] otherFiles = pdttFile.getOtherFiles();
+		String[] otherFilesArr = pdttFile.getOtherFiles();
 		int offset = data.lastIndexOf(cursor);
 		if (offset == -1) {
 			throw new IllegalArgumentException("Offset character is not set");
 		}
 		// Replace the offset character
-		data = data.substring(0, offset) + data.substring(offset + 1);
-		String fileName = Paths.get(pdttFile.getFileName()).getFileName().toString();
-		fileName = fileName.substring(0, fileName.indexOf('.'));
-		testFile = TestUtils.createFile(project, fileName + ".php", data);
-		TestUtils.indexFile(testFile);
+		String fileContent = data.substring(0, offset) + data.substring(offset + 1);
+		String fileNameBase = Paths.get(pdttFile.getFileName()).getFileName().toString();
+		String fileName = fileNameBase.substring(0, fileNameBase.indexOf('.'));
 
-		this.otherFiles = new ArrayList<>(otherFiles.length);
+		testFile = TestUtils.createFile(project, fileName + ".php", fileContent);
+		TestUtils.indexFile(testFile);
+		otherFiles = new ArrayList<>(otherFilesArr.length);
 		int i = 0;
-		for (String otherFileContent : otherFiles) {
+		for (String otherFileContent : otherFilesArr) {
 			IFile tmp = TestUtils.createFile(project, String.format("test%s.php", i), otherFileContent);
-			this.otherFiles.add(i, tmp);
-			TestUtils.indexFile(tmp);
+			TestUtils.indexFile(testFile);
+			otherFiles.add(i, tmp);
 			i++;
 		}
+
 		TestUtils.waitForIndexer();
 		return offset;
 	}
