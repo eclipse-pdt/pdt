@@ -44,7 +44,6 @@ import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.preferences.OverlayPreferenceStore;
-import org.eclipse.wst.sse.ui.internal.projection.AbstractStructuredFoldingStrategy;
 
 /**
  * Configures PHP Editor folding preferences.
@@ -61,7 +60,8 @@ class FoldingConfigurationBlock implements IPreferenceConfigurationBlock {
 		}
 
 		/*
-		 * @see org.eclipse.jdt.internal.ui.text.folding.IJavaFoldingPreferences#
+		 * @see
+		 * org.eclipse.jdt.internal.ui.text.folding.IJavaFoldingPreferences#
 		 * createControl(org.eclipse.swt.widgets.Group)
 		 */
 		@Override
@@ -236,15 +236,17 @@ class FoldingConfigurationBlock implements IPreferenceConfigurationBlock {
 			}
 
 			/*
-			 * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org. eclipse
-			 * .jface.viewers.Viewer, java.lang.Object, java.lang.Object)
+			 * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.
+			 * eclipse .jface.viewers.Viewer, java.lang.Object,
+			 * java.lang.Object)
 			 */
 			@Override
 			public void inputChanged(Viewer v, Object oldInput, Object newInput) {
 			}
 
 			/*
-			 * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements
+			 * @see
+			 * org.eclipse.jface.viewers.IStructuredContentProvider#getElements
 			 * (java.lang.Object)
 			 */
 			@Override
@@ -254,7 +256,9 @@ class FoldingConfigurationBlock implements IPreferenceConfigurationBlock {
 		});
 		viewer.setLabelProvider(new LabelProvider() {
 			/*
-			 * @see org.eclipse.jface.viewers.LabelProvider#getImage(java.lang.Object )
+			 * @see
+			 * org.eclipse.jface.viewers.LabelProvider#getImage(java.lang.Object
+			 * )
 			 */
 			@Override
 			public Image getImage(Object element) {
@@ -262,7 +266,8 @@ class FoldingConfigurationBlock implements IPreferenceConfigurationBlock {
 			}
 
 			/*
-			 * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
+			 * @see
+			 * org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
 			 */
 			@Override
 			public String getText(Object element) {
@@ -343,7 +348,7 @@ class FoldingConfigurationBlock implements IPreferenceConfigurationBlock {
 		// TODO - Might need a fix after the WST will support code folding
 		// officially.
 		boolean foldingEnabled = fStore.getBoolean(PreferenceConstants.EDITOR_FOLDING_ENABLED);
-		SSEUIPlugin.getDefault().getPreferenceStore().setValue(AbstractStructuredFoldingStrategy.FOLDING_ENABLED,
+		SSEUIPlugin.getDefault().getPreferenceStore().setValue(PreferenceConstants.EDITOR_FOLDING_ENABLED,
 				foldingEnabled);
 	}
 

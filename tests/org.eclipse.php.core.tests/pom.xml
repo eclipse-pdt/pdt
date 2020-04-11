@@ -24,7 +24,7 @@
 				<version>${tycho-version}</version>
 				<configuration>
 					<testClass>org.eclipse.php.core.tests.AllTests</testClass>
-					<argLine>${tycho.testArgLine}</argLine>
+					<argLine>-Xms256m -Xmx512m ${test.vmargs} ${tycho.testArgLine}</argLine>
 					<dependencies>
 						<dependency>
 							<type>p2-installable-unit</type>
@@ -32,6 +32,8 @@
 						</dependency>
 					</dependencies>
 					<testFailureIgnore>false</testFailureIgnore>
+					<useUIHarness>false</useUIHarness>
+					<useUIThread>false</useUIThread>
 				</configuration>
 			</plugin>
 		</plugins>

@@ -14,6 +14,7 @@
 package org.eclipse.php.internal.ui.editor;
 
 import java.io.IOException;
+import java.text.BreakIterator;
 import java.text.CharacterIterator;
 import java.util.*;
 
@@ -117,8 +118,6 @@ import org.eclipse.wst.sse.ui.internal.contentoutline.ConfigurableContentOutline
 import org.eclipse.wst.sse.ui.internal.projection.AbstractStructuredFoldingStrategy;
 import org.eclipse.wst.sse.ui.internal.reconcile.ReconcileAnnotationKey;
 import org.eclipse.wst.sse.ui.internal.reconcile.TemporaryAnnotation;
-
-import java.text.BreakIterator;
 
 public class PHPStructuredEditor extends StructuredTextEditor {
 
@@ -1045,7 +1044,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		 */
 		boolean foldingEnabled = PHPUiPlugin.getDefault().getPreferenceStore()
 				.getBoolean(PreferenceConstants.EDITOR_FOLDING_ENABLED);
-		SSEUIPlugin.getDefault().getPreferenceStore().setValue(AbstractStructuredFoldingStrategy.FOLDING_ENABLED,
+		SSEUIPlugin.getDefault().getPreferenceStore().setValue(PreferenceConstants.EDITOR_FOLDING_ENABLED,
 				foldingEnabled);
 		setDocumentProvider(DLTKUIPlugin.getDocumentProvider());
 		fPHPEditorErrorTickUpdater = new PHPEditorErrorTickUpdater(this);
