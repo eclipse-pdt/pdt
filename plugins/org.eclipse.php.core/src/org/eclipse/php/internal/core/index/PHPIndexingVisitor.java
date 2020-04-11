@@ -72,20 +72,20 @@ public class PHPIndexingVisitor extends PHPIndexingVisitorExtension {
 	public static final String EMPTY_ARRAY_VALUE = "[]"; //$NON-NLS-1$
 	public static final String ARRAY_VALUE = "[...]"; //$NON-NLS-1$
 	/**
-	 * This should replace the need for fInClass, fInMethod and fCurrentMethod since
-	 * in php the type declarations can be nested.
+	 * This should replace the need for fInClass, fInMethod and fCurrentMethod
+	 * since in php the type declarations can be nested.
 	 */
 	protected Stack<Declaration> declarations = new Stack<>();
 
 	/**
-	 * Deferred elements that where declared in method/function but should belong to
-	 * the global scope.
+	 * Deferred elements that where declared in method/function but should
+	 * belong to the global scope.
 	 */
 	protected List<ASTNode> deferredDeclarations = new LinkedList<>();
 
 	/**
-	 * Deferred elements that where declared in method/function but should belong to
-	 * the namespaced scope.
+	 * Deferred elements that where declared in method/function but should
+	 * belong to the namespaced scope.
 	 */
 	protected List<ASTNode> deferredNamespacedDeclarations = new LinkedList<>();
 
@@ -96,9 +96,9 @@ public class PHPIndexingVisitor extends PHPIndexingVisitorExtension {
 	protected Stack<Set<String>> methodGlobalVars = new Stack<>();
 
 	/**
-	 * This set contains all variable names having global scope. NB: this set has
-	 * nothing to do with stack "methodGlobalVars" which only stores variable names
-	 * declared through 'global' keyword.
+	 * This set contains all variable names having global scope. NB: this set
+	 * has nothing to do with stack "methodGlobalVars" which only stores
+	 * variable names declared through 'global' keyword.
 	 */
 	protected Set<String> globalScopeVars = new HashSet<>();
 
@@ -164,7 +164,6 @@ public class PHPIndexingVisitor extends PHPIndexingVisitorExtension {
 				}
 			}
 		}
-
 		requestor.addDeclaration(info);
 	}
 
@@ -204,8 +203,8 @@ public class PHPIndexingVisitor extends PHPIndexingVisitorExtension {
 	 * 
 	 * @param declaration
 	 *            Declaration ASTNode
-	 * @return decoded PHPDoc info, or <code>null</code> if there's no PHPDoc info
-	 *         to store.
+	 * @return decoded PHPDoc info, or <code>null</code> if there's no PHPDoc
+	 *         info to store.
 	 */
 	protected static String encodeDocInfo(Declaration declaration) {
 		if (declaration instanceof IPHPDocAwareDeclaration) {

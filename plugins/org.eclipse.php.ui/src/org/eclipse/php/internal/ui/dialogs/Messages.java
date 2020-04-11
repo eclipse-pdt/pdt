@@ -42,6 +42,7 @@ public class Messages extends NLS {
 	public static String OverrideMethodDialog_9;
 	public static String OverrideMethodDialog_filter_description;
 	public static String OverrideMethodDialog_searchtext_message;
+	public static String MultiElementListSelectionDialog_pageInfoMessage;
 
 	static {
 		// initialize resource bundle

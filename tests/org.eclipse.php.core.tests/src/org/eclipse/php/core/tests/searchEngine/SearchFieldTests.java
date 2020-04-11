@@ -22,7 +22,6 @@ import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IModelElement;
@@ -34,13 +33,14 @@ import org.eclipse.dltk.core.index2.search.ISearchRequestor;
 import org.eclipse.dltk.core.index2.search.ModelAccess;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.core.search.SearchEngine;
+import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.tests.PdttFile;
 import org.eclipse.php.core.tests.TestUtils;
+import org.eclipse.php.core.tests.TestUtils.ColliderType;
 import org.eclipse.php.core.tests.runner.PDTTList;
 import org.eclipse.php.core.tests.runner.PDTTList.AfterList;
 import org.eclipse.php.core.tests.runner.PDTTList.BeforeList;
 import org.eclipse.php.core.tests.runner.PDTTList.Parameters;
-import org.eclipse.php.core.PHPVersion;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -69,14 +69,15 @@ public class SearchFieldTests {
 
 	@BeforeList
 	public void setUpSuite() throws Exception {
-		project = TestUtils.createProject("AutoSelectionEngine_" + phpVersion.toString());
-		ResourcesPlugin.getWorkspace().getRoot().getProject("AutoSelectionEngine_" + phpVersion.toString());
+		TestUtils.disableColliders(ColliderType.ALL);
+		project = TestUtils.createProject("SearchFieldTests_" + phpVersion.toString());
 		TestUtils.setProjectPHPVersion(project, phpVersion);
 	}
 
 	@AfterList
 	public void tearDownSuite() throws Exception {
 		TestUtils.deleteProject(project);
+		TestUtils.enableColliders(ColliderType.ALL);
 	}
 
 	@After
@@ -110,8 +111,8 @@ public class SearchFieldTests {
 	}
 
 	/**
-	 * Creates test file with the specified content and calculates the source range
-	 * for the selection. Selection characters themself are stripped off.
+	 * Creates test file with the specified content and calculates the source
+	 * range for the selection. Selection characters themself are stripped off.
 	 * 
 	 * @param data
 	 *            File data
@@ -148,7 +149,6 @@ public class SearchFieldTests {
 				public void match(int elementType, int flags, int offset, int length, int nameOffset, int nameLength,
 						String elementName, String metadata, String doc, String qualifier, String parent,
 						ISourceModule sourceModule, boolean isReference) {
-
 					paths.add(sourceModule.getPath().toString());
 				}
 			};
