@@ -16,18 +16,43 @@ package org.eclipse.php.internal.ui.provisional.registry;
 
 import org.eclipse.php.internal.core.documentModel.handler.PHPModelHandler;
 import org.eclipse.wst.sse.core.internal.ltk.modelhandler.IDocumentTypeHandler;
+import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
+import org.eclipse.wst.sse.ui.internal.provisional.registry.AdapterFactoryProvider;
 
 /**
  * Support for JavaScript editing in php source
  * 
  * @see issue #242015
  */
-public class AdapterFactoryProviderForJSDT
-		extends org.eclipse.wst.jsdt.web.ui.internal.registry.AdapterFactoryProviderForJSDT {
+public class AdapterFactoryProviderForJSDT implements AdapterFactoryProvider {
+	private AdapterFactoryProvider jsdtSupport;
+
+	public AdapterFactoryProviderForJSDT() {
+		try {
+			jsdtSupport = new org.eclipse.wst.jsdt.web.ui.internal.registry.AdapterFactoryProviderForJSDT();
+		} catch (NoClassDefFoundError e) {
+			jsdtSupport = null;
+		}
+	}
 
 	@Override
 	public boolean isFor(IDocumentTypeHandler contentTypeDescription) {
-		return contentTypeDescription instanceof PHPModelHandler;
+		return jsdtSupport != null && contentTypeDescription instanceof PHPModelHandler;
+	}
+
+	@Override
+	public void addAdapterFactories(IStructuredModel structuredModel) {
+		if (jsdtSupport != null) {
+			jsdtSupport.addAdapterFactories(structuredModel);
+		}
+	}
+
+	@Override
+	public void reinitializeFactories(IStructuredModel structuredModel) {
+		if (jsdtSupport != null) {
+			jsdtSupport.addAdapterFactories(structuredModel);
+		}
+
 	}
 
 }

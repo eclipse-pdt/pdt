@@ -20,8 +20,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.dltk.core.*;
-import org.eclipse.dltk.core.IOpenable;
-import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.index2.search.ISearchEngine;
 import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
 import org.eclipse.dltk.core.index2.search.ISearchEngine.SearchFor;
@@ -37,7 +35,6 @@ import org.eclipse.dltk.internal.ui.scriptview.BuildPathContainer;
 import org.eclipse.dltk.ui.DLTKPluginImages;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ITreeContentProvider;
-import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.PHPCoreConstants;
@@ -54,13 +51,6 @@ import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 import org.eclipse.php.internal.ui.util.NamespaceNode;
-import org.eclipse.wst.jsdt.core.*;
-import org.eclipse.wst.jsdt.core.ElementChangedEvent;
-import org.eclipse.wst.jsdt.core.IElementChangedListener;
-import org.eclipse.wst.jsdt.internal.ui.packageview.PackageFragmentRootContainer;
-import org.eclipse.wst.jsdt.ui.ProjectLibraryRoot;
-import org.eclipse.wst.jsdt.ui.StandardJavaScriptElementContentProvider;
-import org.eclipse.wst.jsdt.ui.project.JsNature;
 
 /**
  * 
@@ -69,8 +59,6 @@ import org.eclipse.wst.jsdt.ui.project.JsNature;
  */
 public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 		implements IIncludepathListener /* , IResourceChangeListener */, IElementChangedListener {
-
-	StandardJavaScriptElementContentProvider jsContentProvider;
 
 	private static int[] SEARCH_IN = { IModelElement.TYPE, IModelElement.METHOD, IModelElement.FIELD };
 
@@ -82,7 +70,6 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 	protected void init() {
 		IncludePathManager.getInstance().registerIncludepathListener(this);
 		setIsFlatLayout(false);
-		jsContentProvider = new StandardJavaScriptElementContentProvider(true);
 	}
 
 	@Override
@@ -94,7 +81,6 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 	public void dispose() {
 		super.dispose();
 		IncludePathManager.getInstance().unregisterIncludepathListener(this);
-		JavaScriptCore.removeElementChangedListener(this);
 	}
 
 	private Object[] getNonPHPProjects(final IScriptModel model) throws ModelException {
@@ -129,18 +115,6 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 					return getBuildPathEntryChildren(parentElement, entry);
 				}
 			}
-		}
-
-		// JavaScript nodes
-		if (parentElement instanceof ProjectLibraryRoot) {
-			return ((ProjectLibraryRoot) parentElement).getChildren();
-		}
-		if (parentElement instanceof PackageFragmentRootContainer) {
-			return getContainerPackageFragmentRoots((PackageFragmentRootContainer) parentElement, true);
-		}
-
-		if (parentElement instanceof org.eclipse.wst.jsdt.core.IJavaScriptElement) {
-			return jsContentProvider.getChildren(parentElement);
 		}
 
 		try {
@@ -235,12 +209,6 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 					if (parentElement instanceof IScriptProject) {
 						IScriptProject scriptProject = (IScriptProject) parentElement;
 						IProject project = scriptProject.getProject();
-
-						boolean hasJsNature = JsNature.hasNature(project);
-						if (hasJsNature) {
-							ProjectLibraryRoot projectLibs = new ProjectLibraryRoot(JavaScriptCore.create(project));
-							returnChildren.add(projectLibs);
-						}
 
 						returnChildren.addAll(getScriptProjectContent(scriptProject));
 					}
@@ -383,53 +351,6 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 		return result;
 	}
 
-	private Object[] getContainerPackageFragmentRoots(PackageFragmentRootContainer container, boolean createFolder) {
-
-		Object[] children = container.getChildren();
-		if (children == null) {
-			return new Object[0];
-		}
-
-		ArrayList<IJavaScriptElement> allChildren = new ArrayList<>();
-		ArrayList<Object> expanded = new ArrayList<>();
-		expanded.addAll(Arrays.asList(children));
-
-		if (expanded == null || expanded.size() < 1) {
-			return new Object[0];
-		}
-
-		Object next = expanded.remove(0);
-
-		while (next != null) {
-			try {
-				if (next instanceof IPackageFragment) {
-					expanded.addAll(Arrays.asList(((IPackageFragment) next).getChildren()));
-				} else if (next instanceof IPackageFragmentRoot) {
-					expanded.addAll(Arrays.asList(((IPackageFragmentRoot) next).getChildren()));
-				} else if (next instanceof IClassFile) {
-					List<IJavaScriptElement> newChildren = Arrays.asList(((IClassFile) next).getChildren());
-					allChildren.removeAll(newChildren);
-					allChildren.addAll(newChildren);
-				} else if (next instanceof IJavaScriptUnit) {
-					List<IJavaScriptElement> newChildren = Arrays.asList(((IJavaScriptUnit) next).getChildren());
-					allChildren.removeAll(newChildren);
-					allChildren.addAll(newChildren);
-
-				}
-			} catch (JavaScriptModelException ex) {
-				Logger.logException(ex);
-			}
-
-			if (expanded.size() > 0) {
-				next = expanded.remove(0);
-			} else {
-				next = null;
-			}
-		}
-
-		return allChildren.toArray();
-	}
-
 	/**
 	 * @param parentElement
 	 * @param entry
@@ -523,60 +444,6 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 
 		postRefresh(resources, true, runnables);
 		executeRunnables(runnables);
-	}
-
-	@Override
-	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-		super.inputChanged(viewer, oldInput, newInput);
-		if (oldInput == null && newInput != null) {
-			JavaScriptCore.addElementChangedListener(this);
-		} else if (oldInput != null && newInput == null) {
-			JavaScriptCore.removeElementChangedListener(this);
-		}
-	}
-
-	@Override
-	public void elementChanged(ElementChangedEvent event) {
-		IJavaScriptElementDelta[] affectedChildren = event.getDelta().getAffectedChildren();
-		final ArrayList<Runnable> runnables = new ArrayList<>();
-		for (int i = 0; i < affectedChildren.length; i++) {
-			if (processDelta(affectedChildren[i], runnables)) {
-				return; // early return, element got refreshed
-			}
-		}
-
-	}
-
-	private boolean processDelta(IJavaScriptElementDelta delta, ArrayList<Runnable> runnables) {
-		int flags = delta.getFlags();
-		IJavaScriptElement element = delta.getElement();
-		int elementType = element.getElementType();
-
-		if (elementType != IJavaScriptElement.JAVASCRIPT_MODEL
-				&& elementType != IJavaScriptElement.JAVASCRIPT_PROJECT) {
-			IJavaScriptProject proj = element.getJavaScriptProject();
-			if (proj == null || !proj.getProject().isOpen()) {
-				return false;
-			}
-		}
-
-		if (elementType == IJavaScriptElement.JAVASCRIPT_PROJECT) {
-			// if the raw class path has changed we refresh the entire project
-			if ((flags & IJavaScriptElementDelta.F_INCLUDEPATH_CHANGED) != 0) {
-
-				final ArrayList<IScriptProject> resources = new ArrayList<>(1);
-				IProject project = ((IJavaScriptProject) element).getProject();
-				resources.add(DLTKCore.create(project));
-				postRefresh(resources, true, runnables);
-				try {
-					this.executeRunnables(runnables);
-				} catch (NullPointerException ex) {
-					// workaround for bug 501274
-				}
-				return true;
-			}
-		}
-		return false;
 	}
 
 	@Override

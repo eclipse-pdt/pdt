@@ -17,10 +17,10 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.dltk.internal.ui.IDLTKStatusConstants;
 import org.eclipse.php.internal.core.phar.PharPackage;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.wst.jsdt.internal.ui.IJavaStatusConstants;
 
 public abstract class PharBuilder implements IPharBuilder {
 
@@ -36,17 +36,17 @@ public abstract class PharBuilder implements IPharBuilder {
 
 	// some methods for convenience
 	protected final void addInfo(String message, Throwable error) {
-		fStatus.add(new Status(IStatus.INFO, PHPUiPlugin.getPluginId(), IJavaStatusConstants.INTERNAL_ERROR, message,
+		fStatus.add(new Status(IStatus.INFO, PHPUiPlugin.getPluginId(), IDLTKStatusConstants.INTERNAL_ERROR, message,
 				error));
 	}
 
 	protected final void addWarning(String message, Throwable error) {
-		fStatus.add(new Status(IStatus.WARNING, PHPUiPlugin.getPluginId(), IJavaStatusConstants.INTERNAL_ERROR, message,
+		fStatus.add(new Status(IStatus.WARNING, PHPUiPlugin.getPluginId(), IDLTKStatusConstants.INTERNAL_ERROR, message,
 				error));
 	}
 
 	protected final void addError(String message, Throwable error) {
-		fStatus.add(new Status(IStatus.ERROR, PHPUiPlugin.getPluginId(), IJavaStatusConstants.INTERNAL_ERROR, message,
+		fStatus.add(new Status(IStatus.ERROR, PHPUiPlugin.getPluginId(), IDLTKStatusConstants.INTERNAL_ERROR, message,
 				error));
 	}
 
