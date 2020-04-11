@@ -12,6 +12,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.dialogs;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -20,14 +21,12 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.viewers.ILabelProvider;
-import org.eclipse.php.internal.ui.util.Messages;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.dialogs.AbstractElementListSelectionDialog;
 import org.eclipse.ui.dialogs.FilteredList;
-import org.eclipse.wst.jsdt.internal.ui.JavaUIMessages;
 
 /**
  * A class to select elements out of a list of elements, organized on multiple
@@ -54,7 +53,7 @@ public class MultiElementListSelectionDialog extends AbstractElementListSelectio
 	private Button fNextButton;
 
 	private Label fPageInfoLabel;
-	private String fPageInfoMessage = JavaUIMessages.MultiElementListSelectionDialog_pageInfoMessage;
+	private String fPageInfoMessage = Messages.MultiElementListSelectionDialog_pageInfoMessage;
 	private Comparator<?> fComparator;
 
 	/**
@@ -70,8 +69,8 @@ public class MultiElementListSelectionDialog extends AbstractElementListSelectio
 	}
 
 	/**
-	 * Sets message shown in the right top corner. Use {0} and {1} as placeholders
-	 * for the current and the total number of pages.
+	 * Sets message shown in the right top corner. Use {0} and {1} as
+	 * placeholders for the current and the total number of pages.
 	 * 
 	 * @param message
 	 *            the message.
@@ -131,7 +130,8 @@ public class MultiElementListSelectionDialog extends AbstractElementListSelectio
 	}
 
 	/*
-	 * @see org.eclipse.jface.dialogs.Dialog#createButtonsForButtonBar(Composite)
+	 * @see
+	 * org.eclipse.jface.dialogs.Dialog#createButtonsForButtonBar(Composite)
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
@@ -147,8 +147,8 @@ public class MultiElementListSelectionDialog extends AbstractElementListSelectio
 	}
 
 	/*
-	 * XXX: Workaround for https://bugs.eclipse.org/bugs/show_bug.cgi?id=279425 The
-	 * whole method can be removed once that bug is fixed.
+	 * XXX: Workaround for https://bugs.eclipse.org/bugs/show_bug.cgi?id=279425
+	 * The whole method can be removed once that bug is fixed.
 	 * 
 	 * @see org.eclipse.jface.dialogs.Dialog#initializeBounds()
 	 * 
@@ -317,8 +317,8 @@ public class MultiElementListSelectionDialog extends AbstractElementListSelectio
 			return ""; //$NON-NLS-1$
 		}
 
-		String[] args = new String[] { Integer.toString(fCurrentPage + 1), Integer.toString(fNumberOfPages) };
-		return Messages.format(fPageInfoMessage, args);
+		Object[] args = new String[] { Integer.toString(fCurrentPage + 1), Integer.toString(fNumberOfPages) };
+		return MessageFormat.format(fPageInfoMessage, args);
 	}
 
 	private void initializeResult(int length) {

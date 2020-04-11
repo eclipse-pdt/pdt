@@ -75,7 +75,6 @@ public final class PHPUIMessages extends NLS {
 	public static String CommentAction_label;
 	public static String ColorPage_Phpdoc;
 	public static String PHPVersionConfigurationBlock_needsprojectbuild_message;
-	public static String JavaScriptSupportGroup_OptionBlockTitle;
 	public static String CoreUtility_buildall_taskname;
 	public static String CodeTemplateBlock_delegatecomment_label;
 	public static String RenamePHPElementAction_exception;
@@ -845,7 +844,6 @@ public final class PHPUIMessages extends NLS {
 	public static String PHPManualConfigurationBlock_default;
 	public static String PasteAction_text;
 	public static String OpenType_ClassesFilterCheckboxName;
-	public static String JavaScriptSupportGroup_EnableSupport;
 	public static String ClearWorkingSetAction_toolTip;
 	public static String Search_Error_search_notsuccessful_title;
 	public static String ElementCreationProxy_1;
