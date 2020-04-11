@@ -163,15 +163,15 @@ public class CodeAssistTests {
 	public void setUpSuite() throws Exception {
 		TestUtils.disableColliders(ColliderType.WTP_VALIDATION);
 		TestUtils.disableColliders(ColliderType.LIBRARY_AUTO_DETECTION);
+		TestUtils.disableColliders(ColliderType.AUTO_BUILD);
 		project = TestUtils.createProject("CodeAssistTests_" + version.toString());
 		TestUtils.setProjectPHPVersion(project, version);
-		TestUtils.enableColliders(ColliderType.AUTO_BUILD);
 	}
 
 	@AfterList
 	public void tearDownSuite() throws Exception {
 		TestUtils.deleteProject(project);
-		TestUtils.disableColliders(ColliderType.AUTO_BUILD);
+		TestUtils.enableColliders(ColliderType.AUTO_BUILD);
 		TestUtils.enableColliders(ColliderType.WTP_VALIDATION);
 		TestUtils.enableColliders(ColliderType.LIBRARY_AUTO_DETECTION);
 	}

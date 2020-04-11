@@ -48,7 +48,6 @@ import org.eclipse.text.edits.*;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.texteditor.ITextEditor;
-import org.eclipse.wst.jsdt.internal.corext.refactoring.changes.CompilationUnitChange;
 
 /**
  * A proposal for quick fixes and quick assist that work on a single compilation
@@ -69,8 +68,8 @@ public class CUCorrectionProposal extends ChangeCorrectionProposal {
 	private LinkedProposalModel fLinkedProposalModel;
 
 	/**
-	 * Constructs a correction proposal working on a compilation unit with a given
-	 * text change
+	 * Constructs a correction proposal working on a compilation unit with a
+	 * given text change
 	 * 
 	 * @param name
 	 *            the name that is displayed in the proposal selection dialog.
@@ -79,13 +78,13 @@ public class CUCorrectionProposal extends ChangeCorrectionProposal {
 	 * @param change
 	 *            the change that is executed when the proposal is applied or
 	 *            <code>null</code> if implementors override
-	 *            {@link #addEdits(IDocument, TextEdit)} to provide the text edits
-	 *            or {@link #createTextChange()} to provide a text change.
+	 *            {@link #addEdits(IDocument, TextEdit)} to provide the text
+	 *            edits or {@link #createTextChange()} to provide a text change.
 	 * @param relevance
 	 *            the relevance of this proposal.
 	 * @param image
-	 *            the image that is displayed for this proposal or <code>null</code>
-	 *            if no image is desired.
+	 *            the image that is displayed for this proposal or
+	 *            <code>null</code> if no image is desired.
 	 */
 	public CUCorrectionProposal(String name, ISourceModule cu, TextChange change, int relevance, Image image) {
 		super(name, change, relevance, image);
@@ -99,8 +98,8 @@ public class CUCorrectionProposal extends ChangeCorrectionProposal {
 	/**
 	 * Constructs a correction proposal working on a compilation unit.
 	 * <p>
-	 * Users have to override {@link #addEdits(IDocument, TextEdit)} to provide the
-	 * text edits or {@link #createTextChange()} to provide a text change.
+	 * Users have to override {@link #addEdits(IDocument, TextEdit)} to provide
+	 * the text edits or {@link #createTextChange()} to provide a text change.
 	 * </p>
 	 * 
 	 * @param name
@@ -110,24 +109,24 @@ public class CUCorrectionProposal extends ChangeCorrectionProposal {
 	 * @param relevance
 	 *            The relevance of this proposal.
 	 * @param image
-	 *            The image that is displayed for this proposal or <code>null</code>
-	 *            if no image is desired.
+	 *            The image that is displayed for this proposal or
+	 *            <code>null</code> if no image is desired.
 	 */
 	protected CUCorrectionProposal(String name, ISourceModule cu, int relevance, Image image) {
 		this(name, cu, null, relevance, image);
 	}
 
 	/**
-	 * Called when the {@link CompilationUnitChange} is initialized. Subclasses can
-	 * override to add text edits to the root edit of the change. Implementors must
-	 * not access the proposal, e.g getting the change.
+	 * Called when the {@link CompilationUnitChange} is initialized. Subclasses
+	 * can override to add text edits to the root edit of the change.
+	 * Implementors must not access the proposal, e.g getting the change.
 	 * <p>
 	 * The default implementation does not add any edits
 	 * </p>
 	 * 
 	 * @param document
-	 *            content of the underlying compilation unit. To be accessed read
-	 *            only.
+	 *            content of the underlying compilation unit. To be accessed
+	 *            read only.
 	 * @param editRoot
 	 *            The root edit to add all edits to
 	 * @throws CoreException
@@ -342,8 +341,10 @@ public class CUCorrectionProposal extends ChangeCorrectionProposal {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.jdt.internal.ui.text.correction.ChangeCorrectionProposal#
-	 * performChange(org.eclipse.jface.text.IDocument, org.eclipse.ui.IEditorPart)
+	 * @see
+	 * org.eclipse.jdt.internal.ui.text.correction.ChangeCorrectionProposal#
+	 * performChange(org.eclipse.jface.text.IDocument,
+	 * org.eclipse.ui.IEditorPart)
 	 */
 	@Override
 	protected void performChange(IEditorPart part, IDocument document) throws CoreException {
@@ -373,8 +374,8 @@ public class CUCorrectionProposal extends ChangeCorrectionProposal {
 	}
 
 	/**
-	 * Creates the text change for this proposal. This method is only called once
-	 * and only when no text change has been passed in
+	 * Creates the text change for this proposal. This method is only called
+	 * once and only when no text change has been passed in
 	 * {@link #CUCorrectionProposal(String, ISourceModule, TextChange, int, Image)}
 	 * .
 	 * 
@@ -430,7 +431,8 @@ public class CUCorrectionProposal extends ChangeCorrectionProposal {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.jdt.internal.ui.text.correction.ChangeCorrectionProposal#
+	 * @see
+	 * org.eclipse.jdt.internal.ui.text.correction.ChangeCorrectionProposal#
 	 * createChange()
 	 */
 	@Override
@@ -442,7 +444,8 @@ public class CUCorrectionProposal extends ChangeCorrectionProposal {
 	/**
 	 * Gets the text change that is invoked when the change is applied.
 	 * 
-	 * @return returns the text change that is invoked when the change is applied.
+	 * @return returns the text change that is invoked when the change is
+	 *         applied.
 	 * @throws CoreException
 	 *             throws an exception if accessing the change failed
 	 */
@@ -460,8 +463,8 @@ public class CUCorrectionProposal extends ChangeCorrectionProposal {
 	}
 
 	/**
-	 * Creates a preview of the content of the compilation unit after applying the
-	 * change.
+	 * Creates a preview of the content of the compilation unit after applying
+	 * the change.
 	 * 
 	 * @return returns the preview of the changed compilation unit.
 	 * @throws CoreException
