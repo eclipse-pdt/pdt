@@ -36,8 +36,10 @@
    <requires>
       <import feature="org.eclipse.dltk.core" version="6.1.0" match="greaterOrEqual"/>
       <import feature="org.eclipse.dltk.core.index.lucene" version="5.9.0" match="greaterOrEqual"/>
-      <import feature="org.eclipse.wst.jsdt.feature"/>
-      <import feature="org.eclipse.wst.web_ui.feature" version="3.11.0" match="greaterOrEqual"/>
+      <import feature="org.eclipse.wst.server_ui.feature"/>
+      <import plugin="org.eclipse.wst.html.ui" />
+      <import plugin="org.eclipse.wst.css.ui" />
+      <import plugin="org.eclipse.wst.web" />
       <import plugin="org.eclipse.platform" version="4.13.0" match="greaterOrEqual"/>
    </requires>
 

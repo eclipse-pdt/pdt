@@ -17,18 +17,11 @@ import org.eclipse.dltk.internal.ui.scriptview.BuildPathContainer;
 import org.eclipse.dltk.ui.IModelCompareCategories;
 import org.eclipse.dltk.ui.IModelCompareProvider;
 import org.eclipse.php.internal.ui.navigator.PHPExplorerContentProvider.IncludePathContainer;
-import org.eclipse.wst.jsdt.ui.ProjectLibraryRoot;
 
 public class PHPNavigatorModelCompareProvider implements IModelCompareProvider {
 
 	@Override
 	public CompareResult compare(Object element1, Object element2, int cat1, int cat2) {
-		if (element2 instanceof ProjectLibraryRoot) {
-			return GREATER;
-		}
-		if (element1 instanceof ProjectLibraryRoot) {
-			return LESS;
-		}
 		if (element2 instanceof BuildPathContainer) {
 			return GREATER;
 		}

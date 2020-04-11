@@ -36,7 +36,6 @@ import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.dialogs.CheckedTreeSelectionDialog;
 import org.eclipse.ui.dialogs.PreferencesUtil;
 import org.eclipse.ui.editors.text.TextEditor;
-import org.eclipse.wst.jsdt.internal.ui.refactoring.IVisibilityChangeListener;
 
 /**
  * This class is used for creating the dialog for Source actions (based on the
@@ -78,6 +77,12 @@ public class PHPSourceActionDialog extends CheckedTreeSelectionDialog {
 	protected boolean fHasUserChangedPositionIndex;
 
 	private TextEditor fEditor;
+
+	public interface IVisibilityChangeListener {
+		void visibilityChanged(int newVisibility);
+
+		void modifierChanged(int modifier, boolean isChecked);
+	}
 
 	public PHPSourceActionDialog(Shell parent, ILabelProvider labelProvider, ITreeContentProvider contentProvider,
 			IType type, TextEditor editor) {
