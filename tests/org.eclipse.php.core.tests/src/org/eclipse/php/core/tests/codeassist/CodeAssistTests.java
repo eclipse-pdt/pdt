@@ -25,6 +25,11 @@ import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IWorkspaceRunnable;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.dltk.compiler.problem.IProblem;
 import org.eclipse.dltk.core.CompletionProposal;
 import org.eclipse.dltk.core.CompletionRequestor;
@@ -163,15 +168,15 @@ public class CodeAssistTests {
 	public void setUpSuite() throws Exception {
 		TestUtils.disableColliders(ColliderType.WTP_VALIDATION);
 		TestUtils.disableColliders(ColliderType.LIBRARY_AUTO_DETECTION);
+		TestUtils.disableColliders(ColliderType.AUTO_BUILD);
 		project = TestUtils.createProject("CodeAssistTests_" + version.toString());
 		TestUtils.setProjectPHPVersion(project, version);
-		TestUtils.enableColliders(ColliderType.AUTO_BUILD);
 	}
 
 	@AfterList
 	public void tearDownSuite() throws Exception {
 		TestUtils.deleteProject(project);
-		TestUtils.disableColliders(ColliderType.AUTO_BUILD);
+		TestUtils.enableColliders(ColliderType.AUTO_BUILD);
 		TestUtils.enableColliders(ColliderType.WTP_VALIDATION);
 		TestUtils.enableColliders(ColliderType.LIBRARY_AUTO_DETECTION);
 	}
@@ -179,24 +184,25 @@ public class CodeAssistTests {
 	@Test
 	public void assist(final String fileName) throws Exception {
 		final CodeAssistPdttFile pdttFile = new CodeAssistPdttFile(fileName);
-		pdttFile.applyPreferences();
 		final int offset = createFiles(pdttFile);
 		CompletionProposal[] proposals = getProposals(DLTKCore.createSourceModuleFrom(testFile), offset);
 		compareProposals(proposals, pdttFile);
 	}
 
 	@After
-	public void deleteFiles() {
-		if (testFile != null) {
-			TestUtils.deleteFile(testFile);
-		}
-		if (otherFiles != null) {
-			for (IFile file : otherFiles) {
-				if (file != null) {
-					TestUtils.deleteFile(file);
+	public void deleteFiles() throws CoreException {
+		ResourcesPlugin.getWorkspace().run((monitor) -> {
+			if (testFile != null) {
+				TestUtils.deleteFile(testFile);
+			}
+			if (otherFiles != null) {
+				for (IFile file : otherFiles) {
+					if (file != null) {
+						TestUtils.deleteFile(file);
+					}
 				}
 			}
-		}
+		}, new NullProgressMonitor());
 	}
 
 	/**
@@ -211,27 +217,35 @@ public class CodeAssistTests {
 	private int createFiles(PdttFile pdttFile) throws Exception {
 		final String cursor = getCursor(pdttFile) != null ? getCursor(pdttFile) : DEFAULT_CURSOR;
 		String data = pdttFile.getFile();
-		String[] otherFiles = pdttFile.getOtherFiles();
+		String[] otherFilesArr = pdttFile.getOtherFiles();
 		int offset = data.lastIndexOf(cursor);
 		if (offset == -1) {
 			throw new IllegalArgumentException("Offset character is not set");
 		}
-		// Replace the offset character
-		data = data.substring(0, offset) + data.substring(offset + 1);
-		String fileName = Paths.get(pdttFile.getFileName()).getFileName().toString();
-		fileName = fileName.substring(0, fileName.indexOf('.'));
-		testFile = TestUtils.createFile(project, fileName + ".php", data);
-		TestUtils.indexFile(testFile);
+		IWorkspaceRunnable runnable = new IWorkspaceRunnable() {
 
-		this.otherFiles = new ArrayList<>(otherFiles.length);
-		int i = 0;
-		for (String otherFileContent : otherFiles) {
-			IFile tmp = TestUtils.createFile(project, String.format("test%s.php", i), otherFileContent);
-			this.otherFiles.add(i, tmp);
-			TestUtils.indexFile(tmp);
-			i++;
-		}
-		TestUtils.waitForIndexer();
+			@Override
+			public void run(IProgressMonitor monitor) throws CoreException {
+				pdttFile.applyPreferences();
+				String fileContent = data.substring(0, offset) + data.substring(offset + 1);
+				String fileNameBase = Paths.get(pdttFile.getFileName()).getFileName().toString();
+				String fileName = fileNameBase.substring(0, fileNameBase.indexOf('.'));
+
+				testFile = TestUtils.createFile(project, fileName + ".php", fileContent);
+				TestUtils.indexFile(testFile);
+				otherFiles = new ArrayList<>(otherFilesArr.length);
+				int i = 0;
+				for (String otherFileContent : otherFilesArr) {
+					IFile tmp = TestUtils.createFile(project, String.format("test%s.php", i), otherFileContent);
+					TestUtils.indexFile(testFile);
+					otherFiles.add(i++, tmp);
+				}
+
+			}
+		};
+		ResourcesPlugin.getWorkspace().run(runnable, new NullProgressMonitor());
+		TestUtils.waitForIndexer2();
+
 		return offset;
 	}
 

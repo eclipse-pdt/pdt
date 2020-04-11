@@ -57,7 +57,6 @@ import org.eclipse.php.ui.editor.SharedASTProvider;
 import org.eclipse.text.edits.DeleteEdit;
 import org.eclipse.text.edits.MalformedTreeException;
 import org.eclipse.text.edits.MultiTextEdit;
-import org.eclipse.wst.jsdt.internal.compiler.env.ICompilationUnit;
 
 public class StubUtility {
 
@@ -479,22 +478,22 @@ public class StubUtility {
 	 * Don't use this method directly, use CodeGeneration.
 	 * 
 	 * @param templateID
-	 *                       the template id of the type body to get. Valid id's are
-	 *                       {@link CodeTemplateContextType#CLASSBODY_ID},
-	 *                       {@link CodeTemplateContextType#INTERFACEBODY_ID},
-	 *                       {@link CodeTemplateContextType#ENUMBODY_ID},
-	 *                       {@link CodeTemplateContextType#ANNOTATIONBODY_ID},
+	 *            the template id of the type body to get. Valid id's are
+	 *            {@link CodeTemplateContextType#CLASSBODY_ID},
+	 *            {@link CodeTemplateContextType#INTERFACEBODY_ID},
+	 *            {@link CodeTemplateContextType#ENUMBODY_ID},
+	 *            {@link CodeTemplateContextType#ANNOTATIONBODY_ID},
 	 * @param sp
-	 *                       the compilation unit to which the template is added
+	 *            the compilation unit to which the template is added
 	 * @param typeName
-	 *                       the type name
+	 *            the type name
 	 * @param lineDelim
-	 *                       the line delimiter to use
+	 *            the line delimiter to use
 	 * @return return the type body template or <code>null</code>
 	 * @throws CoreException
-	 *                           thrown if the template could not be evaluated
-	 * @see org.eclipse.jdt.ui.CodeGeneration#getTypeBody(String, ICompilationUnit,
-	 *      String, String)
+	 *             thrown if the template could not be evaluated
+	 * @see org.eclipse.jdt.ui.CodeGeneration#getTypeBody(String,
+	 *      ICompilationUnit, String, String)
 	 */
 	public static String getTypeBody(String templateID, IScriptProject sp, String typeName, String lineDelim)
 			throws CoreException {
@@ -792,8 +791,8 @@ public class StubUtility {
 	}
 
 	/*
-	 * private static ASTNode getReturnType(MethodDeclaration decl) { // used from
-	 * API, can't eliminate return decl.getAST().apiLevel() == AST.JLS2 ?
+	 * private static ASTNode getReturnType(MethodDeclaration decl) { // used
+	 * from API, can't eliminate return decl.getAST().apiLevel() == AST.JLS2 ?
 	 * decl.getReturnType() : decl.getReturnType2(); }
 	 */
 
@@ -912,7 +911,7 @@ public class StubUtility {
 	 * Returns the line delimiter which is used in the specified project.
 	 * 
 	 * @param project
-	 *                    the java project, or <code>null</code>
+	 *            the java project, or <code>null</code>
 	 * @return the used line delimiter
 	 */
 	public static String getLineDelimiterUsed(IScriptProject project) {
@@ -963,11 +962,11 @@ public class StubUtility {
 	 * Only to be used by tests
 	 * 
 	 * @param templateId
-	 *                       the template id
+	 *            the template id
 	 * @param pattern
-	 *                       the new pattern
+	 *            the new pattern
 	 * @param project
-	 *                       not used
+	 *            not used
 	 */
 	public static void setCodeTemplate(String templateId, String pattern, IScriptProject project) {
 		TemplateStore codeTemplateStore = PHPUiPlugin.getDefault().getCodeTemplateStore();

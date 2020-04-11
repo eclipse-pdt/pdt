@@ -30,6 +30,7 @@ import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.core.search.indexing.AbstractJob;
+import org.eclipse.dltk.core.search.indexing.IProjectIndexer;
 import org.eclipse.dltk.core.search.indexing.IndexManager;
 import org.eclipse.dltk.internal.core.DefaultWorkingCopyOwner;
 import org.eclipse.dltk.internal.core.ModelManager;
@@ -48,6 +49,8 @@ import org.eclipse.wst.validation.ValidationFramework;
  */
 @SuppressWarnings("all")
 public final class TestUtils {
+
+	private static IProjectIndexer indexer;
 
 	public static enum ColliderType {
 
@@ -109,10 +112,22 @@ public final class TestUtils {
 		}
 	}
 
-	/**
-	 * Wait for indexer to finish incoming requests.
-	 */
-	public static synchronized void waitForIndexer() {
+	public static void waitForIndexer() {
+		IndexManager indexManager = ModelManager.getModelManager().getIndexManager();
+		indexManager.waitUntilReady();
+	}
+
+	public static void waitForIndexerForWorker() {
+		IndexManager indexManager = ModelManager.getModelManager().getIndexManager();
+		while (indexManager.awaitingJobsCount() > 0) {
+			try {
+				Thread.sleep(50);
+			} catch (InterruptedException e) {
+			}
+		}
+	}
+
+	public static synchronized void waitForIndexer2() {
 		final IndexManager indexManager = ModelManager.getModelManager().getIndexManager();
 		final Semaphore waitForIndexerSemaphore = new Semaphore(0);
 		final Thread noWaitSignalThread = new NoWaitSignalThread();
@@ -150,7 +165,6 @@ public final class TestUtils {
 	public static void setProjectPHPVersion(IProject project, PHPVersion phpVersion) throws CoreException {
 		if (phpVersion != ProjectOptions.getPHPVersion(project)) {
 			ProjectOptions.setPHPVersion(phpVersion, project);
-			waitForIndexer();
 		}
 	}
 
@@ -171,7 +185,6 @@ public final class TestUtils {
 			ProjectOptions.setPHPVersion(phpVersion, project);
 			ProjectOptions.setSupportingASPTags(useASPTags, project);
 			ProjectOptions.setUseShortTags(useShortTags, project);
-			waitForIndexer();
 		}
 	}
 

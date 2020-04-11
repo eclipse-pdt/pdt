@@ -37,6 +37,7 @@ import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.tests.PdttFile;
 import org.eclipse.php.core.tests.TestSuiteWatcher;
 import org.eclipse.php.core.tests.TestUtils;
+import org.eclipse.php.core.tests.TestUtils.ColliderType;
 import org.eclipse.php.core.tests.runner.PDTTList;
 import org.eclipse.php.core.tests.runner.PDTTList.AfterList;
 import org.eclipse.php.core.tests.runner.PDTTList.BeforeList;
@@ -96,6 +97,7 @@ public class TypeInferenceTests {
 
 	@BeforeList
 	public void setUpSuite() throws Exception {
+		TestUtils.disableColliders(ColliderType.ALL);
 		project = TestUtils.createProject("TypeInferenceTests_" + version.toString());
 		TestUtils.setProjectPHPVersion(project, version);
 		typeInferenceEngine = new PHPTypeInferencer();
@@ -105,6 +107,7 @@ public class TypeInferenceTests {
 	public void tearDownSuite() throws Exception {
 		TestUtils.deleteProject(project);
 		typeInferenceEngine = null;
+		TestUtils.enableColliders(ColliderType.ALL);
 	}
 
 	@Test
@@ -166,6 +169,7 @@ public class TypeInferenceTests {
 	protected void createFile(PdttFile pdttFile) throws Exception {
 		String data = pdttFile.getFile();
 		testFile = TestUtils.createFile(project, "test-" + counter++ + ".php", data);
+		TestUtils.indexFile(testFile);
 		TestUtils.waitForIndexer();
 	}
 
