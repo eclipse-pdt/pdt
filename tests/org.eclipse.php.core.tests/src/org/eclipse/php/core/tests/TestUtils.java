@@ -24,20 +24,24 @@ import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IWorkspaceDescription;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.core.search.indexing.AbstractJob;
+import org.eclipse.dltk.core.search.indexing.IProjectIndexer;
 import org.eclipse.dltk.core.search.indexing.IndexManager;
 import org.eclipse.dltk.internal.core.DefaultWorkingCopyOwner;
 import org.eclipse.dltk.internal.core.ModelManager;
 import org.eclipse.dltk.internal.core.search.ProjectIndexerManager;
+import org.eclipse.dltk.internal.core.search.processing.IJob;
 import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.libfolders.LibraryFolderManager;
 import org.eclipse.php.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.Logger;
+import org.eclipse.php.internal.core.PHPLanguageToolkit;
 import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.wst.validation.ValidationFramework;
 
@@ -48,10 +52,35 @@ import org.eclipse.wst.validation.ValidationFramework;
  */
 @SuppressWarnings("all")
 public final class TestUtils {
+	private static IProjectIndexer indexer;
 
 	public static enum ColliderType {
 
 		AUTO_BUILD, WTP_VALIDATION, LIBRARY_AUTO_DETECTION, ALL;
+
+	}
+
+	private static class WaitJob implements IJob {
+
+		@Override
+		public boolean belongsTo(String jobFamily) {
+			return true;
+		}
+
+		@Override
+		public void cancel() {
+
+		}
+
+		@Override
+		public void ensureReadyToRun() {
+
+		}
+
+		@Override
+		public boolean execute(IProgressMonitor progress) {
+			return true;
+		}
 
 	}
 
@@ -112,7 +141,7 @@ public final class TestUtils {
 	/**
 	 * Wait for indexer to finish incoming requests.
 	 */
-	public static synchronized void waitForIndexer() {
+	public static void waitForIndexer() {
 		final IndexManager indexManager = ModelManager.getModelManager().getIndexManager();
 		final Semaphore waitForIndexerSemaphore = new Semaphore(0);
 		final Thread noWaitSignalThread = new NoWaitSignalThread();
@@ -150,7 +179,6 @@ public final class TestUtils {
 	public static void setProjectPHPVersion(IProject project, PHPVersion phpVersion) throws CoreException {
 		if (phpVersion != ProjectOptions.getPHPVersion(project)) {
 			ProjectOptions.setPHPVersion(phpVersion, project);
-			waitForIndexer();
 		}
 	}
 
@@ -171,7 +199,6 @@ public final class TestUtils {
 			ProjectOptions.setPHPVersion(phpVersion, project);
 			ProjectOptions.setSupportingASPTags(useASPTags, project);
 			ProjectOptions.setUseShortTags(useShortTags, project);
-			waitForIndexer();
 		}
 	}
 
@@ -437,6 +464,15 @@ public final class TestUtils {
 	}
 
 	public static void indexFile(IFile file) {
+		ISourceModule sourceModule = DLTKCore.createSourceModuleFrom(file);
+		/*
+		 * try { sourceModule.reconcile(true, DefaultWorkingCopyOwner.PRIMARY,
+		 * null); } catch (ModelException e) { }
+		 */
+		ProjectIndexerManager.indexSourceModule(sourceModule, PHPLanguageToolkit.getDefault());
+	}
+
+	public static void reconcileFile(IFile file) {
 		ISourceModule sourceModule = DLTKCore.createSourceModuleFrom(file);
 		try {
 			sourceModule.reconcile(true, DefaultWorkingCopyOwner.PRIMARY, null);

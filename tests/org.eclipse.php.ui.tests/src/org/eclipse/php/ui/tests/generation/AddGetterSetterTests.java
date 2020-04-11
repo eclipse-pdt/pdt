@@ -37,6 +37,7 @@ import org.eclipse.php.core.ast.nodes.Program;
 import org.eclipse.php.core.tests.PDTTUtils;
 import org.eclipse.php.core.tests.PdttFile;
 import org.eclipse.php.core.tests.TestUtils;
+import org.eclipse.php.core.tests.TestUtils.ColliderType;
 import org.eclipse.php.core.tests.runner.AbstractPDTTRunner.Context;
 import org.eclipse.php.core.tests.runner.PDTTList;
 import org.eclipse.php.core.tests.runner.PDTTList.AfterList;
@@ -76,6 +77,7 @@ public class AddGetterSetterTests {
 
 	@BeforeList
 	public void setUpSuite() throws Exception {
+		TestUtils.disableColliders(ColliderType.ALL);
 		project = TestUtils.createProject("Add_GetterSetter_" + this.phpVersion);
 		TestUtils.setProjectPHPVersion(project, phpVersion);
 
@@ -85,6 +87,7 @@ public class AddGetterSetterTests {
 
 	@AfterList
 	public void tearDownSuite() throws Exception {
+		TestUtils.enableColliders(ColliderType.ALL);
 		TestUtils.deleteProject(project);
 	}
 
@@ -137,8 +140,8 @@ public class AddGetterSetterTests {
 	}
 
 	/**
-	 * Creates test file with the specified content and calculates the source range
-	 * for the selection. Selection characters themself are stripped off.
+	 * Creates test file with the specified content and calculates the source
+	 * range for the selection. Selection characters themself are stripped off.
 	 * 
 	 * @param data
 	 *            File data

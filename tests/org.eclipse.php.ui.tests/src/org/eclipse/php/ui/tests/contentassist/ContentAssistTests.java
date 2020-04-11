@@ -35,6 +35,7 @@ import org.eclipse.php.core.tests.PDTTUtils;
 import org.eclipse.php.core.tests.PdttFile;
 import org.eclipse.php.core.tests.TestSuiteWatcher;
 import org.eclipse.php.core.tests.TestUtils;
+import org.eclipse.php.core.tests.TestUtils.ColliderType;
 import org.eclipse.php.core.tests.runner.AbstractPDTTRunner.Context;
 import org.eclipse.php.core.tests.runner.PDTTList;
 import org.eclipse.php.core.tests.runner.PDTTList.AfterList;
@@ -113,6 +114,7 @@ public class ContentAssistTests {
 
 	@BeforeList
 	public void setUpSuite() throws Exception {
+		TestUtils.disableColliders(ColliderType.ALL);
 		// Set content assist timeout to 60 seconds
 		InstanceScope.INSTANCE.getNode(DLTKUIPlugin.PLUGIN_ID).putInt(PreferenceConstants.CODEASSIST_TIMEOUT, 60000);
 		project = TestUtils.createProject("Content Assist_" + this.phpVersion);
@@ -141,6 +143,7 @@ public class ContentAssistTests {
 				.getInt(PreferenceConstants.CODEASSIST_TIMEOUT, 5000);
 		InstanceScope.INSTANCE.getNode(DLTKUIPlugin.PLUGIN_ID).putInt(PreferenceConstants.CODEASSIST_TIMEOUT,
 				defaultContentAssistTimeout);
+		TestUtils.enableColliders(ColliderType.ALL);
 	}
 
 	@Test
@@ -156,15 +159,15 @@ public class ContentAssistTests {
 		final String data = pdttFileData.substring(0, offset) + pdttFileData.substring(offset + 1);
 		final Exception[] exception = new Exception[1];
 		final String[] result = new String[1];
+		String fileName = Paths.get(pdttFile.getFileName()).getFileName().toString();
+		fileName = fileName.substring(0, fileName.indexOf('.')) + ".php";
+		createFiles(data, fileName, pdttFile.getOtherFiles());
 		// Wait for UI
 		Display.getDefault().syncExec(new Runnable() {
 			@Override
 			public void run() {
 				try {
 					pdttFile.applyPreferences();
-					String fileName = Paths.get(pdttFile.getFileName()).getFileName().toString();
-					fileName = fileName.substring(0, fileName.indexOf('.')) + ".php";
-					createFiles(data, fileName, pdttFile.getOtherFiles());
 					openEditor();
 					result[0] = executeAutoInsert(offset);
 					closeEditor();

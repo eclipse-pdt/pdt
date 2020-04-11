@@ -43,6 +43,7 @@ import org.eclipse.php.core.ast.nodes.TypeBinding;
 import org.eclipse.php.core.tests.PDTTUtils;
 import org.eclipse.php.core.tests.PdttFile;
 import org.eclipse.php.core.tests.TestUtils;
+import org.eclipse.php.core.tests.TestUtils.ColliderType;
 import org.eclipse.php.core.tests.runner.AbstractPDTTRunner.Context;
 import org.eclipse.php.core.tests.runner.PDTTList;
 import org.eclipse.php.core.tests.runner.PDTTList.AfterList;
@@ -85,6 +86,7 @@ public class UnimplementMethodsTests {
 
 	@BeforeList
 	public void setUpSuite() throws Exception {
+		TestUtils.disableColliders(ColliderType.ALL);
 		project = TestUtils.createProject("UnimplementMethods_" + this.phpVersion);
 		TestUtils.setProjectPHPVersion(project, phpVersion);
 
@@ -95,6 +97,7 @@ public class UnimplementMethodsTests {
 	@AfterList
 	public void tearDownSuite() throws Exception {
 		TestUtils.deleteProject(project);
+		TestUtils.enableColliders(ColliderType.ALL);
 	}
 
 	@After
@@ -153,8 +156,8 @@ public class UnimplementMethodsTests {
 	}
 
 	/**
-	 * Creates test file with the specified content and calculates the source range
-	 * for the selection. Selection characters themself are stripped off.
+	 * Creates test file with the specified content and calculates the source
+	 * range for the selection. Selection characters themself are stripped off.
 	 * 
 	 * @param data
 	 *            File data

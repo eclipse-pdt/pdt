@@ -49,6 +49,7 @@ import org.eclipse.php.core.compiler.ast.nodes.PHPModuleDeclaration;
 import org.eclipse.php.core.tests.PdttFile;
 import org.eclipse.php.core.tests.TestSuiteWatcher;
 import org.eclipse.php.core.tests.TestUtils;
+import org.eclipse.php.core.tests.TestUtils.ColliderType;
 import org.eclipse.php.core.tests.runner.AbstractPDTTRunner.Context;
 import org.eclipse.php.core.tests.runner.PDTTList;
 import org.eclipse.php.core.tests.runner.PDTTList.AfterList;
@@ -134,6 +135,7 @@ public class SemanticHighlightingTests {
 
 	@BeforeList
 	public void setUpSuite() throws Exception {
+		TestUtils.disableColliders(ColliderType.ALL);
 		project = TestUtils.createProject("SemanticHighlighting_" + phpVersion);
 		TestUtils.setProjectPHPVersion(project, phpVersion);
 	}
@@ -143,6 +145,7 @@ public class SemanticHighlightingTests {
 		TaskPatternsProvider.unregisterProject(project);
 		setDefaultTaskTagPreferences();
 		TestUtils.deleteProject(project);
+		TestUtils.enableColliders(ColliderType.ALL);
 	}
 
 	@After

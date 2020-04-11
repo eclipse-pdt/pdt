@@ -14,7 +14,7 @@
 		<tycho-version>1.6.0</tycho-version>
 		<antrun-version>1.8</antrun-version>
 		<maven.test.failure.ignore>true</maven.test.failure.ignore>
-		<test.vmargs />
+		<test.vmargs/>
 		<test.proxy />
 		<sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
 		<sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>

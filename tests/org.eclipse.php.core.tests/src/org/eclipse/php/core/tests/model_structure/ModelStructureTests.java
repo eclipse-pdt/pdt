@@ -28,15 +28,16 @@ import org.eclipse.dltk.core.IModelElementVisitor;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.ModelException;
+import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.tests.PDTTUtils;
 import org.eclipse.php.core.tests.PdttFile;
 import org.eclipse.php.core.tests.TestSuiteWatcher;
 import org.eclipse.php.core.tests.TestUtils;
+import org.eclipse.php.core.tests.TestUtils.ColliderType;
 import org.eclipse.php.core.tests.runner.PDTTList;
 import org.eclipse.php.core.tests.runner.PDTTList.AfterList;
 import org.eclipse.php.core.tests.runner.PDTTList.BeforeList;
 import org.eclipse.php.core.tests.runner.PDTTList.Parameters;
-import org.eclipse.php.core.PHPVersion;
 import org.junit.After;
 import org.junit.ClassRule;
 import org.junit.Test;
@@ -70,6 +71,7 @@ public class ModelStructureTests {
 
 	@BeforeList
 	public void setUpSuite() throws Exception {
+		TestUtils.enableColliders(ColliderType.ALL);
 		project = TestUtils.createProject("ModelStructureTests");
 		TestUtils.setProjectPHPVersion(project, version);
 	}
