@@ -36,10 +36,7 @@ import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IMemento;
-import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.actions.ActionGroup;
-import org.eclipse.wst.jsdt.core.IJavaScriptElement;
-import org.eclipse.wst.jsdt.ui.actions.OpenAction;
 
 /**
  * @author nir.c PHPExplorerActionGroup class extends DLTK's
@@ -59,8 +56,8 @@ public class PHPExplorerActionGroup extends ScriptExplorerActionGroup {
 
 	/**
 	 * bug 329194: Changing working set show blank explorer. Now there are two
-	 * working set filters,and the second is not updated when change working set.So
-	 * remove the second one.
+	 * working set filters,and the second is not updated when change working
+	 * set.So remove the second one.
 	 * 
 	 * @param part
 	 */
@@ -80,7 +77,8 @@ public class PHPExplorerActionGroup extends ScriptExplorerActionGroup {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.dltk.internal.ui.actions.CompositeActionGroup#setGroups(org
+	 * @see
+	 * org.eclipse.dltk.internal.ui.actions.CompositeActionGroup#setGroups(org
 	 * .eclipse.ui.actions.ActionGroup[])
 	 */
 	@Override
@@ -149,23 +147,6 @@ public class PHPExplorerActionGroup extends ScriptExplorerActionGroup {
 	 */
 	@Override
 	protected void handleOpen(OpenEvent event) {
-		// this code dispatches the selection from javascript library to JS open
-		// action
-		ISelection selection = event.getSelection();
-		if (selection instanceof ITreeSelection) {
-			ITreeSelection treeSelection = (ITreeSelection) selection;
-			Object firstElement = treeSelection.getFirstElement();
-			if (firstElement instanceof IJavaScriptElement) {
-				// it's JS element, follow opening JS editor
-				ScriptExplorerPart part = getPart();
-				IViewSite viewSite = part.getViewSite();
-				OpenAction openAction = new OpenAction(viewSite);
-				if (openAction != null && openAction.isEnabled()) {
-					openAction.run();
-					return;
-				}
-			}
-		}
 		// use our action to do the open operation
 		IAction openAction = fNavigateActionGroup.getOpenAction();
 		if (openAction != null && openAction.isEnabled()) {
@@ -185,8 +166,8 @@ public class PHPExplorerActionGroup extends ScriptExplorerActionGroup {
 	// ------------------------------------------------------------
 
 	/**
-	 * this method call ScriptExplorerActionGroup.handleDoubleClick(event) at most
-	 * cases, except fNavigateActionGroup relative operation
+	 * this method call ScriptExplorerActionGroup.handleDoubleClick(event) at
+	 * most cases, except fNavigateActionGroup relative operation
 	 */
 	@Override
 	protected void handleDoubleClick(DoubleClickEvent event) {

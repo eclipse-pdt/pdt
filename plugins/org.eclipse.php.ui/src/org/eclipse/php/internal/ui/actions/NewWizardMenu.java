@@ -43,9 +43,9 @@ public class NewWizardMenu extends BaseNewWizardMenu {
 
 	static {
 		PROJECT_WIZARD_ID.add("org.eclipse.php.ui.wizards.PHPFileCreationWizard"); //$NON-NLS-1$
-		PROJECT_WIZARD_ID.add("com.zend.php.ui.wizards.phpElementsWizard.NewPHPClassWizard"); //$NON-NLS-1$
-		PROJECT_WIZARD_ID.add("com.zend.php.ui.wizards.phpElementsWizard.NewPHPInterfaceWizard"); //$NON-NLS-1$
-		PROJECT_WIZARD_ID.add("com.zend.php.ui.wizards.phpElementsWizard.NewPHPTraitWizard"); //$NON-NLS-1$
+		PROJECT_WIZARD_ID.add("org.eclipse.php.internal.ui.wizards.types.NewPHPClassWizard"); //$NON-NLS-1$
+		PROJECT_WIZARD_ID.add("org.eclipse.php.internal.ui.wizards.types.NewPHPInterfaceWizard"); //$NON-NLS-1$
+		PROJECT_WIZARD_ID.add("org.eclipse.php.internal.ui.wizards.types.NewPHPTraitWizard"); //$NON-NLS-1$
 
 		PROJECT_WIZARD_ID.add("org.eclipse.php.ui.wizards.UntitledPHPDocumentWizard"); //$NON-NLS-1$
 		PROJECT_WIZARD_ID.add("org.eclipse.ui.wizards.new.folder"); //$NON-NLS-1$
@@ -54,13 +54,11 @@ public class NewWizardMenu extends BaseNewWizardMenu {
 		PROJECT_WIZARD_ID.add("org.eclipse.wst.html.ui.internal.wizard.NewHTMLWizard"); //$NON-NLS-1$
 		PROJECT_WIZARD_ID.add("org.eclipse.wst.xml.ui.internal.wizards.NewXMLWizard"); //$NON-NLS-1$
 		PROJECT_WIZARD_ID.add("org.eclipse.ui.editors.wizards.UntitledTextFileWizard"); //$NON-NLS-1$
-		PROJECT_WIZARD_ID.add("org.zend.php.framework.ui.wizards.NewZendItemWizard"); //$NON-NLS-1$
 
-		PROJECT_WIZARD_ID.add("com.zend.php.ui.wizards.wizards.RemoteFolderWizard"); //$NON-NLS-1$
 		PROJECT_WIZARD_ID.add("org.eclipse.php.wst.jsdt.ui.NewJSWizard"); //$NON-NLS-1$
 		PROJECT_WIZARD_ID.add("org.eclipse.mylyn.tasks.ui.wizards.new.repository.task"); //$NON-NLS-1$
-		PROJECT_WIZARD_ID.add("com.zend.php.phpunit.wizards.TestCaseWizard"); //$NON-NLS-1$
-		PROJECT_WIZARD_ID.add("com.zend.php.phpunit.wizards.TestSuiteWizard"); //$NON-NLS-1$
+		PROJECT_WIZARD_ID.add("org.eclipse.php.phpunit.wizards.TestCaseWizard"); //$NON-NLS-1$
+		PROJECT_WIZARD_ID.add("org.eclipse.php.phpunit.wizards.TestSuiteWizard"); //$NON-NLS-1$
 	}
 
 	private final IAction newExampleAction;

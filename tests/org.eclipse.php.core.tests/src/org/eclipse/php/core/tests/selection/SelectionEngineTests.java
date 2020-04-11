@@ -33,6 +33,7 @@ import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.tests.PdttFile;
 import org.eclipse.php.core.tests.TestSuiteWatcher;
 import org.eclipse.php.core.tests.TestUtils;
+import org.eclipse.php.core.tests.TestUtils.ColliderType;
 import org.eclipse.php.core.tests.codeassist.CodeAssistPdttFile;
 import org.eclipse.php.core.tests.codeassist.CodeAssistPdttFile.ExpectedProposal;
 import org.eclipse.php.core.tests.runner.PDTTList;
@@ -97,6 +98,7 @@ public class SelectionEngineTests {
 
 	@BeforeList
 	public void setUpSuite() throws Exception {
+		TestUtils.disableColliders(ColliderType.ALL);
 		project = TestUtils.createProject("AutoSelectionEngine_" + version.toString());
 		TestUtils.setProjectPHPVersion(project, version);
 	}
@@ -104,6 +106,7 @@ public class SelectionEngineTests {
 	@AfterList
 	public void tearDownSuite() throws Exception {
 		TestUtils.deleteProject(project);
+		TestUtils.enableColliders(ColliderType.ALL);
 	}
 
 	@Test

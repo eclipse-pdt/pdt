@@ -53,8 +53,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.WorkspaceModifyDelegatingOperation;
-import org.eclipse.wst.jsdt.core.JavaScriptModelException;
-import org.eclipse.wst.jsdt.web.core.internal.project.JsWebNature;
 
 /**
  * As addition to the DLTKCapabilityConfigurationPage, the wizard does an early
@@ -218,11 +216,6 @@ public class PHPProjectWizardSecondPage extends CapabilityConfigurationPage impl
 
 			configureScriptProject(new SubProgressMonitor(monitor, 30));
 
-			// checking and adding JS nature,libs, include path if needed
-			if (fFirstPage.getJavaScriptSupportGroup().shouldSupportJavaScript()) {
-				addJavaScriptNature(monitor);
-			}
-
 			// adding build paths, and language-Container:
 			getScriptProject().setRawBuildpath(buildpathEntries, new NullProgressMonitor());
 			LanguageModelInitializer.enableLanguageModelFor(getScriptProject());
@@ -264,16 +257,6 @@ public class PHPProjectWizardSecondPage extends CapabilityConfigurationPage impl
 	 */
 	protected IncludePath[] setProjectBaseIncludepath() {
 		return new IncludePath[] { new IncludePath(getProject(), getProject()) };
-	}
-
-	/**
-	 * @param monitor
-	 * @throws CoreException
-	 * @throws JavaScriptModelException
-	 */
-	protected void addJavaScriptNature(IProgressMonitor monitor) throws CoreException, JavaScriptModelException {
-		JsWebNature jsWebNature = new JsWebNature(getProject(), new SubProgressMonitor(monitor, 1));
-		jsWebNature.configure();
 	}
 
 	@Override
