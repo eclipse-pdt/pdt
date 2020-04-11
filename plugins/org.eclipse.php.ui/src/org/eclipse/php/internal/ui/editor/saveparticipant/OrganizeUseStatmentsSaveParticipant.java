@@ -35,7 +35,6 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.part.FileEditorInput;
-import org.eclipse.wst.jsdt.internal.ui.javaeditor.saveparticipant.SaveParticipantDescriptor;
 
 public class OrganizeUseStatmentsSaveParticipant implements IPostSaveListener {
 
@@ -53,8 +52,6 @@ public class OrganizeUseStatmentsSaveParticipant implements IPostSaveListener {
 
 	/**
 	 * Preference prefix that is appended to the id of
-	 * {@link SaveParticipantDescriptor save participants}.
-	 * 
 	 * <p>
 	 * Value is of type <code>Boolean</code>.
 	 * </p>
