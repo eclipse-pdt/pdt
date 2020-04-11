@@ -45,39 +45,45 @@ public class LanguageModelContainer implements IBuildpathContainer {
 		this.fProject = project;
 	}
 
-	public synchronized IBuildpathEntry[] getBuildpathEntries(IScriptProject project) {
+	public IBuildpathEntry[] getBuildpathEntries(IScriptProject project) {
 		if (buildPathEntries == null) {
-			try {
-				List<IBuildpathEntry> entries = new LinkedList<>();
+			synchronized (this) {
+				if (buildPathEntries == null) {
+					try {
+						List<IBuildpathEntry> entries = new LinkedList<>();
 
-				for (ILanguageModelProvider provider : LanguageModelInitializer.getContributedProviders()) {
+						for (ILanguageModelProvider provider : LanguageModelInitializer.getContributedProviders()) {
 
-					// Get the location where language model files reside
-					// in provider's plug-in:
-					IPath path = provider.getPath(project);
-					if (path != null) {
+							// Get the location where language model files
+							// reside
+							// in provider's plug-in:
+							IPath path = provider.getPath(project);
+							if (path != null) {
 
-						// Copy files (if target directory is older) to the
-						// plug-in state
-						// location:
-						path = copyToInstanceLocation(provider, path, project);
-						if (path != null) {
+								// Copy files (if target directory is older) to
+								// the
+								// plug-in state
+								// location:
+								path = copyToInstanceLocation(provider, path, project);
+								if (path != null) {
 
-							LanguageModelInitializer.addPathName(path, provider.getName());
+									LanguageModelInitializer.addPathName(path, provider.getName());
 
-							IEnvironment environment = EnvironmentManager.getEnvironment(project);
-							if (environment != null) {
-								path = EnvironmentPathUtils.getFullPath(environment, path);
+									IEnvironment environment = EnvironmentManager.getEnvironment(project);
+									if (environment != null) {
+										path = EnvironmentPathUtils.getFullPath(environment, path);
+									}
+									entries.add(DLTKCore.newLibraryEntry(path, IBuildpathEntry.NO_ACCESS_RULES,
+											IBuildpathEntry.NO_EXTRA_ATTRIBUTES, BuildpathEntry.INCLUDE_ALL,
+											BuildpathEntry.EXCLUDE_NONE, false, true));
+								}
 							}
-							entries.add(DLTKCore.newLibraryEntry(path, IBuildpathEntry.NO_ACCESS_RULES,
-									IBuildpathEntry.NO_EXTRA_ATTRIBUTES, BuildpathEntry.INCLUDE_ALL,
-									BuildpathEntry.EXCLUDE_NONE, false, true));
 						}
+						buildPathEntries = entries.toArray(new IBuildpathEntry[entries.size()]);
+					} catch (Exception e) {
+						Logger.logException(e);
 					}
 				}
-				buildPathEntries = entries.toArray(new IBuildpathEntry[entries.size()]);
-			} catch (Exception e) {
-				Logger.logException(e);
 			}
 		}
 		return buildPathEntries != null ? buildPathEntries : new IBuildpathEntry[0];
