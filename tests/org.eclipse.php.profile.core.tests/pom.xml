@@ -22,13 +22,7 @@
 				<version>${tycho-version}</version>
 				<configuration>
 					<testClass>org.eclipse.php.profile.core.test.AllTests</testClass>
-					<argLine>${tycho.testArgLine}</argLine>
-					<dependencies>
-						<dependency>
-							<type>p2-installable-unit</type>
-							<artifactId>org.eclipse.dltk.core.index.lucene</artifactId>
-						</dependency>
-					</dependencies>
+					<argLine>${tycho.testArgLine} ${test.vmargs}</argLine>
 					<testFailureIgnore>false</testFailureIgnore>
 				</configuration>
 			</plugin>

@@ -14,7 +14,7 @@
 		<tycho-version>1.6.0</tycho-version>
 		<antrun-version>1.8</antrun-version>
 		<maven.test.failure.ignore>true</maven.test.failure.ignore>
-		<test.vmargs/>
+		<test.vmargs>-server</test.vmargs>
 		<test.proxy />
 		<sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
 		<sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
@@ -165,6 +165,15 @@
 							<ws>cocoa</ws>
 							<arch>x86_64</arch>
 						</environment>
+						<dependency-resolution>
+						    <extraRequirements>
+								<requirement>
+									<type>p2-installable-unit</type>
+									<id>org.eclipse.dltk.core.index.lucene</id>
+									<versionRange>0.0.0</versionRange>
+								</requirement>
+							</extraRequirements>
+						</dependency-resolution>
 					</environments>
 				</configuration>
 			</plugin>
@@ -272,6 +281,15 @@
 									<version>${project.version}</version>
 								</artifact>
 							</target>
+							<dependency-resolution>
+							    <extraRequirements>
+									<requirement>
+										<type>p2-installable-unit</type>
+										<id>org.eclipse.dltk.core.index.lucene</id>
+										<versionRange>0.0.0</versionRange>
+									</requirement>
+								</extraRequirements>
+							</dependency-resolution>
 						</configuration>
 					</plugin>
 				</plugins>

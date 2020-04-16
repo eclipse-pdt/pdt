@@ -22,7 +22,6 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.dltk.codeassist.ScriptCompletionEngine;
 import org.eclipse.dltk.compiler.env.IModuleSource;
 import org.eclipse.dltk.core.*;
-import org.eclipse.dltk.internal.core.ModelManager;
 import org.eclipse.php.core.codeassist.*;
 import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.core.compiler.ast.nodes.NamespaceReference;
@@ -77,18 +76,11 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements IComp
 
 	@Override
 	public void complete(IModuleSource module, int position, int i) {
-		complete(module, position, i, false);
-	}
-
-	public void complete(IModuleSource module, int position, int i, boolean waitForBuilder) {
 		if (!PHPCorePlugin.toolkitInitialized) {
 			return;
 		}
 		if (requestor instanceof IPHPCompletionRequestor) {
 			((IPHPCompletionRequestor) requestor).setOffset(offset);
-		}
-		if (waitForBuilder) {
-			ModelManager.getModelManager().getIndexManager().waitUntilReady();
 		}
 
 		this.module = module;
