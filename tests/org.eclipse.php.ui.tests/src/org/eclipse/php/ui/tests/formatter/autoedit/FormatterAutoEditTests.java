@@ -194,7 +194,7 @@ public class FormatterAutoEditTests {
 			cmd.length = lastOffset - (firstOffset + cursor.length());
 		}
 		testFile = TestUtils.createFile(project, "test" + (++count) + ".php", data);
-		project.getFile("test" + (++count) + ".php");
+		TestUtils.reconcileFile(testFile);
 		// Wait for indexer...
 		TestUtils.waitForIndexer();
 		return cmd;

@@ -141,7 +141,7 @@ public final class TestUtils {
 	/**
 	 * Wait for indexer to finish incoming requests.
 	 */
-	public static void waitForIndexer() {
+	public static void waitForIndexer2() {
 		final IndexManager indexManager = ModelManager.getModelManager().getIndexManager();
 		final Semaphore waitForIndexerSemaphore = new Semaphore(0);
 		final Thread noWaitSignalThread = new NoWaitSignalThread();
@@ -149,6 +149,11 @@ public final class TestUtils {
 		noWaitSignalThread.start();
 		// Wait for indexer requests to be finished
 		waitForIndexerSemaphore.acquireUninterruptibly();
+	}
+
+	public static void waitForIndexer() {
+		final IndexManager indexManager = ModelManager.getModelManager().getIndexManager();
+		indexManager.waitUntilReady();
 	}
 
 	/**
