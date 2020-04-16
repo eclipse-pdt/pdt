@@ -71,7 +71,7 @@ public class ModelStructureTests {
 
 	@BeforeList
 	public void setUpSuite() throws Exception {
-		TestUtils.enableColliders(ColliderType.ALL);
+		TestUtils.disableColliders(ColliderType.ALL);
 		project = TestUtils.createProject("ModelStructureTests");
 		TestUtils.setProjectPHPVersion(project, version);
 	}
@@ -79,6 +79,7 @@ public class ModelStructureTests {
 	@AfterList
 	public void tearDownSuite() throws Exception {
 		TestUtils.deleteProject(project);
+		TestUtils.enableColliders(ColliderType.ALL);
 	}
 
 	@Test

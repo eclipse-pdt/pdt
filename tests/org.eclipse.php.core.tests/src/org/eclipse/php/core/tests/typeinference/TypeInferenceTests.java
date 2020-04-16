@@ -169,7 +169,6 @@ public class TypeInferenceTests {
 	protected void createFile(PdttFile pdttFile) throws Exception {
 		String data = pdttFile.getFile();
 		testFile = TestUtils.createFile(project, "test-" + counter++ + ".php", data);
-		TestUtils.indexFile(testFile);
 		TestUtils.waitForIndexer();
 	}
 

@@ -130,7 +130,6 @@ public class FormatterTests {
 			pdttFiles.put(fileName, pdttFile);
 		}
 		// Wait for indexer...
-		TestUtils.waitForIndexer();
 		profileManager.clearAllSettings(scopeContext);
 		profileManager.commitChanges(scopeContext);
 		if (xmlFile != null) {

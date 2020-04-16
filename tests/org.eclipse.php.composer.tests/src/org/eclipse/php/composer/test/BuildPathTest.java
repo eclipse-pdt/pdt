@@ -62,7 +62,6 @@ public class BuildPathTest {
 
 		project.build(IncrementalProjectBuilder.FULL_BUILD, null);
 
-		TestUtils.waitForIndexer();
 		TestUtils.waitForAutoBuild();
 
 		IFile file = project.getFile("composer.json"); //$NON-NLS-1$
