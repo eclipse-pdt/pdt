@@ -25,7 +25,6 @@ import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.compiler.problem.IProblem;
 import org.eclipse.dltk.core.CompletionProposal;
@@ -221,18 +220,15 @@ public class CodeAssistTests {
 		String fileContent = data.substring(0, offset) + data.substring(offset + 1);
 		String fileNameBase = Paths.get(pdttFile.getFileName()).getFileName().toString();
 		String fileName = fileNameBase.substring(0, fileNameBase.indexOf('.'));
-		ResourcesPlugin.getWorkspace().run((m) -> {
-			testFile = TestUtils.createFile(project, fileName + ".php", fileContent);
-			otherFiles = new ArrayList<>(otherFilesArr.length);
-			int i = 0;
-			for (String otherFileContent : otherFilesArr) {
-				IFile tmp = TestUtils.createFile(project, String.format("test%s.php", i), otherFileContent);
-				otherFiles.add(i++, tmp);
-			}
-		}, null);
 
+		otherFiles = new ArrayList<>(otherFilesArr.length);
+		testFile = TestUtils.createFile(project, fileName + ".php", fileContent);
+		int i = 0;
+		for (String otherFileContent : otherFilesArr) {
+			IFile tmp = TestUtils.createFile(project, String.format("test%s.php", i), otherFileContent);
+			otherFiles.add(i++, tmp);
+		}
 		TestUtils.waitForIndexer();
-
 		return offset;
 	}
 
