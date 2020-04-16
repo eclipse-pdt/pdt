@@ -40,12 +40,6 @@
 					<useUIHarness>false</useUIHarness>
 					<useUIThread>false</useUIThread>
 					<argLine>-Xmx512m ${test.vmargs} ${test.proxy} ${tycho.testArgLine} -Dfile.encoding=UTF-8</argLine>
-					<dependencies>
-						<dependency>
-							<type>p2-installable-unit</type>
-							<artifactId>org.eclipse.dltk.core.index.lucene</artifactId>
-						</dependency>
-					</dependencies>
 					<testFailureIgnore>false</testFailureIgnore>
 				</configuration>
 			</plugin>

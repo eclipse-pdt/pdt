@@ -221,9 +221,10 @@ public class CodeAssistTests {
 		String fileContent = data.substring(0, offset) + data.substring(offset + 1);
 		String fileNameBase = Paths.get(pdttFile.getFileName()).getFileName().toString();
 		String fileName = fileNameBase.substring(0, fileNameBase.indexOf('.'));
+
 		ResourcesPlugin.getWorkspace().run((m) -> {
-			testFile = TestUtils.createFile(project, fileName + ".php", fileContent);
 			otherFiles = new ArrayList<>(otherFilesArr.length);
+			testFile = TestUtils.createFile(project, fileName + ".php", fileContent);
 			int i = 0;
 			for (String otherFileContent : otherFilesArr) {
 				IFile tmp = TestUtils.createFile(project, String.format("test%s.php", i), otherFileContent);
@@ -232,7 +233,6 @@ public class CodeAssistTests {
 		}, null);
 
 		TestUtils.waitForIndexer();
-
 		return offset;
 	}
 

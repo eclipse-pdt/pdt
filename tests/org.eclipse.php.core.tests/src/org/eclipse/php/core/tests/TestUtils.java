@@ -13,8 +13,6 @@
 package org.eclipse.php.core.tests;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.util.concurrent.Semaphore;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.resources.IFile;
@@ -24,19 +22,16 @@ import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IWorkspaceDescription;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ModelException;
-import org.eclipse.dltk.core.search.indexing.AbstractJob;
 import org.eclipse.dltk.core.search.indexing.IProjectIndexer;
 import org.eclipse.dltk.core.search.indexing.IndexManager;
 import org.eclipse.dltk.internal.core.DefaultWorkingCopyOwner;
 import org.eclipse.dltk.internal.core.ModelManager;
 import org.eclipse.dltk.internal.core.search.ProjectIndexerManager;
-import org.eclipse.dltk.internal.core.search.processing.IJob;
 import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.libfolders.LibraryFolderManager;
 import org.eclipse.php.core.project.ProjectOptions;
@@ -60,95 +55,9 @@ public final class TestUtils {
 
 	}
 
-	private static class WaitJob implements IJob {
-
-		@Override
-		public boolean belongsTo(String jobFamily) {
-			return true;
-		}
-
-		@Override
-		public void cancel() {
-
-		}
-
-		@Override
-		public void ensureReadyToRun() {
-
-		}
-
-		@Override
-		public boolean execute(IProgressMonitor progress) {
-			return true;
-		}
-
-	}
-
-	private static final class NoWaitSignalThread extends Thread {
-
-		public NoWaitSignalThread() {
-			super("No-Wait-Signal-Thread");
-		}
-
-		@Override
-		public void run() {
-			ModelManager.getModelManager().getIndexManager().waitUntilReady();
-		}
-
-	}
-
-	private static final class NoDelayRequest extends AbstractJob {
-
-		private final Thread noWaitSignalThread;
-		private final Semaphore waitForIndexerSemaphore;
-		private final IndexManager indexManager;
-
-		private NoDelayRequest(Thread noWaitSignalThread, Semaphore waitForIndexerSemaphore) {
-			this.waitForIndexerSemaphore = waitForIndexerSemaphore;
-			this.noWaitSignalThread = noWaitSignalThread;
-			this.indexManager = ModelManager.getModelManager().getIndexManager();
-		}
-
-		@Override
-		protected void run() throws CoreException, IOException {
-			/*
-			 * Check if there were some new index requests added to the queue in
-			 * the meantime, if so go back to the end of the queue.
-			 */
-			if (indexManager.awaitingJobsCount() > 1) {
-				noWaitSignalThread.interrupt();
-				NoWaitSignalThread noWaitSignalThread = new NoWaitSignalThread();
-				// Go back to the end of the queue
-				indexManager.request(new NoDelayRequest(noWaitSignalThread, waitForIndexerSemaphore));
-				noWaitSignalThread.start();
-				return;
-			}
-			// Interrupt "wait for indexer" thread (no sleeping dude...).
-			noWaitSignalThread.interrupt();
-			/*
-			 * Requests queue is empty, we can assume that indexer has finished
-			 * so release semaphore to move on with processing.
-			 */
-			waitForIndexerSemaphore.release();
-		}
-
-		@Override
-		protected String getName() {
-			return "WAIT-UNTIL-READY-NO-DELAY-JOB";
-		}
-	}
-
-	/**
-	 * Wait for indexer to finish incoming requests.
-	 */
 	public static void waitForIndexer() {
 		final IndexManager indexManager = ModelManager.getModelManager().getIndexManager();
-		final Semaphore waitForIndexerSemaphore = new Semaphore(0);
-		final Thread noWaitSignalThread = new NoWaitSignalThread();
-		indexManager.request(new NoDelayRequest(noWaitSignalThread, waitForIndexerSemaphore));
-		noWaitSignalThread.start();
-		// Wait for indexer requests to be finished
-		waitForIndexerSemaphore.acquireUninterruptibly();
+		indexManager.waitUntilReady();
 	}
 
 	/**
