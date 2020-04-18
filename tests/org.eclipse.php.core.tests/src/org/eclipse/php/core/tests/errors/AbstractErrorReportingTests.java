@@ -14,6 +14,8 @@
  *******************************************************************************/
 package org.eclipse.php.core.tests.errors;
 
+import static org.junit.Assert.fail;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -30,6 +32,7 @@ import org.eclipse.php.core.tests.PdttFile;
 import org.eclipse.php.core.tests.TestUtils;
 import org.eclipse.php.core.tests.runner.PDTTList.AfterList;
 import org.eclipse.php.core.tests.runner.PDTTList.BeforeList;
+import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.compiler.ast.parser.PHPProblemIdentifier;
 import org.junit.Test;
 
@@ -66,7 +69,7 @@ abstract public class AbstractErrorReportingTests {
 		PDTTUtils.assertContents(pdttFiles.get(fileName).getExpected(), buf.toString());
 	}
 
-	protected IFile createFile(String data) throws Exception {
+	protected IFile createFile(String data) {
 		return TestUtils.createFile(project, "test" + (++count) + ".php", data);
 	}
 
@@ -77,20 +80,25 @@ abstract public class AbstractErrorReportingTests {
 
 	@BeforeList
 	public void setUpSuite() throws Exception {
-		project = TestUtils.createProject("ErrorReportingTests");
-		ResourcesPlugin.getWorkspace().getRoot().getProject(getPHPVersion() + "ErrorReportingTests");
-		for (final String fileName : fileNames) {
-			PdttFile pdttFile = new PdttFile(fileName);
-			pdttFiles.put(fileName, pdttFile);
-			files.put(fileName, createFile(pdttFile.getFile().trim()));
-			for (String otherFile : pdttFile.getOtherFiles()) {
-				createFile(otherFile.trim());
+		ResourcesPlugin.getWorkspace().run((m) -> {
+			project = TestUtils.createProject("ErrorReportingTests");
+			TestUtils.setProjectPHPVersion(project, getPHPVersion());
+			try {
+				for (final String fileName : fileNames) {
+					PdttFile pdttFile = new PdttFile(fileName);
+					pdttFiles.put(fileName, pdttFile);
+					files.put(fileName, createFile(pdttFile.getFile().trim()));
+					for (String otherFile : pdttFile.getOtherFiles()) {
+						createFile(otherFile.trim());
+					}
+				}
+			} catch (Exception e) {
+				Logger.logException(e);
+				fail(e.getMessage());
 			}
-		}
-		TestUtils.setProjectPHPVersion(project, getPHPVersion());
+		}, null);
 		// Perform full build to trigger errors check
 		project.build(IncrementalProjectBuilder.FULL_BUILD, null);
-		TestUtils.waitForIndexer();
 		TestUtils.waitForAutoBuild();
 	}
 

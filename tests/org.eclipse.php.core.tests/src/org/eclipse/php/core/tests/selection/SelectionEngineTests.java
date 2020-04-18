@@ -23,6 +23,7 @@ import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
@@ -40,6 +41,7 @@ import org.eclipse.php.core.tests.runner.PDTTList;
 import org.eclipse.php.core.tests.runner.PDTTList.AfterList;
 import org.eclipse.php.core.tests.runner.PDTTList.BeforeList;
 import org.eclipse.php.core.tests.runner.PDTTList.Parameters;
+import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.junit.After;
 import org.junit.ClassRule;
@@ -90,6 +92,7 @@ public class SelectionEngineTests {
 	protected IProject project;
 	protected IFile testFile = null;
 	protected List<IFile> otherFiles = new ArrayList<>();
+	protected ISourceRange range;
 	protected PHPVersion version;
 
 	public SelectionEngineTests(PHPVersion version, String[] fileNames) {
@@ -221,10 +224,17 @@ public class SelectionEngineTests {
 	}
 
 	protected IModelElement[] getSelection(CodeAssistPdttFile pdttFile) throws Exception {
-		ISourceRange range = createFile(pdttFile);
-		for (int i = 0, len = pdttFile.getOtherFiles().length; i < len; i++) {
-			otherFiles.add(TestUtils.createFile(project, "FILE" + i + ".php", pdttFile.getOtherFile(i)));
-		}
+		ResourcesPlugin.getWorkspace().run((m) -> {
+			try {
+				range = createFile(pdttFile);
+			} catch (Exception e) {
+				Logger.logException(e);
+				fail();
+			}
+			for (int i = 0, len = pdttFile.getOtherFiles().length; i < len; i++) {
+				otherFiles.add(TestUtils.createFile(project, "FILE" + i + ".php", pdttFile.getOtherFile(i)));
+			}
+		}, null);
 		TestUtils.waitForIndexer();
 		ISourceModule sourceModule = getSourceModule();
 		IModelElement[] elements = sourceModule.codeSelect(range.getOffset(), range.getLength());
