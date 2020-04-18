@@ -21,9 +21,11 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.php.core.tests.PDTTUtils;
 import org.eclipse.php.core.tests.TestUtils;
 import org.eclipse.php.core.tests.runner.PDTTList;
+import org.eclipse.php.internal.core.Logger;
 import org.junit.runner.RunWith;
 import org.osgi.framework.Bundle;
 
@@ -31,11 +33,10 @@ import org.osgi.framework.Bundle;
 public abstract class AbstractPDTTListRefactoringTest extends AbstractRefactoringTest {
 
 	protected String[] fileNames = null;
-	protected final TestProject project;
+	protected TestProject project;
 	protected Map<String, PdttFileExt> filesMap = new LinkedHashMap<>();
 
 	public AbstractPDTTListRefactoringTest(String[] fileNames) {
-		project = createProject();
 		this.fileNames = fileNames;
 	}
 
@@ -45,7 +46,17 @@ public abstract class AbstractPDTTListRefactoringTest extends AbstractRefactorin
 
 	@PDTTList.BeforeList
 	public void setUpListSuite() throws Exception {
-		initFiles(fileNames);
+		project = createProject();
+		ResourcesPlugin.getWorkspace().run((m) -> {
+			try {
+				initFiles(fileNames);
+			} catch (Exception e) {
+				Logger.logException(e);
+				fail();
+			}
+		}, null);
+		TestUtils.waitForIndexer();
+
 	}
 
 	@PDTTList.AfterList
@@ -61,7 +72,6 @@ public abstract class AbstractPDTTListRefactoringTest extends AbstractRefactorin
 			}
 			filesMap.put(fileName, pdttFile);
 		}
-		TestUtils.waitForIndexer();
 	}
 
 	protected String getContents(PdttFileExt pdttFile, FileInfo testFile) {

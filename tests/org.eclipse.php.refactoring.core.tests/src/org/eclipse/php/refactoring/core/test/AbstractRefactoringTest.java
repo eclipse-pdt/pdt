@@ -7,6 +7,7 @@ import static org.junit.Assert.fail;
 import java.io.IOException;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
@@ -32,6 +33,7 @@ public abstract class AbstractRefactoringTest {
 
 	protected Program createProgram(IFile file) throws Exception {
 		ISourceModule sourceModule = DLTKCore.createSourceModuleFrom(file);
+		sourceModule.makeConsistent(null);
 		Program program = null;
 		program = ASTUtils.createProgramFromSource(sourceModule);
 		return program;
@@ -39,20 +41,28 @@ public abstract class AbstractRefactoringTest {
 
 	protected void performChange(RefactoringProcessor processor) {
 		try {
-			Change change = processor.createChange(new NullProgressMonitor());
-			if (change != null) {
-				change.perform(new NullProgressMonitor());
-			}
-		} catch (OperationCanceledException e) {
-			e.printStackTrace();
-			fail(e.getMessage());
+			ResourcesPlugin.getWorkspace().run((m) -> {
+				try {
+					Change change = processor.createChange(new NullProgressMonitor());
+					if (change != null) {
+						change.perform(new NullProgressMonitor());
+					}
+				} catch (OperationCanceledException e) {
+					e.printStackTrace();
+					fail(e.getMessage());
+				} catch (CoreException e) {
+					e.printStackTrace();
+					fail(e.getMessage());
+				} catch (Exception e) {
+					e.printStackTrace();
+					fail(e.getMessage());
+				}
+			}, null);
 		} catch (CoreException e) {
 			e.printStackTrace();
 			fail(e.getMessage());
-		} catch (Exception e) {
-			e.printStackTrace();
-			fail(e.getMessage());
 		}
+
 		TestUtils.waitForIndexer();
 	}
 

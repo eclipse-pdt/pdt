@@ -188,16 +188,18 @@ public class CodeAssistTests {
 
 	@After
 	public void deleteFiles() throws CoreException {
-		if (testFile != null) {
-			TestUtils.deleteFile(testFile);
-		}
-		if (otherFiles != null) {
-			for (IFile file : otherFiles) {
-				if (file != null) {
-					TestUtils.deleteFile(file);
+		ResourcesPlugin.getWorkspace().run((m) -> {
+			if (testFile != null) {
+				TestUtils.deleteFile(testFile);
+			}
+			if (otherFiles != null) {
+				for (IFile file : otherFiles) {
+					if (file != null) {
+						TestUtils.deleteFile(file);
+					}
 				}
 			}
-		}
+		}, null);
 	}
 
 	/**

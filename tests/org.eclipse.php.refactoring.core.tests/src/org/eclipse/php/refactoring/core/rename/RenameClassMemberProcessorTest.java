@@ -17,6 +17,7 @@ import static org.junit.Assert.assertNotNull;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.php.core.ast.nodes.ASTNode;
 import org.eclipse.php.core.ast.nodes.Program;
+import org.eclipse.php.core.tests.TestUtils;
 import org.eclipse.php.core.tests.runner.PDTTList;
 import org.eclipse.php.refactoring.core.test.AbstractPDTTListRefactoringTest;
 import org.eclipse.php.refactoring.core.test.PdttFileExt;
@@ -36,6 +37,7 @@ public class RenameClassMemberProcessorTest extends AbstractPDTTListRefactoringT
 		PdttFileExt testFile = filesMap.get(fileName);
 		IFile file = project.findFile(testFile.getTestFiles().get(0).getName());
 
+		TestUtils.waitForIndexer();
 		Program program = createProgram(file);
 
 		assertNotNull(program);
@@ -50,6 +52,7 @@ public class RenameClassMemberProcessorTest extends AbstractPDTTListRefactoringT
 		processor.setUpdateTextualMatches(Boolean.valueOf(testFile.getConfig().get("updateTextualMatches")));
 
 		checkInitCondition(processor);
+
 		performChange(processor);
 		checkTestResult(testFile);
 	}

@@ -27,6 +27,7 @@ import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IPath;
@@ -273,15 +274,17 @@ public class SemanticHighlightingTests {
 	}
 
 	protected void createFile(PdttFile pdttFile) throws Exception {
-		testFile = TestUtils.createFile(project, "test.php", new String(pdttFile.getFile().getBytes()));
-		String[] otherFiles = pdttFile.getOtherFiles();
-		this.otherFiles = new ArrayList<>(otherFiles.length);
-		int i = 0;
-		for (String otherFileContent : otherFiles) {
-			IFile tmp = TestUtils.createFile(project, String.format("test%s.php", i), otherFileContent);
-			this.otherFiles.add(i, tmp);
-			i++;
-		}
+		ResourcesPlugin.getWorkspace().run((m) -> {
+			testFile = TestUtils.createFile(project, "test.php", new String(pdttFile.getFile().getBytes()));
+			String[] otherFiles = pdttFile.getOtherFiles();
+			this.otherFiles = new ArrayList<>(otherFiles.length);
+			int i = 0;
+			for (String otherFileContent : otherFiles) {
+				IFile tmp = TestUtils.createFile(project, String.format("test%s.php", i), otherFileContent);
+				this.otherFiles.add(i, tmp);
+				i++;
+			}
+		}, null);
 		// Wait for indexer...
 		TestUtils.waitForIndexer();
 	}

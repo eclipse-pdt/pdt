@@ -244,12 +244,15 @@ public class ContentAssistTests {
 	}
 
 	private void createFiles(String content, String fileName, String[] other) throws Exception {
-		testFile = TestUtils.createFile(project, new Path(fileName).lastSegment(), content);
-		otherFiles = new IFile[other.length];
-		for (int i = 0; i < other.length; i++) {
-			otherFiles[i] = TestUtils.createFile(project, new Path(i + fileName).addFileExtension("php").lastSegment(),
-					other[i]);
-		}
+		ResourcesPlugin.getWorkspace().run((m) -> {
+			testFile = TestUtils.createFile(project, new Path(fileName).lastSegment(), content);
+			otherFiles = new IFile[other.length];
+			for (int i = 0; i < other.length; i++) {
+				otherFiles[i] = TestUtils.createFile(project,
+						new Path(i + fileName).addFileExtension("php").lastSegment(), other[i]);
+			}
+		}, null);
+
 		TestUtils.waitForIndexer();
 	}
 
