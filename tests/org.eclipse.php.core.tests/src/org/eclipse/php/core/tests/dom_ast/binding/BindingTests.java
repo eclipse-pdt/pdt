@@ -54,6 +54,7 @@ import org.eclipse.php.core.ast.nodes.StaticMethodInvocation;
 import org.eclipse.php.core.project.ProjectOptions;
 import org.eclipse.php.core.tests.TestSuiteWatcher;
 import org.eclipse.php.core.tests.TestUtils;
+import org.eclipse.php.core.tests.TestUtils.ColliderType;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -71,12 +72,14 @@ public class BindingTests {
 
 	@BeforeClass
 	public static void setUpSuite() {
+		TestUtils.disableColliders(ColliderType.ALL);
 		project = TestUtils.createProject("BindingTests");
 	}
 
 	@AfterClass
 	public static void tearDownSuite() {
 		TestUtils.deleteProject(project);
+		TestUtils.enableColliders(ColliderType.ALL);
 	}
 
 	@After
@@ -94,24 +97,24 @@ public class BindingTests {
 	}
 
 	/**
-	 * Locate the index of the marker (comment block) in the given content. (start
-	 * the search from the zero index)
+	 * Locate the index of the marker (comment block) in the given content.
+	 * (start the search from the zero index)
 	 */
 	private int locateElement(String content) {
 		return locateElement(content, 0);
 	}
 
 	protected Program createAndParse(String code) throws Exception {
-		if (testFile == null) {
-			testFile = TestUtils.createFile(project, "test.php", code);
-			// Wait for indexer...
-			TestUtils.waitForIndexer();
-		}
+		testFile = TestUtils.createFile(project, "test.php", code);
+		TestUtils.waitForIndexer();
 		ISourceModule sourceModule = null;
 		sourceModule = DLTKCore.createSourceModuleFrom(testFile);
 		ASTParser parser = ASTParser.newParser(new InputStreamReader(testFile.getContents()),
 				ProjectOptions.getDefaultPHPVersion(), ProjectOptions.getDefaultIsSupportingASPTags(),
 				ProjectOptions.getDefaultUseShortTags(), sourceModule);
+
+		// Wait for indexer...
+
 		return parser.createAST(new NullProgressMonitor());
 	}
 
