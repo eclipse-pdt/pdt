@@ -142,7 +142,6 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 	 * 
 	 * @since 3.4
 	 */
-	private ActivationListener fActivationListener = new ActivationListener();
 	private ISelectionListenerWithAST fPostSelectionListenerWithAST;
 	private OccurrencesFinderJob fOccurrencesFinderJob;
 	/** The occurrences finder job canceler */
@@ -698,64 +697,6 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 	}
 
 	/**
-	 * Internal activation listener.
-	 * 
-	 * @since 3.0
-	 */
-	private class ActivationListener implements IWindowListener {
-
-		/*
-		 * @seeorg.eclipse.ui.IWindowListener#windowActivated(org.eclipse.ui.
-		 * IWorkbenchWindow)
-		 * 
-		 * @since 3.1
-		 */
-		@Override
-		public void windowActivated(IWorkbenchWindow window) {
-			if (window == getEditorSite().getWorkbenchWindow() && fMarkOccurrenceAnnotations && isActivePart()) {
-				fForcedMarkOccurrencesSelection = getSelectionProvider().getSelection();
-				IModelElement sourceModule = getModelElement();
-				if (sourceModule != null && sourceModule.getElementType() == IModelElement.SOURCE_MODULE) {
-					updateOccurrenceAnnotations((ITextSelection) fForcedMarkOccurrencesSelection, sourceModule);
-				}
-			}
-		}
-
-		/*
-		 * @seeorg.eclipse.ui.IWindowListener#windowDeactivated(org.eclipse.ui.
-		 * IWorkbenchWindow)
-		 * 
-		 * @since 3.1
-		 */
-		@Override
-		public void windowDeactivated(IWorkbenchWindow window) {
-			if (window == getEditorSite().getWorkbenchWindow() && fMarkOccurrenceAnnotations && isActivePart()) {
-				removeOccurrenceAnnotations();
-			}
-		}
-
-		/*
-		 * @seeorg.eclipse.ui.IWindowListener#windowClosed(org.eclipse.ui.
-		 * IWorkbenchWindow)
-		 * 
-		 * @since 3.1
-		 */
-		@Override
-		public void windowClosed(IWorkbenchWindow window) {
-		}
-
-		/*
-		 * @seeorg.eclipse.ui.IWindowListener#windowOpened(org.eclipse.ui.
-		 * IWorkbenchWindow)
-		 * 
-		 * @since 3.1
-		 */
-		@Override
-		public void windowOpened(IWorkbenchWindow window) {
-		}
-	}
-
-	/**
 	 * Cancels the occurrences finder job upon document changes.
 	 * 
 	 * @since 3.0
@@ -1131,10 +1072,6 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 			InstanceScope.INSTANCE.getNode(PHPCorePlugin.ID).removePreferenceChangeListener(fPreferencesListener);
 		}
 
-		if (fActivationListener != null) {
-			PlatformUI.getWorkbench().removeWindowListener(fActivationListener);
-			fActivationListener = null;
-		}
 		// some things in the configuration need to clean
 		// up after themselves
 		uninstallOccurrencesFinder();
@@ -2117,8 +2054,6 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		if (isMarkingOccurrences()) {
 			installOccurrencesFinder(true);
 		}
-
-		PlatformUI.getWorkbench().addWindowListener(fActivationListener);
 
 		setHelpContextId(IPHPHelpContextIds.EDITOR_PREFERENCES);
 	}
