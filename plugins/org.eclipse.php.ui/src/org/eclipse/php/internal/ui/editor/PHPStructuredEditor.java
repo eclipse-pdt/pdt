@@ -115,7 +115,6 @@ import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.internal.actions.ActionDefinitionIds;
 import org.eclipse.wst.sse.ui.internal.contentassist.StructuredContentAssistant;
 import org.eclipse.wst.sse.ui.internal.contentoutline.ConfigurableContentOutlinePage;
-import org.eclipse.wst.sse.ui.internal.projection.AbstractStructuredFoldingStrategy;
 import org.eclipse.wst.sse.ui.internal.reconcile.ReconcileAnnotationKey;
 import org.eclipse.wst.sse.ui.internal.reconcile.TemporaryAnnotation;
 
@@ -978,15 +977,6 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 	private final List<String> fCursorActions = new ArrayList<>(5);
 
 	public PHPStructuredEditor() {
-		/**
-		 * Bug fix: #158170 Set WST's folding support enablement according to
-		 * PHP editor folding support status. Must be removed, when WTP releases
-		 * folding support
-		 */
-		boolean foldingEnabled = PHPUiPlugin.getDefault().getPreferenceStore()
-				.getBoolean(PreferenceConstants.EDITOR_FOLDING_ENABLED);
-		SSEUIPlugin.getDefault().getPreferenceStore().setValue(PreferenceConstants.EDITOR_FOLDING_ENABLED,
-				foldingEnabled);
 		setDocumentProvider(DLTKUIPlugin.getDocumentProvider());
 		fPHPEditorErrorTickUpdater = new PHPEditorErrorTickUpdater(this);
 	}
@@ -2012,7 +2002,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 	private boolean isFoldingEnabled() {
 		IPreferenceStore store = getPreferenceStore();
 		// check both preference store and vm argument
-		return (store.getBoolean(AbstractStructuredFoldingStrategy.FOLDING_ENABLED));
+		return (store.getBoolean(PreferenceConstants.EDITOR_FOLDING_ENABLED));
 	}
 
 	/**
@@ -2339,7 +2329,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 			super.handlePreferenceStoreChanged(event);
 		}
 
-		if (AbstractStructuredFoldingStrategy.FOLDING_ENABLED.equals(property)) {
+		if (PreferenceConstants.EDITOR_FOLDING_ENABLED.equals(property)) {
 			if (getSourceViewer() instanceof ProjectionViewer) {
 				// install projection support if it has not even been
 				// installed yet

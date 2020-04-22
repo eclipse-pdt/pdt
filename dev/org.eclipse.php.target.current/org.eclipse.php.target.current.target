@@ -46,7 +46,7 @@
 <unit id="org.eclipse.wst.json_ui.feature.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.wst.web_ui.feature.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.wst.xml_ui.feature.feature.group" version="0.0.0"/>
-<repository location="https://download.eclipse.org/webtools/downloads/drops/R3.17.0/I-latest/repository"/>
+<repository location="https://download.eclipse.org/webtools/downloads/drops/R3.18.0/I-latest/repository"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.license.feature.group" version="0.0.0"/>

@@ -34,8 +34,8 @@
    </license>
 
    <requires>
-      <import feature="org.eclipse.dltk.core" version="6.1.0" match="greaterOrEqual"/>
-      <import feature="org.eclipse.dltk.core.index.lucene" version="5.9.0" match="greaterOrEqual"/>
+      <import feature="org.eclipse.dltk.core" version="6.2.0" match="greaterOrEqual"/>
+      <import feature="org.eclipse.dltk.core.index.lucene" version="6.2.0" match="greaterOrEqual"/>
       <import feature="org.eclipse.wst.server_ui.feature"/>
       <import plugin="org.eclipse.wst.html.ui" />
       <import plugin="org.eclipse.wst.css.ui" />
