@@ -25,7 +25,6 @@ import org.eclipse.php.internal.ui.editor.SemanticHighlightingManager;
 import org.eclipse.php.internal.ui.editor.saveparticipant.CodeFormatSaveParticipant;
 import org.eclipse.php.internal.ui.editor.saveparticipant.OrganizeUseStatmentsSaveParticipant;
 import org.eclipse.php.internal.ui.editor.saveparticipant.RemoveTrailingWhitespacesSaveParticipant;
-import org.eclipse.php.internal.ui.folding.IStructuredTextFoldingProvider;
 import org.eclipse.php.internal.ui.outline.PHPContentOutlineConfiguration;
 import org.eclipse.php.internal.ui.util.PHPManualSiteDescriptor;
 import org.eclipse.swt.SWT;
@@ -34,6 +33,7 @@ import org.eclipse.ui.internal.editors.text.EditorsPlugin;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
 import org.eclipse.ui.texteditor.spelling.SpellingService;
 import org.eclipse.wst.sse.ui.internal.preferences.ui.ColorHelper;
+import org.eclipse.wst.sse.ui.preferences.AppearancePreferenceNames;
 
 public class PreferenceConstants {
 
@@ -777,11 +777,8 @@ public class PreferenceConstants {
 	 * </p>
 	 * 
 	 * @since 3.1
-	 * @see IStructuredTextFoldingProvider#FOLDING_ENABLED
 	 */
-	// public static final String EDITOR_FOLDING_ENABLED=
-	// "editor_folding_enabled";
-	public static final String EDITOR_FOLDING_ENABLED = "foldingEnabled"; //$NON-NLS-1$ ;
+	public static final String EDITOR_FOLDING_ENABLED = AppearancePreferenceNames.FOLDING_ENABLED;
 
 	/**
 	 * A named preference that stores the configured folding provider.
