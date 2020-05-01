@@ -369,10 +369,6 @@ public class VariableValidator implements IValidatorExtension {
 					String mess = NLS.bind(Messages.VariableValidator_IsNeverUsed, entry.getKey());
 					validator.reportProblem(value.start, value.end, mess, PHPProblemIdentifier.UnusedVariable,
 							ProblemSeverity.WARNING);
-					for (Entry<Integer, Integer> a : value.other.entrySet()) {
-						validator.reportProblem(a.getKey(), a.getValue(), mess, PHPProblemIdentifier.UnusedVariable,
-								ProblemSeverity.WARNING);
-					}
 				}
 			}
 		}
