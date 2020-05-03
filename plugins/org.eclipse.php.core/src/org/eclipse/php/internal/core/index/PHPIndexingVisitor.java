@@ -363,6 +363,12 @@ public class PHPIndexingVisitor extends PHPIndexingVisitorExtension {
 		modifiers = markAsDeprecated(modifiers, method);
 
 		StringBuilder metadata = new StringBuilder();
+		if ((modifiers & Modifiers.AccGlobal) != 0) {
+			// Take care of global functions
+			if (fCurrentQualifier == null && !fCurrentQualifierCounts.containsKey(methodName)) {
+				fCurrentQualifierCounts.put(methodName, 1);
+			}
+		}
 		metadata.append(fCurrentQualifier != null ? fCurrentQualifierCounts.get(fCurrentQualifier) : 1);
 		metadata.append(QUALIFIER_SEPERATOR);
 		if (method instanceof PHPMethodDeclaration) {
@@ -561,6 +567,17 @@ public class PHPIndexingVisitor extends PHPIndexingVisitorExtension {
 
 			String[] superClasses = processSuperClasses(type);
 			StringBuilder metadata = new StringBuilder();
+			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=448895
+			// A type name can first be used inside a global namespace and after
+			// that can be used again as a namespace name,
+			// we must add first occurence of the type name to the
+			// fCurrentQualifierCounts Map so when same name is
+			// used again as a namespace name
+			// fCurrentQualifierCounts.get(fCurrentQualifier) will correctly
+			// return a value >= 2:
+			if (fCurrentQualifier == null && !fCurrentQualifierCounts.containsKey(type.getName())) {
+				fCurrentQualifierCounts.put(type.getName(), 1);
+			}
 			metadata.append(fCurrentQualifier != null ? fCurrentQualifierCounts.get(fCurrentQualifier) : 1);
 			metadata.append(QUALIFIER_SEPERATOR);
 			for (int i = 0; i < superClasses.length; ++i) {
@@ -835,13 +852,18 @@ public class PHPIndexingVisitor extends PHPIndexingVisitorExtension {
 		ConstantReference constantName = declaration.getConstantName();
 		int offset = constantName.sourceStart();
 		int length = constantName.sourceEnd() - constantName.sourceStart();
+		String name = ASTUtils.stripQuotes(constantName.getName());
 		StringBuilder metadata = new StringBuilder();
+		if (fCurrentParent == null) {
+			// Take care of non-class constants
+			if (fCurrentQualifier == null && !fCurrentQualifierCounts.containsKey(name)) {
+				fCurrentQualifierCounts.put(name, 1);
+			}
+		}
 		metadata.append(fCurrentQualifier != null ? fCurrentQualifierCounts.get(fCurrentQualifier) : 1);
 		metadata.append(QUALIFIER_SEPERATOR);
-		modifyDeclaration(declaration,
-				new DeclarationInfo(IModelElement.FIELD, modifiers, offset, length, offset, length,
-						ASTUtils.stripQuotes(constantName.getName()), metadata.toString(), encodeDocInfo(declaration),
-						fCurrentQualifier, fCurrentParent));
+		modifyDeclaration(declaration, new DeclarationInfo(IModelElement.FIELD, modifiers, offset, length, offset,
+				length, name, metadata.toString(), encodeDocInfo(declaration), fCurrentQualifier, fCurrentParent));
 		return visitGeneral(declaration);
 	}
 
