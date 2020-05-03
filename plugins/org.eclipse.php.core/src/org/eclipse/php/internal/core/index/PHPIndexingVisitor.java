@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2015, 2016, 2018 IBM Corporation and others.
+ * Copyright (c) 2009-2020 IBM Corporation and others.
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -561,6 +561,24 @@ public class PHPIndexingVisitor extends PHPIndexingVisitorExtension {
 
 			String[] superClasses = processSuperClasses(type);
 			StringBuilder metadata = new StringBuilder();
+			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=448895
+			// See also PHPElementResolver#resolve().
+			// A type name can first be used inside a global namespace and after
+			// that can be used again as a namespace name,
+			// we must add first occurence of the type name to the
+			// fCurrentQualifierCounts Map so when same name is
+			// used again as a namespace name
+			// fCurrentQualifierCounts.get(fCurrentQualifier) will
+			// return a value > 1. This hack is necessary otherwise
+			// PHPElementResolver#resolve() could generate identical
+			// "new IndexType(..., 1)" model elements for
+			// IModelElement.PACKAGE_DECLARATION and IModelElement.TYPE
+			// element types sharing same name. Other element types should be
+			// OK, because PHPElementResolver#resolve() returns different class
+			// objects for methods, fields and import declarations.
+			if (fCurrentQualifier == null && !fCurrentQualifierCounts.containsKey(type.getName())) {
+				fCurrentQualifierCounts.put(type.getName(), 1);
+			}
 			metadata.append(fCurrentQualifier != null ? fCurrentQualifierCounts.get(fCurrentQualifier) : 1);
 			metadata.append(QUALIFIER_SEPERATOR);
 			for (int i = 0; i < superClasses.length; ++i) {

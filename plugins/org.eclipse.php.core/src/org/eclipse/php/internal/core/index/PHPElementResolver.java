@@ -85,6 +85,12 @@ public class PHPElementResolver implements IElementResolver {
 			// a namespace cannot have a nested namespace otherwise
 			// occurrenceCount will be applied to both!
 			assert qualifier == null;
+			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=448895
+			// See also PHPIndexingVisitor#visit(TypeDeclaration).
+			// We have to be careful that exactly same
+			// IndexType(..., occurrenceCount) object
+			// cannot be generated for a IModelElement.PACKAGE_DECLARATION
+			// element and a IModelElement.TYPE element.
 			return new IndexType(parentElement, elementName, flags, offset, length, nameOffset, nameLength,
 					superClassNames, doc, occurrenceCount);
 
@@ -140,8 +146,8 @@ public class PHPElementResolver implements IElementResolver {
 	 * 
 	 * @param doc
 	 *            String representation of encoded PHPDoc info
-	 * @return map of encoded information, or <code>null</code> in case PHPDoc info
-	 *         is <code>null</code>
+	 * @return map of encoded information, or <code>null</code> in case PHPDoc
+	 *         info is <code>null</code>
 	 */
 	protected static Map<String, String> decodeDocInfo(String doc) {
 		if (doc == null) {

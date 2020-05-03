@@ -1,0 +1,18 @@
+--TEST--
+Bug 559657 - Validator warns about unresolved types when classes and namespaces have same name
+--FILE--
+<?php
+namespace {
+final class FFI  {
+	/**
+	 * @return bool whether a FFI\CData is a null pointer.
+	 */
+	public static function isNull (FFI\CData &$ptr) {}
+}
+}
+
+namespace FFI {
+final class CData  {
+}
+}
+--EXPECT--
