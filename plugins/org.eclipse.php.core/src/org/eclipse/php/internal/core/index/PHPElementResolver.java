@@ -22,6 +22,7 @@ import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.core.index2.IElementResolver;
 import org.eclipse.dltk.internal.core.*;
+import org.eclipse.dltk.internal.core.util.Util;
 import org.eclipse.php.core.compiler.IPHPModifiers;
 import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.Constants;
@@ -68,7 +69,7 @@ public class PHPElementResolver implements IElementResolver {
 		}
 		if (qualifier != null) {
 			// namespace:
-			parentElement = new IndexType(parentElement, qualifier, Modifiers.AccNameSpace, 0, 0, 0, 0, null, doc,
+			parentElement = new IndexNSType(parentElement, qualifier, Modifiers.AccNameSpace, 0, 0, 0, 0, null, doc,
 					occurrenceCount);
 		}
 		if (parent != null) {
@@ -85,14 +86,14 @@ public class PHPElementResolver implements IElementResolver {
 			// a namespace cannot have a nested namespace otherwise
 			// occurrenceCount will be applied to both!
 			assert qualifier == null;
-			return new IndexType(parentElement, elementName, flags, offset, length, nameOffset, nameLength,
+			return new IndexNSType(parentElement, elementName, flags, offset, length, nameOffset, nameLength,
 					superClassNames, doc, occurrenceCount);
 
 		case IModelElement.TYPE:
 			if (metadataToDecode != null) {
 				superClassNames = StringUtils.split(metadataToDecode, SEPARATOR_CHAR);
 			}
-			return new IndexType(parentElement, elementName, flags, offset, length, nameOffset, nameLength,
+			return new IndexNonNSType(parentElement, elementName, flags, offset, length, nameOffset, nameLength,
 					superClassNames, doc, 1);
 
 		case IModelElement.METHOD:
@@ -140,8 +141,8 @@ public class PHPElementResolver implements IElementResolver {
 	 * 
 	 * @param doc
 	 *            String representation of encoded PHPDoc info
-	 * @return map of encoded information, or <code>null</code> in case PHPDoc info
-	 *         is <code>null</code>
+	 * @return map of encoded information, or <code>null</code> in case PHPDoc
+	 *         info is <code>null</code>
 	 */
 	protected static Map<String, String> decodeDocInfo(String doc) {
 		if (doc == null) {
@@ -345,7 +346,7 @@ public class PHPElementResolver implements IElementResolver {
 
 	}
 
-	private static class IndexType extends SourceType implements IPHPDocAwareElement {
+	private static abstract class IndexType extends SourceType implements IPHPDocAwareElement {
 
 		private int flags;
 		private ISourceRange sourceRange;
@@ -399,5 +400,45 @@ public class PHPElementResolver implements IElementResolver {
 			return null;
 		}
 
+	}
+
+	private static class IndexNonNSType extends IndexType {
+		public IndexNonNSType(ModelElement parent, String name, int flags, int offset, int length, int nameOffset,
+				int nameLength, String[] superClassNames, String doc, int occurrenceCount) {
+			super(parent, name, flags, offset, length, nameOffset, nameLength, superClassNames, doc, occurrenceCount);
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (!(o instanceof IndexNonNSType)) {
+				return false;
+			}
+			return super.equals(o);
+		}
+
+		@Override
+		public int hashCode() {
+			return Util.combineHashCodes("IndexNonNSType".hashCode(), super.hashCode()); //$NON-NLS-1$
+		}
+	}
+
+	private static class IndexNSType extends IndexType {
+		public IndexNSType(ModelElement parent, String name, int flags, int offset, int length, int nameOffset,
+				int nameLength, String[] superClassNames, String doc, int occurrenceCount) {
+			super(parent, name, flags, offset, length, nameOffset, nameLength, superClassNames, doc, occurrenceCount);
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (!(o instanceof IndexNSType)) {
+				return false;
+			}
+			return super.equals(o);
+		}
+
+		@Override
+		public int hashCode() {
+			return Util.combineHashCodes("IndexNSType".hashCode(), super.hashCode()); //$NON-NLS-1$
+		}
 	}
 }
