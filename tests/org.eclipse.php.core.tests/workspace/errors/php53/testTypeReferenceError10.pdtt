@@ -1,0 +1,32 @@
+--TEST--
+Bug 559657 - Validator warns about unresolved types when classes and namespaces have same name
+--FILE--
+<?php
+namespace FFI
+{
+
+}
+namespace
+{
+
+    final class FFI
+    {
+
+        /**
+         *
+         * @param \FFI\CData $ptr
+         *            The handle of the pointer to a C data structure.
+         */
+        public static function isNull(\FFI\CData &$ptr)
+        {
+        }
+    }
+}
+namespace FFI
+{
+
+    final class CData
+    {
+    }
+}
+--EXPECT--

@@ -1,0 +1,19 @@
+--TEST--
+Bug 559657 - Validator warns about unresolved types when classes and namespaces have same name
+--FILE--
+<?php
+namespace
+{
+    function FFI(\FFI\CData &$ptr)
+    {
+    }
+}
+namespace FFI
+{
+    final class CData
+    {
+    }
+
+    \FFI();
+}
+--EXPECT--

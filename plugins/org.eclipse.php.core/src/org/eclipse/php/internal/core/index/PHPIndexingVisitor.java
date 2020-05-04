@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2015, 2016, 2018 IBM Corporation and others.
+ * Copyright (c) 2009-2020 IBM Corporation and others.
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -115,6 +115,8 @@ public class PHPIndexingVisitor extends PHPIndexingVisitorExtension {
 	protected Map<String, Integer> fCurrentQualifierCounts = new HashMap<>();
 	protected String fCurrentParent;
 	protected Stack<ASTNode> fNodes = new Stack<>();
+	protected String fPreviousQualifier;
+	protected Set<String> fglobalNSQualifiers = new HashSet<>();
 
 	public PHPIndexingVisitor(IIndexingRequestor requestor, ISourceModule module) {
 		this.requestor = requestor;
@@ -287,6 +289,8 @@ public class PHPIndexingVisitor extends PHPIndexingVisitorExtension {
 			// resolve more type member declarations
 			resolveMagicMembers(type);
 
+			fglobalNSQualifiers.clear();
+			fPreviousQualifier = fCurrentQualifier;
 			fCurrentNamespace = null; // there are no nested namespaces
 			fCurrentQualifier = null;
 			fLastUseParts.clear();
@@ -561,6 +565,31 @@ public class PHPIndexingVisitor extends PHPIndexingVisitorExtension {
 
 			String[] superClasses = processSuperClasses(type);
 			StringBuilder metadata = new StringBuilder();
+			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=448895
+			// See also PHPElementResolver#resolve().
+			// A type name can first be used inside a global namespace and after
+			// that can be used again as a namespace name,
+			// *OR* a name can first be used as a namespace name and after that
+			// can be used again as a type name inside a global namespace,
+			// we must adjust the qualifier counts otherwise
+			// PHPElementResolver#resolve() could generate identical
+			// "new IndexType(..., occurenceCount)" model elements for
+			// IModelElement.PACKAGE_DECLARATION and IModelElement.TYPE
+			// -typed elements sharing same element name. Other IModelElement.*
+			// types should be OK, because separate model classes will be used
+			// in PHPElementResolver#resolve().
+			if (fCurrentQualifier == null
+					&& (!fCurrentQualifierCounts.containsKey(type.getName()) || fPreviousQualifier != null)) {
+				// Do increment counts for a specific type name only one time
+				// per global namespace (or per multiple successive global
+				// namespaces).
+				if (!fglobalNSQualifiers.contains(type.getName())) {
+					Integer count = fCurrentQualifierCounts.get(type.getName());
+					count = count != null ? count + 1 : 1;
+					fCurrentQualifierCounts.put(type.getName(), count);
+					fglobalNSQualifiers.add(type.getName());
+				}
+			}
 			metadata.append(fCurrentQualifier != null ? fCurrentQualifierCounts.get(fCurrentQualifier) : 1);
 			metadata.append(QUALIFIER_SEPERATOR);
 			for (int i = 0; i < superClasses.length; ++i) {
