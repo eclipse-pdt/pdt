@@ -227,7 +227,7 @@ public List<BlockMarker> getBlockMarkers() {
 /* user method */
 @Override
 public final int getOffset() {
-	return fOffset + yychar;
+	return fOffset + ((int) yychar);
 }
 private final boolean isBlockMarker() {
 	return isBlockMarker(fCurrentTagName);
@@ -438,7 +438,7 @@ private final String doScanEndPHP(String searchContext, int exitState, int immed
 	yypushback(1); // begin with the last char
 
 	final AbstractPHPLexer phpLexer = getPHPLexer();
-	PHPScriptRegion region = new PHPScriptRegion(searchContext, yychar, phpVersion, isSupportingASPTags, useShortTags, phpLexer);
+	PHPScriptRegion region = new PHPScriptRegion(searchContext, ((int) yychar), phpVersion, isSupportingASPTags, useShortTags, phpLexer);
 
 	// restore the locations / states
 	reset(zzReader, phpLexer.getZZBuffer(), phpLexer.getParameters());
@@ -498,7 +498,7 @@ private final String doScan(String searchString, boolean requireTailSeparator, S
 		// the context of the region being added to the embedded container
 		internalContext = startType;
 		// keep track of where this container began; to provide relative indeces for the regions
-		int containerStart = yychar;
+		int containerStart = ((int) yychar);
 		boolean notFinished = true;
 		// keep track of where we seem to be so that the endTagName can be checked
 		boolean isInEndTag = false;
@@ -522,7 +522,7 @@ private final String doScan(String searchString, boolean requireTailSeparator, S
 					newToken = bufferedTextRegion;
 					bufferedTextRegion.adjustStart(-containerStart);
 				} else {
-					newToken = fRegionFactory.createToken(internalContext, yychar - containerStart, yylength(), yylength());
+					newToken = fRegionFactory.createToken(internalContext, ((int) yychar) - containerStart, yylength(), yylength());
 				}
 				fEmbeddedContainer.getRegions().add(newToken);
 				fEmbeddedContainer.setLength(fEmbeddedContainer.getLength() + newToken.getLength());
@@ -579,7 +579,7 @@ private final String doScan(String searchString, boolean requireTailSeparator, S
 						newToken = bufferedTextRegion;
 						bufferedTextRegion.adjustStart(-containerStart);
 					} else {
-						newToken = fRegionFactory.createToken(internalContext, yychar - containerStart, yylength(), yylength());
+						newToken = fRegionFactory.createToken(internalContext, ((int) yychar) - containerStart, yylength(), yylength());
 					}
 
 					fEmbeddedContainer.getRegions().add(newToken);
@@ -625,12 +625,12 @@ private final String doScan(String searchString, boolean requireTailSeparator, S
 		}
 		// finish adding the last context
 		if (internalContext != null && internalContext != PROXY_CONTEXT) {
-			ITextRegion newToken = fRegionFactory.createToken(internalContext, yychar - containerStart, yylength(), yylength());
+			ITextRegion newToken = fRegionFactory.createToken(internalContext, ((int) yychar) - containerStart, yylength(), yylength());
 			fEmbeddedContainer.getRegions().add(newToken);
 			// DW, 4/16/2003 token regions no longer have parents
 			//newToken.setParent(fEmbeddedContainer);
-			fEmbeddedContainer.setLength(yychar - containerStart + yylength());
-			fEmbeddedContainer.setTextLength(yychar - containerStart + yylength());
+			fEmbeddedContainer.setLength(((int) yychar) - containerStart + yylength());
+			fEmbeddedContainer.setTextLength(((int) yychar) - containerStart + yylength());
 		}
 		yybegin(fEmbeddedPostState);
 	}
@@ -740,7 +740,7 @@ public final ITextRegion getNextToken() throws IOException {
 		} else if (context == XML_END_TAG_OPEN) {
 			fIsBlockingEnabled = false;
 		}
-		start = yychar;
+		start = ((int) yychar);
 		textLength = length = yylength();
 		if (zzAtEOF) {
 			fTokenCount++;
@@ -775,7 +775,7 @@ public final ITextRegion getNextToken() throws IOException {
 	} else if (fBufferedContext == XML_END_TAG_OPEN) {
 		fIsBlockingEnabled = false;
 	}
-	fBufferedStart = yychar;
+	fBufferedStart = ((int) yychar);
 	fBufferedLength = yylength();
 	if (fBufferedContext == WHITE_SPACE) {
 		fShouldLoadBuffered = false;

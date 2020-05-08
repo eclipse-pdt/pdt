@@ -18,7 +18,7 @@ import java.util.Map;
 
 import org.eclipse.php.core.compiler.ast.nodes.PHPDocTag.TagKind;
 
-@SuppressWarnings({"unused", "nls"})
+//@SuppressWarnings({"unused", "nls"})
 
 %%
 

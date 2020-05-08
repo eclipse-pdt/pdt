@@ -14,7 +14,7 @@
 <project name="Downloading JFlex from www.jflex.de" default="getJFlexJar">
 
 	<target name="init">
-		<property name="jflexVersion" value="1.6.1" />
+		<property name="jflexVersion" value="1.8.2" />
 
 		<!-- if dir exists, then it'll be used to get jflex -->
 		<available file="/shared/tools/php" property="jflex.work.dir" value="/shared/tools/php"/>
@@ -22,7 +22,9 @@
 		<property name="jflex.work.dir" value="${java.io.tmpdir}/PDT_JFlex_files"/>
 
 		<mkdir dir="${jflex.work.dir}" />
-		<property name="jflexJar" value="${jflex.work.dir}/jflex-${jflexVersion}/lib/jflex-${jflexVersion}.jar" />
+		<property name="jflexJarPath" value="${jflex.work.dir}/jflex-${jflexVersion}/lib" />
+		<property name="jflexJarName" value="jflex-full-${jflexVersion}.jar" />
+		<property name="jflexJar" value="${jflexJarPath}/${jflexJarName}" />
 	</target>
 
 	<target name="getJFlexJar" depends="init">
@@ -37,7 +39,7 @@
 	</target>
 
 	<target name="downloadAndUnpack" unless="jarExists">
-		<get src="http://jflex.de/jflex-${jflexVersion}.zip" dest="${jflex.work.dir}/jflex-${jflexVersion}.zip" verbose="true" usetimestamp="true" />
+		<get src="https://github.com/jflex-de/jflex/releases/download/v${jflexVersion}/jflex-${jflexVersion}.zip" dest="${jflex.work.dir}/jflex-${jflexVersion}.zip" verbose="true" usetimestamp="true" />
 		<unzip src="${jflex.work.dir}/jflex-${jflexVersion}.zip" dest="${jflex.work.dir}" />
 	</target>
 
