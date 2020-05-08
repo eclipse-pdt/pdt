@@ -15,12 +15,13 @@
 
 	<import file="../../jflex/build.xml" />
 
-	<target name="checkUpToDate">
+	<target name="checkUpToDate" depends="getJFlexJar">
 		<uptodate
 			property="upToDate"
 			targetfile="../../../../gen/org/eclipse/php/internal/core/documentModel/parser/php53/PHPLexer.java">
 			<srcfiles dir="." includes="highlighting_scanner.jflex" />
 			<srcfiles dir="../../jflex" includes="common.skeleton" />
+			<srcfiles dir="${jflexJarPath}" includes="${jflexJarName}" />
 		</uptodate>
 	</target>
 
