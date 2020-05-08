@@ -28,7 +28,7 @@ import org.eclipse.php.core.compiler.ast.nodes.PHPDocTag;
 import org.eclipse.php.core.compiler.ast.nodes.PHPDocTag.TagKind;
 import org.eclipse.php.core.compiler.ast.nodes.Scalar;
 
-@SuppressWarnings({"unused", "nls"})
+//@SuppressWarnings({"unused", "nls"})
 
 %%
 
