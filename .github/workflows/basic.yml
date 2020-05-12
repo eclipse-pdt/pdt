@@ -26,8 +26,8 @@ jobs:
         key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
         restore-keys: ${{ runner.os }}-m2
     - name: Build with Maven
-      run sudo apt-get install -y xvfb --fix-missing
-      run xvfb-run -a mvn verify --file pom.xml
+      run: sudo apt-get install -y xvfb --fix-missing
+      run: xvfb-run -a mvn verify --file pom.xml
     - run: mkdir repository && cp -r dev/org.eclipse.php-repository/target/repository/* repository
     - name: Upload repository
       uses: actions/upload-artifact@v1
