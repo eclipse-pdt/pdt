@@ -4,9 +4,12 @@
 
 # Welcome to PHP Development Tools
 
+
 ![master](https://github.com/eclipse/pdt/workflows/Tycho%20build/badge.svg)
 [![Sonarcloud Status](https://sonarcloud.io/api/project_badges/measure?project=eclipse-tools.pdt.main&metric=alert_status)](https://sonarcloud.io/dashboard?id=eclipse-tools.pdt.main)
 [![License](https://img.shields.io/badge/License-EPL%202.0-green.svg)](https://opensource.org/licenses/EPL-2.0)
+<a href="http://marketplace.eclipse.org/marketplace-client-intro?mpc_install=1944539" class="drag" title="Drag to your running Eclipse* workspace. *Requires Eclipse Marketplace Client"><img typeof="foaf:Image" class="img-responsive" src="https://marketplace.eclipse.org/sites/all/themes/solstice/public/images/marketplace/btn-install.png" align="right" height="26" alt="Drag to your running Eclipse* workspace. *Requires Eclipse Marketplace Client" /></a>
+
 
 The [Eclipse PHP Development Tools](https://www.eclipse.org/pdt/) project delivers a PHP Integrated Development Environment
 framework for the Eclipse platform. This project encompasses the development
