@@ -1,41 +1,36 @@
-# Contributing to PHP Development Tools
+<p align="center">
+<a href="https://www.eclipse.org/pdt/"><img src="https://projects.eclipse.org/sites/default/files/phplogo.png" alt="Eclipse PDT" align="middle" width="175" height="164" /></a>
+<p>
 
-Thanks for your interest in this project.
+# Welcome to PHP Development Tools
 
-## Project description
+![master](https://github.com/eclipse/pdt/workflows/Tycho%20build/badge.svg)
+[![Sonarcloud Status](https://sonarcloud.io/api/project_badges/measure?project=eclipse-tools.pdt.main&metric=alert_status)](https://sonarcloud.io/dashboard?id=eclipse-tools.pdt.main)
+[![License](https://img.shields.io/badge/License-EPL%202.0-green.svg)](https://opensource.org/licenses/EPL-2.0)
 
-The Eclipse PHP IDE project delivers a PHP Integrated Development Environment
+The [Eclipse PHP Development Tools](https://www.eclipse.org/pdt/) project delivers a PHP Integrated Development Environment
 framework for the Eclipse platform. This project encompasses the development
 components necessary to develop PHP-based Web Applications and facilitates
 extensibility. It leverages the existing Web Tools Project in providing
 developers with PHP capabilities.
 
-* https://projects.eclipse.org/projects/tools.pdt
+<p align="center">
+<img src="https://www.eclipse.org/pdt/img/shot1-min.png" alt="PHP Editor" width="450" />
+<img src="https://www.eclipse.org/pdt/img/shot5-min.png" alt="PHP Dark Editor" width="450" />
+</p>
 
 ## Developer resources
 
-__GitHub tracker and pull requests are currently not supported by the contribution process.__
+__GitHub tracker and pull requests are currently main contribution process.__
 
-Information regarding source code management, builds, coding standards, and
-more.
-
-* https://projects.eclipse.org/projects/tools.pdt/developer
-
-The project maintains the following source code repositories
-
-* http://git.eclipse.org/c/pdt/org.eclipse.pdt.git
-
-This project uses Bugzilla to track ongoing development and issues.
-
-* Search for issues: https://eclipse.org/bugs/buglist.cgi?product=pdt
-* Create a new report: https://eclipse.org/bugs/enter_bug.cgi?product=pdt
+* Contribution Quick Guide: https://wiki.eclipse.org/PDT/Contributing#Quick_guide
+* Information regarding source code management, builds, coding standards, and more: https://projects.eclipse.org/projects/tools.pdt/developer
+* Main source code repository: https://github.com/eclipse/pdt.git
+* Search for issues: https://github.com/eclipse/pdt/issues
+* Create a new report: https://github.com/eclipse/pdt/issues/new
 
 Be sure to search for existing bugs before you create another one. Remember that
 contributions are always welcome!
-
-## How to start
-
-* https://wiki.eclipse.org/PDT/Contributing#Quick_guide
 
 ## Eclipse Contributor Agreement
 
@@ -43,6 +38,8 @@ Before your contribution can be accepted by the project team contributors must
 electronically sign the Eclipse Contributor Agreement (ECA).
 
 * http://www.eclipse.org/legal/ECA.php
+
+## Signed-off-by field
 
 Commits that are provided by non-committers must have a Signed-off-by field in
 the footer indicating that the author is aware of the terms by which the
