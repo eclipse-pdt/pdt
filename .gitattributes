@@ -1,0 +1,4 @@
+plugins/org.eclipse.php.help/docs/source/* linguist-documentation
+plugins/org.eclipse.php.core/gen/* linguist-generated
+plugins/org.eclipse.php.core/Resources/language/* linguist-generated
+plugins/org.eclipse.php.core/Resources/language/generate.php -linguist-generated
