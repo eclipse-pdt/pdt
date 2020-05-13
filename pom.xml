@@ -16,10 +16,20 @@
 		<maven.test.failure.ignore>true</maven.test.failure.ignore>
 		<test.vmargs>-server</test.vmargs>
 		<test.proxy />
+		
 		<sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
 		<sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
-		<sonar.exclusions>**/gen/**,**/*Messages.java</sonar.exclusions>
-		<sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/../../target/site/jacoco-aggregate/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
+		<sonar.exclusions>**/gen/**,**/*Messages.java,**/Resources/language/**,**/Resources/parserTools/**</sonar.exclusions>
+		<sonar.coverage.jacoco.xmlReportPaths>${maven.multiModuleProjectDirectory}/target/site/jacoco-aggregate/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
+		<sonar.projectKey>eclipse-tools.pdt.main</sonar.projectKey>
+		<sonar.moduleKey>${project.artifactId}</sonar.moduleKey>
+		<sonar.organization>eclipse-tools</sonar.organization>
+		<sonar.language>java</sonar.language>
+		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
+		<sonar.junit.reportPaths>${maven.multiModuleProjectDirectory}/tests/org.eclipse.php.core.tests/target/surefire-reports,${maven.multiModuleProjectDirectory}/tests/org.eclipse.php.ui.tests/target/surefire-reports,${maven.multiModuleProjectDirectory}/tests/org.eclipse.php.composer.tests/target/surefire-reports,${maven.multiModuleProjectDirectory}/tests/org.eclipse.php.composer.api.tests/target/surefire-reports,${maven.multiModuleProjectDirectory}/tests/org.eclipse.php.formatter.core.tests/target/surefire-reports,${maven.multiModuleProjectDirectory}/tests/org.eclipse.php.profile.core.tests/target/surefire-reports,${maven.multiModuleProjectDirectory}/tests/org.eclipse.php.refactoring.core.tests/target/surefire-reports</sonar.junit.reportPaths>
+		<sonar.skippedModules>org.eclipse.php.core.performance.tests,org.eclipse.php,features,org.eclipse.php.repository,org.eclipse.php.core.parser</sonar.skippedModules>
+		<java.sonar.source>1.8</java.sonar.source>
+		
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<tycho.scmUrl>scm:git:git://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git</tycho.scmUrl>
 		<tycho.testArgLine />
@@ -32,17 +42,17 @@
 	</properties>
 	<url>https://eclipse.org/pdt</url>
 	<ciManagement>
-		<system>hudson</system>
-		<url>https://hudson.eclipse.org/pdt</url>
+		<system>jenkins</system>
+		<url>https://ci.eclipse.org/pdt</url>
 	</ciManagement>
 	<scm>
-		<connection>scm:git:http://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git</connection>
-		<developerConnection>scm:git:ssh://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git</developerConnection>
-		<url>http://git.eclipse.org/c/pdt/org.eclipse.pdt.git</url>
+		<connection>scm:git:https://github.com/eclipse/pdt.git</connection>
+		<developerConnection>scm:git:ssh://git@github.com:eclipse/pdt.git</developerConnection>
+		<url>https://github.com/eclipse/pdt</url>
 	</scm>
 	<issueManagement>
-		<system>Bugzilla</system>
-		<url>https://bugs.eclipse.org/bugs/buglist.cgi?product=pdt</url>
+		<system>GitHub</system>
+		<url>https://github.com/eclipse/pdt/issues</url>
 	</issueManagement>
 	<build>
 		<pluginManagement>
@@ -294,6 +304,14 @@
 					</plugin>
 				</plugins>
 			</build>
+		</profile>
+		<profile>
+			<id>sonar</id>
+			
+			<properties>
+				<maven.test.error.ignore>true</maven.test.error.ignore>
+				<maven.test.failure.ignore>true</maven.test.failure.ignore>
+			</properties>
 		</profile>
 	</profiles>
 
