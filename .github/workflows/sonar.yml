@@ -29,8 +29,10 @@ jobs:
     - name: Build with Maven
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: xvfb-run -a mvn -Pcoverage -Dsonar.login=$SONAR_TOKEN verify --file pom.xml
     - name: Sonar scan
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: mvn -Psonar -Dsonar.login=$SONAR_TOKEN org.sonarsource.scanner.maven:sonar-maven-plugin:3.7.0.1746:sonar --file pom.xml

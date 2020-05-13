@@ -28,7 +28,7 @@ SPDX-License-Identifier: EPL-2.0
 
 The project maintains the following source code repositories:
 
-* http://git.eclipse.org/c/pdt/org.eclipse.pdt.git
+* https://github.com/eclipse/pdt.git
 
 ## Third-party Content
 
@@ -56,12 +56,6 @@ eclipse-color-theme (0.9)
 Google Gson (2.2.4)
 
 * License: Apache License, 2.0
-
-h2 Database (1.1.117)
-
-* License: Eclipse Public License
-* Project: http://www.h2database.com/html/main.html
-* Source: http://code.google.com/p/h2database/source/checkout
 
 httpcomponent Core 4.3.3 (4.3.3)
 

@@ -31,7 +31,7 @@
 		<java.sonar.source>1.8</java.sonar.source>
 		
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<tycho.scmUrl>scm:git:git://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git</tycho.scmUrl>
+		<tycho.scmUrl>scm:git:https://github.com/eclipse/pdt.git</tycho.scmUrl>
 		<tycho.testArgLine />
 		<jacoco.version>0.8.5</jacoco.version>
 		<eclipseNext>false</eclipseNext>
@@ -42,8 +42,8 @@
 	</properties>
 	<url>https://eclipse.org/pdt</url>
 	<ciManagement>
-		<system>jenkins</system>
-		<url>https://ci.eclipse.org/pdt</url>
+		<system>GitHub actions</system>
+		<url>https://github.com/eclipse/pdt/actions</url>
 	</ciManagement>
 	<scm>
 		<connection>scm:git:https://github.com/eclipse/pdt.git</connection>
