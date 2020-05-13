@@ -28,7 +28,8 @@
 		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
 		<sonar.junit.reportPaths>${maven.multiModuleProjectDirectory}/tests/org.eclipse.php.core.tests/target/surefire-reports,${maven.multiModuleProjectDirectory}/tests/org.eclipse.php.ui.tests/target/surefire-reports,${maven.multiModuleProjectDirectory}/tests/org.eclipse.php.composer.tests/target/surefire-reports,${maven.multiModuleProjectDirectory}/tests/org.eclipse.php.composer.api.tests/target/surefire-reports,${maven.multiModuleProjectDirectory}/tests/org.eclipse.php.formatter.core.tests/target/surefire-reports,${maven.multiModuleProjectDirectory}/tests/org.eclipse.php.profile.core.tests/target/surefire-reports,${maven.multiModuleProjectDirectory}/tests/org.eclipse.php.refactoring.core.tests/target/surefire-reports</sonar.junit.reportPaths>
 		<sonar.skippedModules>org.eclipse.php.core.performance.tests,org.eclipse.php,features,org.eclipse.php.repository,org.eclipse.php.core.parser</sonar.skippedModules>
-		<java.sonar.source>1.8</java.sonar.source>
+		<sonar.java.source>1.8</sonar.java.source>
+		<sonar.java.target>1.8</sonar.java.target>
 		
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<tycho.scmUrl>scm:git:https://github.com/eclipse/pdt.git</tycho.scmUrl>
