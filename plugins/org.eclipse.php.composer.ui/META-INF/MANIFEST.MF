@@ -19,7 +19,6 @@ Require-Bundle: org.eclipse.ui.forms,
  org.eclipse.jface.text,
  org.eclipse.ui.console,
  org.eclipse.php.core,
- org.eclipse.wst.sse.ui,
  org.eclipse.php.debug.ui,
  org.eclipse.php.debug.core,
  org.apache.commons.lang3,
@@ -36,7 +35,9 @@ Require-Bundle: org.eclipse.ui.forms,
  org.eclipse.tm.terminal.view.ui,
  org.eclipse.tm.terminal.connector.process,
  org.eclipse.tm.terminal.control,
- javax.inject
+ javax.inject,
+ org.eclipse.ui.genericeditor,
+ org.eclipse.ui.editors
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Export-Package: 

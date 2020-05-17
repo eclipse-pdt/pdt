@@ -415,4 +415,7 @@
          </page>
       </wizard-pages>
    </extension>
+   <extension point="org.eclipse.wildwebdeveloper.json.schema">
+      <schema pattern="composer.json" url="http://json.schemastore.org/composer" />  
+   </extension>
 </plugin>
