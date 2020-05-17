@@ -48,6 +48,7 @@
 		<module>org.eclipse.php.profiler-feature</module>
 		<module>org.eclipse.php.rdt.sync-feature</module>
 		<module>org.eclipse.php.mylyn-feature</module>
+		<module>org.eclipse.php.tools-feature</module>
 		<module>org.eclipse.php.source-feature</module>
 		<module>org.eclipse.php.test-feature</module>
 		<module>org.eclipse.php.sdk-feature</module>
