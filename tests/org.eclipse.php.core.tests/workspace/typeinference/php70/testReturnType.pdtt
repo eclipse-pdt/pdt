@@ -1,0 +1,8 @@
+--TEST--
+Test return type FQN
+--FILE--
+<?php 
+namespace Foo;
+function a (): \PDOStatement {  } $t = a(); testReturnType($t); ?>
+--EXPECT--
+PDOStatement

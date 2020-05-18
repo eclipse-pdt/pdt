@@ -623,6 +623,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		if (returnType != null) {
 			mi.returnType = returnType.getName();
 			if (returnType instanceof FullyQualifiedReference) {
+				mi.returnType = ((FullyQualifiedReference) returnType).getFullyQualifiedName();
 				if (((FullyQualifiedReference) returnType).isNullable()) {
 					mi.modifiers |= IPHPModifiers.AccNullable;
 				}

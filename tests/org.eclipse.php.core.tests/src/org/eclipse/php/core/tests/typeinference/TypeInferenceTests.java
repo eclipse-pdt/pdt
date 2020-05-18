@@ -72,16 +72,26 @@ public class TypeInferenceTests {
 				"/workspace/typeinference/php54", "/workspace/typeinference/php55" });
 		TESTS.put(PHPVersion.PHP5_6, new String[] { "/workspace/typeinference/php5", "/workspace/typeinference/php53",
 				"/workspace/typeinference/php54", "/workspace/typeinference/php55", "/workspace/typeinference/php56" });
-		TESTS.put(PHPVersion.PHP7_0, new String[] { "/workspace/typeinference/php5", "/workspace/typeinference/php53",
-				"/workspace/typeinference/php54", "/workspace/typeinference/php55", "/workspace/typeinference/php56" });
-		TESTS.put(PHPVersion.PHP7_1, new String[] { "/workspace/typeinference/php5", "/workspace/typeinference/php53",
-				"/workspace/typeinference/php54", "/workspace/typeinference/php55", "/workspace/typeinference/php56" });
-		TESTS.put(PHPVersion.PHP7_2, new String[] { "/workspace/typeinference/php5", "/workspace/typeinference/php53",
-				"/workspace/typeinference/php54", "/workspace/typeinference/php55", "/workspace/typeinference/php56" });
-		TESTS.put(PHPVersion.PHP7_3, new String[] { "/workspace/typeinference/php5", "/workspace/typeinference/php53",
-				"/workspace/typeinference/php54", "/workspace/typeinference/php55", "/workspace/typeinference/php56" });
-		TESTS.put(PHPVersion.PHP7_4, new String[] { "/workspace/typeinference/php5", "/workspace/typeinference/php53",
-				"/workspace/typeinference/php54", "/workspace/typeinference/php55", "/workspace/typeinference/php56" });
+		TESTS.put(PHPVersion.PHP7_0,
+				new String[] { "/workspace/typeinference/php5", "/workspace/typeinference/php53",
+						"/workspace/typeinference/php54", "/workspace/typeinference/php55",
+						"/workspace/typeinference/php56", "/workspace/typeinference/php70" });
+		TESTS.put(PHPVersion.PHP7_1,
+				new String[] { "/workspace/typeinference/php5", "/workspace/typeinference/php53",
+						"/workspace/typeinference/php54", "/workspace/typeinference/php55",
+						"/workspace/typeinference/php56", "/workspace/typeinference/php70" });
+		TESTS.put(PHPVersion.PHP7_2,
+				new String[] { "/workspace/typeinference/php5", "/workspace/typeinference/php53",
+						"/workspace/typeinference/php54", "/workspace/typeinference/php55",
+						"/workspace/typeinference/php56", "/workspace/typeinference/php70" });
+		TESTS.put(PHPVersion.PHP7_3,
+				new String[] { "/workspace/typeinference/php5", "/workspace/typeinference/php53",
+						"/workspace/typeinference/php54", "/workspace/typeinference/php55",
+						"/workspace/typeinference/php56", "/workspace/typeinference/php70" });
+		TESTS.put(PHPVersion.PHP7_4,
+				new String[] { "/workspace/typeinference/php5", "/workspace/typeinference/php53",
+						"/workspace/typeinference/php54", "/workspace/typeinference/php55",
+						"/workspace/typeinference/php56", "/workspace/typeinference/php70" });
 	};
 
 	private static int counter = 0;
