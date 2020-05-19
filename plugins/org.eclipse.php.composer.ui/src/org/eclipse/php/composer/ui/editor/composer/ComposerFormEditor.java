@@ -44,13 +44,14 @@ import org.eclipse.php.composer.ui.job.UpdateJob;
 import org.eclipse.php.internal.core.preferences.PreferencesSupport;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.*;
+import org.eclipse.ui.editors.text.TextEditor;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.IMessage;
 import org.eclipse.ui.forms.editor.SharedHeaderFormEditor;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
+import org.eclipse.ui.internal.genericeditor.ExtensionBasedTextEditor;
 import org.eclipse.ui.texteditor.IDocumentProvider;
-import org.eclipse.wst.sse.ui.StructuredTextEditor;
 
 public class ComposerFormEditor extends SharedHeaderFormEditor {
 
@@ -80,7 +81,7 @@ public class ComposerFormEditor extends SharedHeaderFormEditor {
 	protected ConfigurationPage configurationPage;
 	protected AutoloadPage autoloadPage;
 	protected AutoloadDevPage autoloadDevPage;
-	protected StructuredTextEditor jsonEditor;
+	protected TextEditor jsonEditor;
 	protected DependencyGraphPage graphPage;
 
 	protected IToolBarManager toolbarManager;
@@ -97,7 +98,7 @@ public class ComposerFormEditor extends SharedHeaderFormEditor {
 
 	public ComposerFormEditor() {
 		super();
-		jsonEditor = new StructuredTextEditor();
+		jsonEditor = new ExtensionBasedTextEditor();
 	}
 
 	@Override

@@ -36,7 +36,6 @@
    </url>
 
    <requires>
-      <import feature="org.eclipse.wst.json_ui.feature"/>
    </requires>
 
    <includes
