@@ -398,14 +398,6 @@
         point="org.eclipse.wst.common.project.facet.ui.images">
         <image path="icons/full/obj16/composer.png" facet="php.composer.component" />
    </extension>
-   <extension
-         point="org.eclipse.core.contenttype.contentTypes">
-      <file-association
-            content-type="org.eclipse.wst.json.core.jsonsource"
-            file-names="composer.lock">
-      </file-association>
-   </extension>
-
    	<extension
          point="org.eclipse.wst.common.project.facet.ui.wizardPages">
       <wizard-pages
@@ -414,8 +406,5 @@
                class="org.eclipse.php.composer.ui.facet.FacetInstallWizardPage">
          </page>
       </wizard-pages>
-   </extension>
-   <extension point="org.eclipse.wildwebdeveloper.json.schema">
-      <schema pattern="composer.json" url="http://json.schemastore.org/composer" />  
    </extension>
 </plugin>

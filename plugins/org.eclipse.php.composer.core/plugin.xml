@@ -128,6 +128,10 @@
             content-type="org.eclipse.php.composer.core.composerJson"
             file-names="composer.json">
       </file-association>
+      <file-association
+            content-type="org.eclipse.wildwebdeveloper.json"
+            file-names="composer.lock">
+      </file-association>
    </extension>
    <extension
          point="org.eclipse.wst.common.project.facet.core.validators">
@@ -149,5 +153,8 @@
             class="org.eclipse.php.composer.internal.core.util.NamespaceResolver"
             priority="0">
       </resolver>
+   </extension>
+   <extension point="org.eclipse.wildwebdeveloper.json.schema">
+      <schema pattern="composer.json" url="https://getcomposer.org/schema.json" />  
    </extension>
 </plugin>
