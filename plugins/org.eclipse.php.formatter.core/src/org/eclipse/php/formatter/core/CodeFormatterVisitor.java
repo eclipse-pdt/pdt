@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013-2019 Zend Techologies Ltd.
+ * Copyright (c) 2013-2020 Zend Techologies Ltd.
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -1229,7 +1229,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 					commentContent = commentContent.trim();
 
 					boolean newLineStart = true;
-					appendToBuffer("//"); //$NON-NLS-1$
+					appendToBuffer(commentTokLen == 1 ? "#" : "//"); //$NON-NLS-1$ //$NON-NLS-2$
 
 					for (String word : commentWords) {
 						if (this.preferences.comment_line_length != 9999 && !newLineStart
@@ -1240,7 +1240,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 							if (!startAtFirstColumn || (startAtFirstColumn && doIndentForComment)) {
 								indentForComment(indentationLevelDescending);
 							}
-							appendToBuffer("//"); //$NON-NLS-1$
+							appendToBuffer(commentTokLen == 1 ? "#" : "//"); //$NON-NLS-1$ //$NON-NLS-2$
 							insertSpaces(1);
 							appendToBuffer(word);
 						} else {
