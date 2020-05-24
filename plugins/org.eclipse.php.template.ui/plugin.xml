@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<!--
+    Copyright (c) 2017 Rogue Wave Software, Inc. and others.
+
+    This program and the accompanying materials are made
+    available under the terms of the Eclipse Public License 2.0
+    which is available at https://www.eclipse.org/legal/epl-2.0/
+
+    SPDX-License-Identifier: EPL-2.0
+   
+    Contributors:
+        Rogue Wave Software - initial API and implementation
+ -->
+
+<plugin>
+   <extension
+         point="org.eclipse.core.contenttype.contentTypes">
+      <content-type
+            base-type="org.eclipse.wildwebdeveloper.html"
+            file-extensions="twig"
+            id="org.eclipse.php.template.twig"
+            name="Twig Template"
+            priority="normal">
+      </content-type>
+      
+      <content-type
+            base-type="org.eclipse.wildwebdeveloper.html"
+            file-extensions="tpl"
+            id="org.eclipse.php.template.smarty"
+            name="Smarty Template"
+            priority="normal">
+      </content-type>
+      
+   </extension>
+   <extension
+         point="org.eclipse.ui.genericeditor.presentationReconcilers">
+      <presentationReconciler
+            class="org.eclipse.tm4e.ui.text.TMPresentationReconciler"
+            contentType="org.eclipse.php.template.twig">
+      </presentationReconciler>
+      <presentationReconciler
+            class="org.eclipse.tm4e.ui.text.TMPresentationReconciler"
+            contentType="org.eclipse.php.template.smarty">
+      </presentationReconciler>
+   </extension>
+   <extension
+         point="org.eclipse.tm4e.ui.snippets">
+      <snippet
+            name="org.eclipse.php.template.core.twig"
+            path="./syntaxes/twig.snippet.json"
+            scopeName="text.html.twig">
+      </snippet>
+   </extension>
+   <extension
+         point="org.eclipse.tm4e.registry.grammars">
+      <grammar
+      		scopeName="text.html.twig"
+            path="./syntaxes/twig.tmLanguage" >
+      </grammar> 
+      
+      
+      <grammar
+      		scopeName="text.html.smarty"
+            path="./syntaxes/smarty.tmLanguage" >
+      </grammar>      
+      <scopeNameContentTypeBinding
+            contentTypeId="org.eclipse.php.template.twig"
+            scopeName="text.html.twig">
+      </scopeNameContentTypeBinding>
+      <scopeNameContentTypeBinding
+            contentTypeId="org.eclipse.php.template.smarty"
+            scopeName="text.html.smarty">
+      </scopeNameContentTypeBinding>
+   </extension>
+   <extension
+         point="org.eclipse.tm4e.languageconfiguration.languageConfigurations">
+      <languageConfiguration
+            contentTypeId="org.eclipse.php.template.twig"
+            path="./syntaxes/twig.language-configuration.json"> 
+      </languageConfiguration>
+      <languageConfiguration
+            contentTypeId="org.eclipse.php.template.smarty"
+            path="./syntaxes/smarty.language-configuration.json"> 
+      </languageConfiguration>
+   </extension>
+   <extension
+         point="org.eclipse.lsp4e.languageServer">
+      <contentTypeMapping
+            contentType="org.eclipse.wildwebdeveloper.html"
+            id="org.eclipse.php.template.twig">
+      </contentTypeMapping>
+      <contentTypeMapping
+            contentType="org.eclipse.wildwebdeveloper.html"
+            id="org.eclipse.php.template.smarty">
+      </contentTypeMapping>
+   </extension>
+</plugin>

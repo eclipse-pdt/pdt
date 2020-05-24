@@ -102,6 +102,7 @@
 		<module>org.eclipse.php.profile.core</module>
 		<module>org.eclipse.php.profile.ui</module>
 		<module>org.eclipse.php.rdt.sync.ui</module>
+		<module>org.eclipse.php.template.ui</module>
 	</modules>
 	
 </project>

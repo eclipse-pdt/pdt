@@ -1,0 +1,22 @@
+{
+	"comments": {
+		"blockComment": [ "{#", "#}" ]
+	},
+	"brackets": [
+		["{{", "}}"],
+		["{%", "%}"],
+		["{", "}"],
+		["[", "]"],
+		["(", ")"]
+	],
+	"surroundingPairs": [
+		{ "open": "{{", "close": "}}"},
+		{ "open": "{%", "close": "%}"},
+		{ "open": "'", "close": "'", "notIn" : ["text.html.twig"] },
+		{ "open": "\"", "close": "\"", "notIn" : ["text.html.twig"] },
+		{ "open": "{", "close": "}", "notIn" : ["text.html.twig"]},
+		{ "open": "[", "close": "]", "notIn" : ["text.html.twig"]},
+		{ "open": "(", "close": ")", "notIn" : ["text.html.twig"] },
+		{ "open": "<", "close": ">", "notIn" : ["text.html.twig"] }
+	]
+}
