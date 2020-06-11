@@ -3,7 +3,7 @@ Automatic-Module-Name: org.eclipse.php.composer.api.tests
 Bundle-ManifestVersion: 2
 Bundle-Name: Composer API Plugin - Tests
 Bundle-SymbolicName: org.eclipse.php.composer.api.tests
-Bundle-Version: 7.2.0.qualifier
+Bundle-Version: 8.0.0.qualifier
 Bundle-Vendor: Eclipse PDT
 Fragment-Host: org.eclipse.php.composer.api
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8

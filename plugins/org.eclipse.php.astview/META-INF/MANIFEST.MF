@@ -3,7 +3,7 @@ Automatic-Module-Name: org.eclipse.php.astview
 Bundle-ManifestVersion: 2
 Bundle-Name: PDT Astview Plug-in
 Bundle-SymbolicName: org.eclipse.php.astview;singleton:=true
-Bundle-Version: 7.2.0.qualifier
+Bundle-Version: 8.0.0.qualifier
 Bundle-Activator: org.eclipse.php.astview.ASTViewPlugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.php.ui;bundle-version="1.1.0",

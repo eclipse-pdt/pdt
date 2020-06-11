@@ -3,7 +3,7 @@ Automatic-Module-Name: org.eclipse.php.profile.core
 Bundle-ManifestVersion: 2
 Bundle-Name: PDT Profiler Core Plug-in
 Bundle-SymbolicName: org.eclipse.php.profile.core;singleton:=true
-Bundle-Version: 7.2.0.qualifier
+Bundle-Version: 8.0.0.qualifier
 Bundle-Activator: org.eclipse.php.profile.core.PHPProfileCorePlugin
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.core.runtime,

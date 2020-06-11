@@ -3,7 +3,7 @@ Automatic-Module-Name: org.eclipse.php.rdt.sync.ui
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: org.eclipse.php.rdt.sync.ui;singleton:=true
-Bundle-Version: 7.2.0.qualifier
+Bundle-Version: 8.0.0.qualifier
 Bundle-Vendor: %Bundle-Vendor
 Require-Bundle: org.eclipse.core.resources,
  org.eclipse.core.runtime,

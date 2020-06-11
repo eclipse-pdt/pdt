@@ -18,7 +18,7 @@
 	<parent>
         <artifactId>features</artifactId>
         <groupId>org.eclipse.php</groupId>
-        <version>7.2.0-SNAPSHOT</version>
+        <version>8.0.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 	<artifactId>org.eclipse.php.profiler</artifactId>

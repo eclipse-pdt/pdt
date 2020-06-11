@@ -3,7 +3,7 @@ Automatic-Module-Name: org.eclipse.php.ui.tests
 Bundle-ManifestVersion: 2
 Bundle-Name: PDT Ui Unit Tests
 Bundle-SymbolicName: org.eclipse.php.ui.tests;singleton:=true
-Bundle-Version: 7.2.0.qualifier
+Bundle-Version: 8.0.0.qualifier
 Bundle-Activator: org.eclipse.php.ui.tests.PHPUiTests
 Require-Bundle: org.junit,
  org.eclipse.ui;bundle-version="3.5.0",

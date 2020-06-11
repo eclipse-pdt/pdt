@@ -3,7 +3,7 @@ Automatic-Module-Name: org.eclipse.php.core.tests
 Bundle-ManifestVersion: 2
 Bundle-Name: PDT Core Unit Tests
 Bundle-SymbolicName: org.eclipse.php.core.tests;singleton:=true
-Bundle-Version: 7.2.0.qualifier
+Bundle-Version: 8.0.0.qualifier
 Bundle-Activator: org.eclipse.php.core.tests.PHPCoreTests
 Require-Bundle: org.junit;bundle-version="4.11.0",
  org.eclipse.core.runtime,

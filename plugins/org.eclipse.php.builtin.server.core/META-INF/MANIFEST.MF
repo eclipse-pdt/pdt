@@ -3,7 +3,7 @@ Automatic-Module-Name: org.eclipse.php.builtin.server.core
 Bundle-ManifestVersion: 2
 Bundle-Name: PDT Builtin Server Core Plug-in
 Bundle-SymbolicName: org.eclipse.php.builtin.server.core;singleton:=true
-Bundle-Version: 7.2.0.qualifier
+Bundle-Version: 8.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-Activator: org.eclipse.php.internal.server.core.builtin.PHPServerPlugin
 Require-Bundle: org.eclipse.wst.server.core,

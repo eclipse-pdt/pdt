@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Automatic-Module-Name: org.eclipse.php.core
 Bundle-ManifestVersion: 2
 Bundle-SymbolicName: org.eclipse.php.core;singleton:=true
-Bundle-Version: 7.2.0.qualifier
+Bundle-Version: 8.0.0.qualifier
 Bundle-Name: PDT Core Plug-in
 Bundle-Activator: org.eclipse.php.internal.core.PHPCorePlugin
 Bundle-Localization: plugin

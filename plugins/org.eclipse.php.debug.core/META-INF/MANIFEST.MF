@@ -3,7 +3,7 @@ Automatic-Module-Name: org.eclipse.php.debug.core
 Bundle-ManifestVersion: 2
 Bundle-Name: PDT Core Plug-in
 Bundle-SymbolicName: org.eclipse.php.debug.core;singleton:=true
-Bundle-Version: 7.2.0.qualifier
+Bundle-Version: 8.0.0.qualifier
 Bundle-Activator: org.eclipse.php.internal.debug.core.PHPDebugPlugin
 Bundle-Localization: plugin
 Eclipse-BuddyPolicy: registered

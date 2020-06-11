@@ -3,7 +3,7 @@ Automatic-Module-Name: org.eclipse.php.server.ui
 Bundle-ManifestVersion: 2
 Bundle-Name: PDT Server UI Plug-in
 Bundle-SymbolicName: org.eclipse.php.server.ui;singleton:=true
-Bundle-Version: 7.2.0.qualifier
+Bundle-Version: 8.0.0.qualifier
 Bundle-Activator: org.eclipse.php.internal.server.ui.Activator
 Bundle-Vendor: Eclipse PDT
 Bundle-Localization: plugin

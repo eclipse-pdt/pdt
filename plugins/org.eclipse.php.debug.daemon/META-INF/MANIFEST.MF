@@ -3,7 +3,7 @@ Automatic-Module-Name: org.eclipse.php.debug.daemon
 Bundle-ManifestVersion: 2
 Bundle-Name: PDT Debug Daemon Plug-in
 Bundle-SymbolicName: org.eclipse.php.debug.daemon; singleton:=true
-Bundle-Version: 7.2.0.qualifier
+Bundle-Version: 8.0.0.qualifier
 Bundle-Activator: org.eclipse.php.internal.debug.daemon.DaemonPlugin
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui

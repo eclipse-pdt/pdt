@@ -3,7 +3,7 @@ Automatic-Module-Name: org.eclipse.php.refactoring.ui
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: org.eclipse.php.refactoring.ui;singleton:=true
-Bundle-Version: 7.2.0.qualifier
+Bundle-Version: 8.0.0.qualifier
 Bundle-Activator: org.eclipse.php.refactoring.ui.RefactoringUIPlugin
 Bundle-Vendor: %Bundle-Vendor
 Bundle-Localization: plugin

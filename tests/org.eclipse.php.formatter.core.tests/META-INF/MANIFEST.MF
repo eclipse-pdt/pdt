@@ -3,7 +3,7 @@ Automatic-Module-Name: org.eclipse.php.formatter.core.tests
 Bundle-ManifestVersion: 2
 Bundle-Name: PHP Formatter Core Tests
 Bundle-SymbolicName: org.eclipse.php.formatter.core.tests;singleton:=true
-Bundle-Version: 7.2.0.qualifier
+Bundle-Version: 8.0.0.qualifier
 Bundle-Activator: org.eclipse.php.formatter.core.tests.Activator
 Bundle-Vendor: Eclipse PDT
 Require-Bundle: org.junit,
