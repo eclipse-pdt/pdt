@@ -1,30 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/org.eclipse.php_7.2.0.qualifier.jar" id="org.eclipse.php" version="7.2.0.qualifier">
+   <feature url="features/org.eclipse.php_8.0.0.qualifier.jar" id="org.eclipse.php" version="8.0.0.qualifier">
       <category name="org.eclipse.php.category"/>
    </feature>
-   <feature url="features/org.eclipse.php.mylyn_7.2.0.qualifier.jar" id="org.eclipse.php.mylyn" version="7.2.0.qualifier">
+   <feature url="features/org.eclipse.php.mylyn_8.0.0.qualifier.jar" id="org.eclipse.php.mylyn" version="8.0.0.qualifier">
       <category name="org.eclipse.php.category"/>
    </feature>
-   <feature url="features/org.eclipse.php.composer_7.2.0.qualifier.jar" id="org.eclipse.php.composer" version="7.2.0.qualifier">
+   <feature url="features/org.eclipse.php.composer_8.0.0.qualifier.jar" id="org.eclipse.php.composer" version="8.0.0.qualifier">
       <category name="org.eclipse.php.category"/>
    </feature>
-   <feature url="features/org.eclipse.php.phpunit.feature_7.2.0.qualifier.jar" id="org.eclipse.php.phpunit.feature" version="7.2.0.qualifier">
+   <feature url="features/org.eclipse.php.phpunit.feature_8.0.0.qualifier.jar" id="org.eclipse.php.phpunit.feature" version="8.0.0.qualifier">
       <category name="org.eclipse.php.category"/>
    </feature>
-   <feature url="features/org.eclipse.php.profiler_7.2.0.qualifier.jar" id="org.eclipse.php.profiler" version="7.2.0.qualifier">
+   <feature url="features/org.eclipse.php.profiler_8.0.0.qualifier.jar" id="org.eclipse.php.profiler" version="8.0.0.qualifier">
       <category name="org.eclipse.php.category"/>
    </feature>
-   <feature url="features/org.eclipse.php.rdt.sync_7.2.0.qualifier.jar" id="org.eclipse.php.rdt.sync" version="7.2.0.qualifier">
+   <feature url="features/org.eclipse.php.rdt.sync_8.0.0.qualifier.jar" id="org.eclipse.php.rdt.sync" version="8.0.0.qualifier">
       <category name="org.eclipse.php.category"/>
    </feature>
-   <feature url="features/org.eclipse.php.test_7.2.0.qualifier.jar" id="org.eclipse.php.test" version="7.2.0.qualifier">
+   <feature url="features/org.eclipse.php.test_8.0.0.qualifier.jar" id="org.eclipse.php.test" version="8.0.0.qualifier">
       <category name="org.eclipse.php.sdk.category"/>
    </feature>
-   <feature url="features/org.eclipse.php.source_7.2.0.qualifier.jar" id="org.eclipse.php.source" version="7.2.0.qualifier">
+   <feature url="features/org.eclipse.php.source_8.0.0.qualifier.jar" id="org.eclipse.php.source" version="8.0.0.qualifier">
       <category name="org.eclipse.php.sdk.category"/>
    </feature>
-   <feature url="features/org.eclipse.php.sdk_7.2.0.qualifier.jar" id="org.eclipse.php.sdk" version="7.2.0.qualifier">
+   <feature url="features/org.eclipse.php.sdk_8.0.0.qualifier.jar" id="org.eclipse.php.sdk" version="8.0.0.qualifier">
       <category name="org.eclipse.php.sdk.category"/>
    </feature>
    <category-def name="org.eclipse.php.category" label="PHP Development Tools"/>

@@ -4,12 +4,12 @@
 	<parent>
         <artifactId>tests</artifactId>
         <groupId>org.eclipse.php</groupId>
-        <version>7.2.0-SNAPSHOT</version>
+        <version>8.0.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 	<groupId>org.eclipse.php</groupId>
 	<artifactId>org.eclipse.php.core.tests</artifactId>
-	<version>7.2.0-SNAPSHOT</version>
+	<version>8.0.0-SNAPSHOT</version>
 	<packaging>eclipse-test-plugin</packaging>
 	<properties>
 		<!-- Workaround for https://bugs.eclipse.org/bugs/show_bug.cgi?id=397015 -->

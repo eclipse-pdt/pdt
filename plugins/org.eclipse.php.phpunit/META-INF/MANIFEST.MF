@@ -3,7 +3,7 @@ Automatic-Module-Name: org.eclipse.php.phpunit
 Bundle-ManifestVersion: 2
 Bundle-Name: PHPUnit Plug-in
 Bundle-SymbolicName: org.eclipse.php.phpunit;singleton:=true
-Bundle-Version: 7.2.0.qualifier
+Bundle-Version: 8.0.0.qualifier
 Bundle-Activator: org.eclipse.php.phpunit.PHPUnitPlugin
 Bundle-Vendor: Eclipse PDT
 Bundle-Localization: plugin
