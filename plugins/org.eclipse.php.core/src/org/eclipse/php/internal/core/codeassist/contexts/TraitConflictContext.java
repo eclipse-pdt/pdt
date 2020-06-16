@@ -171,4 +171,9 @@ public class TraitConflictContext extends StatementContext implements IClassMemb
 	public IType[] getLhsTypes() {
 		return getCompanion().getLeftHandType(this, false);
 	}
+
+	@Override
+	public String getSuffix(AbstractCompletionContext abstractContext) {
+		return ""; //$NON-NLS-1$
+	}
 }

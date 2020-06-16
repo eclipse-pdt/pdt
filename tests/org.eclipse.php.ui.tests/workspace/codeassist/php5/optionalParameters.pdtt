@@ -2,10 +2,11 @@
 Test CA for optional parameters
 --PREFERENCES--
 org.eclipse.php.core/contentAssistInsertCompletion=true
+org.eclipse.php.core/contentAssistExpandDefaultValueMethods=false
 --FILE--
 <?php
 class Test {
-    public function test($mandatory, $optional = null) {}
+    public function test1($mandatory, $optional = null) {}
 }
 
 $test = new Test();
@@ -14,9 +15,9 @@ $test->te|
 --EXPECT--
 <?php
 class Test {
-    public function test($mandatory, $optional = null) {}
+    public function test1($mandatory, $optional = null) {}
 }
 
 $test = new Test();
-$test->test($mandatory)
+$test->test1($mandatory)
 ?>

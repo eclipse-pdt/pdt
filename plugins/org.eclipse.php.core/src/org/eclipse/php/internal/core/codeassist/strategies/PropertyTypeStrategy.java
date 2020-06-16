@@ -41,10 +41,14 @@ public class PropertyTypeStrategy extends TypesStrategy {
 	public void apply(ICompletionReporter reporter) throws BadLocationException {
 		AbstractCompletionContext context = (AbstractCompletionContext) getContext();
 
-		if (PHPVersion.PHP7_4.isGreaterThan(getCompanion().getPHPVersion())) {
+		if (PHPVersion.PHP7_4.isGreaterThan(getCompanion().getPHPVersion()) || !isValidStatement(context)) {
 			return;
 		}
 		String prefix = context.getPrefix();
+		if (!prefix.isEmpty() && prefix.charAt(0) == '?') {
+			prefix = prefix.substring(1); // remove ?
+		}
+
 		String suffix = ""; //$NON-NLS-1$
 		ISourceRange replaceRange = getReplacementRange(context);
 		PHPVersion phpVersion = getCompanion().getPHPVersion();
@@ -56,7 +60,24 @@ public class PropertyTypeStrategy extends TypesStrategy {
 		super.apply(reporter);
 	}
 
-	@Override
+	private boolean isValidStatement(AbstractCompletionContext context) {
+		try {
+			String word = context.getPreviousWord();
+			if (word.equalsIgnoreCase("static")) { //$NON-NLS-1$
+				word = context.getPreviousWord(2);
+			}
+			if (word.isEmpty()) {
+				return false;
+			}
+
+			return word.equalsIgnoreCase("private") || word.equalsIgnoreCase("public") //$NON-NLS-1$ //$NON-NLS-2$
+					|| word.equalsIgnoreCase("protected"); //$NON-NLS-1$
+		} catch (BadLocationException e) {
+			return false;
+		}
+
+	}
+
 	public String getSuffix(AbstractCompletionContext abstractContext) {
 		return ""; //$NON-NLS-1$
 	}

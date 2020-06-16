@@ -67,11 +67,12 @@ import org.eclipse.text.edits.TextEdit;
 public final class ImportRewrite {
 
 	/**
-	 * A {@link ImportRewrite.ImportRewriteContext} can optionally be used in e.g.
+	 * A {@link ImportRewrite.ImportRewriteContext} can optionally be used in
+	 * e.g.
 	 * {@link ImportRewrite#addImport(String, ImportRewrite.ImportRewriteContext)}
-	 * to give more information about the types visible in the scope. These types
-	 * can be for example inherited inner types where it is unnecessary to add
-	 * import statements for.
+	 * to give more information about the types visible in the scope. These
+	 * types can be for example inherited inner types where it is unnecessary to
+	 * add import statements for.
 	 * 
 	 * </p>
 	 * <p>
@@ -81,18 +82,20 @@ public final class ImportRewrite {
 	public static abstract class ImportRewriteContext {
 
 		/**
-		 * Result constant signaling that the given element is know in the context.
+		 * Result constant signaling that the given element is know in the
+		 * context.
 		 */
 		public final static int RES_NAME_FOUND = 1;
 
 		/**
-		 * Result constant signaling that the given element is not know in the context.
+		 * Result constant signaling that the given element is not know in the
+		 * context.
 		 */
 		public final static int RES_NAME_UNKNOWN = 2;
 
 		/**
-		 * Result constant signaling that the given element is conflicting with an other
-		 * element in the context.
+		 * Result constant signaling that the given element is conflicting with
+		 * an other element in the context.
 		 */
 		public final static int RES_NAME_CONFLICT = 3;
 
@@ -112,21 +115,23 @@ public final class ImportRewrite {
 		public final static int KIND_FUNCTION = 3;
 
 		/**
-		 * Searches for the given element in the context and reports if the element is
-		 * known ({@link #RES_NAME_FOUND}), unknown ( {@link #RES_NAME_UNKNOWN}) or if
-		 * its name conflicts ( {@link #RES_NAME_CONFLICT}) with an other element.
+		 * Searches for the given element in the context and reports if the
+		 * element is known ({@link #RES_NAME_FOUND}), unknown (
+		 * {@link #RES_NAME_UNKNOWN}) or if its name conflicts (
+		 * {@link #RES_NAME_CONFLICT}) with an other element.
 		 * 
 		 * @param qualifier
-		 *            The qualifier of the element, can be package or the qualified name
-		 *            of a type
+		 *            The qualifier of the element, can be package or the
+		 *            qualified name of a type
 		 * @param name
-		 *            The simple name of the element; either a type, method or field
-		 *            name or * for on-demand imports.
+		 *            The simple name of the element; either a type, method or
+		 *            field name or * for on-demand imports.
 		 * @param kind
 		 *            The kind of the element. Can be either {@link #KIND_TYPE},
-		 *            {@link #KIND_STATIC_CONSTANT} or {@link #KIND_STATIC_METHOD}.
-		 *            Implementors should be prepared for new, currently unspecified
-		 *            kinds and return {@link #RES_NAME_UNKNOWN} by default.
+		 *            {@link #KIND_STATIC_CONSTANT} or
+		 *            {@link #KIND_STATIC_METHOD}. Implementors should be
+		 *            prepared for new, currently unspecified kinds and return
+		 *            {@link #RES_NAME_UNKNOWN} by default.
 		 * @return Returns the result of the lookup. Can be either
 		 *         {@link #RES_NAME_FOUND}, {@link #RES_NAME_UNKNOWN} or
 		 *         {@link #RES_NAME_CONFLICT}.
@@ -158,14 +163,14 @@ public final class ImportRewrite {
 	private boolean filterImplicitImports;
 
 	/**
-	 * Creates a {@link ImportRewrite} from a an AST ({@link Program}). The AST has
-	 * to be created from a {@link ISourceModule}, that means
-	 * {@link ASTParser#setSource(ISourceModule)} has been used when creating the
-	 * AST. If <code>restoreExistingImports</code> is <code>true</code>, all
-	 * existing imports are kept, and new imports will be inserted at best matching
-	 * locations. If <code>restoreExistingImports</code> is <code>false</code>, the
-	 * existing imports will be removed and only the newly added imports will be
-	 * created.
+	 * Creates a {@link ImportRewrite} from a an AST ({@link Program}). The AST
+	 * has to be created from a {@link ISourceModule}, that means
+	 * {@link ASTParser#setSource(ISourceModule)} has been used when creating
+	 * the AST. If <code>restoreExistingImports</code> is <code>true</code>, all
+	 * existing imports are kept, and new imports will be inserted at best
+	 * matching locations. If <code>restoreExistingImports</code> is
+	 * <code>false</code>, the existing imports will be removed and only the
+	 * newly added imports will be created.
 	 * <p>
 	 * Note that this method is more efficient than using
 	 * {@link #create(ISourceModule, boolean)} if an AST is already available.
@@ -253,16 +258,16 @@ public final class ImportRewrite {
 	}
 
 	/**
-	 * Defines the import groups and order to be used by the {@link ImportRewrite}.
-	 * Imports are added to the group matching their qualified name most. The empty
-	 * group name groups all imports not matching any other group. Static imports
-	 * are managed in separate groups. Static import group names are prefixed with a
-	 * '#' character.
+	 * Defines the import groups and order to be used by the
+	 * {@link ImportRewrite}. Imports are added to the group matching their
+	 * qualified name most. The empty group name groups all imports not matching
+	 * any other group. Static imports are managed in separate groups. Static
+	 * import group names are prefixed with a '#' character.
 	 * 
 	 * @param order
-	 *            A list of strings defining the import groups. A group name must be
-	 *            a valid package name or empty. If can be prefixed by the '#'
-	 *            character for static import groups
+	 *            A list of strings defining the import groups. A group name
+	 *            must be a valid package name or empty. If can be prefixed by
+	 *            the '#' character for static import groups
 	 */
 	public void setImportOrder(String[] order) {
 		if (order == null) {
@@ -274,7 +279,8 @@ public final class ImportRewrite {
 	/**
 	 * The compilation unit for which this import rewrite was created for.
 	 * 
-	 * @return the compilation unit for which this import rewrite was created for.
+	 * @return the compilation unit for which this import rewrite was created
+	 *         for.
 	 */
 	public ISourceModule getSourceModule() {
 		return this.compilationUnit;
@@ -285,9 +291,9 @@ public final class ImportRewrite {
 	}
 
 	/**
-	 * Returns the default rewrite context that only knows about the imported types.
-	 * Clients can write their own context and use the default context for the
-	 * default behavior.
+	 * Returns the default rewrite context that only knows about the imported
+	 * types. Clients can write their own context and use the default context
+	 * for the default behavior.
 	 * 
 	 * @return the default import rewrite context.
 	 */
@@ -297,9 +303,9 @@ public final class ImportRewrite {
 
 	/**
 	 * Specifies that implicit imports (types in default package, package
-	 * <code>java.lang</code> or in the same package as the rewrite compilation unit
-	 * should not be created except if necessary to resolve an on-demand import
-	 * conflict. The filter is enabled by default.
+	 * <code>java.lang</code> or in the same package as the rewrite compilation
+	 * unit should not be created except if necessary to resolve an on-demand
+	 * import conflict. The filter is enabled by default.
 	 * 
 	 * @param filterImplicitImports
 	 *            if set, implicit imports will be filtered.
@@ -368,32 +374,37 @@ public final class ImportRewrite {
 	}
 
 	/**
-	 * Adds a new import to the rewriter's record and returns a type reference that
-	 * can be used in the code. The type binding can only be an array or non-generic
-	 * type.
+	 * Adds a new import to the rewriter's record and returns a type reference
+	 * that can be used in the code. The type binding can only be an array or
+	 * non-generic type.
 	 * <p>
-	 * No imports are added for types that are already known. If a import for a type
-	 * is recorded to be removed, this record is discarded instead.
+	 * No imports are added for types that are already known. If a import for a
+	 * type is recorded to be removed, this record is discarded instead.
 	 * </p>
 	 * <p>
-	 * The content of the compilation unit itself is actually not modified in any
-	 * way by this method; rather, the rewriter just records that a new import has
-	 * been added.
+	 * The content of the compilation unit itself is actually not modified in
+	 * any way by this method; rather, the rewriter just records that a new
+	 * import has been added.
 	 * </p>
 	 * 
 	 * @param qualifiedTypeName
 	 *            the qualified type name of the type to be added
 	 * @param context
-	 *            an optional context that knows about types visible in the current
-	 *            scope or <code>null</code> to use the default context only using
-	 *            the available imports.
+	 *            an optional context that knows about types visible in the
+	 *            current scope or <code>null</code> to use the default context
+	 *            only using the available imports.
 	 * @return returns a type to which the type binding can be assigned to. The
-	 *         returned type contains is unqualified when an import could be added
-	 *         or was already known. It is fully qualified, if an import conflict
-	 *         prevented the import.
+	 *         returned type contains is unqualified when an import could be
+	 *         added or was already known. It is fully qualified, if an import
+	 *         conflict prevented the import.
 	 */
 	public String addImport(NamespaceDeclaration namespace, String qualifiedTypeName, ImportRewriteContext context) {
 		return internalAddImport(namespace, qualifiedTypeName, null, ImportRewriteContext.KIND_TYPE, context);
+	}
+
+	public String addImport(NamespaceDeclaration namespace, String qualifiedTypeName, String alias,
+			ImportRewriteContext context) {
+		return internalAddImport(namespace, qualifiedTypeName, alias, ImportRewriteContext.KIND_TYPE, context);
 	}
 
 	public String addImport(NamespaceDeclaration namespace, String qualifiedTypeName, String alias, int importKind,
@@ -402,25 +413,25 @@ public final class ImportRewrite {
 	}
 
 	/**
-	 * Adds a new import to the rewriter's record and returns a type reference that
-	 * can be used in the code. The type binding can only be an array or non-generic
-	 * type.
+	 * Adds a new import to the rewriter's record and returns a type reference
+	 * that can be used in the code. The type binding can only be an array or
+	 * non-generic type.
 	 * <p>
-	 * No imports are added for types that are already known. If a import for a type
-	 * is recorded to be removed, this record is discarded instead.
+	 * No imports are added for types that are already known. If a import for a
+	 * type is recorded to be removed, this record is discarded instead.
 	 * </p>
 	 * <p>
-	 * The content of the compilation unit itself is actually not modified in any
-	 * way by this method; rather, the rewriter just records that a new import has
-	 * been added.
+	 * The content of the compilation unit itself is actually not modified in
+	 * any way by this method; rather, the rewriter just records that a new
+	 * import has been added.
 	 * </p>
 	 * 
 	 * @param qualifiedTypeName
 	 *            the qualified type name of the type to be added
 	 * @return returns a type to which the type binding can be assigned to. The
-	 *         returned type contains is unqualified when an import could be added
-	 *         or was already known. It is fully qualified, if an import conflict
-	 *         prevented the import.
+	 *         returned type contains is unqualified when an import could be
+	 *         added or was already known. It is fully qualified, if an import
+	 *         conflict prevented the import.
 	 */
 	public String addImport(NamespaceDeclaration namespace, String qualifiedTypeName) {
 		return addImport(namespace, qualifiedTypeName, this.defaultContext);
@@ -524,19 +535,19 @@ public final class ImportRewrite {
 	}
 
 	/**
-	 * Records to remove a import. No remove is recorded if no such import exists or
-	 * if such an import is recorded to be added. In that case the record of the
-	 * addition is discarded.
+	 * Records to remove a import. No remove is recorded if no such import
+	 * exists or if such an import is recorded to be added. In that case the
+	 * record of the addition is discarded.
 	 * <p>
-	 * The content of the compilation unit itself is actually not modified in any
-	 * way by this method; rather, the rewriter just records that an import has been
-	 * removed.
+	 * The content of the compilation unit itself is actually not modified in
+	 * any way by this method; rather, the rewriter just records that an import
+	 * has been removed.
 	 * </p>
 	 * 
 	 * @param qualifiedName
 	 *            The import name to remove.
-	 * @return <code>true</code> is returned of an import of the given name could be
-	 *         found.
+	 * @return <code>true</code> is returned of an import of the given name
+	 *         could be found.
 	 */
 	public boolean removeImport(NamespaceDeclaration namespace, String qualifiedName) {
 		return removeEntry(namespace, NORMAL_PREFIX + qualifiedName);
@@ -544,19 +555,19 @@ public final class ImportRewrite {
 
 	/**
 	 * Converts all modifications recorded by this rewriter into an object
-	 * representing the corresponding text edits to the source code of the rewrite's
-	 * compilation unit. The compilation unit itself is not modified.
+	 * representing the corresponding text edits to the source code of the
+	 * rewrite's compilation unit. The compilation unit itself is not modified.
 	 * <p>
 	 * Calling this methods does not discard the modifications on record.
-	 * Subsequence modifications are added to the ones already on record. If this
-	 * method is called again later, the resulting text edit object will accurately
-	 * reflect the net cumulative affect of all those changes.
+	 * Subsequence modifications are added to the ones already on record. If
+	 * this method is called again later, the resulting text edit object will
+	 * accurately reflect the net cumulative affect of all those changes.
 	 * </p>
 	 * 
 	 * @param monitor
 	 *            the progress monitor or <code>null</code>
-	 * @return text edit object describing the changes to the document corresponding
-	 *         to the changes recorded by this rewriter
+	 * @return text edit object describing the changes to the document
+	 *         corresponding to the changes recorded by this rewriter
 	 * @throws CoreException
 	 *             the exception is thrown if the rewrite fails.
 	 */

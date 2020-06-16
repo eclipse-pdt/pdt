@@ -39,6 +39,7 @@ import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.codeassist.AliasField;
 import org.eclipse.php.internal.core.codeassist.ProposalExtraInfo;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
+import org.eclipse.php.internal.core.codeassist.contexts.UseConstNameContext;
 import org.eclipse.php.internal.core.codeassist.contexts.UseStatementContext;
 import org.eclipse.php.internal.core.model.PHPModelAccess;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
@@ -81,6 +82,16 @@ public class ConstantsStrategy extends ElementsStrategy {
 			return;
 		}
 
+		boolean isUseConstContext = context instanceof UseConstNameContext;
+		int extraInfo = getExtraInfo();
+		if (isUseConstContext) {
+			extraInfo |= ProposalExtraInfo.IN_USE_STATEMENT_CONTEXT;
+		}
+		String namespaceOfPrefix = getNamespaceOfPrefix(context);
+		if (namespaceOfPrefix.length() > 0) {
+			extraInfo |= ProposalExtraInfo.PREFIX_HAS_NAMESPACE;
+		}
+
 		MatchRule matchRule = MatchRule.PREFIX;
 		if (requestor.isContextInformationMode()) {
 			matchRule = MatchRule.EXACT;
@@ -114,7 +125,6 @@ public class ConstantsStrategy extends ElementsStrategy {
 
 		String memberName = abstractContext.getMemberName();
 		String namespaceName = abstractContext.getQualifier(true);
-		int extraInfo = getExtraInfo();
 		if (abstractContext.isAbsoluteName()) {
 			extraInfo |= ProposalExtraInfo.FULL_NAME;
 			extraInfo |= ProposalExtraInfo.NO_INSERT_USE;
@@ -123,7 +133,6 @@ public class ConstantsStrategy extends ElementsStrategy {
 
 		if (abstractContext.isAbsolute()) {
 			extraInfo |= ProposalExtraInfo.FULL_NAME;
-			extraInfo |= ProposalExtraInfo.NO_INSERT_USE;
 		}
 
 		if (nsUseGroupPrefix != null) {

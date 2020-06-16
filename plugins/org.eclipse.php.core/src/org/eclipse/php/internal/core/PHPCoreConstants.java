@@ -133,6 +133,7 @@ public interface PHPCoreConstants {
 	 * Value is of type <code>Boolean</code>.
 	 * </p>
 	 */
+	@Deprecated
 	String CODEASSIST_FILL_ARGUMENT_NAMES = "contentAssistFillMethodArguments"; //$NON-NLS-1$
 
 	/**
@@ -211,6 +212,12 @@ public interface PHPCoreConstants {
 	 * </p>
 	 */
 	String CODEASSIST_INSERT_FULL_QUALIFIED_NAME_IN_COMMENTS = "contentAssistInsertFullyQualifiedNameInCommentsCheckBox"; //$NON-NLS-1$
+
+	/**
+	 * A named preference that controls if code assist expand method proposal
+	 * for method with default value parameter
+	 */
+	public final static String CODEASSIST_EXPAND_DEFAULT_VALUE_METHODS = "contentAssistExpandDefaultValueMethods"; //$NON-NLS-1$
 
 	/**
 	 * A named preference that controls if code assist also contains proposals

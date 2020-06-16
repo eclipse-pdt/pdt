@@ -56,7 +56,7 @@ public class FunctionReturnTypeStrategy extends TypesStrategy {
 	}
 
 	@Override
-	public String getSuffix(AbstractCompletionContext abstractContext) {
+	public String getSuffix(AbstractCompletionContext abstractContext, String suffix) {
 		return ""; //$NON-NLS-1$
 	}
 

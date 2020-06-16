@@ -99,6 +99,10 @@ public class TypesStrategy extends ElementsStrategy {
 			extraInfo |= ProposalExtraInfo.NO_INSERT_USE;
 			extraInfo |= ProposalExtraInfo.ABSOLUTE_NAME;
 		}
+		String namespaceOfPrefix = getNamespaceOfPrefix(context);
+		if (namespaceOfPrefix.length() > 0) {
+			extraInfo |= ProposalExtraInfo.PREFIX_HAS_NAMESPACE;
+		}
 
 		if (abstractContext.isAbsolute()) {
 			extraInfo |= ProposalExtraInfo.FULL_NAME;
@@ -107,6 +111,9 @@ public class TypesStrategy extends ElementsStrategy {
 
 		if (nsUseGroupPrefix != null) {
 			extraInfo |= ProposalExtraInfo.NO_INSERT_USE;
+		}
+		if ("namespace".equals(abstractContext.getPreviousWord(1))) { //$NON-NLS-1$
+			extraInfo = extraInfo | ProposalExtraInfo.NO_INSERT_USE;
 		}
 
 		String namespace = getCompanion().getCurrentNamespace();
@@ -128,11 +135,16 @@ public class TypesStrategy extends ElementsStrategy {
 								isNamespace ? replacementRange : memberReplacementRange, extraInfo, relevance);
 					}
 				}
+				suffix = ""; //$NON-NLS-1$
+				if (!isNamespace) {
+					suffix = getSuffix(abstractContext, ";"); //$NON-NLS-1$
+				}
+				reporter.reportType(type, suffix, replacementRange, extraInfo, relevance);
 			} catch (ModelException e) {
 				PHPCorePlugin.log(e);
 			}
 		}
-		addAlias(reporter, suffix);
+		addAlias(reporter, ""); //$NON-NLS-1$
 
 	}
 
@@ -251,6 +263,8 @@ public class TypesStrategy extends ElementsStrategy {
 		String prefix = context.getPrefix();
 		if (prefix.startsWith("$")) { //$NON-NLS-1$
 			return EMPTY;
+		} else if (prefix.startsWith("\\")) { //$NON-NLS-1$
+			prefix = prefix.substring(1);
 		}
 
 		IDLTKSearchScope scope = createSearchScope();
@@ -325,7 +339,7 @@ public class TypesStrategy extends ElementsStrategy {
 		if (StringUtils.startsWithIgnoreCase("self", prefix)) { //$NON-NLS-1$
 			if (!context.getCompletionRequestor().isContextInformationMode() || prefix.length() == 4) { // "self".length()
 
-				String suffix = getSuffix(context);
+				String suffix = getSuffix(context, "::"); //$NON-NLS-1$
 
 				// get the class data for "self". In case of null, the self
 				// function will not be added
@@ -368,14 +382,14 @@ public class TypesStrategy extends ElementsStrategy {
 		}
 	}
 
-	public String getSuffix(AbstractCompletionContext abstractContext) {
+	public String getSuffix(AbstractCompletionContext abstractContext, String suffix) {
 		String nextWord = null;
 		try {
 			nextWord = abstractContext.getNextWord();
 		} catch (BadLocationException e) {
 			PHPCorePlugin.log(e);
 		}
-		return "::".equals(nextWord) ? "" : "::"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		return suffix == null || suffix.equals(nextWord) ? "" : suffix; //$NON-NLS-1$
 	}
 
 	/**

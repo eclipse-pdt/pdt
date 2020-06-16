@@ -3,6 +3,7 @@
  */
 package org.eclipse.php.internal.core.codeassist.strategies;
 
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.internal.core.ModelElement;
@@ -14,11 +15,13 @@ import org.eclipse.php.core.codeassist.ICompletionScope.Type;
 import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.core.compiler.ast.nodes.NamespaceReference;
 import org.eclipse.php.internal.core.Logger;
+import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.codeassist.AliasType;
 import org.eclipse.php.internal.core.codeassist.ProposalExtraInfo;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
 import org.eclipse.php.internal.core.typeinference.FakeConstructor;
+import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 
 /**
  * This is a basic strategy that completes global classes after 'new' statement,
@@ -44,21 +47,27 @@ public abstract class AbstractClassInstantiationStrategy extends TypesStrategy {
 
 		ICompletionContext context = getContext();
 		AbstractCompletionContext concreteContext = (AbstractCompletionContext) context;
-
+		int extraInfo = getExtraInfo();
 		ICompletionScope scope = getCompanion().getScope().findParent(Type.CLASS, Type.INTERFACE);
 		if (scope != null) {
 			enclosingClass = scope.getName();
 		}
 
 		ISourceRange replaceRange = getReplacementRangeForMember(concreteContext);
-		String suffix = getSuffix(concreteContext);
+		String namespaceOfPrefix = getNamespaceOfPrefix(context);
+		if (namespaceOfPrefix.length() > 0) {
+			extraInfo |= ProposalExtraInfo.PREFIX_HAS_NAMESPACE;
+		} else if (!concreteContext.isAbsolute()) {
+			extraInfo |= ProposalExtraInfo.IMPORT_PARENT;
+		}
+
+		String suffix = getSuffix(concreteContext, ""); //$NON-NLS-1$
 
 		IType[] types = getTypes(concreteContext);
 		for (IType type : types) {
 			try {
 				if (PHPFlags.isNamespace(type.getFlags())) {
 					ISourceRange nsReplaceRange = getReplacementRange(concreteContext);
-					int extraInfo = getExtraInfo();
 					if (concreteContext.isAbsoluteName()) {
 						extraInfo |= ProposalExtraInfo.ABSOLUTE_NAME;
 					}
@@ -69,56 +78,68 @@ public abstract class AbstractClassInstantiationStrategy extends TypesStrategy {
 			} catch (ModelException e) {
 				Logger.logException(e);
 			}
-			if (!concreteContext.getCompletionRequestor().isContextInformationMode()) {
-				// here we use fake method,and do the real work in class
-				// ParameterGuessingProposal
-				IMethod ctorMethod = FakeConstructor.createFakeConstructor(null, type,
-						enclosingClass != null && enclosingClass.equals(type.getElementName()));
-				reporter.reportMethod(ctorMethod, suffix, replaceRange, ProposalExtraInfo.FULL_NAME);
-			} else {
-				// if this is context information mode,we use this,
-				// because the number of types' length is very small
-				IMethod[] ctors = FakeConstructor.getConstructors(type, type.getElementName().equals(enclosingClass));
-				if (ctors != null && ctors.length == 2) {
-					if (ctors[1] != null) {
-						reporter.reportMethod(ctors[1], suffix, replaceRange, ProposalExtraInfo.FULL_NAME);
-					} else if (ctors[0] == null) {
-						reporter.reportType(type, suffix, replaceRange);
-					}
-				}
-			}
 
+			IMethod ctor = getConstructor(type);
+			if (ctor != null) {
+				reportMethod(reporter, ctor, suffix, replaceRange, extraInfo);
+			}
 		}
 		addAlias(reporter, suffix);
+	}
+
+	protected IType[] getTypes(AbstractCompletionContext context) throws BadLocationException {
+		/*
+		 * if (StringUtils.isBlank(context.getPrefix())) { if (enclosingClass !=
+		 * null) { return new IType[] { enclosingClass }; } return new IType[0];
+		 * }
+		 */
+		return super.getTypes(context);
+	}
+
+	protected void reportMethod(ICompletionReporter reporter, IMethod method, String suffix, ISourceRange replaceRange,
+			int extraInfo) {
+		if (isExpandMethodEnabled()) {
+			IMethod[] methods = PHPModelUtils.expandDefaultValueMethod(method);
+			for (IMethod m : methods) {
+				reporter.reportMethod(m, suffix, replaceRange, extraInfo);
+			}
+		} else {
+			reporter.reportMethod(method, suffix, replaceRange, extraInfo);
+		}
 	}
 
 	@Override
 	protected void reportAlias(ICompletionReporter reporter, IDLTKSearchScope scope, ISourceModule module,
 			ISourceRange replacementRange, IType type, String fullyQualifiedName, String alias, String suffix) {
 		IType aliasType = new AliasType((ModelElement) type, fullyQualifiedName, alias);
-		IMethod ctorMethod = FakeConstructor.createFakeConstructor(null, aliasType,
-				type.getElementName().equals(enclosingClass));
-		reporter.reportMethod(ctorMethod, "", replacementRange, ProposalExtraInfo.FULL_NAME); //$NON-NLS-1$
+		IMethod ctor = getConstructor(aliasType);
+		reportMethod(reporter, ctor, suffix, replacementRange, getExtraInfo()); // $NON-NLS-1$
+	}
+
+	private IMethod getConstructor(IType type) {
+		boolean isEnclosingClass = type.equals(enclosingClass);
+		IMethod[] ctors = FakeConstructor.getConstructors(type, isEnclosingClass);
+		if (ctors != null && ctors.length == 2) {
+			if (ctors[1] != null) {
+				return FakeConstructor.createFakeConstructor(ctors[1], type, isEnclosingClass);
+			} else if (ctors[0] == null) {
+				return FakeConstructor.createFakeConstructor(null, type, isEnclosingClass);
+			}
+		}
+		return null;
+	}
+
+	private boolean isExpandMethodEnabled() {
+		return Platform.getPreferencesService().getBoolean(PHPCorePlugin.ID,
+				PHPCoreConstants.CODEASSIST_EXPAND_DEFAULT_VALUE_METHODS, true, null);
 	}
 
 	@Override
-	public String getSuffix(AbstractCompletionContext abstractContext) {
-		boolean insertMode = isInsertMode();
-
-		char nextChar = ' ';
-		try {
-			if (insertMode) {
-				nextChar = abstractContext.getNextChar();
-			} else {
-				ISourceRange replacementRange = getReplacementRange(abstractContext);
-				nextChar = abstractContext.getChar(replacementRange.getOffset() + replacementRange.getLength());
-			}
-
-		} catch (BadLocationException e) {
-			PHPCorePlugin.log(e);
+	protected int getExtraInfo() {
+		if (!((AbstractCompletionContext) getContext()).isAbsolute()) {
+			return super.getExtraInfo();
 		}
-		return '(' == nextChar ? "" : "()"; //$NON-NLS-1$ //$NON-NLS-2$
-											// //$NON-NLS-3$
+		return super.getExtraInfo();
 	}
 
 }

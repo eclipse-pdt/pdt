@@ -14,6 +14,8 @@
 
 package org.eclipse.php.internal.ui.corext.util;
 
+import static java.lang.Character.isJavaIdentifierPart;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -704,5 +706,35 @@ public class Strings {
 		Matcher matcher = pattern.matcher(string);
 		matcher.find();
 		return matcher.replaceAll(" "); //$NON-NLS-1$
+	}
+
+	/**
+	 * Given a completion's display string like 'ArrayList()', it returns the
+	 * substring of the display string used to match a user-entered prefix and
+	 * the completion, i.e., 'ArrayList' without brackets in this case.
+	 * <p>
+	 * Examples:
+	 *
+	 * <pre>
+	 * add($o) --> add
+	 * ArrayList(Collection c) --> ArrayList
+	 * org.eclipse.other --> org.eclipse.other
+	 * </pre>
+	 */
+	public static String getPrefixMatchingArea(String displayString) {
+
+		int end = displayString.length();
+		for (int i = 0; i < displayString.length(); i++) {
+			char c = displayString.charAt(i);
+			if (!isJavaIdentifierLike(c) && c != '\\') {
+				end = i;
+				break;
+			}
+		}
+		return displayString.substring(0, end);
+	}
+
+	private static boolean isJavaIdentifierLike(char c) {
+		return isJavaIdentifierPart(c) || c == '#' || c == '@' || c == '{' || c == '}';
 	}
 }

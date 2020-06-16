@@ -114,6 +114,21 @@ public abstract class AbstractCompletionStrategy implements ICompletionStrategy 
 		return NamespaceReference.NAMESPACE_DELIMITER.equals(nextWord) ? "" : NamespaceReference.NAMESPACE_DELIMITER; //$NON-NLS-1$
 	}
 
+	public String getNamespaceOfPrefix(ICompletionContext context) {
+		AbstractCompletionContext completionContext = (AbstractCompletionContext) context;
+		String namespace = ""; //$NON-NLS-1$
+		try {
+			String prefix = completionContext.getPrefix();
+			int index = prefix.lastIndexOf(NamespaceReference.NAMESPACE_DELIMITER);
+			if (index > 0) {
+				namespace = prefix.substring(0, index);
+			}
+		} catch (BadLocationException e) {
+			PHPCorePlugin.log(e);
+		}
+		return namespace;
+	}
+
 	public ISourceRange getReplacementRangeWithBraces(ICompletionContext context) throws BadLocationException {
 
 		AbstractCompletionContext completionContext = (AbstractCompletionContext) context;
