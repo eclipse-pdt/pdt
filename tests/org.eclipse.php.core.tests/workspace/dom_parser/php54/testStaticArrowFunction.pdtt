@@ -8,7 +8,7 @@ static   function   &   ($x)   {   $x;   }
 <Program start='0' length='51'>
 	<Statements>
 		<ExpressionStatement start='6' length='45'>
-			<LambdaFunctionDeclaration start='6' length='42' isReference='true isStatic='true'>
+			<LambdaFunctionDeclaration start='6' length='42' isReference='true' isStatic='true'>
 				<FormalParameters>
 					<FormalParameter start='31' length='2' isMandatory='false'>
 						<Type>

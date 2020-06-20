@@ -11,7 +11,7 @@ Test Lambda Function
 					<Identifier start='7' length='6' name='lambda'/>
 				</Variable>
 				<Value>
-					<LambdaFunctionDeclaration start='16' length='22' isReference='false isStatic='true'>
+					<LambdaFunctionDeclaration start='16' length='22' isReference='false' isStatic='true'>
 						<FormalParameters>
 						</FormalParameters>
 						<LexicalVariables>
