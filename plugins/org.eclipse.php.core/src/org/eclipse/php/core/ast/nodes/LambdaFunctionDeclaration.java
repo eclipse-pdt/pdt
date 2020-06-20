@@ -205,11 +205,11 @@ public class LambdaFunctionDeclaration extends Expression {
 	public void toString(StringBuilder buffer, String tab) {
 		buffer.append(tab).append("<LambdaFunctionDeclaration"); //$NON-NLS-1$
 		appendInterval(buffer);
-		buffer.append(" isReference='").append(isReference); //$NON-NLS-1$
+		buffer.append(" isReference='").append(isReference).append('\''); //$NON-NLS-1$
 		if (isStatic) {
-			buffer.append(" isStatic='").append(isStatic); //$NON-NLS-1$
+			buffer.append(" isStatic='").append(isStatic).append('\''); //$NON-NLS-1$
 		}
-		buffer.append("'>\n"); //$NON-NLS-1$
+		buffer.append(">\n"); //$NON-NLS-1$
 		buffer.append(TAB).append(tab).append("<FormalParameters>\n"); //$NON-NLS-1$
 		for (ASTNode node : this.formalParameters) {
 			node.toString(buffer, TAB + TAB + tab);
