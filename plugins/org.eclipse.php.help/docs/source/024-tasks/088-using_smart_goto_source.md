@@ -16,13 +16,6 @@ You will be automatically taken to the element's source code. If the declaration
 
 <!--ref-end-->
 
-<!--note-start-->
-
-#### Note:
-
-Smart Goto Source will also be available for JavaScript elements if JavaScript support was enabled for the project. See [Enabling JavaScript Support in PHP Projects](../024-tasks/208-using_javascript/008-enabling_javascript_support_in_php_projects.md) for more information.
-
-<!--note-end-->
 
 <!--links-start-->
 

@@ -22,14 +22,6 @@ Clicking on an element while hovering will take you to that element's declaratio
 
 To configure your hover settings, go to the [Hover Preferences page](../032-reference/032-preferences/040-editor/024-hovers.md), accessible by going to **Window | Preferences | PHP | Editor | Hovers**.
 
-<!--note-start-->
-
-#### Note:
-
-Hovering will also be enabled for JavaScript elements if JavaScript support was enabled for the project. See [Enabling JavaScript Support in PHP Projects](../024-tasks/208-using_javascript/008-enabling_javascript_support_in_php_projects.md) for more information. JavaScript hover settings can be configured from the JavaScript Hovers preferences page, accessible by going to **Window | Preferences | Web | JavaScript | Editor | Hovers**.
-
-<!--note-end-->
-
 <!--links-start-->
 
 #### Related Links:

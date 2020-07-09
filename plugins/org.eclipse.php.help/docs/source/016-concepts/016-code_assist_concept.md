@@ -42,14 +42,6 @@ Each type of code element will have a unique icon. See [PHP Icons](../032-refere
 
 Content Assist works with the following elements: PHP Classes, Functions, Variables, Constants, Keywords, Interfaces, attributes, values, nested functions, names, syntax and include calls, as well as all user defined Classes, Functions and Constants.
 
-<!--note-start-->
-
-#### Note:
-
-Content Assist will also be available for JavaScript elements if JavaScript support was enabled for the project. See [Enabling JavaScript Support in PHP Projects](../024-tasks/208-using_javascript/008-enabling_javascript_support_in_php_projects.md) for more information.
-
-<!--note-end-->
-
 ### Content Assist in PHPDocBlock
 
 Content Assist provides proposals for the PHPDoc tags:

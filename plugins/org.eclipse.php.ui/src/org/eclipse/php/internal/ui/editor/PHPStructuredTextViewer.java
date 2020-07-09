@@ -21,11 +21,9 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IScriptProject;
-import org.eclipse.dltk.internal.ui.dialogs.OptionalMessageDialog;
 import org.eclipse.emf.common.command.BasicCommandStack;
 import org.eclipse.emf.common.command.CommandStack;
 import org.eclipse.emf.common.command.CommandStackListener;
-import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.internal.text.SelectionProcessor;
 import org.eclipse.jface.text.*;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
@@ -40,22 +38,17 @@ import org.eclipse.jface.text.information.IInformationPresenter;
 import org.eclipse.jface.text.projection.ProjectionMapping;
 import org.eclipse.jface.text.reconciler.DirtyRegion;
 import org.eclipse.jface.text.source.*;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPHPScriptRegion;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.ui.Logger;
-import org.eclipse.php.internal.ui.PHPUIMessages;
-import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.editor.configuration.PHPStructuredTextViewerConfiguration;
 import org.eclipse.php.internal.ui.editor.contentassist.PHPCompletionProcessor;
 import org.eclipse.swt.custom.ST;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.texteditor.ITextEditor;
-import org.eclipse.wst.jsdt.web.ui.SetupProjectsWizzard;
 import org.eclipse.wst.sse.core.internal.parser.ForeignRegion;
 import org.eclipse.wst.sse.core.internal.provisional.events.RegionChangedEvent;
 import org.eclipse.wst.sse.core.internal.provisional.events.RegionsReplacedEvent;
@@ -211,27 +204,7 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 
 					// open dialog if required
 					if (isJavaScriptRegion && !hasJavaScriptNature) {
-						try {
-							SetupProjectsWizzard wiz = new SetupProjectsWizzard();
-							Shell activeWorkbenchShell = PHPUiPlugin.getActiveWorkbenchShell();
-							// Pop a question dialog - if the user selects 'Yes'
-							// JS
-							// Support is added, otherwise no change
-							int addJavaScriptSupport = OptionalMessageDialog.open("PROMPT_ADD_JAVASCRIPT_SUPPORT", //$NON-NLS-1$
-									activeWorkbenchShell, PHPUIMessages.PHPStructuredTextViewer_0, null,
-									PHPUIMessages.PHPStructuredTextViewer_1, OptionalMessageDialog.QUESTION,
-									new String[] { IDialogConstants.YES_LABEL, IDialogConstants.NO_LABEL }, 0);
-
-							// run the JSDT action for adding the JS nature
-							if (addJavaScriptSupport == 0 && project != null) {
-
-								wiz.setActivePart(null, this.getTextEditor());
-								wiz.selectionChanged(null, new StructuredSelection(project));
-								wiz.run(null);
-							}
-						} catch (NoClassDefFoundError e) {
-
-						}
+						// remove JSDT support completely
 					}
 				} catch (CoreException e) {
 					Logger.logException(e);

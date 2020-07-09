@@ -22,13 +22,6 @@ Comments can be either single line or multi-lined:
     lines
     */
 
-<!--note-start-->
-
-#### Note:
-
-Code Commenting will also be available for JavaScript elements if JavaScript support was enabled for the project. See [Enabling JavaScript Support in PHP Projects](../../024-tasks/208-using_javascript/008-enabling_javascript_support_in_php_projects.md) for more information.
-
-<!--note-end-->
 
 <!--links-start-->
 

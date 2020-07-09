@@ -153,14 +153,6 @@ All elements have a default Background of white. The color and font settings can
 
 <!--note-end-->
 
-<!--note-start-->
-
-#### Note:
-
-Syntax Coloring will also be available for JavaScript elements if JavaScript support was enabled for the project. See [Enabling JavaScript Support in PHP Projects](../024-tasks/208-using_javascript/008-enabling_javascript_support_in_php_projects.md) for more information.  To configure JavaScript Syntax Coloring preferences, go to **Window | Preferences | JavaScript | Editor | Syntax Coloring**.
-
-<!--note-end-->
-
 <!--links-start-->
 
 #### Related Links:

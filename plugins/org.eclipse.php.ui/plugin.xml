@@ -248,11 +248,6 @@
 			class="org.eclipse.php.internal.ui.editor.adapter.AdapterFactoryProviderForPHP">
 			<contentType id="org.eclipse.php.core.phpsource" />
 		</adapterFactoryDescription>
-		<!-- JavaScript Support in php editor  -->
-		<adapterFactoryDescription
-			class="org.eclipse.php.internal.ui.provisional.registry.AdapterFactoryProviderForJSDT">
-			<contentType id="org.eclipse.php.core.phpsource" />
-		</adapterFactoryDescription>
 	</extension>
 
 	<extension point="org.eclipse.core.filebuffers.annotationModelCreation">
@@ -327,25 +322,6 @@
 			isGoToPreviousNavigationTarget="false" textStylePreferenceKey="overrideIndicatorTextStyleForPHP"
 			textStylePreferenceValue="SQUIGGLES">
 		</specification>
-	</extension>
-
-	<!--
-		======================================================================================
-	-->
-	<!-- java script source validation for PHP															  -->
-	<!--
-		======================================================================================
-	-->
-
-	<extension point="org.eclipse.wst.sse.ui.sourcevalidation">
-		<validator scope="total"
-			class="org.eclipse.wst.jsdt.web.core.internal.validation.JsValidator"
-			id="org.eclipse.php.core.phpsourcevalidator">
-			<contentTypeIdentifier id="org.eclipse.php.core.phpsource">
-				<partitionType id="org.eclipse.wst.html.SCRIPT"></partitionType>
-				<partitionType id="org.eclipse.wst.html.SCRIPT.EVENTHANDLER"></partitionType>
-			</contentTypeIdentifier>
-		</validator>
 	</extension>
 
 	<!--
