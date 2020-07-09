@@ -20,6 +20,7 @@
 <tr><td>[Code Commenting](../016-concepts/064-commenting_code/000-index.md) | [phpDoc Block Comments](../016-concepts/064-commenting_code/008-phpdoc_comments.md) | [Bookmarks](../016-concepts/064-commenting_code/016-bookmarks.md)</td>
 <td>[Path Mapping](160-path_mapping.md)</td></tr>
 <tr><td>[Hover Support](072-hover_support.md)</td>
+</tr>
 <tr><td>[Override Indicators](080-override_indicators.md)</td>
 <td>[Mylyn Integration](176-mylyn_integration.md)</td></tr>
 <tr><td>[PHP Working Sets](088-php_working_sets.md)</td>
