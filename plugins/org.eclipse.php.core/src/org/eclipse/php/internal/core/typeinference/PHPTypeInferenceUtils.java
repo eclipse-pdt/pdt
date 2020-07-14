@@ -97,7 +97,8 @@ public class PHPTypeInferenceUtils {
 	 * @param evaluatedType
 	 *            Evaluated type
 	 * @param context
-	 * @return model elements or <code>null</code> in case no element could be found
+	 * @return model elements or <code>null</code> in case no element could be
+	 *         found
 	 */
 	public static IType[] getModelElements(IEvaluatedType evaluatedType, ISourceModuleContext context) {
 		return PHPTypeInferenceUtils.getModelElements(evaluatedType, context, 0,
@@ -112,7 +113,8 @@ public class PHPTypeInferenceUtils {
 	 *            Evaluated type
 	 * @param context
 	 * @param cache
-	 * @return model elements or <code>null</code> in case no element could be found
+	 * @return model elements or <code>null</code> in case no element could be
+	 *         found
 	 */
 	public static IType[] getModelElements(IEvaluatedType evaluatedType, ISourceModuleContext context,
 			IModelAccessCache cache) {
@@ -127,7 +129,8 @@ public class PHPTypeInferenceUtils {
 	 *            Evaluated type
 	 * @param context
 	 * @param offset
-	 * @return model elements or <code>null</code> in case no element could be found
+	 * @return model elements or <code>null</code> in case no element could be
+	 *         found
 	 */
 	public static IType[] getModelElements(IEvaluatedType evaluatedType, ISourceModuleContext context, int offset) {
 		return internalGetModelElements(evaluatedType, context, offset,
@@ -143,7 +146,8 @@ public class PHPTypeInferenceUtils {
 	 * @param context
 	 * @param offset
 	 * @param cache
-	 * @return model elements or <code>null</code> in case no element could be found
+	 * @return model elements or <code>null</code> in case no element could be
+	 *         found
 	 */
 	public static IType[] getModelElements(IEvaluatedType evaluatedType, ISourceModuleContext context, int offset,
 			IModelAccessCache cache) {
@@ -260,11 +264,6 @@ public class PHPTypeInferenceUtils {
 				if (!isSimple(type)) {
 					return false;
 				}
-			}
-			return true;
-		} else if (object instanceof PHPNamespaceConstantType) {
-			if (!isSimple(((PHPNamespaceConstantType) object).getValueType())) {
-				return false;
 			}
 			return true;
 		}

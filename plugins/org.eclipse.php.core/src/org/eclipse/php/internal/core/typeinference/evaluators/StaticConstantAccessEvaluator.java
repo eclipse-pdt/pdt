@@ -17,17 +17,20 @@ import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.ast.references.TypeReference;
 import org.eclipse.dltk.evaluation.types.UnknownType;
 import org.eclipse.dltk.ti.GoalState;
+import org.eclipse.dltk.ti.ISourceModuleContext;
 import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
 import org.eclipse.dltk.ti.goals.GoalEvaluator;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.core.compiler.ast.nodes.StaticConstantAccess;
 import org.eclipse.php.internal.core.typeinference.PHPSimpleTypes;
-import org.eclipse.php.internal.core.typeinference.goals.ConstantDeclarationGoal;
+import org.eclipse.php.internal.core.typeinference.context.TypeContext;
+import org.eclipse.php.internal.core.typeinference.goals.ClassVariableDeclarationGoal;
 
 public class StaticConstantAccessEvaluator extends GoalEvaluator {
 
 	private IEvaluatedType evaluatedType;
+	private String name;
 
 	public StaticConstantAccessEvaluator(IGoal goal) {
 		super(goal);
@@ -37,12 +40,11 @@ public class StaticConstantAccessEvaluator extends GoalEvaluator {
 	public IGoal[] init() {
 		ExpressionTypeGoal typedGoal = (ExpressionTypeGoal) goal;
 		StaticConstantAccess expr = (StaticConstantAccess) typedGoal.getExpression();
-
 		Expression dispatcher = expr.getDispatcher();
 		if (dispatcher instanceof TypeReference) {
 			TypeReference typeReference = (TypeReference) dispatcher;
-			return new IGoal[] { new ConstantDeclarationGoal(goal.getContext(), expr.getConstant().getName(),
-					typeReference.getName()) };
+			this.name = expr.getConstant().getName();
+			return new IGoal[] { new ExpressionTypeGoal(typedGoal.getContext(), typeReference) };
 		}
 		return IGoal.NO_GOALS;
 	}
@@ -55,8 +57,15 @@ public class StaticConstantAccessEvaluator extends GoalEvaluator {
 	@Override
 	public IGoal[] subGoalDone(IGoal subgoal, Object result, GoalState state) {
 		if (state == GoalState.PRUNED || result == null || result == UnknownType.INSTANCE) {
-			evaluatedType = PHPSimpleTypes.STRING;
-		} else {
+			evaluatedType = PHPSimpleTypes.MIXED;
+			return IGoal.NO_GOALS;
+		}
+		if (subgoal instanceof ExpressionTypeGoal) {
+			TypeContext typeContext = new TypeContext((ISourceModuleContext) goal.getContext(),
+					(IEvaluatedType) result);
+			return new IGoal[] { new ClassVariableDeclarationGoal(typeContext, name) };
+		}
+		if (result instanceof IEvaluatedType) {
 			evaluatedType = (IEvaluatedType) result;
 		}
 		return IGoal.NO_GOALS;

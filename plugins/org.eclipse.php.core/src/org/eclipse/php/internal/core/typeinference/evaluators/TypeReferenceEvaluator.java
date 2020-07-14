@@ -30,7 +30,6 @@ import org.eclipse.dltk.ast.references.TypeReference;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.evaluation.types.AmbiguousType;
 import org.eclipse.dltk.evaluation.types.MultiTypeType;
-import org.eclipse.dltk.evaluation.types.UnknownType;
 import org.eclipse.dltk.internal.core.ImportDeclaration;
 import org.eclipse.dltk.ti.GoalState;
 import org.eclipse.dltk.ti.IContext;
@@ -47,7 +46,6 @@ import org.eclipse.php.core.compiler.ast.nodes.UsePart;
 import org.eclipse.php.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
-import org.eclipse.php.internal.core.typeinference.PHPNamespaceConstantType;
 import org.eclipse.php.internal.core.typeinference.PHPSimpleTypes;
 import org.eclipse.php.internal.core.typeinference.context.INamespaceContext;
 import org.eclipse.php.internal.core.typeinference.context.MethodContext;
@@ -214,11 +212,6 @@ public class TypeReferenceEvaluator extends GoalEvaluator {
 					// NB: ImportDeclaration has no useful type, we have to look
 					// at the type of "typeReference"
 					if (elementType == FullyQualifiedReference.T_CONSTANT) {
-						if (namespace != null) {
-							result = new PHPNamespaceConstantType(namespace, elementName);
-						} else {
-							result = new PHPNamespaceConstantType(elementName);
-						}
 						return new IGoal[] { new ConstantDeclarationGoal(goal.getContext(), elementName, namespace) };
 					}
 					if (elementType == FullyQualifiedReference.T_TYPE) {
@@ -253,7 +246,6 @@ public class TypeReferenceEvaluator extends GoalEvaluator {
 			} else {
 				if (parentNamespace != null) {
 					if (elementType == FullyQualifiedReference.T_CONSTANT) {
-						result = new PHPNamespaceConstantType(parentNamespace, elementName);
 						return new IGoal[] {
 								new ConstantDeclarationGoal(goal.getContext(), elementName, parentNamespace) };
 					} else {
@@ -368,12 +360,8 @@ public class TypeReferenceEvaluator extends GoalEvaluator {
 
 	@Override
 	public IGoal[] subGoalDone(IGoal subgoal, Object result, GoalState state) {
-		if (this.result instanceof PHPNamespaceConstantType) {
-			if (state == GoalState.PRUNED || result == null || result == UnknownType.INSTANCE) {
-				((PHPNamespaceConstantType) this.result).setValueType(PHPSimpleTypes.STRING);
-			} else {
-				((PHPNamespaceConstantType) this.result).setValueType((IEvaluatedType) result);
-			}
+		if (result instanceof IEvaluatedType) {
+			this.result = (IEvaluatedType) result;
 		}
 		return IGoal.NO_GOALS;
 	}

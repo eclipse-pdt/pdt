@@ -24,6 +24,7 @@ import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
 import org.eclipse.dltk.core.index2.search.ModelAccess;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.php.core.compiler.IPHPModifiers;
+import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 
 public class PHPModelAccess extends ModelAccess {
@@ -256,6 +257,23 @@ public class PHPModelAccess extends ModelAccess {
 			result = PHPModelAccess.NULL_TYPES;
 		}
 		return result;
+	}
+
+	public IField[] findConstants(String qualifier, String type, String name, MatchRule matchRule, int trueFlags,
+			int falseFlags, IDLTKSearchScope scope, IProgressMonitor monitor) {
+		List<IField> result = new LinkedList<>();
+		if (type == null || type.length() == 0) {
+			type = PHPCoreConstants.FILE_PARENT;
+		}
+		if (qualifier == null || qualifier.length() == 0) {
+			qualifier = PHPCoreConstants.GLOBAL_NAMESPACE;
+		}
+		if (!findElements(IModelElement.FIELD, qualifier, name, type, matchRule, trueFlags | PHPFlags.AccConstant,
+				falseFlags, scope, result, monitor)) {
+			return PHPModelAccess.NULL_FIELDS;
+		}
+
+		return result.toArray(new IField[result.size()]);
 	}
 
 }
