@@ -2398,9 +2398,10 @@ namespace_name:functionName T_OPEN_PARENTHESE:start function_call_parameter_list
 {:
 	parameters.setStart(startright);
 	parameters.setEnd(endleft);
-	if (functionName.getNamespace() != null) {
-		functionName.getNamespace().setLocal(true);
+	if (functionName.getNamespace() == null) {
+		functionName.setNamespace(new NamespaceReference(functionNameleft, functionNameleft, ""));
 	}
+	functionName.getNamespace().setLocal(true);
 	RESULT = new PHPCallExpression(namespaceleft, endright, null, functionName, parameters);
 :}
 
@@ -2483,9 +2484,10 @@ T_STATIC:s
 
 | T_NAMESPACE:s T_NS_SEPARATOR namespace_name:name
 {:
-	if (name.getNamespace() != null) {
-		name.getNamespace().setLocal(true);
+	if (name.getNamespace() == null) {
+		name.setNamespace(new NamespaceReference(nameleft, nameleft, ""));
 	}
+	name.getNamespace().setLocal(true);
 	name.setElementType(FullyQualifiedReference.T_TYPE);
 	RESULT = name;
 :}
@@ -2514,9 +2516,10 @@ namespace_name:name
 
 | T_NAMESPACE:s T_NS_SEPARATOR namespace_name:name
 {:
-	if (name.getNamespace() != null) {
-		name.getNamespace().setLocal(true);
+	if (name.getNamespace() == null) {
+		name.setNamespace(new NamespaceReference(nameleft, nameleft, ""));
 	}
+	name.getNamespace().setLocal(true);
 	name.setElementType(FullyQualifiedReference.T_TYPE);
 	RESULT = name;
 :}
@@ -2713,9 +2716,10 @@ common_scalar:scalar
 
 | T_NAMESPACE:s T_NS_SEPARATOR namespace_name:name
 {:
-	if (name.getNamespace() != null) {
-		name.getNamespace().setLocal(true);
+	if (name.getNamespace() == null) {
+		name.setNamespace(new NamespaceReference(nameleft, nameleft, ""));
 	}
+	name.getNamespace().setLocal(true);
 	RESULT = name;
 :}
 
@@ -2780,9 +2784,10 @@ class_constant:classConstant
 :}
 | T_NAMESPACE:s T_NS_SEPARATOR namespace_name:name
 {:
-	if (name.getNamespace() != null) {
-		name.getNamespace().setLocal(true);
+	if (name.getNamespace() == null) {
+		name.setNamespace(new NamespaceReference(nameleft, nameleft, ""));
 	}
+	name.getNamespace().setLocal(true);
 	RESULT = name;
 :}
 | T_NS_SEPARATOR:s namespace_name:name
