@@ -323,6 +323,10 @@ public class DefaultBindingResolver extends BindingResolver {
 		if (name.getParent() instanceof Variable) {
 			return resolveVariable((Variable) name.getParent());
 		}
+		IVariableBinding resolveField = resolveField(name);
+		if (resolveField != null && resolveField.isField()) {
+			return resolveField;
+		}
 		IBinding binding = resolveExpressionType(name);
 
 		return binding;
