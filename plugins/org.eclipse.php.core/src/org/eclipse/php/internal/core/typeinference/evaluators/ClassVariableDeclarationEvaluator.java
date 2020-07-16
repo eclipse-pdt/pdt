@@ -182,8 +182,8 @@ public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator 
 	}
 
 	/**
-	 * Searches for all class variable declarations using offset and length which is
-	 * hold by model element
+	 * Searches for all class variable declarations using offset and length
+	 * which is hold by model element
 	 * 
 	 * @author michael
 	 */
@@ -241,20 +241,27 @@ public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator 
 		public boolean visit(Statement e) throws Exception {
 			if (typeDeclarationRange.getOffset() < e.sourceStart()
 					&& (typeDeclarationRange.getOffset() + typeDeclarationRange.getLength()) > e.sourceEnd()) {
+				boolean check = false;
 				if (e instanceof PHPFieldDeclaration) {
 					PHPFieldDeclaration phpFieldDecl = (PHPFieldDeclaration) e;
 					if (phpFieldDecl.getDeclarationStart() == offset
 							&& phpFieldDecl.sourceEnd() - phpFieldDecl.getDeclarationStart() == length) {
 						result = ((PHPFieldDeclaration) e).getVariableValue();
-						if (result instanceof Scalar) {
-							Scalar scalar = (Scalar) result;
-							if (scalar.getScalarType() == Scalar.TYPE_STRING
-									&& scalar.getValue().equalsIgnoreCase(NULL)) {
-								result = null;
-							}
-						}
-						context = contextStack.peek();
+						check = true;
 					}
+				} else if (e instanceof ConstantDeclaration) {
+					ConstantDeclaration decl = (ConstantDeclaration) e;
+					result = decl.getConstantValue();
+					check = true;
+				}
+				if (check) {
+					if (result instanceof Scalar) {
+						Scalar scalar = (Scalar) result;
+						if (scalar.getScalarType() == Scalar.TYPE_STRING && scalar.getValue().equalsIgnoreCase(NULL)) {
+							result = null;
+						}
+					}
+					context = contextStack.peek();
 				}
 			}
 			return visitGeneral(e);

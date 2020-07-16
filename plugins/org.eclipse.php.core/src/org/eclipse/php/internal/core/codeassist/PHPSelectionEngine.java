@@ -414,12 +414,16 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 			if (nodeType == FullyQualifiedReference.T_CONSTANT) {
 				String constantName = typeReference.getName();
 				String qualifier = null;
-				if (typeReference instanceof FullyQualifiedReference) {
+				IModelElement element = sourceModule.getElementAt(offset);
+				if (element instanceof IImportDeclaration) {
+					qualifier = PHPModelUtils.extractNameSpaceName(element.getElementName());
+				} else if (typeReference instanceof FullyQualifiedReference) {
 					String fqn = ((FullyQualifiedReference) typeReference).getFullyQualifiedName();
 					qualifier = PHPModelUtils.extractNamespaceName(fqn, sourceModule, typeReference.start());
 				}
-				return PHPModelAccess.getDefault().findConstants(qualifier, null, constantName, MatchRule.EXACT, 0, 0,
-						SearchEngine.createSearchScope(sourceModule.getScriptProject()), null);
+				IModelElement[] elements = PHPModelAccess.getDefault().findConstants(qualifier, null, constantName,
+						MatchRule.EXACT, 0, 0, SearchEngine.createSearchScope(sourceModule.getScriptProject()), null);
+				return elements;
 			}
 
 			IEvaluatedType evaluatedType = PHPTypeInferenceUtils.resolveExpression(sourceModule, node);
