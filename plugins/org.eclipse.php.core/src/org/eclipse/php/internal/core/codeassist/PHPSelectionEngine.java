@@ -58,7 +58,10 @@ import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.core.model.PHPModelAccess;
 import org.eclipse.php.internal.core.model.PerFileModelAccessCache;
-import org.eclipse.php.internal.core.typeinference.*;
+import org.eclipse.php.internal.core.typeinference.IModelAccessCache;
+import org.eclipse.php.internal.core.typeinference.PHPClassType;
+import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
+import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
 import org.eclipse.php.internal.core.typeinference.context.IModelCacheContext;
 import org.eclipse.php.internal.core.util.text.PHPTextSequenceUtilities;
 import org.eclipse.php.internal.core.util.text.TextSequence;
@@ -401,21 +404,36 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 					return PHPModelUtils.getFunctions(fullyQualifiedName, sourceModule, offset, cache, null);
 				}
 			}
+			int nodeType = FullyQualifiedReference.T_TYPE;
+			if (node instanceof FullyQualifiedReference) {
+				nodeType = ((FullyQualifiedReference) node).getElementType();
+			}
+
 			TypeReference typeReference = (TypeReference) node;
+
+			if (nodeType == FullyQualifiedReference.T_CONSTANT) {
+				String constantName = typeReference.getName();
+				String qualifier = null;
+				IModelElement element = sourceModule.getElementAt(offset);
+				if (element instanceof IImportDeclaration) {
+					qualifier = PHPModelUtils.extractNameSpaceName(element.getElementName());
+				} else if (typeReference instanceof FullyQualifiedReference) {
+					String fqn = ((FullyQualifiedReference) typeReference).getFullyQualifiedName();
+					qualifier = PHPModelUtils.extractNamespaceName(fqn, sourceModule, typeReference.start());
+				}
+				IModelElement[] elements = PHPModelAccess.getDefault().findConstants(qualifier, null, constantName,
+						MatchRule.EXACT, 0, 0, SearchEngine.createSearchScope(sourceModule.getScriptProject()), null);
+				return elements;
+			}
+
 			IEvaluatedType evaluatedType = PHPTypeInferenceUtils.resolveExpression(sourceModule, node);
 			if (evaluatedType == null) {
 				return EMPTY;
 			}
 			IModelElement[] elements = new IModelElement[0];
 			String name = evaluatedType.getTypeName();
-			int nodeType = FullyQualifiedReference.T_TYPE;
-			if (node instanceof FullyQualifiedReference) {
-				nodeType = ((FullyQualifiedReference) node).getElementType();
-			}
-			if (nodeType == FullyQualifiedReference.T_CONSTANT && evaluatedType instanceof PHPNamespaceConstantType) {
-				String constantName = ((PHPNamespaceConstantType) evaluatedType).getConstantName();
-				elements = PHPModelUtils.getFields(constantName, sourceModule, offset, cache, null);
-			} else if (nodeType == FullyQualifiedReference.T_FUNCTION) {
+
+			if (nodeType == FullyQualifiedReference.T_FUNCTION) {
 				elements = PHPModelUtils.getFunctions(name, sourceModule, offset, cache, null);
 				if (elements.length == 0) {
 					elements = PHPModelUtils.getFunctions(typeReference.getName(), sourceModule, offset, cache, null);
@@ -1136,8 +1154,8 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 	}
 
 	/**
-	 * Return workspace or method fields depending on current position: whether we
-	 * are inside method or in global scope.
+	 * Return workspace or method fields depending on current position: whether
+	 * we are inside method or in global scope.
 	 * 
 	 * @param sourceModule
 	 * @param offset

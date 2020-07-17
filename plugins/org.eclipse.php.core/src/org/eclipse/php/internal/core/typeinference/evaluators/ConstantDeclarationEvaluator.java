@@ -18,7 +18,6 @@ import java.util.Map.Entry;
 
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.ASTVisitor;
-import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.expressions.CallExpression;
 import org.eclipse.dltk.ast.expressions.Expression;
@@ -33,16 +32,12 @@ import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
 import org.eclipse.dltk.ti.goals.GoalEvaluator;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
-import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.core.compiler.ast.nodes.ConstantDeclaration;
-import org.eclipse.php.core.compiler.ast.nodes.NamespaceReference;
 import org.eclipse.php.core.compiler.ast.nodes.Scalar;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.PHPLanguageToolkit;
 import org.eclipse.php.internal.core.model.PHPModelAccess;
-import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
-import org.eclipse.php.internal.core.typeinference.context.NamespaceContext;
 import org.eclipse.php.internal.core.typeinference.goals.ConstantDeclarationGoal;
 
 public class ConstantDeclarationEvaluator extends GoalEvaluator {
@@ -70,37 +65,9 @@ public class ConstantDeclarationEvaluator extends GoalEvaluator {
 		if (scope == null) {
 			scope = SearchEngine.createWorkspaceScope(PHPLanguageToolkit.getDefault());
 		}
-		Set<IModelElement> elements = new HashSet<>();
-		if (typedGoal.getContext() instanceof NamespaceContext) {
-			String fullName = PHPModelUtils.concatFullyQualifiedNames(typeName, constantName);
-			if (fullName.startsWith(NamespaceReference.NAMESPACE_DELIMITER)) {
-				fullName = fullName.substring(1);
-			}
-			IField[] fields = PHPModelAccess.getDefault().findFields(constantName, MatchRule.EXACT, 0, 0, scope, null);
-			for (IField field : fields) {
-				try {
-					if (fullName.equalsIgnoreCase(field.getFullyQualifiedName(NamespaceReference.NAMESPACE_DELIMITER))
-							&& field.exists() && PHPFlags.isConstant(field.getFlags())) {
-						elements.add(field);
-					}
-				} catch (ModelException e) {
-					PHPCorePlugin.log(e);
-				}
-			}
-		} else {
-			IType[] types = PHPModelAccess.getDefault().findTypes(typeName, MatchRule.EXACT, 0, Modifiers.AccNameSpace,
-					scope, null);
-			for (IType type : types) {
-				try {
-					IField field = type.getField(constantName);
-					if (field.exists() && PHPFlags.isConstant(field.getFlags())) {
-						elements.add(field);
-					}
-				} catch (ModelException e) {
-					PHPCorePlugin.log(e);
-				}
-			}
-		}
+
+		IField[] elements = PHPModelAccess.getDefault().findConstants(typeName, null, constantName, MatchRule.EXACT, 0,
+				0, scope, null);
 
 		Map<ISourceModule, SortedSet<ISourceRange>> offsets = new HashMap<>();
 
@@ -253,8 +220,8 @@ public class ConstantDeclarationEvaluator extends GoalEvaluator {
 	}
 
 	/**
-	 * Strips single or double quotes from the start and from the end of the given
-	 * string
+	 * Strips single or double quotes from the start and from the end of the
+	 * given string
 	 * 
 	 * @param name
 	 *            String
