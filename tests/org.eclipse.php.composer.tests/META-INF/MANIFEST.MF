@@ -7,7 +7,7 @@ Bundle-Version: 8.0.0.qualifier
 Bundle-Vendor: Eclipse PDT
 Bundle-Activator: org.eclipse.php.composer.test.ComposerCoreTestPlugin
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Require-Bundle: org.junit;bundle-version="4.11.0",
  org.eclipse.php.core.tests,
  org.eclipse.php.core.tests,

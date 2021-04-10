@@ -13,4 +13,4 @@ Export-Package: org.eclipse.php.debug.daemon.communication,
  org.eclipse.php.internal.debug.daemon;x-internal:=true,
  org.eclipse.php.internal.debug.daemon.communication;x-internal:=true,
  org.eclipse.php.internal.debug.daemon.startup;x-internal:=true
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11

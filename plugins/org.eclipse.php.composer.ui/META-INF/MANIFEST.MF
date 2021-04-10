@@ -38,7 +38,7 @@ Require-Bundle: org.eclipse.ui.forms,
  javax.inject,
  org.eclipse.ui.genericeditor,
  org.eclipse.ui.editors
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-ActivationPolicy: lazy
 Export-Package: 
  org.eclipse.php.composer.ui,

@@ -31,5 +31,5 @@ Require-Bundle: org.eclipse.ui,
  org.apache.commons.lang3
 Bundle-ActivationPolicy: lazy
 Eclipse-BundleShape: dir
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 

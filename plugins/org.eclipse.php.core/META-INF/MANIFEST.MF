@@ -1023,5 +1023,5 @@ Export-Package: org.eclipse.php.core,
    org.eclipse.php.refactoring.ui"
 Bundle-Vendor: Eclipse PDT
 Bundle-ClassPath: .
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Service-Component: OSGI-INF/problemPreferences.xml

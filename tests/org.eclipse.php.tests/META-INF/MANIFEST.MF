@@ -12,6 +12,6 @@ Require-Bundle: org.junit;bundle-version="4.11.0",
  org.eclipse.php.refactoring.core.tests,
  org.eclipse.php.ui.tests
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-Vendor: Eclipse PDT
 Export-Package: org.eclipse.php.tests
