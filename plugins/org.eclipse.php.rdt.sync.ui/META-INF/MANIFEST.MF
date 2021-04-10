@@ -11,6 +11,6 @@ Require-Bundle: org.eclipse.core.resources,
  org.eclipse.php.core,
  org.eclipse.ptp.rdt.sync.ui,
  org.eclipse.ptp.rdt.sync.core
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .

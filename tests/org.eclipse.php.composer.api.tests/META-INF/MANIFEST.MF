@@ -6,5 +6,5 @@ Bundle-SymbolicName: org.eclipse.php.composer.api.tests
 Bundle-Version: 8.0.0.qualifier
 Bundle-Vendor: Eclipse PDT
 Fragment-Host: org.eclipse.php.composer.api
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Require-Bundle: org.junit;bundle-version="4.12.0"
