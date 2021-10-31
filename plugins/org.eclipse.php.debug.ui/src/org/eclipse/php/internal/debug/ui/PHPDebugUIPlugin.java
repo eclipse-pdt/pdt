@@ -16,6 +16,7 @@ package org.eclipse.php.internal.debug.ui;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.core.internal.runtime.AdapterManager;
 import org.eclipse.core.resources.IProject;
@@ -107,7 +108,8 @@ public class PHPDebugUIPlugin extends AbstractUIPlugin {
 		// class, we insert the
 		// factory before any other factory.
 		AdapterManager manager = (AdapterManager) Platform.getAdapterManager();
-		List<IAdapterFactory> list = manager.getFactories().get(IVariable.class.getName());
+		Map<String, List<IAdapterFactory>> factories = manager.getFactories();
+		List<IAdapterFactory> list = factories.get(IVariable.class.getName());
 		PHPDebugElementAdapterFactory propertiesFactory = new PHPDebugElementAdapterFactory();
 		manager.registerAdapters(propertiesFactory, IVariable.class);
 		manager.registerAdapters(propertiesFactory, IWatchExpression.class);
@@ -164,8 +166,8 @@ public class PHPDebugUIPlugin extends AbstractUIPlugin {
 	}
 
 	/**
-	 * Returns an image descriptor for the image file at the given plug-in relative
-	 * path.
+	 * Returns an image descriptor for the image file at the given plug-in
+	 * relative path.
 	 * 
 	 * @param path
 	 *            the path
@@ -278,8 +280,8 @@ public class PHPDebugUIPlugin extends AbstractUIPlugin {
 	}
 
 	/*
-	 * Clean the secure storage from any SSH Tunnel definitions that are no longer
-	 * used by any of the launch configuration definitions.
+	 * Clean the secure storage from any SSH Tunnel definitions that are no
+	 * longer used by any of the launch configuration definitions.
 	 */
 	private void cleanSecuredStorage() {
 		Job cleanStorageJob = new Job(PHPDebugUIMessages.PHPDebugUIPlugin_2) {
@@ -460,7 +462,8 @@ public class PHPDebugUIPlugin extends AbstractUIPlugin {
 	}
 
 	/*
-	 * A class that is responsible of selecting the new launch in the LaunchView.
+	 * A class that is responsible of selecting the new launch in the
+	 * LaunchView.
 	 */
 	private static class FirstSelectionDebugLaunchListener implements ILaunchesListener2 {
 
