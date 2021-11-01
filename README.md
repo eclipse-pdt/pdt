@@ -4,7 +4,6 @@
 
 # Welcome to PHP Development Tools
 
-
 ![master](https://github.com/eclipse/pdt/workflows/Tycho%20build/badge.svg)
 [![Sonarcloud Status](https://sonarcloud.io/api/project_badges/measure?project=eclipse-tools.pdt.main&metric=alert_status)](https://sonarcloud.io/dashboard?id=eclipse-tools.pdt.main)
 [![License](https://img.shields.io/badge/License-EPL%202.0-green.svg)](https://opensource.org/licenses/EPL-2.0)
@@ -41,17 +40,6 @@ Before your contribution can be accepted by the project team contributors must
 electronically sign the Eclipse Contributor Agreement (ECA).
 
 * http://www.eclipse.org/legal/ECA.php
-
-## Signed-off-by field
-
-Commits that are provided by non-committers must have a Signed-off-by field in
-the footer indicating that the author is aware of the terms by which the
-contribution has been provided to the project. The non-committer must
-additionally have an Eclipse Foundation account and must have a signed Eclipse
-Contributor Agreement (ECA) on file.
-
-For more information, please see the Eclipse Committer Handbook:
-https://www.eclipse.org/projects/handbook/#resources-commit
 
 ## Contact
 
