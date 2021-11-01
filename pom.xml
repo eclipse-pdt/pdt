@@ -11,7 +11,7 @@
 
 	<!-- this is the parent POM from which all modules inherit common settings -->
 	<properties>
-		<tycho-version>2.3.0</tycho-version>
+		<tycho-version>2.5.0</tycho-version>
 		<antrun-version>1.8</antrun-version>
 		<maven.test.failure.ignore>true</maven.test.failure.ignore>
 		<test.vmargs>-server</test.vmargs>
@@ -240,7 +240,7 @@
 				</property>
 			</activation>
 			<properties>
-				<eclipse.name>2021-06</eclipse.name>
+				<eclipse.name>2021-12</eclipse.name>
 			</properties>
 			<modules>
 				<module>dev/org.eclipse.php.target.next</module>
@@ -272,7 +272,7 @@
 				</property>
 			</activation>
 			<properties>
-				<eclipse.name>2021-03</eclipse.name>
+				<eclipse.name>2021-09</eclipse.name>
 			</properties>
 			<modules>
 				<module>dev/org.eclipse.php.target.current</module>
