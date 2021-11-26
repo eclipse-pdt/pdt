@@ -70,11 +70,6 @@
 					<version>${tycho-version}</version>
 				</plugin>
 				<plugin>
-					<groupId>org.eclipse.tycho.extras</groupId>
-					<artifactId>tycho-pack200a-plugin</artifactId>
-					<version>${tycho-version}</version>
-				</plugin>
-				<plugin>
 					<groupId>org.eclipse.tycho</groupId>
 					<artifactId>tycho-p2-repository-plugin</artifactId>
 					<version>${tycho-version}</version>
@@ -85,11 +80,6 @@
 							<p2.mirrorsURL>${p2.mirrorsURL}</p2.mirrorsURL>
 						</extraArtifactRepositoryProperties>
 					</configuration>
-				</plugin>
-				<plugin>
-					<groupId>org.eclipse.tycho.extras</groupId>
-					<artifactId>tycho-pack200b-plugin</artifactId>
-					<version>${tycho-version}</version>
 				</plugin>
 				<plugin>
 					<groupId>org.eclipse.tycho.extras</groupId>
