@@ -13,6 +13,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.ui;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -108,7 +109,9 @@ public class PHPDebugUIPlugin extends AbstractUIPlugin {
 		// class, we insert the
 		// factory before any other factory.
 		AdapterManager manager = (AdapterManager) Platform.getAdapterManager();
-		Map<String, List<IAdapterFactory>> factories = manager.getFactories();
+		Method method = manager.getClass().getMethod("getFactories"); //$NON-NLS-1$
+
+		Map<String, List<IAdapterFactory>> factories = (Map<String, List<IAdapterFactory>>) method.invoke(manager);
 		List<IAdapterFactory> list = factories.get(IVariable.class.getName());
 		PHPDebugElementAdapterFactory propertiesFactory = new PHPDebugElementAdapterFactory();
 		manager.registerAdapters(propertiesFactory, IVariable.class);
