@@ -13,6 +13,7 @@
  *******************************************************************************/
 package org.eclipse.php.core.tests.phar;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -63,6 +64,15 @@ public class PharFileTest {
 
 	private static final String PHAR_PHARS_FOLDER = "/workspace/phar";
 	protected static final String[] TESTS = new String[] { PHAR_PHARS_FOLDER };
+	private static final String[] DIGEST_TYPES = new String[] { // nl
+			Digest.SHA1_TYPE, // nl
+			Digest.SHA256_TYPE, // nl
+			Digest.SHA512_TYPE, // nl
+			Digest.MD5_TYPE };
+	private static final int[] COMPRESS_MODES = new int[] { // nl
+			PharConstants.NONE_COMPRESSED, // nl
+			PharConstants.GZ_COMPRESSED, // nl
+			PharConstants.BZ2_COMPRESSED };
 
 	@Parameters(name = "{1} - {2} - {3} - {4}")
 	public static Iterable<Object[]> data() throws Exception {
@@ -82,14 +92,12 @@ public class PharFileTest {
 						pharPackage.setStubLocation(stubLocation);
 					}
 					pharPackage.setExportType(PharConstants.PHAR);
-					list.add(new Object[] { pharFolder.getName(), pharFolder.getAbsolutePath(), pharPackage,
-							PharConstants.NONE_COMPRESSED, Digest.SHA1_TYPE });
-
-					list.add(new Object[] { pharFolder.getName(), pharFolder.getAbsolutePath(), pharPackage,
-							PharConstants.BZ2_COMPRESSED, Digest.SHA1_TYPE });
-
-					list.add(new Object[] { pharFolder.getName(), pharFolder.getAbsolutePath(), pharPackage,
-							PharConstants.GZ_COMPRESSED, Digest.MD5_TYPE });
+					for (String digestType : DIGEST_TYPES) {
+						for (int iCompressType : COMPRESS_MODES) {
+							list.add(new Object[] { pharFolder.getName(), pharFolder.getAbsolutePath(), pharPackage,
+									iCompressType, digestType });
+						}
+					}
 				}
 			}
 		}
@@ -201,9 +209,16 @@ public class PharFileTest {
 
 	@Test
 	public void runTest() throws Throwable {
+		validateSignatureIsSupported(pharPackage.getSignature());
 		File tempPhar = exportTempPhar(pharFileFolder);
 		compareContent(pharFileFolder, new PharFile(tempPhar));
 		tempPhar.delete();
+	}
+
+	private void validateSignatureIsSupported(String signatureName) {
+		Digest digest = Digest.DIGEST_MAP.get(signatureName);
+		assertTrue(digest != null);
+		assertFalse(Digest.NULL_DIGEST.equals(digest.getDigest()));
 	}
 
 	private File exportTempPhar(String pharFileFolder) throws IOException, CoreException {
