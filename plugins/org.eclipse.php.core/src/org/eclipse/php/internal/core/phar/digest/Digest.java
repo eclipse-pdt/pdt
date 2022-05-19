@@ -20,18 +20,20 @@ import java.util.Map;
 public class Digest {
 	public static final String MD5_TYPE = "MD5"; //$NON-NLS-1$
 	public static final String SHA1_TYPE = "SHA1"; //$NON-NLS-1$
+	public static final String SHA256_TYPE = "SHA-256"; //$NON-NLS-1$
+	public static final String SHA512_TYPE = "SHA-512"; //$NON-NLS-1$
 	public static final Digest MD5 = new Digest(MD5_TYPE, new byte[] { 1, 0, 0, 0 });
 	public static final Digest SHA1 = new Digest(SHA1_TYPE, new byte[] { 2, 0, 0, 0 });
-	// public static final Digest SHA256 = new Digest("SHA256","0004");
-	// public static final Digest SHA512 = new Digest("SHA512 ","0008");
+	public static final Digest SHA256 = new Digest(SHA256_TYPE, new byte[] { 3, 0, 0, 0 });
+	public static final Digest SHA512 = new Digest(SHA512_TYPE, new byte[] { 4, 0, 0, 0 });
 	public static final NullMessageDigest NULL_DIGEST = new NullMessageDigest("NULL"); //$NON-NLS-1$
 	public static final Map<String, Digest> DIGEST_MAP = new HashMap<>();
 
 	static {
 		DIGEST_MAP.put(MD5.name, MD5);
 		DIGEST_MAP.put(SHA1.name, SHA1);
-		// DIGEST_MAP.put(SHA256.name, SHA256);
-		// DIGEST_MAP.put(SHA512.name, SHA512);
+		DIGEST_MAP.put(SHA256.name, SHA256);
+		DIGEST_MAP.put(SHA512.name, SHA512);
 	}
 
 	byte[] bitMap;
