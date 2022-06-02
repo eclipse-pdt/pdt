@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<component id="org.eclipse.php.debug.ui" version="2">
+    <resource path="src/org/eclipse/php/internal/debug/ui/actions/PopupInspectAction.java" type="org.eclipse.php.internal.debug.ui.actions.PopupInspectAction">
+        <filter id="571519004">
+            <message_arguments>
+                <message_argument value="org.eclipse.php.internal.debug.ui.actions.PopupInspectAction.showPopup(StyledText)"/>
+                <message_argument value="InspectPopupDialog"/>
+            </message_arguments>
+        </filter>
+    </resource>
+</component>
