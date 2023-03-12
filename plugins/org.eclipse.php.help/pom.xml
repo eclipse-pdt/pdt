@@ -73,6 +73,11 @@
 						<artifactId>org.eclipse.mylyn.wikitext.markdown</artifactId>
 						<version>LATEST</version>
 					</dependency>
+					<dependency>
+						<groupId>org.openjdk.nashorn</groupId>
+						<artifactId>nashorn-core</artifactId>
+						<version>15.4</version>
+					</dependency>
 				</dependencies>
 			</plugin>
 			<plugin>

@@ -37,10 +37,6 @@
          version="0.0.0"/>
 
    <includes
-         id="org.eclipse.php.mylyn"
-         version="0.0.0"/>
-
-   <includes
          id="org.eclipse.php.composer"
          version="0.0.0"/>
 

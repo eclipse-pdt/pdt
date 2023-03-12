@@ -17,19 +17,26 @@
 
 <unit id="org.eclipse.zest.core" version="0.0.0"/>
 <unit id="org.eclipse.zest.layouts" version="0.0.0"/>
-<repository location="https://download.eclipse.org/releases/2021-09/"/>
+
+<repository location="https://download.eclipse.org/releases/2022-09/"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="com.google.gson" version="2.2.4.v201311231704"/>
-<unit id="org.apache.commons.exec" version="0.0.0"/>
+<unit id="com.google.gson" version="0.0.0"/>
 <unit id="org.apache.commons.io" version="0.0.0"/>
+<unit id="org.apache.commons.lang" version="0.0.0"/>
 <unit id="org.apache.commons.lang3" version="0.0.0"/>
 <unit id="org.apache.commons.logging" version="0.0.0"/>
-<unit id="org.apache.httpcomponents.httpclient" version="4.5.13.v20210128-2225"/>
-<unit id="org.apache.httpcomponents.httpcore" version="4.4.14.v20210128-2225"/>
-<unit id="org.junit" version="4.13.0.v20200204-1500"/>
+
+<unit id="org.apache.httpcomponents.httpclient" version="0.0.0"/>
+<unit id="org.apache.httpcomponents.httpcore" version="0.0.0"/>
+<unit id="org.junit" version="0.0.0"/>
+
+<repository location="https://download.eclipse.org/tools/orbit/downloads/drops/R20230302014618/repository/"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="javax.xml.bind" version="0.0.0"/>
-<repository location="https://download.eclipse.org/tools/orbit/downloads/drops/R20210223232630/repository/"/>
+<unit id="org.apache.commons.exec" version="0.0.0"/>
+<repository location="https://download.eclipse.org/tools/orbit/downloads/drops/R20220302172233/repository/"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.test.feature.group" version="3.5.100.v20120528-1714-7R7dBhBgLiCViQnG8ISKO73701A1"/>
@@ -39,7 +46,6 @@
 <unit id="org.eclipse.dltk.core.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.dltk.core.index.lucene.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.dltk.core.tests" version="0.0.0"/>
-<unit id="org.eclipse.dltk.mylyn.feature.group" version="0.0.0"/>
 <repository location="https://download.eclipse.org/technology/dltk/updates-nightly/"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
@@ -47,7 +53,7 @@
 <unit id="org.eclipse.wst.json_ui.feature.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.wst.web_ui.feature.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.wst.xml_ui.feature.feature.group" version="0.0.0"/>
-<repository location="https://download.eclipse.org/webtools/downloads/drops/R3.21.0/I-latest/repository"/>
+<repository location="https://download.eclipse.org/webtools/downloads/drops/R3.28.0/R-3.28.0-20221120050827/repository"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.license.feature.group" version="0.0.0"/>

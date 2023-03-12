@@ -11,7 +11,7 @@
 
 	<!-- this is the parent POM from which all modules inherit common settings -->
 	<properties>
-		<tycho-version>2.5.0</tycho-version>
+		<tycho-version>2.7.5</tycho-version>
 		<antrun-version>1.8</antrun-version>
 		<maven.test.failure.ignore>true</maven.test.failure.ignore>
 		<test.vmargs>-server</test.vmargs>
@@ -166,6 +166,11 @@
 							<ws>cocoa</ws>
 							<arch>x86_64</arch>
 						</environment>
+						<environment>
+							<os>macosx</os>
+							<ws>cocoa</ws>
+							<arch>aarch64</arch>
+						</environment>
 						<dependency-resolution>
 						    <extraRequirements>
 								<requirement>
@@ -191,12 +196,8 @@
 
 	<pluginRepositories>
 		<pluginRepository>
-			<id>maven.eclipse.org</id>
-			<url>https://repo.eclipse.org/content/repositories/releases/</url>
-		</pluginRepository>
-		<pluginRepository>
-			<id>eclipse.org-mylyn</id>
-			<url>https://repo.eclipse.org/content/repositories/mylyn-snapshots/</url>
+			<id>maven.central</id>
+			<url>https://repo.maven.apache.org/maven2/.</url>
 		</pluginRepository>
 	</pluginRepositories>
 
@@ -230,7 +231,7 @@
 				</property>
 			</activation>
 			<properties>
-				<eclipse.name>2021-12</eclipse.name>
+				<eclipse.name>2023-03</eclipse.name>
 			</properties>
 			<modules>
 				<module>dev/org.eclipse.php.target.next</module>
@@ -262,7 +263,7 @@
 				</property>
 			</activation>
 			<properties>
-				<eclipse.name>2021-09</eclipse.name>
+				<eclipse.name>2022-12</eclipse.name>
 			</properties>
 			<modules>
 				<module>dev/org.eclipse.php.target.current</module>

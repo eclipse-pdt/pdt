@@ -62,7 +62,7 @@
 		<module>org.eclipse.php.debug.ui</module>
 		<module>org.eclipse.php.formatter.core</module>
 		<module>org.eclipse.php.formatter.ui</module>
-		<module>org.eclipse.php.mylyn.ui</module>
+		<!--module>org.eclipse.php.mylyn.ui</module-->
 		<module>org.eclipse.php.refactoring.core</module>
 		<module>org.eclipse.php.refactoring.ui</module>
 		<module>org.eclipse.php.server.core</module>

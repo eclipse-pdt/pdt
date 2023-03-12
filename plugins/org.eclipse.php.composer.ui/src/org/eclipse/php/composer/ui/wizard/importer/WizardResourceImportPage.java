@@ -228,7 +228,7 @@ public class WizardResourceImportPage extends WizardDataTransferPage {
 
 		if (sourceProject.toFile().exists()) {
 			try {
-				ProjectDescriptionReader reader = new ProjectDescriptionReader();
+				ProjectDescriptionReader reader = new ProjectDescriptionReader(ResourcesPlugin.getWorkspace());
 				ProjectDescription projectDescription = reader.read(sourceProject);
 
 				if (projectDescription == null) {
