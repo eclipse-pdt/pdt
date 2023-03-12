@@ -196,6 +196,10 @@
 
 	<pluginRepositories>
 		<pluginRepository>
+			<id>maven.eclipse.org</id>
+			<url>https://repo.eclipse.org/content/repositories/releases/</url>
+		</pluginRepository>
+		<pluginRepository>
 			<id>maven.central</id>
 			<url>https://repo.maven.apache.org/maven2/</url>
 		</pluginRepository>

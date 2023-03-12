@@ -326,6 +326,9 @@ public class CodeAssistTests {
 						errorBuf.append("type");
 						break;
 					}
+					if ((modelElement instanceof FakeConstructor) && (modelElement.getParent() instanceof AliasType)) {
+						modelElement = modelElement.getParent();
+					}
 					if (modelElement instanceof AliasType) {
 						errorBuf.append('(').append(((AliasType) modelElement).getAlias()).append(")\n");
 					} else {
