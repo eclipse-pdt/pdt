@@ -199,8 +199,11 @@ public class TypesStrategy extends ElementsStrategy {
 					IType[] elements = PHPModelAccess.getDefault().findTypes(fullName, MatchRule.EXACT, 0, 0, scope,
 							null);
 					for (int i = 0; i < elements.length; i++) {
-						reportAlias(reporter, scope, module, replacementRange, elements[i],
-								elements[i].getElementName(), name, suffix);
+						if (PHPModelUtils.getFullName(elements[i]).equalsIgnoreCase(fullName)) {
+							reportAlias(reporter, scope, module, replacementRange, elements[i],
+									elements[i].getElementName(), name, suffix);
+						}
+
 					}
 					IType[] namespaces = PHPModelAccess.getDefault().findNamespaces(null, fullName, MatchRule.EXACT, 0,
 							0, scope, null);
