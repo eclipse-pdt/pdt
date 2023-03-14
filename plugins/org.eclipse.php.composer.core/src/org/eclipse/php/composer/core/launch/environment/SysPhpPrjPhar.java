@@ -15,9 +15,9 @@ package org.eclipse.php.composer.core.launch.environment;
 
 import java.io.File;
 
-import org.apache.commons.exec.CommandLine;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.php.internal.debug.core.phpIni.PHPINIUtil;
 
 public class SysPhpPrjPhar extends PrjPharEnvironment {
@@ -34,19 +34,18 @@ public class SysPhpPrjPhar extends PrjPharEnvironment {
 	}
 
 	@Override
-	public CommandLine getCommand() {
-		CommandLine cmd = new CommandLine(php.trim());
+	public ProcessBuilder getCommand() throws CoreException {
+		ProcessBuilder pb = new ProcessBuilder(php);
 
 		// specify php.ini location
 		File iniFile = PHPINIUtil.findPHPIni(php);
 		if (iniFile != null) {
-			cmd.addArgument("-c"); //$NON-NLS-1$
-			cmd.addArgument(iniFile.getAbsolutePath());
+			pb.command().add("-c");//$NON-NLS-1$
+			pb.command().add(iniFile.getAbsolutePath());
 		}
+		pb.command().add(phar);
 
-		// specify composer.phar location
-		cmd.addArgument(phar.trim());
-		return cmd;
+		return pb;
 	}
 
 	@Override

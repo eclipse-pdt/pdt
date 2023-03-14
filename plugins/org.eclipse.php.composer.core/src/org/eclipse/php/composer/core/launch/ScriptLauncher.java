@@ -15,14 +15,11 @@ package org.eclipse.php.composer.core.launch;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
-import org.apache.commons.exec.CommandLine;
-import org.apache.commons.exec.ExecuteException;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.debug.core.DebugException;
 import org.eclipse.php.composer.core.launch.environment.Environment;
 import org.eclipse.php.composer.core.launch.execution.ExecutionResponseListener;
 import org.eclipse.php.composer.core.launch.execution.ScriptExecutor;
@@ -60,18 +57,19 @@ public class ScriptLauncher {
 		listeners.remove(listener);
 	}
 
-	public void launch(String argument) throws ExecuteException, IOException, InterruptedException {
+	public void launch(String argument) throws IOException, CoreException, InterruptedException {
 		launch(argument, new String[] {});
 	}
 
-	public void launch(String argument, String param) throws ExecuteException, IOException, InterruptedException {
+	public void launch(String argument, String param) throws IOException, CoreException, InterruptedException {
 		launch(argument, new String[] { param });
 	}
 
-	public void launch(String argument, String... params) throws ExecuteException, IOException, InterruptedException {
-		CommandLine cmd = environment.getCommand();
-		cmd.addArgument(argument);
-		cmd.addArguments(params);
+	protected ProcessBuilder prepare(String argument, String... params)
+			throws IOException, InterruptedException, CoreException {
+		ProcessBuilder cmd = environment.getCommand();
+		cmd.command().add(argument);
+		cmd.command().addAll(Arrays.asList(params));
 
 		executor = new ScriptExecutor();
 
@@ -80,17 +78,26 @@ public class ScriptLauncher {
 		}
 
 		Logger.debug("Setting executor working directory to " + project.getLocation().toOSString()); //$NON-NLS-1$
-		executor.setWorkingDirectory(project.getLocation().toFile());
+		cmd.directory(new File(project.getLocation().toOSString()));
 
 		for (ExecutionResponseListener listener : listeners) {
 			executor.addResponseListener(listener);
 		}
 
 		Map<String, String> env = new HashMap<>(System.getenv());
-		PHPLaunchUtilities.appendExecutableToPathEnv(env, new File(cmd.getExecutable()).getParentFile());
-		PHPLaunchUtilities.appendLibrarySearchPathEnv(env, new File(cmd.getExecutable()).getParentFile());
 
-		executor.execute(cmd, env);
+		PHPLaunchUtilities.appendExecutableToPathEnv(env, new File(cmd.command().get(0)).getParentFile());
+		PHPLaunchUtilities.appendLibrarySearchPathEnv(env, new File(cmd.command().get(0)).getParentFile());
+		cmd.environment().putAll(env);
+
+		return cmd;
+	}
+
+	public void launch(String argument, String... params) throws IOException, InterruptedException, CoreException {
+
+		ProcessBuilder cmd = prepare(argument, params);
+		executor.execute(cmd);
+
 	}
 
 	protected Set<ExecutionResponseListener> getListeners() {
@@ -98,7 +105,11 @@ public class ScriptLauncher {
 	}
 
 	public void abort() {
-		executor.abort();
+		try {
+			executor.abort();
+		} catch (DebugException e) {
+			Logger.debug(e.getMessage());
+		}
 	}
 
 	public void setTimeout(int timeout) {

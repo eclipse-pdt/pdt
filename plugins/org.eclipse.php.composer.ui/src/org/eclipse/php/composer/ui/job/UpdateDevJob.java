@@ -19,8 +19,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.commons.exec.ExecuteException;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.php.composer.core.launch.ScriptLauncher;
 
@@ -41,7 +41,7 @@ public class UpdateDevJob extends ComposerJob {
 	}
 
 	@Override
-	protected void launch(ScriptLauncher launcher) throws ExecuteException, IOException, InterruptedException {
+	protected void launch(ScriptLauncher launcher) throws IOException, InterruptedException, CoreException {
 		List<String> params = new ArrayList<>();
 		if (packages != null) {
 			params.addAll(Arrays.asList(packages));

@@ -18,11 +18,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.CountDownLatch;
 
-import org.apache.commons.exec.CommandLine;
-import org.apache.commons.exec.ExecuteException;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.php.composer.core.ComposerPlugin;
@@ -31,7 +31,6 @@ import org.eclipse.php.composer.core.launch.ScriptNotFoundException;
 import org.eclipse.php.composer.core.launch.environment.Environment;
 import org.eclipse.php.composer.core.launch.execution.ExecutionResponseListener;
 import org.eclipse.php.composer.core.log.Logger;
-import org.eclipse.php.internal.debug.core.launching.PHPLaunchUtilities;
 import org.eclipse.tm.terminal.view.core.interfaces.ITerminalService.Done;
 import org.eclipse.tm.terminal.view.core.interfaces.ITerminalServiceOutputStreamMonitorListener;
 import org.eclipse.tm.terminal.view.core.interfaces.constants.ITerminalsConnectorConstants;
@@ -43,33 +42,32 @@ public class ComposerLauncher extends ScriptLauncher {
 
 	private final static String WINDOWS_END_OF_LINE = "\r\n"; //$NON-NLS-1$
 
-	private Environment environment;
 	private IProject project;
 	private TerminalConsole terminalConsole;
 
 	public ComposerLauncher(Environment environment, IProject project) throws ScriptNotFoundException {
 		super(environment, project);
-		this.environment = environment;
 		this.project = project;
 	}
 
 	@Override
-	public void launch(String argument, String... params) throws ExecuteException, IOException, InterruptedException {
-		CommandLine cmd = environment.getCommand();
-		cmd.addArgument(argument);
-		cmd.addArguments(params);
+	public void launch(String argument, String... params) throws IOException, InterruptedException, CoreException {
+		ProcessBuilder cmd = prepare(argument, params);
 
-		Map<String, String> env = new HashMap<>(System.getenv());
-		PHPLaunchUtilities.appendExecutableToPathEnv(env, new File(cmd.getExecutable()).getParentFile());
-		PHPLaunchUtilities.appendLibrarySearchPathEnv(env, new File(cmd.getExecutable()).getParentFile());
+		Map<String, String> env = cmd.environment();
+		List<String> strings = new ArrayList<>(env.size());
+		StringBuilder buffer = null;
+		for (Entry<String, String> entry : env.entrySet()) {
+			buffer = new StringBuilder(entry.getKey());
+			buffer.append('=').append(entry.getValue());
+			strings.add(buffer.toString());
+		}
 
 		Map<String, Object> properties = new HashMap<>();
-		List<String> envs = new ArrayList<>(env.size());
-		for (String key : env.keySet()) {
-			envs.add(key + '=' + env.get(key));
-		}
-		properties.put(ITerminalsConnectorConstants.PROP_PROCESS_ENVIRONMENT, envs.toArray(new String[envs.size()]));
+
+		properties.put(ITerminalsConnectorConstants.PROP_PROCESS_ENVIRONMENT, strings.toArray());
 		properties.put(ITerminalsConnectorConstants.PROP_PROCESS_MERGE_ENVIRONMENT, true);
+
 		ITerminalServiceOutputStreamMonitorListener[] outListeners = new ITerminalServiceOutputStreamMonitorListener[] {
 				new ITerminalServiceOutputStreamMonitorListener() {
 
@@ -92,10 +90,8 @@ public class ComposerLauncher extends ScriptLauncher {
 			builder.append("chcp 65001").append(WINDOWS_END_OF_LINE); //$NON-NLS-1$
 
 			builder.append("cls").append(WINDOWS_END_OF_LINE); //$NON-NLS-1$
-			builder.append(escapePath(cmd.getExecutable())).append(' ');
-			for (String arg : cmd.getArguments()) {
-				builder.append(arg).append(' ');
-			}
+			builder.append(escapePath(cmd.command().remove(0)));
+			cmd.command().stream().forEach(part -> builder.append(' ').append(part));
 
 			File file = File.createTempFile("composer_windows_", ".bat"); //$NON-NLS-1$//$NON-NLS-2$
 			file.deleteOnExit();
@@ -109,12 +105,10 @@ public class ComposerLauncher extends ScriptLauncher {
 			String args = "/C " + file.getAbsolutePath(); //$NON-NLS-1$
 			properties.put(ITerminalsConnectorConstants.PROP_PROCESS_ARGS, args);
 		} else {
-			properties.put(ITerminalsConnectorConstants.PROP_PROCESS_PATH, escapePath(cmd.getExecutable()));
+			properties.put(ITerminalsConnectorConstants.PROP_PROCESS_PATH, escapePath(cmd.command().remove(0)));
 
 			StringBuilder builder = new StringBuilder();
-			for (String arg : cmd.getArguments()) {
-				builder.append(arg + ' ');
-			}
+			cmd.command().stream().forEach(part -> builder.append(part).append(' '));
 			properties.put(ITerminalsConnectorConstants.PROP_PROCESS_ARGS, builder.toString());
 		}
 
