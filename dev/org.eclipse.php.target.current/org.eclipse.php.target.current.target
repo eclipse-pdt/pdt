@@ -35,7 +35,6 @@
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="javax.xml.bind" version="0.0.0"/>
-<unit id="org.apache.commons.exec" version="0.0.0"/>
 <repository location="https://download.eclipse.org/tools/orbit/downloads/drops/R20220302172233/repository/"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">

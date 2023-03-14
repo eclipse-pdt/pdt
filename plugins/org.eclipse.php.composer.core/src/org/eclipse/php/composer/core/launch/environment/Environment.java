@@ -12,8 +12,8 @@
  *******************************************************************************/
 package org.eclipse.php.composer.core.launch.environment;
 
-import org.apache.commons.exec.CommandLine;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.php.composer.core.launch.ScriptNotFoundException;
 
 /**
@@ -26,5 +26,5 @@ public interface Environment {
 
 	public void setUp(IProject project) throws ScriptNotFoundException;
 
-	public CommandLine getCommand();
+	public ProcessBuilder getCommand() throws CoreException;
 }

@@ -16,7 +16,6 @@ package org.eclipse.php.composer.ui.preferences.launcher;
 import java.io.File;
 import java.net.URL;
 
-import org.apache.commons.exec.CommandLine;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.php.composer.core.launch.execution.ExecutionResponseListener;
@@ -41,8 +40,7 @@ public class ExecutableTester implements Runnable {
 
 		try {
 			ScriptExecutor executor = new ScriptExecutor();
-			CommandLine cmd = new CommandLine(phPexeItem.getExecutable());
-			cmd.addArgument("testexecutable"); //$NON-NLS-1$
+			ProcessBuilder cmd = new ProcessBuilder(phPexeItem.getExecutable().getAbsolutePath(), "testexecutable"); //$NON-NLS-1$
 
 			Bundle bundle = Platform.getBundle(ComposerUIPlugin.PLUGIN_ID);
 			URL entry = bundle.getEntry("Resources/launcher"); //$NON-NLS-1$

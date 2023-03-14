@@ -14,6 +14,7 @@
 package org.eclipse.php.internal.debug.core.launching;
 
 import java.io.File;
+import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -41,8 +42,6 @@ import org.eclipse.php.internal.debug.core.preferences.PHPexes;
 import org.eclipse.php.internal.debug.core.zend.communication.DebuggerCommunicationDaemon;
 import org.eclipse.php.internal.debug.core.zend.debugger.*;
 import org.eclipse.swt.widgets.Display;
-
-import java.text.MessageFormat;
 
 public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 
@@ -83,7 +82,10 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 			String fileName = new File(fileToDebug).getAbsolutePath();
 			String query = PHPLaunchUtilities.generateQuery(launch, parametersInitializer);
 			String iniFileLocation = launch.getAttribute(IDebugParametersKeys.PHP_INI_LOCATION);
-			String workingDir = new File(fileToDebug).getParentFile().getAbsolutePath();
+			String workingDir = launch.getAttribute(DebugPlugin.ATTR_WORKING_DIRECTORY);
+			if (workingDir == null) {
+				workingDir = new File(fileToDebug).getParentFile().getAbsolutePath();
+			}
 
 			debuggerInitializer.initializeDebug(phpExeString, fileName, workingDir, query, envVariables,
 					iniFileLocation);
@@ -106,7 +108,7 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 			return;
 		}
 		PHPLaunchUtilities.showDebugView();
-		IProgressMonitor subMonitor; // the total of monitor is 100
+		SubMonitor subMonitor; // the total of monitor is 100
 		if (monitor.isCanceled()) {
 			return;
 		}
@@ -152,8 +154,7 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 			displayErrorMessage(PHPDebugCoreMessages.PHPExecutableLaunchDelegate_4);
 			return;
 		}
-
-		subMonitor = new SubProgressMonitor(monitor, 10); // 10 of 100
+		subMonitor = SubMonitor.convert(monitor);
 
 		// Locate the php.ini by using the attribute. If the attribute was null,
 		// try to locate an php.ini that exists next to the executable.
@@ -259,8 +260,10 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 			if (monitor.isCanceled()) {
 				return;
 			}
-
-			File workingDir = new File(fileName).getParentFile();
+			;
+			File workingDir = launch.getAttribute(DebugPlugin.ATTR_WORKING_DIRECTORY) == null
+					? new File(fileName).getParentFile()
+					: new File(launch.getAttribute(DebugPlugin.ATTR_WORKING_DIRECTORY));
 			Process p = workingDir.exists() ? DebugPlugin.exec(cmdLine, workingDir, envp)
 					: DebugPlugin.exec(cmdLine, null, envp);
 
@@ -282,19 +285,18 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 			processAttributes.put(IProcess.ATTR_PROCESS_TYPE, programName);
 
 			if (p != null) {
-				subMonitor = new SubProgressMonitor(monitor, 80); // 10+80 of
-																	// 100;
-				subMonitor.beginTask(MessageFormat.format("start launch", new Object[] { configuration.getName() }), //$NON-NLS-1$
+				SubMonitor subTask = subMonitor.newChild(80); // 10+80 of
+																// 100;
+				subTask.beginTask(MessageFormat.format("start launch", new Object[] { configuration.getName() }), //$NON-NLS-1$
 						IProgressMonitor.UNKNOWN);
 				process = DebugPlugin.newProcess(launch, p, phpExe.toOSString(), processAttributes);
 				if (process == null) {
 					p.destroy();
 					throw new CoreException(new Status(IStatus.ERROR, PHPDebugPlugin.getID(), 0, null, null));
 				}
-				subMonitor.done();
+				subTask.done();
 			}
 			if (process != null) {
-				process.setAttribute(IProcess.ATTR_CMDLINE, fileName);
 
 				if (CommonTab.isLaunchInBackground(configuration)) {
 					// refresh resources after process finishes
@@ -318,10 +320,9 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 					}
 
 					// refresh resources
-					subMonitor = new SubProgressMonitor(monitor, 10); // 10+80+10
-																		// of
-																		// 100;
-					RefreshTab.refreshResources(configuration, subMonitor);
+					// of
+					// 100;
+					RefreshTab.refreshResources(configuration, subMonitor.newChild(10));
 				}
 			}
 		}

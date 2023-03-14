@@ -17,8 +17,8 @@ package org.eclipse.php.composer.ui.job;
 import java.io.IOException;
 import java.util.Objects;
 
-import org.apache.commons.exec.ExecuteException;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -146,7 +146,7 @@ abstract public class ComposerJob extends Job {
 	protected void doOnLauncherRunException(Exception e) {
 	}
 
-	abstract protected void launch(ScriptLauncher launcher) throws ExecuteException, IOException, InterruptedException;
+	abstract protected void launch(ScriptLauncher launcher) throws IOException, InterruptedException, CoreException;
 
 	public IProject getProject() {
 		return project;

@@ -13,13 +13,14 @@
  *******************************************************************************/
 package org.eclipse.php.composer.core.launch.execution;
 
+import java.io.BufferedReader;
 import java.io.File;
-import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.exec.*;
+import org.eclipse.debug.core.DebugException;
+import org.eclipse.php.composer.core.launch.environment.Environment;
 import org.eclipse.php.composer.core.log.Logger;
 
 /**
@@ -29,82 +30,21 @@ import org.eclipse.php.composer.core.log.Logger;
  */
 public class ScriptExecutor {
 
-	private DefaultExecutor executor;
-	private ExecuteWatchdog watchdog;
-
-	private PumpStreamHandler streamHandler;
-
-	private LogOutputStream outStream;
-	private LogOutputStream errStream;
-
 	private StringBuilder outBuilder;
 	private StringBuilder errBuilder;
 
-	private int timeout = 60000;
+	private long timeout = 60000;
 
 	private Set<ExecutionResponseListener> listeners = new HashSet<>();
 
-	private DefaultExecuteResultHandler handler = new DefaultExecuteResultHandler() {
+	private File workingDirectory;
 
-		@Override
-		public void onProcessComplete(int exitValue) {
-			super.onProcessComplete(exitValue);
-			for (ExecutionResponseListener handler : listeners) {
-				handler.executionFinished(outBuilder.toString(), exitValue);
-			}
-		}
-
-		@Override
-		public void onProcessFailed(ExecuteException e) {
-			String response = errBuilder.toString();
-			String stdOutResponse = outBuilder.toString();
-
-			super.onProcessFailed(e);
-
-			for (ExecutionResponseListener handler : listeners) {
-
-				if (stdOutResponse.length() > 0) {
-					response = stdOutResponse;
-				}
-
-				handler.executionFailed(response, e);
-			}
-		}
-	};
+	private Process process;
 
 	public ScriptExecutor() {
 
 		outBuilder = new StringBuilder();
 		errBuilder = new StringBuilder();
-
-		errStream = new LogOutputStream() {
-			@Override
-			protected void processLine(String line, int level) {
-				if (!line.isEmpty()) {
-					errBuilder.append(line + "\n"); //$NON-NLS-1$
-					for (ExecutionResponseListener listener : listeners) {
-						listener.executionMessage(line);
-					}
-				}
-			}
-		};
-
-		outStream = new LogOutputStream() {
-			@Override
-			protected void processLine(String line, int level) {
-				if (!line.isEmpty()) {
-					outBuilder.append(line + "\n"); //$NON-NLS-1$
-					for (ExecutionResponseListener listener : listeners) {
-						listener.executionMessage(line);
-					}
-				}
-			}
-		};
-
-		streamHandler = new PumpStreamHandler(outStream, errStream);
-
-		executor = new DefaultExecutor();
-		executor.setStreamHandler(streamHandler);
 
 	}
 
@@ -116,38 +56,42 @@ public class ScriptExecutor {
 		listeners.remove(listener);
 	}
 
-	public void setTimeout(long timeout) {
-		watchdog = new ExecuteWatchdog(timeout);
-		executor.setWatchdog(watchdog);
-	}
-
-	public void setExitValue(int exitValue) {
-		executor.setExitValue(exitValue);
-	}
-
-	public void execute(String cmd) throws ExecuteException, IOException, InterruptedException {
-		execute(CommandLine.parse(cmd));
-	}
-
-	public void execute(CommandLine cmd) {
-		execute(cmd, null);
-	}
-
-	public void execute(CommandLine cmd, Map<String, String> env) {
+	public void execute(ProcessBuilder launch) {
 		try {
 			for (ExecutionResponseListener handler : listeners) {
 				handler.executionAboutToStart();
 			}
 
-			Logger.debug("executing command using executable: " + cmd.getExecutable()); //$NON-NLS-1$
-			executor.setExitValue(0);
-			executor.execute(cmd, env, handler);
+			Logger.debug("executing command using executable: " + launch.command().get(0));
 
+			if (this.workingDirectory != null) {
+				launch.directory(workingDirectory);
+			}
+
+			process = launch.start();
 			for (ExecutionResponseListener handler : listeners) {
 				handler.executionStarted();
 			}
+			BufferedReader outputReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+			String line;
+			while ((line = outputReader.readLine()) != null) {
+				for (ExecutionResponseListener handler : listeners) {
+					handler.executionMessage(line);
+					outBuilder.append(line);
+				}
+			}
+			BufferedReader errorReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+			while ((line = errorReader.readLine()) != null) {
+				for (ExecutionResponseListener handler : listeners) {
+					handler.executionError(line);
+					errBuilder.append(line);
+				}
+			}
+			int result = process.waitFor();
+			for (ExecutionResponseListener handler : listeners) {
+				handler.executionFinished(outBuilder.toString(), result);
+			}
 
-			handler.waitFor();
 		} catch (Exception e) {
 			for (ExecutionResponseListener handler : listeners) {
 				handler.executionFailed("", e); //$NON-NLS-1$
@@ -155,24 +99,22 @@ public class ScriptExecutor {
 		}
 	}
 
-	public void abort() {
-		if (watchdog != null) {
-			executor.setExitValues(new int[] { 0, 143 }); // we abort, so it's
-															// ok with 1 as exit
-															// value
-			watchdog.destroyProcess();
+	public void abort() throws DebugException {
+		if (process != null && process.isAlive()) {
+			process.destroyForcibly();
 		}
+
 	}
 
 	public void setWorkingDirectory(File dir) {
-		executor.setWorkingDirectory(dir);
+		workingDirectory = dir;
 	}
 
 	public File getWorkingDirectory() {
-		return executor.getWorkingDirectory();
+		return workingDirectory;
 	}
 
-	public void setTimeout(int timeout) {
+	public void setTimeout(long timeout) {
 
 		if (timeout < 0) {
 			throw new IllegalArgumentException(Messages.ScriptExecutor_NegativeTimeoutError);
@@ -180,7 +122,5 @@ public class ScriptExecutor {
 
 		this.timeout = timeout;
 
-		watchdog = new ExecuteWatchdog(timeout);
-		executor.setWatchdog(watchdog);
 	}
 }

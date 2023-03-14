@@ -12,8 +12,8 @@
  *******************************************************************************/
 package org.eclipse.php.composer.core.launch.environment;
 
-import org.apache.commons.exec.CommandLine;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
 
 /**
  * An environment which uses a PHP executable selected by the user and a script
@@ -41,10 +41,7 @@ public class SysPhpSysPhar implements Environment {
 	}
 
 	@Override
-	public CommandLine getCommand() {
-		CommandLine cmd = new CommandLine(php.trim());
-		cmd.addArgument(phar.trim());
-
-		return cmd;
+	public ProcessBuilder getCommand() throws CoreException {
+		return new ProcessBuilder(php, phar);
 	}
 }

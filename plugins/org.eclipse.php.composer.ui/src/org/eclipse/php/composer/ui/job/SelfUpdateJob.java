@@ -15,8 +15,8 @@ package org.eclipse.php.composer.ui.job;
 
 import java.io.IOException;
 
-import org.apache.commons.exec.ExecuteException;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.php.composer.core.launch.ScriptLauncher;
 
 public class SelfUpdateJob extends ComposerJob {
@@ -26,7 +26,7 @@ public class SelfUpdateJob extends ComposerJob {
 	}
 
 	@Override
-	protected void launch(ScriptLauncher launcher) throws ExecuteException, IOException, InterruptedException {
+	protected void launch(ScriptLauncher launcher) throws IOException, InterruptedException, CoreException {
 		launcher.launch("selfupdate"); //$NON-NLS-1$
 	}
 }

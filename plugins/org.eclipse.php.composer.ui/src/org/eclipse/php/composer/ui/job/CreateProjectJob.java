@@ -19,12 +19,12 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.exec.ExecuteException;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.core.internal.resources.Project;
 import org.eclipse.core.internal.resources.Workspace;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
@@ -93,7 +93,7 @@ public class CreateProjectJob extends ComposerJob {
 	}
 
 	@Override
-	protected void launch(ScriptLauncher launcher) throws ExecuteException, IOException, InterruptedException {
+	protected void launch(ScriptLauncher launcher) throws IOException, InterruptedException, CoreException {
 
 		// cloning large projects can take a long time...
 		// TODO: make this configurable via preferences
@@ -110,7 +110,8 @@ public class CreateProjectJob extends ComposerJob {
 				try {
 					if (composerExists() /*
 											 * message != null && message.
-											 * equals("Loading composer repositories with package information" )
+											 * equals("Loading composer repositories with package information"
+											 * )
 											 */) {
 						notifyOnStart();
 					}
