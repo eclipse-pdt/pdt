@@ -105,6 +105,6 @@ Export-Package: org.eclipse.php.internal.ui;x-friends:="org.eclipse.php.formatte
  org.eclipse.php.ui.util,
  org.eclipse.php.ui.wizards
 Bundle-Vendor: %Bundle-Vendor.1
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Import-Package: org.eclipse.core.expressions,
  org.eclipse.php.internal.ui.preferences

@@ -106,7 +106,7 @@
 							<url>http://download.eclipse.org/releases/${eclipse.name}</url>
 						</repository>
 					</repositories>
-					<executionEnvironment>JavaSE-11</executionEnvironment>
+					<executionEnvironment>JavaSE-17</executionEnvironment>
 				</configuration>
 				<executions>
 					<execution>

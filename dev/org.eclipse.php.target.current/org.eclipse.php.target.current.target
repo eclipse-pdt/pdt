@@ -17,8 +17,8 @@
 
 <unit id="org.eclipse.zest.core" version="0.0.0"/>
 <unit id="org.eclipse.zest.layouts" version="0.0.0"/>
-
-<repository location="https://download.eclipse.org/releases/2022-09/"/>
+<unit id="org.eclipse.wildwebdeveloper.feature.feature.group" version="0.0.0"/>
+<repository location="https://download.eclipse.org/releases/2022-12/"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="com.google.gson" version="0.0.0"/>
@@ -59,5 +59,5 @@
 <repository location="https://download.eclipse.org/cbi/updates/license"/>
 </location>
 </locations>
-<targetJRE path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-11"/>
+<targetJRE path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-17"/>
 </target>

@@ -11,29 +11,31 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         # Disabling shallow clone is recommended for improving relevancy of reporting
         fetch-depth: 0
-    - name: Set up JDK 11
-      uses: actions/setup-java@v2
+    - name: Set up JDK 17
+      uses: actions/setup-java@v3
       with:
-        java-version: '11'
-        distribution: 'adopt'
+        java-version: '17'
+        distribution: 'temurin'
         architecture: x64
+    - name: Cache SonarCloud packages
+      uses: actions/cache@v3
+      with:
+        path: ~/.sonar/cache
+        key: ${{ runner.os }}-sonar
+        restore-keys: ${{ runner.os }}-sonar
     - name: Cache Maven packages
-      uses: actions/cache@v1
+      uses: actions/cache@v3
       with:
         path: ~/.m2
         key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
         restore-keys: ${{ runner.os }}-m2
-    - name: Build with Maven
+    - name: Build and analyze
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: xvfb-run -a mvn -Pcoverage -Dsonar.login=$SONAR_TOKEN verify --file pom.xml
-    - name: Sonar scan
-      env:
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: mvn -Psonar -Dsonar.login=$SONAR_TOKEN org.sonarsource.scanner.maven:sonar-maven-plugin:3.7.0.1746:sonar --file pom.xml
+      run: xvfb-run -a mvn -Pcoverage -Dsonar.login=$SONAR_TOKEN verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar --file pom.xml
+

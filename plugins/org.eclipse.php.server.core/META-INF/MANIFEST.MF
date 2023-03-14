@@ -20,4 +20,4 @@ Export-Package: org.eclipse.php.internal.server.core;x-internal:=true,
  org.eclipse.php.internal.server.core.tunneling,
  org.eclipse.php.internal.server.core.types,
  org.eclipse.php.server.core.types
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17

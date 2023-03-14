@@ -22,4 +22,4 @@ Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.php.formatter.core,
  org.eclipse.php.formatter.core.profiles,
  org.eclipse.php.internal.formatter.core;x-friends:="org.eclipse.php.formatter.ui"
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17

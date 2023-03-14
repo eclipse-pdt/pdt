@@ -57,4 +57,4 @@ Export-Package: org.eclipse.php.debug.ui,
  org.eclipse.php.internal.debug.ui.wizards;x-internal:=true,
  org.eclipse.php.internal.debug.ui.uri;x-internal:=true
 Bundle-Vendor: Eclipse PDT
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17

@@ -13,6 +13,6 @@ Require-Bundle: org.eclipse.php.core,
  org.eclipse.php.builtin.server.core,
  org.eclipse.wst.server.core,
  org.eclipse.ui.forms
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-ActivationPolicy: lazy
 Bundle-Vendor: Eclipse PDT

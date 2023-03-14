@@ -19,4 +19,4 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.wst.sse.ui
 Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.php.formatter.ui.preferences
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
