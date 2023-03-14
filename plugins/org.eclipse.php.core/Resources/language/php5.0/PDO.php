@@ -16,7 +16,7 @@ class PDOException extends RuntimeException  {
 	 * @param message[optional]
 	 * @param code[optional]
 	 */
-	public function __construct ($message, $code) {}
+	public function __construct ($message = null, $code = null) {}
 
 	final public function getMessage () {}
 

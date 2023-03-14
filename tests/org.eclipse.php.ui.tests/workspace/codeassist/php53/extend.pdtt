@@ -5,7 +5,7 @@ org.eclipse.php.core/contentAssistInsertCompletion=true
 --FILE--
 <?php
 namespace test;
-class Testddd extends Exception|{
+class Testddd extends InvalidArgumentException|{
 	public static function run( ){
 	}
 }
@@ -13,7 +13,7 @@ class Testddd extends Exception|{
 --EXPECT--
 <?php
 namespace test;
-class Testddd extends \Exception{
+class Testddd extends \InvalidArgumentException{
 	public static function run( ){
 	}
 }

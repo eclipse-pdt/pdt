@@ -5,12 +5,12 @@ org.eclipse.php.core/contentAssistInsertCompletion=true
 --FILE--
 <?php
 namespace test;
-if ($a instanceof Exception|) {
+if ($a instanceof InvalidArgumentException|) {
 }
 ?>
 --EXPECT--
 <?php
 namespace test;
-if ($a instanceof \Exception) {
+if ($a instanceof \InvalidArgumentException) {
 }
 ?>

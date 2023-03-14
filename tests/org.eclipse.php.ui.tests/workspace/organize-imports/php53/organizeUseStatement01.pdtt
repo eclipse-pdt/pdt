@@ -10,7 +10,7 @@ use Error;
 use name\Foo;
 use name\Foo;
 
-new Exception();
+new InvalidArgumentException();
 new C();
 new Foo();
 
@@ -30,9 +30,9 @@ namespace name;
 
 use Boo\C;
 use Error;
-use Exception;
+use InvalidArgumentException;
 
-new Exception();
+new InvalidArgumentException();
 new C();
 new Foo();
 

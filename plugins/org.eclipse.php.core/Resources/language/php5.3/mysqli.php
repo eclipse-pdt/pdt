@@ -17,7 +17,7 @@ class mysqli_sql_exception extends RuntimeException  {
 	 * @param code[optional]
 	 * @param previous[optional]
 	 */
-	public function __construct ($message, $code, $previous) {}
+	public function __construct ($message = null, $code = null, $previous = null) {}
 
 	final public function getMessage () {}
 

@@ -4,9 +4,9 @@ Test overwrite mode
 org.eclipse.php.core/contentAssistInsertCompletion=false
 --FILE--
 <?php
-new Except|ion123(); 
+new InvalidArgumentExcept|ion123(); 
 ?>
 --EXPECT--
 <?php
-new Exception(); 
+new InvalidArgumentException(); 
 ?>

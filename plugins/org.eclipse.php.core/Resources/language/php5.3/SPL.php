@@ -16,7 +16,7 @@ class LogicException extends Exception  {
 	 * @param code[optional]
 	 * @param previous[optional]
 	 */
-	public function __construct ($message, $code, $previous) {}
+	public function __construct ($message = null, $code = null, $previous = null) {}
 
 	final public function getMessage () {}
 
@@ -50,7 +50,7 @@ class BadFunctionCallException extends LogicException  {
 	 * @param code[optional]
 	 * @param previous[optional]
 	 */
-	public function __construct ($message, $code, $previous) {}
+	public function __construct ($message = null, $code = null, $previous = null) {}
 
 	final public function getMessage () {}
 
@@ -84,7 +84,7 @@ class BadMethodCallException extends BadFunctionCallException  {
 	 * @param code[optional]
 	 * @param previous[optional]
 	 */
-	public function __construct ($message, $code, $previous) {}
+	public function __construct ($message = null, $code = null, $previous = null) {}
 
 	final public function getMessage () {}
 
@@ -118,7 +118,7 @@ class DomainException extends LogicException  {
 	 * @param code[optional]
 	 * @param previous[optional]
 	 */
-	public function __construct ($message, $code, $previous) {}
+	public function __construct ($message = null, $code = null, $previous = null) {}
 
 	final public function getMessage () {}
 
@@ -152,7 +152,7 @@ class InvalidArgumentException extends LogicException  {
 	 * @param code[optional]
 	 * @param previous[optional]
 	 */
-	public function __construct ($message, $code, $previous) {}
+	public function __construct ($message = null, $code = null, $previous = null) {}
 
 	final public function getMessage () {}
 
@@ -186,7 +186,7 @@ class LengthException extends LogicException  {
 	 * @param code[optional]
 	 * @param previous[optional]
 	 */
-	public function __construct ($message, $code, $previous) {}
+	public function __construct ($message = null, $code = null, $previous = null) {}
 
 	final public function getMessage () {}
 
@@ -220,7 +220,7 @@ class OutOfRangeException extends LogicException  {
 	 * @param code[optional]
 	 * @param previous[optional]
 	 */
-	public function __construct ($message, $code, $previous) {}
+	public function __construct ($message = null, $code = null, $previous = null) {}
 
 	final public function getMessage () {}
 
@@ -254,7 +254,7 @@ class RuntimeException extends Exception  {
 	 * @param code[optional]
 	 * @param previous[optional]
 	 */
-	public function __construct ($message, $code, $previous) {}
+	public function __construct ($message = null, $code = null, $previous = null) {}
 
 	final public function getMessage () {}
 
@@ -288,7 +288,7 @@ class OutOfBoundsException extends RuntimeException  {
 	 * @param code[optional]
 	 * @param previous[optional]
 	 */
-	public function __construct ($message, $code, $previous) {}
+	public function __construct ($message = null, $code = null, $previous = null) {}
 
 	final public function getMessage () {}
 
@@ -322,7 +322,7 @@ class OverflowException extends RuntimeException  {
 	 * @param code[optional]
 	 * @param previous[optional]
 	 */
-	public function __construct ($message, $code, $previous) {}
+	public function __construct ($message = null, $code = null, $previous = null) {}
 
 	final public function getMessage () {}
 
@@ -356,7 +356,7 @@ class RangeException extends RuntimeException  {
 	 * @param code[optional]
 	 * @param previous[optional]
 	 */
-	public function __construct ($message, $code, $previous) {}
+	public function __construct ($message = null, $code = null, $previous = null) {}
 
 	final public function getMessage () {}
 
@@ -390,7 +390,7 @@ class UnderflowException extends RuntimeException  {
 	 * @param code[optional]
 	 * @param previous[optional]
 	 */
-	public function __construct ($message, $code, $previous) {}
+	public function __construct ($message = null, $code = null, $previous = null) {}
 
 	final public function getMessage () {}
 
@@ -424,7 +424,7 @@ class UnexpectedValueException extends RuntimeException  {
 	 * @param code[optional]
 	 * @param previous[optional]
 	 */
-	public function __construct ($message, $code, $previous) {}
+	public function __construct ($message = null, $code = null, $previous = null) {}
 
 	final public function getMessage () {}
 

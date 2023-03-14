@@ -16,7 +16,7 @@ class PharException extends Exception  {
 	 * @param code[optional]
 	 * @param previous[optional]
 	 */
-	public function __construct ($message, $code, $previous) {}
+	public function __construct ($message = null, $code = null, $previous = null) {}
 
 	final public function getMessage () {}
 
