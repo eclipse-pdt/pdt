@@ -20,6 +20,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.php.core.PHPVersion;
@@ -102,6 +103,13 @@ public abstract class AbstractConciliatorTest {
 		file = TestUtils.createFile(project, "test.php", content);
 		// Wait for indexer...
 		TestUtils.waitForIndexer();
+
+		try {
+			// XXX Workaround to make test more stable
+			file.touch(new NullProgressMonitor());
+			TestUtils.waitForIndexer();
+		} catch (CoreException e) {
+		}
 	}
 
 	protected Program createProgram(IFile file) {
