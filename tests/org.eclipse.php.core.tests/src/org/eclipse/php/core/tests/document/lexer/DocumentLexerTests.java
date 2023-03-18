@@ -16,6 +16,7 @@ package org.eclipse.php.core.tests.document.lexer;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Field;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -52,8 +53,10 @@ public class DocumentLexerTests {
 		TESTS.put(PHPVersion.PHP5_6, new String[] { "/workspace/document_lexer/php53",
 				"/workspace/document_lexer/php54", "/workspace/document_lexer/php56" });
 		TESTS.put(PHPVersion.PHP7_0, new String[] { "/workspace/document_lexer/php7" });
-		TESTS.put(PHPVersion.PHP7_3, new String[] { "/workspace/document_lexer/php73" });
-		TESTS.put(PHPVersion.PHP7_4, new String[] { "/workspace/document_lexer/php74" });
+		TESTS.put(PHPVersion.PHP7_3,
+				new String[] { "/workspace/document_lexer/php7", "/workspace/document_lexer/php73" });
+		TESTS.put(PHPVersion.PHP7_4, new String[] { "/workspace/document_lexer/php7", "/workspace/document_lexer/php73",
+				"/workspace/document_lexer/php74" });
 	};
 
 	private final PHPVersion version;
@@ -76,12 +79,25 @@ public class DocumentLexerTests {
 		StringBuilder actualBuf = new StringBuilder();
 		String tokenType = lexer.yylex();
 		while (tokenType != null) {
-			actualBuf.append(tokenType).append('|').append(lexer.yytext()).append('|').append(lexer.yystate())
+			actualBuf.append(tokenType).append('|').append(lexer.yytext()).append('|').append(stateName(lexer))
 					.append('\n');
 			tokenType = lexer.yylex();
 		}
 
 		PDTTUtils.assertContents(pdttFile.getExpected(), actualBuf.toString());
+	}
+
+	private String stateName(AbstractPHPLexer lexer) throws IllegalArgumentException, IllegalAccessException {
+		int state = lexer.yystate();
+		String name = "_UKNOWN_STATE_";
+		for (Field field : lexer.getClass().getDeclaredFields()) {
+			if (field.getName().startsWith("ST_") && field.getType().equals(Integer.TYPE)
+					&& (int) field.get(lexer) == state) {
+				name = field.getName();
+				break;
+			}
+		}
+		return name;
 	}
 
 }

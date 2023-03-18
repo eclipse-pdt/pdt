@@ -41,64 +41,64 @@ Bug 537608 - PHP 7.3 Support
     EOF;
 ?>
 --EXPECT--
-PHP_TOKEN|<|2
-PHP_TOKEN|?|2
-PHP_LABEL|php|2
+PHP_TOKEN|<|ST_PHP_IN_SCRIPTING
+PHP_TOKEN|?|ST_PHP_IN_SCRIPTING
+PHP_LABEL|php|ST_PHP_IN_SCRIPTING
 WHITESPACE|
-|2
+|ST_PHP_IN_SCRIPTING
 PHP_NOWDOC_START_TAG|<<<'EOF'
-|18
-PHP_CONSTANT_ENCAPSED_STRING|    namespace|18
-PHP_CONSTANT_ENCAPSED_STRING| Namespaced|18
+|ST_PHP_START_NOWDOC
+PHP_CONSTANT_ENCAPSED_STRING|    namespace|ST_PHP_START_NOWDOC
+PHP_CONSTANT_ENCAPSED_STRING| Namespaced|ST_PHP_START_NOWDOC
 PHP_CONSTANT_ENCAPSED_STRING|
     {
-    class|14
+    class|ST_PHP_NOWDOC
 PHP_CONSTANT_ENCAPSED_STRING| WithComments
     {
-    public|14
+    public|ST_PHP_NOWDOC
 PHP_CONSTANT_ENCAPSED_STRING| static $loaded = true;
     }
     $string ='string should not be   modified {$string}';
     $heredoc = (<<<HD
         
         
-        Heredoc|14
+        Heredoc|ST_PHP_NOWDOC
 PHP_CONSTANT_ENCAPSED_STRING| should not be   modified {$string}
         
         
-        HD|14
+        HD|ST_PHP_NOWDOC
 PHP_CONSTANT_ENCAPSED_STRING|
     );
     $nowdoc =<<<'ND'
         
         
-        Nowdoc|14
+        Nowdoc|ST_PHP_NOWDOC
 PHP_CONSTANT_ENCAPSED_STRING| should not be   modified {$string}
         
         
-        ND|14
+        ND|ST_PHP_NOWDOC
 PHP_CONSTANT_ENCAPSED_STRING|
     ;
     }
-    namespace|14
+    namespace|ST_PHP_NOWDOC
 PHP_CONSTANT_ENCAPSED_STRING|
     {
-    class|14
+    class|ST_PHP_NOWDOC
 PHP_CONSTANT_ENCAPSED_STRING| Pearlike_WithComments
     {
-    public|14
+    public|ST_PHP_NOWDOC
 PHP_CONSTANT_ENCAPSED_STRING| static $loaded = true;
     }
     }
-    namespace|14
+    namespace|ST_PHP_NOWDOC
 PHP_CONSTANT_ENCAPSED_STRING| {require __DIR__.'/Fixtures/Namespaced/WithDirMagic.php';}
-    namespace|14
+    namespace|ST_PHP_NOWDOC
 PHP_CONSTANT_ENCAPSED_STRING| {require __DIR__.'/Fixtures/Namespaced/WithFileMagic.php';}
-    namespace|14
-PHP_CONSTANT_ENCAPSED_STRING| {require __DIR__.'/Fixtures/Namespaced/WithHaltCompiler.php';}|34
+    namespace|ST_PHP_NOWDOC
+PHP_CONSTANT_ENCAPSED_STRING| {require __DIR__.'/Fixtures/Namespaced/WithHaltCompiler.php';}|ST_PHP_END_NOWDOC
 PHP_NOWDOC_CLOSE_TAG|
-    EOF|2
-PHP_SEMICOLON|;|2
+    EOF|ST_PHP_IN_SCRIPTING
+PHP_SEMICOLON|;|ST_PHP_IN_SCRIPTING
 WHITESPACE|
-|2
-PHP_CLOSETAG|?>|2
+|ST_PHP_IN_SCRIPTING
+PHP_CLOSETAG|?>|ST_PHP_IN_SCRIPTING
