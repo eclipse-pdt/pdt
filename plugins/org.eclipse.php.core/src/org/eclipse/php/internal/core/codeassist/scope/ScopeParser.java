@@ -504,6 +504,7 @@ public class ScopeParser {
 							case PHPRegionTypes.PHP_STATIC:
 							case PHPRegionTypes.PHP_PROTECTED:
 							case PHPRegionTypes.PHP_PUBLIC:
+							case PHPRegionTypes.PHP_READONLY:
 								if (current.type != Type.TYPE_STATEMENT) {
 									pushState(new State(Type.TYPE_STATEMENT, tokenStart));
 								}

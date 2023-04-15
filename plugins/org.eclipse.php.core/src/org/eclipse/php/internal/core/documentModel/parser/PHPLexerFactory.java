@@ -52,6 +52,15 @@ public class PHPLexerFactory {
 		if (phpVersion == PHPVersion.PHP7_4) {
 			return new org.eclipse.php.internal.core.documentModel.parser.php74.PHPLexer(reader);
 		}
+		if (phpVersion == PHPVersion.PHP8_0) {
+			return new org.eclipse.php.internal.core.documentModel.parser.php80.PHPLexer(reader);
+		}
+		if (phpVersion == PHPVersion.PHP8_1) {
+			return new org.eclipse.php.internal.core.documentModel.parser.php81.PHPLexer(reader);
+		}
+		if (phpVersion == PHPVersion.PHP8_2) {
+			return new org.eclipse.php.internal.core.documentModel.parser.php82.PHPLexer(reader);
+		}
 		if (phpVersion == null) {
 			throw new IllegalArgumentException(CoreMessages.getString("UnknownPHPVersion_0")); //$NON-NLS-1$
 		} else {

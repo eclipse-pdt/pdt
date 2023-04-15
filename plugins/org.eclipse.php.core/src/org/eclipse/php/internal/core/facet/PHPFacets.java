@@ -123,12 +123,21 @@ public class PHPFacets {
 				if (PHPFacetsConstants.PHP_COMPONENT_VERSION_7_4.equals(version.getVersionString())) {
 					return PHPVersion.PHP7_4;
 				}
+				if (PHPFacetsConstants.PHP_COMPONENT_VERSION_8_0.equals(version.getVersionString())) {
+					return PHPVersion.PHP8_0;
+				}
+				if (PHPFacetsConstants.PHP_COMPONENT_VERSION_8_1.equals(version.getVersionString())) {
+					return PHPVersion.PHP8_1;
+				}
+				if (PHPFacetsConstants.PHP_COMPONENT_VERSION_8_2.equals(version.getVersionString())) {
+					return PHPVersion.PHP8_2;
+				}
 			}
 		} catch (CoreException ex) {
 			// silently ignore
 		}
-		// defaults to php 5.4
-		return PHPVersion.PHP5_4;
+		// defaults to php latest
+		return PHPVersion.getLatestVersion();
 	}
 
 	/**
@@ -160,8 +169,14 @@ public class PHPFacets {
 		case PHP7_3:
 			return phpFacet.getVersion(PHPFacetsConstants.PHP_COMPONENT_VERSION_7_3);
 		case PHP7_4:
-		default:
 			return phpFacet.getVersion(PHPFacetsConstants.PHP_COMPONENT_VERSION_7_4);
+		case PHP8_0:
+			return phpFacet.getVersion(PHPFacetsConstants.PHP_COMPONENT_VERSION_8_0);
+		case PHP8_1:
+			return phpFacet.getVersion(PHPFacetsConstants.PHP_COMPONENT_VERSION_8_1);
+		case PHP8_2:
+		default:
+			return phpFacet.getVersion(PHPFacetsConstants.PHP_COMPONENT_VERSION_8_2);
 		}
 	}
 

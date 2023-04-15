@@ -155,6 +155,12 @@ public class PHPKeywords {
 					instance = new PHPKeywords(new KeywordInitializerPHP_7_3());
 				} else if (PHPVersion.PHP7_4 == version) {
 					instance = new PHPKeywords(new KeywordInitializerPHP_7_4());
+				} else if (PHPVersion.PHP8_0 == version) {
+					instance = new PHPKeywords(new KeywordInitializerPHP_8_0());
+				} else if (PHPVersion.PHP8_1 == version) {
+					instance = new PHPKeywords(new KeywordInitializerPHP_8_1());
+				} else if (PHPVersion.PHP8_2 == version) {
+					instance = new PHPKeywords(new KeywordInitializerPHP_8_2());
 				} else {
 					if (version == null) {
 						throw new IllegalArgumentException(CoreMessages.getString("UnknownPHPVersion_0")); //$NON-NLS-1$

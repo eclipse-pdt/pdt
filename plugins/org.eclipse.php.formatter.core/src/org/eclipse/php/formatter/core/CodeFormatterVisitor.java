@@ -479,6 +479,48 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			stWhile = org.eclipse.php.internal.core.ast.scanner.php74.ParserConstants.T_WHILE;
 			stElse = org.eclipse.php.internal.core.ast.scanner.php74.ParserConstants.T_ELSE;
 			stElseIf = org.eclipse.php.internal.core.ast.scanner.php74.ParserConstants.T_ELSEIF;
+		} else if (PHPVersion.PHP8_0.equals(phpVersion)) {
+			result = new org.eclipse.php.internal.core.compiler.ast.parser.php80.CompilerAstLexer(reader);
+			((org.eclipse.php.internal.core.compiler.ast.parser.php80.CompilerAstLexer) result)
+					.setAST(new AST(reader, PHPVersion.PHP8_0, useASPTags, useShortTags));
+			stInScriptin = org.eclipse.php.internal.core.compiler.ast.parser.php80.CompilerAstLexer.ST_IN_SCRIPTING; // save
+			// the
+			// initial
+			// state
+			// for
+			// reset
+			// operation
+			stWhile = org.eclipse.php.internal.core.ast.scanner.php80.ParserConstants.T_WHILE;
+			stElse = org.eclipse.php.internal.core.ast.scanner.php80.ParserConstants.T_ELSE;
+			stElseIf = org.eclipse.php.internal.core.ast.scanner.php80.ParserConstants.T_ELSEIF;
+		} else if (PHPVersion.PHP8_1.equals(phpVersion)) {
+			result = new org.eclipse.php.internal.core.compiler.ast.parser.php81.CompilerAstLexer(reader);
+			((org.eclipse.php.internal.core.compiler.ast.parser.php81.CompilerAstLexer) result)
+					.setAST(new AST(reader, phpVersion, useASPTags, useShortTags));
+			stInScriptin = org.eclipse.php.internal.core.compiler.ast.parser.php81.CompilerAstLexer.ST_IN_SCRIPTING; // save
+			// the
+			// initial
+			// state
+			// for
+			// reset
+			// operation
+			stWhile = org.eclipse.php.internal.core.ast.scanner.php81.ParserConstants.T_WHILE;
+			stElse = org.eclipse.php.internal.core.ast.scanner.php81.ParserConstants.T_ELSE;
+			stElseIf = org.eclipse.php.internal.core.ast.scanner.php81.ParserConstants.T_ELSEIF;
+		} else if (PHPVersion.PHP8_2.equals(phpVersion)) {
+			result = new org.eclipse.php.internal.core.compiler.ast.parser.php82.CompilerAstLexer(reader);
+			((org.eclipse.php.internal.core.compiler.ast.parser.php82.CompilerAstLexer) result)
+					.setAST(new AST(reader, phpVersion, useASPTags, useShortTags));
+			stInScriptin = org.eclipse.php.internal.core.compiler.ast.parser.php82.CompilerAstLexer.ST_IN_SCRIPTING; // save
+			// the
+			// initial
+			// state
+			// for
+			// reset
+			// operation
+			stWhile = org.eclipse.php.internal.core.ast.scanner.php82.ParserConstants.T_WHILE;
+			stElse = org.eclipse.php.internal.core.ast.scanner.php82.ParserConstants.T_ELSE;
+			stElseIf = org.eclipse.php.internal.core.ast.scanner.php82.ParserConstants.T_ELSEIF;
 		} else {
 			throw new IllegalArgumentException("unrecognized version " //$NON-NLS-1$
 					+ phpVersion);

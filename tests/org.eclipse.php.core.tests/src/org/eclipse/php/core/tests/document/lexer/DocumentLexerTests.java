@@ -57,6 +57,18 @@ public class DocumentLexerTests {
 				new String[] { "/workspace/document_lexer/php7", "/workspace/document_lexer/php73" });
 		TESTS.put(PHPVersion.PHP7_4, new String[] { "/workspace/document_lexer/php7", "/workspace/document_lexer/php73",
 				"/workspace/document_lexer/php74" });
+
+		TESTS.put(PHPVersion.PHP8_0, new String[] { "/workspace/document_lexer/php7", "/workspace/document_lexer/php73",
+				"/workspace/document_lexer/php74", "/workspace/document_lexer/php80" });
+		TESTS.put(PHPVersion.PHP8_1,
+				new String[] { "/workspace/document_lexer/php7", "/workspace/document_lexer/php73",
+						"/workspace/document_lexer/php74", "/workspace/document_lexer/php80",
+						"/workspace/document_lexer/php81" });
+		TESTS.put(PHPVersion.PHP8_2,
+				new String[] { "/workspace/document_lexer/php7", "/workspace/document_lexer/php73",
+						"/workspace/document_lexer/php74", "/workspace/document_lexer/php80",
+						"/workspace/document_lexer/php81", "/workspace/document_lexer/php82" });
+
 	};
 
 	private final PHPVersion version;

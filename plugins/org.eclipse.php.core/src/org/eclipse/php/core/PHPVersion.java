@@ -34,7 +34,14 @@ public enum PHPVersion {
 	/**
 	 * @since 7.0
 	 */
-	PHP7_4("php7.4"); //$NON-NLS-1$
+	PHP7_4("php7.4"), //$NON-NLS-1$
+
+	/**
+	 * @since 8.0
+	 */
+	PHP8_0("php8.0", true), //$NON-NLS-1$
+	PHP8_1("php8.1", true), //$NON-NLS-1$
+	PHP8_2("php8.2", true); //$NON-NLS-1$
 
 	private String alias;
 	private boolean isExperimentalSupport;
@@ -78,7 +85,8 @@ public enum PHPVersion {
 	}
 
 	public static PHPVersion[] supportedVersions() {
-		return new PHPVersion[] { PHP7_4, PHP7_3, PHP7_2, PHP7_1, PHP7_0, PHP5_6, PHP5_5, PHP5_4, PHP5_3, PHP5 };
+		return new PHPVersion[] { PHP8_2, PHP8_1, PHP8_0, PHP7_4, PHP7_3, PHP7_2, PHP7_1, PHP7_0, PHP5_6, PHP5_5,
+				PHP5_4, PHP5_3, PHP5 };
 	}
 
 	/**

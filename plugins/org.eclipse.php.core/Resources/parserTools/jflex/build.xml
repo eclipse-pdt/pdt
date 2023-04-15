@@ -14,7 +14,7 @@
 <project name="Downloading JFlex from www.jflex.de" default="getJFlexJar">
 
 	<target name="init">
-		<property name="jflexVersion" value="1.8.2" />
+		<property name="jflexVersion" value="1.9.1" />
 
 		<!-- if dir exists, then it'll be used to get jflex -->
 		<available file="/shared/tools/php" property="jflex.work.dir" value="/shared/tools/php"/>

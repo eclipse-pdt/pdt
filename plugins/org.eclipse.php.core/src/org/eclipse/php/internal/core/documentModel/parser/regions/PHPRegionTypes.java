@@ -419,4 +419,15 @@ public interface PHPRegionTypes {
 	static final String PHP_FALSE = "PHP_FALSE"; //$NON-NLS-1$
 
 	// static final String TASK = "TASK"; //$NON-NLS-1$
+
+	static final String PHP_ATTRIBUTE = "PHP_ATTRIBUTE";
+
+	/**
+	 * @since 8.0
+	 */
+	static final String PHP_MATCH = "PHP_MATCH"; //$NON-NLS-1$
+	static final String PHP_ENUM = "PHP_ENUM"; //$NON-NLS-1$
+	static final String PHP_READONLY = "PHP_READONLY"; //$NON-NLS-1$
+	static final String PHP_NEVER = "PHP_NEVER"; //$NON-NLS-1$
+
 }

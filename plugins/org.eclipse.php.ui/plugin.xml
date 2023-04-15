@@ -2940,6 +2940,30 @@
              <feature name="typed properties"></feature>
              <feature name="null coalescing assignment operator"></feature>
        </phpVersion>
+       <phpVersion
+             name="8.0"
+             version="php8.0">
+             <feature name="named arguments"></feature>
+             <feature name="attributes"></feature>
+             <feature name="union types"></feature>
+             <feature name="JIT"></feature>
+       </phpVersion>
+       <phpVersion
+             name="8.1"
+             version="php8.1">
+             <feature name="enumerations"></feature>
+             <feature name="readonly properties"></feature>
+             <feature name="first-class callable"></feature>
+             <feature name="new in initializers"></feature>
+       </phpVersion>
+       <phpVersion
+             name="8.2"
+             version="php8.2">
+             <feature name="readonly classes"></feature>
+             <feature name="DNF types"></feature>
+             <feature name="null,false,true types"></feature>
+             <feature name="constants in traits"></feature>
+       </phpVersion>
    </extension>
    <extension
          point="org.eclipse.php.ui.problemConfiguration">

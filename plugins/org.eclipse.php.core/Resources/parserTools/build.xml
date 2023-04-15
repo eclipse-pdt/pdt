@@ -65,6 +65,21 @@
 		<ant dir="${antfile.dir}/parser/php74/" antfile="generateAstParser.xml" />
 		<ant dir="${antfile.dir}/parser/php74/" antfile="generateAstScanner.xml" />
 		<ant dir="${antfile.dir}/parser/php74/" antfile="generateCompilerAstParser.xml" />
+		
+		<!-- PHP 8.0 AST -->
+		<ant dir="${antfile.dir}/parser/php80/" antfile="generateAstParser.xml" />
+		<ant dir="${antfile.dir}/parser/php80/" antfile="generateAstScanner.xml" />
+		<ant dir="${antfile.dir}/parser/php80/" antfile="generateCompilerAstParser.xml" />
+		
+		<!-- PHP 8.1 AST -->
+		<ant dir="${antfile.dir}/parser/php81/" antfile="generateAstParser.xml" />
+		<ant dir="${antfile.dir}/parser/php81/" antfile="generateAstScanner.xml" />
+		<ant dir="${antfile.dir}/parser/php81/" antfile="generateCompilerAstParser.xml" />
+			
+		<!-- PHP 8.2 AST -->
+		<ant dir="${antfile.dir}/parser/php82/" antfile="generateAstParser.xml" />
+		<ant dir="${antfile.dir}/parser/php82/" antfile="generateAstScanner.xml" />
+		<ant dir="${antfile.dir}/parser/php82/" antfile="generateCompilerAstParser.xml" />
 
 		<!-- PHPDoc Lexer -->
 		<ant dir="${antfile.dir}/parser/phpdoc/" antfile="generatePHPDocScanner.xml" />
@@ -80,6 +95,9 @@
 		<ant dir="${antfile.dir}/highlighting/php72" antfile="generateHighlightingScanner.xml" />
 		<ant dir="${antfile.dir}/highlighting/php73" antfile="generateHighlightingScanner.xml" />
 		<ant dir="${antfile.dir}/highlighting/php74" antfile="generateHighlightingScanner.xml" />
+		<ant dir="${antfile.dir}/highlighting/php80" antfile="generateHighlightingScanner.xml" />
+		<ant dir="${antfile.dir}/highlighting/php81" antfile="generateHighlightingScanner.xml" />
+		<ant dir="${antfile.dir}/highlighting/php82" antfile="generateHighlightingScanner.xml" />
 
 		<!-- PHPTokenizer -->
 		<ant dir="${antfile.dir}/highlighting/" antfile="generatePHPTokenizer.xml" />
