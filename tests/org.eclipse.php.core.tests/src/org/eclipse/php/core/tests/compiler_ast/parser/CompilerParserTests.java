@@ -96,6 +96,26 @@ public class CompilerParserTests {
 						"/workspace/compiler_parser/php7", "/workspace/compiler_parser/php71",
 						"/workspace/compiler_parser/php72", "/workspace/compiler_parser/php73",
 						"/workspace/compiler_parser/php74" });
+		TESTS.put(PHPVersion.PHP8_0,
+				new String[] { "/workspace/compiler_parser/php53", "/workspace/compiler_parser/php54",
+						"/workspace/compiler_parser/php55", "/workspace/compiler_parser/php56",
+						"/workspace/compiler_parser/php7", "/workspace/compiler_parser/php71",
+						"/workspace/compiler_parser/php72", "/workspace/compiler_parser/php73",
+						"/workspace/compiler_parser/php74", "/workspace/compiler_parser/php80" });
+
+		TESTS.put(PHPVersion.PHP8_1,
+				new String[] { "/workspace/compiler_parser/php53", "/workspace/compiler_parser/php54",
+						"/workspace/compiler_parser/php55", "/workspace/compiler_parser/php56",
+						"/workspace/compiler_parser/php7", "/workspace/compiler_parser/php71",
+						"/workspace/compiler_parser/php72", "/workspace/compiler_parser/php73",
+						"/workspace/compiler_parser/php74", "/workspace/compiler_parser/php80" });
+
+		TESTS.put(PHPVersion.PHP8_2,
+				new String[] { "/workspace/compiler_parser/php53", "/workspace/compiler_parser/php54",
+						"/workspace/compiler_parser/php55", "/workspace/compiler_parser/php56",
+						"/workspace/compiler_parser/php7", "/workspace/compiler_parser/php71",
+						"/workspace/compiler_parser/php72", "/workspace/compiler_parser/php73",
+						"/workspace/compiler_parser/php74", "/workspace/compiler_parser/php80" });
 	};
 
 	private AbstractPHPSourceParser parser;

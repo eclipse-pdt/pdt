@@ -217,6 +217,13 @@ terminal T_COALESCE;
 //php 7.4
 terminal T_COALESCE_EQUAL;
 terminal String T_FN;
+//php 8.0
+terminal T_ATTRIBUTE;
+terminal String T_MATCH;
+terminal T_NULLSAFE_OBJECT_OPERATOR;
+//php 8.1
+terminal String T_ENUM;
+terminal String T_READONLY;
 
 /* Non terminals */
 

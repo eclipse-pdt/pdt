@@ -41,12 +41,13 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
  * function foo() : MyClass;
  * </pre>
  */
-public class PHPMethodDeclaration extends MethodDeclaration implements IPHPDocAwareDeclaration {
+public class PHPMethodDeclaration extends MethodDeclaration implements IPHPDocAwareDeclaration, IAttributedStatement {
 
 	private static final List<FormalParameter> EMPTY_PARAMETERS = new LinkedList<>();
 	private final boolean isReference;
 	private PHPDocBlock phpDoc;
 	private ReturnType returnType;
+	private List<Attribute> attributes;
 
 	public PHPMethodDeclaration(int start, int end, int nameStart, int nameEnd, String functionName,
 			List<FormalParameter> formalParameters, Block body, final boolean isReference, PHPDocBlock phpDoc) {
@@ -98,7 +99,13 @@ public class PHPMethodDeclaration extends MethodDeclaration implements IPHPDocAw
 
 	@Override
 	protected void traverseChildNodes(ASTVisitor visitor) throws Exception {
+		if (attributes != null) {
+			for (Attribute attr : attributes) {
+				attr.traverse(visitor);
+			}
+		}
 		super.traverseChildNodes(visitor);
+
 		if (this.returnType != null) {
 			this.returnType.traverse(visitor);
 		}
@@ -114,5 +121,15 @@ public class PHPMethodDeclaration extends MethodDeclaration implements IPHPDocAw
 	@Override
 	public String toString() {
 		return ASTPrintVisitor.toXMLString(this);
+	}
+
+	@Override
+	public List<Attribute> getAttributes() {
+		return attributes;
+	}
+
+	@Override
+	public void setAttributes(List<Attribute> attributes) {
+		this.attributes = attributes;
 	}
 }

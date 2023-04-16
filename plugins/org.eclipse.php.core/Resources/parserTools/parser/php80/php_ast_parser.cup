@@ -218,6 +218,11 @@ terminal T_COALESCE;
 terminal T_COALESCE_EQUAL;
 terminal String T_FN;
 
+//php 8.0
+terminal T_ATTRIBUTE;
+terminal String T_MATCH;
+terminal T_NULLSAFE_OBJECT_OPERATOR;
+
 /* Non terminals */
 
 non terminal Program thestart;

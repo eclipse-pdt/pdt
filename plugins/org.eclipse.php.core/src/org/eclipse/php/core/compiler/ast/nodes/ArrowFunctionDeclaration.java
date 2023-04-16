@@ -33,13 +33,14 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
  * @see https://wiki.php.net/rfc/arrow_functions
  * @since PHP 7.4
  */
-public class ArrowFunctionDeclaration extends Expression {
+public class ArrowFunctionDeclaration extends Expression implements IAttributedStatement {
 
 	private final boolean isReference;
 	private final boolean isStatic;
 	protected List<FormalParameter> arguments = new LinkedList<>();
 	private Expression body;
 	private ReturnType returnType;
+	private List<Attribute> attributes;
 
 	public ArrowFunctionDeclaration(int start, int end, List<FormalParameter> formalParameters, Expression body,
 			final boolean isReference, boolean isStatic, TypeReference returnType) {
@@ -59,6 +60,11 @@ public class ArrowFunctionDeclaration extends Expression {
 	public void traverse(ASTVisitor visitor) throws Exception {
 		final boolean visit = visitor.visit(this);
 		if (visit) {
+			if (attributes != null) {
+				for (Attribute attr : attributes) {
+					attr.traverse(visitor);
+				}
+			}
 			for (FormalParameter param : arguments) {
 				param.traverse(visitor);
 			}
@@ -122,5 +128,15 @@ public class ArrowFunctionDeclaration extends Expression {
 	@Override
 	public int getKind() {
 		return ASTNodeKinds.ARROW_FUNCTION;
+	}
+
+	@Override
+	public List<Attribute> getAttributes() {
+		return attributes;
+	}
+
+	@Override
+	public void setAttributes(List<Attribute> attributes) {
+		this.attributes = attributes;
 	}
 }

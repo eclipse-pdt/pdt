@@ -1,0 +1,55 @@
+--TEST--
+PHP 8.0
+--FILE--
+<?php
+
+htmlspecialchars($string, double_encode: false);
+
+$el->call(second: 1);
+new FooBar(named: 'value');
+?>
+--EXPECT--
+<ModuleDeclaration start="0" end="110">
+	<ExpressionStatement start="7" end="55">
+		<PHPCallExpression start="7" end="54">
+			<FullyQualifiedReference start="7" end="23" name="htmlspecialchars">
+			</FullyQualifiedReference>
+			<PHPCallArgumentsList start="24" end="53">
+				<VariableReference start="24" end="31" name="$string">
+				</VariableReference>
+				<NamedExpression start="33" end="53" name="double_encode">
+					<Scalar start="48" end="53" type="string" value="false">
+					</Scalar>
+				</NamedExpression>
+			</PHPCallArgumentsList>
+		</PHPCallExpression>
+	</ExpressionStatement>
+	<ExpressionStatement start="57" end="78">
+		<PHPCallExpression start="57" end="77">
+			<VariableReference start="57" end="60" name="$el">
+			</VariableReference>
+			<SimpleReference start="62" end="66" name="call">
+			</SimpleReference>
+			<PHPCallArgumentsList start="67" end="76">
+				<NamedExpression start="67" end="76" name="second">
+					<Scalar start="75" end="76" type="int" value="1">
+					</Scalar>
+				</NamedExpression>
+			</PHPCallArgumentsList>
+		</PHPCallExpression>
+	</ExpressionStatement>
+	<ExpressionStatement start="79" end="106">
+		<ClassInstanceCreation start="79" end="105">
+			<FullyQualifiedReference start="83" end="89" name="FooBar">
+			</FullyQualifiedReference>
+			<PHPCallArgumentsList start="90" end="104">
+				<NamedExpression start="90" end="104" name="named">
+					<Scalar start="97" end="104" type="string" value="&apos;value&apos;">
+					</Scalar>
+				</NamedExpression>
+			</PHPCallArgumentsList>
+		</ClassInstanceCreation>
+	</ExpressionStatement>
+	<EmptyStatement start="107" end="109">
+	</EmptyStatement>
+</ModuleDeclaration>

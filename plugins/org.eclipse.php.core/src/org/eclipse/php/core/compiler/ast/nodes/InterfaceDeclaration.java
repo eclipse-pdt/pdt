@@ -16,6 +16,7 @@ package org.eclipse.php.core.compiler.ast.nodes;
 import java.util.List;
 
 import org.eclipse.dltk.ast.ASTListNode;
+import org.eclipse.dltk.ast.ASTVisitor;
 import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.ast.declarations.TypeDeclaration;
 import org.eclipse.dltk.ast.references.TypeReference;
@@ -34,10 +35,12 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
  * Interface2 { const MY_CONSTANT = 3; public function myFunction($a); }
  * </pre>
  */
-public class InterfaceDeclaration extends TypeDeclaration implements IPHPDocAwareDeclaration, IRecoverable {
+public class InterfaceDeclaration extends TypeDeclaration
+		implements IPHPDocAwareDeclaration, IRecoverable, IAttributedStatement {
 
 	private PHPDocBlock phpDoc;
 	private boolean isRecovered;
+	private List<Attribute> attributes;
 
 	public InterfaceDeclaration(int start, int end, int nameStart, int nameEnd, String interfaceName,
 			List<TypeReference> interfaces, Block body, PHPDocBlock phpDoc) {
@@ -93,5 +96,34 @@ public class InterfaceDeclaration extends TypeDeclaration implements IPHPDocAwar
 	@Override
 	public String toString() {
 		return ASTPrintVisitor.toXMLString(this);
+	}
+
+	@Override
+	public List<Attribute> getAttributes() {
+		return attributes;
+	}
+
+	@Override
+	public void traverse(ASTVisitor visitor) throws Exception {
+
+		if (visitor.visit(this)) {
+			if (attributes != null) {
+				for (Attribute attr : attributes) {
+					attr.traverse(visitor);
+				}
+			}
+			if (this.getSuperClasses() != null) {
+				this.getSuperClasses().traverse(visitor);
+			}
+			if (this.fBody != null) {
+				fBody.traverse(visitor);
+			}
+			visitor.endvisit(this);
+		}
+	}
+
+	@Override
+	public void setAttributes(List<Attribute> attributes) {
+		this.attributes = attributes;
 	}
 }

@@ -1,0 +1,212 @@
+--TEST--
+PHP 8.0
+--FILE--
+<?php
+#[Attr]
+#[Attr, Attr2]
+#[Attr('val', named: 2)]
+function myFunc() {}
+
+#[Space\Attr(1)]
+class Simple {
+	#[Space\AttrConst(1)]
+	const C = 1;
+	#[Space\AttrVal(1)]
+	private $val;
+	#[AttrFN]
+	public function fn(#[AttrParam] $param) {}
+}
+
+$res = #[Space\Attr\Closure(1)] function() {};
+
+$res = #[Space\Attr\Arrow(1)] fn() => 2+2;
+
+$res = new #[Space\Attr\Anonym(1)] class {
+	#[Space\Attr(1)]
+    public function log($msg)
+    {
+        echo $msg;
+    }
+};
+?>
+--EXPECT--
+<ModuleDeclaration start="0" end="459">
+	<PHPMethodDeclaration start="54" end="74" modifiers="" name="myFunc">
+		<Attribute start="8" end="12">
+			<FullyQualifiedReference start="8" end="12" name="Attr">
+			</FullyQualifiedReference>
+		</Attribute>
+		<Attribute start="16" end="20">
+			<FullyQualifiedReference start="16" end="20" name="Attr">
+			</FullyQualifiedReference>
+		</Attribute>
+		<Attribute start="22" end="27">
+			<FullyQualifiedReference start="22" end="27" name="Attr2">
+			</FullyQualifiedReference>
+		</Attribute>
+		<Attribute start="31" end="52">
+			<FullyQualifiedReference start="31" end="35" name="Attr">
+			</FullyQualifiedReference>
+			<PHPCallArgumentsList start="0" end="-1">
+				<Scalar start="36" end="41" type="string" value="&apos;val&apos;">
+				</Scalar>
+				<NamedExpression start="43" end="51" name="named">
+					<Scalar start="50" end="51" type="int" value="2">
+					</Scalar>
+				</NamedExpression>
+			</PHPCallArgumentsList>
+		</Attribute>
+	</PHPMethodDeclaration>
+	<ClassDeclaration start="93" end="237" modifiers="" name="Simple">
+		<Attribute start="78" end="91">
+			<FullyQualifiedReference start="78" end="88" name="Space\Attr">
+				<NamespaceReference start="78" end="83" name="Space" global="false" local="false">
+				</NamespaceReference>
+			</FullyQualifiedReference>
+			<PHPCallArgumentsList start="0" end="-1">
+				<Scalar start="89" end="90" type="int" value="1">
+				</Scalar>
+			</PHPCallArgumentsList>
+		</Attribute>
+		<ConstantDeclaration start="132" end="143" modifiers="">
+			<Attribute start="111" end="129">
+				<FullyQualifiedReference start="111" end="126" name="Space\AttrConst">
+					<NamespaceReference start="111" end="116" name="Space" global="false" local="false">
+					</NamespaceReference>
+				</FullyQualifiedReference>
+				<PHPCallArgumentsList start="0" end="-1">
+					<Scalar start="127" end="128" type="int" value="1">
+					</Scalar>
+				</PHPCallArgumentsList>
+			</Attribute>
+			<ConstantReference start="138" end="139" name="C">
+			</ConstantReference>
+			<Scalar start="142" end="143" type="int" value="1">
+			</Scalar>
+		</ConstantDeclaration>
+		<PHPFieldDeclaration start="175" end="179" modifiers="private">
+			<Attribute start="148" end="164">
+				<FullyQualifiedReference start="148" end="161" name="Space\AttrVal">
+					<NamespaceReference start="148" end="153" name="Space" global="false" local="false">
+					</NamespaceReference>
+				</FullyQualifiedReference>
+				<PHPCallArgumentsList start="0" end="-1">
+					<Scalar start="162" end="163" type="int" value="1">
+					</Scalar>
+				</PHPCallArgumentsList>
+			</Attribute>
+			<SimpleReference start="175" end="179" name="$val">
+			</SimpleReference>
+		</PHPFieldDeclaration>
+		<PHPMethodDeclaration start="193" end="235" modifiers="public" name="fn">
+			<Attribute start="184" end="190">
+				<FullyQualifiedReference start="184" end="190" name="AttrFN">
+				</FullyQualifiedReference>
+			</Attribute>
+			<FormalParameter start="225" end="231" modifiers="" isMandatory="true">
+				<Attribute start="214" end="223">
+					<FullyQualifiedReference start="214" end="223" name="AttrParam">
+					</FullyQualifiedReference>
+				</Attribute>
+				<VariableReference start="225" end="231" name="$param">
+				</VariableReference>
+			</FormalParameter>
+		</PHPMethodDeclaration>
+	</ClassDeclaration>
+	<ExpressionStatement start="239" end="285">
+		<Assignment start="239" end="284" operator="=">
+			<VariableReference start="239" end="243" name="$res">
+			</VariableReference>
+			<LambdaFunctionDeclaration start="271" end="284" isReference="false">
+				<Attribute start="248" end="269">
+					<FullyQualifiedReference start="248" end="266" name="Space\Attr\Closure">
+						<NamespaceReference start="248" end="258" name="Space\Attr" global="false" local="false">
+						</NamespaceReference>
+					</FullyQualifiedReference>
+					<PHPCallArgumentsList start="0" end="-1">
+						<Scalar start="267" end="268" type="int" value="1">
+						</Scalar>
+					</PHPCallArgumentsList>
+				</Attribute>
+				<Arguments>
+				</Arguments>
+			</LambdaFunctionDeclaration>
+		</Assignment>
+	</ExpressionStatement>
+	<ExpressionStatement start="287" end="329">
+		<Assignment start="287" end="328" operator="=">
+			<VariableReference start="287" end="291" name="$res">
+			</VariableReference>
+			<ArrowFunctionDeclaration start="317" end="328" isReference="false">
+				<Attribute start="296" end="315">
+					<FullyQualifiedReference start="296" end="312" name="Space\Attr\Arrow">
+						<NamespaceReference start="296" end="306" name="Space\Attr" global="false" local="false">
+						</NamespaceReference>
+					</FullyQualifiedReference>
+					<PHPCallArgumentsList start="0" end="-1">
+						<Scalar start="313" end="314" type="int" value="1">
+						</Scalar>
+					</PHPCallArgumentsList>
+				</Attribute>
+				<Arguments>
+				</Arguments>
+				<InfixExpression start="325" end="328" operator="+">
+					<Scalar start="325" end="326" type="int" value="2">
+					</Scalar>
+					<Scalar start="327" end="328" type="int" value="2">
+					</Scalar>
+				</InfixExpression>
+			</ArrowFunctionDeclaration>
+		</Assignment>
+	</ExpressionStatement>
+	<ExpressionStatement start="331" end="455">
+		<Assignment start="331" end="454" operator="=">
+			<VariableReference start="331" end="335" name="$res">
+			</VariableReference>
+			<ClassInstanceCreation start="338" end="454">
+				<SimpleReference start="366" end="371" name="class">
+				</SimpleReference>
+				<PHPCallArgumentsList start="0" end="-1">
+				</PHPCallArgumentsList>
+				<AnonymousClassDeclaration start="371" end="454">
+					<Attribute start="344" end="364">
+						<FullyQualifiedReference start="344" end="361" name="Space\Attr\Anonym">
+							<NamespaceReference start="344" end="354" name="Space\Attr" global="false" local="false">
+							</NamespaceReference>
+						</FullyQualifiedReference>
+						<PHPCallArgumentsList start="0" end="-1">
+							<Scalar start="362" end="363" type="int" value="1">
+							</Scalar>
+						</PHPCallArgumentsList>
+					</Attribute>
+					<Interfaces>
+					</Interfaces>
+					<Body>
+						<PHPMethodDeclaration start="396" end="452" modifiers="public" name="log">
+							<Attribute start="377" end="390">
+								<FullyQualifiedReference start="377" end="387" name="Space\Attr">
+									<NamespaceReference start="377" end="382" name="Space" global="false" local="false">
+									</NamespaceReference>
+								</FullyQualifiedReference>
+								<PHPCallArgumentsList start="0" end="-1">
+									<Scalar start="388" end="389" type="int" value="1">
+									</Scalar>
+								</PHPCallArgumentsList>
+							</Attribute>
+							<FormalParameter start="416" end="420" modifiers="" isMandatory="true">
+								<VariableReference start="416" end="420" name="$msg">
+								</VariableReference>
+							</FormalParameter>
+							<EchoStatement start="436" end="446">
+								<VariableReference start="441" end="445" name="$msg">
+								</VariableReference>
+							</EchoStatement>
+						</PHPMethodDeclaration>
+					</Body>
+				</AnonymousClassDeclaration>
+			</ClassInstanceCreation>
+		</Assignment>
+	</ExpressionStatement>
+	<EmptyStatement start="456" end="458">
+	</EmptyStatement>
+</ModuleDeclaration>

@@ -15,54 +15,66 @@ package org.eclipse.php.core.compiler.ast.nodes;
 
 import org.eclipse.dltk.ast.ASTVisitor;
 import org.eclipse.dltk.ast.expressions.Expression;
+import org.eclipse.dltk.utils.CorePrinter;
+import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
 
 /**
- * Represents a field access
+ * Represents a named expression
  * 
  * <pre>
  * e.g.
  * 
- * $a->$b
- * $a?->$b
+ * --$a, --foo()
  * </pre>
  */
-public class FieldAccess extends Dispatch {
+public class NamedExpression extends Expression {
 
-	private final boolean nullSafe;
-	private final Expression field;
+	private final String name;
+	private final Expression variable;
 
-	public FieldAccess(int start, int end, Expression dispatcher, Expression field) {
-		this(start, end, dispatcher, false, field);
-	}
+	public NamedExpression(int start, int end, String name, Expression variable) {
+		super(start, end);
 
-	public FieldAccess(int start, int end, Expression dispatcher, boolean nullSafe, Expression field) {
-		super(start, end, dispatcher);
+		assert variable != null;
+		assert name != null;
 
-		assert field != null;
-		this.field = field;
-		this.nullSafe = nullSafe;
+		this.name = name;
+		this.variable = variable;
+
 	}
 
 	@Override
 	public void traverse(ASTVisitor visitor) throws Exception {
 		final boolean visit = visitor.visit(this);
 		if (visit) {
-			getDispatcher().traverse(visitor);
-			field.traverse(visitor);
+			variable.traverse(visitor);
 		}
 		visitor.endvisit(this);
 	}
 
 	@Override
 	public int getKind() {
-		return ASTNodeKinds.FIELD_ACCESS;
+		return ASTNodeKinds.NAMED_EXPRESSION;
 	}
 
-	public Expression getField() {
-		return field;
+	public Expression getVariable() {
+		return variable;
 	}
 
-	public boolean isNullSafe() {
-		return nullSafe;
+	public String getName() {
+		return name;
 	}
+
+	/**
+	 * We don't print anything - we use {@link ASTPrintVisitor} instead
+	 */
+	@Override
+	public final void printNode(CorePrinter output) {
+	}
+
+	@Override
+	public String toString() {
+		return ASTPrintVisitor.toXMLString(this);
+	}
+
 }

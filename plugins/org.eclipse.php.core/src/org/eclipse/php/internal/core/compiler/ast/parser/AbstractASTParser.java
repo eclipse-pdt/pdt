@@ -43,7 +43,8 @@ abstract public class AbstractASTParser extends lr_parser {
 	private String fileName;
 
 	/**
-	 * This is a place holder for statements that were found after unclosed classes
+	 * This is a place holder for statements that were found after unclosed
+	 * classes
 	 */
 	public Statement pendingStatement = null;
 
@@ -304,6 +305,26 @@ abstract public class AbstractASTParser extends lr_parser {
 		}
 		block.addStatement(s);
 		block.setEnd(s.sourceEnd());
+	}
+
+	public ASTNode getRecentDeclarationStatement() {
+		Statement node = declarations.peek();
+
+		Block block = null;
+		if (node instanceof TypeDeclaration) {
+			block = ((TypeDeclaration) node).getBody();
+		} else if (node instanceof MethodDeclaration) {
+			block = ((MethodDeclaration) node).getBody();
+		} else if (node instanceof Block) {
+			block = (Block) node;
+		} else if (node instanceof AnonymousClassDeclaration) {
+			block = ((AnonymousClassDeclaration) node).getBody();
+		}
+		if (block == null || block.getStatements().size() == 0) {
+			return node;
+		}
+
+		return block.getStatements().get(block.getStatements().size() - 1);
 	}
 
 	protected int appendModifier(int start, int end, int flags, int newFlag) {

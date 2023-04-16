@@ -289,6 +289,10 @@ NOWDOC_CHARS=([^\n\r]|({NEWLINE}{TABS_AND_SPACES})+[^a-zA-Z_\u0080-\uffff\n\r \t
 	return createFullSymbol(ParserConstants.T_FN);
 }
 
+<ST_IN_SCRIPTING>"match" {
+	return createFullSymbol(ParserConstants.T_MATCH);
+}
+
 <ST_IN_SCRIPTING>"const" {
 	return createFullSymbol(ParserConstants.T_CONST);
 }
@@ -445,9 +449,18 @@ NOWDOC_CHARS=([^\n\r]|({NEWLINE}{TABS_AND_SPACES})+[^a-zA-Z_\u0080-\uffff\n\r \t
 	return createFullSymbol(ParserConstants.T_IMPLEMENTS);
 }
 
+<ST_IN_SCRIPTING>"#[" {
+	return createSymbol(ParserConstants.T_ATTRIBUTE);
+}
+
 <ST_IN_SCRIPTING>"->" {
 	pushState(ST_LOOKING_FOR_PROPERTY);
 	return createSymbol(ParserConstants.T_OBJECT_OPERATOR);
+}
+
+<ST_IN_SCRIPTING>"?->" {
+	pushState(ST_LOOKING_FOR_PROPERTY);
+	return createSymbol(ParserConstants.T_NULLSAFE_OBJECT_OPERATOR);
 }
 
 <ST_IN_SCRIPTING,ST_LOOKING_FOR_PROPERTY>{WHITESPACES} {
@@ -455,6 +468,10 @@ NOWDOC_CHARS=([^\n\r]|({NEWLINE}{TABS_AND_SPACES})+[^a-zA-Z_\u0080-\uffff\n\r \t
 
 <ST_LOOKING_FOR_PROPERTY>"->" {
 	return createSymbol(ParserConstants.T_OBJECT_OPERATOR);
+}
+
+<ST_LOOKING_FOR_PROPERTY>"?->" {
+	return createSymbol(ParserConstants.T_NULLSAFE_OBJECT_OPERATOR);
 }
 
 <ST_LOOKING_FOR_PROPERTY>{LABEL} {

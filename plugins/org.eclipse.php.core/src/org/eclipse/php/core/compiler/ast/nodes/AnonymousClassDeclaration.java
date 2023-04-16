@@ -21,12 +21,13 @@ import org.eclipse.dltk.ast.statements.Block;
 import org.eclipse.dltk.utils.CorePrinter;
 import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
 
-public class AnonymousClassDeclaration extends Expression implements IRecoverable {
+public class AnonymousClassDeclaration extends Expression implements IRecoverable, IAttributedStatement {
 
 	private TypeReference superClass;
 	private List<TypeReference> interfaceList;
 	private Block body;
 	private boolean isRecovered;
+	private List<Attribute> attributes;
 
 	public AnonymousClassDeclaration(int start, int end, TypeReference superClass, List<TypeReference> interfaceList,
 			Block body) {
@@ -43,6 +44,11 @@ public class AnonymousClassDeclaration extends Expression implements IRecoverabl
 	public void traverse(ASTVisitor visitor) throws Exception {
 		final boolean visit = visitor.visit(this);
 		if (visit) {
+			if (attributes != null) {
+				for (Attribute attr : attributes) {
+					attr.traverse(visitor);
+				}
+			}
 			if (superClass != null) {
 				superClass.traverse(visitor);
 			}
@@ -93,6 +99,16 @@ public class AnonymousClassDeclaration extends Expression implements IRecoverabl
 	@Override
 	public void setRecovered(boolean isRecovered) {
 		this.isRecovered = isRecovered;
+	}
+
+	@Override
+	public List<Attribute> getAttributes() {
+		return attributes;
+	}
+
+	@Override
+	public void setAttributes(List<Attribute> attributes) {
+		this.attributes = attributes;
 	}
 
 }

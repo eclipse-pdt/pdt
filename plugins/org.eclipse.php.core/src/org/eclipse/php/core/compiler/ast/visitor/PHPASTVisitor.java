@@ -1011,6 +1011,14 @@ public abstract class PHPASTVisitor extends ASTVisitor {
 		if (nodeClass.equals(TraitDeclaration.class)) {
 			return endvisit((TraitDeclaration) s);
 		}
+
+		// php8.0
+		if (nodeClass.equals(NamedExpression.class)) {
+			return endvisit((NamedExpression) s);
+		}
+		if (nodeClass.equals(Attribute.class)) {
+			return endvisit((Attribute) s);
+		}
 		return true;
 	}
 
@@ -1312,6 +1320,14 @@ public abstract class PHPASTVisitor extends ASTVisitor {
 		if (nodeClass.equals(TraitDeclaration.class)) {
 			return visit((TraitDeclaration) s);
 		}
+
+		// php8.0
+		if (nodeClass.equals(NamedExpression.class)) {
+			return visit((NamedExpression) s);
+		}
+		if (nodeClass.equals(Attribute.class)) {
+			return visit((Attribute) s);
+		}
 		return true;
 	}
 
@@ -1381,6 +1397,27 @@ public abstract class PHPASTVisitor extends ASTVisitor {
 	}
 
 	// php5.4 ends
+
+	// php8.0
+	public boolean visit(NamedExpression s) throws Exception {
+		return visitGeneral(s);
+	}
+
+	public boolean visit(Attribute s) throws Exception {
+		return visitGeneral(s);
+	}
+
+	public boolean endvisit(NamedExpression s) throws Exception {
+		endvisitGeneral(s);
+		return false;
+	}
+
+	public boolean endvisit(Attribute s) throws Exception {
+		endvisitGeneral(s);
+		return false;
+	}
+
+	// php8.0 ends
 
 	@Override
 	public boolean visit(Expression s) throws Exception {

@@ -13,6 +13,8 @@
  *******************************************************************************/
 package org.eclipse.php.core.compiler.ast.nodes;
 
+import java.util.List;
+
 import org.eclipse.dltk.ast.ASTVisitor;
 import org.eclipse.dltk.ast.declarations.Argument;
 import org.eclipse.dltk.ast.expressions.Expression;
@@ -30,11 +32,13 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
  * $a, MyClass $a, $a = 3, int $a = 3, ...$a, int ...$a
  * </pre>
  */
-public class FormalParameter extends Argument {
+public class FormalParameter extends Argument implements IAttributedStatement {
 
 	private final SimpleReference parameterType; // this can be either type
 													// reference or array
 	private final VariableReference parameterName;
+
+	private List<Attribute> attributes;
 	/**
 	 * @deprecated
 	 */
@@ -85,6 +89,11 @@ public class FormalParameter extends Argument {
 	public void traverse(ASTVisitor visitor) throws Exception {
 		final boolean visit = visitor.visit(this);
 		if (visit) {
+			if (attributes != null) {
+				for (Attribute attr : attributes) {
+					attr.traverse(visitor);
+				}
+			}
 			if (parameterType != null) {
 				parameterType.traverse(visitor);
 			}
@@ -131,5 +140,15 @@ public class FormalParameter extends Argument {
 	@Override
 	public String toString() {
 		return ASTPrintVisitor.toXMLString(this);
+	}
+
+	@Override
+	public List<Attribute> getAttributes() {
+		return attributes;
+	}
+
+	@Override
+	public void setAttributes(List<Attribute> attributes) {
+		this.attributes = attributes;
 	}
 }

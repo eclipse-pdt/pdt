@@ -203,6 +203,11 @@ terminal T_COALESCE;
 terminal T_COALESCE_EQUAL;
 terminal CompilerAstLexer.PHPDocBlockSymbolPair T_FN;
 
+//php 8.0
+terminal T_ATTRIBUTE;
+terminal String T_MATCH;
+terminal T_NULLSAFE_OBJECT_OPERATOR;
+
 /* Non terminals */
 
 non terminal ModuleDeclaration thestart;
@@ -355,6 +360,16 @@ non terminal FinallyClause finally_clause;
 non terminal FinallyClause non_empty_finally_clause;
 
 non terminal YieldExpression yield_expr;
+
+//php8.0
+non terminal Attribute attribute_decl;
+non terminal List<Attribute> attribute_group;
+non terminal List<Attribute> attribute;
+non terminal List<Attribute> attributes;
+non terminal Statement attributed_statement;
+non terminal FormalParameter attributed_parameter;
+non terminal Expression inline_function;
+non terminal attributed_class_statement;
 
 
 precedence left T_INCLUDE, T_INCLUDE_ONCE, T_EVAL, T_REQUIRE, T_REQUIRE_ONCE;
@@ -662,6 +677,10 @@ T_INCLUDE:v
 	// this is to break the ambiguities with => for array and yield keys.
 	RESULT = v.value;
 :}
+| T_MATCH:v
+{:
+	RESULT = v;
+:}
 ;
 
 semi_reserved ::=
@@ -801,6 +820,65 @@ namespace_name:name
 :}
 ;
 
+attribute_decl ::=
+class_name:name
+{:
+	RESULT = new Attribute(nameleft, nameright, (FullyQualifiedReference)name);
+:}
+| class_name:name T_OPEN_PARENTHESE:start function_call_parameter_list:paramsList T_CLOSE_PARENTHESE:end
+{:
+	RESULT = new Attribute(nameleft, endright, (FullyQualifiedReference)name, paramsList);
+:}
+;
+
+attribute_group ::=
+attribute_group:list T_COMMA attribute_decl:decl 
+{:
+	list.add(decl);
+	
+	RESULT = list;
+:}
+| attribute_decl:decl 
+{:
+	List<Attribute> list = new LinkedList<Attribute>();
+	list.add(decl);
+	RESULT = list;
+:}
+;
+attribute ::=
+T_ATTRIBUTE attribute_group:list T_CLOSE_RECT
+{:
+	RESULT = list;
+:}
+;
+
+attributes ::=
+attributes:attributesList attribute:attr
+{:
+	attributesList.addAll(attr);
+	
+	RESULT = attributesList;
+:}
+| attribute:attr
+{:
+	List<Attribute> attributesList = new LinkedList<Attribute>(attr);
+	
+	RESULT = attributesList;
+:}
+;
+
+attributed_statement ::=
+function_declaration_statement:statement
+{:
+	RESULT = statement;
+:}
+| class_declaration_statement:statement
+{:
+	RESULT = statement;
+:}
+;
+
+
 top_statement_list ::=
 top_statement_list:statementList top_statement:statement
 {:
@@ -825,13 +903,14 @@ statement:statement
 	RESULT = statement;
 :}
 
-| function_declaration_statement:statement
+| attributed_statement:statement
 {:
 	RESULT = statement;
 :}
 
-| class_declaration_statement:statement
+| attributes:attrs attributed_statement:statement
 {:
+	((IAttributedStatement) statement).setAttributes(attrs);
 	RESULT = statement;
 :}
 
@@ -1134,13 +1213,14 @@ statement:statement
 	RESULT = statement;
 :}
 
-| function_declaration_statement:statement
+| attributed_statement:statement
 {:
 	RESULT = statement;
 :}
 
-| class_declaration_statement:statement
+| attributes:attrs attributed_statement:statement
 {:
+	((IAttributedStatement) statement).setAttributes(attrs);
 	RESULT = statement;
 :}
 ;
@@ -1964,7 +2044,7 @@ non_empty_parameter_list:list
 ;
 
 non_empty_parameter_list ::=
-parameter:parameter
+attributed_parameter:parameter
 {:
 	List list = new LinkedList();
 	if (parameter != null) {
@@ -1973,7 +2053,7 @@ parameter:parameter
 	RESULT = list;
 :}
 
-| non_empty_parameter_list:list T_COMMA parameter:parameter
+| non_empty_parameter_list:list T_COMMA attributed_parameter:parameter
 {:
 	if (parameter != null) {
 		list.add(parameter);
@@ -1991,6 +2071,16 @@ parameter:parameter
 {:
 	parser.reportError(new ASTError(commaleft, commaright), "syntax error, unexpected ','");
 	RESULT = list;
+:}
+;
+
+attributed_parameter ::=
+attributes:attrs parameter:param {:
+	((IAttributedStatement) param).setAttributes(attrs);
+	RESULT = param;
+:}
+| parameter:param {:
+	RESULT = param;
 :}
 ;
 
@@ -2103,6 +2193,10 @@ argument ::=
 expr:expr
 {:
 	RESULT = expr;
+:}
+| identifier:ident T_NEKUDOTAIM expr:expr
+{:
+	RESULT = new NamedExpression(identleft, exprright, ident, expr);
 :}
 | T_ELLIPSIS:ell expr:expr
 {:
@@ -2226,7 +2320,7 @@ class_statement_list:list class_statement:classStatement
 | /* empty */
 ;
 
-class_statement ::=
+attributed_class_statement ::=
 variable_modifiers:modifier optional_type:type property_list:decList T_SEMICOLON
 {:
 	Iterator i = decList.iterator();
@@ -2343,6 +2437,23 @@ method_body:body
 	}
 :}
 
+
+;
+
+class_statement ::=
+attributed_class_statement:statement
+{:
+:}
+
+| attributes:attrs attributed_class_statement
+{:
+	ASTNode node = parser.getRecentDeclarationStatement();
+	if (node instanceof IAttributedStatement) {
+		((IAttributedStatement)node).setAttributes(attrs);
+	}
+	
+	//RESULT = statement;
+:}
 | T_VAR_COMMENT
 | error:theError /* error statement */
 {:
@@ -2350,7 +2461,6 @@ method_body:body
 	ASTError error = new ASTError(theErrorleft, theErrorright);
 	parser.addDeclarationStatement(error);
 :}
-
 | trait_use_statement:statement
 {:
 	RESULT = statement;
@@ -2764,6 +2874,12 @@ T_NEW:start class_name_reference:className ctor_arguments:ctor
 	Expression className = new SimpleReference(tclassleft, tclassright, "class");
 	RESULT = new ClassInstanceCreation(startleft, acright, className, ctor, ac);
 :}
+| T_NEW:start attributes:attrs T_CLASS:tclass ctor_arguments:ctor anonymous_class:ac
+{:
+	Expression className = new SimpleReference(tclassleft, tclassright, "class");
+	ac.setAttributes(attrs);
+	RESULT = new ClassInstanceCreation(startleft, acright, className, ctor, ac);
+:}
 ;
 
 expr_without_variable ::=
@@ -3163,7 +3279,21 @@ T_LIST:start T_OPEN_PARENTHESE array_pair_list:list T_CLOSE_PARENTHESE:end T_EQU
 	RESULT = result;
 :}
 
-| T_FUNCTION:s is_reference:isReference
+| inline_function:fnc
+{:
+	RESULT = fnc;
+:}
+
+| attributes:attrs inline_function:fnc
+{:
+	((IAttributedStatement) fnc).setAttributes(attrs);
+	RESULT = fnc;
+:}
+
+;
+
+inline_function ::=
+T_FUNCTION:s is_reference:isReference
 T_OPEN_PARENTHESE parameter_list:paramList T_CLOSE_PARENTHESE lexical_vars:varsList return_type:returnType
 {:
 	LambdaFunctionDeclaration functionDeclaration = new LambdaFunctionDeclaration(sleft, varsListright, paramList, varsList,
@@ -3558,6 +3688,11 @@ callable_variable:var
 {:
 	RESULT = new FieldAccess(dispatchleft, propertyright, dispatch, property);
 :}
+
+| dereferencable:dispatch T_NULLSAFE_OBJECT_OPERATOR property_name:property
+{:
+	RESULT = new FieldAccess(dispatchleft, propertyright, dispatch, true, property);
+:}
 ;
 
 dereferencable ::=
@@ -3647,6 +3782,16 @@ simple_variable:var
 		RESULT = new ReflectionCallExpression(chleft, endright, ch, memberProperty, paramsList);
 	}
 :}
+| dereferencable:ch T_NULLSAFE_OBJECT_OPERATOR property_name:memberProperty T_OPEN_PARENTHESE:start function_call_parameter_list:paramsList T_CLOSE_PARENTHESE:end
+{:
+	paramsList.setStart(startright);
+	paramsList.setEnd(endleft);
+	if (memberProperty.getClass() == SimpleReference.class) {
+		RESULT = new PHPCallExpression(chleft, endright, ch, true, (SimpleReference) memberProperty, paramsList);
+	} else {
+		RESULT = new ReflectionCallExpression(chleft, endright, ch, true, memberProperty, paramsList);
+	}
+:}
 | function_call:c
 {:
 	RESULT = c;
@@ -3708,6 +3853,11 @@ simple_variable:v
 | new_variable:dispatcher T_OBJECT_OPERATOR property_name:property
 {:
 	RESULT = new FieldAccess(dispatcherleft, propertyright, dispatcher, property);
+:}
+
+| new_variable:dispatcher T_NULLSAFE_OBJECT_OPERATOR property_name:property
+{:
+	RESULT = new FieldAccess(dispatcherleft, propertyright, dispatcher, true, property);
 :}
 
 | class_name:className T_PAAMAYIM_NEKUDOTAYIM simple_variable:var
@@ -3910,6 +4060,12 @@ T_CURLY_OPEN_WITH_DOLAR:start variable:var T_CURLY_CLOSE:end
 {:
 	RESULT = new FieldAccess(varNameleft, stringright, new VariableReference(varNameleft, varNameright, varName, PHPVariableKind.LOCAL), new SimpleReference(stringleft, stringright, string));
 :}
+
+| T_VARIABLE:varName T_NULLSAFE_OBJECT_OPERATOR string_st:string
+{:
+	RESULT = new FieldAccess(varNameleft, stringright, new VariableReference(varNameleft, varNameright, varName, PHPVariableKind.LOCAL), true, new SimpleReference(stringleft, stringright, string));
+:}
+
 
 | T_DOLLAR_OPEN_CURLY_BRACES:start expr:expr T_CURLY_CLOSE:end
 {:

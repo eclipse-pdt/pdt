@@ -13,6 +13,8 @@
  *******************************************************************************/
 package org.eclipse.php.core.compiler.ast.nodes;
 
+import java.util.List;
+
 import org.eclipse.dltk.ast.ASTVisitor;
 import org.eclipse.dltk.ast.declarations.Declaration;
 import org.eclipse.dltk.ast.expressions.Expression;
@@ -29,11 +31,12 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
  * const MY_CONST = 5; const MY_CONST = 5, YOUR_CONSTANT = 8;
  * </pre>
  */
-public class ConstantDeclaration extends Declaration implements IPHPDocAwareDeclaration {
+public class ConstantDeclaration extends Declaration implements IPHPDocAwareDeclaration, IAttributedStatement {
 
 	private final ConstantReference constant;
 	private final Expression initializer;
 	private PHPDocBlock phpDoc;
+	private List<Attribute> attributes;
 
 	public ConstantDeclaration(ConstantReference constant, Expression initializer, int start, int end,
 			PHPDocBlock phpDoc) {
@@ -64,6 +67,11 @@ public class ConstantDeclaration extends Declaration implements IPHPDocAwareDecl
 	public void traverse(ASTVisitor visitor) throws Exception {
 		final boolean visit = visitor.visit(this);
 		if (visit) {
+			if (attributes != null) {
+				for (Attribute attr : attributes) {
+					attr.traverse(visitor);
+				}
+			}
 			constant.traverse(visitor);
 			initializer.traverse(visitor);
 		}
@@ -93,5 +101,15 @@ public class ConstantDeclaration extends Declaration implements IPHPDocAwareDecl
 	@Override
 	public String toString() {
 		return ASTPrintVisitor.toXMLString(this);
+	}
+
+	@Override
+	public List<Attribute> getAttributes() {
+		return attributes;
+	}
+
+	@Override
+	public void setAttributes(List<Attribute> attributes) {
+		this.attributes = attributes;
 	}
 }

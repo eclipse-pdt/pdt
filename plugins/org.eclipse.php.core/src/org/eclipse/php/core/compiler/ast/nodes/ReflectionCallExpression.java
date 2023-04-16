@@ -24,8 +24,15 @@ public class ReflectionCallExpression extends Expression implements Dereferencab
 	private Expression receiver;
 	private Expression name;
 	private CallArgumentsList args;
+	private boolean nullSafe;
 
 	public ReflectionCallExpression(int start, int end, Expression receiver, Expression name, CallArgumentsList args) {
+		this(start, end, receiver, false, name, args);
+
+	}
+
+	public ReflectionCallExpression(int start, int end, Expression receiver, boolean nullSafe, Expression name,
+			CallArgumentsList args) {
 		super(start, end);
 
 		assert name != null;
@@ -37,6 +44,7 @@ public class ReflectionCallExpression extends Expression implements Dereferencab
 		this.receiver = receiver;
 		this.name = name;
 		this.args = args;
+		this.nullSafe = nullSafe;
 	}
 
 	@Override
@@ -85,5 +93,9 @@ public class ReflectionCallExpression extends Expression implements Dereferencab
 	@Override
 	public String toString() {
 		return ASTPrintVisitor.toXMLString(this);
+	}
+
+	public boolean isNullSafe() {
+		return nullSafe;
 	}
 }

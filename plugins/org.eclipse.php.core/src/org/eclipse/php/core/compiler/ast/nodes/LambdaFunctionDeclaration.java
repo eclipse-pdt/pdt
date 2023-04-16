@@ -33,7 +33,7 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
  * 
  * @see http://wiki.php.net/rfc/closures
  */
-public class LambdaFunctionDeclaration extends Expression {
+public class LambdaFunctionDeclaration extends Expression implements IAttributedStatement {
 
 	private final boolean isReference;
 	private final boolean isStatic;
@@ -41,6 +41,7 @@ public class LambdaFunctionDeclaration extends Expression {
 	protected List<FormalParameter> arguments = new LinkedList<>();
 	private Block body;
 	private ReturnType returnType;
+	private List<Attribute> attributes;
 
 	public LambdaFunctionDeclaration(int start, int end, List<FormalParameter> formalParameters,
 			List<? extends Expression> lexicalVars, Block body, final boolean isReference) {
@@ -72,6 +73,11 @@ public class LambdaFunctionDeclaration extends Expression {
 	public void traverse(ASTVisitor visitor) throws Exception {
 		final boolean visit = visitor.visit(this);
 		if (visit) {
+			if (attributes != null) {
+				for (Attribute attr : attributes) {
+					attr.traverse(visitor);
+				}
+			}
 			for (FormalParameter param : arguments) {
 				param.traverse(visitor);
 			}
@@ -145,5 +151,15 @@ public class LambdaFunctionDeclaration extends Expression {
 	@Override
 	public int getKind() {
 		return ASTNodeKinds.LAMBDA_FUNCTION;
+	}
+
+	@Override
+	public List<Attribute> getAttributes() {
+		return attributes;
+	}
+
+	@Override
+	public void setAttributes(List<Attribute> attributes) {
+		this.attributes = attributes;
 	}
 }

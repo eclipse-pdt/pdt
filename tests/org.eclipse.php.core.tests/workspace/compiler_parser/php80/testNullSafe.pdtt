@@ -1,0 +1,30 @@
+--TEST--
+PHP 8.0
+--FILE--
+<?php
+
+$session?->user?->getAddress()?->country;
+?>
+--EXPECT--
+<ModuleDeclaration start="0" end="52">
+	<ExpressionStatement start="7" end="48">
+		<FieldAccess start="7" end="47" null-safe="true">
+			<PHPCallExpression start="7" end="37" null-safe="true">
+				<FieldAccess start="7" end="22" null-safe="true">
+					<VariableReference start="7" end="15" name="$session">
+					</VariableReference>
+					<SimpleReference start="18" end="22" name="user">
+					</SimpleReference>
+				</FieldAccess>
+				<SimpleReference start="25" end="35" name="getAddress">
+				</SimpleReference>
+				<PHPCallArgumentsList start="36" end="36">
+				</PHPCallArgumentsList>
+			</PHPCallExpression>
+			<SimpleReference start="40" end="47" name="country">
+			</SimpleReference>
+		</FieldAccess>
+	</ExpressionStatement>
+	<EmptyStatement start="49" end="51">
+	</EmptyStatement>
+</ModuleDeclaration>

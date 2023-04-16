@@ -95,5 +95,7 @@ public interface ASTNodeKinds {
 	int RETURN_TYPE = 77;
 	int ARROW_FUNCTION = 78;
 	int ARRAY_SPREAD_ELEMENT = 79;
+	int NAMED_EXPRESSION = 80;
+	int ATTRIBUTE_STATEMENT = 81;
 
 }

@@ -802,6 +802,9 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 	@Override
 	public boolean visit(FieldAccess s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
+		if (s.isNullSafe()) {
+			parameters.put("null-safe", "true"); //$NON-NLS-1$ //$NON-NLS-2$
+		}
 		xmlWriter.startTag("FieldAccess", parameters); //$NON-NLS-1$
 		return true;
 	}
@@ -947,6 +950,9 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 	@Override
 	public boolean visit(PHPCallExpression s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
+		if (s.isNullSafe()) {
+			parameters.put("null-safe", "true"); //$NON-NLS-1$ //$NON-NLS-2$
+		}
 		xmlWriter.startTag("PHPCallExpression", parameters); //$NON-NLS-1$
 		return true;
 	}
@@ -1029,6 +1035,9 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 	@Override
 	public boolean visit(ReflectionCallExpression s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
+		if (s.isNullSafe()) {
+			parameters.put("null-safe", "true"); //$NON-NLS-1$ //$NON-NLS-2$
+		}
 		xmlWriter.startTag("ReflectionCallExpression", parameters); //$NON-NLS-1$
 		return true;
 	}
@@ -1280,6 +1289,12 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 		}
 		xmlWriter.startTag("LambdaFunctionDeclaration", parameters); //$NON-NLS-1$
 
+		if (s.getAttributes() != null) {
+			for (Attribute a : s.getAttributes()) {
+				a.traverse(this);
+			}
+		}
+
 		xmlWriter.startTag("Arguments", new HashMap<String, String>()); //$NON-NLS-1$
 		for (FormalParameter p : s.getArguments()) {
 			p.traverse(this);
@@ -1317,6 +1332,12 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 		}
 		xmlWriter.startTag("ArrowFunctionDeclaration", parameters); //$NON-NLS-1$
 
+		if (s.getAttributes() != null) {
+			for (Attribute a : s.getAttributes()) {
+				a.traverse(this);
+			}
+		}
+
 		xmlWriter.startTag("Arguments", new HashMap<String, String>()); //$NON-NLS-1$
 		for (FormalParameter p : s.getArguments()) {
 			p.traverse(this);
@@ -1340,6 +1361,11 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 	public boolean visit(AnonymousClassDeclaration s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("AnonymousClassDeclaration", parameters); //$NON-NLS-1$
+		if (s.getAttributes() != null) {
+			for (Attribute a : s.getAttributes()) {
+				a.traverse(this);
+			}
+		}
 		if (s.getSuperClass() != null) {
 			xmlWriter.startTag("SuperClass", new HashMap<String, String>()); //$NON-NLS-1$
 			s.getSuperClass().traverse(this);
@@ -1462,4 +1488,37 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 		return false;
 	}
 	// php5.4 ends
+
+	// php8.0
+
+	@Override
+	public boolean visit(NamedExpression s) throws Exception {
+		Map<String, String> parameters = createInitialParameters(s);
+		parameters.put("name", s.getName()); //$NON-NLS-1$
+		xmlWriter.startTag("NamedExpression", parameters); //$NON-NLS-1$
+
+		return true;
+	}
+
+	@Override
+	public boolean visit(Attribute s) throws Exception {
+		Map<String, String> parameters = createInitialParameters(s);
+		xmlWriter.startTag("Attribute", parameters); //$NON-NLS-1$
+
+		return true;
+	}
+
+	@Override
+	public boolean endvisit(NamedExpression s) throws Exception {
+		xmlWriter.endTag("NamedExpression"); //$NON-NLS-1$
+		return false;
+	}
+
+	@Override
+	public boolean endvisit(Attribute s) throws Exception {
+		xmlWriter.endTag("Attribute"); //$NON-NLS-1$
+		return false;
+	}
+
+	// php 8.0 ends
 }

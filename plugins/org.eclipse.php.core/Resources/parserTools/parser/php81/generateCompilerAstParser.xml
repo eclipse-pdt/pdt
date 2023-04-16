@@ -11,7 +11,7 @@
 		IBM Corporation - initial API and implementation
 		Zend Technologies
  -->
-<project name="Generates Compiler AST Parser for PHP 7.4" default="generateParser" basedir=".">
+<project name="Generates Compiler AST Parser for PHP 8.1" default="generateParser" basedir=".">
 
 	<target name="checkUpToDate">
 		<uptodate

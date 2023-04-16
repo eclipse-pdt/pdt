@@ -13,6 +13,8 @@
  *******************************************************************************/
 package org.eclipse.php.core.compiler.ast.nodes;
 
+import java.util.List;
+
 import org.eclipse.dltk.ast.ASTVisitor;
 import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.ast.declarations.FieldDeclaration;
@@ -22,12 +24,13 @@ import org.eclipse.dltk.ast.references.VariableReference;
 import org.eclipse.dltk.utils.CorePrinter;
 import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
 
-public class PHPFieldDeclaration extends FieldDeclaration implements IPHPDocAwareDeclaration {
+public class PHPFieldDeclaration extends FieldDeclaration implements IPHPDocAwareDeclaration, IAttributedStatement {
 
 	private SimpleReference fieldType;
 	private int declStart;
 	private Expression initializer;
 	private PHPDocBlock phpDoc;
+	private List<Attribute> attributes;
 
 	public PHPFieldDeclaration(VariableReference variable, SimpleReference variableType, Expression initializer,
 			int start, int end, int modifiers, int declStart, PHPDocBlock phpDoc) {
@@ -61,6 +64,11 @@ public class PHPFieldDeclaration extends FieldDeclaration implements IPHPDocAwar
 	public void traverse(ASTVisitor visitor) throws Exception {
 		boolean visit = visitor.visit(this);
 		if (visit) {
+			if (attributes != null) {
+				for (Attribute attr : attributes) {
+					attr.traverse(visitor);
+				}
+			}
 			if (fieldType != null) {
 				fieldType.traverse(visitor);
 			}
@@ -99,5 +107,15 @@ public class PHPFieldDeclaration extends FieldDeclaration implements IPHPDocAwar
 	@Override
 	public String toString() {
 		return ASTPrintVisitor.toXMLString(this);
+	}
+
+	@Override
+	public List<Attribute> getAttributes() {
+		return attributes;
+	}
+
+	@Override
+	public void setAttributes(List<Attribute> attributes) {
+		this.attributes = attributes;
 	}
 }

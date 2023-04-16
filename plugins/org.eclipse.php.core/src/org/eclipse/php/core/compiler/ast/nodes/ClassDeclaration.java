@@ -19,6 +19,7 @@ import java.util.List;
 
 import org.eclipse.dltk.ast.ASTListNode;
 import org.eclipse.dltk.ast.ASTNode;
+import org.eclipse.dltk.ast.ASTVisitor;
 import org.eclipse.dltk.ast.declarations.TypeDeclaration;
 import org.eclipse.dltk.ast.references.TypeReference;
 import org.eclipse.dltk.ast.statements.Block;
@@ -37,12 +38,14 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
  * var $anotherOne; private function myFunction($a) { } }
  * </pre>
  */
-public class ClassDeclaration extends TypeDeclaration implements IPHPDocAwareDeclaration, IRecoverable {
+public class ClassDeclaration extends TypeDeclaration
+		implements IPHPDocAwareDeclaration, IRecoverable, IAttributedStatement {
 
 	private PHPDocBlock phpDoc;
 	private TypeReference superClass;
 	private List<TypeReference> interfaceList;
 	private boolean isRecovered;
+	private List<Attribute> attributes;
 
 	public ClassDeclaration(int start, int end, int nameStart, int nameEnd, int modifier, String className,
 			TypeReference superClass, List<TypeReference> interfaces, Block body, PHPDocBlock phpDoc) {
@@ -155,6 +158,25 @@ public class ClassDeclaration extends TypeDeclaration implements IPHPDocAwareDec
 		return ASTNodeKinds.CLASS_DECLARATION;
 	}
 
+	@Override
+	public void traverse(ASTVisitor visitor) throws Exception {
+
+		if (visitor.visit(this)) {
+			if (attributes != null) {
+				for (Attribute attr : attributes) {
+					attr.traverse(visitor);
+				}
+			}
+			if (this.getSuperClasses() != null) {
+				this.getSuperClasses().traverse(visitor);
+			}
+			if (this.fBody != null) {
+				fBody.traverse(visitor);
+			}
+			visitor.endvisit(this);
+		}
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -188,5 +210,15 @@ public class ClassDeclaration extends TypeDeclaration implements IPHPDocAwareDec
 	@Override
 	public String toString() {
 		return ASTPrintVisitor.toXMLString(this);
+	}
+
+	@Override
+	public List<Attribute> getAttributes() {
+		return attributes;
+	}
+
+	@Override
+	public void setAttributes(List<Attribute> attributes) {
+		this.attributes = attributes;
 	}
 }

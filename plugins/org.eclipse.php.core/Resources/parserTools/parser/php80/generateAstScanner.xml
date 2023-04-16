@@ -11,7 +11,7 @@
 		IBM Corporation - initial API and implementation
 		Zend Technologies
  -->
-<project name="Generates DOM AST Scanner for PHP 7.4" default="generateScanner" basedir=".">
+<project name="Generates DOM AST Scanner for PHP 8.0" default="generateScanner" basedir=".">
 
 	<import file="../../jflex/build.xml" />
 
