@@ -291,7 +291,7 @@ non terminal PHPDocBlock interface_entry;
 non terminal List interface_extends_list;
 non terminal Expression class_name;
 non terminal FullyQualifiedReference name;
-non terminal FullyQualifiedReference type;
+non terminal TypeReference type;
 non terminal TypeReference type_expr;
 non terminal TypeReference return_type;
 non terminal TypeReference fully_qualified_class_name;
@@ -370,6 +370,19 @@ non terminal Statement attributed_statement;
 non terminal FormalParameter attributed_parameter;
 non terminal Expression inline_function;
 non terminal attributed_class_statement;
+non terminal MatchExpression match;
+non terminal List<ASTNode> match_arm_list;
+non terminal List<ASTNode> non_empty_match_arm_list;
+non terminal MatchArm match_arm;
+non terminal List<Expression> match_arm_cond_list;
+non terminal TypeReference type_without_static;
+non terminal TypeReference type_expr_without_static;
+non terminal DNFTypeReference union_type;
+non terminal DNFTypeReference union_type_without_static;
+non terminal List<TypeReference> union_type_list;
+non terminal List<TypeReference> union_type_list_without_static;
+non terminal TypeReference optional_type_without_static;
+non terminal CompilerAstParser.ModifierDocPair optional_visibility_modifier;
 
 
 precedence left T_INCLUDE, T_INCLUDE_ONCE, T_EVAL, T_REQUIRE, T_REQUIRE_ONCE;
@@ -1947,6 +1960,69 @@ T_NEKUDOTAIM
 | T_SEMICOLON
 ;
 
+match ::=
+T_MATCH:start T_OPEN_PARENTHESE expr:expr T_CLOSE_PARENTHESE T_CURLY_OPEN:bstart match_arm_list:list T_CURLY_CLOSE:bend
+{:
+	RESULT = new MatchExpression(
+		startleft, bendright,
+		expr, new Block(bstartleft, bendright, list)
+	);
+:}
+;
+
+match_arm_list ::=
+/* empty */
+{:
+	RESULT = new LinkedList<>();
+:}
+| non_empty_match_arm_list:list possible_comma
+{:
+	RESULT = list;
+:}
+;
+
+non_empty_match_arm_list ::=
+match_arm:arm
+{:
+	List<ASTNode> list = new LinkedList<>();
+	list.add(arm);
+	
+	RESULT = list;
+:}
+| non_empty_match_arm_list:list T_COMMA match_arm:arm
+{:
+	list.add(arm);
+	
+	RESULT = list;
+:}
+;
+
+match_arm ::=
+match_arm_cond_list:cond possible_comma T_DOUBLE_ARROW expr:expr
+{:
+	RESULT = new MatchArm(condleft, exprright, cond, expr);
+:}
+| T_DEFAULT:start possible_comma T_DOUBLE_ARROW expr:expr
+{:
+	RESULT = new MatchArm(startleft, exprright, expr);
+:}
+;
+
+match_arm_cond_list ::=
+match_arm_cond_list:list T_COMMA expr:expr
+{:
+	list.add(expr);
+	RESULT = list;
+:}
+| expr:expr
+{:
+	List<Expression> list = new LinkedList<>();
+	list.add(expr);
+	
+	RESULT = list;
+:}
+;
+
 while_statement ::=
 statement:statement
 {:
@@ -2031,7 +2107,7 @@ new_else_single ::=
 ;
 
 parameter_list ::=
-non_empty_parameter_list:list
+non_empty_parameter_list:list possible_comma
 {:
 	RESULT = list;
 :}
@@ -2067,11 +2143,6 @@ attributed_parameter:parameter
 	}
 	RESULT = list;
 :}
-| non_empty_parameter_list:list T_COMMA:comma /* error recovery */
-{:
-	parser.reportError(new ASTError(commaleft, commaright), "syntax error, unexpected ','");
-	RESULT = list;
-:}
 ;
 
 attributed_parameter ::=
@@ -2083,53 +2154,99 @@ attributes:attrs parameter:param {:
 	RESULT = param;
 :}
 ;
+optional_visibility_modifier ::=
+/* empty */
+{:
+	RESULT = null;
+:}
+| T_PUBLIC:value
+{:
+	RESULT = parser.new ModifierDocPair(Modifiers.AccPublic, value.doc);
+:}
+
+| T_PROTECTED:value
+{:
+	RESULT = parser.new ModifierDocPair(Modifiers.AccProtected, value.doc);
+:}
+
+| T_PRIVATE:value
+{:
+	RESULT = parser.new ModifierDocPair(Modifiers.AccPrivate, value.doc);
+:}
+;
+
+
 
 parameter ::=
-optional_type:type T_VARIABLE:var
+optional_visibility_modifier:modifier optional_type_without_static:type T_VARIABLE:var
 {:
 	int start = type == null ? varleft : typeleft;
+	start = modifier != null ? modifierleft : start;
 	VariableReference v = new VariableReference(varleft, varright, var, PHPVariableKind.LOCAL);
 	FormalParameter parameter = new FormalParameter(start, varright, type, v);
+	if (modifier != null) {
+		parameter.setModifiers(modifier.modifier);
+	}
 	RESULT = parameter;
 :}
 
-| optional_type:type T_ELLIPSIS:e T_VARIABLE:var
+| optional_visibility_modifier:modifier optional_type_without_static:type T_ELLIPSIS:e T_VARIABLE:var
 {:
 	int start = type == null ? eleft : typeleft;
+	start = modifier != null ? modifierleft : start;
 	VariableReference v = new VariableReference(varleft, varright, var, PHPVariableKind.LOCAL);
 	FormalParameter parameter = new FormalParameter(start, varright, type, v, null, false, true);
+	if (modifier != null) {
+		parameter.setModifiers(modifier.modifier);
+	}
 	RESULT = parameter;
 :}
 
-| optional_type:type T_REFERENCE:ref T_VARIABLE:var
+| optional_visibility_modifier:modifier optional_type_without_static:type T_REFERENCE:ref T_VARIABLE:var
 {:
 	int start = type == null ? refleft : typeleft;
+	start = modifier != null ? modifierleft : start;
 	VariableReference v = new VariableReference(varleft, varright, var, PHPVariableKind.LOCAL);
 	FormalParameter parameter = new FormalParameterByReference(start, varright, type, v);
+	if (modifier != null) {
+		parameter.setModifiers(modifier.modifier);
+	}
 	RESULT = parameter;
 :}
 
-| optional_type:type T_REFERENCE:ref T_ELLIPSIS T_VARIABLE:var
+| optional_visibility_modifier:modifier optional_type_without_static:type T_REFERENCE:ref T_ELLIPSIS T_VARIABLE:var
 {:
 	int start = type == null ? refleft : typeleft;
+	start = modifier != null ? modifierleft : start;
 	VariableReference v = new VariableReference(varleft, varright, var, PHPVariableKind.LOCAL);
 	FormalParameter parameter = new FormalParameterByReference(start, varright, type, v, null, false, true);
+	if (modifier != null) {
+		parameter.setModifiers(modifier.modifier);
+	}
 	RESULT = parameter;
 :}
 
-| optional_type:type T_VARIABLE:var T_EQUAL expr:expr
+| optional_visibility_modifier:modifier optional_type_without_static:type T_VARIABLE:var T_EQUAL expr:expr
 {:
 	int start = type == null ? varleft : typeleft;
+	start = modifier != null ? modifierleft : start;
 	VariableReference v = new VariableReference(varleft, varright, var, PHPVariableKind.LOCAL);
 	FormalParameter parameter = new FormalParameter(start, exprright, type, v, expr);
+	if (modifier != null) {
+		parameter.setModifiers(modifier.modifier);
+	}
 	RESULT = parameter;
 :}
 
-| optional_type:type T_REFERENCE:ref T_VARIABLE:var T_EQUAL expr:expr
+| optional_visibility_modifier:modifier optional_type_without_static:type T_REFERENCE:ref T_VARIABLE:var T_EQUAL expr:expr
 {:
 	int start = type == null ? refleft : typeleft;
+	start = modifier != null ? modifierleft : start;
 	VariableReference v = new VariableReference(varleft, varright, var, PHPVariableKind.LOCAL);
 	FormalParameter parameter = new FormalParameterByReference(start, exprright, type, v, expr);
+	if (modifier != null) {
+		parameter.setModifiers(modifier.modifier);
+	}
 	RESULT = parameter;
 :}
 
@@ -2151,6 +2268,22 @@ optional_type ::=
 	RESULT = type_expr;
 :}
 ;
+
+optional_type_without_static ::=
+/* empty */
+{:
+	RESULT = null;
+:}
+
+| type_expr_without_static:type_expr
+{:
+	if (type_expr instanceof List) {
+		throw new Exception("kurwa");
+	}
+	RESULT = type_expr;
+:}
+;
+
 
 function_call_parameter_list ::=
 non_empty_argument_list:paramsList possible_comma
@@ -2212,12 +2345,71 @@ type:type
 
 | T_QUESTION_MARK type:type
 {:
-	type.setNullable(true);
+	((FullyQualifiedReference)type).setNullable(true);
+	RESULT = type;
+:}
+| union_type:type
+{:
 	RESULT = type;
 :}
 ;
 
 type ::=
+type_without_static:type
+{:
+	RESULT = type;
+:}
+
+| T_STATIC:st
+{:
+	RESULT = new FullyQualifiedReference(stleft, stright, "static", null, FullyQualifiedReference.T_TYPE);
+:}
+
+;
+
+union_type ::=
+union_type_list:list
+{:
+	RESULT = new DNFTypeReference(listleft, listright, list, DNFTypeReference.T_UNION);
+:}
+;
+
+union_type_list ::=
+type:first T_OR type:second
+{:
+	List<TypeReference> refs = new LinkedList<>();
+	refs.add(first);
+	refs.add(second);
+	RESULT = refs;
+:}
+| union_type_list:list T_OR type:type
+{:
+	list.add(type);
+	
+	RESULT = list;
+:}
+;
+
+type_expr_without_static ::=
+type_without_static:type
+{:
+	RESULT = type;
+:}
+
+| T_QUESTION_MARK type_without_static:type
+{:
+	((FullyQualifiedReference)type).setNullable(true);
+	RESULT = type;
+:}
+| union_type_without_static:type
+{:
+	RESULT = type;
+:}
+;
+
+/* Duplicate the type rules without "static",
+ * to avoid conflicts with "static" modifier for properties. */
+type_without_static ::=
 T_ARRAY:array
 {:
 	RESULT = new FullyQualifiedReference(arrayleft, arrayright, "array", null, FullyQualifiedReference.T_TYPE);
@@ -2234,6 +2426,30 @@ T_ARRAY:array
 	RESULT = name;
 :}
 ;
+
+union_type_without_static ::=
+union_type_list_without_static:list
+{:
+	RESULT = new DNFTypeReference(listleft, listright, list, DNFTypeReference.T_UNION);
+:}
+;
+
+union_type_list_without_static ::=
+type_without_static:first T_OR type_without_static:second
+{:
+	List<TypeReference> refs = new LinkedList<>();
+	refs.add(first);
+	refs.add(second);
+	RESULT = refs;
+:}
+| union_type_list_without_static:list T_OR type_without_static:type
+{:
+	list.add(type);
+	
+	RESULT = list;
+:}
+;
+ 
 
 return_type ::=
 /* empty */
@@ -2321,7 +2537,7 @@ class_statement_list:list class_statement:classStatement
 ;
 
 attributed_class_statement ::=
-variable_modifiers:modifier optional_type:type property_list:decList T_SEMICOLON
+variable_modifiers:modifier optional_type_without_static:type property_list:decList T_SEMICOLON
 {:
 	Iterator i = decList.iterator();
 	while (i.hasNext()) {
@@ -3290,6 +3506,11 @@ T_LIST:start T_OPEN_PARENTHESE array_pair_list:list T_CLOSE_PARENTHESE:end T_EQU
 	RESULT = fnc;
 :}
 
+| match:match
+{:
+	RESULT = match;
+:}
+
 ;
 
 inline_function ::=
@@ -3378,7 +3599,7 @@ lexical_vars ::=
 	RESULT = null;
 :}
 
-| T_USE:s T_OPEN_PARENTHESE lexical_var_list:list T_CLOSE_PARENTHESE:e
+| T_USE:s T_OPEN_PARENTHESE lexical_var_list:list possible_comma T_CLOSE_PARENTHESE:e
 {:
 	RESULT = list;
 :}
@@ -3693,6 +3914,7 @@ callable_variable:var
 {:
 	RESULT = new FieldAccess(dispatchleft, propertyright, dispatch, true, property);
 :}
+
 ;
 
 dereferencable ::=

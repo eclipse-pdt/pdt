@@ -1509,6 +1509,32 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 	}
 
 	@Override
+	public boolean visit(DNFTypeReference s) throws Exception {
+		Map<String, String> parameters = createInitialParameters(s);
+		parameters.put("type", Integer.toString(s.getType()));
+		xmlWriter.startTag("DNFTypeReference", parameters); //$NON-NLS-1$
+
+		return true;
+	}
+
+	@Override
+	public boolean visit(MatchExpression s) throws Exception {
+		Map<String, String> parameters = createInitialParameters(s);
+		xmlWriter.startTag("MatchExpression", parameters); //$NON-NLS-1$
+
+		return true;
+	}
+
+	@Override
+	public boolean visit(MatchArm s) throws Exception {
+		Map<String, String> parameters = createInitialParameters(s);
+		parameters.put("default", Boolean.toString(s.isDefault()));
+		xmlWriter.startTag("MatchArm", parameters); //$NON-NLS-1$
+
+		return true;
+	}
+
+	@Override
 	public boolean endvisit(NamedExpression s) throws Exception {
 		xmlWriter.endTag("NamedExpression"); //$NON-NLS-1$
 		return false;
@@ -1517,6 +1543,24 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 	@Override
 	public boolean endvisit(Attribute s) throws Exception {
 		xmlWriter.endTag("Attribute"); //$NON-NLS-1$
+		return false;
+	}
+
+	@Override
+	public boolean endvisit(DNFTypeReference s) throws Exception {
+		xmlWriter.endTag("DNFTypeReference"); //$NON-NLS-1$
+		return false;
+	}
+
+	@Override
+	public boolean endvisit(MatchExpression s) throws Exception {
+		xmlWriter.endTag("MatchExpression"); //$NON-NLS-1$
+		return false;
+	}
+
+	@Override
+	public boolean endvisit(MatchArm s) throws Exception {
+		xmlWriter.endTag("MatchArm"); //$NON-NLS-1$
 		return false;
 	}
 

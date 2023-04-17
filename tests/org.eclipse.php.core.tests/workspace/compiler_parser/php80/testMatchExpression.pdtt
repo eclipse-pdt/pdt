@@ -1,0 +1,70 @@
+--TEST--
+PHP 8.0
+--FILE--
+<?php
+
+echo match(1) {
+    call(), 2 => $val,
+    default => 3
+};
+echo match(1) {
+    call(), 2 => $val,
+    default => 3,
+}; 
+echo match(1) {}; 
+?>
+--EXPECT--
+<ModuleDeclaration start="0" end="149">
+	<EchoStatement start="7" end="65">
+		<MatchExpression start="12" end="64">
+			<Scalar start="18" end="19" type="int" value="1">
+			</Scalar>
+			<MatchArm start="27" end="44" default="false">
+				<PHPCallExpression start="27" end="33">
+					<FullyQualifiedReference start="27" end="31" name="call">
+					</FullyQualifiedReference>
+					<PHPCallArgumentsList start="32" end="32">
+					</PHPCallArgumentsList>
+				</PHPCallExpression>
+				<Scalar start="35" end="36" type="int" value="2">
+				</Scalar>
+				<VariableReference start="40" end="44" name="$val">
+				</VariableReference>
+			</MatchArm>
+			<MatchArm start="50" end="62" default="true">
+				<Scalar start="61" end="62" type="int" value="3">
+				</Scalar>
+			</MatchArm>
+		</MatchExpression>
+	</EchoStatement>
+	<EchoStatement start="66" end="125">
+		<MatchExpression start="71" end="124">
+			<Scalar start="77" end="78" type="int" value="1">
+			</Scalar>
+			<MatchArm start="86" end="103" default="false">
+				<PHPCallExpression start="86" end="92">
+					<FullyQualifiedReference start="86" end="90" name="call">
+					</FullyQualifiedReference>
+					<PHPCallArgumentsList start="91" end="91">
+					</PHPCallArgumentsList>
+				</PHPCallExpression>
+				<Scalar start="94" end="95" type="int" value="2">
+				</Scalar>
+				<VariableReference start="99" end="103" name="$val">
+				</VariableReference>
+			</MatchArm>
+			<MatchArm start="109" end="121" default="true">
+				<Scalar start="120" end="121" type="int" value="3">
+				</Scalar>
+			</MatchArm>
+		</MatchExpression>
+	</EchoStatement>
+	<EchoStatement start="127" end="144">
+		<MatchExpression start="132" end="143">
+			<Scalar start="138" end="139" type="int" value="1">
+			</Scalar>
+		</MatchExpression>
+	</EchoStatement>
+	<EmptyStatement start="146" end="148">
+	</EmptyStatement>
+</ModuleDeclaration>

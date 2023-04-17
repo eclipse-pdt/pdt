@@ -1,0 +1,25 @@
+--TEST--
+PHP 8.0
+--FILE--
+<?php
+$fn = function() use ($param1, $param2, ) {}
+?>
+--EXPECT--
+<ModuleDeclaration start="0" end="54">
+	<ExpressionStatement start="6" end="53">
+		<Assignment start="6" end="50" operator="=">
+			<VariableReference start="6" end="9" name="$fn">
+			</VariableReference>
+			<LambdaFunctionDeclaration start="12" end="50" isReference="false">
+				<Arguments>
+				</Arguments>
+				<LexicalVars>
+					<VariableReference start="28" end="35" name="$param1">
+					</VariableReference>
+					<VariableReference start="37" end="44" name="$param2">
+					</VariableReference>
+				</LexicalVars>
+			</LambdaFunctionDeclaration>
+		</Assignment>
+	</ExpressionStatement>
+</ModuleDeclaration>

@@ -1,0 +1,41 @@
+--TEST--
+PHP 8.0
+--FILE--
+<?php
+
+class Point {
+	public function myMethod($var): Example|static {}
+	public function myMethod2($var): static {}
+}
+?>
+--EXPECT--
+<ModuleDeclaration start="0" end="121">
+	<ClassDeclaration start="7" end="117" modifiers="" name="Point">
+		<PHPMethodDeclaration start="22" end="71" modifiers="public" name="myMethod">
+			<FormalParameter start="47" end="51" modifiers="" isMandatory="true">
+				<VariableReference start="47" end="51" name="$var">
+				</VariableReference>
+			</FormalParameter>
+			<ReturnType>
+				<DNFTypeReference start="54" end="68" type="1">
+					<FullyQualifiedReference start="54" end="61" name="Example">
+					</FullyQualifiedReference>
+					<FullyQualifiedReference start="62" end="68" name="static">
+					</FullyQualifiedReference>
+				</DNFTypeReference>
+			</ReturnType>
+		</PHPMethodDeclaration>
+		<PHPMethodDeclaration start="73" end="115" modifiers="public" name="myMethod2">
+			<FormalParameter start="99" end="103" modifiers="" isMandatory="true">
+				<VariableReference start="99" end="103" name="$var">
+				</VariableReference>
+			</FormalParameter>
+			<ReturnType>
+				<FullyQualifiedReference start="106" end="112" name="static">
+				</FullyQualifiedReference>
+			</ReturnType>
+		</PHPMethodDeclaration>
+	</ClassDeclaration>
+	<EmptyStatement start="118" end="120">
+	</EmptyStatement>
+</ModuleDeclaration>

@@ -1,0 +1,51 @@
+--TEST--
+PHP 8.0
+--FILE--
+<?php
+function myFunc(string|int|Exception $type) {}
+
+class Point {
+	public function myMethod(string|int $var): Exception|Example {}
+}
+?>
+--EXPECT--
+<ModuleDeclaration start="0" end="138">
+	<PHPMethodDeclaration start="6" end="52" modifiers="" name="myFunc">
+		<FormalParameter start="22" end="48" modifiers="" isMandatory="true" parameterType="string|int|Exception">
+			<DNFTypeReference start="22" end="42" type="1">
+				<FullyQualifiedReference start="22" end="28" name="string">
+				</FullyQualifiedReference>
+				<FullyQualifiedReference start="29" end="32" name="int">
+				</FullyQualifiedReference>
+				<FullyQualifiedReference start="33" end="42" name="Exception">
+				</FullyQualifiedReference>
+			</DNFTypeReference>
+			<VariableReference start="43" end="48" name="$type">
+			</VariableReference>
+		</FormalParameter>
+	</PHPMethodDeclaration>
+	<ClassDeclaration start="54" end="134" modifiers="" name="Point">
+		<PHPMethodDeclaration start="69" end="132" modifiers="public" name="myMethod">
+			<FormalParameter start="94" end="109" modifiers="" isMandatory="true" parameterType="string|int">
+				<DNFTypeReference start="94" end="104" type="1">
+					<FullyQualifiedReference start="94" end="100" name="string">
+					</FullyQualifiedReference>
+					<FullyQualifiedReference start="101" end="104" name="int">
+					</FullyQualifiedReference>
+				</DNFTypeReference>
+				<VariableReference start="105" end="109" name="$var">
+				</VariableReference>
+			</FormalParameter>
+			<ReturnType>
+				<DNFTypeReference start="112" end="129" type="1">
+					<FullyQualifiedReference start="112" end="121" name="Exception">
+					</FullyQualifiedReference>
+					<FullyQualifiedReference start="122" end="129" name="Example">
+					</FullyQualifiedReference>
+				</DNFTypeReference>
+			</ReturnType>
+		</PHPMethodDeclaration>
+	</ClassDeclaration>
+	<EmptyStatement start="135" end="137">
+	</EmptyStatement>
+</ModuleDeclaration>

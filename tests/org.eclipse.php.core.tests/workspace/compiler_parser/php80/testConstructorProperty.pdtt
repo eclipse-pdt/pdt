@@ -1,0 +1,46 @@
+--TEST--
+PHP 8.0
+--FILE--
+<?php
+class Point {
+  public function __construct(
+    public float $x = 0.0,
+    protected float $y = 0.0,
+    private float $z = 0.0
+  ) {}
+}
+
+?>
+--EXPECT--
+<ModuleDeclaration start="0" end="148">
+	<ClassDeclaration start="6" end="143" modifiers="" name="Point">
+		<PHPMethodDeclaration start="22" end="141" modifiers="public" name="__construct">
+			<FormalParameter start="55" end="76" modifiers="public" isMandatory="false" parameterType="float">
+				<FullyQualifiedReference start="62" end="67" name="float">
+				</FullyQualifiedReference>
+				<VariableReference start="68" end="70" name="$x">
+				</VariableReference>
+				<Scalar start="73" end="76" type="real" value="0.0">
+				</Scalar>
+			</FormalParameter>
+			<FormalParameter start="82" end="106" modifiers="protected" isMandatory="false" parameterType="float">
+				<FullyQualifiedReference start="92" end="97" name="float">
+				</FullyQualifiedReference>
+				<VariableReference start="98" end="100" name="$y">
+				</VariableReference>
+				<Scalar start="103" end="106" type="real" value="0.0">
+				</Scalar>
+			</FormalParameter>
+			<FormalParameter start="112" end="134" modifiers="private" isMandatory="false" parameterType="float">
+				<FullyQualifiedReference start="120" end="125" name="float">
+				</FullyQualifiedReference>
+				<VariableReference start="126" end="128" name="$z">
+				</VariableReference>
+				<Scalar start="131" end="134" type="real" value="0.0">
+				</Scalar>
+			</FormalParameter>
+		</PHPMethodDeclaration>
+	</ClassDeclaration>
+	<EmptyStatement start="145" end="147">
+	</EmptyStatement>
+</ModuleDeclaration>

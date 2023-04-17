@@ -1,0 +1,21 @@
+--TEST--
+PHP 8.0
+--FILE--
+<?php
+function myFunc($param, $param2, ) {}
+?>
+--EXPECT--
+<ModuleDeclaration start="0" end="47">
+	<PHPMethodDeclaration start="6" end="43" modifiers="" name="myFunc">
+		<FormalParameter start="22" end="28" modifiers="" isMandatory="true">
+			<VariableReference start="22" end="28" name="$param">
+			</VariableReference>
+		</FormalParameter>
+		<FormalParameter start="30" end="37" modifiers="" isMandatory="true">
+			<VariableReference start="30" end="37" name="$param2">
+			</VariableReference>
+		</FormalParameter>
+	</PHPMethodDeclaration>
+	<EmptyStatement start="44" end="46">
+	</EmptyStatement>
+</ModuleDeclaration>

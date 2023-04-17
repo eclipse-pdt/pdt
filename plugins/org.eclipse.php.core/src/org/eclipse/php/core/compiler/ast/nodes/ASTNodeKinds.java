@@ -97,5 +97,6 @@ public interface ASTNodeKinds {
 	int ARRAY_SPREAD_ELEMENT = 79;
 	int NAMED_EXPRESSION = 80;
 	int ATTRIBUTE_STATEMENT = 81;
+	int MATCH_EXPRESSION = 82;
 
 }

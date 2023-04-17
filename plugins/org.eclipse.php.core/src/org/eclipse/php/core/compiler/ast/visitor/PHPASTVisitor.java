@@ -1019,6 +1019,15 @@ public abstract class PHPASTVisitor extends ASTVisitor {
 		if (nodeClass.equals(Attribute.class)) {
 			return endvisit((Attribute) s);
 		}
+		if (nodeClass.equals(DNFTypeReference.class)) {
+			return endvisit((DNFTypeReference) s);
+		}
+		if (nodeClass.equals(MatchExpression.class)) {
+			return endvisit((MatchExpression) s);
+		}
+		if (nodeClass.equals(MatchArm.class)) {
+			return endvisit((MatchArm) s);
+		}
 		return true;
 	}
 
@@ -1328,6 +1337,15 @@ public abstract class PHPASTVisitor extends ASTVisitor {
 		if (nodeClass.equals(Attribute.class)) {
 			return visit((Attribute) s);
 		}
+		if (nodeClass.equals(DNFTypeReference.class)) {
+			return visit((DNFTypeReference) s);
+		}
+		if (nodeClass.equals(MatchExpression.class)) {
+			return visit((MatchExpression) s);
+		}
+		if (nodeClass.equals(MatchArm.class)) {
+			return visit((MatchArm) s);
+		}
 		return true;
 	}
 
@@ -1407,12 +1425,39 @@ public abstract class PHPASTVisitor extends ASTVisitor {
 		return visitGeneral(s);
 	}
 
+	public boolean visit(DNFTypeReference s) throws Exception {
+		return visitGeneral(s);
+	}
+
+	public boolean visit(MatchExpression s) throws Exception {
+		return visitGeneral(s);
+	}
+
+	public boolean visit(MatchArm s) throws Exception {
+		return visitGeneral(s);
+	}
+
 	public boolean endvisit(NamedExpression s) throws Exception {
 		endvisitGeneral(s);
 		return false;
 	}
 
 	public boolean endvisit(Attribute s) throws Exception {
+		endvisitGeneral(s);
+		return false;
+	}
+
+	public boolean endvisit(DNFTypeReference s) throws Exception {
+		endvisitGeneral(s);
+		return false;
+	}
+
+	public boolean endvisit(MatchExpression s) throws Exception {
+		endvisitGeneral(s);
+		return false;
+	}
+
+	public boolean endvisit(MatchArm s) throws Exception {
 		endvisitGeneral(s);
 		return false;
 	}
