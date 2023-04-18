@@ -1,0 +1,29 @@
+--TEST--
+PHP 8.0
+--FILE--
+<?php
+try {
+
+} catch(InvalidArgumentException $e) {
+} catch(Exception|Throwable) {
+}
+?>
+--EXPECT--
+<ModuleDeclaration start="0" end="88">
+	<TryStatement start="6" end="84">
+		<CatchClause start="15" end="53">
+			<FullyQualifiedReference start="21" end="45" name="InvalidArgumentException">
+			</FullyQualifiedReference>
+			<VariableReference start="46" end="48" name="$e">
+			</VariableReference>
+		</CatchClause>
+		<CatchClause start="54" end="84">
+			<FullyQualifiedReference start="60" end="69" name="Exception">
+			</FullyQualifiedReference>
+			<FullyQualifiedReference start="70" end="79" name="Throwable">
+			</FullyQualifiedReference>
+		</CatchClause>
+	</TryStatement>
+	<EmptyStatement start="85" end="87">
+	</EmptyStatement>
+</ModuleDeclaration>

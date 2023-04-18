@@ -43,7 +43,7 @@ public class CatchClause extends Statement {
 	public CatchClause(int start, int end, TypeReference className, VariableReference variable, Block statement) {
 		super(start, end);
 
-		assert className != null && variable != null && statement != null;
+		assert className != null && statement != null;
 		this.classNames = Collections.singletonList(className);
 		this.variable = variable;
 		this.statement = statement;
@@ -53,7 +53,7 @@ public class CatchClause extends Statement {
 			Block statement) {
 		super(start, end);
 
-		assert classNames != null && !classNames.isEmpty() && variable != null && statement != null;
+		assert classNames != null && !classNames.isEmpty() && statement != null;
 		this.classNames = classNames;
 		this.variable = variable;
 		this.statement = statement;
@@ -66,7 +66,9 @@ public class CatchClause extends Statement {
 			for (TypeReference typeReference : classNames) {
 				typeReference.traverse(visitor);
 			}
-			variable.traverse(visitor);
+			if (variable != null) {
+				variable.traverse(visitor);
+			}
 			statement.traverse(visitor);
 		}
 		visitor.endvisit(this);

@@ -383,8 +383,9 @@ non terminal List<TypeReference> union_type_list;
 non terminal List<TypeReference> union_type_list_without_static;
 non terminal TypeReference optional_type_without_static;
 non terminal CompilerAstParser.ModifierDocPair optional_visibility_modifier;
+non terminal String optional_variable;
 
-
+precedence left T_THROW;
 precedence left T_INCLUDE, T_INCLUDE_ONCE, T_EVAL, T_REQUIRE, T_REQUIRE_ONCE;
 precedence left T_COMMA;
 precedence left T_LOGICAL_OR;
@@ -1380,6 +1381,12 @@ inner_statement_list:statementList T_CURLY_CLOSE:end
 	RESULT = new EchoStatement(startleft, endright, exprList);
 :}
 
+/** keep old statement node for test compatibility */
+| T_THROW:token expr:expr T_SEMICOLON:end
+{:
+	RESULT = new ThrowStatement(tokenleft, endright, expr);
+:}
+
 | T_INLINE_HTML
 
 | expr:expr T_SEMICOLON:end
@@ -1442,11 +1449,6 @@ finally_clause:finallyClause
 	RESULT = s;
 :}
 
-| T_THROW:token expr:expr T_SEMICOLON:end
-{:
-	RESULT = new ThrowStatement(tokenleft, endright, expr);
-:}
-
 | T_GOTO:start T_STRING:label T_SEMICOLON:end
 {:
 	RESULT = new GotoStatement(startleft, endright, label);
@@ -1485,11 +1487,11 @@ catch_clause:catch_statement
 ;
 
 catch_clause ::=
-T_CATCH:catch_word T_OPEN_PARENTHESE catch_name_list:catch_name_list T_VARIABLE:var T_CLOSE_PARENTHESE
+T_CATCH:catch_word T_OPEN_PARENTHESE catch_name_list:catch_name_list optional_variable:var T_CLOSE_PARENTHESE
  T_CURLY_OPEN:catchBlockStart inner_statement_list:catchList T_CURLY_CLOSE:catchBlockEnd
 {:
 	Block catchBlock = new Block(catchBlockStartleft, catchBlockEndright, catchList);
-	VariableReference variable = new VariableReference(varleft, varright, var, PHPVariableKind.LOCAL);
+	VariableReference variable = var == null ? null : new VariableReference(varleft, varright, var, PHPVariableKind.LOCAL);
 	RESULT = new CatchClause(catch_wordleft, catchBlockEndright, catch_name_list, variable, catchBlock);
 :}
 ;
@@ -1505,6 +1507,18 @@ fully_qualified_class_name:name
 {:
 	list.add(name);
 	RESULT = list;
+:}
+;
+
+optional_variable ::=
+/* empty */
+{:
+	RESULT = null;
+:}
+
+| T_VARIABLE:var
+{:
+	RESULT = var;
 :}
 ;
 
@@ -3389,6 +3403,11 @@ T_LIST:start T_OPEN_PARENTHESE array_pair_list:list T_CLOSE_PARENTHESE:end T_EQU
 		parser.pendingStatement = yield;
 	}
 	RESULT = yield;
+:}
+
+| T_THROW:token expr:expr
+{:
+	RESULT = new ThrowExpression(tokenleft, exprright, expr);
 :}
 
 | expr:condition T_QUESTION_MARK expr:ifTrue T_NEKUDOTAIM expr:ifFalse

@@ -98,5 +98,6 @@ public interface ASTNodeKinds {
 	int NAMED_EXPRESSION = 80;
 	int ATTRIBUTE_STATEMENT = 81;
 	int MATCH_EXPRESSION = 82;
+	int THROW_EXPRESSION = 83;
 
 }

@@ -1535,6 +1535,14 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 	}
 
 	@Override
+	public boolean visit(ThrowExpression s) throws Exception {
+		Map<String, String> parameters = createInitialParameters(s);
+		xmlWriter.startTag("ThrowExpression", parameters); //$NON-NLS-1$
+
+		return true;
+	}
+
+	@Override
 	public boolean endvisit(NamedExpression s) throws Exception {
 		xmlWriter.endTag("NamedExpression"); //$NON-NLS-1$
 		return false;
@@ -1561,6 +1569,12 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 	@Override
 	public boolean endvisit(MatchArm s) throws Exception {
 		xmlWriter.endTag("MatchArm"); //$NON-NLS-1$
+		return false;
+	}
+
+	@Override
+	public boolean endvisit(ThrowExpression e) throws Exception {
+		xmlWriter.endTag("ThrowExpression"); //$NON-NLS-1$
 		return false;
 	}
 

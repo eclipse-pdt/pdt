@@ -1028,6 +1028,9 @@ public abstract class PHPASTVisitor extends ASTVisitor {
 		if (nodeClass.equals(MatchArm.class)) {
 			return endvisit((MatchArm) s);
 		}
+		if (nodeClass.equals(ThrowExpression.class)) {
+			return endvisit((ThrowExpression) s);
+		}
 		return true;
 	}
 
@@ -1346,6 +1349,9 @@ public abstract class PHPASTVisitor extends ASTVisitor {
 		if (nodeClass.equals(MatchArm.class)) {
 			return visit((MatchArm) s);
 		}
+		if (nodeClass.equals(ThrowExpression.class)) {
+			return visit((ThrowExpression) s);
+		}
 		return true;
 	}
 
@@ -1437,6 +1443,10 @@ public abstract class PHPASTVisitor extends ASTVisitor {
 		return visitGeneral(s);
 	}
 
+	public boolean visit(ThrowExpression s) throws Exception {
+		return visitGeneral(s);
+	}
+
 	public boolean endvisit(NamedExpression s) throws Exception {
 		endvisitGeneral(s);
 		return false;
@@ -1458,6 +1468,11 @@ public abstract class PHPASTVisitor extends ASTVisitor {
 	}
 
 	public boolean endvisit(MatchArm s) throws Exception {
+		endvisitGeneral(s);
+		return false;
+	}
+
+	public boolean endvisit(ThrowExpression s) throws Exception {
 		endvisitGeneral(s);
 		return false;
 	}
