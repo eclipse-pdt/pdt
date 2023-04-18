@@ -308,7 +308,6 @@ non terminal PHPMethodDeclaration function_declaration_statement;
 non terminal Statement class_declaration_statement;
 non terminal Expression variable;
 non terminal Expression callable_variable;
-non terminal Expression dereferencable;
 non terminal Expression callable_expr;
 non terminal Expression dereferencable_scalar;
 non terminal List catches_list;
@@ -321,7 +320,6 @@ non terminal CompilerAstParser.ModifierDocPair class_entry_type;
 non terminal TypeReference extends_from;
 non terminal List implements_list;
 non terminal List interface_list;
-non terminal TypeReference optional_type;
 non terminal CompilerAstParser.ModifierDocPair variable_modifiers;
 non terminal Expression constant;
 non terminal StaticFieldAccess static_member;
@@ -384,6 +382,9 @@ non terminal List<TypeReference> union_type_list_without_static;
 non terminal TypeReference optional_type_without_static;
 non terminal CompilerAstParser.ModifierDocPair optional_visibility_modifier;
 non terminal String optional_variable;
+non terminal Expression array_object_dereferencable;
+non terminal Expression fully_dereferencable;
+non terminal Expression class_constant;
 
 precedence left T_THROW;
 precedence left T_INCLUDE, T_INCLUDE_ONCE, T_EVAL, T_REQUIRE, T_REQUIRE_ONCE;
@@ -2271,18 +2272,6 @@ optional_visibility_modifier:modifier optional_type_without_static:type T_VARIAB
 :}
 ;
 
-optional_type ::=
-/* empty */
-{:
-	RESULT = null;
-:}
-
-| type_expr:type_expr
-{:
-	RESULT = type_expr;
-:}
-;
-
 optional_type_without_static ::=
 /* empty */
 {:
@@ -3744,6 +3733,11 @@ class_name:className
 {:
 	RESULT = className;
 :}
+
+| T_OPEN_PARENTHESE expr:expr T_CLOSE_PARENTHESE
+{:
+	RESULT = expr;
+:}
 ;
 
 exit_expr ::=
@@ -3816,53 +3810,6 @@ T_LNUMBER:scalar
 	RESULT = s;
 :}
 
-| T_LINE:scalar
-{:
-	Scalar s = new Scalar(scalarleft, scalarright, "__LINE__", Scalar.TYPE_SYSTEM);
-	RESULT = s;
-:}
-
-| T_FILE:scalar
-{:
-	Scalar s = new Scalar(scalarleft, scalarright, "__FILE__", Scalar.TYPE_SYSTEM);
-	RESULT = s;
-:}
-
-| T_DIR:scalar
-{:
-	Scalar s = new Scalar(scalarleft, scalarright, "__DIR__", Scalar.TYPE_SYSTEM);
-	RESULT = s;
-:}
-
-| T_CLASS_C:scalar
-{:
-	Scalar s = new Scalar(scalarleft, scalarright, "__CLASS__", Scalar.TYPE_SYSTEM);
-	RESULT = s;
-:}
-
-| T_TRAIT_C:scalar
-{:
-	Scalar s = new Scalar(scalarleft, scalarright, "__TRAIT__", Scalar.TYPE_SYSTEM);
-	RESULT = s;
-:}
-
-| T_METHOD_C:scalar
-{:
-	Scalar s = new Scalar(scalarleft, scalarright, "__METHOD__", Scalar.TYPE_SYSTEM);
-	RESULT = s;
-:}
-
-| T_FUNC_C:scalar
-{:
-	Scalar s = new Scalar(scalarleft, scalarright, "__FUNCTION__", Scalar.TYPE_SYSTEM);
-	RESULT = s;
-:}
-
-| T_NS_C:scalar
-{:
-	RESULT = new Scalar(scalarleft, scalarright, "__NAMESPACE__", Scalar.TYPE_SYSTEM);
-:}
-
 | T_START_HEREDOC:label T_ENCAPSED_AND_WHITESPACE:string T_END_HEREDOC:e
 {:
 	List list = new LinkedList();
@@ -3875,14 +3822,6 @@ T_LNUMBER:scalar
 	RESULT = new Quote(labelleft, eright, new LinkedList(), label.charAt(0) == '\'' ? Quote.QT_NOWDOC : Quote.QT_HEREDOC, e.innerIndentation);
 :}
 
-| T_QUATE:start encaps_list:list T_QUATE:end
-{:
-	RESULT = new Quote(startleft, endright, list, Quote.QT_QUOTE);
-:}
-| T_SINGLE_QUATE:start encaps_list:list T_SINGLE_QUATE:end
-{:
-	RESULT = new Quote(startleft, endright, list, Quote.QT_SINGLE);
-:}
 | T_START_HEREDOC:start encaps_list:list T_END_HEREDOC:end
 {:
 	Quote hereDoc = new Quote(startleft, endright, list, Quote.QT_HEREDOC, end.innerIndentation);
@@ -3895,6 +3834,11 @@ T_LNUMBER:scalar
 :}
 
 | constant:classConstant
+{:
+	RESULT = classConstant;
+:}
+
+| class_constant:classConstant
 {:
 	RESULT = classConstant;
 :}
@@ -3924,48 +3868,16 @@ callable_variable:var
 	RESULT = s;
 :}
 
-| dereferencable:dispatch T_OBJECT_OPERATOR property_name:property
+| array_object_dereferencable:dispatch T_OBJECT_OPERATOR property_name:property
 {:
 	RESULT = new FieldAccess(dispatchleft, propertyright, dispatch, property);
 :}
 
-| dereferencable:dispatch T_NULLSAFE_OBJECT_OPERATOR property_name:property
+| array_object_dereferencable:dispatch T_NULLSAFE_OBJECT_OPERATOR property_name:property
 {:
 	RESULT = new FieldAccess(dispatchleft, propertyright, dispatch, true, property);
 :}
 
-;
-
-dereferencable ::=
-variable:v
-{:
-	RESULT = v;
-:}
-| T_OPEN_PARENTHESE:s expr:expr T_CLOSE_PARENTHESE:e
-{:
-	RESULT = expr;
-:}
-
-| dereferencable_scalar:s
-{:
-	RESULT = s;
-:}
-;
-
-callable_expr ::=
-callable_variable:v
-{:
-	RESULT = v;
-:}
-| T_OPEN_PARENTHESE expr:expr T_CLOSE_PARENTHESE
-{:
-	RESULT = expr;
-:}
-
-| dereferencable_scalar:s
-{:
-	RESULT = s;
-:}
 ;
 
 dereferencable_scalar ::=
@@ -3983,6 +3895,16 @@ T_ARRAY:start T_OPEN_PARENTHESE array_pair_list:list T_CLOSE_PARENTHESE:end
 {:
 	RESULT = new Scalar(scalarleft, scalarright, scalar, Scalar.TYPE_STRING);
 :}
+
+| T_QUATE:start encaps_list:list T_QUATE:end
+{:
+	RESULT = new Quote(startleft, endright, list, Quote.QT_QUOTE);
+:}
+
+| T_SINGLE_QUATE:start encaps_list:list T_SINGLE_QUATE:end
+{:
+	RESULT = new Quote(startleft, endright, list, Quote.QT_SINGLE);
+:}
 ;
 
 callable_variable ::=
@@ -3990,7 +3912,7 @@ simple_variable:var
 {:
 	RESULT = var;
 :}
-| dereferencable:d T_OPEN_RECT:f optional_expr:dim T_CLOSE_RECT:e
+| array_object_dereferencable:d T_OPEN_RECT:f optional_expr:dim T_CLOSE_RECT:e
 {:
 	if (d.getClass() == VariableReference.class) {
 		RESULT = new ArrayVariableReference(dleft, eright, ((VariableReference) d).getName(), dim, ArrayVariableReference.VARIABLE_ARRAY);
@@ -3999,12 +3921,7 @@ simple_variable:var
 	}
 :}
 
-| constant:d T_OPEN_RECT:f optional_expr:dim T_CLOSE_RECT:e
-{:
-	RESULT = new ReflectionArrayVariableReference(dleft, eright, d, dim, ReflectionArrayVariableReference.VARIABLE_ARRAY);
-:}
-
-| dereferencable:d T_CURLY_OPEN expr:dim T_CURLY_CLOSE:e
+| array_object_dereferencable:d T_CURLY_OPEN expr:dim T_CURLY_CLOSE:e
 {:
 	if (d.getClass() == VariableReference.class) {
 		RESULT = new ArrayVariableReference(dleft, eright, ((VariableReference) d).getName(), dim, ArrayVariableReference.VARIABLE_HASHTABLE);
@@ -4013,7 +3930,7 @@ simple_variable:var
 	}
 :}
 
-| dereferencable:ch T_OBJECT_OPERATOR property_name:memberProperty T_OPEN_PARENTHESE:start function_call_parameter_list:paramsList T_CLOSE_PARENTHESE:end
+| array_object_dereferencable:ch T_OBJECT_OPERATOR property_name:memberProperty T_OPEN_PARENTHESE:start function_call_parameter_list:paramsList T_CLOSE_PARENTHESE:end
 {:
 	paramsList.setStart(startright);
 	paramsList.setEnd(endleft);
@@ -4023,7 +3940,7 @@ simple_variable:var
 		RESULT = new ReflectionCallExpression(chleft, endright, ch, memberProperty, paramsList);
 	}
 :}
-| dereferencable:ch T_NULLSAFE_OBJECT_OPERATOR property_name:memberProperty T_OPEN_PARENTHESE:start function_call_parameter_list:paramsList T_CLOSE_PARENTHESE:end
+| array_object_dereferencable:ch T_NULLSAFE_OBJECT_OPERATOR property_name:memberProperty T_OPEN_PARENTHESE:start function_call_parameter_list:paramsList T_CLOSE_PARENTHESE:end
 {:
 	paramsList.setStart(startright);
 	paramsList.setEnd(endleft);
@@ -4044,7 +3961,56 @@ name:name
 {:
 	RESULT = detectScalar(name);
 :}
-| class_name:className T_PAAMAYIM_NEKUDOTAYIM identifier:var
+| T_LINE:scalar
+{:
+	Scalar s = new Scalar(scalarleft, scalarright, "__LINE__", Scalar.TYPE_SYSTEM);
+	RESULT = s;
+:}
+
+| T_FILE:scalar
+{:
+	Scalar s = new Scalar(scalarleft, scalarright, "__FILE__", Scalar.TYPE_SYSTEM);
+	RESULT = s;
+:}
+
+| T_DIR:scalar
+{:
+	Scalar s = new Scalar(scalarleft, scalarright, "__DIR__", Scalar.TYPE_SYSTEM);
+	RESULT = s;
+:}
+
+| T_TRAIT_C:scalar
+{:
+	Scalar s = new Scalar(scalarleft, scalarright, "__TRAIT__", Scalar.TYPE_SYSTEM);
+	RESULT = s;
+:}
+
+| T_METHOD_C:scalar
+{:
+	Scalar s = new Scalar(scalarleft, scalarright, "__METHOD__", Scalar.TYPE_SYSTEM);
+	RESULT = s;
+:}
+
+| T_FUNC_C:scalar
+{:
+	Scalar s = new Scalar(scalarleft, scalarright, "__FUNCTION__", Scalar.TYPE_SYSTEM);
+	RESULT = s;
+:}
+
+| T_NS_C:scalar
+{:
+	RESULT = new Scalar(scalarleft, scalarright, "__NAMESPACE__", Scalar.TYPE_SYSTEM);
+:}
+
+| T_CLASS_C:scalar
+{:
+	Scalar s = new Scalar(scalarleft, scalarright, "__CLASS__", Scalar.TYPE_SYSTEM);
+	RESULT = s;
+:}
+;
+
+class_constant ::=
+class_name:className T_PAAMAYIM_NEKUDOTAYIM identifier:var
 {:
 	RESULT = new StaticConstantAccess(classNameleft, varright, className, new ConstantReference(varleft, varright, var));
 :}
@@ -4112,12 +4078,7 @@ simple_variable:v
 :}
 ;
 
-variable_class_name ::=
-dereferencable:var
-{:
-	RESULT = var;
-:}
-;
+
 
 optional_expr ::=
 /* empty */
@@ -4128,6 +4089,58 @@ optional_expr ::=
 | expr:expr
 {:
 	RESULT = expr;
+:}
+;
+
+variable_class_name ::=
+fully_dereferencable:var
+{:
+	RESULT = var;
+:}
+;
+
+fully_dereferencable ::=
+variable:var
+{:
+	RESULT = var;
+:}
+| T_OPEN_PARENTHESE expr:expr T_CLOSE_PARENTHESE
+{:
+	RESULT = expr;
+:}
+| dereferencable_scalar:scalar
+{:
+	RESULT = scalar;
+:}
+| class_constant:scalar
+{:
+	RESULT = scalar;
+:}
+;
+
+array_object_dereferencable ::=
+fully_dereferencable:var
+{:
+	RESULT = var;
+:}
+| constant:cnt 
+{:
+	RESULT = cnt;
+:}
+;
+
+callable_expr ::=
+callable_variable:var
+{:
+	RESULT = var;
+:}
+| T_OPEN_PARENTHESE expr:expr T_CLOSE_PARENTHESE
+{:
+	RESULT = expr;
+:}
+| dereferencable_scalar:scalar
+{:
+	RESULT = scalar;
 :}
 ;
 
