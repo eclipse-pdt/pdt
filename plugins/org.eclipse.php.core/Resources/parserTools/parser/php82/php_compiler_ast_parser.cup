@@ -207,6 +207,9 @@ terminal CompilerAstLexer.PHPDocBlockSymbolPair T_FN;
 terminal T_ATTRIBUTE;
 terminal String T_MATCH;
 terminal T_NULLSAFE_OBJECT_OPERATOR;
+terminal String T_NAME_FULLY_QUALIFIED;
+terminal String T_NAME_QUALIFIED;
+terminal String T_NAME_RELATIVE;
 
 /* Non terminals */
 
@@ -215,9 +218,7 @@ non terminal String reserved_non_modifiers;
 non terminal String semi_reserved;
 non terminal String identifier;
 non terminal FullyQualifiedReference namespace_name;
-non terminal List namespace_name_list;
 non terminal UsePart use_declaration;
-non terminal FullyQualifiedReference use_namespace_name;
 non terminal UseStatement mixed_group_use_declaration;
 non terminal UseStatement group_use_declaration;
 non terminal List inline_use_declarations;
@@ -289,12 +290,10 @@ non terminal Expression internal_functions_in_yacc;
 non terminal String string_st;
 non terminal PHPDocBlock interface_entry;
 non terminal List interface_extends_list;
-non terminal Expression class_name;
 non terminal FullyQualifiedReference name;
 non terminal TypeReference type;
 non terminal TypeReference type_expr;
 non terminal TypeReference return_type;
-non terminal TypeReference fully_qualified_class_name;
 non terminal List property_list;
 non terminal List class_const_list;
 non terminal ASTNode[] class_const_decl;
@@ -385,6 +384,11 @@ non terminal String optional_variable;
 non terminal Expression array_object_dereferencable;
 non terminal Expression fully_dereferencable;
 non terminal Expression class_constant;
+non terminal FullyQualifiedReference class_name;
+non terminal FullyQualifiedReference legacy_namespace_name;
+non terminal FullyQualifiedReference namespace_declaration_name;
+non terminal UsePart unprefixed_use_declaration;
+non terminal List unprefixed_use_declarations;
 
 precedence left T_THROW;
 precedence left T_INCLUDE, T_INCLUDE_ONCE, T_EVAL, T_REQUIRE, T_REQUIRE_ONCE;
@@ -740,44 +744,6 @@ string_st:v
 :}
 ;
 
-namespace_name ::=
-namespace_name_list:list
-{:
-	StringBuilder namespaceNameBuf = new StringBuilder();
-	FullyQualifiedReference fullyQualifiedName = null;
-	Iterator i = list.iterator();
-	while (i.hasNext()) {
-		String str = (String) i.next();
-		if (i.hasNext()) {
-			if (namespaceNameBuf.length() != 0) {
-				namespaceNameBuf.append('\\');
-			}
-			namespaceNameBuf.append(str);
-		} else {
-			NamespaceReference namespaceRef = (namespaceNameBuf.length() != 0) ?
-				new NamespaceReference(listleft, listright - str.length() - 1, namespaceNameBuf.toString()) : null;
-			fullyQualifiedName = new FullyQualifiedReference(listleft, listright, str, namespaceRef);
-		}
-	}
-	RESULT = fullyQualifiedName;
-:}
-;
-
-namespace_name_list ::=
-string_st:name
-{:
-	List list = new LinkedList();
-	list.add(name);
-	RESULT = list;
-:}
-|
-namespace_name_list:list T_NS_SEPARATOR string_st:name
-{:
-	list.add(name);
-	RESULT = list;
-:}
-;
-
 namespace_statement_list ::=
 namespace_statement_list:statementList top_statement:statement
 {:
@@ -805,35 +771,7 @@ namespace_statement_list:statementList top_statement:statement
 :}
 ;
 
-name ::=
-namespace_name:name
-{:
-	RESULT = name;
-:}
 
-| T_NAMESPACE:s T_NS_SEPARATOR namespace_name:name
-{:
-	if (name.getNamespace() == null) {
-		name.setNamespace(new NamespaceReference(nameleft, nameleft, ""));
-	}
-	name.getNamespace().setLocal(true);
-
-	RESULT = name;
-:}
-
-| T_NS_SEPARATOR:s namespace_name:name
-{:
-	NamespaceReference namespace = name.getNamespace();
-	if (namespace == null) {
-		namespace = new NamespaceReference(sleft, sright, "");
-		name.setNamespace(namespace);
-	}
-	namespace.setGlobal(true);
-	namespace.setStart(sleft);
-	name.setStart(sleft);
-	RESULT = name;
-:}
-;
 
 attribute_decl ::=
 class_name:name
@@ -912,6 +850,60 @@ top_statement_list:statementList top_statement:statement
 | /* empty */
 ;
 
+/* Name usable in a namespace declaration. */
+namespace_declaration_name ::=
+identifier:i
+{:
+	RESULT = new FullyQualifiedReference(ileft, iright, i, null);
+:}
+| T_NAME_QUALIFIED:i
+{:
+	RESULT = new FullyQualifiedReference(ileft, iright, i, false, false);
+:}
+;
+
+namespace_name ::=
+T_STRING:i
+{:
+	RESULT = new FullyQualifiedReference(ileft, iright, i, null);
+:}
+| T_NAME_QUALIFIED:i
+{:
+	RESULT = new FullyQualifiedReference(ileft, iright, i, false, false); 
+:}
+;
+
+/* Name usable in "use" declarations (leading separator allowed). */
+legacy_namespace_name ::=
+namespace_name:i
+{:
+	RESULT = i;
+:}
+| T_NAME_FULLY_QUALIFIED:i
+{:
+	RESULT = new FullyQualifiedReference(ileft, iright, i.substring(1), true, false);
+:}
+;
+
+name ::=
+T_STRING:i
+{:
+	RESULT = new FullyQualifiedReference(ileft, iright, i, null);
+:}
+| T_NAME_QUALIFIED:i
+{:
+	RESULT = new FullyQualifiedReference(ileft, iright, i, false, false);
+:}
+| T_NAME_FULLY_QUALIFIED:i
+{:
+	RESULT = new FullyQualifiedReference(ileft, iright, i.substring(1), true, false);
+:}
+| T_NAME_RELATIVE:i
+{:
+	RESULT = new FullyQualifiedReference(ileft, iright, i, false, true);
+:}
+;
+
 top_statement ::=
 statement:statement
 {:
@@ -929,7 +921,7 @@ statement:statement
 	RESULT = statement;
 :}
 
-| T_NAMESPACE:start namespace_name:name
+| T_NAMESPACE:start namespace_declaration_name:name
 {:
 	NamespaceDeclaration namespace = new NamespaceDeclaration(startleft, nameright, nameleft, nameright, name.getFullyQualifiedName(), null, null);
 	parser.addDeclarationStatement(namespace);
@@ -1062,15 +1054,17 @@ T_FUNCTION
 ;
 
 group_use_declaration ::=
-use_namespace_name:namespaceName T_CURLY_OPEN use_declarations:useDeclList possible_comma T_CURLY_CLOSE:end
+legacy_namespace_name:namespaceName T_NS_SEPARATOR T_CURLY_OPEN unprefixed_use_declarations:useDeclList possible_comma T_CURLY_CLOSE:end
 {:
+	namespaceName.setEnd(namespaceName.end()+1); // add T_NS to FQN end
 	RESULT = new UseStatement(namespaceNameleft, endright, namespaceName, useDeclList);
 :}
 ;
 
 mixed_group_use_declaration ::=
-use_namespace_name:namespaceName T_CURLY_OPEN inline_use_declarations:useDeclList possible_comma T_CURLY_CLOSE:end
+legacy_namespace_name:namespaceName T_NS_SEPARATOR T_CURLY_OPEN inline_use_declarations:useDeclList possible_comma T_CURLY_CLOSE:end
 {:
+	namespaceName.setEnd(namespaceName.end()+1); // add T_NS to FQN end
 	RESULT = new UseStatement(namespaceNameleft, endright, namespaceName, useDeclList);
 :}
 ;
@@ -1089,18 +1083,48 @@ inline_use_declarations:useDeclList T_COMMA inline_use_declaration:useDecl
 :}
 ;
 
+unprefixed_use_declarations ::=
+unprefixed_use_declarations:useDeclList T_COMMA unprefixed_use_declaration:useDecl
+{:
+	useDeclList.add(useDecl);
+	RESULT = useDeclList;
+:}
+| unprefixed_use_declaration:useDecl
+{:
+	List useDeclList = new LinkedList();
+	useDeclList.add(useDecl);
+	RESULT = useDeclList;
+:}
+;
+
 inline_use_declaration ::=
-use_declaration:useDeclaration
+unprefixed_use_declaration:useDeclaration
 {:
 	RESULT = useDeclaration;
 :}
 
-| use_type:useType use_declaration:useDeclaration
+| use_type:useType unprefixed_use_declaration:useDeclaration
 {:
 	int elementType = getElementTypeByUseType(useType);
 	useDeclaration.getNamespace().setElementType(elementType);
 	useDeclaration.setStatementType(useType);
 	RESULT = useDeclaration;
+:}
+;
+
+unprefixed_use_declaration ::=
+namespace_name:name
+{:
+	name.setElementType(FullyQualifiedReference.T_TYPE);
+	UsePart usePart = new UsePart(name, null);
+	RESULT = usePart;
+:}
+| namespace_name:name T_AS T_STRING:aliasName
+{:
+	name.setElementType(FullyQualifiedReference.T_TYPE);
+	UsePart usePart = new UsePart(name,
+		new SimpleReference(aliasNameleft, aliasNameright, aliasName));
+	RESULT = usePart;
 :}
 ;
 
@@ -1120,32 +1144,15 @@ use_declarations:useDeclList T_COMMA use_declaration:useDecl
 ;
 
 use_declaration ::=
-namespace_name:name
+legacy_namespace_name:name
 {:
 	name.setElementType(FullyQualifiedReference.T_TYPE);
 	UsePart usePart = new UsePart(name, null);
 	RESULT = usePart;
 :}
 
-| namespace_name:name T_AS T_STRING:aliasName
+| legacy_namespace_name:name T_AS T_STRING:aliasName
 {:
-	name.setElementType(FullyQualifiedReference.T_TYPE);
-	UsePart usePart = new UsePart(name,
-		new SimpleReference(aliasNameleft, aliasNameright, aliasName));
-	RESULT = usePart;
-:}
-
-| T_NS_SEPARATOR:s namespace_name:name
-{:
-	// NB: leading backslash is optional and has no special meaning here, so totally ignore it
-	name.setElementType(FullyQualifiedReference.T_TYPE);
-	UsePart usePart = new UsePart(name, null);
-	RESULT = usePart;
-:}
-
-| T_NS_SEPARATOR:s namespace_name:name T_AS T_STRING:aliasName
-{:
-	// NB: leading backslash is optional and has no special meaning here, so totally ignore it
 	name.setElementType(FullyQualifiedReference.T_TYPE);
 	UsePart usePart = new UsePart(name,
 		new SimpleReference(aliasNameleft, aliasNameright, aliasName));
@@ -1153,50 +1160,6 @@ namespace_name:name
 :}
 ;
 
-use_namespace_name ::=
-namespace_name_list:list T_NS_SEPARATOR:end
-{:
-	StringBuilder namespaceNameBuf = new StringBuilder();
-	FullyQualifiedReference fullyQualifiedName = null;
-	Iterator i = list.iterator();
-	while (i.hasNext()) {
-		String str = (String) i.next();
-		if (i.hasNext()) {
-			if (namespaceNameBuf.length() != 0) {
-				namespaceNameBuf.append('\\');
-			}
-			namespaceNameBuf.append(str);
-		} else {
-			NamespaceReference namespaceRef = (namespaceNameBuf.length() != 0) ?
-				new NamespaceReference(listleft, listright - str.length() - 1, namespaceNameBuf.toString()) : null;
-			fullyQualifiedName = new FullyQualifiedReference(listleft, endright, str, namespaceRef);
-		}
-	}
-	RESULT = fullyQualifiedName;
-:}
-
-| T_NS_SEPARATOR:s namespace_name_list:list T_NS_SEPARATOR:end
-{:
-	// NB: leading backslash is optional and has no special meaning here, so totally ignore it
-	StringBuilder namespaceNameBuf = new StringBuilder();
-	FullyQualifiedReference fullyQualifiedName = null;
-	Iterator i = list.iterator();
-	while (i.hasNext()) {
-		String str = (String) i.next();
-		if (i.hasNext()) {
-			if (namespaceNameBuf.length() != 0) {
-				namespaceNameBuf.append('\\');
-			}
-			namespaceNameBuf.append(str);
-		} else {
-			NamespaceReference namespaceRef = (namespaceNameBuf.length() != 0) ?
-				new NamespaceReference(sright, listright - str.length() - 1, namespaceNameBuf.toString()) : null;
-			fullyQualifiedName = new FullyQualifiedReference(sright, endright, str, namespaceRef);
-		}
-	}
-	RESULT = fullyQualifiedName;
-:}
-;
 
 inner_statement_list ::=
 inner_statement_list:statementList inner_statement:statement
@@ -1498,13 +1461,13 @@ T_CATCH:catch_word T_OPEN_PARENTHESE catch_name_list:catch_name_list optional_va
 ;
 
 catch_name_list ::=
-fully_qualified_class_name:name
+class_name:name
 {:
 	List list = new LinkedList<TypeReference>();
 	list.add(name);
 	RESULT = list;
 :}
-| catch_name_list:list T_OR fully_qualified_class_name:name
+| catch_name_list:list T_OR class_name:name
 {:
 	list.add(name);
 	RESULT = list;
@@ -1771,7 +1734,7 @@ extends_from ::=
 {:
 	RESULT = null;
 :}
-| T_EXTENDS fully_qualified_class_name:className
+| T_EXTENDS class_name:className
 {:
 	RESULT = className;
 :}
@@ -1815,7 +1778,7 @@ implements_list ::=
 ;
 
 interface_list ::=
-fully_qualified_class_name:className
+class_name:className
 {:
 	List list = new LinkedList();
 	if (className != null) {
@@ -1824,7 +1787,7 @@ fully_qualified_class_name:className
 	RESULT = list;
 :}
 
-| interface_list:list T_COMMA fully_qualified_class_name:className
+| interface_list:list T_COMMA class_name:className
 {:
 	list.add(className);
 	RESULT = list;
@@ -2697,13 +2660,13 @@ trait_use_statement ::=
 ;
 
 trait_list ::=
-		fully_qualified_class_name:name
+		class_name:name
 {:
 	List<TypeReference> traitList = new LinkedList<TypeReference>();
 	traitList.add(name);
 	RESULT = traitList;
 :}
-|	trait_list:traitList T_COMMA fully_qualified_class_name:name
+|	trait_list:traitList T_COMMA class_name:name
 {:
 	traitList.add(name);
 	RESULT = traitList;
@@ -2768,13 +2731,13 @@ trait_precedence ::=
 ;
 
 trait_reference_list ::=
-		fully_qualified_class_name:className
+		class_name:className
 {:
 	List<TypeReference> trList = new LinkedList<TypeReference>();
 	trList.add(className);
 	RESULT = trList;
 :}
-|	trait_reference_list:trList T_COMMA fully_qualified_class_name:className
+|	trait_reference_list:trList T_COMMA class_name:className
 {:
 	trList.add(className);
 	RESULT = trList;
@@ -2794,7 +2757,7 @@ T_STRING:functionName
 ;
 
 trait_method_reference_fully_qualified ::=
-	fully_qualified_class_name:className T_PAAMAYIM_NEKUDOTAYIM T_STRING:functionName
+	class_name:className T_PAAMAYIM_NEKUDOTAYIM T_STRING:functionName
 {:
 	SimpleReference name = new SimpleReference(functionNameleft, functionNameright, functionName);
 	FullyQualifiedTraitMethodReference methodReference = new FullyQualifiedTraitMethodReference(classNameleft, functionNameright, className, functionName);
@@ -3685,39 +3648,6 @@ T_STATIC:s
 
 | name:name
 {:
-	name.setElementType(FullyQualifiedReference.T_TYPE);
-	RESULT = name;
-:}
-;
-
-fully_qualified_class_name ::=
-namespace_name:name
-{:
-	name.setElementType(FullyQualifiedReference.T_TYPE);
-	RESULT = name;
-:}
-
-| T_NAMESPACE:s T_NS_SEPARATOR namespace_name:name
-{:
-	if (name.getNamespace() == null) {
-		name.setNamespace(new NamespaceReference(nameleft, nameleft, ""));
-	}
-
-	name.getNamespace().setLocal(true);
-	name.setElementType(FullyQualifiedReference.T_TYPE);
-	RESULT = name;
-:}
-
-| T_NS_SEPARATOR:s namespace_name:name
-{:
-	NamespaceReference namespace = name.getNamespace();
-	if (namespace == null) {
-		namespace = new NamespaceReference(sleft, sright, "");
-		name.setNamespace(namespace);
-	}
-	namespace.setGlobal(true);
-	namespace.setStart(sleft);
-	name.setStart(sleft);
 	name.setElementType(FullyQualifiedReference.T_TYPE);
 	RESULT = name;
 :}

@@ -488,6 +488,17 @@ NOWDOC_CHARS=([^\n\r]|({NEWLINE}{TABS_AND_SPACES})+[^a-zA-Z_\u0080-\uffff\n\r \t
 	return createSymbol(ParserConstants.T_PAAMAYIM_NEKUDOTAYIM);
 }
 
+<ST_IN_SCRIPTING>"namespace"("\\"{LABEL})+ {
+	return createFullSymbol(ParserConstants.T_NAME_RELATIVE);
+}
+<ST_IN_SCRIPTING>{LABEL}("\\"{LABEL})+ {
+	return createFullSymbol(ParserConstants.T_NAME_QUALIFIED);
+}
+
+<ST_IN_SCRIPTING>"\\"{LABEL}("\\"{LABEL})* {
+	return createFullSymbol(ParserConstants.T_NAME_FULLY_QUALIFIED);
+}
+
 <ST_IN_SCRIPTING>"\\" {
 	return createSymbol(ParserConstants.T_NS_SEPARATOR);
 }

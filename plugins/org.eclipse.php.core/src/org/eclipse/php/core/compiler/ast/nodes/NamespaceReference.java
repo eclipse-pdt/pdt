@@ -25,6 +25,7 @@ public class NamespaceReference extends TypeReference {
 
 	public final static char NAMESPACE_SEPARATOR = '\\';
 	public final static String NAMESPACE_DELIMITER = "\\"; //$NON-NLS-1$
+	public final static String EMPTY = ""; //$NON-NLS-1$
 	private boolean global;
 	private boolean local;
 
@@ -34,6 +35,8 @@ public class NamespaceReference extends TypeReference {
 
 	public NamespaceReference(int start, int end, String name, boolean global, boolean local) {
 		super(start, end, name);
+		this.global = global;
+		this.local = local;
 	}
 
 	/**

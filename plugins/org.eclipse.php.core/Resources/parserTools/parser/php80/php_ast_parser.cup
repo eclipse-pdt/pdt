@@ -222,6 +222,10 @@ terminal String T_FN;
 terminal T_ATTRIBUTE;
 terminal String T_MATCH;
 terminal T_NULLSAFE_OBJECT_OPERATOR;
+terminal String T_NAME_FULLY_QUALIFIED;
+terminal String T_NAME_QUALIFIED;
+terminal String T_NAME_RELATIVE;
+
 
 /* Non terminals */
 
@@ -400,6 +404,7 @@ precedence left T_ELSEIF;
 precedence left T_ELSE;
 precedence left T_ENDIF;
 precedence right T_STATIC, T_ABSTRACT, T_FINAL, T_PRIVATE, T_PROTECTED, T_PUBLIC;
+
 
 thestart ::=
 top_statement_list:sList

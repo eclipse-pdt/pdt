@@ -13,6 +13,7 @@
  *******************************************************************************/
 package org.eclipse.php.core.compiler.ast.nodes;
 
+import org.eclipse.dltk.annotations.Internal;
 import org.eclipse.dltk.annotations.Nullable;
 import org.eclipse.dltk.ast.ASTVisitor;
 import org.eclipse.dltk.ast.references.TypeReference;
@@ -41,6 +42,26 @@ public class FullyQualifiedReference extends TypeReference {
 		super(start, end, name);
 		this.namespace = namespace;
 		this.elementType = type;
+	}
+
+	public FullyQualifiedReference(int start, int end, String fqn, boolean global, boolean local) {
+		this(start, end, fqn, global, local, T_CONSTANT);
+	}
+
+	public FullyQualifiedReference(int start, int end, String fqn, boolean global, boolean local, int elementType) {
+		super(start, end, null);
+		this.elementType = elementType;
+		int pos = fqn.lastIndexOf(NamespaceReference.NAMESPACE_DELIMITER);
+		if (pos == -1) {
+			// ignore
+			if (global) {
+				setNamespace(new NamespaceReference(start, start + 1, NamespaceReference.EMPTY, global, local));
+			}
+		} else {
+			setNamespace(new NamespaceReference(start, start + pos + (global ? 1 : 0), fqn.substring(0, pos), global,
+					local));
+		}
+		setName(fqn.substring(pos + 1));
 	}
 
 	@Override
@@ -106,5 +127,24 @@ public class FullyQualifiedReference extends TypeReference {
 
 	public void setElementType(int elementType) {
 		this.elementType = elementType;
+	}
+
+	/**
+	 * Used for useStatements
+	 * 
+	 * XXX: Remove this hack
+	 */
+	@Internal
+	public void removeGlobal() {
+
+		if (namespace != null && namespace.isGlobal()) {
+			setStart(start() + 1);
+			namespace.setGlobal(false);
+			namespace.setStart(namespace.start() + 1);
+			if (namespace.getName().length() == 0) {
+				namespace = null;
+			}
+
+		}
 	}
 }

@@ -63,7 +63,7 @@ public class UseStatement extends Statement {
 		super(start, end);
 
 		assert parts != null;
-		this.namespace = namespace;
+		this.setNamespace(namespace);
 		this.parts = parts;
 		this.statementType = statementType;
 	}
@@ -103,6 +103,9 @@ public class UseStatement extends Statement {
 
 	public void setNamespace(FullyQualifiedReference namespace) {
 		this.namespace = namespace;
+		if (namespace != null) {
+			namespace.removeGlobal();
+		}
 	}
 
 	public FullyQualifiedReference getNamespace() {

@@ -221,6 +221,9 @@ terminal String T_FN;
 terminal T_ATTRIBUTE;
 terminal String T_MATCH;
 terminal T_NULLSAFE_OBJECT_OPERATOR;
+terminal String T_NAME_FULLY_QUALIFIED;
+terminal String T_NAME_QUALIFIED;
+terminal String T_NAME_RELATIVE;
 //php 8.1
 terminal String T_ENUM;
 terminal String T_READONLY;

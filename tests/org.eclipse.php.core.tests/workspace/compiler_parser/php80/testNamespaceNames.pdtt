@@ -1,0 +1,53 @@
+--TEST--
+PHP 8.0
+--FILE--
+<?php
+use Some;
+use NS\Some;
+use \NS\Some;
+new namespace\Some();
+
+?>
+--EXPECT--
+<ModuleDeclaration start="0" end="69">
+	<UseStatement start="6" end="15">
+		<Parts>
+			<UsePart start="0" end="0">
+				<FullyQualifiedReference start="10" end="14" name="Some">
+				</FullyQualifiedReference>
+			</UsePart>
+		</Parts>
+	</UseStatement>
+	<UseStatement start="16" end="28">
+		<Parts>
+			<UsePart start="0" end="0">
+				<FullyQualifiedReference start="20" end="27" name="NS\Some">
+					<NamespaceReference start="20" end="22" name="NS" global="false" local="false">
+					</NamespaceReference>
+				</FullyQualifiedReference>
+			</UsePart>
+		</Parts>
+	</UseStatement>
+	<UseStatement start="29" end="42">
+		<Parts>
+			<UsePart start="0" end="0">
+				<FullyQualifiedReference start="34" end="41" name="NS\Some">
+					<NamespaceReference start="34" end="36" name="NS" global="false" local="false">
+					</NamespaceReference>
+				</FullyQualifiedReference>
+			</UsePart>
+		</Parts>
+	</UseStatement>
+	<ExpressionStatement start="43" end="64">
+		<ClassInstanceCreation start="43" end="63">
+			<FullyQualifiedReference start="47" end="61" name="namespace\namespace\Some">
+				<NamespaceReference start="47" end="56" name="namespace\namespace" global="false" local="true">
+				</NamespaceReference>
+			</FullyQualifiedReference>
+			<PHPCallArgumentsList start="62" end="62">
+			</PHPCallArgumentsList>
+		</ClassInstanceCreation>
+	</ExpressionStatement>
+	<EmptyStatement start="66" end="68">
+	</EmptyStatement>
+</ModuleDeclaration>

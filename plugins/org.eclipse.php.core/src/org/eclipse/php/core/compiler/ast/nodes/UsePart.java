@@ -95,6 +95,9 @@ public class UsePart extends ASTNode {
 
 	public void setNamespace(FullyQualifiedReference namespace) {
 		this.namespace = namespace;
+		if (namespace != null) {
+			namespace.removeGlobal();
+		}
 	}
 
 	/**
