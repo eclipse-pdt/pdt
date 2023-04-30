@@ -1,0 +1,53 @@
+--TEST--
+PHP 8.0
+--FILE--
+<?php
+
+$session?->user?->getAddress()?->country;
+?>
+--EXPECT--
+<Program start='0' length='51'>
+	<Statements>
+		<ExpressionStatement start='7' length='41'>
+			<FieldAccess start='7' length='40'' nullable='true>
+				<Dispatcher>
+					<MethodInvocation start='7' length='30'' nullable='true>
+						<Dispatcher>
+							<FieldAccess start='7' length='15'' nullable='true>
+								<Dispatcher>
+									<Variable start='7' length='8' isDollared='true'>
+										<Identifier start='8' length='7' name='session'/>
+									</Variable>
+								</Dispatcher>
+								<Property>
+									<Variable start='18' length='4' isDollared='false'>
+										<Identifier start='18' length='4' name='user'/>
+									</Variable>
+								</Property>
+							</FieldAccess>
+						</Dispatcher>
+						<Property>
+							<FunctionInvocation start='25' length='12'>
+								<FunctionName start='25' length='10'>
+									<Variable start='25' length='10' isDollared='false'>
+										<Identifier start='25' length='10' name='getAddress'/>
+									</Variable>
+								</FunctionName>
+								<Parameters>
+								</Parameters>
+							</FunctionInvocation>
+						</Property>
+					</MethodInvocation>
+				</Dispatcher>
+				<Property>
+					<Variable start='40' length='7' isDollared='false'>
+						<Identifier start='40' length='7' name='country'/>
+					</Variable>
+				</Property>
+			</FieldAccess>
+		</ExpressionStatement>
+		<EmptyStatement start='49' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

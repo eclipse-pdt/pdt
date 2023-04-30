@@ -32,7 +32,7 @@ import org.eclipse.php.core.ast.visitor.Visitor;
  * @see https://wiki.php.net/rfc/arrow_functions
  * @since PHP 7.4
  */
-public class ArrowFunctionDeclaration extends Expression {
+public class ArrowFunctionDeclaration extends AttributedExpression {
 
 	private boolean isReference;
 	private boolean isStatic;
@@ -59,6 +59,9 @@ public class ArrowFunctionDeclaration extends Expression {
 	public static final ChildPropertyDescriptor RETURN_TYPE_PROPERTY = new ChildPropertyDescriptor(
 			ArrowFunctionDeclaration.class, "returnType", ReturnType.class, //$NON-NLS-1$
 			OPTIONAL, CYCLE_RISK);
+	public static final ChildListPropertyDescriptor ATTRIBUTES_PROPERTY = new ChildListPropertyDescriptor(
+			ArrowFunctionDeclaration.class, "attributes", AttributeGroup.class, //$NON-NLS-1$
+			CYCLE_RISK);
 
 	/**
 	 * A list of property descriptors (element type:
@@ -66,14 +69,34 @@ public class ArrowFunctionDeclaration extends Expression {
 	 */
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
 
+	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS_PHP8;
+
 	static {
-		List<StructuralPropertyDescriptor> propertyList = new ArrayList<>(4);
+		List<StructuralPropertyDescriptor> propertyList = new ArrayList<>(5);
 		propertyList.add(IS_REFERENCE_PROPERTY);
 		propertyList.add(IS_STATIC);
 		propertyList.add(FORMAL_PARAMETERS_PROPERTY);
 		propertyList.add(BODY_PROPERTY);
 		propertyList.add(RETURN_TYPE_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(propertyList);
+
+		propertyList = new ArrayList<>(6);
+		propertyList.add(IS_REFERENCE_PROPERTY);
+		propertyList.add(IS_STATIC);
+		propertyList.add(FORMAL_PARAMETERS_PROPERTY);
+		propertyList.add(BODY_PROPERTY);
+		propertyList.add(RETURN_TYPE_PROPERTY);
+		propertyList.add(ATTRIBUTES_PROPERTY);
+		PROPERTY_DESCRIPTORS_PHP8 = Collections.unmodifiableList(propertyList);
+	}
+
+	public ArrowFunctionDeclaration(int start, int end, AST ast, List<FormalParameter> formalParameters,
+			Expression body, final boolean isReference, final boolean isStatic, Identifier returnType,
+			List<AttributeGroup> attributes) {
+		this(start, end, ast, formalParameters, body, isReference, isStatic, returnType);
+		if (attributes != null) {
+			attributes().addAll(attributes);
+		}
 	}
 
 	public ArrowFunctionDeclaration(int start, int end, AST ast, List<FormalParameter> formalParameters,
@@ -114,6 +137,9 @@ public class ArrowFunctionDeclaration extends Expression {
 
 	@Override
 	public void childrenAccept(Visitor visitor) {
+		for (AttributeGroup attr : attributes()) {
+			attr.accept(visitor);
+		}
 		for (ASTNode node : this.formalParameters) {
 			node.accept(visitor);
 		}
@@ -128,6 +154,9 @@ public class ArrowFunctionDeclaration extends Expression {
 	@Override
 	public void traverseTopDown(Visitor visitor) {
 		accept(visitor);
+		for (AttributeGroup attr : attributes()) {
+			attr.traverseTopDown(visitor);
+		}
 		for (ASTNode node : this.formalParameters) {
 			node.traverseTopDown(visitor);
 		}
@@ -150,6 +179,9 @@ public class ArrowFunctionDeclaration extends Expression {
 		if (body != null) {
 			body.traverseBottomUp(visitor);
 		}
+		for (AttributeGroup attr : attributes()) {
+			attr.traverseBottomUp(visitor);
+		}
 		accept(visitor);
 	}
 
@@ -162,6 +194,7 @@ public class ArrowFunctionDeclaration extends Expression {
 			buffer.append(" isStatic='").append(isStatic); //$NON-NLS-1$
 		}
 		buffer.append("'>\n"); //$NON-NLS-1$
+		toStringAttributes(buffer, tab + TAB);
 		buffer.append(TAB).append(tab).append("<FormalParameters>\n"); //$NON-NLS-1$
 		for (ASTNode node : this.formalParameters) {
 			node.toString(buffer, TAB + TAB + tab);
@@ -369,12 +402,21 @@ public class ArrowFunctionDeclaration extends Expression {
 		final List<FormalParameter> formalParams = ASTNode.copySubtrees(target, formalParameters());
 		final boolean isRef = isReference();
 		final Identifier returnType = ASTNode.copySubtree(target, getReturnType());
+		final List<AttributeGroup> attributes = ASTNode.copySubtrees(target, attributes());
 		return new ArrowFunctionDeclaration(getStart(), getEnd(), target, formalParams, body, isRef, isStatic(),
-				returnType);
+				returnType, attributes);
 	}
 
 	@Override
 	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(PHPVersion apiLevel) {
-		return PROPERTY_DESCRIPTORS;
+		if (PHPVersion.PHP8_0.isGreaterThan(apiLevel)) {
+			return PROPERTY_DESCRIPTORS;
+		}
+		return PROPERTY_DESCRIPTORS_PHP8;
+	}
+
+	@Override
+	protected ChildListPropertyDescriptor getAttributesProperty() {
+		return ATTRIBUTES_PROPERTY;
 	}
 }

@@ -799,7 +799,7 @@ attribute_group:list T_COMMA attribute_decl:decl
 :}
 ;
 attribute ::=
-T_ATTRIBUTE attribute_group:list T_CLOSE_RECT
+T_ATTRIBUTE attribute_group:list possible_comma T_CLOSE_RECT
 {:
 	RESULT = list;
 :}
@@ -863,7 +863,7 @@ identifier:i
 ;
 
 namespace_name ::=
-T_STRING:i
+string_st:i
 {:
 	RESULT = new FullyQualifiedReference(ileft, iright, i, null);
 :}
@@ -886,7 +886,7 @@ namespace_name:i
 ;
 
 name ::=
-T_STRING:i
+string_st:i
 {:
 	RESULT = new FullyQualifiedReference(ileft, iright, i, null);
 :}
@@ -1097,21 +1097,6 @@ unprefixed_use_declarations:useDeclList T_COMMA unprefixed_use_declaration:useDe
 :}
 ;
 
-inline_use_declaration ::=
-unprefixed_use_declaration:useDeclaration
-{:
-	RESULT = useDeclaration;
-:}
-
-| use_type:useType unprefixed_use_declaration:useDeclaration
-{:
-	int elementType = getElementTypeByUseType(useType);
-	useDeclaration.getNamespace().setElementType(elementType);
-	useDeclaration.setStatementType(useType);
-	RESULT = useDeclaration;
-:}
-;
-
 unprefixed_use_declaration ::=
 namespace_name:name
 {:
@@ -1125,6 +1110,21 @@ namespace_name:name
 	UsePart usePart = new UsePart(name,
 		new SimpleReference(aliasNameleft, aliasNameright, aliasName));
 	RESULT = usePart;
+:}
+;
+
+inline_use_declaration ::=
+unprefixed_use_declaration:useDeclaration
+{:
+	RESULT = useDeclaration;
+:}
+
+| use_type:useType unprefixed_use_declaration:useDeclaration
+{:
+	int elementType = getElementTypeByUseType(useType);
+	useDeclaration.getNamespace().setElementType(elementType);
+	useDeclaration.setStatementType(useType);
+	RESULT = useDeclaration;
 :}
 ;
 
@@ -2243,9 +2243,6 @@ optional_type_without_static ::=
 
 | type_expr_without_static:type_expr
 {:
-	if (type_expr instanceof List) {
-		throw new Exception("kurwa");
-	}
 	RESULT = type_expr;
 :}
 ;
@@ -2625,16 +2622,17 @@ method_body:body
 class_statement ::=
 attributed_class_statement:statement
 {:
+	RESULT = statement;
 :}
 
-| attributes:attrs attributed_class_statement
+| attributes:attrs attributed_class_statement:statement
 {:
 	ASTNode node = parser.getRecentDeclarationStatement();
 	if (node instanceof IAttributedStatement) {
 		((IAttributedStatement)node).setAttributes(attrs);
 	}
 	
-	//RESULT = statement;
+	RESULT = statement;
 :}
 | T_VAR_COMMENT
 | error:theError /* error statement */

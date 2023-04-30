@@ -33,6 +33,7 @@ import org.eclipse.php.core.ast.visitor.Visitor;
 public class FieldAccess extends Dispatch {
 
 	private Variable field;
+	private boolean nullSafe;
 
 	/**
 	 * The structural property of this node type.
@@ -41,6 +42,9 @@ public class FieldAccess extends Dispatch {
 			"dispatcher", VariableBase.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
 	public static final ChildPropertyDescriptor FIELD_PROPERTY = new ChildPropertyDescriptor(FieldAccess.class, "field", //$NON-NLS-1$
 			Variable.class, MANDATORY, CYCLE_RISK);
+
+	public static final SimplePropertyDescriptor NULLSAFE_PROPERTY = new SimplePropertyDescriptor(FieldAccess.class,
+			"isNullSafe", Boolean.class, OPTIONAL); //$NON-NLS-1$
 
 	@Override
 	ChildPropertyDescriptor getDispatcherProperty() {
@@ -53,20 +57,37 @@ public class FieldAccess extends Dispatch {
 	 */
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
 
+	/**
+	 * A list of property descriptors (element type:
+	 * {@link StructuralPropertyDescriptor}), or null if uninitialized.
+	 */
+	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS_PHP8;
+
 	static {
 		List<StructuralPropertyDescriptor> propertyList = new ArrayList<>(2);
 		propertyList.add(FIELD_PROPERTY);
 		propertyList.add(DISPATCHER_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(propertyList);
+
+		propertyList = new ArrayList<>(3);
+		propertyList.add(FIELD_PROPERTY);
+		propertyList.add(DISPATCHER_PROPERTY);
+		propertyList.add(NULLSAFE_PROPERTY);
+		PROPERTY_DESCRIPTORS_PHP8 = Collections.unmodifiableList(propertyList);
 	}
 
-	public FieldAccess(int start, int end, AST ast, VariableBase dispatcher, Variable field) {
+	public FieldAccess(int start, int end, AST ast, VariableBase dispatcher, Variable field, boolean nullsafe) {
 		super(start, end, ast, dispatcher);
 
 		if (field == null) {
 			throw new IllegalArgumentException();
 		}
 		setField(field);
+		setNullSafe(nullsafe);
+	}
+
+	public FieldAccess(int start, int end, AST ast, VariableBase dispatcher, Variable field) {
+		this(start, end, ast, dispatcher, field, false);
 	}
 
 	public FieldAccess(AST ast) {
@@ -106,6 +127,9 @@ public class FieldAccess extends Dispatch {
 	public void toString(StringBuilder buffer, String tab) {
 		buffer.append(tab).append("<FieldAccess"); //$NON-NLS-1$
 		appendInterval(buffer);
+		if (isNullSafe()) {
+			buffer.append("' nullable='").append(nullSafe); //$NON-NLS-1$
+		}
 		buffer.append(">\n"); //$NON-NLS-1$
 		buffer.append(TAB).append(tab).append("<Dispatcher>\n"); //$NON-NLS-1$
 		getDispatcher().toString(buffer, TAB + TAB + tab);
@@ -128,6 +152,10 @@ public class FieldAccess extends Dispatch {
 	 */
 	public Variable getField() {
 		return field;
+	}
+
+	public boolean isNullSafe() {
+		return nullSafe;
 	}
 
 	/**
@@ -161,6 +189,12 @@ public class FieldAccess extends Dispatch {
 		postReplaceChild(oldChild, variable, FIELD_PROPERTY);
 	}
 
+	public void setNullSafe(boolean value) {
+		preValueChange(NULLSAFE_PROPERTY);
+		this.nullSafe = value;
+		postValueChange(NULLSAFE_PROPERTY);
+	}
+
 	@Override
 	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
 		if (property == FIELD_PROPERTY) {
@@ -173,6 +207,19 @@ public class FieldAccess extends Dispatch {
 		}
 		// allow default implementation to flag the error
 		return super.internalGetSetChildProperty(property, get, child);
+	}
+
+	@Override
+	boolean internalGetSetBooleanProperty(SimplePropertyDescriptor property, boolean get, boolean value) {
+		if (property == NULLSAFE_PROPERTY) {
+			if (get) {
+				return isNullSafe();
+			} else {
+				setNullSafe(value);
+				return false;
+			}
+		}
+		return super.internalGetSetBooleanProperty(property, get, value);
 	}
 
 	/*
@@ -188,13 +235,17 @@ public class FieldAccess extends Dispatch {
 	ASTNode clone0(AST target) {
 		final VariableBase dispatcher = ASTNode.copySubtree(target, getDispatcher());
 		final Variable field = ASTNode.copySubtree(target, getField());
-		final FieldAccess result = new FieldAccess(getStart(), getEnd(), target, dispatcher, field);
+		final FieldAccess result = new FieldAccess(getStart(), getEnd(), target, dispatcher, field, nullSafe);
 		return result;
 	}
 
 	@Override
 	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(PHPVersion apiLevel) {
-		return PROPERTY_DESCRIPTORS;
+		if (PHPVersion.PHP8_0.isGreaterThan(apiLevel)) {
+			return PROPERTY_DESCRIPTORS;
+		}
+
+		return PROPERTY_DESCRIPTORS_PHP8;
 	}
 
 	/**

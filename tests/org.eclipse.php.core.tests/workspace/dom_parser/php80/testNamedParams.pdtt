@@ -1,0 +1,72 @@
+--TEST--
+PHP 8.0
+--FILE--
+<?php
+
+htmlspecialchars($string, double_encode: false);
+
+$el->call(second: 1);
+new FooBar(named: 'value');
+?>
+--EXPECT--
+<Program start='0' length='109'>
+	<Statements>
+		<ExpressionStatement start='7' length='48'>
+			<FunctionInvocation start='7' length='47'>
+				<FunctionName start='7' length='16'>
+					<NamespaceName start='7' length='16' global='false' current='false'>
+						<Identifier start='7' length='16' name='htmlspecialchars'/>
+					</NamespaceName>
+				</FunctionName>
+				<Parameters>
+					<Variable start='24' length='7' isDollared='true'>
+						<Identifier start='25' length='6' name='string'/>
+					</Variable>
+					<NamedExpression start='33' length='20' name='double_encode'>
+						<Scalar start='48' length='5' type='string' value='false'/>
+					</NamedExpression>
+				</Parameters>
+			</FunctionInvocation>
+		</ExpressionStatement>
+		<ExpressionStatement start='57' length='21'>
+			<MethodInvocation start='57' length='20'>
+				<Dispatcher>
+					<Variable start='57' length='3' isDollared='true'>
+						<Identifier start='58' length='2' name='el'/>
+					</Variable>
+				</Dispatcher>
+				<Property>
+					<FunctionInvocation start='62' length='15'>
+						<FunctionName start='62' length='4'>
+							<Variable start='62' length='4' isDollared='false'>
+								<Identifier start='62' length='4' name='call'/>
+							</Variable>
+						</FunctionName>
+						<Parameters>
+							<NamedExpression start='67' length='9' name='second'>
+								<Scalar start='75' length='1' type='int' value='1'/>
+							</NamedExpression>
+						</Parameters>
+					</FunctionInvocation>
+				</Property>
+			</MethodInvocation>
+		</ExpressionStatement>
+		<ExpressionStatement start='79' length='27'>
+			<ClassInstanceCreation start='79' length='26'>
+				<ClassName start='83' length='6'>
+					<NamespaceName start='83' length='6' global='false' current='false'>
+						<Identifier start='83' length='6' name='FooBar'/>
+					</NamespaceName>
+				</ClassName>
+				<ConstructorParameters>
+					<NamedExpression start='90' length='14' name='named'>
+						<Scalar start='97' length='7' type='string' value='&apos;value&apos;'/>
+					</NamedExpression>
+				</ConstructorParameters>
+			</ClassInstanceCreation>
+		</ExpressionStatement>
+		<EmptyStatement start='107' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

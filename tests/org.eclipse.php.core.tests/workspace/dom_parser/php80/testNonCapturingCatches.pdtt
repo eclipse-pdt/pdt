@@ -1,0 +1,48 @@
+--TEST--
+PHP 8.0
+--FILE--
+<?php
+try {
+
+} catch(InvalidArgumentException $e) {
+} catch(Exception|Throwable) {
+}
+?>
+--EXPECT--
+<Program start='0' length='87'>
+	<Statements>
+		<TryStatement start='6' length='78'>
+			<Block start='10' length='4' isCurly='true'>
+			</Block>
+			<CatchClause start='15' length='38'>
+				<ClassName>
+					<NamespaceName start='21' length='24' global='false' current='false'>
+						<Identifier start='21' length='24' name='InvalidArgumentException'/>
+					</NamespaceName>
+				</ClassName>
+				<Variable start='46' length='2' isDollared='true'>
+					<Identifier start='47' length='1' name='e'/>
+				</Variable>
+				<Block start='50' length='3' isCurly='true'>
+				</Block>
+			</CatchClause>
+			<CatchClause start='54' length='30'>
+				<ClassName>
+					<NamespaceName start='60' length='9' global='false' current='false'>
+						<Identifier start='60' length='9' name='Exception'/>
+					</NamespaceName>
+				</ClassName>
+				<ClassName>
+					<NamespaceName start='70' length='9' global='false' current='false'>
+						<Identifier start='70' length='9' name='Throwable'/>
+					</NamespaceName>
+				</ClassName>
+				<Block start='81' length='3' isCurly='true'>
+				</Block>
+			</CatchClause>
+		</TryStatement>
+		<EmptyStatement start='85' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

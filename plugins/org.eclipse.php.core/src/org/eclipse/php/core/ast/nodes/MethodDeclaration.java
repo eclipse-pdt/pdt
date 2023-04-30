@@ -40,10 +40,17 @@ public class MethodDeclaration extends BodyDeclaration {
 			MethodDeclaration.class, "modifier", Integer.class, OPTIONAL); //$NON-NLS-1$
 	public static final ChildPropertyDescriptor COMMENT_PROPERTY = new ChildPropertyDescriptor(Comment.class, "comment", //$NON-NLS-1$
 			Comment.class, OPTIONAL, NO_CYCLE_RISK);
+	public static final ChildListPropertyDescriptor ATTRIBUTES_PROPERTY = new ChildListPropertyDescriptor(
+			MethodDeclaration.class, "attributes", AttributeGroup.class, CYCLE_RISK); //$NON-NLS-1$
 
 	@Override
 	public final SimplePropertyDescriptor getModifierProperty() {
 		return MODIFIER_PROPERTY;
+	}
+
+	@Override
+	protected ChildListPropertyDescriptor getAttributesProperty() {
+		return ATTRIBUTES_PROPERTY;
 	}
 
 	/**
@@ -52,12 +59,29 @@ public class MethodDeclaration extends BodyDeclaration {
 	 */
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
 
+	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS_PHP8;
+
 	static {
-		List<StructuralPropertyDescriptor> propertyList = new ArrayList<>(2);
+		List<StructuralPropertyDescriptor> propertyList = new ArrayList<>(3);
 		propertyList.add(FUNCTION_PROPERTY);
 		propertyList.add(MODIFIER_PROPERTY);
 		propertyList.add(COMMENT_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(propertyList);
+
+		propertyList = new ArrayList<>(4);
+		propertyList.add(FUNCTION_PROPERTY);
+		propertyList.add(MODIFIER_PROPERTY);
+		propertyList.add(COMMENT_PROPERTY);
+		propertyList.add(ATTRIBUTES_PROPERTY);
+		PROPERTY_DESCRIPTORS_PHP8 = Collections.unmodifiableList(propertyList);
+	}
+
+	public MethodDeclaration(int start, int end, AST ast, int modifier, FunctionDeclaration function,
+			boolean shouldComplete, List<AttributeGroup> attributes) {
+		this(start, end, ast, modifier, function, shouldComplete);
+		if (attributes != null) {
+			attributes().addAll(attributes);
+		}
 	}
 
 	public MethodDeclaration(int start, int end, AST ast, int modifier, FunctionDeclaration function,
@@ -89,6 +113,9 @@ public class MethodDeclaration extends BodyDeclaration {
 
 	@Override
 	public void childrenAccept(Visitor visitor) {
+		for (AttributeGroup object : attributes()) {
+			object.accept(visitor);
+		}
 		if (comment != null) {
 			comment.accept(visitor);
 		}
@@ -98,6 +125,9 @@ public class MethodDeclaration extends BodyDeclaration {
 	@Override
 	public void traverseTopDown(Visitor visitor) {
 		accept(visitor);
+		for (AttributeGroup object : attributes()) {
+			object.traverseTopDown(visitor);
+		}
 		if (comment != null) {
 			comment.traverseTopDown(visitor);
 		}
@@ -106,6 +136,9 @@ public class MethodDeclaration extends BodyDeclaration {
 
 	@Override
 	public void traverseBottomUp(Visitor visitor) {
+		for (AttributeGroup object : attributes()) {
+			object.traverseBottomUp(visitor);
+		}
 		function.traverseBottomUp(visitor);
 		if (comment != null) {
 			comment.traverseBottomUp(visitor);
@@ -118,6 +151,7 @@ public class MethodDeclaration extends BodyDeclaration {
 		buffer.append(tab).append("<MethodDeclaration"); //$NON-NLS-1$
 		appendInterval(buffer);
 		buffer.append(" modifier='").append(getModifierString()).append("'>\n"); //$NON-NLS-1$ //$NON-NLS-2$
+		toStringAttributes(buffer, TAB + tab);
 		function.toString(buffer, TAB + tab);
 		buffer.append("\n"); //$NON-NLS-1$
 		buffer.append(tab).append("</MethodDeclaration>"); //$NON-NLS-1$
@@ -210,19 +244,26 @@ public class MethodDeclaration extends BodyDeclaration {
 	ASTNode clone0(AST target) {
 		final FunctionDeclaration function = ASTNode.copySubtree(target, getFunction());
 		final int modifier = getModifier();
-		final MethodDeclaration result = new MethodDeclaration(getStart(), getEnd(), target, modifier, function, true);
+		final List<AttributeGroup> attributes = ASTNode.copySubtrees(target, attributes());
+		final MethodDeclaration result = new MethodDeclaration(getStart(), getEnd(), target, modifier, function, true,
+				attributes);
 		return result;
 	}
 
 	@Override
 	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(PHPVersion apiLevel) {
-		return PROPERTY_DESCRIPTORS;
+		if (PHPVersion.PHP8_0.isGreaterThan(apiLevel)) {
+			return PROPERTY_DESCRIPTORS;
+		}
+
+		return PROPERTY_DESCRIPTORS_PHP8;
 	}
 
 	/**
 	 * Resolves and returns the binding for this method
 	 * 
-	 * @return the binding, or <code>null</code> if the binding cannot be resolved
+	 * @return the binding, or <code>null</code> if the binding cannot be
+	 *         resolved
 	 */
 	public IMethodBinding resolveMethodBinding() {
 		return this.ast.getBindingResolver().resolveMethod(this);

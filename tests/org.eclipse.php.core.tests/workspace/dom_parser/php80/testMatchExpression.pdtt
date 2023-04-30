@@ -1,0 +1,96 @@
+--TEST--
+PHP 8.0
+--FILE--
+<?php
+
+echo match(1) {
+    call(), 2 => $val,
+    default => 3
+};
+echo match(1) {
+    call(), 2 => $val,
+    default => 3,
+}; 
+echo match(1) {}; 
+?>
+--EXPECT--
+<Program start='0' length='148'>
+	<Statements>
+		<EchoStatement start='7' length='58'>
+			<MatchExpression start='12' length='52'>
+				<Expression>
+					<Scalar start='18' length='1' type='int' value='1'/>
+				</Expression>
+				<Block start='21' length='43' isCurly='true'>
+					<SwitchArm start='27' length='17' isDefault='false'>
+						<Value>
+							<Variable start='40' length='4' isDollared='true'>
+								<Identifier start='41' length='3' name='val'/>
+							</Variable>
+						</Value>
+						<FunctionInvocation start='27' length='6'>
+							<FunctionName start='27' length='4'>
+								<NamespaceName start='27' length='4' global='false' current='false'>
+									<Identifier start='27' length='4' name='call'/>
+								</NamespaceName>
+							</FunctionName>
+							<Parameters>
+							</Parameters>
+						</FunctionInvocation>
+						<Scalar start='35' length='1' type='int' value='2'/>
+					</SwitchCase>
+					<SwitchArm start='50' length='12' isDefault='true'>
+						<Value>
+							<Scalar start='61' length='1' type='int' value='3'/>
+						</Value>
+					</SwitchCase>
+					<EmptyStatement start='62' length='0'/>
+				</Block>
+			</MatchExpression>
+		</EchoStatement>
+		<EchoStatement start='66' length='59'>
+			<MatchExpression start='71' length='53'>
+				<Expression>
+					<Scalar start='77' length='1' type='int' value='1'/>
+				</Expression>
+				<Block start='80' length='44' isCurly='true'>
+					<SwitchArm start='86' length='17' isDefault='false'>
+						<Value>
+							<Variable start='99' length='4' isDollared='true'>
+								<Identifier start='100' length='3' name='val'/>
+							</Variable>
+						</Value>
+						<FunctionInvocation start='86' length='6'>
+							<FunctionName start='86' length='4'>
+								<NamespaceName start='86' length='4' global='false' current='false'>
+									<Identifier start='86' length='4' name='call'/>
+								</NamespaceName>
+							</FunctionName>
+							<Parameters>
+							</Parameters>
+						</FunctionInvocation>
+						<Scalar start='94' length='1' type='int' value='2'/>
+					</SwitchCase>
+					<SwitchArm start='109' length='12' isDefault='true'>
+						<Value>
+							<Scalar start='120' length='1' type='int' value='3'/>
+						</Value>
+					</SwitchCase>
+					<EmptyStatement start='121' length='1'/>
+				</Block>
+			</MatchExpression>
+		</EchoStatement>
+		<EchoStatement start='127' length='17'>
+			<MatchExpression start='132' length='11'>
+				<Expression>
+					<Scalar start='138' length='1' type='int' value='1'/>
+				</Expression>
+				<Block start='141' length='2' isCurly='true'>
+				</Block>
+			</MatchExpression>
+		</EchoStatement>
+		<EmptyStatement start='146' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

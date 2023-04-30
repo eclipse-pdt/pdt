@@ -47,11 +47,17 @@ public class ConstantDeclaration extends BodyDeclaration {
 	public static final SimplePropertyDescriptor MODIFIER_PROPERTY = new SimplePropertyDescriptor(
 			ConstantDeclaration.class, "modifier", Integer.class, OPTIONAL); //$NON-NLS-1$
 
+	public static final ChildListPropertyDescriptor ATTRIBUTES_PROPERTY = new ChildListPropertyDescriptor(
+			ConstantDeclaration.class, "attributes", AttributeGroup.class, //$NON-NLS-1$
+			CYCLE_RISK);
+
 	/**
 	 * A list of property descriptors (element type:
 	 * {@link StructuralPropertyDescriptor}), or null if uninitialized.
 	 */
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
+
+	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS_PHP8;
 
 	static {
 		List<StructuralPropertyDescriptor> properyList = new ArrayList<>(3);
@@ -59,6 +65,13 @@ public class ConstantDeclaration extends BodyDeclaration {
 		properyList.add(INITIALIZERS_PROPERTY);
 		properyList.add(MODIFIER_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(properyList);
+
+		properyList = new ArrayList<>(4);
+		properyList.add(NAMES_PROPERTY);
+		properyList.add(INITIALIZERS_PROPERTY);
+		properyList.add(MODIFIER_PROPERTY);
+		properyList.add(ATTRIBUTES_PROPERTY);
+		PROPERTY_DESCRIPTORS_PHP8 = Collections.unmodifiableList(properyList);
 	}
 
 	public ConstantDeclaration(int start, int end, AST ast, List<Identifier> names, List<Expression> initializers) {
@@ -67,10 +80,18 @@ public class ConstantDeclaration extends BodyDeclaration {
 
 	public ConstantDeclaration(int start, int end, AST ast, int modifier, List<Identifier> names,
 			List<Expression> initializers) {
+		this(start, end, ast, modifier, names, initializers, null);
+	}
+
+	public ConstantDeclaration(int start, int end, AST ast, int modifier, List<Identifier> names,
+			List<Expression> initializers, List<AttributeGroup> attributes) {
 		super(start, end, ast, modifier);
 
 		if (names == null || initializers == null || names.size() != initializers.size()) {
 			throw new IllegalArgumentException();
+		}
+		if (attributes != null) {
+			attributes().addAll(attributes);
 		}
 
 		Iterator<Identifier> iteratorNames = names.iterator();
@@ -115,6 +136,9 @@ public class ConstantDeclaration extends BodyDeclaration {
 
 	@Override
 	public void childrenAccept(Visitor visitor) {
+		for (AttributeGroup attr : attributes()) {
+			attr.traverseBottomUp(visitor);
+		}
 		Iterator<Identifier> iterator1 = names.iterator();
 		Iterator<Expression> iterator2 = initializers.iterator();
 		while (iterator1.hasNext()) {
@@ -126,6 +150,9 @@ public class ConstantDeclaration extends BodyDeclaration {
 	@Override
 	public void traverseTopDown(Visitor visitor) {
 		accept(visitor);
+		for (AttributeGroup attr : attributes()) {
+			attr.traverseTopDown(visitor);
+		}
 		Iterator<Identifier> iterator1 = names.iterator();
 		Iterator<Expression> iterator2 = initializers.iterator();
 		while (iterator1.hasNext()) {
@@ -136,11 +163,15 @@ public class ConstantDeclaration extends BodyDeclaration {
 
 	@Override
 	public void traverseBottomUp(Visitor visitor) {
+
 		Iterator<Identifier> iterator1 = names.iterator();
 		Iterator<Expression> iterator2 = initializers.iterator();
 		while (iterator1.hasNext()) {
 			iterator1.next().traverseBottomUp(visitor);
 			iterator2.next().traverseBottomUp(visitor);
+		}
+		for (AttributeGroup attr : attributes()) {
+			attr.traverseBottomUp(visitor);
 		}
 		accept(visitor);
 	}
@@ -151,6 +182,7 @@ public class ConstantDeclaration extends BodyDeclaration {
 		appendInterval(buffer);
 		buffer.append(" modifier='").append(getModifierString()).append('\''); //$NON-NLS-1$
 		buffer.append(">\n"); //$NON-NLS-1$
+		toStringAttributes(buffer, tab + TAB);
 		Iterator<Identifier> iterator1 = names.iterator();
 		Iterator<Expression> iterator2 = initializers.iterator();
 		while (iterator1.hasNext()) {
@@ -213,17 +245,27 @@ public class ConstantDeclaration extends BodyDeclaration {
 	ASTNode clone0(AST target) {
 		final List<Identifier> names = ASTNode.copySubtrees(target, this.names());
 		final List<Expression> initializers = ASTNode.copySubtrees(target, this.initializers());
-		return new ConstantDeclaration(this.getStart(), this.getEnd(), target, this.getModifier(), names, initializers);
+		final List<AttributeGroup> attributes = ASTNode.copySubtrees(target, attributes());
+		return new ConstantDeclaration(this.getStart(), this.getEnd(), target, this.getModifier(), names, initializers,
+				attributes);
 
 	}
 
 	@Override
 	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(PHPVersion apiLevel) {
-		return PROPERTY_DESCRIPTORS;
+		if (PHPVersion.PHP8_0.isGreaterThan(apiLevel)) {
+			return PROPERTY_DESCRIPTORS;
+		}
+		return PROPERTY_DESCRIPTORS_PHP8;
 	}
 
 	@Override
 	public SimplePropertyDescriptor getModifierProperty() {
 		return MODIFIER_PROPERTY;
+	}
+
+	@Override
+	protected ChildListPropertyDescriptor getAttributesProperty() {
+		return ATTRIBUTES_PROPERTY;
 	}
 }

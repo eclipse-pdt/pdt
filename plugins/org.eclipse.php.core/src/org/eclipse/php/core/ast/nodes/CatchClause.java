@@ -44,7 +44,7 @@ public class CatchClause extends Statement {
 			CatchClause.class, "classNames", //$NON-NLS-1$
 			Expression.class, CYCLE_RISK);
 	public static final ChildPropertyDescriptor VARIABLE_PROPERTY = new ChildPropertyDescriptor(CatchClause.class,
-			"variable", Variable.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
+			"variable", Variable.class, OPTIONAL, CYCLE_RISK); //$NON-NLS-1$
 	public static final ChildPropertyDescriptor BODY_PROPERTY = new ChildPropertyDescriptor(CatchClause.class,
 			"statement", Block.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
 
@@ -65,7 +65,7 @@ public class CatchClause extends Statement {
 	public CatchClause(int start, int end, AST ast, Expression className, Variable variable, Block statement) {
 		super(start, end, ast);
 
-		if (variable == null || statement == null) {
+		if (statement == null) {
 			throw new IllegalArgumentException();
 		}
 		if (!(className instanceof Identifier) && !(className instanceof NamespaceName)) {
@@ -75,15 +75,16 @@ public class CatchClause extends Statement {
 		this.classNames.add(className);
 		this.variable = variable;
 		this.body = statement;
-
-		variable.setParent(this, VARIABLE_PROPERTY);
+		if (variable != null) {
+			variable.setParent(this, VARIABLE_PROPERTY);
+		}
 		statement.setParent(this, BODY_PROPERTY);
 	}
 
 	public CatchClause(int start, int end, AST ast, List<Expression> classNames, Variable variable, Block statement) {
 		super(start, end, ast);
 
-		if (variable == null || statement == null || classNames == null || classNames.isEmpty()) {
+		if (statement == null || classNames == null || classNames.isEmpty()) {
 			throw new IllegalArgumentException();
 		}
 
@@ -96,8 +97,9 @@ public class CatchClause extends Statement {
 		this.classNames.addAll(classNames);
 		this.variable = variable;
 		this.body = statement;
-
-		variable.setParent(this, VARIABLE_PROPERTY);
+		if (variable != null) {
+			variable.setParent(this, VARIABLE_PROPERTY);
+		}
 		statement.setParent(this, BODY_PROPERTY);
 	}
 
@@ -119,7 +121,9 @@ public class CatchClause extends Statement {
 		for (Expression className : classNames) {
 			className.accept(visitor);
 		}
-		variable.accept(visitor);
+		if (variable != null) {
+			variable.accept(visitor);
+		}
 		body.accept(visitor);
 	}
 
@@ -129,7 +133,9 @@ public class CatchClause extends Statement {
 		for (Expression className : classNames) {
 			className.traverseTopDown(visitor);
 		}
-		variable.traverseTopDown(visitor);
+		if (variable != null) {
+			variable.traverseTopDown(visitor);
+		}
 		body.traverseTopDown(visitor);
 	}
 
@@ -138,7 +144,9 @@ public class CatchClause extends Statement {
 		for (Expression className : classNames) {
 			className.traverseBottomUp(visitor);
 		}
-		variable.traverseBottomUp(visitor);
+		if (variable != null) {
+			variable.traverseBottomUp(visitor);
+		}
 		body.traverseBottomUp(visitor);
 		accept(visitor);
 	}
@@ -154,8 +162,10 @@ public class CatchClause extends Statement {
 			buffer.append("\n"); //$NON-NLS-1$
 			buffer.append(TAB).append(tab).append("</ClassName>\n"); //$NON-NLS-1$
 		}
-		variable.toString(buffer, TAB + tab);
-		buffer.append("\n"); //$NON-NLS-1$
+		if (variable != null) {
+			variable.toString(buffer, TAB + tab);
+			buffer.append("\n"); //$NON-NLS-1$
+		}
 		body.toString(buffer, TAB + tab);
 		buffer.append("\n"); //$NON-NLS-1$
 		buffer.append(tab).append("</CatchClause>"); //$NON-NLS-1$
@@ -222,9 +232,6 @@ public class CatchClause extends Statement {
 	 *                </ul>
 	 */
 	public void setVariable(Variable variable) {
-		if (variable == null) {
-			throw new IllegalArgumentException();
-		}
 		ASTNode oldChild = this.variable;
 		preReplaceChild(oldChild, variable, VARIABLE_PROPERTY);
 		this.variable = variable;

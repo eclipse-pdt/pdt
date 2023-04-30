@@ -31,7 +31,7 @@ import org.eclipse.php.core.ast.visitor.Visitor;
  * 
  * @see http://wiki.php.net/rfc/closures
  */
-public class LambdaFunctionDeclaration extends Expression {
+public class LambdaFunctionDeclaration extends AttributedExpression {
 
 	private boolean isReference;
 	private boolean isStatic;
@@ -62,6 +62,9 @@ public class LambdaFunctionDeclaration extends Expression {
 	public static final ChildPropertyDescriptor RETURN_TYPE_PROPERTY = new ChildPropertyDescriptor(
 			LambdaFunctionDeclaration.class, "returnType", ReturnType.class, //$NON-NLS-1$
 			OPTIONAL, CYCLE_RISK);
+	public static final ChildListPropertyDescriptor ATTRIBUTES_PROPERTY = new ChildListPropertyDescriptor(
+			LambdaFunctionDeclaration.class, "attributes", AttributeGroup.class, //$NON-NLS-1$
+			CYCLE_RISK);
 
 	/**
 	 * A list of property descriptors (element type:
@@ -69,8 +72,10 @@ public class LambdaFunctionDeclaration extends Expression {
 	 */
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
 
+	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS_PHP8;
+
 	static {
-		List<StructuralPropertyDescriptor> propertyList = new ArrayList<>(4);
+		List<StructuralPropertyDescriptor> propertyList = new ArrayList<>(6);
 		propertyList.add(IS_REFERENCE_PROPERTY);
 		propertyList.add(IS_STATIC);
 		propertyList.add(FORMAL_PARAMETERS_PROPERTY);
@@ -78,6 +83,16 @@ public class LambdaFunctionDeclaration extends Expression {
 		propertyList.add(BODY_PROPERTY);
 		propertyList.add(RETURN_TYPE_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(propertyList);
+
+		propertyList = new ArrayList<>(7);
+		propertyList.add(IS_REFERENCE_PROPERTY);
+		propertyList.add(IS_STATIC);
+		propertyList.add(FORMAL_PARAMETERS_PROPERTY);
+		propertyList.add(LEXICAL_VARIABLES_PROPERTY);
+		propertyList.add(BODY_PROPERTY);
+		propertyList.add(RETURN_TYPE_PROPERTY);
+		propertyList.add(ATTRIBUTES_PROPERTY);
+		PROPERTY_DESCRIPTORS_PHP8 = Collections.unmodifiableList(propertyList);
 	}
 
 	public LambdaFunctionDeclaration(int start, int end, AST ast, List<FormalParameter> formalParameters,
@@ -142,6 +157,15 @@ public class LambdaFunctionDeclaration extends Expression {
 		super(ast);
 	}
 
+	public LambdaFunctionDeclaration(int start, int end, AST target, List<FormalParameter> formalParams,
+			List<Expression> lexicalVars, Block body, boolean isRef, boolean isStatic, Identifier returnType,
+			List<AttributeGroup> attributes) {
+		this(start, end, target, formalParams, lexicalVars, body, isRef, isStatic, returnType);
+		if (attributes != null) {
+			attributes().addAll(attributes);
+		}
+	}
+
 	@Override
 	public void accept0(Visitor visitor) {
 		final boolean visit = visitor.visit(this);
@@ -153,6 +177,9 @@ public class LambdaFunctionDeclaration extends Expression {
 
 	@Override
 	public void childrenAccept(Visitor visitor) {
+		for (AttributeGroup attr : attributes()) {
+			attr.accept(visitor);
+		}
 		for (ASTNode node : this.formalParameters) {
 			node.accept(visitor);
 		}
@@ -170,6 +197,9 @@ public class LambdaFunctionDeclaration extends Expression {
 	@Override
 	public void traverseTopDown(Visitor visitor) {
 		accept(visitor);
+		for (AttributeGroup attr : attributes()) {
+			attr.traverseTopDown(visitor);
+		}
 		for (ASTNode node : this.formalParameters) {
 			node.traverseTopDown(visitor);
 		}
@@ -198,6 +228,9 @@ public class LambdaFunctionDeclaration extends Expression {
 		if (body != null) {
 			body.traverseBottomUp(visitor);
 		}
+		for (AttributeGroup attr : attributes()) {
+			attr.traverseBottomUp(visitor);
+		}
 		accept(visitor);
 	}
 
@@ -210,6 +243,7 @@ public class LambdaFunctionDeclaration extends Expression {
 			buffer.append(" isStatic='").append(isStatic).append('\''); //$NON-NLS-1$
 		}
 		buffer.append(">\n"); //$NON-NLS-1$
+		toStringAttributes(buffer, tab + TAB);
 		buffer.append(TAB).append(tab).append("<FormalParameters>\n"); //$NON-NLS-1$
 		for (ASTNode node : this.formalParameters) {
 			node.toString(buffer, TAB + TAB + tab);
@@ -437,12 +471,22 @@ public class LambdaFunctionDeclaration extends Expression {
 		final List<Expression> lexicalVars = ASTNode.copySubtrees(target, lexicalVariables());
 		final boolean isRef = isReference();
 		final Identifier returnType = ASTNode.copySubtree(target, getReturnType());
+		final List<AttributeGroup> attributes = ASTNode.copySubtrees(target, attributes());
 		return new LambdaFunctionDeclaration(getStart(), getEnd(), target, formalParams, lexicalVars, body, isRef,
-				isStatic(), returnType);
+				isStatic(), returnType, attributes);
 	}
 
 	@Override
 	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(PHPVersion apiLevel) {
-		return PROPERTY_DESCRIPTORS;
+		if (PHPVersion.PHP8_0.isGreaterThan(apiLevel)) {
+			return PROPERTY_DESCRIPTORS;
+		}
+		return PROPERTY_DESCRIPTORS_PHP8;
 	}
+
+	@Override
+	protected ChildListPropertyDescriptor getAttributesProperty() {
+		return ATTRIBUTES_PROPERTY;
+	}
+
 }

@@ -1,0 +1,90 @@
+--TEST--
+PHP 8.0
+--FILE--
+<?php
+class Point {
+  public function __construct(
+    public float $x = 0.0,
+    protected float $y = 0.0,
+    private float $z = 0.0
+  ) {}
+}
+
+?>
+--EXPECT--
+<Program start='0' length='147'>
+	<Statements>
+		<ClassDeclaration start='6' length='137' modifier=''>
+			<ClassName>
+				<Identifier start='12' length='5' name='Point'/>
+			</ClassName>
+			<SuperClassName>
+			</SuperClassName>
+			<Interfaces>
+			</Interfaces>
+			<Block start='18' length='125' isCurly='true'>
+				<MethodDeclaration start='22' length='119' modifier='public'>
+					<FunctionDeclaration start='29' length='112' isReference='false'>
+						<FunctionName>
+							<Identifier start='38' length='11' name='__construct'/>
+						</FunctionName>
+						<FormalParameters>
+							<FormalParameter start='55' length='21' isMandatory='false modifier='public''>
+								<Type>
+									<NamespaceName start='62' length='5' global='false' current='false'>
+										<Identifier start='62' length='5' name='float'/>
+									</NamespaceName>
+								</Type>
+								<ParameterName>
+									<Variable start='68' length='2' isDollared='true'>
+										<Identifier start='69' length='1' name='x'/>
+									</Variable>
+								</ParameterName>
+								<DefaultValue>
+									<Scalar start='73' length='3' type='real' value='0.0'/>
+								</DefaultValue>
+							</FormalParameter>
+							<FormalParameter start='82' length='24' isMandatory='false modifier='protected''>
+								<Type>
+									<NamespaceName start='92' length='5' global='false' current='false'>
+										<Identifier start='92' length='5' name='float'/>
+									</NamespaceName>
+								</Type>
+								<ParameterName>
+									<Variable start='98' length='2' isDollared='true'>
+										<Identifier start='99' length='1' name='y'/>
+									</Variable>
+								</ParameterName>
+								<DefaultValue>
+									<Scalar start='103' length='3' type='real' value='0.0'/>
+								</DefaultValue>
+							</FormalParameter>
+							<FormalParameter start='112' length='22' isMandatory='false modifier='private''>
+								<Type>
+									<NamespaceName start='120' length='5' global='false' current='false'>
+										<Identifier start='120' length='5' name='float'/>
+									</NamespaceName>
+								</Type>
+								<ParameterName>
+									<Variable start='126' length='2' isDollared='true'>
+										<Identifier start='127' length='1' name='z'/>
+									</Variable>
+								</ParameterName>
+								<DefaultValue>
+									<Scalar start='131' length='3' type='real' value='0.0'/>
+								</DefaultValue>
+							</FormalParameter>
+						</FormalParameters>
+						<FunctionBody>
+							<Block start='139' length='2' isCurly='true'>
+							</Block>
+						</FunctionBody>
+					</FunctionDeclaration>
+				</MethodDeclaration>
+			</Block>
+		</ClassDeclaration>
+		<EmptyStatement start='145' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

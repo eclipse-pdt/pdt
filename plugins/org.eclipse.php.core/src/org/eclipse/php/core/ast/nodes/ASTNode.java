@@ -123,6 +123,15 @@ public abstract class ASTNode implements Visitable {
 	public static final int ARROW_FUNCTION_DECLARATION = 80;
 	public static final int ARRAY_SPREAD_ELEMENT = 81;
 
+	// php8.0
+	public static final int ATTRIBUTE = 82;
+	public static final int ATTRIBUTE_GROUP = 83;
+	public static final int NAMED_EXPRESSION = 84;
+	public static final int MATCH_EXPRESSION = 85;
+	public static final int MATCH_ARM = 86;
+	public static final int THROW_EXPRESSION = 87;
+	public static final int DNF_TYPE = 88;
+
 	/**
 	 * Internal convenience constant indicating that there is definite risk of
 	 * cycles.

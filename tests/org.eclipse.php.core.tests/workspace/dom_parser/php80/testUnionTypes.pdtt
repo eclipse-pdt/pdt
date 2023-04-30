@@ -1,0 +1,104 @@
+--TEST--
+PHP 8.0
+--FILE--
+<?php
+function myFunc(string|int|Exception $type) {}
+
+class Point {
+	public function myMethod(string|int $var): Exception|Example {}
+}
+?>
+--EXPECT--
+<Program start='0' length='137'>
+	<Statements>
+		<FunctionDeclaration start='6' length='46' isReference='false'>
+			<FunctionName>
+				<Identifier start='15' length='6' name='myFunc'/>
+			</FunctionName>
+			<FormalParameters>
+				<FormalParameter start='22' length='26' isMandatory='false'>
+					<Type>
+						<DNFType start='22' length='20' type='1'>
+							<NamespaceName start='22' length='6' global='false' current='false'>
+								<Identifier start='22' length='6' name='string'/>
+							</NamespaceName>
+							<NamespaceName start='29' length='3' global='false' current='false'>
+								<Identifier start='29' length='3' name='int'/>
+							</NamespaceName>
+							<NamespaceName start='33' length='9' global='false' current='false'>
+								<Identifier start='33' length='9' name='Exception'/>
+							</NamespaceName>
+						</DNFType>
+					</Type>
+					<ParameterName>
+						<Variable start='43' length='5' isDollared='true'>
+							<Identifier start='44' length='4' name='type'/>
+						</Variable>
+					</ParameterName>
+					<DefaultValue>
+					</DefaultValue>
+				</FormalParameter>
+			</FormalParameters>
+			<FunctionBody>
+				<Block start='50' length='2' isCurly='true'>
+				</Block>
+			</FunctionBody>
+		</FunctionDeclaration>
+		<ClassDeclaration start='54' length='80' modifier=''>
+			<ClassName>
+				<Identifier start='60' length='5' name='Point'/>
+			</ClassName>
+			<SuperClassName>
+			</SuperClassName>
+			<Interfaces>
+			</Interfaces>
+			<Block start='66' length='68' isCurly='true'>
+				<MethodDeclaration start='69' length='63' modifier='public'>
+					<FunctionDeclaration start='76' length='56' isReference='false'>
+						<FunctionName>
+							<Identifier start='85' length='8' name='myMethod'/>
+						</FunctionName>
+						<FormalParameters>
+							<FormalParameter start='94' length='15' isMandatory='false'>
+								<Type>
+									<DNFType start='94' length='10' type='1'>
+										<NamespaceName start='94' length='6' global='false' current='false'>
+											<Identifier start='94' length='6' name='string'/>
+										</NamespaceName>
+										<NamespaceName start='101' length='3' global='false' current='false'>
+											<Identifier start='101' length='3' name='int'/>
+										</NamespaceName>
+									</DNFType>
+								</Type>
+								<ParameterName>
+									<Variable start='105' length='4' isDollared='true'>
+										<Identifier start='106' length='3' name='var'/>
+									</Variable>
+								</ParameterName>
+								<DefaultValue>
+								</DefaultValue>
+							</FormalParameter>
+						</FormalParameters>
+						<ReturnType>
+							<DNFType start='112' length='17' type='1'>
+								<NamespaceName start='112' length='9' global='false' current='false'>
+									<Identifier start='112' length='9' name='Exception'/>
+								</NamespaceName>
+								<NamespaceName start='122' length='7' global='false' current='false'>
+									<Identifier start='122' length='7' name='Example'/>
+								</NamespaceName>
+							</DNFType>
+						</ReturnType>
+						<FunctionBody>
+							<Block start='130' length='2' isCurly='true'>
+							</Block>
+						</FunctionBody>
+					</FunctionDeclaration>
+				</MethodDeclaration>
+			</Block>
+		</ClassDeclaration>
+		<EmptyStatement start='135' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

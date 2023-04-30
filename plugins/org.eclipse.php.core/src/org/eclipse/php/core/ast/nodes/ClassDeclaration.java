@@ -57,6 +57,9 @@ public class ClassDeclaration extends TypeDeclaration {
 	public static final SimplePropertyDescriptor MODIFIER_PROPERTY = new SimplePropertyDescriptor(
 			ClassDeclaration.class, "modifier", Integer.class, OPTIONAL); //$NON-NLS-1$
 
+	public static final ChildListPropertyDescriptor ATTRIBUTES_PROPERTY = new ChildListPropertyDescriptor(
+			ClassDeclaration.class, "attributes", AttributeGroup.class, CYCLE_RISK); //$NON-NLS-1$
+
 	@Override
 	protected ChildPropertyDescriptor getBodyProperty() {
 		return BODY_PROPERTY;
@@ -72,11 +75,18 @@ public class ClassDeclaration extends TypeDeclaration {
 		return NAME_PROPERTY;
 	}
 
+	@Override
+	protected ChildListPropertyDescriptor getAttributesProperty() {
+		return ATTRIBUTES_PROPERTY;
+	}
+
 	/**
 	 * A list of property descriptors (element type:
 	 * {@link StructuralPropertyDescriptor}), or null if uninitialized.
 	 */
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
+
+	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS_PHP8;
 
 	static {
 		List<StructuralPropertyDescriptor> propertyList = new ArrayList<>(5);
@@ -86,16 +96,33 @@ public class ClassDeclaration extends TypeDeclaration {
 		propertyList.add(SUPER_CLASS_PROPERTY);
 		propertyList.add(MODIFIER_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(propertyList);
+
+		propertyList = new ArrayList<>(6);
+		propertyList.add(NAME_PROPERTY);
+		propertyList.add(INTERFACES_PROPERTY);
+		propertyList.add(BODY_PROPERTY);
+		propertyList.add(SUPER_CLASS_PROPERTY);
+		propertyList.add(MODIFIER_PROPERTY);
+		propertyList.add(ATTRIBUTES_PROPERTY);
+		PROPERTY_DESCRIPTORS_PHP8 = Collections.unmodifiableList(propertyList);
 	}
 
 	private ClassDeclaration(int start, int end, AST ast, int modifier, Identifier className, Expression superClass,
-			Identifier[] interfaces, Block body) {
+			Identifier[] interfaces, Block body, List<AttributeGroup> attributes) {
 		super(start, end, ast, className, interfaces, body);
 
 		setModifier(modifier);
 		if (superClass != null) {
 			setSuperClass(superClass);
 		}
+		if (attributes != null) {
+			attributes().addAll(attributes);
+		}
+	}
+
+	private ClassDeclaration(int start, int end, AST ast, int modifier, Identifier className, Expression superClass,
+			Identifier[] interfaces, Block body) {
+		this(start, end, ast, modifier, className, superClass, interfaces, body, null);
 	}
 
 	public ClassDeclaration(AST ast) {
@@ -119,6 +146,9 @@ public class ClassDeclaration extends TypeDeclaration {
 
 	@Override
 	public void childrenAccept(Visitor visitor) {
+		for (AttributeGroup object : attributes()) {
+			object.accept(visitor);
+		}
 		getName().accept(visitor);
 		if (superClass != null) {
 			superClass.accept(visitor);
@@ -133,6 +163,9 @@ public class ClassDeclaration extends TypeDeclaration {
 	@Override
 	public void traverseTopDown(Visitor visitor) {
 		accept(visitor);
+		for (AttributeGroup object : attributes()) {
+			object.traverseTopDown(visitor);
+		}
 		getName().traverseTopDown(visitor);
 		if (superClass != null) {
 			superClass.traverseTopDown(visitor);
@@ -146,6 +179,9 @@ public class ClassDeclaration extends TypeDeclaration {
 
 	@Override
 	public void traverseBottomUp(Visitor visitor) {
+		for (AttributeGroup object : attributes()) {
+			object.traverseBottomUp(visitor);
+		}
 		getName().traverseBottomUp(visitor);
 		if (superClass != null) {
 			superClass.traverseBottomUp(visitor);
@@ -176,6 +212,7 @@ public class ClassDeclaration extends TypeDeclaration {
 		buffer.append(tab).append("<ClassDeclaration"); //$NON-NLS-1$
 		appendInterval(buffer);
 		buffer.append(" modifier='").append(getModifier(modifier)).append("'>\n"); //$NON-NLS-1$ //$NON-NLS-2$
+		toStringAttributes(buffer, TAB + tab);
 		buffer.append(tab).append(TAB).append("<ClassName>\n"); //$NON-NLS-1$
 		getName().toString(buffer, TAB + TAB + tab);
 		buffer.append("\n"); //$NON-NLS-1$
@@ -300,11 +337,18 @@ public class ClassDeclaration extends TypeDeclaration {
 		final int modifier = getModifier();
 		final List<Identifier> interfaces = ASTNode.copySubtrees(target, interfaces());
 		final Identifier name = ASTNode.copySubtree(target, getName());
-		return new ClassDeclaration(getStart(), getEnd(), target, modifier, name, superName, interfaces, body);
+		final List<AttributeGroup> attributes = ASTNode.copySubtrees(target, attributes());
+
+		return new ClassDeclaration(getStart(), getEnd(), target, modifier, name, superName,
+				interfaces.toArray(new Identifier[0]), body, attributes);
 	}
 
 	@Override
 	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(PHPVersion apiLevel) {
-		return PROPERTY_DESCRIPTORS;
+		if (PHPVersion.PHP8_0.isGreaterThan(apiLevel)) {
+			return PROPERTY_DESCRIPTORS;
+		}
+
+		return PROPERTY_DESCRIPTORS_PHP8;
 	}
 }

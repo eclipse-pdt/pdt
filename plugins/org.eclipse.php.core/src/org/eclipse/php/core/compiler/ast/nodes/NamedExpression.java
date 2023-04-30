@@ -22,9 +22,7 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
  * Represents a named expression
  * 
  * <pre>
- * e.g.
- * 
- * --$a, --foo()
+ * name: $a, sub_name: call()
  * </pre>
  */
 public class NamedExpression extends Expression {

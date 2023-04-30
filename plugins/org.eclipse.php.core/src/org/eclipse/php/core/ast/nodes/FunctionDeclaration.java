@@ -38,7 +38,7 @@ import org.eclipse.php.core.ast.visitor.Visitor;
  * function foo() : MyType {};
  * </pre>
  */
-public class FunctionDeclaration extends Statement {
+public class FunctionDeclaration extends AttributedStatement {
 
 	private boolean isReference;
 	private Identifier name;
@@ -64,6 +64,8 @@ public class FunctionDeclaration extends Statement {
 	public static final ChildPropertyDescriptor RETURN_TYPE_PROPERTY = new ChildPropertyDescriptor(
 			FunctionDeclaration.class, "returnType", ReturnType.class, //$NON-NLS-1$
 			OPTIONAL, CYCLE_RISK);
+	public static final ChildListPropertyDescriptor ATTRIBUTES_PROPERTY = new ChildListPropertyDescriptor(
+			FunctionDeclaration.class, "attributes", AttributeGroup.class, CYCLE_RISK); //$NON-NLS-1$
 
 	/**
 	 * A list of property descriptors (element type:
@@ -71,14 +73,35 @@ public class FunctionDeclaration extends Statement {
 	 */
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
 
+	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS_PHP8;
+
 	static {
-		List<StructuralPropertyDescriptor> propertyList = new ArrayList<>(4);
+		List<StructuralPropertyDescriptor> propertyList = new ArrayList<>(5);
 		propertyList.add(IS_REFERENCE_PROPERTY);
 		propertyList.add(NAME_PROPERTY);
 		propertyList.add(FORMAL_PARAMETERS_PROPERTY);
 		propertyList.add(BODY_PROPERTY);
 		propertyList.add(RETURN_TYPE_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(propertyList);
+
+		propertyList = new ArrayList<>(6);
+		propertyList.add(IS_REFERENCE_PROPERTY);
+		propertyList.add(NAME_PROPERTY);
+		propertyList.add(FORMAL_PARAMETERS_PROPERTY);
+		propertyList.add(BODY_PROPERTY);
+		propertyList.add(RETURN_TYPE_PROPERTY);
+		propertyList.add(ATTRIBUTES_PROPERTY);
+		PROPERTY_DESCRIPTORS_PHP8 = Collections.unmodifiableList(propertyList);
+	}
+
+	@Override
+	protected ChildListPropertyDescriptor getAttributesProperty() {
+		return ATTRIBUTES_PROPERTY;
+	}
+
+	public FunctionDeclaration(int start, int end, AST ast, Identifier functionName,
+			List<FormalParameter> formalParameters, Block body, final boolean isReference, Identifier returnType) {
+		this(start, end, ast, functionName, formalParameters, body, isReference, returnType, null);
 	}
 
 	public FunctionDeclaration(int start, int end, AST ast, Identifier functionName,
@@ -87,7 +110,8 @@ public class FunctionDeclaration extends Statement {
 	}
 
 	public FunctionDeclaration(int start, int end, AST ast, Identifier functionName,
-			List<FormalParameter> formalParameters, Block body, final boolean isReference, Identifier returnType) {
+			List<FormalParameter> formalParameters, Block body, final boolean isReference, Identifier returnType,
+			List<AttributeGroup> attributes) {
 		super(start, end, ast);
 
 		if (functionName == null || formalParameters == null) {
@@ -96,8 +120,7 @@ public class FunctionDeclaration extends Statement {
 
 		setIsReference(isReference);
 		setFunctionName(functionName);
-		for (Object obj : formalParameters) {
-			FormalParameter formalParameter = (FormalParameter) obj;
+		for (FormalParameter formalParameter : formalParameters) {
 			this.formalParameters.add(formalParameter);
 		}
 		if (returnType != null) {
@@ -105,6 +128,9 @@ public class FunctionDeclaration extends Statement {
 		}
 		if (body != null) {
 			setBody(body);
+		}
+		if (attributes != null) {
+			attributes().addAll(attributes);
 		}
 	}
 
@@ -123,6 +149,9 @@ public class FunctionDeclaration extends Statement {
 
 	@Override
 	public void childrenAccept(Visitor visitor) {
+		for (AttributeGroup object : attributes()) {
+			object.accept(visitor);
+		}
 		name.accept(visitor);
 		for (ASTNode node : this.formalParameters) {
 			node.accept(visitor);
@@ -138,6 +167,12 @@ public class FunctionDeclaration extends Statement {
 	@Override
 	public void traverseTopDown(Visitor visitor) {
 		accept(visitor);
+		for (AttributeGroup object : attributes()) {
+			object.traverseBottomUp(visitor);
+		}
+		for (AttributeGroup object : attributes()) {
+			object.traverseTopDown(visitor);
+		}
 		name.traverseTopDown(visitor);
 		for (ASTNode node : this.formalParameters) {
 			node.traverseTopDown(visitor);
@@ -170,6 +205,7 @@ public class FunctionDeclaration extends Statement {
 		buffer.append(tab).append("<FunctionDeclaration"); //$NON-NLS-1$
 		appendInterval(buffer);
 		buffer.append(" isReference='").append(isReference).append("'>\n"); //$NON-NLS-1$ //$NON-NLS-2$
+		toStringAttributes(buffer, TAB + tab);
 		buffer.append(TAB).append(tab).append("<FunctionName>\n"); //$NON-NLS-1$
 		name.toString(buffer, TAB + TAB + tab);
 		buffer.append("\n"); //$NON-NLS-1$
@@ -405,12 +441,19 @@ public class FunctionDeclaration extends Statement {
 		final List<FormalParameter> formalParams = ASTNode.copySubtrees(target, formalParameters());
 		final boolean isRef = isReference();
 		final Identifier returnType = ASTNode.copySubtree(target, getReturnType());
-		return new FunctionDeclaration(getStart(), getEnd(), target, function, formalParams, body, isRef, returnType);
+		final List<AttributeGroup> attributes = ASTNode.copySubtrees(target, attributes());
+		return new FunctionDeclaration(getStart(), getEnd(), target, function, formalParams, body, isRef, returnType,
+				attributes);
+
 	}
 
 	@Override
 	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(PHPVersion apiLevel) {
-		return PROPERTY_DESCRIPTORS;
+		if (PHPVersion.PHP8_0.isGreaterThan(apiLevel)) {
+			return PROPERTY_DESCRIPTORS;
+		}
+
+		return PROPERTY_DESCRIPTORS_PHP8;
 	}
 
 	/**

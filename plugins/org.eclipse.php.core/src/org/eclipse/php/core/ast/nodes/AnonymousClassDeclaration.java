@@ -21,7 +21,7 @@ import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.ast.match.ASTMatcher;
 import org.eclipse.php.core.ast.visitor.Visitor;
 
-public class AnonymousClassDeclaration extends Expression {
+public class AnonymousClassDeclaration extends AttributedExpression {
 
 	private Expression superClass;
 	protected ASTNode.NodeList<Identifier> interfaces = new ASTNode.NodeList<>(INTERFACES_PROPERTY);
@@ -39,6 +39,9 @@ public class AnonymousClassDeclaration extends Expression {
 	public static final ChildPropertyDescriptor BODY_PROPERTY = new ChildPropertyDescriptor(
 			AnonymousClassDeclaration.class, "body", Block.class, MANDATORY, //$NON-NLS-1$
 			CYCLE_RISK);
+	public static final ChildListPropertyDescriptor ATTRIBUTES_PROPERTY = new ChildListPropertyDescriptor(
+			AnonymousClassDeclaration.class, "attributes", AttributeGroup.class, //$NON-NLS-1$
+			CYCLE_RISK);
 
 	/**
 	 * A list of property descriptors (element type:
@@ -46,12 +49,21 @@ public class AnonymousClassDeclaration extends Expression {
 	 */
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
 
+	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS_PHP8;
+
 	static {
 		List<StructuralPropertyDescriptor> propertyList = new ArrayList<>(3);
 		propertyList.add(SUPER_CLASS_PROPERTY);
 		propertyList.add(INTERFACES_PROPERTY);
 		propertyList.add(BODY_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(propertyList);
+
+		propertyList = new ArrayList<>(4);
+		propertyList.add(SUPER_CLASS_PROPERTY);
+		propertyList.add(INTERFACES_PROPERTY);
+		propertyList.add(BODY_PROPERTY);
+		propertyList.add(ATTRIBUTES_PROPERTY);
+		PROPERTY_DESCRIPTORS_PHP8 = Collections.unmodifiableList(propertyList);
 	}
 
 	public AnonymousClassDeclaration(AST ast) {
@@ -59,7 +71,7 @@ public class AnonymousClassDeclaration extends Expression {
 	}
 
 	public AnonymousClassDeclaration(int start, int end, AST ast, Expression superClass, List<Identifier> interfaces,
-			Block body) {
+			Block body, List<AttributeGroup> attributes) {
 		super(start, end, ast);
 
 		setSuperClass(superClass);
@@ -70,6 +82,14 @@ public class AnonymousClassDeclaration extends Expression {
 			}
 		}
 		setBody(body);
+		if (attributes != null) {
+			attributes().addAll(attributes);
+		}
+	}
+
+	public AnonymousClassDeclaration(int start, int end, AST ast, Expression superClass, List<Identifier> interfaces,
+			Block body) {
+		this(start, end, ast, superClass, interfaces, body, null);
 	}
 
 	public Block getBody() {
@@ -86,6 +106,9 @@ public class AnonymousClassDeclaration extends Expression {
 
 	@Override
 	public void childrenAccept(Visitor visitor) {
+		for (AttributeGroup attr : attributes()) {
+			attr.accept(visitor);
+		}
 		if (superClass != null) {
 			superClass.accept(visitor);
 		}
@@ -99,6 +122,9 @@ public class AnonymousClassDeclaration extends Expression {
 
 	@Override
 	public void traverseTopDown(Visitor visitor) {
+		for (AttributeGroup attr : attributes()) {
+			attr.traverseTopDown(visitor);
+		}
 		if (superClass != null) {
 			superClass.traverseTopDown(visitor);
 		}
@@ -113,14 +139,17 @@ public class AnonymousClassDeclaration extends Expression {
 	@Override
 	public void traverseBottomUp(Visitor visitor) {
 		if (superClass != null) {
-			superClass.traverseTopDown(visitor);
+			superClass.traverseBottomUp(visitor);
 		}
 		if (interfaces != null) {
 			for (Identifier identifier : interfaces) {
-				identifier.traverseTopDown(visitor);
+				identifier.traverseBottomUp(visitor);
 			}
 		}
-		body.traverseTopDown(visitor);
+		for (AttributeGroup attr : attributes()) {
+			attr.traverseBottomUp(visitor);
+		}
+		body.traverseBottomUp(visitor);
 
 	}
 
@@ -138,7 +167,7 @@ public class AnonymousClassDeclaration extends Expression {
 		buffer.append(tab).append("<AnonymousClassDeclaration"); //$NON-NLS-1$
 		appendInterval(buffer);
 		buffer.append(">\n"); //$NON-NLS-1$
-
+		toStringAttributes(buffer, tab + TAB);
 		buffer.append(TAB).append(tab).append("<SuperClass>\n"); //$NON-NLS-1$
 		if (superClass != null) {
 			superClass.toString(buffer, TAB + TAB + tab);
@@ -191,7 +220,8 @@ public class AnonymousClassDeclaration extends Expression {
 		final Expression superClass = ASTNode.copySubtree(target, getSuperClass());
 		final List<Identifier> interfaces = ASTNode.copySubtrees(target, getInterfaces());
 		final Block body = ASTNode.copySubtree(target, getBody());
-		return new AnonymousClassDeclaration(getStart(), getEnd(), target, superClass, interfaces, body);
+		final List<AttributeGroup> attributes = ASTNode.copySubtrees(target, attributes());
+		return new AnonymousClassDeclaration(getStart(), getEnd(), target, superClass, interfaces, body, attributes);
 	}
 
 	@Override
@@ -232,7 +262,15 @@ public class AnonymousClassDeclaration extends Expression {
 
 	@Override
 	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(PHPVersion apiLevel) {
-		return PROPERTY_DESCRIPTORS;
+		if (PHPVersion.PHP8_0.isGreaterThan(apiLevel)) {
+			return PROPERTY_DESCRIPTORS;
+		}
+		return PROPERTY_DESCRIPTORS_PHP8;
+	}
+
+	@Override
+	protected ChildListPropertyDescriptor getAttributesProperty() {
+		return ATTRIBUTES_PROPERTY;
 	}
 
 }

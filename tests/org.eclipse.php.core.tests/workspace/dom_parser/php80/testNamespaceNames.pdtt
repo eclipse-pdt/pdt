@@ -1,0 +1,59 @@
+--TEST--
+PHP 8.0
+--FILE--
+<?php
+use Some;
+use NS\Some;
+use \NS\Some;
+new namespace\Some();
+
+?>
+--EXPECT--
+<Program start='0' length='68'>
+	<Statements>
+		<UseStatement start='6' length='9'>
+			<UseStatementPart start='10' length='4'>
+				<Name>
+					<NamespaceName start='10' length='4' global='false' current='false'>
+						<Identifier start='10' length='4' name='Some'/>
+					</NamespaceName>
+				</Name>
+			</UseStatementPart>
+		</UseStatement>
+		<UseStatement start='16' length='12'>
+			<UseStatementPart start='20' length='7'>
+				<Name>
+					<NamespaceName start='20' length='7' global='false' current='false'>
+						<Identifier start='20' length='2' name='NS'/>
+						<Identifier start='23' length='4' name='Some'/>
+					</NamespaceName>
+				</Name>
+			</UseStatementPart>
+		</UseStatement>
+		<UseStatement start='29' length='13'>
+			<UseStatementPart start='33' length='8'>
+				<Name>
+					<NamespaceName start='34' length='7' global='false' current='false'>
+						<Identifier start='34' length='2' name='NS'/>
+						<Identifier start='37' length='4' name='Some'/>
+					</NamespaceName>
+				</Name>
+			</UseStatementPart>
+		</UseStatement>
+		<ExpressionStatement start='43' length='21'>
+			<ClassInstanceCreation start='43' length='20'>
+				<ClassName start='47' length='14'>
+					<NamespaceName start='47' length='14' global='false' current='true'>
+						<Identifier start='47' length='9' name='namespace'/>
+						<Identifier start='57' length='4' name='Some'/>
+					</NamespaceName>
+				</ClassName>
+				<ConstructorParameters>
+				</ConstructorParameters>
+			</ClassInstanceCreation>
+		</ExpressionStatement>
+		<EmptyStatement start='66' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

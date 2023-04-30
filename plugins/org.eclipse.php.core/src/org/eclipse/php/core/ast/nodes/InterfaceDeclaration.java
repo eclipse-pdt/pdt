@@ -40,6 +40,8 @@ public class InterfaceDeclaration extends TypeDeclaration {
 			InterfaceDeclaration.class, "interfaces", Identifier.class, NO_CYCLE_RISK); //$NON-NLS-1$
 	public static final ChildPropertyDescriptor BODY_PROPERTY = new ChildPropertyDescriptor(InterfaceDeclaration.class,
 			"body", Block.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
+	public static final ChildListPropertyDescriptor ATTRIBUTES_PROPERTY = new ChildListPropertyDescriptor(
+			InterfaceDeclaration.class, "attributes", AttributeGroup.class, CYCLE_RISK); //$NON-NLS-1$
 
 	@Override
 	protected ChildPropertyDescriptor getBodyProperty() {
@@ -56,11 +58,18 @@ public class InterfaceDeclaration extends TypeDeclaration {
 		return NAME_PROPERTY;
 	}
 
+	@Override
+	protected ChildListPropertyDescriptor getAttributesProperty() {
+		return ATTRIBUTES_PROPERTY;
+	}
+
 	/**
 	 * A list of property descriptors (element type:
 	 * {@link StructuralPropertyDescriptor}), or null if uninitialized.
 	 */
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
+
+	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS_PHP8;
 
 	static {
 		List<StructuralPropertyDescriptor> propertyList = new ArrayList<>(3);
@@ -68,6 +77,21 @@ public class InterfaceDeclaration extends TypeDeclaration {
 		propertyList.add(INTERFACES_PROPERTY);
 		propertyList.add(BODY_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(propertyList);
+
+		propertyList = new ArrayList<>(4);
+		propertyList.add(NAME_PROPERTY);
+		propertyList.add(INTERFACES_PROPERTY);
+		propertyList.add(BODY_PROPERTY);
+		propertyList.add(ATTRIBUTES_PROPERTY);
+		PROPERTY_DESCRIPTORS_PHP8 = Collections.unmodifiableList(propertyList);
+	}
+
+	public InterfaceDeclaration(int start, int end, AST ast, Identifier interfaceName, List<Identifier> interfaces,
+			Block body, List<AttributeGroup> attributes) {
+		super(start, end, ast, interfaceName, interfaces.toArray(new Identifier[interfaces.size()]), body);
+		if (attributes != null) {
+			attributes().addAll(attributes);
+		}
 	}
 
 	public InterfaceDeclaration(int start, int end, AST ast, Identifier interfaceName, List<Identifier> interfaces,
@@ -90,6 +114,9 @@ public class InterfaceDeclaration extends TypeDeclaration {
 
 	@Override
 	public void childrenAccept(Visitor visitor) {
+		for (AttributeGroup object : attributes()) {
+			object.accept(visitor);
+		}
 		getName().accept(visitor);
 		final List<Identifier> interfaes = interfaces();
 		for (Object node : interfaes) {
@@ -102,6 +129,9 @@ public class InterfaceDeclaration extends TypeDeclaration {
 	@Override
 	public void traverseTopDown(Visitor visitor) {
 		accept(visitor);
+		for (AttributeGroup object : attributes()) {
+			object.traverseTopDown(visitor);
+		}
 		getName().traverseTopDown(visitor);
 		final List<Identifier> interfaes = interfaces();
 		for (Object node : interfaes) {
@@ -113,6 +143,9 @@ public class InterfaceDeclaration extends TypeDeclaration {
 
 	@Override
 	public void traverseBottomUp(Visitor visitor) {
+		for (AttributeGroup object : attributes()) {
+			object.traverseBottomUp(visitor);
+		}
 		getName().traverseBottomUp(visitor);
 		final List<Identifier> interfaes = interfaces();
 		for (Object node : interfaes) {
@@ -128,6 +161,7 @@ public class InterfaceDeclaration extends TypeDeclaration {
 		buffer.append(tab).append("<InterfaceDeclaration"); //$NON-NLS-1$
 		appendInterval(buffer);
 		buffer.append(">\n"); //$NON-NLS-1$
+		toStringAttributes(buffer, TAB + tab);
 		buffer.append(tab).append(TAB).append("<InterfaceName>\n"); //$NON-NLS-1$
 		getName().toString(buffer, TAB + TAB + tab);
 		buffer.append("\n"); //$NON-NLS-1$
@@ -164,11 +198,16 @@ public class InterfaceDeclaration extends TypeDeclaration {
 		final Identifier name = ASTNode.copySubtree(target, getName());
 		final Block body = ASTNode.copySubtree(target, getBody());
 		final List<Identifier> interfaces = ASTNode.copySubtrees(target, interfaces());
-		return new InterfaceDeclaration(getStart(), getEnd(), target, name, interfaces, body);
+		final List<AttributeGroup> attributes = ASTNode.copySubtrees(target, attributes());
+		return new InterfaceDeclaration(getStart(), getEnd(), target, name, interfaces, body, attributes);
 	}
 
 	@Override
 	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(PHPVersion apiLevel) {
-		return PROPERTY_DESCRIPTORS;
+		if (PHPVersion.PHP8_0.isGreaterThan(apiLevel)) {
+			return PROPERTY_DESCRIPTORS;
+		}
+
+		return PROPERTY_DESCRIPTORS_PHP8;
 	}
 }

@@ -19,7 +19,7 @@ import org.eclipse.php.core.compiler.PHPFlags;
 /**
  * Base class for class member declarations
  */
-public abstract class BodyDeclaration extends Statement {
+public abstract class BodyDeclaration extends AttributedStatement {
 
 	private int modifier;
 

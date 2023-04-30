@@ -530,7 +530,7 @@ public class ASTMatcher {
 		}
 		FormalParameter o = (FormalParameter) other;
 
-		return (safeEquals(node.isMandatory(), o.isMandatory()) && safeEquals(node.isVariadic(), o.isVariadic())
+		return (safeEquals(node.getModifier(), o.getModifier()) && safeEquals(node.isVariadic(), o.isVariadic())
 				&& safeSubtreeMatch(node.getParameterType(), o.getParameterType())
 				&& safeSubtreeMatch(node.getParameterName(), o.getParameterName())
 				&& safeSubtreeMatch(node.getDefaultValue(), o.getDefaultValue()));
@@ -1058,6 +1058,62 @@ public class ASTMatcher {
 		}
 		ReturnType o = (ReturnType) other;
 		return node.getName().equals(o.getName());
+	}
+
+	public boolean match(Attribute node, Object other) {
+		if (!(other instanceof Attribute)) {
+			return false;
+		}
+		Attribute o = (Attribute) other;
+		return safeSubtreeMatch(node.getAttributeName(), o.getAttributeName())
+				&& safeSubtreeListMatch(node.parameters(), o.parameters());
+	}
+
+	public boolean match(AttributeGroup node, Object other) {
+		if (!(other instanceof AttributeGroup)) {
+			return false;
+		}
+		AttributeGroup o = (AttributeGroup) other;
+		return safeSubtreeMatch(node.emptyPart(), o.emptyPart())
+				&& safeSubtreeListMatch(node.attributes(), o.attributes());
+	}
+
+	public boolean match(ThrowExpression node, Object other) {
+		if (!(other instanceof ThrowExpression)) {
+			return false;
+		}
+		ThrowExpression o = (ThrowExpression) other;
+
+		return safeSubtreeMatch(node.getExpression(), o.getExpression());
+	}
+
+	public boolean match(MatchExpression node, Object other) {
+		if (!(other instanceof MatchExpression)) {
+			return false;
+		}
+		MatchExpression o = (MatchExpression) other;
+
+		return (safeSubtreeMatch(node.getExpression(), o.getExpression())
+				&& safeSubtreeMatch(node.getBody(), o.getBody()));
+	}
+
+	public boolean match(MatchArm node, Object other) {
+		if (!(other instanceof MatchArm)) {
+			return false;
+		}
+		MatchArm o = (MatchArm) other;
+
+		return (safeEquals(node.isDefault(), o.isDefault()) && safeSubtreeMatch(node.getValue(), o.getValue())
+				&& safeSubtreeListMatch(node.conditions(), o.conditions()));
+	}
+
+	public boolean match(NamedExpression node, Object other) {
+		if (!(other instanceof NamedExpression)) {
+			return false;
+		}
+		NamedExpression o = (NamedExpression) other;
+
+		return safeEquals(node.getName(), o.getName()) && safeSubtreeMatch(node.getExpression(), o.getExpression());
 	}
 
 }

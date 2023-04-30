@@ -1,0 +1,39 @@
+--TEST--
+PHP 8.0
+--FILE--
+<?php
+$fn = function() use ($param1, $param2, ) {}
+?>
+--EXPECT--
+<Program start='0' length='53'>
+	<Statements>
+		<ExpressionStatement start='6' length='47'>
+			<Assignment start='6' length='44' operator='='>
+				<Variable start='6' length='3' isDollared='true'>
+					<Identifier start='7' length='2' name='fn'/>
+				</Variable>
+				<Value>
+					<LambdaFunctionDeclaration start='12' length='38' isReference='false'>
+						<FormalParameters>
+						</FormalParameters>
+						<LexicalVariables>
+							<Variable start='28' length='7' isDollared='true'>
+								<Identifier start='29' length='6' name='param1'/>
+							</Variable>
+							<Variable start='37' length='7' isDollared='true'>
+								<Identifier start='38' length='6' name='param2'/>
+							</Variable>
+							<EmptyExpression start='45' length='0'/>
+						</LexicalVariables>
+						<FunctionBody>
+							<Block start='48' length='2' isCurly='true'>
+							</Block>
+						</FunctionBody>
+					</LambdaFunctionDeclaration>
+				</Value>
+			</Assignment>
+		</ExpressionStatement>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

@@ -46,6 +46,9 @@ public class FieldsDeclaration extends BodyDeclaration {
 	public static final ChildListPropertyDescriptor FIELDS_PROPERTY = new ChildListPropertyDescriptor(
 			FieldsDeclaration.class, "fields", SingleFieldDeclaration.class, CYCLE_RISK); //$NON-NLS-1$
 
+	public static final ChildListPropertyDescriptor ATTRIBUTES_PROPERTY = new ChildListPropertyDescriptor(
+			FieldsDeclaration.class, "attributes", AttributeGroup.class, CYCLE_RISK); //$NON-NLS-1$
+
 	@Override
 	public final SimplePropertyDescriptor getModifierProperty() {
 		return MODIFIER_PROPERTY;
@@ -57,20 +60,32 @@ public class FieldsDeclaration extends BodyDeclaration {
 	 */
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
 
+	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS_PHP8;
+
 	static {
-		List<StructuralPropertyDescriptor> properyList = new ArrayList<>(1);
+		List<StructuralPropertyDescriptor> properyList = new ArrayList<>(3);
 		properyList.add(MODIFIER_PROPERTY);
 		properyList.add(FIELDS_TYPE_PROPERTY);
 		properyList.add(FIELDS_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(properyList);
+
+		properyList = new ArrayList<>(4);
+		properyList.add(MODIFIER_PROPERTY);
+		properyList.add(FIELDS_TYPE_PROPERTY);
+		properyList.add(FIELDS_PROPERTY);
+		properyList.add(ATTRIBUTES_PROPERTY);
+		PROPERTY_DESCRIPTORS_PHP8 = Collections.unmodifiableList(properyList);
 	}
 
 	public FieldsDeclaration(int start, int end, AST ast, int modifier, Expression type,
-			List<SingleFieldDeclaration> variablesAndDefaults) {
+			List<SingleFieldDeclaration> variablesAndDefaults, List<AttributeGroup> attributes) {
 		super(start, end, ast, modifier);
 
 		if (variablesAndDefaults == null || variablesAndDefaults.size() == 0) {
 			throw new IllegalArgumentException();
+		}
+		if (attributes != null) {
+			attributes().addAll(attributes);
 		}
 
 		if (type != null) {
@@ -87,6 +102,11 @@ public class FieldsDeclaration extends BodyDeclaration {
 				this.fields.add(field);
 			}
 		}
+	}
+
+	public FieldsDeclaration(int start, int end, AST ast, int modifier, Expression type,
+			List<SingleFieldDeclaration> variablesAndDefaults) {
+		this(start, end, ast, modifier, type, variablesAndDefaults, null);
 	}
 
 	/**
@@ -119,6 +139,9 @@ public class FieldsDeclaration extends BodyDeclaration {
 
 	@Override
 	public void childrenAccept(Visitor visitor) {
+		for (AttributeGroup object : attributes()) {
+			object.accept(visitor);
+		}
 		if (fieldsType != null) {
 			fieldsType.accept(visitor);
 		}
@@ -130,6 +153,9 @@ public class FieldsDeclaration extends BodyDeclaration {
 	@Override
 	public void traverseTopDown(Visitor visitor) {
 		accept(visitor);
+		for (AttributeGroup object : attributes()) {
+			object.traverseTopDown(visitor);
+		}
 		if (fieldsType != null) {
 			fieldsType.accept(visitor);
 		}
@@ -140,6 +166,9 @@ public class FieldsDeclaration extends BodyDeclaration {
 
 	@Override
 	public void traverseBottomUp(Visitor visitor) {
+		for (AttributeGroup object : attributes()) {
+			object.traverseBottomUp(visitor);
+		}
 		if (fieldsType != null) {
 			fieldsType.accept(visitor);
 		}
@@ -155,6 +184,7 @@ public class FieldsDeclaration extends BodyDeclaration {
 		appendInterval(buffer);
 		buffer.append(" modifier='").append(getModifierString()); //$NON-NLS-1$
 		buffer.append("'>\n"); //$NON-NLS-1$
+		toStringAttributes(buffer, TAB + tab);
 		buffer.append(TAB).append(tab).append("<Type>\n"); //$NON-NLS-1$
 		if (fieldsType != null) {
 			fieldsType.toString(buffer, TAB + TAB + tab);
@@ -282,7 +312,11 @@ public class FieldsDeclaration extends BodyDeclaration {
 
 	@Override
 	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(PHPVersion apiLevel) {
-		return PROPERTY_DESCRIPTORS;
+		if (PHPVersion.PHP8_0.isGreaterThan(apiLevel)) {
+			return PROPERTY_DESCRIPTORS;
+		}
+
+		return PROPERTY_DESCRIPTORS_PHP8;
 	}
 
 	/**
@@ -293,5 +327,10 @@ public class FieldsDeclaration extends BodyDeclaration {
 	 */
 	public final IVariableBinding resolveTypeBinding() {
 		return this.ast.getBindingResolver().resolveVariable(this);
+	}
+
+	@Override
+	protected ChildListPropertyDescriptor getAttributesProperty() {
+		return ATTRIBUTES_PROPERTY;
 	}
 }

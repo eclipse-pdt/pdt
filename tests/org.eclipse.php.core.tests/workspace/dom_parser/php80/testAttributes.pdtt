@@ -1,0 +1,343 @@
+--TEST--
+PHP 8.0
+--FILE--
+<?php
+#[Attr]
+#[Attr, Attr2()]
+#[Attr('val', named: 2)]
+function myFunc() {}
+
+#[Space\Attr(1,)]
+class Simple {
+	#[Space\AttrConst(1)]
+	const C = 1;
+	#[Space\AttrVal(1)]
+	private $val;
+	#[AttrFN]
+	public function fn(#[AttrParam] $param) {}
+}
+
+$res = #[Space\Attr\Closure(1)] function() {};
+
+$res = #[Space\Attr\Arrow(1)] fn() => 2+2;
+
+$res = new #[Space\Attr\Anonym(1)] class {
+	#[Space\Attr(1)]
+    public function log($msg)
+    {
+        echo $msg;
+    }
+};
+?>
+--EXPECT--
+<Program start='0' length='461'>
+	<Statements>
+		<FunctionDeclaration start='56' length='20' isReference='false'>
+			<Attributes>
+				<AttributeGroup start='6' length='7'>
+					<Attribute start='8' length='4'>
+						<NamespaceName start='8' length='4' global='false' current='false'>
+							<Identifier start='8' length='4' name='Attr'/>
+						</NamespaceName>
+						<Parameters>
+						</Parameters>
+					</Attribute>
+				</AttributeGroup>
+				<AttributeGroup start='14' length='16'>
+					<Attribute start='16' length='4'>
+						<NamespaceName start='16' length='4' global='false' current='false'>
+							<Identifier start='16' length='4' name='Attr'/>
+						</NamespaceName>
+						<Parameters>
+						</Parameters>
+					</Attribute>
+					<Attribute start='22' length='7'>
+						<NamespaceName start='22' length='5' global='false' current='false'>
+							<Identifier start='22' length='5' name='Attr2'/>
+						</NamespaceName>
+						<Parameters>
+						</Parameters>
+					</Attribute>
+				</AttributeGroup>
+				<AttributeGroup start='31' length='24'>
+					<Attribute start='33' length='21'>
+						<NamespaceName start='33' length='4' global='false' current='false'>
+							<Identifier start='33' length='4' name='Attr'/>
+						</NamespaceName>
+						<Parameters>
+							<Scalar start='38' length='5' type='string' value='&apos;val&apos;'/>
+							<NamedExpression start='45' length='8' name='named'>
+								<Scalar start='52' length='1' type='int' value='2'/>
+							</NamedExpression>
+						</Parameters>
+					</Attribute>
+				</AttributeGroup>
+			</Attributes>
+			<FunctionName>
+				<Identifier start='65' length='6' name='myFunc'/>
+			</FunctionName>
+			<FormalParameters>
+			</FormalParameters>
+			<FunctionBody>
+				<Block start='74' length='2' isCurly='true'>
+				</Block>
+			</FunctionBody>
+		</FunctionDeclaration>
+		<ClassDeclaration start='96' length='144' modifier=''>
+			<Attributes>
+				<AttributeGroup start='78' length='17'>
+					<Attribute start='80' length='14'>
+						<NamespaceName start='80' length='10' global='false' current='false'>
+							<Identifier start='80' length='5' name='Space'/>
+							<Identifier start='86' length='4' name='Attr'/>
+						</NamespaceName>
+						<Parameters>
+							<Scalar start='91' length='1' type='int' value='1'/>
+							<EmptyExpression start='93' length='0'/>
+						</Parameters>
+					</Attribute>
+				</AttributeGroup>
+			</Attributes>
+			<ClassName>
+				<Identifier start='102' length='6' name='Simple'/>
+			</ClassName>
+			<SuperClassName>
+			</SuperClassName>
+			<Interfaces>
+			</Interfaces>
+			<Block start='109' length='131' isCurly='true'>
+				<ConstantDeclaration start='135' length='12' modifier=''>
+					<Attributes>
+						<AttributeGroup start='112' length='21'>
+							<Attribute start='114' length='18'>
+								<NamespaceName start='114' length='15' global='false' current='false'>
+									<Identifier start='114' length='5' name='Space'/>
+									<Identifier start='120' length='9' name='AttrConst'/>
+								</NamespaceName>
+								<Parameters>
+									<Scalar start='130' length='1' type='int' value='1'/>
+								</Parameters>
+							</Attribute>
+						</AttributeGroup>
+					</Attributes>
+					<VariableName>
+						<Identifier start='141' length='1' name='C'/>
+					</VariableName>
+					<InitialValue>
+						<Scalar start='145' length='1' type='int' value='1'/>
+					</InitialValue>
+				</ConstantDeclaration>
+				<FieldsDeclaration start='170' length='13' modifier='private'>
+					<Attributes>
+						<AttributeGroup start='149' length='19'>
+							<Attribute start='151' length='16'>
+								<NamespaceName start='151' length='13' global='false' current='false'>
+									<Identifier start='151' length='5' name='Space'/>
+									<Identifier start='157' length='7' name='AttrVal'/>
+								</NamespaceName>
+								<Parameters>
+									<Scalar start='165' length='1' type='int' value='1'/>
+								</Parameters>
+							</Attribute>
+						</AttributeGroup>
+					</Attributes>
+					<Type>
+					</Type>
+					<VariableName>
+						<Variable start='178' length='4' isDollared='true'>
+							<Identifier start='179' length='3' name='val'/>
+						</Variable>
+					</VariableName>
+					<InitialValue>
+					</InitialValue>
+				</FieldsDeclaration>
+				<MethodDeclaration start='196' length='42' modifier='public'>
+					<Attributes>
+						<AttributeGroup start='185' length='9'>
+							<Attribute start='187' length='6'>
+								<NamespaceName start='187' length='6' global='false' current='false'>
+									<Identifier start='187' length='6' name='AttrFN'/>
+								</NamespaceName>
+								<Parameters>
+								</Parameters>
+							</Attribute>
+						</AttributeGroup>
+					</Attributes>
+					<FunctionDeclaration start='203' length='35' isReference='false'>
+						<FunctionName>
+							<Identifier start='212' length='2' name='fn'/>
+						</FunctionName>
+						<FormalParameters>
+							<FormalParameter start='228' length='6' isMandatory='false'>
+								<Type>
+								</Type>
+								<ParameterName>
+									<Variable start='228' length='6' isDollared='true'>
+										<Identifier start='229' length='5' name='param'/>
+									</Variable>
+								</ParameterName>
+								<DefaultValue>
+								</DefaultValue>
+							</FormalParameter>
+						</FormalParameters>
+						<FunctionBody>
+							<Block start='236' length='2' isCurly='true'>
+							</Block>
+						</FunctionBody>
+					</FunctionDeclaration>
+				</MethodDeclaration>
+			</Block>
+		</ClassDeclaration>
+		<ExpressionStatement start='242' length='46'>
+			<Assignment start='242' length='45' operator='='>
+				<Variable start='242' length='4' isDollared='true'>
+					<Identifier start='243' length='3' name='res'/>
+				</Variable>
+				<Value>
+					<LambdaFunctionDeclaration start='274' length='13' isReference='false'>
+						<Attributes>
+							<AttributeGroup start='249' length='24'>
+								<Attribute start='251' length='21'>
+									<NamespaceName start='251' length='18' global='false' current='false'>
+										<Identifier start='251' length='5' name='Space'/>
+										<Identifier start='257' length='4' name='Attr'/>
+										<Identifier start='262' length='7' name='Closure'/>
+									</NamespaceName>
+									<Parameters>
+										<Scalar start='270' length='1' type='int' value='1'/>
+									</Parameters>
+								</Attribute>
+							</AttributeGroup>
+						</Attributes>
+						<FormalParameters>
+						</FormalParameters>
+						<LexicalVariables>
+						</LexicalVariables>
+						<FunctionBody>
+							<Block start='285' length='2' isCurly='true'>
+							</Block>
+						</FunctionBody>
+					</LambdaFunctionDeclaration>
+				</Value>
+			</Assignment>
+		</ExpressionStatement>
+		<ExpressionStatement start='290' length='42'>
+			<Assignment start='290' length='41' operator='='>
+				<Variable start='290' length='4' isDollared='true'>
+					<Identifier start='291' length='3' name='res'/>
+				</Variable>
+				<Value>
+					<ArrowFunctionDeclaration start='320' length='11' isReference='false'>
+						<Attributes>
+							<AttributeGroup start='297' length='22'>
+								<Attribute start='299' length='19'>
+									<NamespaceName start='299' length='16' global='false' current='false'>
+										<Identifier start='299' length='5' name='Space'/>
+										<Identifier start='305' length='4' name='Attr'/>
+										<Identifier start='310' length='5' name='Arrow'/>
+									</NamespaceName>
+									<Parameters>
+										<Scalar start='316' length='1' type='int' value='1'/>
+									</Parameters>
+								</Attribute>
+							</AttributeGroup>
+						</Attributes>
+						<FormalParameters>
+						</FormalParameters>
+						<FunctionBody>
+							<InfixExpression start='328' length='3' operator='+'>
+								<Scalar start='328' length='1' type='int' value='2'/>
+								<Scalar start='330' length='1' type='int' value='2'/>
+							</InfixExpression>
+						</FunctionBody>
+					</ArrowFunctionDeclaration>
+				</Value>
+			</Assignment>
+		</ExpressionStatement>
+		<ExpressionStatement start='334' length='124'>
+			<Assignment start='334' length='123' operator='='>
+				<Variable start='334' length='4' isDollared='true'>
+					<Identifier start='335' length='3' name='res'/>
+				</Variable>
+				<Value>
+					<ClassInstanceCreation start='341' length='116'>
+						<ClassName start='369' length='5'>
+							<Identifier start='369' length='5' name='class'/>
+						</ClassName>
+						<ConstructorParameters>
+						</ConstructorParameters>
+						<AnonymousClassDeclaration start='374' length='83'>
+							<Attributes>
+								<AttributeGroup start='345' length='23'>
+									<Attribute start='347' length='20'>
+										<NamespaceName start='347' length='17' global='false' current='false'>
+											<Identifier start='347' length='5' name='Space'/>
+											<Identifier start='353' length='4' name='Attr'/>
+											<Identifier start='358' length='6' name='Anonym'/>
+										</NamespaceName>
+										<Parameters>
+											<Scalar start='365' length='1' type='int' value='1'/>
+										</Parameters>
+									</Attribute>
+								</AttributeGroup>
+							</Attributes>
+							<SuperClass>
+							<SuperClass>
+							<Interfaces>
+							<Interfaces>
+							<Body>
+								<Block start='375' length='82' isCurly='true'>
+									<MethodDeclaration start='399' length='56' modifier='public'>
+										<Attributes>
+											<AttributeGroup start='378' length='16'>
+												<Attribute start='380' length='13'>
+													<NamespaceName start='380' length='10' global='false' current='false'>
+														<Identifier start='380' length='5' name='Space'/>
+														<Identifier start='386' length='4' name='Attr'/>
+													</NamespaceName>
+													<Parameters>
+														<Scalar start='391' length='1' type='int' value='1'/>
+													</Parameters>
+												</Attribute>
+											</AttributeGroup>
+										</Attributes>
+										<FunctionDeclaration start='406' length='49' isReference='false'>
+											<FunctionName>
+												<Identifier start='415' length='3' name='log'/>
+											</FunctionName>
+											<FormalParameters>
+												<FormalParameter start='419' length='4' isMandatory='false'>
+													<Type>
+													</Type>
+													<ParameterName>
+														<Variable start='419' length='4' isDollared='true'>
+															<Identifier start='420' length='3' name='msg'/>
+														</Variable>
+													</ParameterName>
+													<DefaultValue>
+													</DefaultValue>
+												</FormalParameter>
+											</FormalParameters>
+											<FunctionBody>
+												<Block start='429' length='26' isCurly='true'>
+													<EchoStatement start='439' length='10'>
+														<Variable start='444' length='4' isDollared='true'>
+															<Identifier start='445' length='3' name='msg'/>
+														</Variable>
+													</EchoStatement>
+												</Block>
+											</FunctionBody>
+										</FunctionDeclaration>
+									</MethodDeclaration>
+								</Block>
+							<Body>
+						</AnonymousClassDeclaration>
+					</ClassInstanceCreation>
+				</Value>
+			</Assignment>
+		</ExpressionStatement>
+		<EmptyStatement start='459' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

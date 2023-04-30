@@ -1,0 +1,88 @@
+--TEST--
+PHP 8.0
+--FILE--
+<?php
+
+class Point {
+	public function myMethod($var): Example|static {}
+	public function myMethod2($var): static {}
+}
+?>
+--EXPECT--
+<Program start='0' length='120'>
+	<Statements>
+		<ClassDeclaration start='7' length='110' modifier=''>
+			<ClassName>
+				<Identifier start='13' length='5' name='Point'/>
+			</ClassName>
+			<SuperClassName>
+			</SuperClassName>
+			<Interfaces>
+			</Interfaces>
+			<Block start='19' length='98' isCurly='true'>
+				<MethodDeclaration start='22' length='49' modifier='public'>
+					<FunctionDeclaration start='29' length='42' isReference='false'>
+						<FunctionName>
+							<Identifier start='38' length='8' name='myMethod'/>
+						</FunctionName>
+						<FormalParameters>
+							<FormalParameter start='47' length='4' isMandatory='false'>
+								<Type>
+								</Type>
+								<ParameterName>
+									<Variable start='47' length='4' isDollared='true'>
+										<Identifier start='48' length='3' name='var'/>
+									</Variable>
+								</ParameterName>
+								<DefaultValue>
+								</DefaultValue>
+							</FormalParameter>
+						</FormalParameters>
+						<ReturnType>
+							<DNFType start='54' length='14' type='1'>
+								<NamespaceName start='54' length='7' global='false' current='false'>
+									<Identifier start='54' length='7' name='Example'/>
+								</NamespaceName>
+								<Identifier start='62' length='6' name='static'/>
+							</DNFType>
+						</ReturnType>
+						<FunctionBody>
+							<Block start='69' length='2' isCurly='true'>
+							</Block>
+						</FunctionBody>
+					</FunctionDeclaration>
+				</MethodDeclaration>
+				<MethodDeclaration start='73' length='42' modifier='public'>
+					<FunctionDeclaration start='80' length='35' isReference='false'>
+						<FunctionName>
+							<Identifier start='89' length='9' name='myMethod2'/>
+						</FunctionName>
+						<FormalParameters>
+							<FormalParameter start='99' length='4' isMandatory='false'>
+								<Type>
+								</Type>
+								<ParameterName>
+									<Variable start='99' length='4' isDollared='true'>
+										<Identifier start='100' length='3' name='var'/>
+									</Variable>
+								</ParameterName>
+								<DefaultValue>
+								</DefaultValue>
+							</FormalParameter>
+						</FormalParameters>
+						<ReturnType>
+							<Identifier start='106' length='6' name='static'/>
+						</ReturnType>
+						<FunctionBody>
+							<Block start='113' length='2' isCurly='true'>
+							</Block>
+						</FunctionBody>
+					</FunctionDeclaration>
+				</MethodDeclaration>
+			</Block>
+		</ClassDeclaration>
+		<EmptyStatement start='118' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

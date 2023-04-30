@@ -3010,4 +3010,31 @@ public class AST {
 		// TODO Auto-generated method stub
 		this.rewriter.setInsertUseStatement(isInsertUseStatement);
 	}
+
+	/************************* php8.0 start ***************************/
+
+	public AttributeGroup newAttributeGroup() {
+		return new AttributeGroup(this);
+	}
+
+	public AttributeGroup newAttributeGroup(List<Attribute> attributes, EmptyExpression trailingComma) {
+		AttributeGroup group = new AttributeGroup(this);
+		group.setEmptyPart(trailingComma);
+		group.attributes().addAll(attributes);
+
+		return group;
+	}
+
+	public Attribute newAttribute() {
+		Attribute attribute = new Attribute(this);
+		return attribute;
+	}
+
+	public Attribute newAttribute(Identifier name, List<Expression> parameters) {
+		Attribute attribute = new Attribute(this);
+		attribute.setAttributeName(name);
+		attribute.parameters().addAll(parameters);
+
+		return attribute;
+	}
 }

@@ -3707,13 +3707,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 	@Override
 	public boolean visit(FormalParameter formalParameter) {
-		// handle const in PHP4
 		int lastPosition = formalParameter.getStart();
-		if (formalParameter.isMandatory()) {
-			// the word 'const'
-			lastPosition += 5;
-			addNonBlanksToLineWidth(5);
-		}
 
 		// handle type
 		Expression parameterType = formalParameter.getParameterType();

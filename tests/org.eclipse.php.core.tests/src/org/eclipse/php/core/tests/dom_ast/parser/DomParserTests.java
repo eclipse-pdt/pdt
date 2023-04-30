@@ -80,6 +80,22 @@ public class DomParserTests {
 						"/workspace/dom_parser/php55", "/workspace/dom_parser/php56", "/workspace/dom_parser/php7",
 						"/workspace/dom_parser/php71", "/workspace/dom_parser/php72", "/workspace/dom_parser/php73",
 						"/workspace/dom_parser/php74" });
+
+		TESTS.put(PHPVersion.PHP8_0,
+				new String[] { "/workspace/dom_parser/php53", "/workspace/dom_parser/php54",
+						"/workspace/dom_parser/php55", "/workspace/dom_parser/php56", "/workspace/dom_parser/php7",
+						"/workspace/dom_parser/php71", "/workspace/dom_parser/php72", "/workspace/dom_parser/php73",
+						"/workspace/dom_parser/php74", "/workspace/dom_parser/php80" });
+		TESTS.put(PHPVersion.PHP8_1,
+				new String[] { "/workspace/dom_parser/php53", "/workspace/dom_parser/php54",
+						"/workspace/dom_parser/php55", "/workspace/dom_parser/php56", "/workspace/dom_parser/php7",
+						"/workspace/dom_parser/php71", "/workspace/dom_parser/php72", "/workspace/dom_parser/php73",
+						"/workspace/dom_parser/php74", "/workspace/dom_parser/php80" });
+		TESTS.put(PHPVersion.PHP8_2,
+				new String[] { "/workspace/dom_parser/php53", "/workspace/dom_parser/php54",
+						"/workspace/dom_parser/php55", "/workspace/dom_parser/php56", "/workspace/dom_parser/php7",
+						"/workspace/dom_parser/php71", "/workspace/dom_parser/php72", "/workspace/dom_parser/php73",
+						"/workspace/dom_parser/php74", "/workspace/dom_parser/php80" });
 	};
 
 	private ASTParser parser;

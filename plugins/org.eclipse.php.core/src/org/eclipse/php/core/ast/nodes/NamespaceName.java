@@ -21,6 +21,7 @@ import java.util.List;
 import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.ast.match.ASTMatcher;
 import org.eclipse.php.core.ast.visitor.Visitor;
+import org.eclipse.php.core.compiler.ast.nodes.NamespaceReference;
 
 /**
  * Represents namespace name:
@@ -44,8 +45,8 @@ public class NamespaceName extends Identifier {
 	private boolean global;
 
 	/**
-	 * Whether the namespace name has 'namespace' prefix, which means it relates to
-	 * the current namespace scope
+	 * Whether the namespace name has 'namespace' prefix, which means it relates
+	 * to the current namespace scope
 	 */
 	private boolean current;
 
@@ -77,6 +78,37 @@ public class NamespaceName extends Identifier {
 
 	public NamespaceName(AST ast) {
 		super(ast);
+	}
+
+	public NamespaceName(int start, int end, AST ast, String name, boolean global, boolean current) {
+		this(start, end, ast, buildSegments(start, end, name, ast, global, current), global, current);
+	}
+
+	private static Identifier[] buildSegments(int start, int end, String fqn, AST ast, boolean global,
+			boolean current) {
+		int pos = fqn.indexOf(NamespaceReference.NAMESPACE_DELIMITER);
+		if (pos == -1) {
+			return new Identifier[] { new Identifier(start, end, ast, fqn) };
+		} else {
+			String[] split = fqn.split(NamespaceReference.NAMESPACE_DELIMITER + NamespaceReference.NAMESPACE_DELIMITER);
+			int istart = start;
+			int iend = 0;
+			List<Identifier> ident = new ArrayList<>();
+			for (String part : split) {
+				iend = istart + part.length();
+				if (global) {
+					iend++;
+					global = false;
+				}
+
+				if (part.length() > 0) {
+					ident.add(new Identifier(istart, iend, ast, part));
+				}
+
+				istart += 1 + part.length();
+			}
+			return ident.toArray(new Identifier[0]);
+		}
 	}
 
 	public NamespaceName(int start, int end, AST ast, Identifier[] segments, boolean global, boolean current) {
@@ -216,8 +248,8 @@ public class NamespaceName extends Identifier {
 	/**
 	 * Retrieves names parts of the namespace
 	 * 
-	 * @return segments. If names list is empty, that means that this namespace is
-	 *         global.
+	 * @return segments. If names list is empty, that means that this namespace
+	 *         is global.
 	 */
 	public List<Identifier> segments() {
 		assert segments.size() > 0 || global;

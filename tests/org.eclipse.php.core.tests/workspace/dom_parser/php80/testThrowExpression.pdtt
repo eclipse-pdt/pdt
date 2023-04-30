@@ -1,0 +1,39 @@
+--TEST--
+PHP 8.0
+--FILE--
+<?php
+echo throw new \Exception();
+throw new \InvalidArgumentException();
+?>
+--EXPECT--
+<Program start='0' length='76'>
+	<Statements>
+		<EchoStatement start='6' length='28'>
+			<ThrowExpression start='11' length='22'>
+				<ClassInstanceCreation start='17' length='16'>
+					<ClassName start='21' length='10'>
+						<NamespaceName start='21' length='10' global='true' current='false'>
+							<Identifier start='22' length='9' name='Exception'/>
+						</NamespaceName>
+					</ClassName>
+					<ConstructorParameters>
+					</ConstructorParameters>
+				</ClassInstanceCreation>
+			</ThrowExpression>
+		</EchoStatement>
+		<ThrowStatement start='35' length='38'>
+			<ClassInstanceCreation start='41' length='31'>
+				<ClassName start='45' length='25'>
+					<NamespaceName start='45' length='25' global='true' current='false'>
+						<Identifier start='46' length='24' name='InvalidArgumentException'/>
+					</NamespaceName>
+				</ClassName>
+				<ConstructorParameters>
+				</ConstructorParameters>
+			</ClassInstanceCreation>
+		</ThrowStatement>
+		<EmptyStatement start='74' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>
