@@ -11,6 +11,7 @@ import java.util.*;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.php.core.ast.nodes.*;
 import org.eclipse.dltk.ast.Modifiers;
+import org.eclipse.php.core.compiler.IPHPModifiers;
 
 parser code {:
 	protected final static Integer PUBLIC = Integer.valueOf(Modifiers.AccPublic);
@@ -19,6 +20,7 @@ parser code {:
 	protected final static Integer ABSTRACT = Integer.valueOf(Modifiers.AccAbstract);
 	protected final static Integer FINAL = Integer.valueOf(Modifiers.AccFinal);
 	protected final static Integer STATIC = Integer.valueOf(Modifiers.AccStatic);
+	protected final static Integer READONLY = Integer.valueOf(IPHPModifiers.AccReadonly);
 
 	AST ast;
 
@@ -226,6 +228,8 @@ terminal String T_NAME_FULLY_QUALIFIED;
 terminal String T_NAME_QUALIFIED;
 terminal String T_NAME_RELATIVE;
 
+//php 8.1
+terminal String T_READONLY;
 
 /* Non terminals */
 
@@ -385,7 +389,6 @@ non terminal DNFType union_type_without_static;
 non terminal List<Identifier> union_type_list;
 non terminal List<Identifier> union_type_list_without_static;
 non terminal Identifier optional_type_without_static;
-non terminal Integer optional_visibility_modifier;
 non terminal String optional_variable;
 non terminal VariableBase array_object_dereferencable;
 non terminal VariableBase fully_dereferencable;
@@ -395,6 +398,12 @@ non terminal NamespaceName legacy_namespace_name;
 non terminal NamespaceName namespace_declaration_name;
 non terminal UseStatementPart unprefixed_use_declaration;
 non terminal List<UseStatementPart> unprefixed_use_declarations;
+
+//php8.1
+non terminal String function_name;
+non terminal Integer optional_property_modifiers;
+non terminal Integer property_modifier;
+non terminal List<Integer> non_empty_property_modifiers;
 
 
 precedence left T_THROW;
@@ -719,6 +728,11 @@ reserved_non_modifiers:v
 	RESULT = v;
 :}
 | T_PUBLIC:v
+{:
+	RESULT = v;
+:}
+
+| T_READONLY:v
 {:
 	RESULT = v;
 :}
@@ -1456,8 +1470,19 @@ is_reference ::=
 :}
 ;
 
+function_name ::=
+string_st:functionName
+{:
+	RESULT = functionName;
+:}
+| T_READONLY:v
+{:
+	RESULT = v;
+:}
+;
+
 unticked_function_declaration_statement ::=
-T_FUNCTION:s is_reference:isReference string_st:fn
+T_FUNCTION:s is_reference:isReference function_name:fn
 T_OPEN_PARENTHESE parameter_list:paramList T_CLOSE_PARENTHESE return_type:returnType
 T_CURLY_OPEN:blockStart inner_statement_list:sList T_CURLY_CLOSE:blockEnd
 {:
@@ -1896,12 +1921,39 @@ attributes:attrs parameter:param {:
 :}
 ;
 
-optional_visibility_modifier ::=
+optional_property_modifiers ::=
 /* empty */
 {:
 	RESULT = 0;
 :}
-| T_PUBLIC:value
+
+| non_empty_property_modifiers:list
+{:
+	int result = 0;
+	for (Integer i : list) {
+		result |= i;
+	}
+	RESULT = result;
+:}
+;
+
+non_empty_property_modifiers ::=
+property_modifier:modifier
+{:
+	List list = new LinkedList();
+	list.add(modifier);
+	RESULT = list;
+:}
+
+| non_empty_property_modifiers:list property_modifier:modifier
+{:
+	list.add(modifier);
+	RESULT = list;
+:}
+;
+
+property_modifier ::=
+T_PUBLIC:value
 {:
 	RESULT = PHPAstParser.PUBLIC;
 :}
@@ -1915,10 +1967,15 @@ optional_visibility_modifier ::=
 {:
 	RESULT = PHPAstParser.PRIVATE;
 :}
+
+| T_READONLY:value
+{:
+	RESULT = PHPAstParser.READONLY;
+:}
 ;
 
 parameter ::=
-optional_visibility_modifier:modifier optional_type_without_static:type T_VARIABLE:var
+optional_property_modifiers:modifier optional_type_without_static:type T_VARIABLE:var
 {:
 	int s = type == null ? varleft : typeleft;
 	s = modifier != 0 ? modifierleft : s;
@@ -1926,7 +1983,7 @@ optional_visibility_modifier:modifier optional_type_without_static:type T_VARIAB
 	RESULT = new FormalParameter(s, varright, parser.ast, type, v, null, false, modifier);
 :}
 
-| optional_visibility_modifier:modifier optional_type_without_static:type T_ELLIPSIS:e T_VARIABLE:var
+| optional_property_modifiers:modifier optional_type_without_static:type T_ELLIPSIS:e T_VARIABLE:var
 {:
 	int s = type == null ? eleft : typeleft;
 	s = modifier != 0 ? modifierleft : s;
@@ -1934,7 +1991,7 @@ optional_visibility_modifier:modifier optional_type_without_static:type T_VARIAB
 	RESULT = new FormalParameter(s, varright, parser.ast, type, v, null, true, modifier);
 :}
 
-| optional_visibility_modifier:modifier optional_type_without_static:type T_REFERENCE:ref T_VARIABLE:var
+| optional_property_modifiers:modifier optional_type_without_static:type T_REFERENCE:ref T_VARIABLE:var
 {:
 	int s = type == null ? refleft : typeleft;
 	s = modifier != 0 ? modifierleft : s;
@@ -1943,7 +2000,7 @@ optional_visibility_modifier:modifier optional_type_without_static:type T_VARIAB
 	RESULT = new FormalParameter(s, varright, parser.ast, type, ref_var, null, false, modifier);
 :}
 
-| optional_visibility_modifier:modifier optional_type_without_static:type T_REFERENCE:ref T_ELLIPSIS T_VARIABLE:var
+| optional_property_modifiers:modifier optional_type_without_static:type T_REFERENCE:ref T_ELLIPSIS T_VARIABLE:var
 {:
 	int s = type == null ? refleft : typeleft;
 	s = modifier != 0 ? modifierleft : s;
@@ -1952,7 +2009,7 @@ optional_visibility_modifier:modifier optional_type_without_static:type T_VARIAB
 	RESULT = new FormalParameter(s, varright, parser.ast, type, ref_var, null, true, modifier);
 :}
 
-| optional_visibility_modifier:modifier optional_type_without_static:type T_VARIABLE:var T_EQUAL expr:expr
+| optional_property_modifiers:modifier optional_type_without_static:type T_VARIABLE:var T_EQUAL expr:expr
 {:
 	int s = type == null ? varleft : typeleft;
 	s = modifier != 0 ? modifierleft : s;
@@ -1960,7 +2017,7 @@ optional_visibility_modifier:modifier optional_type_without_static:type T_VARIAB
 	RESULT = new FormalParameter(s, exprright, parser.ast, type, v, expr, false, modifier);
 :}
 
-| optional_visibility_modifier:modifier optional_type_without_static:type T_REFERENCE:ref T_VARIABLE:var T_EQUAL expr:expr
+| optional_property_modifiers:modifier optional_type_without_static:type T_REFERENCE:ref T_VARIABLE:var T_EQUAL expr:expr
 {:
 	int s = type == null ? refleft : typeleft;
 	s = modifier != 0 ? modifierleft : s;
@@ -2510,6 +2567,11 @@ T_PUBLIC
 | T_FINAL
 {:
 	RESULT = PHPAstParser.FINAL;
+:}
+
+| T_READONLY
+{:
+	RESULT = PHPAstParser.READONLY;
 :}
 ;
 

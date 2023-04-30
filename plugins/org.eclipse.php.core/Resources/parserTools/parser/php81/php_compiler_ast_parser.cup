@@ -15,6 +15,7 @@ import org.eclipse.dltk.ast.statements.*;
 import org.eclipse.php.core.compiler.ast.nodes.*;
 import org.eclipse.php.internal.core.compiler.ast.parser.*;
 import org.eclipse.php.internal.core.ast.scanner.php81.*;
+import org.eclipse.php.core.compiler.IPHPModifiers;
 
 parser code {:
 
@@ -211,6 +212,9 @@ terminal String T_NAME_FULLY_QUALIFIED;
 terminal String T_NAME_QUALIFIED;
 terminal String T_NAME_RELATIVE;
 
+//php 8.1
+terminal CompilerAstLexer.PHPDocBlockSymbolPair T_READONLY;
+
 /* Non terminals */
 
 non terminal ModuleDeclaration thestart;
@@ -379,7 +383,6 @@ non terminal DNFTypeReference union_type_without_static;
 non terminal List<TypeReference> union_type_list;
 non terminal List<TypeReference> union_type_list_without_static;
 non terminal TypeReference optional_type_without_static;
-non terminal CompilerAstParser.ModifierDocPair optional_visibility_modifier;
 non terminal String optional_variable;
 non terminal Expression array_object_dereferencable;
 non terminal Expression fully_dereferencable;
@@ -389,6 +392,12 @@ non terminal FullyQualifiedReference legacy_namespace_name;
 non terminal FullyQualifiedReference namespace_declaration_name;
 non terminal UsePart unprefixed_use_declaration;
 non terminal List unprefixed_use_declarations;
+
+//php8.1
+non terminal String function_name;
+non terminal CompilerAstParser.ModifierDocPair optional_property_modifiers;
+non terminal CompilerAstParser.ModifierDocPair property_modifier;
+non terminal List non_empty_property_modifiers;
 
 precedence left T_THROW;
 precedence left T_INCLUDE, T_INCLUDE_ONCE, T_EVAL, T_REQUIRE, T_REQUIRE_ONCE;
@@ -728,6 +737,11 @@ reserved_non_modifiers:v
 	RESULT = v.value;
 :}
 | T_PUBLIC:v
+{:
+	RESULT = v.value;
+:}
+
+| T_READONLY:v
 {:
 	RESULT = v.value;
 :}
@@ -1567,8 +1581,19 @@ is_reference ::=
 :}
 ;
 
+function_name ::=
+string_st:functionName
+{:
+	RESULT = functionName;
+:}
+| T_READONLY:v
+{:
+	RESULT = v.value;
+:}
+;
+
 unticked_function_declaration_statement ::=
-T_FUNCTION:start is_reference:isReference string_st:functionName
+T_FUNCTION:start is_reference:isReference function_name:functionName
 {:
 	PHPMethodDeclaration functionDeclaration = new PHPMethodDeclaration(startleft, functionNameright, functionNameleft, functionNameright, functionName, 0, null, new Block(functionNameright, functionNameright, null), isReference.booleanValue(), start.doc);
 	parser.addDeclarationStatement(functionDeclaration);
@@ -2132,12 +2157,45 @@ attributes:attrs parameter:param {:
 	RESULT = param;
 :}
 ;
-optional_visibility_modifier ::=
+
+optional_property_modifiers ::=
 /* empty */
 {:
 	RESULT = null;
 :}
-| T_PUBLIC:value
+
+| non_empty_property_modifiers:list
+{:
+	int result = 0;
+	PHPDocBlock docBlock = null;
+	for (Iterator it = list.iterator(); it.hasNext();) {
+		CompilerAstParser.ModifierDocPair modifier = (CompilerAstParser.ModifierDocPair) it.next();
+		if (modifier.doc != null) {
+			docBlock = modifier.doc;
+		}
+		result = appendPropertyModifier(listleft, listright, result, modifier.modifier);
+	}
+	RESULT = parser.new ModifierDocPair(result, docBlock);
+:}
+;
+
+non_empty_property_modifiers ::=
+property_modifier:modifier
+{:
+	List list = new LinkedList();
+	list.add(modifier);
+	RESULT = list;
+:}
+
+| non_empty_property_modifiers:list property_modifier:modifier
+{:
+	list.add(modifier);
+	RESULT = list;
+:}
+;
+
+property_modifier ::=
+T_PUBLIC:value
 {:
 	RESULT = parser.new ModifierDocPair(Modifiers.AccPublic, value.doc);
 :}
@@ -2151,12 +2209,17 @@ optional_visibility_modifier ::=
 {:
 	RESULT = parser.new ModifierDocPair(Modifiers.AccPrivate, value.doc);
 :}
+
+| T_READONLY:value
+{:
+	RESULT = parser.new ModifierDocPair(IPHPModifiers.AccReadonly, value.doc);
+:}
 ;
 
 
 
 parameter ::=
-optional_visibility_modifier:modifier optional_type_without_static:type T_VARIABLE:var
+optional_property_modifiers:modifier optional_type_without_static:type T_VARIABLE:var
 {:
 	int start = type == null ? varleft : typeleft;
 	start = modifier != null ? modifierleft : start;
@@ -2168,7 +2231,7 @@ optional_visibility_modifier:modifier optional_type_without_static:type T_VARIAB
 	RESULT = parameter;
 :}
 
-| optional_visibility_modifier:modifier optional_type_without_static:type T_ELLIPSIS:e T_VARIABLE:var
+| optional_property_modifiers:modifier optional_type_without_static:type T_ELLIPSIS:e T_VARIABLE:var
 {:
 	int start = type == null ? eleft : typeleft;
 	start = modifier != null ? modifierleft : start;
@@ -2180,7 +2243,7 @@ optional_visibility_modifier:modifier optional_type_without_static:type T_VARIAB
 	RESULT = parameter;
 :}
 
-| optional_visibility_modifier:modifier optional_type_without_static:type T_REFERENCE:ref T_VARIABLE:var
+| optional_property_modifiers:modifier optional_type_without_static:type T_REFERENCE:ref T_VARIABLE:var
 {:
 	int start = type == null ? refleft : typeleft;
 	start = modifier != null ? modifierleft : start;
@@ -2192,7 +2255,7 @@ optional_visibility_modifier:modifier optional_type_without_static:type T_VARIAB
 	RESULT = parameter;
 :}
 
-| optional_visibility_modifier:modifier optional_type_without_static:type T_REFERENCE:ref T_ELLIPSIS T_VARIABLE:var
+| optional_property_modifiers:modifier optional_type_without_static:type T_REFERENCE:ref T_ELLIPSIS T_VARIABLE:var
 {:
 	int start = type == null ? refleft : typeleft;
 	start = modifier != null ? modifierleft : start;
@@ -2204,7 +2267,7 @@ optional_visibility_modifier:modifier optional_type_without_static:type T_VARIAB
 	RESULT = parameter;
 :}
 
-| optional_visibility_modifier:modifier optional_type_without_static:type T_VARIABLE:var T_EQUAL expr:expr
+| optional_property_modifiers:modifier optional_type_without_static:type T_VARIABLE:var T_EQUAL expr:expr
 {:
 	int start = type == null ? varleft : typeleft;
 	start = modifier != null ? modifierleft : start;
@@ -2216,7 +2279,7 @@ optional_visibility_modifier:modifier optional_type_without_static:type T_VARIAB
 	RESULT = parameter;
 :}
 
-| optional_visibility_modifier:modifier optional_type_without_static:type T_REFERENCE:ref T_VARIABLE:var T_EQUAL expr:expr
+| optional_property_modifiers:modifier optional_type_without_static:type T_REFERENCE:ref T_VARIABLE:var T_EQUAL expr:expr
 {:
 	int start = type == null ? refleft : typeleft;
 	start = modifier != null ? modifierleft : start;
@@ -2920,6 +2983,11 @@ T_PUBLIC:value
 | T_FINAL:value
 {:
 	RESULT = parser.new ModifierDocPair(Modifiers.AccFinal, value.doc);
+:}
+
+| T_READONLY:value
+{:
+	RESULT = parser.new ModifierDocPair(IPHPModifiers.AccReadonly, value.doc);
 :}
 ;
 

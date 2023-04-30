@@ -18,7 +18,7 @@ import org.eclipse.php.core.ast.nodes.IDocumentorLexer;
 import org.eclipse.php.core.compiler.ast.nodes.Comment;
 import org.eclipse.php.core.compiler.ast.nodes.PHPDocBlock;
 import org.eclipse.php.core.compiler.ast.nodes.VarComment;
-import org.eclipse.php.internal.core.ast.scanner.php74.ParserConstants;
+import org.eclipse.php.internal.core.ast.scanner.php81.ParserConstants;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
 import org.eclipse.php.internal.core.compiler.ast.parser.DocumentorLexer;
 
@@ -109,6 +109,7 @@ public class CompilerAstLexer extends org.eclipse.php.internal.core.ast.scanner.
 		case ParserConstants.T_PUBLIC:
 		case ParserConstants.T_TRAIT:
 		case ParserConstants.T_FN:
+		case ParserConstants.T_READONLY:
 			symbol.value = new PHPDocBlockSymbolPair((String) symbol.value, latestDocBlock);
 			break;
 		case ParserConstants.T_END_HEREDOC:

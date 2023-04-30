@@ -15,6 +15,8 @@ package org.eclipse.php.internal.core.compiler.ast.parser.php82;
 
 import java.util.HashMap;
 
+import org.eclipse.php.internal.core.compiler.ast.parser.php81.CompilerParserConstants;
+
 public abstract class PHPTokenNames {
 
 	private static HashMap<Integer, String> token2Name = new HashMap<>();
@@ -143,6 +145,13 @@ public abstract class PHPTokenNames {
 		token2Name.put(CompilerParserConstants.T_SPACESHIP, "<=>"); //$NON-NLS-1$
 		token2Name.put(CompilerParserConstants.T_COALESCE, "??"); //$NON-NLS-1$
 		token2Name.put(CompilerParserConstants.T_YIELD_FROM, "yield from"); //$NON-NLS-1$
+
+		// PHP8.0
+		token2Name.put(CompilerParserConstants.T_ATTRIBUTE, "#["); //$NON-NLS-1$
+		token2Name.put(CompilerParserConstants.T_MATCH, "match"); //$NON-NLS-1$
+		token2Name.put(CompilerParserConstants.T_NAME_FULLY_QUALIFIED, "identifier_fully_qualified"); //$NON-NLS-1$
+		token2Name.put(CompilerParserConstants.T_NAME_QUALIFIED, "identifier_qualified"); //$NON-NLS-1$
+		token2Name.put(CompilerParserConstants.T_NAME_RELATIVE, "identifier_realitive"); //$NON-NLS-1$
 	}
 
 	/**

@@ -82,7 +82,7 @@ import java_cup.runtime.Symbol;
 
 	@Override
 	public PHPVersion getPHPVersion() {
-		return PHPVersion.PHP8_2;
+		return PHPVersion.PHP8_1;
 	}
 
 	@Override
@@ -612,6 +612,10 @@ NOWDOC_CHARS=([^\n\r]|({NEWLINE}{TABS_AND_SPACES})+[^a-zA-Z_\u0080-\uffff\n\r \t
 
 <ST_IN_SCRIPTING>"public" {
 	return createFullSymbol(ParserConstants.T_PUBLIC);
+}
+
+<ST_IN_SCRIPTING>"readonly" {
+	return createFullSymbol(ParserConstants.T_READONLY);
 }
 
 <ST_IN_SCRIPTING>"unset" {

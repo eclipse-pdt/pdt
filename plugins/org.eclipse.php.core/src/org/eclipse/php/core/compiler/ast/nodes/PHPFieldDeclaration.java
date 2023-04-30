@@ -22,6 +22,7 @@ import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.ast.references.VariableReference;
 import org.eclipse.dltk.utils.CorePrinter;
+import org.eclipse.php.core.compiler.IPHPModifiers;
 import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
 
 public class PHPFieldDeclaration extends FieldDeclaration implements IPHPDocAwareDeclaration, IAttributedStatement {
@@ -117,5 +118,9 @@ public class PHPFieldDeclaration extends FieldDeclaration implements IPHPDocAwar
 	@Override
 	public void setAttributes(List<Attribute> attributes) {
 		this.attributes = attributes;
+	}
+
+	public boolean isReadonly() {
+		return (this.modifiers & IPHPModifiers.AccReadonly) != 0;
 	}
 }

@@ -1,0 +1,140 @@
+--TEST--
+PHP 8.1
+--FILE--
+<?php
+class Data
+{
+    public readonly int $status;
+   
+    public function __construct(int $status) 
+    {
+        $this->status = $status;
+    }
+}
+class Test {
+    public function __construct(
+        public readonly int $i = 0
+    ) {}
+}
+
+?>
+--EXPECT--
+<Program start='0' length='244'>
+	<Statements>
+		<ClassDeclaration start='6' length='142' modifier=''>
+			<ClassName>
+				<Identifier start='12' length='4' name='Data'/>
+			</ClassName>
+			<SuperClassName>
+			</SuperClassName>
+			<Interfaces>
+			</Interfaces>
+			<Block start='17' length='131' isCurly='true'>
+				<FieldsDeclaration start='23' length='28' modifier='public readonly'>
+					<Type>
+						<NamespaceName start='39' length='3' global='false' current='false'>
+							<Identifier start='39' length='3' name='int'/>
+						</NamespaceName>
+					</Type>
+					<VariableName>
+						<Variable start='43' length='7' isDollared='true'>
+							<Identifier start='44' length='6' name='status'/>
+						</Variable>
+					</VariableName>
+					<InitialValue>
+					</InitialValue>
+				</FieldsDeclaration>
+				<MethodDeclaration start='60' length='86' modifier='public'>
+					<FunctionDeclaration start='67' length='79' isReference='false'>
+						<FunctionName>
+							<Identifier start='76' length='11' name='__construct'/>
+						</FunctionName>
+						<FormalParameters>
+							<FormalParameter start='88' length='11' isMandatory='false'>
+								<Type>
+									<NamespaceName start='88' length='3' global='false' current='false'>
+										<Identifier start='88' length='3' name='int'/>
+									</NamespaceName>
+								</Type>
+								<ParameterName>
+									<Variable start='92' length='7' isDollared='true'>
+										<Identifier start='93' length='6' name='status'/>
+									</Variable>
+								</ParameterName>
+								<DefaultValue>
+								</DefaultValue>
+							</FormalParameter>
+						</FormalParameters>
+						<FunctionBody>
+							<Block start='106' length='40' isCurly='true'>
+								<ExpressionStatement start='116' length='24'>
+									<Assignment start='116' length='23' operator='='>
+										<FieldAccess start='116' length='13'>
+											<Dispatcher>
+												<Variable start='116' length='5' isDollared='true'>
+													<Identifier start='117' length='4' name='this'/>
+												</Variable>
+											</Dispatcher>
+											<Property>
+												<Variable start='123' length='6' isDollared='false'>
+													<Identifier start='123' length='6' name='status'/>
+												</Variable>
+											</Property>
+										</FieldAccess>
+										<Value>
+											<Variable start='132' length='7' isDollared='true'>
+												<Identifier start='133' length='6' name='status'/>
+											</Variable>
+										</Value>
+									</Assignment>
+								</ExpressionStatement>
+							</Block>
+						</FunctionBody>
+					</FunctionDeclaration>
+				</MethodDeclaration>
+			</Block>
+		</ClassDeclaration>
+		<ClassDeclaration start='149' length='91' modifier=''>
+			<ClassName>
+				<Identifier start='155' length='4' name='Test'/>
+			</ClassName>
+			<SuperClassName>
+			</SuperClassName>
+			<Interfaces>
+			</Interfaces>
+			<Block start='160' length='80' isCurly='true'>
+				<MethodDeclaration start='166' length='72' modifier='public'>
+					<FunctionDeclaration start='173' length='65' isReference='false'>
+						<FunctionName>
+							<Identifier start='182' length='11' name='__construct'/>
+						</FunctionName>
+						<FormalParameters>
+							<FormalParameter start='203' length='26' isMandatory='false modifier='public readonly''>
+								<Type>
+									<NamespaceName start='219' length='3' global='false' current='false'>
+										<Identifier start='219' length='3' name='int'/>
+									</NamespaceName>
+								</Type>
+								<ParameterName>
+									<Variable start='223' length='2' isDollared='true'>
+										<Identifier start='224' length='1' name='i'/>
+									</Variable>
+								</ParameterName>
+								<DefaultValue>
+									<Scalar start='228' length='1' type='int' value='0'/>
+								</DefaultValue>
+							</FormalParameter>
+						</FormalParameters>
+						<FunctionBody>
+							<Block start='236' length='2' isCurly='true'>
+							</Block>
+						</FunctionBody>
+					</FunctionDeclaration>
+				</MethodDeclaration>
+			</Block>
+		</ClassDeclaration>
+		<EmptyStatement start='242' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

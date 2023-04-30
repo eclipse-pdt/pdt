@@ -26,6 +26,7 @@ import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.ast.references.TypeReference;
 import org.eclipse.dltk.ast.references.VariableReference;
 import org.eclipse.dltk.ast.statements.Statement;
+import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.core.compiler.ast.nodes.*;
 import org.eclipse.php.core.compiler.ast.visitor.PHPASTVisitor;
 import org.eclipse.php.internal.core.util.XMLWriter;
@@ -96,6 +97,9 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 			}
 			if (declaration.isStatic()) {
 				buf.append(",static"); //$NON-NLS-1$
+			}
+			if (PHPFlags.isReadonly(declaration.getModifiers())) {
+				buf.append(",readonly"); //$NON-NLS-1$
 			}
 			String modifiers = buf.toString();
 			parameters.put("modifiers", //$NON-NLS-1$

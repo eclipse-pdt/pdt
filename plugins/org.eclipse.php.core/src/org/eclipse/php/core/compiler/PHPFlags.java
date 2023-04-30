@@ -109,6 +109,9 @@ public class PHPFlags extends Flags implements IPHPModifiers {
 		if ((mod & AccFinal) != 0) {
 			sb.append("final "); //$NON-NLS-1$
 		}
+		if ((mod & AccReadonly) != 0) {
+			sb.append("readonly "); //$NON-NLS-1$
+		}
 
 		int len;
 		if ((len = sb.length()) > 0) { /* trim trailing space */
@@ -151,5 +154,12 @@ public class PHPFlags extends Flags implements IPHPModifiers {
 	 */
 	public static boolean isNullable(int flags) {
 		return (flags & AccNullable) != 0;
+	}
+
+	/**
+	 * @since 8.0
+	 */
+	public static boolean isReadonly(int flags) {
+		return (flags & AccReadonly) != 0;
 	}
 }

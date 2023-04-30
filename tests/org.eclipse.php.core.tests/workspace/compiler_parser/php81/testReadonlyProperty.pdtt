@@ -1,0 +1,64 @@
+--TEST--
+PHP 8.1
+--FILE--
+<?php
+class Data
+{
+    public readonly int $status;
+   
+    public function __construct(int $status) 
+    {
+        $this->status = $status;
+    }
+}
+class Test {
+    public function __construct(
+        public readonly int $i = 0
+    ) {}
+}
+?>
+--EXPECT--
+<ModuleDeclaration start="0" end="244">
+	<ClassDeclaration start="6" end="148" modifiers="" name="Data">
+		<PHPFieldDeclaration start="43" end="50" modifiers="public,readonly" fieldType="int">
+			<FullyQualifiedReference start="39" end="42" name="int">
+			</FullyQualifiedReference>
+			<SimpleReference start="43" end="50" name="$status">
+			</SimpleReference>
+		</PHPFieldDeclaration>
+		<PHPMethodDeclaration start="60" end="146" modifiers="public" name="__construct">
+			<FormalParameter start="88" end="99" modifiers="" isMandatory="true" parameterType="int">
+				<FullyQualifiedReference start="88" end="91" name="int">
+				</FullyQualifiedReference>
+				<VariableReference start="92" end="99" name="$status">
+				</VariableReference>
+			</FormalParameter>
+			<ExpressionStatement start="116" end="140">
+				<Assignment start="116" end="139" operator="=">
+					<FieldAccess start="116" end="129">
+						<VariableReference start="116" end="121" name="$this">
+						</VariableReference>
+						<SimpleReference start="123" end="129" name="status">
+						</SimpleReference>
+					</FieldAccess>
+					<VariableReference start="132" end="139" name="$status">
+					</VariableReference>
+				</Assignment>
+			</ExpressionStatement>
+		</PHPMethodDeclaration>
+	</ClassDeclaration>
+	<ClassDeclaration start="149" end="240" modifiers="" name="Test">
+		<PHPMethodDeclaration start="166" end="238" modifiers="public" name="__construct">
+			<FormalParameter start="203" end="229" modifiers="public,readonly" isMandatory="false" parameterType="int">
+				<FullyQualifiedReference start="219" end="222" name="int">
+				</FullyQualifiedReference>
+				<VariableReference start="223" end="225" name="$i">
+				</VariableReference>
+				<Scalar start="228" end="229" type="int" value="0">
+				</Scalar>
+			</FormalParameter>
+		</PHPMethodDeclaration>
+	</ClassDeclaration>
+	<EmptyStatement start="241" end="243">
+	</EmptyStatement>
+</ModuleDeclaration>
