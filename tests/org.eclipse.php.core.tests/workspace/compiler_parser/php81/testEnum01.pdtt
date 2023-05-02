@@ -1,0 +1,30 @@
+--TEST--
+PHP 8.1
+--FILE--
+<?php
+enum Status
+{
+    case Draft;
+    case Published;
+    case Archived;
+}
+?>
+--EXPECT--
+<ModuleDeclaration start="0" end="80">
+	<EnumDeclaration start="6" end="76" modifiers="final" name="Status">
+		<ConstantDeclaration start="24" end="35" modifiers="final,public,enum_case">
+			<ConstantReference start="29" end="34" name="Draft">
+			</ConstantReference>
+		</ConstantDeclaration>
+		<ConstantDeclaration start="40" end="55" modifiers="final,public,enum_case">
+			<ConstantReference start="45" end="54" name="Published">
+			</ConstantReference>
+		</ConstantDeclaration>
+		<ConstantDeclaration start="60" end="74" modifiers="final,public,enum_case">
+			<ConstantReference start="65" end="73" name="Archived">
+			</ConstantReference>
+		</ConstantDeclaration>
+	</EnumDeclaration>
+	<EmptyStatement start="77" end="79">
+	</EmptyStatement>
+</ModuleDeclaration>

@@ -1,0 +1,57 @@
+--TEST--
+PHP 8.1
+--FILE--
+<?php
+enum Status: string
+{
+    case Draft = 'draft';
+    case Published = 'published';
+    case Archived = 'something';
+}
+?>
+--EXPECT--
+<Program start='0' length='125'>
+	<Statements>
+		<EnumDeclaration start='6' length='116'>
+			<EnumName>
+				<Identifier start='11' length='6' name='Status'/>
+			</EnumName>
+			<EnumType>
+				<NamespaceName start='19' length='6' global='false' current='false'>
+					<Identifier start='19' length='6' name='string'/>
+				</NamespaceName>
+			</EnumType>
+			<Interfaces>
+			</Interfaces>
+			<Block start='26' length='96' isCurly='true'>
+				<EnumCaseDeclaration start='32' length='21' modifier='final'>
+					<VariableName>
+						<Identifier start='37' length='5' name='Draft'/>
+					</VariableName>
+					<InitialValue>
+						<Scalar start='45' length='7' type='string' value='&apos;draft&apos;'/>
+					</InitialValue>
+				</EnumCaseDeclaration>
+				<EnumCaseDeclaration start='58' length='29' modifier='final'>
+					<VariableName>
+						<Identifier start='63' length='9' name='Published'/>
+					</VariableName>
+					<InitialValue>
+						<Scalar start='75' length='11' type='string' value='&apos;published&apos;'/>
+					</InitialValue>
+				</EnumCaseDeclaration>
+				<EnumCaseDeclaration start='92' length='28' modifier='final'>
+					<VariableName>
+						<Identifier start='97' length='8' name='Archived'/>
+					</VariableName>
+					<InitialValue>
+						<Scalar start='108' length='11' type='string' value='&apos;something&apos;'/>
+					</InitialValue>
+				</EnumCaseDeclaration>
+			</Block>
+		</EnumDeclaration>
+		<EmptyStatement start='123' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

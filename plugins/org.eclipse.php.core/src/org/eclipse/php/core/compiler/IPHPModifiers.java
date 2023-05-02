@@ -76,11 +76,21 @@ public interface IPHPModifiers extends Modifiers {
 	public static final int AccReadonly = (1 << Modifiers.USER_MODIFIER + 12);
 
 	/**
+	 * @since 8.0
+	 */
+	public static final int AccEnum = (1 << Modifiers.USER_MODIFIER + 13);
+
+	/**
+	 * @since 8.0
+	 */
+	public static final int AccEnumCase = Modifiers.AccConst; // integer END
+
+	/**
 	 * All access modifiers as one for compiler validation
 	 * 
 	 * @since 4.0
 	 */
 	public static final int AccessMask = AccPublic | AccPrivate | AccProtected;
 
-	public static final int USER_MODIFIER = Modifiers.USER_MODIFIER + 13;
+	public static final int USER_MODIFIER = Modifiers.USER_MODIFIER + 15;
 }

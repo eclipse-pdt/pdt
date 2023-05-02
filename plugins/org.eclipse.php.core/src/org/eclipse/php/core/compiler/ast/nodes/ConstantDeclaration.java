@@ -48,7 +48,6 @@ public class ConstantDeclaration extends Declaration implements IPHPDocAwareDecl
 		super(start, end);
 
 		assert constant != null;
-		assert initializer != null;
 
 		this.constant = constant;
 		this.initializer = initializer;
@@ -73,7 +72,9 @@ public class ConstantDeclaration extends Declaration implements IPHPDocAwareDecl
 				}
 			}
 			constant.traverse(visitor);
-			initializer.traverse(visitor);
+			if (initializer != null) {
+				initializer.traverse(visitor);
+			}
 		}
 		visitor.endvisit(this);
 	}

@@ -1,0 +1,43 @@
+--TEST--
+PHP 8.1
+--FILE--
+<?php
+enum Status
+{
+    case Draft;
+    case Published;
+    case Archived;
+}
+?>
+--EXPECT--
+<Program start='0' length='79'>
+	<Statements>
+		<EnumDeclaration start='6' length='70'>
+			<EnumName>
+				<Identifier start='11' length='6' name='Status'/>
+			</EnumName>
+			<Interfaces>
+			</Interfaces>
+			<Block start='18' length='58' isCurly='true'>
+				<EnumCaseDeclaration start='24' length='11' modifier='final'>
+					<VariableName>
+						<Identifier start='29' length='5' name='Draft'/>
+					</VariableName>
+				</EnumCaseDeclaration>
+				<EnumCaseDeclaration start='40' length='15' modifier='final'>
+					<VariableName>
+						<Identifier start='45' length='9' name='Published'/>
+					</VariableName>
+				</EnumCaseDeclaration>
+				<EnumCaseDeclaration start='60' length='14' modifier='final'>
+					<VariableName>
+						<Identifier start='65' length='8' name='Archived'/>
+					</VariableName>
+				</EnumCaseDeclaration>
+			</Block>
+		</EnumDeclaration>
+		<EmptyStatement start='77' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

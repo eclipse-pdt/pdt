@@ -162,4 +162,11 @@ public class PHPFlags extends Flags implements IPHPModifiers {
 	public static boolean isReadonly(int flags) {
 		return (flags & AccReadonly) != 0;
 	}
+
+	/**
+	 * @since 8.0
+	 */
+	public static boolean isEnumCase(int flags) {
+		return (flags & AccEnumCase) != 0;
+	}
 }

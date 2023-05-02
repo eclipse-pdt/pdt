@@ -101,6 +101,9 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 			if (PHPFlags.isReadonly(declaration.getModifiers())) {
 				buf.append(",readonly"); //$NON-NLS-1$
 			}
+			if (PHPFlags.isEnumCase(declaration.getModifiers())) {
+				buf.append(",enum_case"); //$NON-NLS-1$
+			}
 			String modifiers = buf.toString();
 			parameters.put("modifiers", //$NON-NLS-1$
 					modifiers.length() > 0 ? modifiers.substring(1) : modifiers);
@@ -1583,4 +1586,25 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 	}
 
 	// php 8.0 ends
+
+	// php8.1
+	@Override
+	public boolean visit(EnumDeclaration s) throws Exception {
+		Map<String, String> parameters = createInitialParameters(s);
+		parameters.put("name", s.getName()); //$NON-NLS-1$
+		if (s.getBackingType() != null) {
+			parameters.put("type", s.getBackingType().getName());
+		}
+		xmlWriter.startTag("EnumDeclaration", parameters); //$NON-NLS-1$
+
+		return true;
+	}
+
+	@Override
+	public boolean endvisit(EnumDeclaration e) throws Exception {
+		xmlWriter.endTag("EnumDeclaration"); //$NON-NLS-1$
+		return false;
+	}
+
+	// php8.1 ends
 }

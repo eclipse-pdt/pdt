@@ -1116,4 +1116,25 @@ public class ASTMatcher {
 		return safeEquals(node.getName(), o.getName()) && safeSubtreeMatch(node.getExpression(), o.getExpression());
 	}
 
+	public boolean match(EnumDeclaration node, Object other) {
+		if (!(other instanceof EnumDeclaration)) {
+			return false;
+		}
+		EnumDeclaration o = (EnumDeclaration) other;
+
+		return (safeSubtreeMatch(node.getName(), o.getName()) && safeSubtreeMatch(node.getEnumType(), o.getEnumType())
+				&& safeSubtreeMatch(node.getBody(), o.getBody())
+				&& safeSubtreeListMatch(node.interfaces(), o.interfaces()));
+	}
+
+	public boolean match(EnumCaseDeclaration node, Object other) {
+		if (!(other instanceof EnumCaseDeclaration)) {
+			return false;
+		}
+		EnumCaseDeclaration o = (EnumCaseDeclaration) other;
+
+		return (safeSubtreeMatch(node.getName(), o.getName())
+				&& safeSubtreeMatch(node.getInitializer(), o.getInitializer()));
+	}
+
 }

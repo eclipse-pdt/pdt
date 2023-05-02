@@ -1031,6 +1031,11 @@ public abstract class PHPASTVisitor extends ASTVisitor {
 		if (nodeClass.equals(ThrowExpression.class)) {
 			return endvisit((ThrowExpression) s);
 		}
+
+		// php8.1
+		if (nodeClass.equals(EnumDeclaration.class)) {
+			return endvisit((EnumDeclaration) s);
+		}
 		return true;
 	}
 
@@ -1065,6 +1070,9 @@ public abstract class PHPASTVisitor extends ASTVisitor {
 		}
 		if (s instanceof NamespaceDeclaration) {
 			return endvisit((NamespaceDeclaration) s);
+		}
+		if (s instanceof EnumDeclaration) {
+			return endvisit((EnumDeclaration) s);
 		}
 		return true;
 	}
@@ -1352,6 +1360,11 @@ public abstract class PHPASTVisitor extends ASTVisitor {
 		if (nodeClass.equals(ThrowExpression.class)) {
 			return visit((ThrowExpression) s);
 		}
+
+		// php8.1
+		if (nodeClass.equals(EnumDeclaration.class)) {
+			return visit((EnumDeclaration) s);
+		}
 		return true;
 	}
 
@@ -1479,6 +1492,17 @@ public abstract class PHPASTVisitor extends ASTVisitor {
 
 	// php8.0 ends
 
+	// php8.1
+	public boolean visit(EnumDeclaration s) throws Exception {
+		return visitGeneral(s);
+	}
+
+	public boolean endvisit(EnumDeclaration s) throws Exception {
+		endvisitGeneral(s);
+		return false;
+	}
+	// php8.1 ends
+
 	@Override
 	public boolean visit(Expression s) throws Exception {
 		return visit((ASTNode) s);
@@ -1510,6 +1534,10 @@ public abstract class PHPASTVisitor extends ASTVisitor {
 		}
 		if (s instanceof NamespaceDeclaration) {
 			return visit((NamespaceDeclaration) s);
+		}
+
+		if (s instanceof EnumDeclaration) {
+			return visit((EnumDeclaration) s);
 		}
 		return true;
 	}

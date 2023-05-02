@@ -433,6 +433,11 @@ NOWDOC_CHARS=([^\n\r]|({NEWLINE}{TABS_AND_SPACES})+[^a-zA-Z_\u0080-\uffff\n\r \t
 	return createFullSymbol(ParserConstants.T_TRAIT);
 }
 
+<ST_IN_SCRIPTING>"enum"{WHITESPACES}{LABEL} {
+	yypushback(yylength()-4);
+	return createFullSymbol(ParserConstants.T_ENUM);
+}
+
 <ST_IN_SCRIPTING>"insteadof" {
 	return createFullSymbol(ParserConstants.T_INSTEADOF);
 }

@@ -22,32 +22,29 @@ import org.eclipse.dltk.ast.declarations.TypeDeclaration;
 import org.eclipse.dltk.ast.references.TypeReference;
 import org.eclipse.dltk.ast.statements.Block;
 import org.eclipse.dltk.utils.CorePrinter;
+import org.eclipse.php.core.compiler.IPHPModifiers;
 import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
 
 /**
- * Represents an interface declaration
+ * Represents an enum declaration
  * 
  * <pre>
- * 
- * e.g.
- * 
- * interface MyInterface { }, interface MyInterface extends Interface1,
- * Interface2 { const MY_CONSTANT = 3; public function myFunction($a); }
+ * enum MyEnum {
+ * 	case VALUE;
+ * }
  * </pre>
  */
-public class InterfaceDeclaration extends TypeDeclaration
+public class EnumDeclaration extends TypeDeclaration
 		implements IPHPDocAwareDeclaration, IRecoverable, IAttributedStatement {
 
 	private PHPDocBlock phpDoc;
 	private boolean isRecovered;
+	private TypeReference backingType;
 	private List<Attribute> attributes;
 
-	public InterfaceDeclaration(int start, int end, int nameStart, int nameEnd, String interfaceName,
+	public EnumDeclaration(int start, int end, int nameStart, int nameEnd, String enumName, TypeReference backingType,
 			List<TypeReference> interfaces, Block body, PHPDocBlock phpDoc) {
-		super(interfaceName, nameStart, nameEnd, start, end);
-		if (interfaceName == null) {
-			System.out.println("empty");
-		}
+		super(enumName, nameStart, nameEnd, start, end);
 
 		this.phpDoc = phpDoc;
 
@@ -66,7 +63,7 @@ public class InterfaceDeclaration extends TypeDeclaration
 
 		setBody(body);
 
-		setModifier(Modifiers.AccInterface);
+		setModifier(IPHPModifiers.AccEnum | Modifiers.AccFinal);
 	}
 
 	@Override
@@ -76,7 +73,7 @@ public class InterfaceDeclaration extends TypeDeclaration
 
 	@Override
 	public int getKind() {
-		return ASTNodeKinds.INTERFACE_DECLARATION;
+		return ASTNodeKinds.ENUM_DECLARATION;
 	}
 
 	@Override
@@ -115,6 +112,9 @@ public class InterfaceDeclaration extends TypeDeclaration
 					attr.traverse(visitor);
 				}
 			}
+			if (this.backingType != null) {
+				this.backingType.traverse(visitor);
+			}
 			if (this.getSuperClasses() != null) {
 				this.getSuperClasses().traverse(visitor);
 			}
@@ -128,5 +128,9 @@ public class InterfaceDeclaration extends TypeDeclaration
 	@Override
 	public void setAttributes(List<Attribute> attributes) {
 		this.attributes = attributes;
+	}
+
+	public TypeReference getBackingType() {
+		return backingType;
 	}
 }

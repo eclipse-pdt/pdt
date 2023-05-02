@@ -230,6 +230,7 @@ terminal String T_NAME_RELATIVE;
 
 //php 8.1
 terminal String T_READONLY;
+terminal String T_ENUM;
 
 /* Non terminals */
 
@@ -358,6 +359,7 @@ non terminal Expression trait_method_reference;
 non terminal FullyQualifiedTraitMethodReference trait_method_reference_fully_qualified;
 non terminal TraitAlias trait_alias;
 non terminal Integer trait_modifiers;
+non terminal Integer non_empty_trait_modifiers;
 
 non terminal ClassInstanceCreation new_expr;
 non terminal AnonymousClassDeclaration anonymous_class;
@@ -404,6 +406,8 @@ non terminal String function_name;
 non terminal Integer optional_property_modifiers;
 non terminal Integer property_modifier;
 non terminal List<Integer> non_empty_property_modifiers;
+non terminal Identifier enum_backing_type;
+non terminal Expression enum_case_expr;
 
 
 precedence left T_THROW;
@@ -697,6 +701,11 @@ T_INCLUDE:v
 	RESULT = v;
 :}
 | T_MATCH:v
+{:
+	RESULT = v;
+:}
+
+| T_ENUM:v
 {:
 	RESULT = v;
 :}
@@ -1517,7 +1526,41 @@ T_CURLY_OPEN:blockStart class_statement_list:sList T_CURLY_CLOSE:blockEnd
 		new Identifier(classNameleft, classNameright, parser.ast, className), interfaces,
 		new Block(blockStartleft, blockEndright, parser.ast, sList));
 :}
+|
+T_ENUM:start T_STRING:className enum_backing_type:type implements_list:interfaces 
+T_CURLY_OPEN:blockStart class_statement_list:statementList T_CURLY_CLOSE:blockEnd
+{:
+	RESULT = new EnumDeclaration(startleft, blockEndright, parser.ast, 
+		new Identifier(classNameleft, classNameright, parser.ast, className),
+		type, interfaces,
+		new Block(blockStartleft, blockEndright, parser.ast, statementList),
+		null
+	);
+:}
 ;
+
+enum_backing_type ::=
+/* empty */
+{:
+	RESULT = null;
+:}
+| T_NEKUDOTAIM type_expr:type
+{:
+	RESULT = type;
+:}
+;
+
+enum_case_expr ::=
+/* empty */
+{:
+	RESULT = null;
+:}
+| T_EQUAL expr:expr
+{:
+	RESULT = expr;
+:}
+;
+
 
 class_entry_type ::=
 T_CLASS
@@ -2301,6 +2344,10 @@ method_body:body
 	FunctionDeclaration functionDeclaration = new FunctionDeclaration(sleft, bodyright, parser.ast, functionId, paramList, body, isReference.booleanValue(), returnType);
 	RESULT = new MethodDeclaration(methodStart, bodyright, parser.ast, modifier.intValue(), functionDeclaration, true);
 :}
+| T_CASE:start identifier:name enum_case_expr:expr T_SEMICOLON:end
+{:
+	RESULT = new EnumCaseDeclaration(startleft, endright, parser.ast, new Identifier(nameleft, nameright, parser.ast, name), expr);
+:}
 ;
 
 class_statement ::=
@@ -2456,7 +2503,7 @@ trait_alias ::=
 	TraitAlias alias = new TraitAlias(referenceleft, functionNameright, parser.ast, reference, modifierValue, modifierOffset, name);
 	RESULT = alias;
 :}
-|	trait_method_reference:reference T_AS:as member_modifier:modifier
+|	trait_method_reference:reference T_AS:as non_empty_trait_modifiers:modifier
 {:
 	int modifierValue = modifier == null ? Modifiers.AccPublic : modifier.intValue();
 	int modifierOffset = modifier == null ? asright + 1 : modifierleft;
@@ -2465,12 +2512,29 @@ trait_alias ::=
 :}
 ;
 
+non_empty_trait_modifiers ::=
+T_PUBLIC
+{:
+	RESULT = PHPAstParser.PUBLIC;
+:}
+
+| T_PROTECTED
+{:
+	RESULT = PHPAstParser.PROTECTED;
+:}
+
+| T_PRIVATE
+{:
+	RESULT = PHPAstParser.PRIVATE;
+:}
+;
+
 trait_modifiers ::=
 /* empty */
 {:
 	RESULT = null;
 :}
-| member_modifier:modifier
+| non_empty_trait_modifiers:modifier
 {:
 	RESULT = modifier;
 :}

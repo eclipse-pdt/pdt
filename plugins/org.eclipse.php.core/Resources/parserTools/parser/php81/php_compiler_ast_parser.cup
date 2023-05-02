@@ -101,7 +101,7 @@ terminal String T_CLONE;
 terminal String T_AS;
 terminal String T_SWITCH;
 terminal String T_ENDSWITCH;
-terminal String T_CASE;
+terminal CompilerAstLexer.PHPDocBlockSymbolPair T_CASE;
 terminal String T_DEFAULT;
 terminal String T_BREAK;
 terminal String T_CONTINUE;
@@ -214,6 +214,7 @@ terminal String T_NAME_RELATIVE;
 
 //php 8.1
 terminal CompilerAstLexer.PHPDocBlockSymbolPair T_READONLY;
+terminal CompilerAstLexer.PHPDocBlockSymbolPair T_ENUM;
 
 /* Non terminals */
 
@@ -398,6 +399,9 @@ non terminal String function_name;
 non terminal CompilerAstParser.ModifierDocPair optional_property_modifiers;
 non terminal CompilerAstParser.ModifierDocPair property_modifier;
 non terminal List non_empty_property_modifiers;
+non terminal TypeReference enum_backing_type;
+non terminal Expression enum_case_expr;
+non terminal PHPDocBlock enum_entry;
 
 precedence left T_THROW;
 precedence left T_INCLUDE, T_INCLUDE_ONCE, T_EVAL, T_REQUIRE, T_REQUIRE_ONCE;
@@ -656,7 +660,7 @@ T_INCLUDE:v
 :}
 | T_CASE:v
 {:
-	RESULT = v;
+	RESULT = v.value;
 :}
 | T_DEFAULT:v
 {:
@@ -708,6 +712,11 @@ T_INCLUDE:v
 | T_MATCH:v
 {:
 	RESULT = v;
+:}
+
+| T_ENUM:v
+{:
+	RESULT = v.value;
 :}
 ;
 
@@ -1709,7 +1718,31 @@ T_CURLY_OPEN:blockStart class_statement_list:statementList class_closure:blockEn
 	interfaceDeclaration.getBody().setEnd(blockEndright);
 	RESULT = interfaceDeclaration;
 :}
+
+|
+enum_entry:start T_STRING:className 
+enum_backing_type:type implements_list:interfaces 
+{:
+	EnumDeclaration enumDeclaration = new EnumDeclaration(startleft, interfacesright, classNameleft, classNameright, className, type, interfaces,  new Block(interfacesright, interfacesright, null), start);
+	enumDeclaration.setRecovered(true);
+	parser.declarations.push(enumDeclaration);
+:}
+T_CURLY_OPEN:blockStart class_statement_list:statementList class_closure:blockEnd
+{:
+	if (blockEnd != null) {
+		parser.reportError(new ASTError(statementListright - 1, statementListright), "syntax error, unfinished enum declaration");
+		parser.pendingStatement = blockEnd;
+	}
+
+	EnumDeclaration enumDeclaration = (EnumDeclaration) parser.declarations.pop();
+	enumDeclaration.setRecovered(false);
+	enumDeclaration.setEnd(blockEndright);
+	enumDeclaration.getBody().setStart(blockStartleft);
+	enumDeclaration.getBody().setEnd(blockEndright);
+	RESULT = enumDeclaration;
+:}
 ;
+
 
 errorOrNot ::=
 error
@@ -1754,6 +1787,28 @@ T_CLASS:value
 :}
 ;
 
+enum_backing_type ::=
+/* empty */
+{:
+	RESULT = null;
+:}
+| T_NEKUDOTAIM type_expr:type
+{:
+	RESULT = type;
+:}
+;
+
+enum_case_expr ::=
+/* empty */
+{:
+	RESULT = null;
+:}
+| T_EQUAL expr:expr
+{:
+	RESULT = expr;
+:}
+;
+
 extends_from ::=
 /* empty */
 {:
@@ -1772,6 +1827,14 @@ extends_from ::=
 /* do nothing */
 interface_entry ::=
 T_INTERFACE:value
+{:
+	RESULT = value.doc;
+:}
+;
+
+/* do nothing */
+enum_entry ::=
+T_ENUM:value
 {:
 	RESULT = value.doc;
 :}
@@ -2576,6 +2639,11 @@ variable_modifiers:modifier optional_type_without_static:type property_list:decL
 	}
 :}
 
+| T_CASE:start identifier:name enum_case_expr:expr T_SEMICOLON:end
+{:
+	parser.addDeclarationStatement(new ConstantDeclaration(new ConstantReference(nameleft, nameright, name), expr, IPHPModifiers.AccConstant | IPHPModifiers.AccPublic | IPHPModifiers.AccFinal | IPHPModifiers.AccEnumCase, startleft, endright, start.doc));
+:}
+
 | method_modifiers:modifier T_CONST:s class_const_list:lists T_SEMICOLON
 {:
 	int methodStart = modifier == null ? sleft : modifierleft;
@@ -2655,8 +2723,20 @@ method_body:body
 					}
 				}
 			}
+		} else if (statement instanceof EnumDeclaration) {
+			EnumDeclaration classDeclaration = (EnumDeclaration) statement;
+			
+			if ((methodDeclaration.getModifiers() & Modifiers.AccAbstract) == 0) {
+				parser.reportError(new ASTError(methodDeclaration.getNameStart(), methodDeclaration.getNameEnd(), PHPProblemIdentifier.MethodRequiresBody), Messages.MethodRequiresBody);
+			} else {
+				String message = Messages.getString("AbstractMethodInAbstractClass", methodDeclaration.getName(), classDeclaration.getName());
+				parser.reportError(new ASTError(methodDeclaration.getNameStart(), methodDeclaration.getNameEnd(), PHPProblemIdentifier.AbstractMethodInAbstractClass), message);
+	
+				message = Messages.getString("AbstractMethodsInConcreteClass", classDeclaration.getName());
+				parser.reportError(new ASTError(classDeclaration.getNameStart(), classDeclaration.getNameEnd(), PHPProblemIdentifier.AbstractMethodsInConcreteClass), message);
+			}
 		}
-	} else if (body == null) { /* method with body part */
+	}  else if (body == null) { /* method with body part */
 		Statement statement = parser.declarations.peek();
 		if (statement instanceof ClassDeclaration) { /* handle classes and traits */
 			if ((methodDeclaration.getModifiers() & Modifiers.AccAbstract) != 0) {

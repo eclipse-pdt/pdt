@@ -100,4 +100,7 @@ public interface ASTNodeKinds {
 	int MATCH_EXPRESSION = 82;
 	int THROW_EXPRESSION = 83;
 
+	int ENUM_DECLARATION = 84;
+	int ENUM_CASE = 85;
+
 }

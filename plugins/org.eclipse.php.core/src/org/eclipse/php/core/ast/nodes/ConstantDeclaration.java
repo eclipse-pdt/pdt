@@ -137,7 +137,7 @@ public class ConstantDeclaration extends BodyDeclaration {
 	@Override
 	public void childrenAccept(Visitor visitor) {
 		for (AttributeGroup attr : attributes()) {
-			attr.traverseBottomUp(visitor);
+			attr.accept(visitor);
 		}
 		Iterator<Identifier> iterator1 = names.iterator();
 		Iterator<Expression> iterator2 = initializers.iterator();
