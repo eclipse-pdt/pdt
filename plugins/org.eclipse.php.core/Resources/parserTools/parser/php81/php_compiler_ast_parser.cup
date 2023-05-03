@@ -215,6 +215,7 @@ terminal String T_NAME_RELATIVE;
 //php 8.1
 terminal CompilerAstLexer.PHPDocBlockSymbolPair T_READONLY;
 terminal CompilerAstLexer.PHPDocBlockSymbolPair T_ENUM;
+terminal T_REFERENCE_FOLLOWED_BY_VAR_OR_VARARG;
 
 /* Non terminals */
 
@@ -402,6 +403,13 @@ non terminal List non_empty_property_modifiers;
 non terminal TypeReference enum_backing_type;
 non terminal Expression enum_case_expr;
 non terminal PHPDocBlock enum_entry;
+non terminal DNFTypeReference intersection_type;
+non terminal DNFTypeReference intersection_type_without_static;
+non terminal List<TypeReference> intersection_type_list;
+non terminal List<TypeReference> intersection_type_list_without_static;
+non terminal Boolean reference;
+non terminal Boolean returns_ref;
+non terminal Boolean is_variadic;
 
 precedence left T_THROW;
 precedence left T_INCLUDE, T_INCLUDE_ONCE, T_EVAL, T_REQUIRE, T_REQUIRE_ONCE;
@@ -417,7 +425,7 @@ precedence left T_BOOLEAN_OR;
 precedence left T_BOOLEAN_AND;
 precedence left T_OR;
 precedence left T_KOVA;
-precedence left T_REFERENCE;
+precedence left T_REFERENCE, T_REFERENCE_FOLLOWED_BY_VAR_OR_VARARG;
 precedence left T_ELLIPSIS;
 precedence right T_YIELD;
 precedence right T_DOUBLE_ARROW;
@@ -753,6 +761,17 @@ reserved_non_modifiers:v
 | T_READONLY:v
 {:
 	RESULT = v.value;
+:}
+;
+
+reference ::=
+T_REFERENCE:ref
+{:
+	RESULT = Boolean.TRUE;
+:}
+| T_REFERENCE_FOLLOWED_BY_VAR_OR_VARARG:ref
+{:
+	RESULT = Boolean.TRUE;
 :}
 ;
 
@@ -1584,7 +1603,29 @@ is_reference ::=
 {:
 	RESULT = Boolean.FALSE;
 :}
-| T_REFERENCE
+| T_REFERENCE_FOLLOWED_BY_VAR_OR_VARARG
+{:
+	RESULT = Boolean.TRUE;
+:}
+;
+
+is_variadic ::=
+/* empty */
+{:
+	RESULT = Boolean.FALSE;
+:}
+| T_ELLIPSIS
+{:
+	RESULT = Boolean.TRUE;
+:}
+;
+
+returns_ref ::=
+/* empty */
+{:
+	RESULT = Boolean.FALSE;
+:}
+| reference
 {:
 	RESULT = Boolean.TRUE;
 :}
@@ -1602,7 +1643,7 @@ string_st:functionName
 ;
 
 unticked_function_declaration_statement ::=
-T_FUNCTION:start is_reference:isReference function_name:functionName
+T_FUNCTION:start returns_ref:isReference function_name:functionName
 {:
 	PHPMethodDeclaration functionDeclaration = new PHPMethodDeclaration(startleft, functionNameright, functionNameleft, functionNameright, functionName, 0, null, new Block(functionNameright, functionNameright, null), isReference.booleanValue(), start.doc);
 	parser.addDeclarationStatement(functionDeclaration);
@@ -1898,7 +1939,7 @@ variable:var
 	RESULT = var;
 :}
 
-| T_REFERENCE:start variable:var
+| reference:start variable:var
 {:
 	RESULT = new ReferenceExpression (startleft, varright, var);
 :}
@@ -2282,72 +2323,41 @@ T_PUBLIC:value
 
 
 parameter ::=
-optional_property_modifiers:modifier optional_type_without_static:type T_VARIABLE:var
+optional_property_modifiers:modifier optional_type_without_static:type is_reference:is_reference is_variadic:is_var T_VARIABLE:var
 {:
-	int start = type == null ? varleft : typeleft;
+	int start = varleft;
+	if (modifier != null) {
+		start = modifierleft;
+	} else if(type != null) {
+		start = typeleft;
+	} else if (is_reference) {
+		start = is_referenceleft;
+	} else if (is_var) {
+		start = is_varleft;
+	}
 	start = modifier != null ? modifierleft : start;
 	VariableReference v = new VariableReference(varleft, varright, var, PHPVariableKind.LOCAL);
-	FormalParameter parameter = new FormalParameter(start, varright, type, v);
+	FormalParameter parameter = is_reference ?  new FormalParameterByReference(start, varright, type, v, null, !is_var, is_var) : new FormalParameter(start, varright, type, v, null, !is_var, is_var);
 	if (modifier != null) {
 		parameter.setModifiers(modifier.modifier);
 	}
 	RESULT = parameter;
 :}
 
-| optional_property_modifiers:modifier optional_type_without_static:type T_ELLIPSIS:e T_VARIABLE:var
+| optional_property_modifiers:modifier optional_type_without_static:type is_reference:is_reference is_variadic:is_var T_VARIABLE:var T_EQUAL expr:expr
 {:
-	int start = type == null ? eleft : typeleft;
-	start = modifier != null ? modifierleft : start;
-	VariableReference v = new VariableReference(varleft, varright, var, PHPVariableKind.LOCAL);
-	FormalParameter parameter = new FormalParameter(start, varright, type, v, null, false, true);
+	int start = varleft;
 	if (modifier != null) {
-		parameter.setModifiers(modifier.modifier);
+		start = modifierleft;
+	} else if(type != null) {
+		start = typeleft;
+	} else if (is_reference) {
+		start = is_referenceleft;
+	} else if (is_var) {
+		start = is_varleft;
 	}
-	RESULT = parameter;
-:}
-
-| optional_property_modifiers:modifier optional_type_without_static:type T_REFERENCE:ref T_VARIABLE:var
-{:
-	int start = type == null ? refleft : typeleft;
-	start = modifier != null ? modifierleft : start;
 	VariableReference v = new VariableReference(varleft, varright, var, PHPVariableKind.LOCAL);
-	FormalParameter parameter = new FormalParameterByReference(start, varright, type, v);
-	if (modifier != null) {
-		parameter.setModifiers(modifier.modifier);
-	}
-	RESULT = parameter;
-:}
-
-| optional_property_modifiers:modifier optional_type_without_static:type T_REFERENCE:ref T_ELLIPSIS T_VARIABLE:var
-{:
-	int start = type == null ? refleft : typeleft;
-	start = modifier != null ? modifierleft : start;
-	VariableReference v = new VariableReference(varleft, varright, var, PHPVariableKind.LOCAL);
-	FormalParameter parameter = new FormalParameterByReference(start, varright, type, v, null, false, true);
-	if (modifier != null) {
-		parameter.setModifiers(modifier.modifier);
-	}
-	RESULT = parameter;
-:}
-
-| optional_property_modifiers:modifier optional_type_without_static:type T_VARIABLE:var T_EQUAL expr:expr
-{:
-	int start = type == null ? varleft : typeleft;
-	start = modifier != null ? modifierleft : start;
-	VariableReference v = new VariableReference(varleft, varright, var, PHPVariableKind.LOCAL);
-	FormalParameter parameter = new FormalParameter(start, exprright, type, v, expr);
-	if (modifier != null) {
-		parameter.setModifiers(modifier.modifier);
-	}
-	RESULT = parameter;
-:}
-
-| optional_property_modifiers:modifier optional_type_without_static:type T_REFERENCE:ref T_VARIABLE:var T_EQUAL expr:expr
-{:
-	int start = type == null ? refleft : typeleft;
-	start = modifier != null ? modifierleft : start;
-	VariableReference v = new VariableReference(varleft, varright, var, PHPVariableKind.LOCAL);
-	FormalParameter parameter = new FormalParameterByReference(start, exprright, type, v, expr);
+	FormalParameter parameter = is_reference ?  new FormalParameterByReference(start, varright, type, v, expr, false, is_var) : new FormalParameter(start, varright, type, v, expr, false, is_var);
 	if (modifier != null) {
 		parameter.setModifiers(modifier.modifier);
 	}
@@ -2441,6 +2451,11 @@ type:type
 {:
 	RESULT = type;
 :}
+
+| intersection_type:type
+{:
+	RESULT = type;
+:}
 ;
 
 type ::=
@@ -2479,6 +2494,29 @@ type:first T_OR type:second
 :}
 ;
 
+intersection_type ::=
+intersection_type_list:list
+{:
+	RESULT = new DNFTypeReference(listleft, listright, list, DNFTypeReference.T_INTERSECTION);
+:}
+;
+
+intersection_type_list ::=
+type:first T_REFERENCE type:second
+{:
+	List<TypeReference> refs = new LinkedList<>();
+	refs.add(first);
+	refs.add(second);
+	RESULT = refs;
+:}
+| intersection_type_list:list T_REFERENCE type:type
+{:
+	list.add(type);
+	
+	RESULT = list;
+:}
+;
+
 type_expr_without_static ::=
 type_without_static:type
 {:
@@ -2491,6 +2529,10 @@ type_without_static:type
 	RESULT = type;
 :}
 | union_type_without_static:type
+{:
+	RESULT = type;
+:}
+| intersection_type_without_static:type
 {:
 	RESULT = type;
 :}
@@ -2532,6 +2574,29 @@ type_without_static:first T_OR type_without_static:second
 	RESULT = refs;
 :}
 | union_type_list_without_static:list T_OR type_without_static:type
+{:
+	list.add(type);
+	
+	RESULT = list;
+:}
+;
+
+intersection_type_without_static ::=
+intersection_type_list_without_static:list
+{:
+	RESULT = new DNFTypeReference(listleft, listright, list, DNFTypeReference.T_INTERSECTION);
+:}
+;
+
+intersection_type_list_without_static ::=
+type_without_static:first T_REFERENCE type_without_static:second
+{:
+	List<TypeReference> refs = new LinkedList<>();
+	refs.add(first);
+	refs.add(second);
+	RESULT = refs;
+:}
+| intersection_type_list_without_static:list T_REFERENCE type_without_static:type
 {:
 	list.add(type);
 	
@@ -2665,7 +2730,7 @@ variable_modifiers:modifier optional_type_without_static:type property_list:decL
 	}
 :}
 
-| method_modifiers:modifier T_FUNCTION:start is_reference:isReference identifier:functionName
+| method_modifiers:modifier T_FUNCTION:start returns_ref:isReference identifier:functionName
 {:
 	int methodStart = modifier == null ? startleft : modifierleft;
 	int modifierValue = modifier == null ? Modifiers.AccPublic : modifier.modifier;
@@ -3228,7 +3293,7 @@ T_LIST:start T_OPEN_PARENTHESE array_pair_list:list T_CLOSE_PARENTHESE:end T_EQU
 	RESULT = new Assignment(varleft, exprright, var, Assignment.OP_EQUAL, expr);
 :}
 
-| variable:var T_EQUAL T_REFERENCE:reftoken variable:refvar
+| variable:var T_EQUAL reference:reftoken variable:refvar
 {:
 	RESULT = new Assignment(varleft, refvarright, var, Assignment.OP_REF_EQUAL, refvar);
 :}
@@ -3354,6 +3419,11 @@ T_LIST:start T_OPEN_PARENTHESE array_pair_list:list T_CLOSE_PARENTHESE:end T_EQU
 :}
 
 | expr:expr1 T_REFERENCE expr:expr2
+{:
+	RESULT = new InfixExpression(expr1left, expr2right, expr1, InfixExpression.OP_AND, expr2);
+:}
+
+| expr:expr1 T_REFERENCE_FOLLOWED_BY_VAR_OR_VARARG expr:expr2
 {:
 	RESULT = new InfixExpression(expr1left, expr2right, expr1, InfixExpression.OP_AND, expr2);
 :}
@@ -3631,7 +3701,7 @@ T_LIST:start T_OPEN_PARENTHESE array_pair_list:list T_CLOSE_PARENTHESE:end T_EQU
 ;
 
 inline_function ::=
-T_FUNCTION:s is_reference:isReference
+T_FUNCTION:s returns_ref:isReference
 T_OPEN_PARENTHESE parameter_list:paramList T_CLOSE_PARENTHESE lexical_vars:varsList return_type:returnType
 {:
 	LambdaFunctionDeclaration functionDeclaration = new LambdaFunctionDeclaration(sleft, varsListright, paramList, varsList,
@@ -3643,7 +3713,7 @@ lambda_function_body:body
 {:
 	RESULT = body;
 :}
-| T_STATIC:modifier T_FUNCTION:s is_reference:isReference
+| T_STATIC:modifier T_FUNCTION:s returns_ref:isReference
 T_OPEN_PARENTHESE parameter_list:paramList T_CLOSE_PARENTHESE lexical_vars:varsList return_type:returnType
 {:
 	LambdaFunctionDeclaration functionDeclaration = new LambdaFunctionDeclaration(modifierleft, varsListright, paramList, varsList,
@@ -3655,7 +3725,7 @@ lambda_function_body:body
 {:
 	RESULT = body;
 :}
-| T_FN:s is_reference:isReference
+| T_FN:s returns_ref:isReference
 T_OPEN_PARENTHESE parameter_list:paramList T_CLOSE_PARENTHESE:e return_type:returnType
 {:
 	ArrowFunctionDeclaration functionDeclaration = new ArrowFunctionDeclaration(sleft, eright, paramList,
@@ -3667,7 +3737,7 @@ arrow_function_body:body
 {:
 	RESULT = body;
 :}
-| T_STATIC:modifier T_FN:s is_reference:isReference
+| T_STATIC:modifier T_FN:s returns_ref:isReference
 T_OPEN_PARENTHESE parameter_list:paramList T_CLOSE_PARENTHESE:e return_type:returnType
 {:
 	ArrowFunctionDeclaration functionDeclaration = new ArrowFunctionDeclaration(modifierleft, eright, paramList,
@@ -3743,7 +3813,7 @@ T_VARIABLE:var
 	RESULT = new VariableReference(varleft, varright, var);
 :}
 
-| T_REFERENCE:ref T_VARIABLE:var
+| reference:ref T_VARIABLE:var
 {:
 	RESULT = new ReferenceExpression(refleft, varright, new VariableReference(varleft, varright, var));
 :}
@@ -4303,13 +4373,13 @@ expr:key T_DOUBLE_ARROW expr:value
 	RESULT = expr;
 :}
 
-| expr:key T_DOUBLE_ARROW T_REFERENCE:start variable:var
+| expr:key T_DOUBLE_ARROW reference:start variable:var
 {:
 	ReferenceExpression value = new ReferenceExpression(startleft, varright, var);
 	RESULT = new ArrayElement(keyleft, varright, key, value);
 :}
 
-| T_REFERENCE:start variable:var
+| reference:start variable:var
 {:
 	RESULT = new ReferenceExpression(startleft, varright, var);
 :}

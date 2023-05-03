@@ -747,6 +747,15 @@ NOWDOC_CHARS=([^\n\r]|({NEWLINE}{TABS_AND_SPACES})+[^a-zA-Z_\u0080-\uffff\n\r \t
 	return createSymbol(ParserConstants.T_SR);
 }
 
+<ST_IN_SCRIPTING>("&"){WHITESPACES}?("$"|"...") {
+	yypushback(yylength() - 1);
+	return createSymbol(ParserConstants.T_REFERENCE_FOLLOWED_BY_VAR_OR_VARARG);
+}
+
+<ST_IN_SCRIPTING>"&" {
+	return createSymbol(ParserConstants.T_REFERENCE);
+}
+
 <ST_IN_SCRIPTING>"..." {
 	return createSymbol(ParserConstants.T_ELLIPSIS);
 }
@@ -775,7 +784,6 @@ NOWDOC_CHARS=([^\n\r]|({NEWLINE}{TABS_AND_SPACES})+[^a-zA-Z_\u0080-\uffff\n\r \t
 	")"                     {return createSymbol(ParserConstants.T_CLOSE_PARENTHESE);}
 	"|"                     {return createSymbol(ParserConstants.T_OR);}
 	"^"                     {return createSymbol(ParserConstants.T_KOVA);}
-	"&"                     {return createSymbol(ParserConstants.T_REFERENCE);}
 	"+"                     {return createSymbol(ParserConstants.T_PLUS);}
 	"-"                     {return createSymbol(ParserConstants.T_MINUS);}
 	"/"                     {return createSymbol(ParserConstants.T_DIV);}

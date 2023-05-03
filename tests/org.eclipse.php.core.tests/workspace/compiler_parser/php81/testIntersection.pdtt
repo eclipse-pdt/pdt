@@ -1,0 +1,33 @@
+--TEST--
+PHP 8.1
+--FILE--
+<?php
+function count_and_iterate(Iterator&Countable $value): Iterator&Countable {
+
+}
+?>
+--EXPECT--
+<ModuleDeclaration start="0" end="88">
+	<PHPMethodDeclaration start="6" end="84" modifiers="" name="count_and_iterate">
+		<FormalParameter start="33" end="58" modifiers="" isMandatory="true" parameterType="Iterator&amp;Countable">
+			<DNFTypeReference start="33" end="51" type="2">
+				<FullyQualifiedReference start="33" end="41" name="Iterator">
+				</FullyQualifiedReference>
+				<FullyQualifiedReference start="42" end="51" name="Countable">
+				</FullyQualifiedReference>
+			</DNFTypeReference>
+			<VariableReference start="52" end="58" name="$value">
+			</VariableReference>
+		</FormalParameter>
+		<ReturnType>
+			<DNFTypeReference start="61" end="79" type="2">
+				<FullyQualifiedReference start="61" end="69" name="Iterator">
+				</FullyQualifiedReference>
+				<FullyQualifiedReference start="70" end="79" name="Countable">
+				</FullyQualifiedReference>
+			</DNFTypeReference>
+		</ReturnType>
+	</PHPMethodDeclaration>
+	<EmptyStatement start="85" end="87">
+	</EmptyStatement>
+</ModuleDeclaration>
