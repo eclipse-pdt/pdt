@@ -84,7 +84,13 @@ public class DNFType extends Identifier {
 					break;
 				}
 			}
+			if (el instanceof DNFType) {
+				sb.append('(');
+			}
 			sb.append(el.getName());
+			if (el instanceof DNFType) {
+				sb.append(')');
+			}
 		}
 		return sb.toString();
 	}

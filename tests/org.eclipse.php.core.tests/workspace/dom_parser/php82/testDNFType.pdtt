@@ -1,0 +1,71 @@
+--TEST--
+PHP 8.2
+--FILE--
+<?php
+class Foo {
+    public function bar((A&B)|null $entity) {
+        return $entity;
+    }
+}
+?>
+--EXPECT--
+<Program start='0' length='98'>
+	<Statements>
+		<ClassDeclaration start='6' length='89' modifier=''>
+			<ClassName>
+				<Identifier start='12' length='3' name='Foo'/>
+			</ClassName>
+			<SuperClassName>
+			</SuperClassName>
+			<Interfaces>
+			</Interfaces>
+			<Block start='16' length='79' isCurly='true'>
+				<MethodDeclaration start='22' length='71' modifier='public'>
+					<FunctionDeclaration start='29' length='64' isReference='false'>
+						<FunctionName>
+							<Identifier start='38' length='3' name='bar'/>
+						</FunctionName>
+						<FormalParameters>
+							<FormalParameter start='42' length='18' isMandatory='false'>
+								<Type>
+									<DNFType start='42' length='10' type='1'>
+										<DNFType start='42' length='5' type='2'>
+											<NamespaceName start='43' length='1' global='false' current='false'>
+												<Identifier start='43' length='1' name='A'/>
+											</NamespaceName>
+											<NamespaceName start='45' length='1' global='false' current='false'>
+												<Identifier start='45' length='1' name='B'/>
+											</NamespaceName>
+										</DNFType>
+										<NamespaceName start='48' length='4' global='false' current='false'>
+											<Identifier start='48' length='4' name='null'/>
+										</NamespaceName>
+									</DNFType>
+								</Type>
+								<ParameterName>
+									<Variable start='53' length='7' isDollared='true'>
+										<Identifier start='54' length='6' name='entity'/>
+									</Variable>
+								</ParameterName>
+								<DefaultValue>
+								</DefaultValue>
+							</FormalParameter>
+						</FormalParameters>
+						<FunctionBody>
+							<Block start='62' length='31' isCurly='true'>
+								<ReturnStatement start='72' length='15'>
+									<Variable start='79' length='7' isDollared='true'>
+										<Identifier start='80' length='6' name='entity'/>
+									</Variable>
+								</ReturnStatement>
+							</Block>
+						</FunctionBody>
+					</FunctionDeclaration>
+				</MethodDeclaration>
+			</Block>
+		</ClassDeclaration>
+		<EmptyStatement start='96' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

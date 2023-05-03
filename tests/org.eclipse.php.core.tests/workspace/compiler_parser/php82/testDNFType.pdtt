@@ -1,0 +1,37 @@
+--TEST--
+PHP 8.2
+--FILE--
+<?php
+class Foo {
+    public function bar((A&B)|null $entity) {
+        return $entity;
+    }
+}
+?>
+--EXPECT--
+<ModuleDeclaration start="0" end="99">
+	<ClassDeclaration start="6" end="95" modifiers="" name="Foo">
+		<PHPMethodDeclaration start="22" end="93" modifiers="public" name="bar">
+			<FormalParameter start="42" end="60" modifiers="" isMandatory="true" parameterType="(A&amp;B)|null">
+				<DNFTypeReference start="42" end="52" type="1">
+					<DNFTypeReference start="43" end="46" type="2">
+						<FullyQualifiedReference start="43" end="44" name="A">
+						</FullyQualifiedReference>
+						<FullyQualifiedReference start="45" end="46" name="B">
+						</FullyQualifiedReference>
+					</DNFTypeReference>
+					<FullyQualifiedReference start="48" end="52" name="null">
+					</FullyQualifiedReference>
+				</DNFTypeReference>
+				<VariableReference start="53" end="60" name="$entity">
+				</VariableReference>
+			</FormalParameter>
+			<ReturnStatement start="72" end="87">
+				<VariableReference start="79" end="86" name="$entity">
+				</VariableReference>
+			</ReturnStatement>
+		</PHPMethodDeclaration>
+	</ClassDeclaration>
+	<EmptyStatement start="96" end="98">
+	</EmptyStatement>
+</ModuleDeclaration>

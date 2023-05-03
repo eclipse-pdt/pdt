@@ -152,6 +152,11 @@ public abstract class PHPTokenNames {
 		token2Name.put(CompilerParserConstants.T_NAME_FULLY_QUALIFIED, "identifier_fully_qualified"); //$NON-NLS-1$
 		token2Name.put(CompilerParserConstants.T_NAME_QUALIFIED, "identifier_qualified"); //$NON-NLS-1$
 		token2Name.put(CompilerParserConstants.T_NAME_RELATIVE, "identifier_realitive"); //$NON-NLS-1$
+
+		// PHP8.1
+		token2Name.put(CompilerParserConstants.T_READONLY, "readonly"); //$NON-NLS-1$
+		token2Name.put(CompilerParserConstants.T_ENUM, "enum"); //$NON-NLS-1$
+		token2Name.put(CompilerParserConstants.T_REFERENCE_FOLLOWED_BY_VAR_OR_VARARG, "&"); //$NON-NLS-1$
 	}
 
 	/**

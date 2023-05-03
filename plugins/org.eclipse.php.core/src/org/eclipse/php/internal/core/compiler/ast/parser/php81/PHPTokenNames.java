@@ -154,6 +154,7 @@ public abstract class PHPTokenNames {
 		// PHP8.1
 		token2Name.put(CompilerParserConstants.T_READONLY, "readonly"); //$NON-NLS-1$
 		token2Name.put(CompilerParserConstants.T_ENUM, "enum"); //$NON-NLS-1$
+		token2Name.put(CompilerParserConstants.T_REFERENCE_FOLLOWED_BY_VAR_OR_VARARG, "&"); //$NON-NLS-1$
 
 	}
 

@@ -1,0 +1,42 @@
+--TEST--
+PHP 8.2
+--FILE--
+<?php
+readonly class MyClass
+{
+    public string $title;
+}
+?>
+--EXPECT--
+<Program start='0' length='61'>
+	<Statements>
+		<ClassDeclaration start='6' length='52' modifier='readonly'>
+			<ClassName>
+				<Identifier start='21' length='7' name='MyClass'/>
+			</ClassName>
+			<SuperClassName>
+			</SuperClassName>
+			<Interfaces>
+			</Interfaces>
+			<Block start='29' length='29' isCurly='true'>
+				<FieldsDeclaration start='35' length='21' modifier='public'>
+					<Type>
+						<NamespaceName start='42' length='6' global='false' current='false'>
+							<Identifier start='42' length='6' name='string'/>
+						</NamespaceName>
+					</Type>
+					<VariableName>
+						<Variable start='49' length='6' isDollared='true'>
+							<Identifier start='50' length='5' name='title'/>
+						</Variable>
+					</VariableName>
+					<InitialValue>
+					</InitialValue>
+				</FieldsDeclaration>
+			</Block>
+		</ClassDeclaration>
+		<EmptyStatement start='59' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

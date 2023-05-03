@@ -230,6 +230,9 @@ terminal String T_NAME_RELATIVE;
 
 //php 8.1
 terminal String T_READONLY;
+terminal String T_ENUM;
+terminal T_REFERENCE_FOLLOWED_BY_VAR_OR_VARARG;
+terminal String T_ONUMBER;
 
 /* Non terminals */
 
@@ -358,6 +361,7 @@ non terminal Expression trait_method_reference;
 non terminal FullyQualifiedTraitMethodReference trait_method_reference_fully_qualified;
 non terminal TraitAlias trait_alias;
 non terminal Integer trait_modifiers;
+non terminal Integer non_empty_trait_modifiers;
 
 non terminal ClassInstanceCreation new_expr;
 non terminal AnonymousClassDeclaration anonymous_class;
@@ -404,6 +408,21 @@ non terminal String function_name;
 non terminal Integer optional_property_modifiers;
 non terminal Integer property_modifier;
 non terminal List<Integer> non_empty_property_modifiers;
+non terminal Identifier enum_backing_type;
+non terminal Expression enum_case_expr;
+non terminal DNFType intersection_type;
+non terminal DNFType intersection_type_without_static;
+non terminal List<Identifier> intersection_type_list;
+non terminal List<Identifier> intersection_type_list_without_static;
+non terminal Boolean reference;
+non terminal Boolean returns_ref;
+non terminal Boolean is_variadic;
+
+//php8.2
+non terminal Integer class_modifiers;
+non terminal Integer class_modifier;
+non terminal Identifier union_type_element;
+non terminal Identifier union_type_without_static_element;
 
 
 precedence left T_THROW;
@@ -420,7 +439,7 @@ precedence left T_BOOLEAN_OR;
 precedence left T_BOOLEAN_AND;
 precedence left T_OR;
 precedence left T_KOVA;
-precedence left T_REFERENCE;
+precedence left T_REFERENCE, T_REFERENCE_FOLLOWED_BY_VAR_OR_VARARG;
 precedence left T_ELLIPSIS;
 precedence right T_YIELD;
 precedence right T_DOUBLE_ARROW;
@@ -700,6 +719,11 @@ T_INCLUDE:v
 {:
 	RESULT = v;
 :}
+
+| T_ENUM:v
+{:
+	RESULT = v;
+:}
 ;
 
 semi_reserved ::=
@@ -735,6 +759,17 @@ reserved_non_modifiers:v
 | T_READONLY:v
 {:
 	RESULT = v;
+:}
+;
+
+reference ::=
+T_REFERENCE:ref
+{:
+	RESULT = Boolean.TRUE;
+:}
+| T_REFERENCE_FOLLOWED_BY_VAR_OR_VARARG:ref
+{:
+	RESULT = Boolean.TRUE;
 :}
 ;
 
@@ -1463,8 +1498,29 @@ is_reference ::=
 {:
 	RESULT = Boolean.FALSE;
 :}
+| T_REFERENCE_FOLLOWED_BY_VAR_OR_VARARG
+{:
+	RESULT = Boolean.TRUE;
+:}
+;
 
-| T_REFERENCE
+is_variadic ::=
+/* empty */
+{:
+	RESULT = Boolean.FALSE;
+:}
+| T_ELLIPSIS
+{:
+	RESULT = Boolean.TRUE;
+:}
+;
+
+returns_ref ::=
+/* empty */
+{:
+	RESULT = Boolean.FALSE;
+:}
+| reference
 {:
 	RESULT = Boolean.TRUE;
 :}
@@ -1482,7 +1538,7 @@ string_st:functionName
 ;
 
 unticked_function_declaration_statement ::=
-T_FUNCTION:s is_reference:isReference function_name:fn
+T_FUNCTION:s returns_ref:isReference function_name:fn
 T_OPEN_PARENTHESE parameter_list:paramList T_CLOSE_PARENTHESE return_type:returnType
 T_CURLY_OPEN:blockStart inner_statement_list:sList T_CURLY_CLOSE:blockEnd
 {:
@@ -1517,7 +1573,41 @@ T_CURLY_OPEN:blockStart class_statement_list:sList T_CURLY_CLOSE:blockEnd
 		new Identifier(classNameleft, classNameright, parser.ast, className), interfaces,
 		new Block(blockStartleft, blockEndright, parser.ast, sList));
 :}
+|
+T_ENUM:start T_STRING:className enum_backing_type:type implements_list:interfaces 
+T_CURLY_OPEN:blockStart class_statement_list:statementList T_CURLY_CLOSE:blockEnd
+{:
+	RESULT = new EnumDeclaration(startleft, blockEndright, parser.ast, 
+		new Identifier(classNameleft, classNameright, parser.ast, className),
+		type, interfaces,
+		new Block(blockStartleft, blockEndright, parser.ast, statementList),
+		null
+	);
+:}
 ;
+
+enum_backing_type ::=
+/* empty */
+{:
+	RESULT = null;
+:}
+| T_NEKUDOTAIM type_expr:type
+{:
+	RESULT = type;
+:}
+;
+
+enum_case_expr ::=
+/* empty */
+{:
+	RESULT = null;
+:}
+| T_EQUAL expr:expr
+{:
+	RESULT = expr;
+:}
+;
+
 
 class_entry_type ::=
 T_CLASS
@@ -1525,14 +1615,9 @@ T_CLASS
 	RESULT = Integer.valueOf(ClassDeclaration.MODIFIER_NONE);
 :}
 
-| T_ABSTRACT T_CLASS
+| class_modifiers:mod T_CLASS
 {:
-	RESULT = Integer.valueOf(ClassDeclaration.MODIFIER_ABSTRACT);
-:}
-
-| T_FINAL T_CLASS
-{:
-	RESULT = Integer.valueOf(ClassDeclaration.MODIFIER_FINAL);
+	RESULT = mod;
 :}
 
 | T_TRAIT
@@ -1540,6 +1625,35 @@ T_CLASS
 	RESULT = Integer.valueOf(ClassDeclaration.MODIFIER_TRAIT);
 :}
 ;
+
+class_modifiers ::=
+class_modifier:value
+{:
+	RESULT = value;
+:}
+| class_modifiers:list class_modifier:value
+{:
+	RESULT = list|value;
+:}
+;
+
+class_modifier ::=
+T_ABSTRACT:value
+{:
+	RESULT = Modifiers.AccAbstract;
+:}
+
+| T_FINAL:value
+{:
+	RESULT = Modifiers.AccFinal;
+:}
+
+| T_READONLY:value
+{:
+	RESULT = IPHPModifiers.AccReadonly;
+:}
+;
+
 
 extends_from ::=
 /* empty */
@@ -1605,7 +1719,7 @@ variable:var
 	RESULT = var;
 :}
 
-| T_REFERENCE:s variable:var
+| reference:s variable:var
 {:
 	RESULT = new Reference (sleft, varright, parser.ast, var);
 :}
@@ -1975,55 +2089,45 @@ T_PUBLIC:value
 ;
 
 parameter ::=
-optional_property_modifiers:modifier optional_type_without_static:type T_VARIABLE:var
+optional_property_modifiers:modifier optional_type_without_static:type is_reference:ref is_variadic:e T_VARIABLE:var
 {:
-	int s = type == null ? varleft : typeleft;
-	s = modifier != 0 ? modifierleft : s;
-	Variable v = new Variable(varleft, varright, parser.ast, var);
-	RESULT = new FormalParameter(s, varright, parser.ast, type, v, null, false, modifier);
+	int s = varleft;
+	if (modifier != 0) {
+		s = modifierleft;
+	} else if(type != null) {
+		s = typeleft;
+	} else if (ref) {
+		s = refleft;
+	} else if (e) {
+		s = eleft;
+	}
+	
+	Expression v = new Variable(varleft, varright, parser.ast, var);
+	if (ref) {
+		v= new Reference (refleft, varright, parser.ast, (VariableBase)v);
+	}
+	RESULT = new FormalParameter(s, varright, parser.ast, type, v, null, e, modifier);
+	
 :}
 
-| optional_property_modifiers:modifier optional_type_without_static:type T_ELLIPSIS:e T_VARIABLE:var
+| optional_property_modifiers:modifier optional_type_without_static:type is_reference:ref is_variadic:e T_VARIABLE:var T_EQUAL expr:expr
 {:
-	int s = type == null ? eleft : typeleft;
-	s = modifier != 0 ? modifierleft : s;
-	Variable v = new Variable(varleft, varright, parser.ast, var);
-	RESULT = new FormalParameter(s, varright, parser.ast, type, v, null, true, modifier);
-:}
-
-| optional_property_modifiers:modifier optional_type_without_static:type T_REFERENCE:ref T_VARIABLE:var
-{:
-	int s = type == null ? refleft : typeleft;
-	s = modifier != 0 ? modifierleft : s;
-	Variable v = new Variable(varleft, varright, parser.ast, var);
-	Reference ref_var = new Reference (refleft, varright, parser.ast, v);
-	RESULT = new FormalParameter(s, varright, parser.ast, type, ref_var, null, false, modifier);
-:}
-
-| optional_property_modifiers:modifier optional_type_without_static:type T_REFERENCE:ref T_ELLIPSIS T_VARIABLE:var
-{:
-	int s = type == null ? refleft : typeleft;
-	s = modifier != 0 ? modifierleft : s;
-	Variable v = new Variable(varleft, varright, parser.ast, var);
-	Reference ref_var = new Reference (refleft, varright, parser.ast, v);
-	RESULT = new FormalParameter(s, varright, parser.ast, type, ref_var, null, true, modifier);
-:}
-
-| optional_property_modifiers:modifier optional_type_without_static:type T_VARIABLE:var T_EQUAL expr:expr
-{:
-	int s = type == null ? varleft : typeleft;
-	s = modifier != 0 ? modifierleft : s;
-	Variable v = new Variable(varleft, varright, parser.ast, var);
+	int s = varleft;
+	if (modifier != 0) {
+		s = modifierleft;
+	} else if(type != null) {
+		s = typeleft;
+	} else if (ref) {
+		s = refleft;
+	} else if (e) {
+		s = eleft;
+	}
+	
+	Expression v = new Variable(varleft, varright, parser.ast, var);
+	if (ref) {
+		v= new Reference (refleft, varright, parser.ast, (VariableBase)v);
+	}
 	RESULT = new FormalParameter(s, exprright, parser.ast, type, v, expr, false, modifier);
-:}
-
-| optional_property_modifiers:modifier optional_type_without_static:type T_REFERENCE:ref T_VARIABLE:var T_EQUAL expr:expr
-{:
-	int s = type == null ? refleft : typeleft;
-	s = modifier != 0 ? modifierleft : s;
-	Variable v = new Variable(varleft, varright, parser.ast, var);
-	Reference ref_var = new Reference (refleft, varright, parser.ast, v);
-	RESULT = new FormalParameter(s, exprright, parser.ast, type, ref_var, expr, false, modifier);
 :}
 ;
 
@@ -2046,6 +2150,13 @@ non_empty_argument_list:paramsList possible_comma:comma
 		paramsList.add(new EmptyExpression(commaright, parser.ast));
 	}
 	RESULT = paramsList;
+:}
+
+| T_ELLIPSIS:e
+{:
+	LinkedList nodes = new LinkedList();
+	nodes.add(new AsCallableExpression(eleft, parser.ast));
+	RESULT = nodes;
 :}
 
 | /* empty */
@@ -2100,6 +2211,10 @@ type:type
 {:
 	RESULT = type;
 :}
+| intersection_type:type
+{:
+	RESULT = type;
+:}
 ;
 
 type ::=
@@ -2114,6 +2229,17 @@ type_without_static:type
 :}
 ;
 
+union_type_element ::=
+type:type
+{:
+	RESULT = type;
+:}
+| T_OPEN_PARENTHESE:s intersection_type_list:list T_CLOSE_PARENTHESE:e
+{:
+	RESULT = new DNFType(sleft, eright, parser.ast, false, list, DNFType.T_INTERSECTION);
+:}
+;
+
 union_type ::=
 union_type_list:list
 {:
@@ -2122,14 +2248,37 @@ union_type_list:list
 ;
 
 union_type_list ::=
-type:first T_OR type:second
+union_type_element:first T_OR union_type_element:second
 {:
 	List<Identifier> refs = new LinkedList<>();
 	refs.add(first);
 	refs.add(second);
 	RESULT = refs;
 :}
-| union_type_list:list T_OR type:type
+| union_type_list:list T_OR union_type_element:type
+{:
+	list.add(type);
+	
+	RESULT = list;
+:}
+;
+
+intersection_type ::=
+intersection_type_list:list
+{:
+	RESULT = new DNFType(listleft, listright, parser.ast, false, list, DNFType.T_INTERSECTION);
+:}
+;
+
+intersection_type_list ::=
+type:first T_REFERENCE type:second
+{:
+	List<Identifier> refs = new LinkedList<>();
+	refs.add(first);
+	refs.add(second);
+	RESULT = refs;
+:}
+| intersection_type_list:list T_REFERENCE type:type
 {:
 	list.add(type);
 	
@@ -2153,6 +2302,10 @@ type_without_static:type
 {:
 	RESULT = type;
 :}
+| intersection_type_without_static:type
+{:
+	RESULT = type;
+:}
 ;
 
 
@@ -2173,6 +2326,19 @@ T_ARRAY:array
 :}
 ;
 
+union_type_without_static_element ::=
+type_without_static:type
+{:
+	RESULT = type;
+:}
+
+| T_OPEN_PARENTHESE:s intersection_type_list_without_static:list T_CLOSE_PARENTHESE:e
+{:
+	RESULT = new DNFType(sleft, eright, parser.ast, false, list, DNFType.T_INTERSECTION);
+:}
+;
+
+
 union_type_without_static ::=
 union_type_list_without_static:list
 {:
@@ -2181,20 +2347,44 @@ union_type_list_without_static:list
 ;
 
 union_type_list_without_static ::=
-type_without_static:first T_OR type_without_static:second
+union_type_without_static_element:first T_OR union_type_without_static_element:second
 {:
 	List<Identifier> refs = new LinkedList<>();
 	refs.add(first);
 	refs.add(second);
 	RESULT = refs;
 :}
-| union_type_list_without_static:list T_OR type_without_static:type
+| union_type_list_without_static:list T_OR union_type_without_static_element:type
 {:
 	list.add(type);
 	
 	RESULT = list;
 :}
 ;
+
+intersection_type_without_static ::=
+intersection_type_list_without_static:list
+{:
+	RESULT = new DNFType(listleft, listright, parser.ast, false, list, DNFType.T_INTERSECTION);
+:}
+;
+
+intersection_type_list_without_static ::=
+type_without_static:first T_REFERENCE type_without_static:second
+{:
+	List<Identifier> refs = new LinkedList<>();
+	refs.add(first);
+	refs.add(second);
+	RESULT = refs;
+:}
+| intersection_type_list_without_static:list T_REFERENCE type_without_static:type
+{:
+	list.add(type);
+	
+	RESULT = list;
+:}
+;
+
 
 return_type ::=
 /* empty */
@@ -2291,7 +2481,7 @@ variable_modifiers:modifier optional_type_without_static:type property_list:decL
 	int modifierValue = modifier == null ? 0 : modifier.intValue();
 	RESULT = new ConstantDeclaration(methodStart, eright, parser.ast, modifierValue, list);
 :}
-| method_modifiers:modifier T_FUNCTION:s is_reference:isReference identifier:fn
+| method_modifiers:modifier T_FUNCTION:s returns_ref:isReference identifier:fn
 T_OPEN_PARENTHESE parameter_list:paramList T_CLOSE_PARENTHESE return_type:returnType
 method_body:body
 {:
@@ -2300,6 +2490,10 @@ method_body:body
 	Identifier functionId = new Identifier(fnleft, fnright, parser.ast, fn);
 	FunctionDeclaration functionDeclaration = new FunctionDeclaration(sleft, bodyright, parser.ast, functionId, paramList, body, isReference.booleanValue(), returnType);
 	RESULT = new MethodDeclaration(methodStart, bodyright, parser.ast, modifier.intValue(), functionDeclaration, true);
+:}
+| T_CASE:start identifier:name enum_case_expr:expr T_SEMICOLON:end
+{:
+	RESULT = new EnumCaseDeclaration(startleft, endright, parser.ast, new Identifier(nameleft, nameright, parser.ast, name), expr);
 :}
 ;
 
@@ -2456,7 +2650,7 @@ trait_alias ::=
 	TraitAlias alias = new TraitAlias(referenceleft, functionNameright, parser.ast, reference, modifierValue, modifierOffset, name);
 	RESULT = alias;
 :}
-|	trait_method_reference:reference T_AS:as member_modifier:modifier
+|	trait_method_reference:reference T_AS:as non_empty_trait_modifiers:modifier
 {:
 	int modifierValue = modifier == null ? Modifiers.AccPublic : modifier.intValue();
 	int modifierOffset = modifier == null ? asright + 1 : modifierleft;
@@ -2465,12 +2659,29 @@ trait_alias ::=
 :}
 ;
 
+non_empty_trait_modifiers ::=
+T_PUBLIC
+{:
+	RESULT = PHPAstParser.PUBLIC;
+:}
+
+| T_PROTECTED
+{:
+	RESULT = PHPAstParser.PROTECTED;
+:}
+
+| T_PRIVATE
+{:
+	RESULT = PHPAstParser.PRIVATE;
+:}
+;
+
 trait_modifiers ::=
 /* empty */
 {:
 	RESULT = null;
 :}
-| member_modifier:modifier
+| non_empty_trait_modifiers:modifier
 {:
 	RESULT = modifier;
 :}
@@ -2717,7 +2928,7 @@ T_LIST:s T_OPEN_PARENTHESE assignment_list:varList T_CLOSE_PARENTHESE:close T_EQ
 	RESULT = new Assignment(varleft, exprright, parser.ast, var, Assignment.OP_EQUAL, expr);
 :}
 
-| variable:var T_EQUAL T_REFERENCE:reftoken variable:refvar
+| variable:var T_EQUAL reference:reftoken variable:refvar
 {:
 	RESULT = new Assignment(varleft, refvarright, parser.ast, var, Assignment.OP_EQUAL, new Reference(reftokenleft, refvarright, parser.ast, refvar));
 :}
@@ -3096,7 +3307,7 @@ T_LIST:s T_OPEN_PARENTHESE assignment_list:varList T_CLOSE_PARENTHESE:close T_EQ
 ;
 
 inline_function ::=
-T_FUNCTION:s is_reference:isReference
+T_FUNCTION:s returns_ref:isReference
 T_OPEN_PARENTHESE parameter_list:paramList T_CLOSE_PARENTHESE lexical_vars:varsList return_type:returnType
 T_CURLY_OPEN:blockStart inner_statement_list:list T_CURLY_CLOSE:blockEnd
 {:
@@ -3104,7 +3315,7 @@ T_CURLY_OPEN:blockStart inner_statement_list:list T_CURLY_CLOSE:blockEnd
 		new Block(blockStartleft, blockEndright, parser.ast, list), isReference.booleanValue(), false, -1, returnType);
 :}
 
-| T_STATIC:modifier T_FUNCTION:s is_reference:isReference
+| T_STATIC:modifier T_FUNCTION:s returns_ref:isReference
 T_OPEN_PARENTHESE parameter_list:paramList T_CLOSE_PARENTHESE lexical_vars:varsList return_type:returnType
 T_CURLY_OPEN:blockStart inner_statement_list:list T_CURLY_CLOSE:blockEnd
 {:
@@ -3112,7 +3323,7 @@ T_CURLY_OPEN:blockStart inner_statement_list:list T_CURLY_CLOSE:blockEnd
 		new Block(blockStartleft, blockEndright, parser.ast, list), isReference.booleanValue(), true, returnType);
 :}
 
-| T_FN:s is_reference:isReference
+| T_FN:s returns_ref:isReference
 T_OPEN_PARENTHESE parameter_list:paramList T_CLOSE_PARENTHESE return_type:returnType
 T_DOUBLE_ARROW expr:expr
 {:
@@ -3120,7 +3331,7 @@ T_DOUBLE_ARROW expr:expr
 		expr, isReference.booleanValue(), false, returnType);
 :}
 
-| T_STATIC:modifier T_FN:s is_reference:isReference
+| T_STATIC:modifier T_FN:s returns_ref:isReference
 T_OPEN_PARENTHESE parameter_list:paramList T_CLOSE_PARENTHESE return_type:returnType
 T_DOUBLE_ARROW expr:expr
 {:
@@ -3165,7 +3376,7 @@ T_VARIABLE:var
 	RESULT = new Variable(varleft, varright, parser.ast, var);
 :}
 
-| T_REFERENCE:ref T_VARIABLE:var
+| reference:ref T_VARIABLE:var
 {:
 	RESULT = new Reference(refleft, varright, parser.ast, new Variable(varleft, varright, parser.ast, var));
 :}
@@ -3292,6 +3503,11 @@ T_LNUMBER:scalar
 | T_BNUMBER:scalar
 {:
 	RESULT = new Scalar(scalarleft, scalarright, parser.ast, scalar, Scalar.TYPE_BIN);
+:}
+
+| T_ONUMBER:scalar
+{:
+	RESULT = new Scalar(scalarleft, scalarright, parser.ast, scalar, Scalar.TYPE_OCTAL);
 :}
 
 | T_START_HEREDOC:label T_ENCAPSED_AND_WHITESPACE:string T_END_HEREDOC:e
@@ -3717,12 +3933,12 @@ expr:key T_DOUBLE_ARROW expr:value
 	RESULT = expr;
 :}
 
-| expr:key T_DOUBLE_ARROW T_REFERENCE:s variable:var
+| expr:key T_DOUBLE_ARROW reference:s variable:var
 {:
 	RESULT = new ArrayElement(keyleft, varright, parser.ast, key, new Reference(sleft, varright, parser.ast, var));
 :}
 
-| T_REFERENCE:s variable:var
+| reference:s variable:var
 {:
 	RESULT = new Reference(sleft, varright, parser.ast, var);
 :}

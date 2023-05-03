@@ -118,7 +118,8 @@ public class CompilerParserTests {
 						"/workspace/compiler_parser/php55", "/workspace/compiler_parser/php56",
 						"/workspace/compiler_parser/php7", "/workspace/compiler_parser/php71",
 						"/workspace/compiler_parser/php72", "/workspace/compiler_parser/php73",
-						"/workspace/compiler_parser/php74", "/workspace/compiler_parser/php80" });
+						"/workspace/compiler_parser/php74", "/workspace/compiler_parser/php80",
+						"/workspace/compiler_parser/php81", "/workspace/compiler_parser/php82" });
 	};
 
 	private AbstractPHPSourceParser parser;

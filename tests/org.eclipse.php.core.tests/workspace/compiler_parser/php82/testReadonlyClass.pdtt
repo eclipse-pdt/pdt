@@ -1,0 +1,22 @@
+--TEST--
+PHP 8.2
+--FILE--
+<?php
+readonly class MyClass
+{
+    public string $title;
+}
+?>
+--EXPECT--
+<ModuleDeclaration start="0" end="62">
+	<ClassDeclaration start="6" end="58" modifiers="readonly" name="MyClass">
+		<PHPFieldDeclaration start="49" end="55" modifiers="public" fieldType="string">
+			<FullyQualifiedReference start="42" end="48" name="string">
+			</FullyQualifiedReference>
+			<SimpleReference start="49" end="55" name="$title">
+			</SimpleReference>
+		</PHPFieldDeclaration>
+	</ClassDeclaration>
+	<EmptyStatement start="59" end="61">
+	</EmptyStatement>
+</ModuleDeclaration>

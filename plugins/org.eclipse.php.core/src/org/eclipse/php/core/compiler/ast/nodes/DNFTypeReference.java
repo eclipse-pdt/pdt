@@ -67,8 +67,14 @@ public class DNFTypeReference extends TypeReference {
 					break;
 				}
 			}
+			if (ref instanceof DNFTypeReference) {
+				sb.append('(');
+			}
 			sb.append(ref instanceof FullyQualifiedReference ? ((FullyQualifiedReference) ref).getFullyQualifiedName()
 					: ref.getName());
+			if (ref instanceof DNFTypeReference) {
+				sb.append(')');
+			}
 		}
 
 		return sb.toString();

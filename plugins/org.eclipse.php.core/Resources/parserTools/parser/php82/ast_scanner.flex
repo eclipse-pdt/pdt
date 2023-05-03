@@ -255,6 +255,7 @@ DNUM=({LNUM}?"."{LNUM})|({LNUM}"."{LNUM}?)
 EXPONENT_DNUM=(({LNUM}|{DNUM})[eE][+-]?{LNUM})
 HNUM="0x"[0-9a-fA-F]+(_[0-9a-fA-F]+)*
 BNUM="0b"[01]+(_[01]+)*
+ONUM="0o"[0-7]+(_[0-7]+)*
 LABEL=[a-zA-Z_\u0080-\uffff][a-zA-Z0-9_\u0080-\uffff]*
 WHITESPACES=[ \n\r\t]+
 TABS_AND_SPACES=[ \t]*
@@ -431,6 +432,11 @@ NOWDOC_CHARS=([^\n\r]|({NEWLINE}{TABS_AND_SPACES})+[^a-zA-Z_\u0080-\uffff\n\r \t
 
 <ST_IN_SCRIPTING>"trait" {
 	return createFullSymbol(ParserConstants.T_TRAIT);
+}
+
+<ST_IN_SCRIPTING>"enum"{WHITESPACES}{LABEL} {
+	yypushback(yylength()-4);
+	return createFullSymbol(ParserConstants.T_ENUM);
 }
 
 <ST_IN_SCRIPTING>"insteadof" {
@@ -742,6 +748,15 @@ NOWDOC_CHARS=([^\n\r]|({NEWLINE}{TABS_AND_SPACES})+[^a-zA-Z_\u0080-\uffff\n\r \t
 	return createSymbol(ParserConstants.T_SR);
 }
 
+<ST_IN_SCRIPTING>("&"){WHITESPACES}?("$"|"...") {
+	yypushback(yylength() - 1);
+	return createSymbol(ParserConstants.T_REFERENCE_FOLLOWED_BY_VAR_OR_VARARG);
+}
+
+<ST_IN_SCRIPTING>"&" {
+	return createSymbol(ParserConstants.T_REFERENCE);
+}
+
 <ST_IN_SCRIPTING>"..." {
 	return createSymbol(ParserConstants.T_ELLIPSIS);
 }
@@ -770,7 +785,6 @@ NOWDOC_CHARS=([^\n\r]|({NEWLINE}{TABS_AND_SPACES})+[^a-zA-Z_\u0080-\uffff\n\r \t
 	")"                     {return createSymbol(ParserConstants.T_CLOSE_PARENTHESE);}
 	"|"                     {return createSymbol(ParserConstants.T_OR);}
 	"^"                     {return createSymbol(ParserConstants.T_KOVA);}
-	"&"                     {return createSymbol(ParserConstants.T_REFERENCE);}
 	"+"                     {return createSymbol(ParserConstants.T_PLUS);}
 	"-"                     {return createSymbol(ParserConstants.T_MINUS);}
 	"/"                     {return createSymbol(ParserConstants.T_DIV);}
@@ -826,7 +840,11 @@ NOWDOC_CHARS=([^\n\r]|({NEWLINE}{TABS_AND_SPACES})+[^a-zA-Z_\u0080-\uffff\n\r \t
 	return createFullSymbol(ParserConstants.T_DNUMBER);
 }
 
-<ST_VAR_OFFSET>{LNUM}|{HNUM}|{BNUM} { /* treat numbers (almost) as strings inside encapsulated strings */
+<ST_IN_SCRIPTING>{ONUM} {
+	return createFullSymbol(ParserConstants.T_ONUMBER);
+}
+
+<ST_VAR_OFFSET>{LNUM}|{HNUM}|{BNUM}|{ONUM} { /* treat numbers (almost) as strings inside encapsulated strings */
 	return createFullSymbol(ParserConstants.T_NUM_STRING);
 }
 

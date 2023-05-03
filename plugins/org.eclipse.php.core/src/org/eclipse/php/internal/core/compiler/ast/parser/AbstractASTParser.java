@@ -369,4 +369,21 @@ abstract public class AbstractASTParser extends lr_parser {
 
 		return flags;
 	}
+
+	protected int appendClassModifier(int start, int end, int flags, int newFlag) {
+		if ((flags & IPHPModifiers.AccAbstract) != 0 && (newFlag & IPHPModifiers.AccAbstract) != 0) {
+			reportError(new ASTError(start, end), Messages.AbstractASTParser_MultipleAbstractModifierError);
+		}
+		if ((flags & IPHPModifiers.AccFinal) != 0 && (newFlag & IPHPModifiers.AccFinal) != 0) {
+			reportError(new ASTError(start, end), Messages.AbstractASTParser_MultipleFinalModifierError);
+		}
+
+		flags = appendModifier(start, end, flags, newFlag);
+
+		if ((flags & IPHPModifiers.AccAbstract) != 0 && (flags & IPHPModifiers.AccFinal) != 0) {
+			reportError(new ASTError(start, end), Messages.AbstractASTParser_AbstractAsFinalError);
+		}
+
+		return flags;
+	}
 }

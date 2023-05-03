@@ -20,6 +20,8 @@ import java.util.List;
 import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.ast.match.ASTMatcher;
 import org.eclipse.php.core.ast.visitor.Visitor;
+import org.eclipse.php.core.compiler.IPHPModifiers;
+import org.eclipse.php.core.compiler.PHPFlags;
 
 /**
  * Represents a class declaration
@@ -36,9 +38,10 @@ import org.eclipse.php.core.ast.visitor.Visitor;
 public class ClassDeclaration extends TypeDeclaration {
 
 	public static final int MODIFIER_NONE = 0;
-	public static final int MODIFIER_ABSTRACT = 1;
-	public static final int MODIFIER_FINAL = 2;
-	public static final int MODIFIER_TRAIT = 3;
+	public static final int MODIFIER_ABSTRACT = IPHPModifiers.AccAbstract;
+	public static final int MODIFIER_FINAL = IPHPModifiers.AccFinal;
+	public static final int MODIFIER_TRAIT = IPHPModifiers.AccTrait;
+	public static final int MODIFIER_READONLY = IPHPModifiers.AccReadonly;
 
 	private int modifier;
 	private Expression superClass;
@@ -195,16 +198,13 @@ public class ClassDeclaration extends TypeDeclaration {
 	}
 
 	public static String getModifier(int modifier) {
-		switch (modifier) {
-		case MODIFIER_NONE:
+		if (modifier == MODIFIER_NONE) {
 			return ""; //$NON-NLS-1$
-		case MODIFIER_ABSTRACT:
-			return "abstract"; //$NON-NLS-1$
-		case MODIFIER_FINAL:
-			return "final"; //$NON-NLS-1$
-		default:
-			throw new IllegalArgumentException();
+		} else if (modifier == MODIFIER_TRAIT) {
+			return "trait"; //$NON-NLS-1$
 		}
+
+		return PHPFlags.toString(modifier);
 	}
 
 	@Override

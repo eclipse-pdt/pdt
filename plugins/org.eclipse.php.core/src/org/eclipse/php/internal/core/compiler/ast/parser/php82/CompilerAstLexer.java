@@ -109,6 +109,9 @@ public class CompilerAstLexer extends org.eclipse.php.internal.core.ast.scanner.
 		case ParserConstants.T_PUBLIC:
 		case ParserConstants.T_TRAIT:
 		case ParserConstants.T_FN:
+		case ParserConstants.T_READONLY:
+		case ParserConstants.T_ENUM:
+		case ParserConstants.T_CASE:
 			symbol.value = new PHPDocBlockSymbolPair((String) symbol.value, latestDocBlock);
 			break;
 		case ParserConstants.T_END_HEREDOC:
