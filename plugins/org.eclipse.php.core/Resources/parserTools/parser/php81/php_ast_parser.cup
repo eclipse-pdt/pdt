@@ -3335,6 +3335,12 @@ name:list T_OPEN_PARENTHESE function_call_parameter_list:parameters T_CLOSE_PARE
 		new FunctionName(listleft, listright, parser.ast, list), parameters);
 :}
 
+| T_READONLY:list T_OPEN_PARENTHESE function_call_parameter_list:parameters T_CLOSE_PARENTHESE:e
+{:
+	RESULT = new FunctionInvocation(listleft, eright, parser.ast,
+		new FunctionName(listleft, listright, parser.ast, new NamespaceName(listleft, listright, ast, list, false, false)), parameters);
+:}
+
 | class_name:className T_PAAMAYIM_NEKUDOTAYIM member_name:reflectionName T_OPEN_PARENTHESE function_call_parameter_list:parameters T_CLOSE_PARENTHESE:e
 {:
 	RESULT = new StaticMethodInvocation(classNameleft, eright, parser.ast, className,

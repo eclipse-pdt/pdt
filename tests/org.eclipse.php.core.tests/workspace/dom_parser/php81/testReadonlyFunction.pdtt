@@ -1,0 +1,39 @@
+--TEST--
+PHP 8.1
+--FILE--
+<?php
+function readonly() {}
+
+readonly();
+
+?>
+--EXPECT--
+<Program start='0' length='45'>
+	<Statements>
+		<FunctionDeclaration start='6' length='22' isReference='false'>
+			<FunctionName>
+				<Identifier start='15' length='8' name='readonly'/>
+			</FunctionName>
+			<FormalParameters>
+			</FormalParameters>
+			<FunctionBody>
+				<Block start='26' length='2' isCurly='true'>
+				</Block>
+			</FunctionBody>
+		</FunctionDeclaration>
+		<ExpressionStatement start='30' length='11'>
+			<FunctionInvocation start='30' length='10'>
+				<FunctionName start='30' length='8'>
+					<NamespaceName start='30' length='8' global='false' current='false'>
+						<Identifier start='30' length='8' name='readonly'/>
+					</NamespaceName>
+				</FunctionName>
+				<Parameters>
+				</Parameters>
+			</FunctionInvocation>
+		</ExpressionStatement>
+		<EmptyStatement start='43' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

@@ -1,0 +1,24 @@
+--TEST--
+PHP 8.1
+--FILE--
+<?php
+function readonly() {}
+
+readonly();
+
+?>
+--EXPECT--
+<ModuleDeclaration start="0" end="46">
+	<PHPMethodDeclaration start="6" end="28" modifiers="" name="readonly">
+	</PHPMethodDeclaration>
+	<ExpressionStatement start="30" end="41">
+		<PHPCallExpression start="30" end="40">
+			<FullyQualifiedReference start="30" end="38" name="readonly">
+			</FullyQualifiedReference>
+			<PHPCallArgumentsList start="39" end="39">
+			</PHPCallArgumentsList>
+		</PHPCallExpression>
+	</ExpressionStatement>
+	<EmptyStatement start="43" end="45">
+	</EmptyStatement>
+</ModuleDeclaration>

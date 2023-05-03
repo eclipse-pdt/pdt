@@ -3895,6 +3895,14 @@ name:functionName T_OPEN_PARENTHESE:start function_call_parameter_list:parameter
 	RESULT = new PHPCallExpression(functionNameleft, endright, null, functionName, parameters);
 :}
 
+| T_READONLY:i T_OPEN_PARENTHESE:start function_call_parameter_list:parameters T_CLOSE_PARENTHESE:end
+{:
+	parameters.setStart(startright);
+	parameters.setEnd(endleft);
+	FullyQualifiedReference functionName = new FullyQualifiedReference(ileft, iright, i.value, null, FullyQualifiedReference.T_FUNCTION);
+	RESULT = new PHPCallExpression(ileft, endright, null, functionName, parameters);
+:}
+
 | class_name:className T_PAAMAYIM_NEKUDOTAYIM member_name:functionName T_OPEN_PARENTHESE:start function_call_parameter_list:parameters T_CLOSE_PARENTHESE:end
 {:
 	parameters.setStart(startright);
