@@ -1033,6 +1033,9 @@ public abstract class PHPASTVisitor extends ASTVisitor {
 		}
 
 		// php8.1
+		if (nodeClass.equals(PHPAsCallableArgumentsList.class)) {
+			return endvisit((PHPAsCallableArgumentsList) s);
+		}
 		if (nodeClass.equals(EnumDeclaration.class)) {
 			return endvisit((EnumDeclaration) s);
 		}
@@ -1365,6 +1368,9 @@ public abstract class PHPASTVisitor extends ASTVisitor {
 		if (nodeClass.equals(EnumDeclaration.class)) {
 			return visit((EnumDeclaration) s);
 		}
+		if (nodeClass.equals(PHPAsCallableArgumentsList.class)) {
+			return visit((PHPAsCallableArgumentsList) s);
+		}
 		return true;
 	}
 
@@ -1497,7 +1503,16 @@ public abstract class PHPASTVisitor extends ASTVisitor {
 		return visitGeneral(s);
 	}
 
+	public boolean visit(PHPAsCallableArgumentsList s) throws Exception {
+		return visitGeneral(s);
+	}
+
 	public boolean endvisit(EnumDeclaration s) throws Exception {
+		endvisitGeneral(s);
+		return false;
+	}
+
+	public boolean endvisit(PHPAsCallableArgumentsList s) throws Exception {
 		endvisitGeneral(s);
 		return false;
 	}

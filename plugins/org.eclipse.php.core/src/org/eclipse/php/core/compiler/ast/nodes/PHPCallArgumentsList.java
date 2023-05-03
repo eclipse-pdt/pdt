@@ -50,8 +50,4 @@ public class PHPCallArgumentsList extends CallArgumentsList {
 		}
 	}
 
-	@Override
-	public String toString() {
-		return ASTPrintVisitor.toXMLString(this);
-	}
 }

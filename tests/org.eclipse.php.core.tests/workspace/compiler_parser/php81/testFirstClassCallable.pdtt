@@ -1,0 +1,38 @@
+--TEST--
+PHP 8.1
+--FILE--
+<?php
+$foo = $this->foo(...);
+$fn = strlen(...);
+?>
+--EXPECT--
+<ModuleDeclaration start="0" end="52">
+	<ExpressionStatement start="6" end="29">
+		<Assignment start="6" end="28" operator="=">
+			<VariableReference start="6" end="10" name="$foo">
+			</VariableReference>
+			<PHPCallExpression start="13" end="28">
+				<VariableReference start="13" end="18" name="$this">
+				</VariableReference>
+				<SimpleReference start="20" end="23" name="foo">
+				</SimpleReference>
+				<PHPAsCallableArgumentsList start="24" end="27">
+				</PHPAsCallableArgumentsList>
+			</PHPCallExpression>
+		</Assignment>
+	</ExpressionStatement>
+	<ExpressionStatement start="30" end="48">
+		<Assignment start="30" end="47" operator="=">
+			<VariableReference start="30" end="33" name="$fn">
+			</VariableReference>
+			<PHPCallExpression start="36" end="47">
+				<FullyQualifiedReference start="36" end="42" name="strlen">
+				</FullyQualifiedReference>
+				<PHPAsCallableArgumentsList start="43" end="46">
+				</PHPAsCallableArgumentsList>
+			</PHPCallExpression>
+		</Assignment>
+	</ExpressionStatement>
+	<EmptyStatement start="49" end="51">
+	</EmptyStatement>
+</ModuleDeclaration>

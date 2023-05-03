@@ -40,6 +40,8 @@ public class Scalar extends StringLiteral implements Dereferencable {
 	public static final int TYPE_SYSTEM = 4;
 	// 'binary' starts with "0b",e.g "0b"[01]+
 	public static final int TYPE_BIN = 5;
+	// 'octal' start with "0o", e.g "0o1"
+	public static final int TYPE_OCTAL = 6;
 
 	private final int scalarType;
 
@@ -69,6 +71,8 @@ public class Scalar extends StringLiteral implements Dereferencable {
 			return "system"; //$NON-NLS-1$
 		case TYPE_BIN:
 			return "bin"; //$NON-NLS-1$
+		case TYPE_OCTAL:
+			return "octal"; //$NON-NLS-1$
 		default:
 			throw new IllegalArgumentException();
 		}

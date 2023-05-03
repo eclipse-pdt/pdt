@@ -135,6 +135,7 @@ public abstract class ASTNode implements Visitable {
 	// php8.1
 	public static final int ENUM_DECLARATION = 89;
 	public static final int ENUM_CASE_DECLARATION = 90;
+	public static final int AS_CALLABLE_EXPRESSION = 91;
 
 	/**
 	 * Internal convenience constant indicating that there is definite risk of

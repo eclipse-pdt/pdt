@@ -1,0 +1,27 @@
+--TEST--
+PHP 8.1
+--FILE--
+<?php
+0o16 === 16;
+0o16 === 14;
+?>
+--EXPECT--
+<Program start='0' length='34'>
+	<Statements>
+		<ExpressionStatement start='6' length='12'>
+			<InfixExpression start='6' length='11' operator='==='>
+				<Scalar start='6' length='4' type='octal' value='0o16'/>
+				<Scalar start='15' length='2' type='int' value='16'/>
+			</InfixExpression>
+		</ExpressionStatement>
+		<ExpressionStatement start='19' length='12'>
+			<InfixExpression start='19' length='11' operator='==='>
+				<Scalar start='19' length='4' type='octal' value='0o16'/>
+				<Scalar start='28' length='2' type='int' value='14'/>
+			</InfixExpression>
+		</ExpressionStatement>
+		<EmptyStatement start='32' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

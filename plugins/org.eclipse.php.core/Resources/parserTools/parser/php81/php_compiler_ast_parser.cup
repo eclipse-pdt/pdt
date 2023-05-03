@@ -216,6 +216,7 @@ terminal String T_NAME_RELATIVE;
 terminal CompilerAstLexer.PHPDocBlockSymbolPair T_READONLY;
 terminal CompilerAstLexer.PHPDocBlockSymbolPair T_ENUM;
 terminal T_REFERENCE_FOLLOWED_BY_VAR_OR_VARARG;
+terminal String T_ONUMBER;
 
 /* Non terminals */
 
@@ -2390,6 +2391,11 @@ non_empty_argument_list:paramsList possible_comma
 	RESULT = paramsList;
 :}
 
+| T_ELLIPSIS:e
+{:
+	RESULT = new PHPAsCallableArgumentsList();
+:}
+
 | /* empty */
 {:
 	PHPCallArgumentsList list = new PHPCallArgumentsList();
@@ -3953,6 +3959,12 @@ T_LNUMBER:scalar
 | T_BNUMBER:scalar
 {:
 	Scalar s = new Scalar(scalarleft, scalarright, scalar, Scalar.TYPE_BIN);
+	RESULT = s;
+:}
+
+| T_ONUMBER:scalar
+{:
+	Scalar s = new Scalar(scalarleft, scalarright, scalar, Scalar.TYPE_OCTAL);
 	RESULT = s;
 :}
 

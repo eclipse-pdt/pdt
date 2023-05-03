@@ -1,0 +1,62 @@
+--TEST--
+PHP 8.1
+--FILE--
+<?php
+$foo = $this->foo(...);
+$fn = strlen(...);
+?>
+--EXPECT--
+<Program start='0' length='51'>
+	<Statements>
+		<ExpressionStatement start='6' length='23'>
+			<Assignment start='6' length='22' operator='='>
+				<Variable start='6' length='4' isDollared='true'>
+					<Identifier start='7' length='3' name='foo'/>
+				</Variable>
+				<Value>
+					<MethodInvocation start='13' length='15'>
+						<Dispatcher>
+							<Variable start='13' length='5' isDollared='true'>
+								<Identifier start='14' length='4' name='this'/>
+							</Variable>
+						</Dispatcher>
+						<Property>
+							<FunctionInvocation start='20' length='8'>
+								<FunctionName start='20' length='3'>
+									<Variable start='20' length='3' isDollared='false'>
+										<Identifier start='20' length='3' name='foo'/>
+									</Variable>
+								</FunctionName>
+								<Parameters>
+									<AsCallableExpression start='24' length='0'/>
+								</Parameters>
+							</FunctionInvocation>
+						</Property>
+					</MethodInvocation>
+				</Value>
+			</Assignment>
+		</ExpressionStatement>
+		<ExpressionStatement start='30' length='18'>
+			<Assignment start='30' length='17' operator='='>
+				<Variable start='30' length='3' isDollared='true'>
+					<Identifier start='31' length='2' name='fn'/>
+				</Variable>
+				<Value>
+					<FunctionInvocation start='36' length='11'>
+						<FunctionName start='36' length='6'>
+							<NamespaceName start='36' length='6' global='false' current='false'>
+								<Identifier start='36' length='6' name='strlen'/>
+							</NamespaceName>
+						</FunctionName>
+						<Parameters>
+							<AsCallableExpression start='43' length='0'/>
+						</Parameters>
+					</FunctionInvocation>
+				</Value>
+			</Assignment>
+		</ExpressionStatement>
+		<EmptyStatement start='49' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

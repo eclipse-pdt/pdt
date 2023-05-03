@@ -232,6 +232,7 @@ terminal String T_NAME_RELATIVE;
 terminal String T_READONLY;
 terminal String T_ENUM;
 terminal T_REFERENCE_FOLLOWED_BY_VAR_OR_VARARG;
+terminal String T_ONUMBER;
 
 /* Non terminals */
 
@@ -2121,6 +2122,13 @@ non_empty_argument_list:paramsList possible_comma:comma
 	RESULT = paramsList;
 :}
 
+| T_ELLIPSIS:e
+{:
+	LinkedList nodes = new LinkedList();
+	nodes.add(new AsCallableExpression(eleft, parser.ast));
+	RESULT = nodes;
+:}
+
 | /* empty */
 {:
 	RESULT = new LinkedList();
@@ -3441,6 +3449,11 @@ T_LNUMBER:scalar
 | T_BNUMBER:scalar
 {:
 	RESULT = new Scalar(scalarleft, scalarright, parser.ast, scalar, Scalar.TYPE_BIN);
+:}
+
+| T_ONUMBER:scalar
+{:
+	RESULT = new Scalar(scalarleft, scalarright, parser.ast, scalar, Scalar.TYPE_OCTAL);
 :}
 
 | T_START_HEREDOC:label T_ENCAPSED_AND_WHITESPACE:string T_END_HEREDOC:e

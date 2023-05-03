@@ -1,0 +1,22 @@
+--TEST--
+New in initializers
+--FILE--
+<?php
+class Attr {}
+
+
+#[Attr(new Exception())]
+class Service 
+{
+    private Exception $logger = new Exception;
+    
+    public function __construct(
+        Exception $logger = new Exception(),
+    ) {
+        $this->logger = $logger;
+    }
+}
+?>
+--EXPECT--
+[line=8, start=96, end=109] Constant expression contains invalid operations
+

@@ -1137,4 +1137,12 @@ public class ASTMatcher {
 				&& safeSubtreeMatch(node.getInitializer(), o.getInitializer()));
 	}
 
+	public boolean match(AsCallableExpression node, Object other) {
+		if (!(other instanceof AsCallableExpression)) {
+			return false;
+		}
+
+		return true;
+	}
+
 }

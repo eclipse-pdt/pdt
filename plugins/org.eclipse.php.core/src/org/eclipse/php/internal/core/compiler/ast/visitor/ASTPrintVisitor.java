@@ -1589,6 +1589,14 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 
 	// php8.1
 	@Override
+	public boolean visit(PHPAsCallableArgumentsList s) throws Exception {
+		Map<String, String> parameters = createInitialParameters(s);
+		xmlWriter.startTag("PHPAsCallableArgumentsList", parameters); //$NON-NLS-1$
+
+		return true;
+	}
+
+	@Override
 	public boolean visit(EnumDeclaration s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		parameters.put("name", s.getName()); //$NON-NLS-1$
@@ -1598,6 +1606,12 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 		xmlWriter.startTag("EnumDeclaration", parameters); //$NON-NLS-1$
 
 		return true;
+	}
+
+	@Override
+	public boolean endvisit(PHPAsCallableArgumentsList e) throws Exception {
+		xmlWriter.endTag("PHPAsCallableArgumentsList"); //$NON-NLS-1$
+		return false;
 	}
 
 	@Override

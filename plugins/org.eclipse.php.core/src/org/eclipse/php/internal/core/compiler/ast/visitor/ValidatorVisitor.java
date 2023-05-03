@@ -70,6 +70,9 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 	private static final List<String> TYPE_SKIP = new ArrayList<>();
 	private static final List<String> COMMENT_TYPE_SKIP = new ArrayList<>();
 
+	private static final int ALLOW_ARRAY = 1;
+	private static final int ALLOW_NEW = 2;
+
 	// https://www.php.net/manual/en/reserved.other-reserved-words.php
 	private static final List<SimpleProposal> RESERVED_WORDS = new ArrayList<>();
 
@@ -1107,9 +1110,18 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 	}
 
 	@Override
+	public boolean visit(Attribute s) throws Exception {
+		for (ASTNode ex : s.getArguments().getChilds()) {
+			validateConstantExpression(ex, ALLOW_ARRAY | ALLOW_NEW);
+		}
+
+		return super.visit(s);
+	}
+
+	@Override
 	public boolean visit(ConstantDeclaration s) throws Exception {
 		currentDeclaration = s;
-		validateConstantExpression(s.getConstantValue(), false);
+		validateConstantExpression(s.getConstantValue(), ALLOW_NEW);
 		String id = "c" + s.getName(); //$NON-NLS-1$
 		Map<String, ISourceNode> childs = declarationScope.peekLast();
 		if (childs.containsKey(id)) {
@@ -1124,7 +1136,7 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 
 	@Override
 	public boolean visit(FormalParameter s) throws Exception {
-		validateConstantExpression(s.getInitialization(), true);
+		validateConstantExpression(s.getInitialization(), ALLOW_ARRAY | ALLOW_NEW);
 		if (version.isGreaterThan(PHPVersion.PHP5_3) && s.getParameterName() != null
 				&& PHPVariables.isVariable(s.getParameterName().getName(), version)) {
 			reportProblem(s.getParameterName(), Messages.ReassignAutoGlobalVariable,
@@ -1137,11 +1149,11 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 
 	@Override
 	public boolean endvisit(PHPFieldDeclaration s) throws Exception {
-		validateConstantExpression(s.getVariableValue(), true);
+		validateConstantExpression(s.getVariableValue(), ALLOW_ARRAY);
 		return super.endvisit(s);
 	}
 
-	private void validateConstantExpression(ASTNode astNode, boolean allowArray) {
+	private void validateConstantExpression(ASTNode astNode, int modifier) {
 		if (astNode == null || astNode instanceof Scalar || astNode instanceof ConstantReference) {
 			return;
 		}
@@ -1151,7 +1163,7 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 		}
 		if (astNode instanceof Quote) {
 			for (ASTNode expr : ((Quote) astNode).getExpressions()) {
-				validateConstantExpression(expr, allowArray);
+				validateConstantExpression(expr, modifier);
 			}
 		} else if (astNode instanceof UnaryOperation) {
 			UnaryOperation op = (UnaryOperation) astNode;
@@ -1160,7 +1172,7 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 				reportProblem(astNode, Messages.InvalidConstantExpression,
 						PHPProblemIdentifier.InvalidConstantExpression, ProblemSeverities.Error);
 			} else {
-				validateConstantExpression(op.getExpr(), allowArray);
+				validateConstantExpression(op.getExpr(), modifier);
 			}
 		} else if (astNode instanceof StaticConstantAccess) {
 			StaticConstantAccess acc = (StaticConstantAccess) astNode;
@@ -1170,17 +1182,29 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 			}
 		} else if (version.isGreaterThan(PHPVersion.PHP5_5) && astNode instanceof InfixExpression) {
 			InfixExpression expr = (InfixExpression) astNode;
-			validateConstantExpression(expr.getLeft(), allowArray);
-			validateConstantExpression(expr.getRight(), allowArray);
-		} else if ((allowArray || version.isGreaterThan(PHPVersion.PHP5_5)) && astNode instanceof ArrayCreation) {
+			validateConstantExpression(expr.getLeft(), modifier);
+			validateConstantExpression(expr.getRight(), modifier);
+		} else if (((modifier & ALLOW_ARRAY) != 0 || version.isGreaterThan(PHPVersion.PHP5_5))
+				&& astNode instanceof ArrayCreation) {
 			((ArrayCreation) astNode).getElements().stream().forEach(n -> {
-				validateConstantExpression(n.getKey(), allowArray);
-				validateConstantExpression(n.getValue(), allowArray);
+				validateConstantExpression(n.getKey(), modifier);
+				validateConstantExpression(n.getValue(), modifier);
 			});
 		} else if (version.isGreaterThan(PHPVersion.PHP5_5) && astNode instanceof ReflectionArrayVariableReference) {
 			ReflectionArrayVariableReference ref = (ReflectionArrayVariableReference) astNode;
-			validateConstantExpression(ref.getExpression(), allowArray);
-			validateConstantExpression(ref.getIndex(), allowArray);
+			validateConstantExpression(ref.getExpression(), modifier);
+			validateConstantExpression(ref.getIndex(), modifier);
+		} else if ((modifier & ALLOW_NEW) != 0 && version.isGreaterThan(PHPVersion.PHP8_0)
+				&& astNode instanceof ClassInstanceCreation) {
+			ClassInstanceCreation c = (ClassInstanceCreation) astNode;
+			if (c.getClassName() instanceof FullyQualifiedReference && c.getAnonymousClassDeclaration() == null) {
+				for (ASTNode ex : c.getCtorParams().getChilds()) {
+					validateConstantExpression(ex, modifier);
+				}
+			} else {
+				reportProblem(astNode, Messages.InvalidConstantExpression,
+						PHPProblemIdentifier.InvalidConstantExpression, ProblemSeverities.Error);
+			}
 		} else {
 			reportProblem(astNode, Messages.InvalidConstantExpression, PHPProblemIdentifier.InvalidConstantExpression,
 					ProblemSeverities.Error);

@@ -255,6 +255,7 @@ DNUM=({LNUM}?"."{LNUM})|({LNUM}"."{LNUM}?)
 EXPONENT_DNUM=(({LNUM}|{DNUM})[eE][+-]?{LNUM})
 HNUM="0x"[0-9a-fA-F]+(_[0-9a-fA-F]+)*
 BNUM="0b"[01]+(_[01]+)*
+ONUM="0o"[0-7]+(_[0-7]+)*
 LABEL=[a-zA-Z_\u0080-\uffff][a-zA-Z0-9_\u0080-\uffff]*
 WHITESPACES=[ \n\r\t]+
 TABS_AND_SPACES=[ \t]*
@@ -839,7 +840,11 @@ NOWDOC_CHARS=([^\n\r]|({NEWLINE}{TABS_AND_SPACES})+[^a-zA-Z_\u0080-\uffff\n\r \t
 	return createFullSymbol(ParserConstants.T_DNUMBER);
 }
 
-<ST_VAR_OFFSET>{LNUM}|{HNUM}|{BNUM} { /* treat numbers (almost) as strings inside encapsulated strings */
+<ST_IN_SCRIPTING>{ONUM} {
+	return createFullSymbol(ParserConstants.T_ONUMBER);
+}
+
+<ST_VAR_OFFSET>{LNUM}|{HNUM}|{BNUM}|{ONUM} { /* treat numbers (almost) as strings inside encapsulated strings */
 	return createFullSymbol(ParserConstants.T_NUM_STRING);
 }
 
