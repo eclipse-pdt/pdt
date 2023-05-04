@@ -1,0 +1,14 @@
+--TEST--
+Test 
+--FILE--
+<?php
+#[Attribute]
+class Point {
+  public function __construct() {}
+}
+?>
+--EXPECT--
+FILE: test.php
+	CLASS: Point
+		METHOD: __construct
+

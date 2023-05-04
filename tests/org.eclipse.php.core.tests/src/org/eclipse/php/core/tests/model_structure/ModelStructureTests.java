@@ -22,6 +22,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.core.DLTKCore;
+import org.eclipse.dltk.core.IField;
 import org.eclipse.dltk.core.IMethod;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IModelElementVisitor;
@@ -29,6 +30,7 @@ import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.php.core.PHPVersion;
+import org.eclipse.php.core.compiler.IPHPModifiers;
 import org.eclipse.php.core.tests.PDTTUtils;
 import org.eclipse.php.core.tests.PdttFile;
 import org.eclipse.php.core.tests.TestSuiteWatcher;
@@ -59,6 +61,17 @@ public class ModelStructureTests {
 		TESTS.put(PHPVersion.PHP5_5, new String[] { "/workspace/model_structure/php53" });
 		TESTS.put(PHPVersion.PHP5_6, new String[] { "/workspace/model_structure/php53" });
 		TESTS.put(PHPVersion.PHP7_0, new String[] { "/workspace/model_structure/php53" });
+		TESTS.put(PHPVersion.PHP7_1, new String[] { "/workspace/model_structure/php53" });
+		TESTS.put(PHPVersion.PHP7_2, new String[] { "/workspace/model_structure/php53" });
+		TESTS.put(PHPVersion.PHP7_3, new String[] { "/workspace/model_structure/php53" });
+		TESTS.put(PHPVersion.PHP7_4, new String[] { "/workspace/model_structure/php53" });
+		TESTS.put(PHPVersion.PHP8_0,
+				new String[] { "/workspace/model_structure/php53", "/workspace/model_structure/php80" });
+		TESTS.put(PHPVersion.PHP8_1, new String[] { "/workspace/model_structure/php53",
+				"/workspace/model_structure/php80", "/workspace/model_structure/php81" });
+		TESTS.put(PHPVersion.PHP8_2,
+				new String[] { "/workspace/model_structure/php53", "/workspace/model_structure/php80",
+						"/workspace/model_structure/php81", "/workspace/model_structure/php82" });
 	};
 
 	protected IProject project;
@@ -139,6 +152,8 @@ public class ModelStructureTests {
 						stream.print("INTERFACE: ");
 					} else if ((flags & Modifiers.AccNameSpace) != 0) {
 						stream.print("NAMESPACE: ");
+					} else if ((flags & IPHPModifiers.AccEnum) != 0) {
+						stream.print("ENUM: ");
 					} else {
 						stream.print("CLASS: ");
 					}
@@ -151,7 +166,12 @@ public class ModelStructureTests {
 						stream.print("METHOD: ");
 					}
 				} else if (element.getElementType() == IModelElement.FIELD) {
-					stream.print("VARIABLE: ");
+					IField field = (IField) element;
+					if ((field.getFlags() & IPHPModifiers.AccEnumCase) != 0) {
+						stream.print("CASE: ");
+					} else {
+						stream.print("VARIABLE: ");
+					}
 				} else if (element.getElementType() == IModelElement.SOURCE_MODULE) {
 					stream.print("FILE: ");
 				}

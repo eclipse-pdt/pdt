@@ -1,0 +1,18 @@
+--TEST--
+Test 
+--FILE--
+<?php
+enum Status
+{
+    case Draft;
+    case Published;
+    case Archived;
+}
+?>
+--EXPECT--
+FILE: test.php
+	ENUM: Status
+		CASE: Draft
+		CASE: Published
+		CASE: Archived
+

@@ -1,0 +1,23 @@
+--TEST--
+Test 
+--FILE--
+<?php
+class Point {
+  public function __construct(
+    public float $x = 0.0,
+    public float $y = 0.0,
+    public float $z = 0.0,
+  ) {}
+}
+?>
+--EXPECT--
+FILE: test.php
+	CLASS: Point
+		VARIABLE: $x
+		VARIABLE: $y
+		VARIABLE: $z
+		METHOD: __construct
+			VARIABLE: $x
+			VARIABLE: $y
+			VARIABLE: $z
+

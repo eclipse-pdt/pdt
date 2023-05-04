@@ -1,0 +1,13 @@
+--TEST--
+Test 
+--FILE--
+<?php
+trait Foo
+{
+    public const CONSTANT = 1;
+}
+?>
+--EXPECT--
+FILE: test.php
+	CLASS: Foo
+		VARIABLE: CONSTANT

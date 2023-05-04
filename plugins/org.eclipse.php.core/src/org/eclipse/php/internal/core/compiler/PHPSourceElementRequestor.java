@@ -35,6 +35,7 @@ import org.eclipse.dltk.ast.statements.Statement;
 import org.eclipse.dltk.compiler.IElementRequestor;
 import org.eclipse.dltk.compiler.IElementRequestor.ElementInfo;
 import org.eclipse.dltk.compiler.IElementRequestor.ImportInfo;
+import org.eclipse.dltk.compiler.IElementRequestor.MethodInfo;
 import org.eclipse.dltk.compiler.IElementRequestor.TypeInfo;
 import org.eclipse.dltk.compiler.ISourceElementRequestor;
 import org.eclipse.dltk.compiler.SourceElementRequestVisitor;
@@ -547,9 +548,10 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		if (!declarations.empty()) {
 			parentDeclaration = declarations.peek();
 		}
-		declarations.push(methodDeclaration);
-
 		mi.isConstructor = ASTUtils.isConstructor(mi.name, parentDeclaration, fLastNamespace);
+		mi.parameterTypes = processParameterTypes(mi, methodDeclaration);
+
+		declarations.push(methodDeclaration);
 
 		if (fCurrentClass == null || fCurrentClass == fLastNamespace) {
 			mi.modifiers |= Modifiers.AccGlobal;
@@ -561,7 +563,6 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 			mi.modifiers |= IPHPModifiers.AccInheritdoc;
 		}
 
-		mi.parameterTypes = processParameterTypes(methodDeclaration);
 		modifyReturnTypeInfo(methodDeclaration, mi);
 
 		// modify method info if needed by extensions
@@ -593,7 +594,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		return docBlock.getTags(TagKind.INHERITDOC).length != 0;
 	}
 
-	private String[] processParameterTypes(MethodDeclaration methodDeclaration) {
+	private String[] processParameterTypes(MethodInfo mi, MethodDeclaration methodDeclaration) {
 		List<?> args = methodDeclaration.getArguments();
 		PHPDocBlock docBlock = ((PHPMethodDeclaration) methodDeclaration).getPHPDoc();
 		String[] parameterType = new String[args.size()];
@@ -610,6 +611,23 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 							break;
 						}
 					}
+				}
+				if (mi.isConstructor && arg.getModifiers() != 0) {
+					ISourceElementRequestor.FieldInfo info = new ISourceElementRequestor.FieldInfo();
+					info.modifiers = arg.getModifiers();
+					info.name = arg.getName();
+					SimpleReference var = arg.getRef();
+					info.nameSourceEnd = var.sourceEnd() - 1;
+					info.nameSourceStart = var.sourceStart();
+					info.declarationStart = arg.start();
+					info.modifiers = markAsDeprecated(info.modifiers, methodDeclaration);
+					if (type != null) {
+						info.type = type.getName();
+					}
+
+					fInfoStack.push(info);
+					fRequestor.enterField(info);
+					fRequestor.exitField(arg.end());
 				}
 			}
 		}
@@ -872,6 +890,9 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		info.nameSourceStart = var.sourceStart();
 		info.declarationStart = declaration.getDeclarationStart();
 		info.modifiers = markAsDeprecated(info.modifiers, declaration);
+		if (declaration.getFieldType() != null) {
+			info.type = declaration.getFieldType().getName();
+		}
 		PHPDocBlock doc = declaration.getPHPDoc();
 		if (doc != null) {
 			for (PHPDocTag tag : doc.getTags(TagKind.VAR)) {
