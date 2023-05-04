@@ -429,5 +429,6 @@ public interface PHPRegionTypes {
 	static final String PHP_ENUM = "PHP_ENUM"; //$NON-NLS-1$
 	static final String PHP_READONLY = "PHP_READONLY"; //$NON-NLS-1$
 	static final String PHP_NEVER = "PHP_NEVER"; //$NON-NLS-1$
+	static final String PHP_MIXED = "PHP_MIXED"; //$NON-NLS-1$
 
 }

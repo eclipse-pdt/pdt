@@ -31,11 +31,7 @@ public class ClassHighlighting extends AbstractSemanticHighlighting {
 		public boolean visit(InterfaceDeclaration interfaceDeclaration) {
 			highlight(interfaceDeclaration.getName());
 			for (Identifier identifier : interfaceDeclaration.interfaces()) {
-				if (identifier instanceof NamespaceName) {
-					highlightNamespaceType((NamespaceName) identifier);
-				} else {
-					highlight(identifier);
-				}
+				highlightIdentifier(identifier, false);
 			}
 			return true;
 		}
@@ -43,18 +39,9 @@ public class ClassHighlighting extends AbstractSemanticHighlighting {
 		@Override
 		public boolean visit(ClassDeclaration clazz) {
 			highlight(clazz.getName());
-			Expression superClass = clazz.getSuperClass();
-			if (superClass instanceof NamespaceName) {
-				highlightNamespaceType((NamespaceName) superClass);
-			} else if (superClass != null) {
-				highlight(superClass);
-			}
+			highlightIdentifier(clazz.getSuperClass(), false);
 			for (Identifier identifier : clazz.interfaces()) {
-				if (identifier instanceof NamespaceName) {
-					highlightNamespaceType((NamespaceName) identifier);
-				} else {
-					highlight(identifier);
-				}
+				highlightIdentifier(identifier, false);
 			}
 			return true;
 		}
@@ -62,18 +49,18 @@ public class ClassHighlighting extends AbstractSemanticHighlighting {
 		@Override
 		public boolean visit(TraitDeclaration trait) {
 			highlight(trait.getName());
-			Expression superClass = trait.getSuperClass();
-			if (superClass instanceof NamespaceName) {
-				highlightNamespaceType((NamespaceName) superClass);
-			} else if (superClass != null) {
-				highlight(superClass);
-			}
+			highlightIdentifier(trait.getSuperClass(), false);
 			for (Identifier identifier : trait.interfaces()) {
-				if (identifier instanceof NamespaceName) {
-					highlightNamespaceType((NamespaceName) identifier);
-				} else {
-					highlight(identifier);
-				}
+				highlightIdentifier(identifier, false);
+			}
+			return true;
+		}
+
+		@Override
+		public boolean visit(EnumDeclaration en) {
+			highlight(en.getName());
+			for (Identifier identifier : en.interfaces()) {
+				highlightIdentifier(identifier, false);
 			}
 			return true;
 		}
@@ -81,17 +68,8 @@ public class ClassHighlighting extends AbstractSemanticHighlighting {
 		@Override
 		public boolean visit(ClassInstanceCreation clazz) {
 			Expression name = clazz.getClassName().getName();
-			if (name instanceof NamespaceName) {
-				highlightNamespaceType((NamespaceName) name, true);
-			} else if (name instanceof Identifier) {
-				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=496045
-				// See also DeprecatedHighlighting#visit(ClassName)
-				if (SELF.equalsIgnoreCase(((Identifier) name).getName())
-						|| CLASS.equalsIgnoreCase(((Identifier) name).getName())
-						|| PARENT.equalsIgnoreCase(((Identifier) name).getName())) {
-					return true;
-				}
-				highlight(name);
+			if (name instanceof Identifier) {
+				highlightIdentifier(name, false);
 			}
 			return true;
 		}
@@ -99,37 +77,21 @@ public class ClassHighlighting extends AbstractSemanticHighlighting {
 		@Override
 		public boolean visit(InstanceOfExpression instanceOfExpression) {
 			Expression name = instanceOfExpression.getClassName().getName();
-			if (name instanceof NamespaceName) {
-				highlightNamespaceType((NamespaceName) name);
-			} else if (name instanceof Identifier) {
-				highlight(name);
-			}
+			highlightIdentifier(name, false);
 			return true;
 		}
 
 		@Override
 		public boolean visit(FormalParameter param) {
 			Expression type = param.getParameterType();
-			if (type instanceof NamespaceName) {
-				highlightNamespaceType((NamespaceName) type);
-			} else if (type instanceof Identifier) {
-				if (!PHPSimpleTypes.isHintable(((Identifier) type).getName(), param.getAST().apiLevel())) {
-					highlight(type);
-				}
-			}
+			highlightIdentifier(type, false);
 			return true;
 		}
 
 		@Override
 		public boolean visit(FieldsDeclaration fieldsDeclaration) {
 			Expression type = fieldsDeclaration.getFieldsType();
-			if (type instanceof NamespaceName) {
-				highlightNamespaceType((NamespaceName) type);
-			} else if (type instanceof Identifier) {
-				if (!PHPSimpleTypes.isHintable(((Identifier) type).getName(), fieldsDeclaration.getAST().apiLevel())) {
-					highlight(type);
-				}
-			}
+			highlightIdentifier(type, false);
 			return true;
 		}
 
@@ -139,13 +101,7 @@ public class ClassHighlighting extends AbstractSemanticHighlighting {
 				return true;
 			}
 			Identifier type = functionDeclaration.getReturnType();
-			if (type instanceof NamespaceName) {
-				highlightNamespaceType((NamespaceName) type);
-			} else if (type != null) {
-				if (!PHPSimpleTypes.isHintable(type.getName(), functionDeclaration.getAST().apiLevel())) {
-					highlight(type);
-				}
-			}
+			highlightIdentifier(type, false);
 			return true;
 		}
 
@@ -153,7 +109,7 @@ public class ClassHighlighting extends AbstractSemanticHighlighting {
 		public boolean visit(TraitUseStatement node) {
 			List<NamespaceName> traitList = node.getTraitList();
 			for (NamespaceName namespaceName : traitList) {
-				highlightNamespaceType(namespaceName);
+				highlightIdentifier(namespaceName, false);
 			}
 			List<TraitStatement> tsList = node.getTsList();
 			for (TraitStatement traitStatement : tsList) {
@@ -162,16 +118,16 @@ public class ClassHighlighting extends AbstractSemanticHighlighting {
 					if (statement.getAlias().getTraitMethod() instanceof FullyQualifiedTraitMethodReference) {
 						FullyQualifiedTraitMethodReference reference = (FullyQualifiedTraitMethodReference) statement
 								.getAlias().getTraitMethod();
-						highlightNamespaceType(reference.getClassName());
+						highlightIdentifier(reference.getClassName(), false);
 					}
 
 				} else if (traitStatement instanceof TraitPrecedenceStatement) {
 					TraitPrecedenceStatement statement = (TraitPrecedenceStatement) traitStatement;
 					FullyQualifiedTraitMethodReference reference = statement.getPrecedence().getMethodReference();
-					highlightNamespaceType(reference.getClassName());
+					highlightIdentifier(reference.getClassName(), false);
 					traitList = statement.getPrecedence().getTrList();
 					for (NamespaceName namespaceName : traitList) {
-						highlightNamespaceType(namespaceName);
+						highlightIdentifier(namespaceName, false);
 					}
 				}
 			}
@@ -181,11 +137,7 @@ public class ClassHighlighting extends AbstractSemanticHighlighting {
 		@Override
 		public boolean visit(CatchClause catchStatement) {
 			catchStatement.getClassNames().stream().forEach(e -> {
-				if (e instanceof NamespaceName) {
-					highlightNamespaceType((NamespaceName) e);
-				} else if (e instanceof Identifier) {
-					highlight(e);
-				}
+				highlightIdentifier(e, false);
 			});
 			return true;
 		}
@@ -213,18 +165,7 @@ public class ClassHighlighting extends AbstractSemanticHighlighting {
 		 */
 		private void highlightStatic(StaticDispatch dispatch) {
 			Expression className = dispatch.getClassName();
-			if (className instanceof NamespaceName) {
-				highlightNamespaceType((NamespaceName) className, true);
-			} else if (className instanceof Identifier) {
-				if (!SELF.equalsIgnoreCase(((Identifier) className).getName())
-						&& !PARENT.equalsIgnoreCase(((Identifier) className).getName())) {
-					highlight(className);
-				}
-			}
-		}
-
-		private void highlightNamespaceType(NamespaceName name) {
-			highlightNamespaceType(name, false);
+			highlightIdentifier(className, false);
 		}
 
 		/**
@@ -241,6 +182,30 @@ public class ClassHighlighting extends AbstractSemanticHighlighting {
 								|| PARENT.equalsIgnoreCase(segment.getName()))) {
 					highlight(segment);
 				}
+			}
+		}
+
+		private void highlightIdentifier(ASTNode node, boolean excludeSelf) {
+			if (!(node instanceof Identifier)) {
+				return;
+			}
+			Identifier identifier = (Identifier) node;
+			if (identifier instanceof DNFType) {
+				highlightDNF((DNFType) identifier, excludeSelf);
+			} else if (identifier instanceof NamespaceName) {
+				highlightNamespaceType((NamespaceName) identifier, excludeSelf);
+			} else if (!excludeSelf && SELF.equalsIgnoreCase(identifier.getName())) {
+				//
+			} else if (!PHPSimpleTypes.isHintable(identifier.getName(), identifier.getAST().apiLevel())
+					&& !PARENT.equalsIgnoreCase(identifier.getName())
+					&& !CLASS.equalsIgnoreCase(identifier.getName())) {
+				highlight(identifier);
+			}
+		}
+
+		private void highlightDNF(DNFType type, boolean excludeSelf) {
+			for (Identifier i : type.elements()) {
+				highlightIdentifier(i, excludeSelf);
 			}
 		}
 	}

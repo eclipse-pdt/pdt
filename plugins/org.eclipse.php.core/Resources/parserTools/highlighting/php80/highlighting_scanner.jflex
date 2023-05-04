@@ -212,6 +212,10 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
 	return PHP_MATCH;
 }
 
+<ST_PHP_IN_SCRIPTING>"mixed" {
+	return PHP_MIXED;
+}
+
 <ST_PHP_IN_SCRIPTING>"return" {
 	return PHP_RETURN;
 }

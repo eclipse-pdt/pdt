@@ -79,10 +79,28 @@ public class ConstantHighlighting extends AbstractSemanticHighlighting {
 		}
 
 		@Override
+		public boolean visit(FieldsDeclaration fieldsDeclaration) {
+			for (AttributeGroup g : fieldsDeclaration.attributes()) {
+				g.accept(this);
+			}
+			for (Expression expr : fieldsDeclaration.getInitialValues()) {
+				if (expr != null) {
+					expr.accept(this);
+				}
+			}
+			return false;
+		}
+
+		public boolean visit(DNFType namespace) {
+			return false;
+		}
+
+		@Override
 		public boolean visit(NamespaceName namespace) {
 			ASTNode parent = namespace.getParent();
 			if (!(parent instanceof NamespaceDeclaration) && !(parent instanceof StaticDispatch)
-					&& !(parent instanceof FunctionName) && !(parent instanceof UseStatement)) {
+					&& !(parent instanceof FunctionName) && !(parent instanceof UseStatement)
+					&& !(parent instanceof DNFType)) {
 				List<Identifier> segs = namespace.segments();
 				if (segs.size() > 0) {
 					Identifier c = segs.get(segs.size() - 1);

@@ -13,6 +13,7 @@
 package org.eclipse.php.internal.ui.editor.highlighters;
 
 import org.eclipse.dltk.ast.Modifiers;
+import org.eclipse.php.core.ast.nodes.EnumCaseDeclaration;
 import org.eclipse.php.core.ast.nodes.FieldsDeclaration;
 import org.eclipse.php.core.ast.nodes.StaticFieldAccess;
 import org.eclipse.php.core.ast.nodes.Variable;
@@ -32,6 +33,12 @@ public class StaticFieldHighlighting extends AbstractSemanticHighlighting {
 					highlight(var);
 				}
 			}
+			return true;
+		}
+
+		@Override
+		public boolean visit(EnumCaseDeclaration fieldsDeclaration) {
+			highlight(fieldsDeclaration.getName());
 			return true;
 		}
 

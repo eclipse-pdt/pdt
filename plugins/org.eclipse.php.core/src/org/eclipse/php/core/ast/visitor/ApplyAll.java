@@ -886,4 +886,106 @@ public abstract class ApplyAll extends AbstractVisitor {
 		endVisitNode(node);
 	}
 
+	// php8.0
+	@Override
+	public boolean visit(Attribute node) {
+		return apply(node);
+	}
+
+	@Override
+	public void endvisit(Attribute node) {
+		endVisitNode(node);
+	}
+
+	@Override
+	public boolean visit(AttributeGroup node) {
+		return apply(node);
+	}
+
+	@Override
+	public void endvisit(AttributeGroup node) {
+		endVisitNode(node);
+	}
+
+	@Override
+	public boolean visit(NamedExpression node) {
+		return apply(node);
+	}
+
+	@Override
+	public void endvisit(NamedExpression node) {
+		endVisitNode(node);
+	}
+
+	@Override
+	public boolean visit(MatchExpression node) {
+		return apply(node);
+	}
+
+	@Override
+	public void endvisit(MatchExpression node) {
+		endVisitNode(node);
+	}
+
+	@Override
+	public boolean visit(MatchArm node) {
+		return apply(node);
+	}
+
+	@Override
+	public void endvisit(MatchArm node) {
+		endVisitNode(node);
+	}
+
+	@Override
+	public boolean visit(ThrowExpression node) {
+		return apply(node);
+	}
+
+	@Override
+	public void endvisit(ThrowExpression node) {
+		endVisitNode(node);
+	}
+
+	@Override
+	public boolean visit(DNFType node) {
+		return apply(node);
+	}
+
+	@Override
+	public void endvisit(DNFType node) {
+		endVisitNode(node);
+	}
+
+	// php8.1
+	@Override
+	public boolean visit(EnumDeclaration node) {
+		return apply(node);
+	}
+
+	@Override
+	public void endvisit(EnumDeclaration node) {
+		endVisitNode(node);
+	}
+
+	@Override
+	public boolean visit(EnumCaseDeclaration node) {
+		return apply(node);
+	}
+
+	@Override
+	public void endvisit(EnumCaseDeclaration node) {
+		endVisitNode(node);
+	}
+
+	@Override
+	public boolean visit(AsCallableExpression node) {
+		return apply(node);
+	}
+
+	@Override
+	public void endvisit(AsCallableExpression node) {
+		endVisitNode(node);
+	}
+
 }

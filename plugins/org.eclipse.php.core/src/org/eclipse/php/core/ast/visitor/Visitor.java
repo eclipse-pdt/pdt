@@ -404,4 +404,46 @@ public interface Visitor {
 	boolean visit(AnonymousClassDeclaration anonymousClassDeclaration);
 
 	void endVisit(AnonymousClassDeclaration anonymousClassDeclaration);
+
+	// php8.0
+	boolean visit(Attribute attribute);
+
+	void endvisit(Attribute attribute);
+
+	boolean visit(AttributeGroup attributeGroup);
+
+	void endvisit(AttributeGroup attributeGroup);
+
+	boolean visit(NamedExpression namedExpresion);
+
+	void endvisit(NamedExpression namedExpression);
+
+	boolean visit(MatchExpression matchExpression);
+
+	void endvisit(MatchExpression matchExpression);
+
+	boolean visit(MatchArm matchArm);
+
+	void endvisit(MatchArm matchArm);
+
+	boolean visit(ThrowExpression throwExpression);
+
+	void endvisit(ThrowExpression throwExpression);
+
+	boolean visit(DNFType dnfType);
+
+	void endvisit(DNFType dnfType);
+
+	// php8.1
+	boolean visit(EnumDeclaration enumDeclaration);
+
+	void endvisit(EnumDeclaration enumDeclaration);
+
+	boolean visit(EnumCaseDeclaration enumCaseDeclaration);
+
+	void endvisit(EnumCaseDeclaration enumCaseDeclaration);
+
+	boolean visit(AsCallableExpression asCallableExpression);
+
+	void endvisit(AsCallableExpression asCallableExpression);
 }

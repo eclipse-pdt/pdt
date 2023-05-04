@@ -122,13 +122,19 @@ public class PHPSimpleTypes {
 		SIMPLE_TYPES.put("resource", new TypeInfo(RESOURCE, null)); //$NON-NLS-1$
 		SIMPLE_TYPES.put("object", new TypeInfo(OBJECT, PHPVersion.PHP7_2)); //$NON-NLS-1$
 		SIMPLE_TYPES.put("void", new TypeInfo(VOID, PHPVersion.PHP7_1)); //$NON-NLS-1$
-		SIMPLE_TYPES.put("null", new TypeInfo(NULL, null)); //$NON-NLS-1$
-		SIMPLE_TYPES.put("mixed", new TypeInfo(MIXED, null)); //$NON-NLS-1$
+		SIMPLE_TYPES.put("null", new TypeInfo(NULL, PHPVersion.PHP8_2)); //$NON-NLS-1$
+		SIMPLE_TYPES.put("mixed", new TypeInfo(MIXED, PHPVersion.PHP8_0)); //$NON-NLS-1$
 		SIMPLE_TYPES.put("callable", new TypeInfo(CALLABLE, PHPVersion.PHP5_4)); //$NON-NLS-1$
 		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=531379
 		// "callback" is a (less complete) synonym of "callable"
 		SIMPLE_TYPES.put("callback", new TypeInfo(CALLABLE, null)); //$NON-NLS-1$
 		SIMPLE_TYPES.put("iterable", new TypeInfo(ITERABLE, PHPVersion.PHP7_1)); //$NON-NLS-1$
+
+		SIMPLE_TYPES.put("static", new TypeInfo(MIXED, PHPVersion.PHP8_0)); //$NON-NLS-1$
+
+		SIMPLE_TYPES.put("never", new TypeInfo(VOID, PHPVersion.PHP8_1)); //$NON-NLS-1$
+		SIMPLE_TYPES.put("false", new TypeInfo(BOOLEAN, PHPVersion.PHP8_2)); //$NON-NLS-1$
+		SIMPLE_TYPES.put("true", new TypeInfo(BOOLEAN, PHPVersion.PHP8_2)); //$NON-NLS-1$
 	}
 
 	/**

@@ -816,4 +816,96 @@ public abstract class AbstractVisitor implements Visitor {
 	@Override
 	public void endVisit(FinallyClause node) {
 	}
+
+	// php8.0
+	@Override
+	public boolean visit(Attribute attribute) {
+		return true;
+	}
+
+	@Override
+	public void endvisit(Attribute attribute) {
+	}
+
+	@Override
+	public boolean visit(AttributeGroup attributeGroup) {
+		return true;
+	}
+
+	@Override
+	public void endvisit(AttributeGroup attributeGroup) {
+	}
+
+	@Override
+	public boolean visit(NamedExpression namedExpresion) {
+		return true;
+	}
+
+	@Override
+	public void endvisit(NamedExpression namedExpression) {
+	}
+
+	@Override
+	public boolean visit(MatchExpression matchExpression) {
+		return true;
+	}
+
+	@Override
+	public void endvisit(MatchExpression matchExpression) {
+	}
+
+	@Override
+	public boolean visit(MatchArm matchArm) {
+		return true;
+	}
+
+	@Override
+	public void endvisit(MatchArm matchArm) {
+	}
+
+	@Override
+	public boolean visit(ThrowExpression throwExpression) {
+		return true;
+	}
+
+	@Override
+	public void endvisit(ThrowExpression throwExpression) {
+	}
+
+	@Override
+	public boolean visit(DNFType dnfType) {
+		return true;
+	}
+
+	@Override
+	public void endvisit(DNFType dnfType) {
+	}
+
+	// php8.1
+	@Override
+	public boolean visit(EnumDeclaration enumDeclaration) {
+		return true;
+	}
+
+	@Override
+	public void endvisit(EnumDeclaration enumDeclaration) {
+	}
+
+	@Override
+	public boolean visit(EnumCaseDeclaration enumCaseDeclaration) {
+		return true;
+	}
+
+	@Override
+	public void endvisit(EnumCaseDeclaration enumCaseDeclaration) {
+	}
+
+	@Override
+	public boolean visit(AsCallableExpression asCallableExpression) {
+		return true;
+	}
+
+	@Override
+	public void endvisit(AsCallableExpression asCallableExpression) {
+	}
 }
