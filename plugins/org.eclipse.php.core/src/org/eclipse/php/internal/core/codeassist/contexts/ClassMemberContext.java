@@ -20,6 +20,7 @@ import java.util.List;
 import org.eclipse.dltk.annotations.NonNull;
 import org.eclipse.dltk.core.*;
 import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.codeassist.ICompletionScope.Type;
 import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.PHPCorePlugin;
@@ -75,6 +76,8 @@ public abstract class ClassMemberContext extends StatementContext implements ICl
 		}
 		String triggerText = statementText.subSequence(elementStart - 2, elementStart).toString();
 		if (triggerText.equals("->")) { //$NON-NLS-1$
+			triggerType = Trigger.OBJECT;
+		} else if (triggerText.equals("?->") && getCompanion().getPHPVersion().isGreaterThan(PHPVersion.PHP7_4)) { //$NON-NLS-1$
 			triggerType = Trigger.OBJECT;
 		} else if (triggerText.equals("::")) { //$NON-NLS-1$
 			triggerType = Trigger.CLASS;

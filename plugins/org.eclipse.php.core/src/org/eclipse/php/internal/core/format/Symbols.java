@@ -64,5 +64,10 @@ public interface Symbols {
 	int TokenENDWHILE = 1033;
 	int TokenENDWITCH = 1034;
 	int TokenELSEIF = 1035;
+	int TokenENUM = 1036;
+	int TokenNEVER = 1037;
+	int TokenMATCH = 1038;
+	int TokenATTRIBUTE = 1039;
+	int TokenMIXED = 1040;
 	int TokenIDENT = 2000;
 }

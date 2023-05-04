@@ -250,7 +250,7 @@ public class PHPEvaluationUtils {
 		ISourceModule sourceModule = space.getAncestor(ISourceModule.class);
 
 		List<IEvaluatedType> evaluated = new LinkedList<>();
-		if (PHPSimpleTypes.isSimpleType(typeName)) {
+		if (PHPSimpleTypes.isSimpleType(typeName) && !typeName.equals(STATIC_RETURN_TYPE)) {
 			ClassFinder classFinder = new ClassFinder(typeName);
 			try {
 				space.accept(classFinder);

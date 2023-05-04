@@ -72,6 +72,7 @@ public class CodeAssistUtils {
 	private static final String DOLLAR = "$"; //$NON-NLS-1$
 	private static final String PAAMAYIM_NEKUDOTAIM = "::"; //$NON-NLS-1$
 	protected static final String OBJECT_FUNCTIONS_TRIGGER = "->"; //$NON-NLS-1$
+	protected static final String OBJECT_NULLSAFE_FUNCTIONS_TRIGGER = "?->"; //$NON-NLS-1$
 
 	private static final String[] KEYWORD_FUNCTION_NAMES = { "return", "yield", "print", "echo" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 	private static final String NEW = "new"; //$NON-NLS-1$
@@ -298,8 +299,8 @@ public class CodeAssistUtils {
 	}
 
 	/**
-	 * The "self" function needs to be added only if we are in a class method and it
-	 * is not an abstract class or an interface
+	 * The "self" function needs to be added only if we are in a class method
+	 * and it is not an abstract class or an interface
 	 * 
 	 * @param fileData
 	 * @param offset
