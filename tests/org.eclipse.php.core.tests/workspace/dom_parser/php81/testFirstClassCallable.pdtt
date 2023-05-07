@@ -28,7 +28,7 @@ $fn = strlen(...);
 									</Variable>
 								</FunctionName>
 								<Parameters>
-									<AsCallableExpression start='24' length='0'/>
+									<AsCallableExpression start='24' length='3'/>
 								</Parameters>
 							</FunctionInvocation>
 						</Property>
@@ -49,7 +49,7 @@ $fn = strlen(...);
 							</NamespaceName>
 						</FunctionName>
 						<Parameters>
-							<AsCallableExpression start='43' length='0'/>
+							<AsCallableExpression start='43' length='3'/>
 						</Parameters>
 					</FunctionInvocation>
 				</Value>
@@ -60,3 +60,4 @@ $fn = strlen(...);
 	<Comments>
 	</Comments>
 </Program>
+

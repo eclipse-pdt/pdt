@@ -1,0 +1,12 @@
+--TEST--
+PHP 8.0
+--FILE--
+<?php
+echo 
+throw 
+new \Exception();
+?>
+--EXPECT--
+<?php
+echo throw new \Exception ();
+?>

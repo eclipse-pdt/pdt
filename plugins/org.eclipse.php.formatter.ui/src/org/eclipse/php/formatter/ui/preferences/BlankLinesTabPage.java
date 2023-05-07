@@ -40,7 +40,13 @@ public class BlankLinesTabPage extends ModifyDialogTabPage {
 			"      $v->add($i);" + //$NON-NLS-1$
 			"    }" + //$NON-NLS-1$
 			"  }" + //$NON-NLS-1$
-			"} namespace test1;\n" + "interface MyInterface {}\n?>"; //$NON-NLS-1$ //$NON-NLS-2$
+			"} namespace test1;\n" + //$NON-NLS-1$
+			"interface MyInterface {}\n" + //$NON-NLS-1$
+			" namespace test2; enum MyEnum {" + //$NON-NLS-1$
+			" case C1;" + //$NON-NLS-1$
+			" case C2;" + //$NON-NLS-1$
+			"}" + //$NON-NLS-1$
+			"?>"; //$NON-NLS-1$
 
 	private boolean isInitialized = false;
 
@@ -54,6 +60,7 @@ public class BlankLinesTabPage extends ModifyDialogTabPage {
 	private NumberPreference classDecl;
 	private NumberPreference constantDecl;
 	private NumberPreference fieldDecl;
+	private NumberPreference enumCaseDecl;
 	private NumberPreference methodDecl;
 	private NumberPreference methodBegin;
 	private NumberPreference methodEnd;
@@ -119,6 +126,10 @@ public class BlankLinesTabPage extends ModifyDialogTabPage {
 				FormatterMessages.BlankLinesTabPage_class_option_before_constant_decls, 0, 32);
 		constantDecl.setValue(codeFormatterPreferences.blank_line_before_constant_declaration);
 
+		enumCaseDecl = createNumberPref(group, numColumns,
+				FormatterMessages.BlankLinesTabPage_class_option_before_enum_case_decls, 0, 32);
+		enumCaseDecl.setValue(codeFormatterPreferences.blank_line_before_enum_case_declaration);
+
 		fieldDecl = createNumberPref(group, numColumns,
 				FormatterMessages.BlankLinesTabPage_class_option_before_field_decls, 0, 32);
 		fieldDecl.setValue(codeFormatterPreferences.blank_line_before_field_declaration);
@@ -154,7 +165,8 @@ public class BlankLinesTabPage extends ModifyDialogTabPage {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.jdt.internal.ui.preferences.formatter.ModifyDialogTabPage
+	 * @see
+	 * org.eclipse.jdt.internal.ui.preferences.formatter.ModifyDialogTabPage
 	 * #doCreateJavaPreview(org.eclipse.swt.widgets.Composite)
 	 */
 	@Override
@@ -166,7 +178,8 @@ public class BlankLinesTabPage extends ModifyDialogTabPage {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.jdt.internal.ui.preferences.formatter.ModifyDialogTabPage
+	 * @see
+	 * org.eclipse.jdt.internal.ui.preferences.formatter.ModifyDialogTabPage
 	 * #doUpdatePreview()
 	 */
 	@Override
@@ -181,6 +194,7 @@ public class BlankLinesTabPage extends ModifyDialogTabPage {
 		if (isInitialized) {
 			codeFormatterPreferences.blank_line_before_class_declaration = classDecl.getValue();
 			codeFormatterPreferences.blank_line_before_constant_declaration = constantDecl.getValue();
+			codeFormatterPreferences.blank_line_before_enum_case_declaration = enumCaseDecl.getValue();
 			codeFormatterPreferences.blank_line_before_field_declaration = fieldDecl.getValue();
 			codeFormatterPreferences.blank_line_before_method_declaration = methodDecl.getValue();
 			codeFormatterPreferences.blank_line_at_begin_of_method = methodBegin.getValue();

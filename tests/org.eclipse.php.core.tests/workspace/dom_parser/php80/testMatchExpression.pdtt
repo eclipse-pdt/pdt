@@ -22,7 +22,7 @@ echo match(1) {};
 					<Scalar start='18' length='1' type='int' value='1'/>
 				</Expression>
 				<Block start='21' length='43' isCurly='true'>
-					<SwitchArm start='27' length='17' isDefault='false'>
+					<MatchArm start='27' length='17' isDefault='false'>
 						<Value>
 							<Variable start='40' length='4' isDollared='true'>
 								<Identifier start='41' length='3' name='val'/>
@@ -38,13 +38,12 @@ echo match(1) {};
 							</Parameters>
 						</FunctionInvocation>
 						<Scalar start='35' length='1' type='int' value='2'/>
-					</SwitchCase>
-					<SwitchArm start='50' length='12' isDefault='true'>
+					</MatchArm>
+					<MatchArm start='50' length='12' isDefault='true'>
 						<Value>
 							<Scalar start='61' length='1' type='int' value='3'/>
 						</Value>
-					</SwitchCase>
-					<EmptyStatement start='62' length='0'/>
+					</MatchArm>
 				</Block>
 			</MatchExpression>
 		</EchoStatement>
@@ -54,7 +53,7 @@ echo match(1) {};
 					<Scalar start='77' length='1' type='int' value='1'/>
 				</Expression>
 				<Block start='80' length='44' isCurly='true'>
-					<SwitchArm start='86' length='17' isDefault='false'>
+					<MatchArm start='86' length='17' isDefault='false'>
 						<Value>
 							<Variable start='99' length='4' isDollared='true'>
 								<Identifier start='100' length='3' name='val'/>
@@ -70,12 +69,12 @@ echo match(1) {};
 							</Parameters>
 						</FunctionInvocation>
 						<Scalar start='94' length='1' type='int' value='2'/>
-					</SwitchCase>
-					<SwitchArm start='109' length='12' isDefault='true'>
+					</MatchArm>
+					<MatchArm start='109' length='12' isDefault='true'>
 						<Value>
 							<Scalar start='120' length='1' type='int' value='3'/>
 						</Value>
-					</SwitchCase>
+					</MatchArm>
 					<EmptyStatement start='121' length='1'/>
 				</Block>
 			</MatchExpression>

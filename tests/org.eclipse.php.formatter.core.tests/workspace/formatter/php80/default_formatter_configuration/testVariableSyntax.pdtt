@@ -1,0 +1,33 @@
+--TEST--
+PHP 8.0
+--FILE--
+<?php
+"foo$bar"[0];
+"foo$bar"->baz();
+__FUNCTION__[0];
+FOO{0};
+FOO->length(); 
+Foo::BAR::$baz;
+Foo::BAR::BAZ; 
+(expr)::FOO ;
+new ($x);
+if ($x instanceof ($x)) {
+    
+}
+
+
+?>
+--EXPECT--
+<?php
+"foo$bar" [0];
+"foo$bar"->baz ();
+__FUNCTION__ [0];
+FOO {0};
+FOO->length ();
+Foo::BAR::$baz;
+Foo::BAR::BAZ;
+(expr)::FOO;
+new ($x) ();
+if ($x instanceof ($x)) {
+}
+?>

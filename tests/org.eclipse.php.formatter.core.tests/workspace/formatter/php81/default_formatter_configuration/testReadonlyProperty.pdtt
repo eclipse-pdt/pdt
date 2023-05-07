@@ -1,0 +1,29 @@
+--TEST--
+PHP 8.1
+--FILE--
+<?php
+class Data
+{
+    public readonly int $status; public function __construct(int $status) 
+{ $this->status = $status;}
+}
+class Test {
+    public function 
+    __construct(
+public readonly int $i = 0) {}
+}
+
+?>
+--EXPECT--
+<?php
+class Data {
+	public readonly int $status;
+	public function __construct(int $status) {
+		$this->status = $status;
+	}
+}
+class Test {
+	public function __construct(public readonly int $i = 0) {
+	}
+}
+?>

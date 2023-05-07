@@ -33,7 +33,7 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
  * 
  * @see http://wiki.php.net/rfc/closures
  */
-public class LambdaFunctionDeclaration extends Expression implements IAttributedStatement {
+public class LambdaFunctionDeclaration extends Expression implements IAttributed {
 
 	private final boolean isReference;
 	private final boolean isStatic;

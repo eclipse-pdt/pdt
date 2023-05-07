@@ -21,7 +21,7 @@ import org.eclipse.dltk.ast.statements.Block;
 import org.eclipse.dltk.utils.CorePrinter;
 import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
 
-public class AnonymousClassDeclaration extends Expression implements IRecoverable, IAttributedStatement {
+public class AnonymousClassDeclaration extends Expression implements IRecoverable, IAttributed {
 
 	private TypeReference superClass;
 	private List<TypeReference> interfaceList;

@@ -44,7 +44,6 @@ new namespace\Some();
 			<ClassInstanceCreation start='43' length='20'>
 				<ClassName start='47' length='14'>
 					<NamespaceName start='47' length='14' global='false' current='true'>
-						<Identifier start='47' length='9' name='namespace'/>
 						<Identifier start='57' length='4' name='Some'/>
 					</NamespaceName>
 				</ClassName>

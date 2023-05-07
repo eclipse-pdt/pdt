@@ -1,0 +1,10 @@
+--TEST--
+PHP 8.0
+--FILE--
+<?php
+$fn = function()use($param1,$param2,) {}
+?>
+--EXPECT--
+<?php
+$fn = function () use ($param1, $param2) {
+}?>

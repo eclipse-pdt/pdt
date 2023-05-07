@@ -53,6 +53,37 @@ public final class PHPDefaultFormatterPreferences implements ICodeFormatterPrefe
 		preferences.indent_statements_within_case = true;
 		preferences.indent_break_statements_within_case = true;
 
+		preferences.insert_space_before_opening_paren_in_match = true;
+		preferences.insert_space_after_opening_paren_in_match = false;
+		preferences.insert_space_before_closing_paren_in_match = false;
+		preferences.insert_space_before_opening_brace_in_match = true;
+		preferences.brace_position_for_match = CodeFormatterPreferences.SAME_LINE;
+		preferences.indent_statements_within_match = true;
+		preferences.insert_space_before_comma_in_match = false;
+		preferences.insert_space_after_comma_in_match = false;
+		preferences.insert_space_before_arrow_in_match_arm = true;
+		preferences.insert_space_after_arrow_in_match_arm = true;
+		preferences.insert_space_before_comma_in_match_arm_conditions = false;
+		preferences.insert_space_after_comma_in_match_arm_conditions = true;
+		preferences.line_wrap_arguments_in_match_expression_line_wrap_policy = 3;
+		preferences.line_wrap_arguments_in_match_expression_indent_policy = 0;
+		preferences.line_wrap_arguments_in_match_expression_force_split = true;
+
+		preferences.insert_space_after_attribute_group_start = false;
+		preferences.insert_space_before_attribute_group_end = false;
+		preferences.insert_space_before_comma_in_attribute_group = false;
+		preferences.insert_space_after_comma_in_attribute_group = true;
+		preferences.line_wrap_arguments_in_attribute_group_line_wrap_policy = 0;
+		preferences.line_wrap_arguments_in_attribute_group_indent_policy = 0;
+		preferences.line_wrap_arguments_in_attribute_group_force_split = false;
+
+		preferences.insert_space_before_colon_in_named_arguments = false;
+		preferences.insert_space_after_colon_in_named_arguments = true;
+		preferences.insert_space_before_colon_in_enum_type = false;
+		preferences.insert_space_after_colon_in_enum_type = true;
+		preferences.insert_space_before_equal_in_enum_case = true;
+		preferences.insert_space_after_equal_in_enum_case = true;
+
 		preferences.insert_space_before_semicolon = false;
 
 		preferences.insert_space_before_assignment = true;

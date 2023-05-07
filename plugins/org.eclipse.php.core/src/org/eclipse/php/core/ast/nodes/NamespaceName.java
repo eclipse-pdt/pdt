@@ -14,8 +14,8 @@
 package org.eclipse.php.core.ast.nodes;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.php.core.PHPVersion;
@@ -92,6 +92,10 @@ public class NamespaceName extends Identifier {
 		} else {
 			String[] split = fqn.split(NamespaceReference.NAMESPACE_DELIMITER + NamespaceReference.NAMESPACE_DELIMITER);
 			int istart = start;
+			if (current) {
+				split = Arrays.copyOfRange(split, 1, split.length);
+				istart += 10;
+			}
 			int iend = 0;
 			List<Identifier> ident = new ArrayList<>();
 			for (String part : split) {
@@ -125,10 +129,7 @@ public class NamespaceName extends Identifier {
 	public NamespaceName(int start, int end, AST ast, List<Identifier> segments, boolean global, boolean current) {
 		super(start, end, ast, buildName(segments.toArray(new Identifier[getSegmentSize(segments)]), global, current));
 
-		Iterator<Identifier> it = segments.iterator();
-		while (it.hasNext()) {
-			this.segments.add(it.next());
-		}
+		this.segments.addAll(segments);
 
 		this.global = global;
 		this.current = current;

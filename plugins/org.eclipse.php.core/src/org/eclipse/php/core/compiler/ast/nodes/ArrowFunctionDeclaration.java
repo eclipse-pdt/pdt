@@ -33,7 +33,7 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
  * @see https://wiki.php.net/rfc/arrow_functions
  * @since PHP 7.4
  */
-public class ArrowFunctionDeclaration extends Expression implements IAttributedStatement {
+public class ArrowFunctionDeclaration extends Expression implements IAttributed {
 
 	private final boolean isReference;
 	private final boolean isStatic;

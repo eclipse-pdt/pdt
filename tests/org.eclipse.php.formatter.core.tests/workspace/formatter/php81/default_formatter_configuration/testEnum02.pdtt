@@ -1,0 +1,22 @@
+--TEST--
+PHP 8.1
+--FILE--
+<?php
+enum Status
+:string
+{
+    	case Draft = 'draft';
+case Published 
+= 'published';
+    
+    	case Archived = 'something';
+}
+?>
+--EXPECT--
+<?php
+enum Status: string {
+	case Draft = 'draft';
+	case Published = 'published';
+	case Archived = 'something';
+}
+?>

@@ -41,7 +41,7 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
  * function foo() : MyClass;
  * </pre>
  */
-public class PHPMethodDeclaration extends MethodDeclaration implements IPHPDocAwareDeclaration, IAttributedStatement {
+public class PHPMethodDeclaration extends MethodDeclaration implements IPHPDocAwareDeclaration, IAttributed {
 
 	private static final List<FormalParameter> EMPTY_PARAMETERS = new LinkedList<>();
 	private final boolean isReference;

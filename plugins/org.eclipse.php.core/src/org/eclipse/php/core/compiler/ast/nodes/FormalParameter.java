@@ -33,7 +33,7 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
  * $a, MyClass $a, $a = 3, int $a = 3, ...$a, int ...$a
  * </pre>
  */
-public class FormalParameter extends Argument implements IAttributedStatement {
+public class FormalParameter extends Argument implements IAttributed {
 
 	private final SimpleReference parameterType; // this can be either type
 													// reference or array

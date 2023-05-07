@@ -154,6 +154,9 @@ public class FormalParameter extends BodyDeclaration {
 
 	@Override
 	public void childrenAccept(Visitor visitor) {
+		for (AttributeGroup attr : attributes()) {
+			attr.accept(visitor);
+		}
 		if (parameterType != null) {
 			parameterType.accept(visitor);
 		}
@@ -166,6 +169,9 @@ public class FormalParameter extends BodyDeclaration {
 	@Override
 	public void traverseTopDown(Visitor visitor) {
 		accept(visitor);
+		for (AttributeGroup attr : attributes()) {
+			attr.traverseTopDown(visitor);
+		}
 		if (parameterType != null) {
 			parameterType.traverseTopDown(visitor);
 		}
@@ -177,6 +183,9 @@ public class FormalParameter extends BodyDeclaration {
 
 	@Override
 	public void traverseBottomUp(Visitor visitor) {
+		for (AttributeGroup attr : attributes()) {
+			attr.traverseBottomUp(visitor);
+		}
 		if (parameterType != null) {
 			parameterType.traverseBottomUp(visitor);
 		}

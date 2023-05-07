@@ -1,0 +1,12 @@
+--TEST--
+PHP 8.2
+--FILE--
+<?php
+readonly class MyClass {public string $title;}
+?>
+--EXPECT--
+<?php
+readonly class MyClass {
+	public string $title;
+}
+?>

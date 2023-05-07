@@ -32,7 +32,7 @@ $res = new #[Space\Attr\Anonym(1)] class {
 --EXPECT--
 <Program start='0' length='461'>
 	<Statements>
-		<FunctionDeclaration start='56' length='20' isReference='false'>
+		<FunctionDeclaration start='6' length='70' isReference='false'>
 			<Attributes>
 				<AttributeGroup start='6' length='7'>
 					<Attribute start='8' length='4'>
@@ -56,6 +56,7 @@ $res = new #[Space\Attr\Anonym(1)] class {
 							<Identifier start='22' length='5' name='Attr2'/>
 						</NamespaceName>
 						<Parameters>
+							<EmptyExpression start='28' length='0'/>
 						</Parameters>
 					</Attribute>
 				</AttributeGroup>
@@ -83,7 +84,7 @@ $res = new #[Space\Attr\Anonym(1)] class {
 				</Block>
 			</FunctionBody>
 		</FunctionDeclaration>
-		<ClassDeclaration start='96' length='144' modifier=''>
+		<ClassDeclaration start='78' length='162' modifier=''>
 			<Attributes>
 				<AttributeGroup start='78' length='17'>
 					<Attribute start='80' length='14'>
@@ -106,7 +107,7 @@ $res = new #[Space\Attr\Anonym(1)] class {
 			<Interfaces>
 			</Interfaces>
 			<Block start='109' length='131' isCurly='true'>
-				<ConstantDeclaration start='135' length='12' modifier=''>
+				<ConstantDeclaration start='112' length='35' modifier=''>
 					<Attributes>
 						<AttributeGroup start='112' length='21'>
 							<Attribute start='114' length='18'>
@@ -127,7 +128,7 @@ $res = new #[Space\Attr\Anonym(1)] class {
 						<Scalar start='145' length='1' type='int' value='1'/>
 					</InitialValue>
 				</ConstantDeclaration>
-				<FieldsDeclaration start='170' length='13' modifier='private'>
+				<FieldsDeclaration start='149' length='34' modifier='private'>
 					<Attributes>
 						<AttributeGroup start='149' length='19'>
 							<Attribute start='151' length='16'>
@@ -151,7 +152,7 @@ $res = new #[Space\Attr\Anonym(1)] class {
 					<InitialValue>
 					</InitialValue>
 				</FieldsDeclaration>
-				<MethodDeclaration start='196' length='42' modifier='public'>
+				<MethodDeclaration start='185' length='53' modifier='public'>
 					<Attributes>
 						<AttributeGroup start='185' length='9'>
 							<Attribute start='187' length='6'>
@@ -168,7 +169,7 @@ $res = new #[Space\Attr\Anonym(1)] class {
 							<Identifier start='212' length='2' name='fn'/>
 						</FunctionName>
 						<FormalParameters>
-							<FormalParameter start='228' length='6' isMandatory='false'>
+							<FormalParameter start='215' length='19' isMandatory='false'>
 								<Type>
 								</Type>
 								<ParameterName>
@@ -194,7 +195,7 @@ $res = new #[Space\Attr\Anonym(1)] class {
 					<Identifier start='243' length='3' name='res'/>
 				</Variable>
 				<Value>
-					<LambdaFunctionDeclaration start='274' length='13' isReference='false'>
+					<LambdaFunctionDeclaration start='249' length='38' isReference='false'>
 						<Attributes>
 							<AttributeGroup start='249' length='24'>
 								<Attribute start='251' length='21'>
@@ -227,7 +228,7 @@ $res = new #[Space\Attr\Anonym(1)] class {
 					<Identifier start='291' length='3' name='res'/>
 				</Variable>
 				<Value>
-					<ArrowFunctionDeclaration start='320' length='11' isReference='false'>
+					<ArrowFunctionDeclaration start='297' length='34' isReference='false'>
 						<Attributes>
 							<AttributeGroup start='297' length='22'>
 								<Attribute start='299' length='19'>
@@ -287,7 +288,7 @@ $res = new #[Space\Attr\Anonym(1)] class {
 							<Interfaces>
 							<Body>
 								<Block start='375' length='82' isCurly='true'>
-									<MethodDeclaration start='399' length='56' modifier='public'>
+									<MethodDeclaration start='378' length='77' modifier='public'>
 										<Attributes>
 											<AttributeGroup start='378' length='16'>
 												<Attribute start='380' length='13'>

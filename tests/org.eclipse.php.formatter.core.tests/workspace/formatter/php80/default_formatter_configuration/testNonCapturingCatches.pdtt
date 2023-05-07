@@ -1,0 +1,16 @@
+--TEST--
+PHP 8.0
+--FILE--
+<?php
+try {
+} catch(	InvalidArgumentException $e		) {
+} catch(	Exception|Throwable		) {
+}
+?>
+--EXPECT--
+<?php
+try {
+} catch ( InvalidArgumentException $e ) {
+} catch ( Exception | Throwable ) {
+}
+?>

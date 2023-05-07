@@ -1,0 +1,16 @@
+--TEST--
+PHP 8.0
+--FILE--
+<?php
+
+htmlspecialchars($string,double_encode:false);
+
+$el->call(second: 1);
+new FooBar(named: 'value');
+?>
+--EXPECT--
+<?php
+htmlspecialchars ( $string, double_encode: false );
+$el->call ( second: 1 );
+new FooBar ( named: 'value' );
+?>

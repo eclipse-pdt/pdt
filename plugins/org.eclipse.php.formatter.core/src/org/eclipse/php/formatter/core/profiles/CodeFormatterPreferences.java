@@ -61,6 +61,41 @@ public class CodeFormatterPreferences {
 	public boolean indent_statements_within_case;
 	public boolean indent_break_statements_within_case;
 
+	public boolean indent_statements_within_match;
+	public byte brace_position_for_match;
+	public boolean insert_space_before_opening_paren_in_match;
+	public boolean insert_space_after_opening_paren_in_match;
+	public boolean insert_space_before_closing_paren_in_match;
+	public boolean insert_space_before_opening_brace_in_match;
+	public boolean insert_space_before_arrow_in_match_arm;
+	public boolean insert_space_after_arrow_in_match_arm;
+	public boolean insert_space_after_comma_in_match;
+	public boolean insert_space_before_comma_in_match;
+	public boolean insert_space_before_comma_in_match_arm_conditions;
+	public boolean insert_space_after_comma_in_match_arm_conditions;
+
+	public int line_wrap_arguments_in_match_expression_line_wrap_policy;
+	public int line_wrap_arguments_in_match_expression_indent_policy;
+	public boolean line_wrap_arguments_in_match_expression_force_split;
+
+	public boolean insert_space_after_attribute_group_start;
+	public boolean insert_space_before_attribute_group_end;
+	public boolean insert_space_before_comma_in_attribute_group;
+	public boolean insert_space_after_comma_in_attribute_group;
+	public int line_wrap_arguments_in_attribute_group_line_wrap_policy;
+	public int line_wrap_arguments_in_attribute_group_indent_policy;
+	public boolean line_wrap_arguments_in_attribute_group_force_split;
+
+	public boolean insert_space_before_colon_in_enum_type;
+	public boolean insert_space_after_colon_in_enum_type;
+
+	public int blank_line_before_enum_case_declaration;
+	public boolean insert_space_before_equal_in_enum_case;
+	public boolean insert_space_after_equal_in_enum_case;
+
+	public boolean insert_space_before_colon_in_named_arguments;
+	public boolean insert_space_after_colon_in_named_arguments;
+
 	public byte brace_position_for_block;
 	public boolean insert_space_before_opening_brace_in_block;
 	public boolean insert_space_after_closing_brace_in_block;
@@ -346,6 +381,7 @@ public class CodeFormatterPreferences {
 				insert_space_before_opening_brace_in_switch);
 		brace_position_for_switch = getByteValue(preferences,
 				CodeFormatterConstants.FORMATTER_BRACE_POSITION_FOR_SWITCH, brace_position_for_switch);
+
 		indent_statements_within_switch = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INDENT_SWITCHSTATEMENTS_COMPARE_TO_SWITCH,
 				indent_statements_within_switch);
@@ -360,6 +396,96 @@ public class CodeFormatterPreferences {
 				indent_statements_within_case);
 		indent_break_statements_within_case = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INDENT_BREAKS_COMPARE_TO_CASES, indent_break_statements_within_case);
+
+		brace_position_for_match = getByteValue(preferences, CodeFormatterConstants.FORMATTER_BRACE_POSITION_FOR_MATCH,
+				brace_position_for_match);
+		indent_statements_within_match = getBooleanValue(preferences,
+				CodeFormatterConstants.FORMATTER_INDENT_MATCH_ARMS_COMPARE_TO_MATCH, indent_statements_within_match);
+		insert_space_before_opening_paren_in_match = getBooleanValue(preferences,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_PAREN_IN_MATCH,
+				insert_space_before_opening_paren_in_match);
+		insert_space_after_opening_paren_in_match = getBooleanValue(preferences,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_OPENING_PAREN_IN_MATCH,
+				insert_space_after_opening_paren_in_match);
+		insert_space_before_closing_paren_in_match = getBooleanValue(preferences,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CLOSING_PAREN_IN_MATCH,
+				insert_space_before_closing_paren_in_match);
+		insert_space_before_opening_brace_in_match = getBooleanValue(preferences,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_BRACE_IN_MATCH,
+				insert_space_before_opening_brace_in_match);
+		insert_space_before_arrow_in_match_arm = getBooleanValue(preferences,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_ARROW_IN_MATCH_ARM,
+				insert_space_before_arrow_in_match_arm);
+		insert_space_after_arrow_in_match_arm = getBooleanValue(preferences,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_ARROW_IN_MATCH_ARM,
+				insert_space_after_arrow_in_match_arm);
+		insert_space_before_comma_in_match = getBooleanValue(preferences,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COMMA_IN_MATCH,
+				insert_space_before_comma_in_match);
+		insert_space_after_comma_in_match = getBooleanValue(preferences,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COMMA_IN_MATCH, insert_space_after_comma_in_match);
+		insert_space_before_comma_in_match_arm_conditions = getBooleanValue(preferences,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COMMA_IN_MATCH_ARM_CONDITIONS,
+				insert_space_before_comma_in_match_arm_conditions);
+		insert_space_after_comma_in_match_arm_conditions = getBooleanValue(preferences,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COMMA_IN_MATCH_ARM_CONDITIONS,
+				insert_space_after_comma_in_match_arm_conditions);
+
+		line_wrap_arguments_in_match_expression_line_wrap_policy = getIntValue(preferences,
+				CodeFormatterConstants.FORMATTER_ALIGNMENT_FOR_ARGUMENTS_IN_MATCH_EXPRESSION_LINE_WRAP_POLICY,
+				line_wrap_arguments_in_match_expression_line_wrap_policy);
+		line_wrap_arguments_in_match_expression_indent_policy = getIntValue(preferences,
+				CodeFormatterConstants.FORMATTER_ALIGNMENT_FOR_ARGUMENTS_IN_MATCH_EXPRESSION_INDENT_POLICY,
+				line_wrap_arguments_in_match_expression_indent_policy);
+		line_wrap_arguments_in_match_expression_force_split = getBooleanValue(preferences,
+				CodeFormatterConstants.FORMATTER_ALIGNMENT_FOR_ARGUMENTS_IN_MATCH_EXPRESSION_FORCE_SPLIT,
+				line_wrap_arguments_in_match_expression_force_split);
+
+		insert_space_after_attribute_group_start = getBooleanValue(preferences,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_ATTRIBUTE_GROUP_START,
+				insert_space_after_attribute_group_start);
+		insert_space_before_attribute_group_end = getBooleanValue(preferences,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_ATTRIBUTE_GROUP_END,
+				insert_space_before_attribute_group_end);
+		insert_space_before_comma_in_attribute_group = getBooleanValue(preferences,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COMMA_IN_ATTRIBUTE_GROUP,
+				insert_space_before_comma_in_attribute_group);
+		insert_space_after_comma_in_attribute_group = getBooleanValue(preferences,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COMMA_IN_ATTRIBUTE_GROUP,
+				insert_space_after_comma_in_attribute_group);
+
+		line_wrap_arguments_in_attribute_group_line_wrap_policy = getIntValue(preferences,
+				CodeFormatterConstants.FORMATTER_ALIGNMENT_FOR_ARGUMENTS_IN_ATTRIBUTE_GROUP_LINE_WRAP_POLICY,
+				line_wrap_arguments_in_attribute_group_line_wrap_policy);
+		line_wrap_arguments_in_attribute_group_indent_policy = getIntValue(preferences,
+				CodeFormatterConstants.FORMATTER_ALIGNMENT_FOR_ARGUMENTS_IN_ATTRIBUTE_GROUP_INDENT_POLICY,
+				line_wrap_arguments_in_attribute_group_indent_policy);
+		line_wrap_arguments_in_attribute_group_force_split = getBooleanValue(preferences,
+				CodeFormatterConstants.FORMATTER_ALIGNMENT_FOR_ARGUMENTS_IN_ATTRIBUTE_GROUP_FORCE_SPLIT,
+				line_wrap_arguments_in_attribute_group_force_split);
+
+		insert_space_before_colon_in_enum_type = getBooleanValue(preferences,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COLON_IN_ENUM_TYPE,
+				insert_space_before_colon_in_enum_type);
+		insert_space_after_colon_in_enum_type = getBooleanValue(preferences,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COLON_IN_ENUM_TYPE,
+				insert_space_after_colon_in_enum_type);
+
+		blank_line_before_enum_case_declaration = getIntValue(preferences,
+				CodeFormatterConstants.FORMATTER_BLANK_LINES_BEFORE_ENUM_CASE, blank_line_before_enum_case_declaration);
+		insert_space_before_equal_in_enum_case = getBooleanValue(preferences,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_EQUAL_IN_ENUM_CASE,
+				insert_space_before_equal_in_enum_case);
+		insert_space_after_equal_in_enum_case = getBooleanValue(preferences,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_EQUAL_IN_ENUM_CASE,
+				insert_space_after_equal_in_enum_case);
+
+		insert_space_before_colon_in_named_arguments = getBooleanValue(preferences,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COLON_IN_NAMED_ARGUMENT,
+				insert_space_before_colon_in_named_arguments);
+		insert_space_after_colon_in_named_arguments = getBooleanValue(preferences,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COLON_IN_NAMED_ARGUMENT,
+				insert_space_after_colon_in_named_arguments);
 
 		brace_position_for_block = getByteValue(preferences, CodeFormatterConstants.FORMATTER_BRACE_POSITION_FOR_BLOCK,
 				brace_position_for_block);
@@ -1127,6 +1253,71 @@ public class CodeFormatterPreferences {
 				indent_statements_within_case ? TRUE : FALSE);
 		options.put(CodeFormatterConstants.FORMATTER_INDENT_BREAKS_COMPARE_TO_CASES,
 				indent_break_statements_within_case ? TRUE : FALSE);
+
+		options.put(CodeFormatterConstants.FORMATTER_BRACE_POSITION_FOR_MATCH, Byte.toString(brace_position_for_match));
+		options.put(CodeFormatterConstants.FORMATTER_INDENT_MATCH_ARMS_COMPARE_TO_MATCH,
+				indent_statements_within_match ? TRUE : FALSE);
+		options.put(CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_PAREN_IN_MATCH,
+				insert_space_before_opening_paren_in_match ? TRUE : FALSE);
+		options.put(CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_OPENING_PAREN_IN_MATCH,
+				insert_space_after_opening_paren_in_match ? TRUE : FALSE);
+		options.put(CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CLOSING_PAREN_IN_MATCH,
+				insert_space_before_closing_paren_in_match ? TRUE : FALSE);
+		options.put(CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_BRACE_IN_MATCH,
+				insert_space_before_opening_brace_in_match ? TRUE : FALSE);
+
+		options.put(CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_ARROW_IN_MATCH_ARM,
+				insert_space_before_arrow_in_match_arm ? TRUE : FALSE);
+		options.put(CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_ARROW_IN_MATCH_ARM,
+				insert_space_after_arrow_in_match_arm ? TRUE : FALSE);
+		options.put(CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COMMA_IN_MATCH,
+				insert_space_before_comma_in_match ? TRUE : FALSE);
+		options.put(CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COMMA_IN_MATCH,
+				insert_space_after_comma_in_match ? TRUE : FALSE);
+		options.put(CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COMMA_IN_MATCH_ARM_CONDITIONS,
+				insert_space_before_comma_in_match_arm_conditions ? TRUE : FALSE);
+		options.put(CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COMMA_IN_MATCH_ARM_CONDITIONS,
+				insert_space_after_comma_in_match_arm_conditions ? TRUE : FALSE);
+
+		options.put(CodeFormatterConstants.FORMATTER_ALIGNMENT_FOR_ARGUMENTS_IN_MATCH_EXPRESSION_LINE_WRAP_POLICY,
+				String.valueOf(line_wrap_arguments_in_match_expression_line_wrap_policy));
+		options.put(CodeFormatterConstants.FORMATTER_ALIGNMENT_FOR_ARGUMENTS_IN_MATCH_EXPRESSION_INDENT_POLICY,
+				String.valueOf(line_wrap_arguments_in_match_expression_indent_policy));
+		options.put(CodeFormatterConstants.FORMATTER_ALIGNMENT_FOR_ARGUMENTS_IN_MATCH_EXPRESSION_FORCE_SPLIT,
+				line_wrap_arguments_in_match_expression_force_split ? TRUE : FALSE);
+
+		options.put(CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_ATTRIBUTE_GROUP_START,
+				insert_space_after_attribute_group_start ? TRUE : FALSE);
+		options.put(CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_ATTRIBUTE_GROUP_END,
+				insert_space_before_attribute_group_end ? TRUE : FALSE);
+		options.put(CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COMMA_IN_ATTRIBUTE_GROUP,
+				insert_space_before_comma_in_attribute_group ? TRUE : FALSE);
+		options.put(CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COMMA_IN_ATTRIBUTE_GROUP,
+				insert_space_after_comma_in_attribute_group ? TRUE : FALSE);
+
+		options.put(CodeFormatterConstants.FORMATTER_ALIGNMENT_FOR_ARGUMENTS_IN_ATTRIBUTE_GROUP_LINE_WRAP_POLICY,
+				String.valueOf(line_wrap_arguments_in_attribute_group_line_wrap_policy));
+		options.put(CodeFormatterConstants.FORMATTER_ALIGNMENT_FOR_ARGUMENTS_IN_ATTRIBUTE_GROUP_INDENT_POLICY,
+				String.valueOf(line_wrap_arguments_in_attribute_group_indent_policy));
+		options.put(CodeFormatterConstants.FORMATTER_ALIGNMENT_FOR_ARGUMENTS_IN_ATTRIBUTE_GROUP_FORCE_SPLIT,
+				line_wrap_arguments_in_attribute_group_force_split ? TRUE : FALSE);
+
+		options.put(CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COLON_IN_ENUM_TYPE,
+				insert_space_before_colon_in_enum_type ? TRUE : FALSE);
+		options.put(CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COLON_IN_ENUM_TYPE,
+				insert_space_after_colon_in_enum_type ? TRUE : FALSE);
+
+		options.put(CodeFormatterConstants.FORMATTER_BLANK_LINES_BEFORE_ENUM_CASE,
+				String.valueOf(blank_line_before_enum_case_declaration));
+		options.put(CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_EQUAL_IN_ENUM_CASE,
+				insert_space_before_equal_in_enum_case ? TRUE : FALSE);
+		options.put(CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_EQUAL_IN_ENUM_CASE,
+				insert_space_after_equal_in_enum_case ? TRUE : FALSE);
+
+		options.put(CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COLON_IN_NAMED_ARGUMENT,
+				insert_space_before_colon_in_named_arguments ? TRUE : FALSE);
+		options.put(CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COLON_IN_NAMED_ARGUMENT,
+				insert_space_after_colon_in_named_arguments ? TRUE : FALSE);
 
 		options.put(CodeFormatterConstants.FORMATTER_BRACE_POSITION_FOR_BLOCK,
 				String.valueOf(brace_position_for_block));

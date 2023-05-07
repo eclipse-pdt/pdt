@@ -43,7 +43,7 @@ public class AsCallableExpression extends Expression {
 	}
 
 	public AsCallableExpression(int position, AST ast) {
-		super(position, position, ast);
+		super(position, position + 3, ast);
 	}
 
 	public AsCallableExpression(AST ast) {

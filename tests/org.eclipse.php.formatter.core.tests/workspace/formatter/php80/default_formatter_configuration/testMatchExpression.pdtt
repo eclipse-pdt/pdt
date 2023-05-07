@@ -1,0 +1,27 @@
+--TEST--
+PHP 8.0
+--FILE--
+<?php
+echo match(1) {
+    call(),2 => $val, default => 3
+};
+echo match(1){
+ call(), 2 => $val,
+default => 3,
+}; 
+echo match(1) {}; 
+?>
+--EXPECT--
+<?php
+echo match (1) {
+		call (), 2 => $val,
+		default => 3
+};
+echo match (1) {
+		call (), 2 => $val,
+		default => 3
+};
+echo match (1) {
+};
+?>
+

@@ -37,6 +37,13 @@ parser code {:
 		}
 		return expr;
 	}
+	
+	protected void setAttributes(ASTNode target, List<Attribute> list)
+	{
+		((IAttributed)target).setAttributes(list);
+		Attribute group = list.get(0);
+		target.setStart(group.start());
+	}
 
 	protected int getElementTypeByUseType(int useType) {
 		int elementType = 0;
@@ -917,7 +924,7 @@ statement:statement
 
 | attributes:attrs attributed_statement:statement
 {:
-	((IAttributedStatement) statement).setAttributes(attrs);
+	setAttributes(statement, attrs);
 	RESULT = statement;
 :}
 
@@ -1198,7 +1205,7 @@ statement:statement
 
 | attributes:attrs attributed_statement:statement
 {:
-	((IAttributedStatement) statement).setAttributes(attrs);
+	setAttributes(statement, attrs);
 	RESULT = statement;
 :}
 ;
@@ -2125,7 +2132,7 @@ attributed_parameter:parameter
 
 attributed_parameter ::=
 attributes:attrs parameter:param {:
-	((IAttributedStatement) param).setAttributes(attrs);
+	setAttributes(param, attrs);
 	RESULT = param;
 :}
 | parameter:param {:
@@ -2628,8 +2635,8 @@ attributed_class_statement:statement
 | attributes:attrs attributed_class_statement:statement
 {:
 	ASTNode node = parser.getRecentDeclarationStatement();
-	if (node instanceof IAttributedStatement) {
-		((IAttributedStatement)node).setAttributes(attrs);
+	if (node instanceof IAttributed) {
+		setAttributes(node, attrs);
 	}
 	
 	RESULT = statement;
@@ -3057,7 +3064,7 @@ T_NEW:start class_name_reference:className ctor_arguments:ctor
 | T_NEW:start attributes:attrs T_CLASS:tclass ctor_arguments:ctor anonymous_class:ac
 {:
 	Expression className = new SimpleReference(tclassleft, tclassright, "class");
-	ac.setAttributes(attrs);
+	ac.setAttributes(attrs); //special case
 	RESULT = new ClassInstanceCreation(startleft, acright, className, ctor, ac);
 :}
 ;
@@ -3471,7 +3478,7 @@ T_LIST:start T_OPEN_PARENTHESE array_pair_list:list T_CLOSE_PARENTHESE:end T_EQU
 
 | attributes:attrs inline_function:fnc
 {:
-	((IAttributedStatement) fnc).setAttributes(attrs);
+	setAttributes(fnc, attrs);
 	RESULT = fnc;
 :}
 

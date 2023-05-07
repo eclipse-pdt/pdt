@@ -39,7 +39,7 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
  * </pre>
  */
 public class ClassDeclaration extends TypeDeclaration
-		implements IPHPDocAwareDeclaration, IRecoverable, IAttributedStatement {
+		implements IPHPDocAwareDeclaration, IRecoverable, IAttributed {
 
 	private PHPDocBlock phpDoc;
 	private TypeReference superClass;

@@ -772,6 +772,51 @@ public class WhiteSpaceTabPage extends ModifyDialogTabPage {
 		codeFormatterPreferences.insert_space_after_reference_symbol_in_referenced_expression = getBooleanValue(
 				preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_REFERENCE_SYMBOL_IN_REFERENCED_EXPRESSION);
+
+		codeFormatterPreferences.insert_space_after_arrow_in_match_arm = getBooleanValue(preferences,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_ARROW_IN_MATCH_ARM);
+		codeFormatterPreferences.insert_space_before_arrow_in_match_arm = getBooleanValue(preferences,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_ARROW_IN_MATCH_ARM);
+
+		codeFormatterPreferences.insert_space_after_comma_in_match = getBooleanValue(preferences,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COMMA_IN_MATCH);
+		codeFormatterPreferences.insert_space_before_comma_in_match = getBooleanValue(preferences,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COMMA_IN_MATCH);
+
+		codeFormatterPreferences.insert_space_after_comma_in_match_arm_conditions = getBooleanValue(preferences,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COMMA_IN_MATCH_ARM_CONDITIONS);
+		codeFormatterPreferences.insert_space_before_comma_in_match_arm_conditions = getBooleanValue(preferences,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COMMA_IN_MATCH_ARM_CONDITIONS);
+
+		codeFormatterPreferences.insert_space_before_opening_paren_in_match = getBooleanValue(preferences,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_PAREN_IN_MATCH);
+		codeFormatterPreferences.insert_space_after_opening_paren_in_match = getBooleanValue(preferences,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_OPENING_PAREN_IN_MATCH);
+
+		codeFormatterPreferences.insert_space_before_closing_paren_in_match = getBooleanValue(preferences,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CLOSING_PAREN_IN_MATCH);
+		codeFormatterPreferences.insert_space_before_opening_brace_in_match = getBooleanValue(preferences,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_BRACE_IN_MATCH);
+
+		codeFormatterPreferences.insert_space_after_attribute_group_start = getBooleanValue(preferences,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_ATTRIBUTE_GROUP_START);
+		codeFormatterPreferences.insert_space_before_attribute_group_end = getBooleanValue(preferences,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_ATTRIBUTE_GROUP_END);
+
+		codeFormatterPreferences.insert_space_after_comma_in_attribute_group = getBooleanValue(preferences,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COMMA_IN_ATTRIBUTE_GROUP);
+		codeFormatterPreferences.insert_space_before_comma_in_attribute_group = getBooleanValue(preferences,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COMMA_IN_ATTRIBUTE_GROUP);
+
+		codeFormatterPreferences.insert_space_after_colon_in_enum_type = getBooleanValue(preferences,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COLON_IN_ENUM_TYPE);
+		codeFormatterPreferences.insert_space_before_colon_in_enum_type = getBooleanValue(preferences,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COLON_IN_ENUM_TYPE);
+
+		codeFormatterPreferences.insert_space_after_equal_in_enum_case = getBooleanValue(preferences,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_EQUAL_IN_ENUM_CASE);
+		codeFormatterPreferences.insert_space_before_equal_in_enum_case = getBooleanValue(preferences,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_EQUAL_IN_ENUM_CASE);
 	}
 
 	private boolean getBooleanValue(Map<String, Object> preferences, String key) {

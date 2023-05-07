@@ -10,17 +10,15 @@
  * Contributors:
  *     Dawid Pakuła - initial API and implementation
  *******************************************************************************/
-package org.eclipse.php.core.compiler.ast.nodes;
+package org.eclipse.php.core.ast.nodes;
 
 import java.util.List;
 
-/**
- * This interfeaces is applied to all declarations that can consume PHP8
- * attributes
- *
- */
-public interface IAttributedStatement {
-	public List<Attribute> getAttributes();
+public interface IAttributed {
 
-	public void setAttributes(List<Attribute> attributes);
+	public List<AttributeGroup> attributes();
+
+	public int getStart();
+
+	public int getEnd();
 }

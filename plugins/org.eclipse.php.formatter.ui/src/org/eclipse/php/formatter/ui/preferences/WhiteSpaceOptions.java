@@ -185,7 +185,7 @@ public final class WhiteSpaceOptions {
 	private final static String ARRAY_ACCESS_PREVIEW = "$array[$i]->foo();$array[]='first cell';"; //$NON-NLS-1$
 
 	private final static String METHOD_CALL_PREVIEW = "foo();\n" + //$NON-NLS-1$
-			"bar($x, $y);MyClass::foo();$myClass->foo();"; //$NON-NLS-1$
+			"bar(foo:$x, $y);MyClass::foo();$myClass->foo();"; //$NON-NLS-1$
 
 	private final static String FIELD_ACCESS_PREVIEW = "$myClass->$attr;MyClass::$attr;MyClass::MY_CONST;";//$NON-NLS-1$
 
@@ -194,6 +194,12 @@ public final class WhiteSpaceOptions {
 	private final static String CONDITIONAL_PREVIEW = "$a = $condition ? TRUE : FALSE;"; //$NON-NLS-1$
 
 	private final static String CLASS_DECL_PREVIEW = "class MyClass implements I0, I1, I2 {}"; //$NON-NLS-1$
+
+	private final static String ATTRIBUTE_DECL_PREVIEW = "#[Attr1,Attr2()] class Foo {}"; //$NON-NLS-1$
+
+	private final static String ENUM_DECL_PREVIEW = "enum MyEnum: string implements I0, I1, I2 { case C1 = '1'; case C2 = '2'; }"; //$NON-NLS-1$
+
+	private final static String MATCH_DECL_PREVIEW = "echo match($v){1,2,3=>4,default=>5};"; //$NON-NLS-1$
 
 	private final static String OPERATOR_PREVIEW = "$a= -4 + -9; $b= $a++ / --$number; $c += 4; $value= true && false; $txt = 'abc' . 'def';"; //$NON-NLS-1$
 
@@ -428,6 +434,8 @@ public final class WhiteSpaceOptions {
 		createClassTree(workingValues, declarations);
 		createFieldTree(workingValues, declarations);
 		createMethodDeclTree(workingValues, declarations);
+		createEnumTree(workingValues, declarations);
+		createAttrbuteTree(workingValues, declarations);
 
 		final InnerNode statements = new InnerNode(null, workingValues, FormatterMessages.WhiteSpaceTabPage_statements);
 		createOption(statements, workingValues, FormatterMessages.WhiteSpaceOptions_before_semicolon,
@@ -454,6 +462,7 @@ public final class WhiteSpaceOptions {
 		createConditionalTree(workingValues, expressions);
 		createParenthesisExpressionTree(workingValues, expressions);
 		createReferencedExpressionTree(workingValues, expressions);
+		createMatchExpressionTree(workingValues, declarations);
 
 		final InnerNode arrays = new InnerNode(null, workingValues, FormatterMessages.WhiteSpaceTabPage_arrays);
 		createArrayCreationTree(workingValues, arrays);
@@ -489,6 +498,11 @@ public final class WhiteSpaceOptions {
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COLON_IN_CASE, SWITCH_PREVIEW);
 		createOption(switchStatement, workingValues, FormatterMessages.WhiteSpaceOptions_default,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COLON_IN_DEFAULT, SWITCH_PREVIEW);
+
+		createOption(switchStatement, workingValues, FormatterMessages.WhiteSpaceTabPage_calls_before_colon_in_method,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COLON_IN_NAMED_ARGUMENT, METHOD_CALL_PREVIEW);
+		createOption(switchStatement, workingValues, FormatterMessages.WhiteSpaceOptions_enum_type,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COLON_IN_ENUM_TYPE, ENUM_DECL_PREVIEW);
 	}
 
 	private static void createBeforeCommaTree(Map<String, Object> workingValues, final InnerNode parent) {
@@ -518,6 +532,12 @@ public final class WhiteSpaceOptions {
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COMMA_IN_GLOBAL, GLOBAL_PREVIEW);
 		createOption(parent, workingValues, FormatterMessages.WhiteSpaceTabPage_static,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COMMA_IN_STATIC, STATIC_PREVIEW);
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceTabPage_attributes,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COMMA_IN_ATTRIBUTE_GROUP, ATTRIBUTE_DECL_PREVIEW);
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceTabPage_match,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COMMA_IN_MATCH, MATCH_DECL_PREVIEW);
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceTabPage_match_arm,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COMMA_IN_MATCH_ARM_CONDITIONS, MATCH_DECL_PREVIEW);
 	}
 
 	private static void createBeforeOperatorTree(Map<String, Object> workingValues, final InnerNode parent) {
@@ -533,12 +553,17 @@ public final class WhiteSpaceOptions {
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_POSTFIX_OPERATOR, OPERATOR_PREVIEW);
 		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_concatenation_operator,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CONCATENATION_OPERATOR, OPERATOR_PREVIEW);
+
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceTabPage_enums_before_equal_in_enum_case,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_EQUAL_IN_ENUM_CASE, ENUM_DECL_PREVIEW);
 	}
 
 	private static void createBeforeClosingBracketTree(Map<String, Object> workingValues, final InnerNode parent) {
 		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_array_element_access,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CLOSING_BRACKET_IN_ARRAY_REFERENCE,
 				ARRAY_ACCESS_PREVIEW);
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceTabPage_attributes_before_attribute_group_end,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_ATTRIBUTE_GROUP_END, ATTRIBUTE_DECL_PREVIEW);
 	}
 
 	private static void createBeforeOpenBracketTree(Map<String, Object> workingValues, final InnerNode parent) {
@@ -652,6 +677,8 @@ public final class WhiteSpaceOptions {
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_ARROW_IN_ARRAY_CREATION, ARRAY_CREATION_PREVIEW);
 		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_yield,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_ARROW_IN_YIELD, YIELD_PREVIEW);
+		createOption(parent, workingValues, FormatterMessages.LineWrappingTabPage_match_arms,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_ARROW_IN_MATCH_ARM, MATCH_DECL_PREVIEW);
 	}
 
 	private static void createBeforeArrowTree(Map<String, Object> workingValues, InnerNode parent) {
@@ -665,6 +692,8 @@ public final class WhiteSpaceOptions {
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_ARROW_IN_ARRAY_CREATION, ARRAY_CREATION_PREVIEW);
 		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_yield,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_ARROW_IN_YIELD, YIELD_PREVIEW);
+		createOption(parent, workingValues, FormatterMessages.LineWrappingTabPage_match_arms,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_ARROW_IN_MATCH_ARM, MATCH_DECL_PREVIEW);
 
 	}
 
@@ -676,6 +705,10 @@ public final class WhiteSpaceOptions {
 	private static void createAfterColonTree(Map<String, Object> workingValues, final InnerNode parent) {
 		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_conditional,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COLON_IN_CONDITIONAL, CONDITIONAL_PREVIEW);
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceTabPage_calls_before_colon_in_method,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COLON_IN_NAMED_ARGUMENT, METHOD_CALL_PREVIEW);
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_enum_type,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COLON_IN_ENUM_TYPE, ENUM_DECL_PREVIEW);
 	}
 
 	private static void createAfterCommaTree(Map<String, Object> workingValues, final InnerNode parent) {
@@ -684,6 +717,7 @@ public final class WhiteSpaceOptions {
 		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_method_call,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COMMA_IN_METHOD_INVOCATION_ARGUMENTS,
 				METHOD_CALL_PREVIEW);
+
 		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_method_decl,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COMMA_IN_METHOD_DECLARATION_PARAMETERS,
 				METHOD_DECL_PREVIEW);
@@ -705,6 +739,12 @@ public final class WhiteSpaceOptions {
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COMMA_IN_GLOBAL, GLOBAL_PREVIEW);
 		createOption(parent, workingValues, FormatterMessages.WhiteSpaceTabPage_static,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COMMA_IN_STATIC, STATIC_PREVIEW);
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceTabPage_attributes,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COMMA_IN_ATTRIBUTE_GROUP, ATTRIBUTE_DECL_PREVIEW);
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceTabPage_match,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COMMA_IN_MATCH, MATCH_DECL_PREVIEW);
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceTabPage_match_arm,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COMMA_IN_MATCH_ARM_CONDITIONS, MATCH_DECL_PREVIEW);
 	}
 
 	private static void createAfterOperatorTree(Map<String, Object> workingValues, final InnerNode parent) {
@@ -721,12 +761,16 @@ public final class WhiteSpaceOptions {
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_POSTFIX_OPERATOR, OPERATOR_PREVIEW);
 		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_concatenation_operator,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_CONCATENATION_OPERATOR, OPERATOR_PREVIEW);
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceTabPage_enums_after_equal_in_enum_case,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_EQUAL_IN_ENUM_CASE, ENUM_DECL_PREVIEW);
 	}
 
 	private static void createAfterOpenBracketTree(Map<String, Object> workingValues, final InnerNode parent) {
 		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_array_element_access,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_OPENING_BRACKET_IN_ARRAY_REFERENCE,
 				ARRAY_ACCESS_PREVIEW);
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceTabPage_attributes_after_attribute_group_start,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_ATTRIBUTE_GROUP_START, ATTRIBUTE_DECL_PREVIEW);
 	}
 
 	private static void createAfterCloseBraceTree(Map<String, Object> workingValues, final InnerNode parent) {
@@ -794,6 +838,62 @@ public final class WhiteSpaceOptions {
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COMMA_IN_SUPERINTERFACES, CLASS_DECL_PREVIEW);
 		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_classes_after_comma_implements,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COMMA_IN_SUPERINTERFACES, CLASS_DECL_PREVIEW);
+
+		return root;
+	}
+
+	private static InnerNode createEnumTree(Map<String, Object> workingValues, InnerNode parent) {
+		final InnerNode root = new InnerNode(parent, workingValues, FormatterMessages.WhiteSpaceTabPage_enums);
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_enums_before_colon_in_enum_type,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COLON_IN_ENUM_TYPE, ENUM_DECL_PREVIEW);
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_enums_after_colon_in_enum_type,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COLON_IN_ENUM_TYPE, ENUM_DECL_PREVIEW);
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_enums_before_equal_in_enum_case,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_EQUAL_IN_ENUM_CASE, ENUM_DECL_PREVIEW);
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_enums_after_equal_in_enum_case,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_EQUAL_IN_ENUM_CASE, ENUM_DECL_PREVIEW);
+
+		return root;
+	}
+
+	private static InnerNode createAttrbuteTree(Map<String, Object> workingValues, InnerNode parent) {
+		final InnerNode root = new InnerNode(parent, workingValues, FormatterMessages.WhiteSpaceTabPage_attributes);
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_attributes_after_attribute_group_start,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_ATTRIBUTE_GROUP_START, ATTRIBUTE_DECL_PREVIEW);
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_attributes_before_attribute_group_end,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_ATTRIBUTE_GROUP_END, ATTRIBUTE_DECL_PREVIEW);
+		createOption(root, workingValues,
+				FormatterMessages.WhiteSpaceTabPage_attributes_before_comma_in_attribute_group,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COMMA_IN_ATTRIBUTE_GROUP, ATTRIBUTE_DECL_PREVIEW);
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_attributes_after_comma_in_attribute_group,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COMMA_IN_ATTRIBUTE_GROUP, ATTRIBUTE_DECL_PREVIEW);
+
+		return root;
+	}
+
+	private static InnerNode createMatchExpressionTree(Map<String, Object> workingValues, InnerNode parent) {
+		final InnerNode root = new InnerNode(parent, workingValues, FormatterMessages.WhiteSpaceTabPage_match);
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_match_before_opening_paren_of_match,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_PAREN_IN_MATCH, MATCH_DECL_PREVIEW);
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_match_after_opening_paren_of_match,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_OPENING_PAREN_IN_MATCH, MATCH_DECL_PREVIEW);
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_match_before_closing_paren_of_match,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CLOSING_PAREN_IN_MATCH, MATCH_DECL_PREVIEW);
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_match_before_opening_brace_of_match,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_BRACE_IN_MATCH, MATCH_DECL_PREVIEW);
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_match_before_comma_in_match,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COMMA_IN_MATCH, MATCH_DECL_PREVIEW);
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_match_after_comma_in_match,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COMMA_IN_MATCH, MATCH_DECL_PREVIEW);
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_match_before_arrow_in_match_arm,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_ARROW_IN_MATCH_ARM, MATCH_DECL_PREVIEW);
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_match_after_arrow_in_match_arm,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_ARROW_IN_MATCH_ARM, MATCH_DECL_PREVIEW);
+		createOption(root, workingValues,
+				FormatterMessages.WhiteSpaceTabPage_match_before_comma_in_match_arm_conditions,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COMMA_IN_MATCH_ARM_CONDITIONS, MATCH_DECL_PREVIEW);
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_match_after_comma_in_match_arm_conditions,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COMMA_IN_MATCH_ARM_CONDITIONS, MATCH_DECL_PREVIEW);
 
 		return root;
 	}
@@ -877,6 +977,7 @@ public final class WhiteSpaceOptions {
 		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_constant_after_comma,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COMMA_IN_MULTIPLE_CONSTANT_DECLARATIONS,
 				MULT_FIELD_PREVIEW);
+
 		return root;
 	}
 
@@ -952,6 +1053,14 @@ public final class WhiteSpaceOptions {
 		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_calls_before_comma_in_method_args,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COMMA_IN_METHOD_INVOCATION_ARGUMENTS,
 				METHOD_CALL_PREVIEW);
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_calls_after_comma_in_method_args,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COMMA_IN_METHOD_INVOCATION_ARGUMENTS,
+				METHOD_CALL_PREVIEW);
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_calls_before_colon_in_method,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COLON_IN_NAMED_ARGUMENT, METHOD_CALL_PREVIEW);
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_calls_after_colon_in_method,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COLON_IN_NAMED_ARGUMENT, METHOD_CALL_PREVIEW);
+
 		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_calls_after_comma_in_method_args,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COMMA_IN_METHOD_INVOCATION_ARGUMENTS,
 				METHOD_CALL_PREVIEW);

@@ -66,6 +66,24 @@ public class CodeFormatterConstants {
 	public static final String FORMATTER_ALIGNMENT_FOR_ARGUMENTS_IN_ALLOCATION_EXPRESSION_FORCE_SPLIT = FormatterCorePlugin.PLUGIN_ID
 			+ ".formatter.alignment_for_arguments_in_allocation_expression_force_split"; //$NON-NLS-1$
 
+	public static final String FORMATTER_ALIGNMENT_FOR_ARGUMENTS_IN_MATCH_EXPRESSION_KEY = FormatterCorePlugin.PLUGIN_ID
+			+ ".formatter.alignment_for_arguments_in_match_expression"; //$NON-NLS-1$
+	public static final String FORMATTER_ALIGNMENT_FOR_ARGUMENTS_IN_MATCH_EXPRESSION_LINE_WRAP_POLICY = FormatterCorePlugin.PLUGIN_ID
+			+ ".formatter.alignment_for_arguments_in_match_expression_line_wrap_policy"; //$NON-NLS-1$
+	public static final String FORMATTER_ALIGNMENT_FOR_ARGUMENTS_IN_MATCH_EXPRESSION_INDENT_POLICY = FormatterCorePlugin.PLUGIN_ID
+			+ ".formatter.alignment_for_arguments_in_match_expression_indent_policy"; //$NON-NLS-1$
+	public static final String FORMATTER_ALIGNMENT_FOR_ARGUMENTS_IN_MATCH_EXPRESSION_FORCE_SPLIT = FormatterCorePlugin.PLUGIN_ID
+			+ ".formatter.alignment_for_arguments_in_match_expression_force_split"; //$NON-NLS-1$
+
+	public static final String FORMATTER_ALIGNMENT_FOR_ARGUMENTS_IN_ATTRIBUTE_GROUP_KEY = FormatterCorePlugin.PLUGIN_ID
+			+ ".formatter.alignment_for_arguments_in_attribute_group"; //$NON-NLS-1$
+	public static final String FORMATTER_ALIGNMENT_FOR_ARGUMENTS_IN_ATTRIBUTE_GROUP_LINE_WRAP_POLICY = FormatterCorePlugin.PLUGIN_ID
+			+ ".formatter.alignment_for_arguments_in_attribute_group_line_wrap_policy"; //$NON-NLS-1$
+	public static final String FORMATTER_ALIGNMENT_FOR_ARGUMENTS_IN_ATTRIBUTE_GROUP_INDENT_POLICY = FormatterCorePlugin.PLUGIN_ID
+			+ ".formatter.alignment_for_arguments_in_attribute_group_indent_policy"; //$NON-NLS-1$
+	public static final String FORMATTER_ALIGNMENT_FOR_ARGUMENTS_IN_ATTRIBUTE_GROUP_FORCE_SPLIT = FormatterCorePlugin.PLUGIN_ID
+			+ ".formatter.alignment_for_arguments_in_attribute_group_force_split"; //$NON-NLS-1$
+
 	/**
 	 * <pre>
 	 * FORMATTER / Option for alignment of arguments in method invocation
@@ -337,6 +355,16 @@ public class CodeFormatterConstants {
 	public static final String FORMATTER_BRACE_POSITION_FOR_SWITCH = FormatterCorePlugin.PLUGIN_ID
 			+ ".formatter.brace_position_for_switch"; //$NON-NLS-1$
 	/**
+	 * @see #END_OF_LINE
+	 * @see #NEXT_LINE
+	 * @see #NEXT_LINE_SHIFTED
+	 * @see #NEXT_LINE_ON_WRAP
+	 * @since 3.0
+	 * @since 8.0
+	 */
+	public static final String FORMATTER_BRACE_POSITION_FOR_MATCH = FormatterCorePlugin.PLUGIN_ID
+			+ ".formatter.brace_position_for_match"; //$NON-NLS-1$
+	/**
 	 * <pre>
 	 * FORMATTER / Option to position the braces of a type declaration
 	 *     - option id:         &quot;org.eclipse.php.formatter.core.brace_position_for_type_declaration&quot;
@@ -452,6 +480,7 @@ public class CodeFormatterConstants {
 	 */
 	public static final String FORMATTER_INDENT_SWITCHSTATEMENTS_COMPARE_TO_CASES = FormatterCorePlugin.PLUGIN_ID
 			+ ".formatter.indent_switchstatements_compare_to_cases"; //$NON-NLS-1$
+
 	/**
 	 * <pre>
 	 * FORMATTER / Option to indent switch statements compare to switch
@@ -466,6 +495,9 @@ public class CodeFormatterConstants {
 	 */
 	public static final String FORMATTER_INDENT_SWITCHSTATEMENTS_COMPARE_TO_SWITCH = FormatterCorePlugin.PLUGIN_ID
 			+ ".formatter.indent_switchstatements_compare_to_switch"; //$NON-NLS-1$
+
+	public static final String FORMATTER_INDENT_MATCH_ARMS_COMPARE_TO_MATCH = FormatterCorePlugin.PLUGIN_ID
+			+ ".formatter.indent_match_arms_compare_to_match"; //$NON-NLS-1$
 
 	/**
 	 * <pre>
@@ -718,6 +750,18 @@ public class CodeFormatterConstants {
 	public static final String FORMATTER_INSERT_SPACE_AFTER_COMMA_IN_METHOD_DECLARATION_PARAMETERS = FormatterCorePlugin.PLUGIN_ID
 			+ ".formatter.insert_space_after_comma_in_method_declaration_parameters"; //$NON-NLS-1$
 
+	public static final String FORMATTER_INSERT_SPACE_AFTER_COMMA_IN_ATTRIBUTE_GROUP = FormatterCorePlugin.PLUGIN_ID
+			+ ".formatter.insert_space_after_comma_in_attribute_group"; //$NON-NLS-1$
+
+	public static final String FORMATTER_INSERT_SPACE_BEFORE_COMMA_IN_ATTRIBUTE_GROUP = FormatterCorePlugin.PLUGIN_ID
+			+ ".formatter.insert_space_before_comma_in_attribute_group"; //$NON-NLS-1$
+
+	public static final String FORMATTER_INSERT_SPACE_AFTER_ATTRIBUTE_GROUP_START = FormatterCorePlugin.PLUGIN_ID
+			+ ".formatter.insert_space_after_attribute_group_start"; //$NON-NLS-1$
+
+	public static final String FORMATTER_INSERT_SPACE_BEFORE_ATTRIBUTE_GROUP_END = FormatterCorePlugin.PLUGIN_ID
+			+ ".formatter.insert_space_before_attribute_group_end"; //$NON-NLS-1$
+
 	/**
 	 * <pre>
 	 * FORMATTER / Option to insert a space after the comma in the arguments of a method invocation
@@ -941,6 +985,9 @@ public class CodeFormatterConstants {
 	 */
 	public static final String FORMATTER_INSERT_SPACE_AFTER_OPENING_PAREN_IN_SWITCH = FormatterCorePlugin.PLUGIN_ID
 			+ ".formatter.insert_space_after_opening_paren_in_switch"; //$NON-NLS-1$
+
+	public static final String FORMATTER_INSERT_SPACE_AFTER_OPENING_PAREN_IN_MATCH = FormatterCorePlugin.PLUGIN_ID
+			+ ".formatter.insert_space_after_opening_paren_in_match"; //$NON-NLS-1$
 
 	/**
 	 * <pre>
@@ -1203,6 +1250,9 @@ public class CodeFormatterConstants {
 	public static final String FORMATTER_INSERT_SPACE_BEFORE_CLOSING_PAREN_IN_SWITCH = FormatterCorePlugin.PLUGIN_ID
 			+ ".formatter.insert_space_before_closing_paren_in_switch"; //$NON-NLS-1$
 
+	public static final String FORMATTER_INSERT_SPACE_BEFORE_CLOSING_PAREN_IN_MATCH = FormatterCorePlugin.PLUGIN_ID
+			+ ".formatter.insert_space_before_closing_paren_in_match"; //$NON-NLS-1$
+
 	/**
 	 * <pre>
 	 * FORMATTER / Option to insert a space before the closing parenthesis in a while statement
@@ -1283,6 +1333,44 @@ public class CodeFormatterConstants {
 			+ ".formatter.insert_space_before_arrow_in_yield"; //$NON-NLS-1$
 	public static final String FORMATTER_INSERT_SPACE_AFTER_ARROW_IN_YIELD = FormatterCorePlugin.PLUGIN_ID
 			+ ".formatter.insert_space_after_arrow_in_yield"; //$NON-NLS-1$
+
+	/**
+	 * spaces around MATCH ARM expression
+	 * 
+	 * @since 8.0
+	 */
+	public static final String FORMATTER_INSERT_SPACE_BEFORE_ARROW_IN_MATCH_ARM = FormatterCorePlugin.PLUGIN_ID
+			+ ".formatter.insert_space_before_arrow_in_match_arm"; //$NON-NLS-1$
+	public static final String FORMATTER_INSERT_SPACE_AFTER_ARROW_IN_MATCH_ARM = FormatterCorePlugin.PLUGIN_ID
+			+ ".formatter.insert_space_after_arrow_in_match_arm"; //$NON-NLS-1$
+
+	public static final String FORMATTER_INSERT_SPACE_BEFORE_COMMA_IN_MATCH = FormatterCorePlugin.PLUGIN_ID
+			+ ".formatter.insert_space_before_comma_in_match_expressions"; //$NON-NLS-1$
+	public static final String FORMATTER_INSERT_SPACE_AFTER_COMMA_IN_MATCH = FormatterCorePlugin.PLUGIN_ID
+			+ ".formatter.insert_space_after_comma_in_match_expressions"; //$NON-NLS-1$
+
+	public static final String FORMATTER_INSERT_SPACE_BEFORE_COMMA_IN_MATCH_ARM_CONDITIONS = FormatterCorePlugin.PLUGIN_ID
+			+ ".formatter.insert_space_before_comma_in_match_arm_conditions"; //$NON-NLS-1$
+	public static final String FORMATTER_INSERT_SPACE_AFTER_COMMA_IN_MATCH_ARM_CONDITIONS = FormatterCorePlugin.PLUGIN_ID
+			+ ".formatter.insert_space_after_comma_in_match_arm_conditions"; //$NON-NLS-1$
+
+	public static final String FORMATTER_INSERT_SPACE_BEFORE_COLON_IN_ENUM_TYPE = FormatterCorePlugin.PLUGIN_ID
+			+ ".formatter.insert_space_before_colon_in_enum_type"; //$NON-NLS-1$
+	public static final String FORMATTER_INSERT_SPACE_AFTER_COLON_IN_ENUM_TYPE = FormatterCorePlugin.PLUGIN_ID
+			+ ".formatter.insert_space_after_colon_in_enum_type"; //$NON-NLS-1$
+
+	public static final String FORMATTER_BLANK_LINES_BEFORE_ENUM_CASE = FormatterCorePlugin.PLUGIN_ID
+			+ ".formatter.blank_lines_before_enum_case"; //$NON-NLS-1$
+	public static final String FORMATTER_INSERT_SPACE_BEFORE_EQUAL_IN_ENUM_CASE = FormatterCorePlugin.PLUGIN_ID
+			+ ".formatter.insert_space_before_equal_in_enum_case"; //$NON-NLS-1$
+	public static final String FORMATTER_INSERT_SPACE_AFTER_EQUAL_IN_ENUM_CASE = FormatterCorePlugin.PLUGIN_ID
+			+ ".formatter.insert_space_after_equal_in_enum_case"; //$NON-NLS-1$
+
+	public static final String FORMATTER_INSERT_SPACE_BEFORE_COLON_IN_NAMED_ARGUMENT = FormatterCorePlugin.PLUGIN_ID
+			+ ".formatter.insert_space_before_colon_in_named_argument"; //$NON-NLS-1$
+	public static final String FORMATTER_INSERT_SPACE_AFTER_COLON_IN_NAMED_ARGUMENT = FormatterCorePlugin.PLUGIN_ID
+			+ ".formatter.insert_space_after_colon_in_named_argument"; //$NON-NLS-1$
+
 	/**
 	 * <pre>
 	 * FORMATTER / Option to insert a space before comma in the parameters of a method declaration
@@ -1385,6 +1473,12 @@ public class CodeFormatterConstants {
 	 */
 	public static final String FORMATTER_INSERT_SPACE_BEFORE_OPENING_BRACE_IN_SWITCH = FormatterCorePlugin.PLUGIN_ID
 			+ ".formatter.insert_space_before_opening_brace_in_switch"; //$NON-NLS-1$
+
+	/**
+	 * @since 8.0
+	 */
+	public static final String FORMATTER_INSERT_SPACE_BEFORE_OPENING_BRACE_IN_MATCH = FormatterCorePlugin.PLUGIN_ID
+			+ ".formatter.insert_space_before_opening_brace_in_match"; //$NON-NLS-1$
 	/**
 	 * <pre>
 	 * FORMATTER / Option to insert a space before the opening brace in a type declaration
@@ -1527,6 +1621,10 @@ public class CodeFormatterConstants {
 	 */
 	public static final String FORMATTER_INSERT_SPACE_BEFORE_OPENING_PAREN_IN_SWITCH = FormatterCorePlugin.PLUGIN_ID
 			+ ".formatter.insert_space_before_opening_paren_in_switch"; //$NON-NLS-1$
+
+	public static final String FORMATTER_INSERT_SPACE_BEFORE_OPENING_PAREN_IN_MATCH = FormatterCorePlugin.PLUGIN_ID
+			+ ".formatter.insert_space_before_opening_paren_in_match"; //$NON-NLS-1$
+
 	/**
 	 * <pre>
 	 * FORMATTER / Option to insert a space before the opening parenthesis in a while statement

@@ -55,7 +55,7 @@ public class LineWrappingTabPage extends ModifyDialogTabPage {
 
 		/**
 		 * @param _name
-		 *                  Category name
+		 *            Category name
 		 */
 		public Category(String _name) {
 			this(null, null, _name);
@@ -246,7 +246,7 @@ public class LineWrappingTabPage extends ModifyDialogTabPage {
 
 	private final Category fTypeDeclarationSuperinterfacesCategory = new Category(
 			CodeFormatterConstants.FORMATTER_ALIGNMENT_FOR_SUPERINTERFACES_IN_TYPE_DECLARATION_KEY,
-			"class Example implements I1, I2, I3 {}", //$NON-NLS-1$
+			"class Example implements I1, I2, I3 {} enum Example implements I1, I2, I3 {}", //$NON-NLS-1$
 			FormatterMessages.LineWrappingTabPage_implements_clause);
 
 	private final Category fMethodDeclarationsParametersCategory = new Category(
@@ -280,6 +280,16 @@ public class LineWrappingTabPage extends ModifyDialogTabPage {
 					"  return product / sum;}}", //$NON-NLS-1$
 			FormatterMessages.LineWrappingTabPage_binary_exprs);
 
+	private final Category fMatchArmsCategory = new Category(
+			CodeFormatterConstants.FORMATTER_ALIGNMENT_FOR_ARGUMENTS_IN_MATCH_EXPRESSION_KEY,
+			"echo match($x) {2,3 => 2,  3=>4, default => 2};", //$NON-NLS-1$
+			FormatterMessages.LineWrappingTabPage_match_arms);
+
+	private final Category fAttributeGroupCategory = new Category(
+			CodeFormatterConstants.FORMATTER_ALIGNMENT_FOR_ARGUMENTS_IN_ATTRIBUTE_GROUP_KEY,
+			"#[Attr1, Attr2, Attr3, Attr4, Attr5(['this_is_long_key' => true])] function attributedFunc() {}", //$NON-NLS-1$
+			FormatterMessages.LineWrappingTabPage_attribute_groups);
+
 	/**
 	 * The default preview line width.
 	 */
@@ -312,8 +322,8 @@ public class LineWrappingTabPage extends ModifyDialogTabPage {
 	private Group fOptionsGroup;
 
 	/**
-	 * A collection containing the categories tree. This is used as model for the
-	 * tree viewer.
+	 * A collection containing the categories tree. This is used as model for
+	 * the tree viewer.
 	 * 
 	 * @see TreeViewer
 	 */
@@ -381,14 +391,18 @@ public class LineWrappingTabPage extends ModifyDialogTabPage {
 		final Category functionCalls = new Category(FormatterMessages.LineWrappingTabPage_function_calls);
 		functionCalls.children.add(fMessageSendArgumentsCategory);
 		functionCalls.children.add(fAllocationExpressionArgumentsCategory);
+		final Category attributes = new Category(FormatterMessages.LineWrappingTabPage_attributes);
+		attributes.children.add(fAttributeGroupCategory);
 		final Category expressions = new Category(FormatterMessages.LineWrappingTabPage_expressions);
 		expressions.children.add(fBinaryExpressionCategory);
 		expressions.children.add(fArrayInitializerExpressionsCategory);
+		expressions.children.add(fMatchArmsCategory);
 
 		final List<Category> root = new ArrayList<>();
 		root.add(classDeclarations);
 		root.add(methodDeclarations);
 		root.add(functionCalls);
+		root.add(attributes);
 		root.add(expressions);
 
 		return root;

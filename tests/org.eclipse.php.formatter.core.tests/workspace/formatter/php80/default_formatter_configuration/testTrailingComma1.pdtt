@@ -1,0 +1,11 @@
+--TEST--
+PHP 8.0
+--FILE--
+<?php
+function myFunc($param, $param2, ) {}
+?>
+--EXPECT--
+<?php
+function myFunc($param, $param2) {
+}
+?>

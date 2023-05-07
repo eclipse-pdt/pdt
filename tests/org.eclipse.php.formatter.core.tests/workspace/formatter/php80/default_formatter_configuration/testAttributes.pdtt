@@ -1,0 +1,56 @@
+--TEST--
+PHP 8.0
+--FILE--
+<?php
+#[Attr]#[Attr,Attr2()]#[Attr('val',named:2)]
+function myFunc() {}
+
+#[Space\Attr(1,)]
+class Simple {
+	#[Space\AttrConst(1)]
+	const C = 1;
+	#[Space\AttrVal(1)]
+	private $val;
+	#[AttrFN]
+	public function fn(#[AttrParam] $param) {}
+}
+
+$res = #[Space\Attr\Closure(1)] function() {};
+
+$res = #[Space\Attr\Arrow(1)] fn() => 2+2;
+
+$res = new #[Space\Attr\Anonym(1)] class {
+	#[Space\Attr(1)]
+    public function log($msg)
+    {
+        echo $msg;
+    }
+};
+?>
+--EXPECT--
+<?php
+#[Attr]
+#[Attr, Attr2()]
+#[Attr( 'val', named: 2 )]
+function myFunc() {
+}
+#[Space\Attr( 1 )]
+class Simple {
+	#[Space\AttrConst( 1 )]
+	const C = 1;
+	#[Space\AttrVal( 1 )]
+	private $val;
+	#[AttrFN]
+	public function fn(#[AttrParam] $param) {
+	}
+}
+$res = #[Space\Attr\Closure( 1 )] function () {
+};
+$res = #[Space\Attr\Arrow( 1 )] fn () => 2 + 2;
+$res = new #[Space\Attr\Anonym( 1 )] class () {
+	#[Space\Attr( 1 )]
+	public function log($msg) {
+		echo $msg;
+	}
+};
+?>

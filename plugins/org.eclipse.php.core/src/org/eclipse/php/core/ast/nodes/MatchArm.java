@@ -120,7 +120,7 @@ public class MatchArm extends Statement {
 
 	@Override
 	public void toString(StringBuilder buffer, String tab) {
-		buffer.append(tab).append("<SwitchArm"); //$NON-NLS-1$
+		buffer.append(tab).append("<MatchArm"); //$NON-NLS-1$
 		appendInterval(buffer);
 		buffer.append(" isDefault='").append(isDefault).append("'>\n"); //$NON-NLS-1$ //$NON-NLS-2$
 		buffer.append(TAB).append(tab).append("<Value>\n"); //$NON-NLS-1$
@@ -133,7 +133,7 @@ public class MatchArm extends Statement {
 			node.toString(buffer, TAB + tab);
 			buffer.append("\n"); //$NON-NLS-1$
 		}
-		buffer.append(tab).append("</SwitchCase>"); //$NON-NLS-1$
+		buffer.append(tab).append("</MatchArm>"); //$NON-NLS-1$
 	}
 
 	@Override

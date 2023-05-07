@@ -25,7 +25,7 @@ import org.eclipse.dltk.utils.CorePrinter;
 import org.eclipse.php.core.compiler.IPHPModifiers;
 import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
 
-public class PHPFieldDeclaration extends FieldDeclaration implements IPHPDocAwareDeclaration, IAttributedStatement {
+public class PHPFieldDeclaration extends FieldDeclaration implements IPHPDocAwareDeclaration, IAttributed {
 
 	private SimpleReference fieldType;
 	private int declStart;

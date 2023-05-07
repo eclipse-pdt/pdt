@@ -94,7 +94,7 @@ public enum PHPVersion {
 	 * @return
 	 */
 	public static PHPVersion getLatestVersion() {
-		return PHPVersion.PHP7_4;
+		return PHPVersion.PHP8_2;
 	}
 
 }

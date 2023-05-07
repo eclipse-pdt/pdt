@@ -37,6 +37,13 @@ parser code {:
 		}
 		return expr;
 	}
+	
+	protected void setAttributes(ASTNode target, List<AttributeGroup> list)
+	{
+		((IAttributed)target).attributes().addAll(list);
+		AttributeGroup group = list.get(0);
+		target.setSourceRange(group.getStart(), target.getEnd() - group.getStart());
+	}
 
 	public final void setAST (AST ast) {
 		this.ast = ast;
@@ -742,6 +749,9 @@ class_name:name
 :}
 | class_name:name T_OPEN_PARENTHESE:start function_call_parameter_list:paramsList T_CLOSE_PARENTHESE:end
 {:
+	if (paramsList.isEmpty()) {
+		paramsList.add(new EmptyExpression(startright, parser.ast));
+	}
 	RESULT = new Attribute(nameleft, endright, ast, name, paramsList);
 :}
 ;
@@ -888,7 +898,7 @@ statement:statement
 
 | attributes:attrs attributed_statement:statement
 {:
-	statement.attributes().addAll(attrs);
+	setAttributes(statement, attrs);
 	RESULT = statement;
 :}
 
@@ -1109,7 +1119,7 @@ statement:statement
 
 | attributes:attrs attributed_statement:statement
 {:
-	((AttributedStatement) statement).attributes().addAll(attrs);
+	setAttributes(statement, attrs);
 	RESULT = statement;
 :}
 ;
@@ -1743,7 +1753,9 @@ match_arm_list ::=
 :}
 | non_empty_match_arm_list:list possible_comma:comma
 {:
-	list.add(new EmptyStatement(commaleft, commaright, parser.ast));
+	if (comma != null) {
+		list.add(new EmptyStatement(commaleft, commaright, parser.ast));
+	}
 	RESULT = list;
 :}
 ;
@@ -1888,7 +1900,7 @@ attributed_parameter:parameter
 
 attributed_parameter ::=
 attributes:attrs parameter:param {:
-	((AttributedStatement) param).attributes().addAll(attrs);
+	setAttributes(param, attrs);
 	RESULT = param;
 :}
 | parameter:param {:
@@ -2254,7 +2266,7 @@ attributed_class_statement:statement
 
 | attributes:attrs attributed_class_statement:statement
 {:
-	((AttributedStatement)statement).attributes().addAll(attrs);
+	setAttributes(statement, attrs);
 	
 	RESULT = statement;
 :}
@@ -2631,6 +2643,7 @@ T_NEW:s class_name_reference:className ctor_arguments:ctor
 
 | T_NEW:start attributes:attrs T_CLASS:tclass ctor_arguments:ctor anonymous_class:ac
 {:
+	// specified case where atttributes are outside anonymous class AST setAttributes(ac, attrs);
 	ac.attributes().addAll(attrs);
 	ClassName className = new ClassName(tclassleft, tclassright, parser.ast, new Identifier(tclassleft, tclassright, parser.ast, "class"));
 	RESULT = new ClassInstanceCreation(startleft, acright, parser.ast, className, ctor, ac);
@@ -3023,7 +3036,7 @@ T_LIST:s T_OPEN_PARENTHESE assignment_list:varList T_CLOSE_PARENTHESE:close T_EQ
 
 | attributes:attrs inline_function:fnc
 {:
-	fnc.attributes().addAll(attrs);
+	setAttributes(fnc, attrs);
 	RESULT = fnc;
 :}
 

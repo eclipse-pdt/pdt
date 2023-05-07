@@ -30,18 +30,14 @@ public class Attribute extends Statement {
 	}
 
 	public Attribute(int start, int end, FullyQualifiedReference name) {
-		super(start, end);
-		this.name = name;
-		this.arguments = null;
+		this(start, end, name, new PHPCallArgumentsList());
 	}
 
 	@Override
 	public void traverse(ASTVisitor pVisitor) throws Exception {
 		if (pVisitor.visit(this)) {
 			name.traverse(pVisitor);
-			if (arguments != null) {
-				arguments.traverse(pVisitor);
-			}
+			arguments.traverse(pVisitor);
 
 			pVisitor.endvisit(this);
 		}

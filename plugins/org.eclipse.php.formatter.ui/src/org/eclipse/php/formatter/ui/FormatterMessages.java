@@ -62,6 +62,8 @@ final public class FormatterMessages extends NLS {
 	public static String WhiteSpaceTabPage_calls_after_comma_in_method_args;
 	public static String WhiteSpaceTabPage_calls_before_arrow_in_method;
 	public static String WhiteSpaceTabPage_calls_after_arrow_in_method;
+	public static String WhiteSpaceTabPage_calls_before_colon_in_method;
+	public static String WhiteSpaceTabPage_calls_after_colon_in_method;
 	public static String WhiteSpaceTabPage_calls_before_coloncolon_in_method;
 	public static String WhiteSpaceTabPage_calls_after_coloncolon_in_method;
 	// public static String WhiteSpaceTabPage_calls_after_comma_in_alloc;
@@ -140,6 +142,29 @@ final public class FormatterMessages extends NLS {
 	public static String WhiteSpaceTabPage_ref_expr;
 	public static String WhiteSpaceTabPage_after_reference_symbol;
 	public static String WhiteSpaceTabPage_insert_space;
+	public static String WhiteSpaceTabPage_enums;
+	public static String WhiteSpaceTabPage_enums_before_colon_in_enum_type;
+	public static String WhiteSpaceTabPage_enums_after_colon_in_enum_type;
+	public static String WhiteSpaceTabPage_enums_before_equal_in_enum_case;
+	public static String WhiteSpaceTabPage_enums_after_equal_in_enum_case;
+
+	public static String WhiteSpaceTabPage_attributes;
+	public static String WhiteSpaceTabPage_attributes_after_attribute_group_start;
+	public static String WhiteSpaceTabPage_attributes_before_attribute_group_end;
+	public static String WhiteSpaceTabPage_attributes_before_comma_in_attribute_group;
+	public static String WhiteSpaceTabPage_attributes_after_comma_in_attribute_group;
+
+	public static String WhiteSpaceTabPage_match;
+	public static String WhiteSpaceTabPage_match_before_opening_paren_of_match;
+	public static String WhiteSpaceTabPage_match_after_opening_paren_of_match;
+	public static String WhiteSpaceTabPage_match_before_closing_paren_of_match;
+	public static String WhiteSpaceTabPage_match_before_opening_brace_of_match;
+	public static String WhiteSpaceTabPage_match_before_comma_in_match;
+	public static String WhiteSpaceTabPage_match_after_comma_in_match;
+	public static String WhiteSpaceTabPage_match_before_arrow_in_match_arm;
+	public static String WhiteSpaceTabPage_match_after_arrow_in_match_arm;
+	public static String WhiteSpaceTabPage_match_before_comma_in_match_arm_conditions;
+	public static String WhiteSpaceTabPage_match_after_comma_in_match_arm_conditions;
 	public static String WhiteSpaceOptions_return;
 	public static String WhiteSpaceOptions_before;
 	public static String WhiteSpaceOptions_after;
@@ -209,6 +234,7 @@ final public class FormatterMessages extends NLS {
 	public static String WhiteSpaceOptions_constructor_decl;
 	public static String WhiteSpaceOptions_method_decl;
 	public static String WhiteSpaceOptions_case;
+	public static String WhiteSpaceOptions_enum_type;
 	public static String WhiteSpaceOptions_default;
 	public static String WhiteSpaceOptions_statements;
 	public static String WhiteSpaceOptions_before_opening_paren;
@@ -243,6 +269,7 @@ final public class FormatterMessages extends NLS {
 	public static String WhiteSpaceOptions_before_ellipsis;
 	public static String WhiteSpaceOptions_after_ellipsis;
 	public static String WhiteSpaceOptions_return_with_parenthesized_expression;
+
 	public static String LineWrappingTabPage_compact_if_else;
 	public static String LineWrappingTabPage_extends_clause;
 	public static String LineWrappingTabPage_enum_constant_arguments;
@@ -255,6 +282,8 @@ final public class FormatterMessages extends NLS {
 	public static String LineWrappingTabPage_object_allocation;
 	public static String LineWrappingTabPage_qualified_object_allocation;
 	public static String LineWrappingTabPage_array_init;
+	public static String LineWrappingTabPage_match_arms;
+	public static String LineWrappingTabPage_attribute_groups;
 	public static String LineWrappingTabPage_explicit_constructor_invocations;
 	public static String LineWrappingTabPage_conditionals;
 	public static String LineWrappingTabPage_binary_exprs;
@@ -265,6 +294,7 @@ final public class FormatterMessages extends NLS {
 	public static String LineWrappingTabPage_method_decls;
 	public static String LineWrappingTabPage_constructor_decls;
 	public static String LineWrappingTabPage_function_calls;
+	public static String LineWrappingTabPage_attributes;
 	public static String LineWrappingTabPage_expressions;
 	public static String LineWrappingTabPage_statements;
 	public static String LineWrappingTabPage_enum_decls;
@@ -309,6 +339,7 @@ final public class FormatterMessages extends NLS {
 
 	public static String BlankLinesTabPage_class_group_title;
 	public static String BlankLinesTabPage_class_option_before_constant_decls;
+	public static String BlankLinesTabPage_class_option_before_enum_case_decls;
 	public static String BlankLinesTabPage_class_option_before_field_decls;
 	public static String BlankLinesTabPage_class_option_before_method_decls;
 	public static String BlankLinesTabPage_class_option_at_beginning_of_method_body;
@@ -448,6 +479,8 @@ final public class FormatterMessages extends NLS {
 	public static String WhiteSpaceTabPage_before_comma_in_list;
 	public static String WhiteSpaceTabPage_after_comma_in_list;
 	public static String WhiteSpaceTabPage_static;
+	public static String WhiteSpaceTabPage_match_arm;
+	public static String WhiteSpaceTabPage_match_expr;
 	public static String WhiteSpaceTabPage_global;
 	public static String WhiteSpaceTabPage_echo;
 	public static String WhiteSpaceOptions_constants;

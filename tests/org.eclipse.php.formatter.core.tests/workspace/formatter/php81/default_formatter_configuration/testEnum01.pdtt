@@ -1,0 +1,21 @@
+--TEST--
+PHP 8.1
+--FILE--
+<?php
+enum 
+Status
+
+
+{
+case Published;
+case Archived;
+}
+?>
+--EXPECT--
+<?php
+enum Status 
+{
+	case Published;
+	case Archived;
+}
+?>

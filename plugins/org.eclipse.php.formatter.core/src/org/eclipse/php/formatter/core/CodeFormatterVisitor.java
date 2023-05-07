@@ -26,6 +26,7 @@ import org.eclipse.jface.text.*;
 import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.ast.nodes.*;
 import org.eclipse.php.core.ast.visitor.AbstractVisitor;
+import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.core.compiler.ast.nodes.PHPDocBlock;
 import org.eclipse.php.core.compiler.ast.nodes.PHPDocTag;
 import org.eclipse.php.core.compiler.ast.nodes.PHPDocTag.TagKind;
@@ -2300,8 +2301,13 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			numberOfLines = this.preferences.blank_line_before_field_declaration + 1;
 			ignoreEmptyLineSetting = true;
 			break;
+		case ASTNode.ENUM_CASE_DECLARATION:
+			numberOfLines = this.preferences.blank_line_before_enum_case_declaration + 1;
+			ignoreEmptyLineSetting = true;
+			break;
 		case ASTNode.CLASS_DECLARATION:
 		case ASTNode.INTERFACE_DECLARATION:
+		case ASTNode.ENUM_DECLARATION:
 			ignoreEmptyLineSetting = true;
 			numberOfLines = this.preferences.blank_line_before_class_declaration + 1;
 			break;
@@ -2711,6 +2717,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 		case ASTNode.CLASS_DECLARATION:
 		case ASTNode.INTERFACE_DECLARATION:
+		case ASTNode.ENUM_DECLARATION:
 			isAddEmptyBlockNewLine = preferences.new_line_in_empty_class_body;
 			blockIndentation = this.preferences.indent_statements_within_type_declaration;
 			if (blockIndentation) {
@@ -3085,11 +3092,16 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			insertSpace();
 			catchClause.getClassNames().get(i).accept(this);
 		}
-
-		insertSpace();
-		handleChars(catchClause.getClassNames().get(catchClause.getClassNames().size() - 1).getEnd(),
-				catchClause.getVariable().getStart());
-		catchClause.getVariable().accept(this);
+		int lastPosition;
+		if (catchClause.getVariable() != null) {
+			insertSpace();
+			handleChars(catchClause.getClassNames().get(catchClause.getClassNames().size() - 1).getEnd(),
+					catchClause.getVariable().getStart());
+			catchClause.getVariable().accept(this);
+			lastPosition = catchClause.getVariable().getEnd();
+		} else {
+			lastPosition = catchClause.getClassNames().get(catchClause.getClassNames().size() - 1).getEnd();
+		}
 
 		// set the catch closing parn spaces
 		if (this.preferences.insert_space_before_closing_paren_in_catch) {
@@ -3099,7 +3111,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 		boolean isIndentationAdded = handleBlockOpenBrace(this.preferences.brace_position_for_block,
 				this.preferences.insert_space_before_opening_brace_in_block);
-		handleChars(catchClause.getVariable().getEnd(), catchClause.getBody().getStart());
+		handleChars(lastPosition, catchClause.getBody().getStart());
 		catchClause.getBody().accept(this);
 		if (isIndentationAdded) {
 			indentationLevel--;
@@ -3110,6 +3122,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 	@Override
 	public boolean visit(ConstantDeclaration classConstantDeclaration) {
+		int lastPosition = handleAttributes(classConstantDeclaration, true);
 		boolean isFirst = true;
 
 		// handle modifier
@@ -3120,7 +3133,6 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		}
 		appendToBuffer("const"); //$NON-NLS-1$
 		insertSpace();
-		int lastPosition = classConstantDeclaration.getStart();
 		List<Identifier> names = classConstantDeclaration.names();
 
 		Identifier[] variableNames = new Identifier[names.size()];
@@ -3167,6 +3179,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 	private boolean visitClassOrTraitDeclaration(ClassDeclaration classDeclaration) {
 		// handle spaces between modifier, 'class' and class name
+		int start = handleAttributes(classDeclaration, true);
 		String modifier = ClassDeclaration.getModifier(classDeclaration.getModifier());
 		if (!modifier.equals(EMPTY_STRING)) {
 			appendToBuffer(modifier);
@@ -3178,7 +3191,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			appendToBuffer("class"); //$NON-NLS-1$
 		}
 		insertSpace();
-		handleChars(classDeclaration.getStart(), classDeclaration.getName().getStart());
+		handleChars(start, classDeclaration.getName().getStart());
 
 		classDeclaration.getName().accept(this);
 
@@ -3235,9 +3248,12 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 	@Override
 	public boolean visit(ClassInstanceCreation classInstanceCreation) {
-		// insertSpace();
 		appendToBuffer("new "); //$NON-NLS-1$
-		handleChars(classInstanceCreation.getStart(), classInstanceCreation.getClassName().getStart());
+		int lastPosition = classInstanceCreation.getStart();
+		if (classInstanceCreation.getAnonymousClassDeclaration() != null) {
+			lastPosition = handleAttributes(lastPosition, classInstanceCreation.getAnonymousClassDeclaration(), false);
+		}
+		handleChars(lastPosition, classInstanceCreation.getClassName().getStart());
 		classInstanceCreation.getClassName().accept(this);
 		if (this.preferences.insert_space_before_opening_paren_in_function) {
 			insertSpace();
@@ -3258,7 +3274,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		int indentationGap = calculateIndentGap(
 				this.preferences.line_wrap_arguments_in_allocation_expression_indent_policy,
 				this.preferences.line_wrap_wrapped_lines_indentation);
-		int lastPosition = handleCommaList(arrayOfParameters, classInstanceCreation.getClassName().getEnd(),
+		lastPosition = handleCommaList(arrayOfParameters, classInstanceCreation.getClassName().getEnd(),
 				this.preferences.line_keep_trailing_comma_in_list,
 				this.preferences.insert_space_before_comma_in_function,
 				this.preferences.insert_space_after_comma_in_function,
@@ -3581,6 +3597,9 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		if (this.preferences.insert_space_before_arrow_in_field_access) {
 			insertSpace();
 		}
+		if (fieldAccess.isNullSafe()) {
+			appendToBuffer('?');
+		}
 		appendToBuffer("->"); //$NON-NLS-1$
 		if (this.preferences.insert_space_after_arrow_in_field_access) {
 			insertSpace();
@@ -3595,16 +3614,21 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 	@Override
 	public boolean visit(FieldsDeclaration fieldsDeclaration) {
+		int lastPosition = handleAttributes(fieldsDeclaration, true);
 		boolean isFirst = true;
 		Variable[] variableNames = fieldsDeclaration.getVariableNames();
 		Expression[] initialValues = fieldsDeclaration.getInitialValues();
-		int lastPosition = fieldsDeclaration.getStart();
 
 		// handle field modifiers
 		String modifier = fieldsDeclaration.getModifierString();
 		char firstChar = SPACE;
 		try {
-			firstChar = document.getChar(fieldsDeclaration.getStart());
+			int test = lastPosition;
+			do {
+				firstChar = document.getChar(test);
+				test++;
+
+			} while (!Character.isJavaIdentifierPart(firstChar));
 		} catch (BadLocationException e) {
 			Logger.logException(e);
 		}
@@ -3707,7 +3731,13 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 	@Override
 	public boolean visit(FormalParameter formalParameter) {
-		int lastPosition = formalParameter.getStart();
+		int lastPosition = handleAttributes(formalParameter, false);
+
+		String modifier = PHPFlags.toString(formalParameter.getModifier());
+		if (!modifier.isEmpty()) {
+			appendToBuffer(modifier);
+			insertSpace();
+		}
 
 		// handle type
 		Expression parameterType = formalParameter.getParameterType();
@@ -3795,6 +3825,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 	@Override
 	public boolean visit(FunctionDeclaration functionDeclaration) {
+		int lastPosition = handleAttributes(functionDeclaration, true);
 		StringBuilder buffer = new StringBuilder();
 		buffer.append("function"); //$NON-NLS-1$
 
@@ -3808,13 +3839,13 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		buffer.append(functionDeclaration.getFunctionName().getName());
 
 		appendToBuffer(buffer.toString());
-		handleChars(functionDeclaration.getStart(), functionDeclaration.getFunctionName().getEnd());
+		handleChars(lastPosition, functionDeclaration.getFunctionName().getEnd());
 
 		if (this.preferences.insert_space_before_opening_paren_in_function_declaration) {
 			insertSpace();
 		}
 		appendToBuffer(OPEN_PARN);
-		int lastPosition = functionDeclaration.getFunctionName().getEnd();
+		lastPosition = functionDeclaration.getFunctionName().getEnd();
 		if (functionDeclaration.formalParameters().size() > 0) {
 			if (this.preferences.insert_space_after_opening_paren_in_function_declaration) {
 				insertSpace();
@@ -3827,7 +3858,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			FormalParameter[] parameters = new FormalParameter[parameterList.size()];
 			parameters = parameterList.toArray(parameters);
 
-			lastPosition = handleCommaList(parameters, lastPosition,
+			lastPosition = handleCommaList(parameters, lastPosition, this.preferences.line_keep_trailing_comma_in_list,
 					this.preferences.insert_space_before_comma_in_function_declaration,
 					this.preferences.insert_space_after_comma_in_function_declaration,
 					this.preferences.line_wrap_parameters_in_method_declaration_line_wrap_policy, indentationGap,
@@ -4603,12 +4634,13 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 	@Override
 	public boolean visit(InterfaceDeclaration interfaceDeclaration) {
+		int lastPosition = handleAttributes(interfaceDeclaration, true);
 		addNonBlanksToLineWidth(9);// interface
 		insertSpace();
-		handleChars(interfaceDeclaration.getStart() + 9, interfaceDeclaration.getName().getStart());
+		handleChars(lastPosition + 9, interfaceDeclaration.getName().getStart());
 		interfaceDeclaration.getName().accept(this);
 
-		int lastPosition = interfaceDeclaration.getName().getEnd();
+		lastPosition = interfaceDeclaration.getName().getEnd();
 
 		List<Identifier> interfaceList = interfaceDeclaration.interfaces();
 		Identifier[] interfaces = new Identifier[interfaceList.size()];
@@ -4674,8 +4706,9 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	@Override
 	public boolean visit(MethodDeclaration classMethodDeclaration) {
 		// handle method modifiers
-		String originalModifier = getDocumentString(classMethodDeclaration.getStart(),
-				classMethodDeclaration.getFunction().getStart()).trim();
+		int lastPosition = handleAttributes(classMethodDeclaration, true);
+		String originalModifier = getDocumentString(lastPosition, classMethodDeclaration.getFunction().getStart())
+				.trim();
 		StringTokenizer tokenizer = new StringTokenizer(originalModifier);
 		StringBuilder strBuffer = new StringBuilder();
 		while (tokenizer.hasMoreTokens()) {
@@ -4691,7 +4724,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		if (formattedModifier.length() > 0) {
 			insertSpace();
 		}
-		handleChars(classMethodDeclaration.getStart(), classMethodDeclaration.getFunction().getStart());
+		handleChars(lastPosition, classMethodDeclaration.getFunction().getStart());
 		classMethodDeclaration.getFunction().accept(this);
 		return false;
 	}
@@ -4747,6 +4780,9 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			}
 		}
 
+		if (methodInvocation.isNullSafe()) {
+			appendToBuffer('?');
+		}
 		appendToBuffer("->"); //$NON-NLS-1$
 		if (this.preferences.insert_space_after_arrow_in_method_invocation) {
 			insertSpace();
@@ -5547,23 +5583,21 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 	@Override
 	public boolean visit(LambdaFunctionDeclaration lambdaFunctionDeclaration) {
-		int lastPosition = lambdaFunctionDeclaration.getStart();
+		int lastPosition = handleAttributes(lambdaFunctionDeclaration, false);
 		StringBuilder buffer = new StringBuilder();
 		if (lambdaFunctionDeclaration.isStatic()) {
 			buffer.append("static "); //$NON-NLS-1$
-			lastPosition += 7; // "static ".length()
 		}
 		buffer.append("function"); //$NON-NLS-1$
-		lastPosition += 8; // "function".length()
 
 		// handle referenced function with '&'
 		if (lambdaFunctionDeclaration.isReference()) {
 			buffer.append(" &"); //$NON-NLS-1$
-			lastPosition += 2; // " &".length()
 		}
 
 		appendToBuffer(buffer.toString());
-		handleChars(lambdaFunctionDeclaration.getStart(), lastPosition);
+		handleChars(lastPosition, lastPosition + buffer.length());
+		lastPosition += buffer.length();
 
 		if (this.preferences.insert_space_before_opening_paren_in_function_declaration
 				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=492770
@@ -5580,7 +5614,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			int indentationGap = calculateIndentGap(
 					this.preferences.line_wrap_parameters_in_method_declaration_indent_policy,
 					this.preferences.line_wrap_wrapped_lines_indentation);
-			lastPosition = handleCommaList(params, lastPosition,
+			lastPosition = handleCommaList(params, lastPosition, this.preferences.line_keep_trailing_comma_in_list,
 					this.preferences.insert_space_before_comma_in_function_declaration,
 					this.preferences.insert_space_after_comma_in_function_declaration,
 					this.preferences.line_wrap_parameters_in_method_declaration_line_wrap_policy, indentationGap,
@@ -5610,7 +5644,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			}
 			ASTNode[] vars = variables.toArray(new Expression[variables.size()]);
 
-			lastPosition = handleCommaList(vars, lastPosition,
+			lastPosition = handleCommaList(vars, lastPosition, this.preferences.line_keep_trailing_comma_in_list,
 					this.preferences.insert_space_before_comma_in_function_declaration,
 					this.preferences.insert_space_after_comma_in_function_declaration,
 					this.preferences.line_wrap_parameters_in_method_declaration_line_wrap_policy, 0,
@@ -5655,23 +5689,21 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 	@Override
 	public boolean visit(ArrowFunctionDeclaration arrowFunctionDeclaration) {
-		int lastPosition = arrowFunctionDeclaration.getStart();
+		int lastPosition = handleAttributes(arrowFunctionDeclaration, false);
 		StringBuilder buffer = new StringBuilder();
 		if (arrowFunctionDeclaration.isStatic()) {
 			buffer.append("static "); //$NON-NLS-1$
-			lastPosition += 7; // "static ".length()
 		}
 		buffer.append("fn"); //$NON-NLS-1$
-		lastPosition += 2; // "fn".length()
 
 		// handle referenced function with '&'
 		if (arrowFunctionDeclaration.isReference()) {
 			buffer.append(" &"); //$NON-NLS-1$
-			lastPosition += 2; // " &".length()
 		}
 
 		appendToBuffer(buffer.toString());
-		handleChars(arrowFunctionDeclaration.getStart(), lastPosition);
+		handleChars(lastPosition, lastPosition + buffer.length());
+		lastPosition += buffer.length();
 
 		if (this.preferences.insert_space_before_opening_paren_in_function_declaration
 				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=492770
@@ -5688,7 +5720,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			int indentationGap = calculateIndentGap(
 					this.preferences.line_wrap_parameters_in_method_declaration_indent_policy,
 					this.preferences.line_wrap_wrapped_lines_indentation);
-			lastPosition = handleCommaList(params, lastPosition,
+			lastPosition = handleCommaList(params, lastPosition, this.preferences.line_keep_trailing_comma_in_list,
 					this.preferences.insert_space_before_comma_in_function_declaration,
 					this.preferences.insert_space_after_comma_in_function_declaration,
 					this.preferences.line_wrap_parameters_in_method_declaration_line_wrap_policy, indentationGap,
@@ -5745,6 +5777,334 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			handleChars(node.getStart() + 3, node.getTraitList().get(0).getStart());
 		}
 		return true;
+	}
+
+	@Override
+	public boolean visit(ThrowExpression throwException) {
+		addNonBlanksToLineWidth(5);
+		insertSpace();
+		Expression expr = throwException.getExpression();
+		handleChars(throwException.getStart() + 5, expr.getStart());
+
+		expr.accept(this);
+
+		handleChars(expr.getEnd(), throwException.getEnd());
+		return false;
+	}
+
+	@Override
+	public boolean visit(AttributeGroup attribute) {
+		addNonBlanksToLineWidth(2);
+		if (this.preferences.insert_space_after_attribute_group_start) {
+			insertSpace();
+		}
+		int pos = attribute.getStart() + 2;
+
+		int indentationGap = calculateIndentGap(this.preferences.line_wrap_arguments_in_attribute_group_indent_policy,
+				this.preferences.line_wrap_wrapped_lines_indentation);
+
+		ASTNode[] list = attribute.attributes()
+				.toArray(new ASTNode[attribute.attributes().size() + (attribute.emptyPart() != null ? 1 : 0)]);
+		if (attribute.emptyPart() != null) {
+			list[list.length - 1] = attribute.emptyPart();
+		}
+		pos = handleCommaList(list, pos, this.preferences.line_keep_trailing_comma_in_list,
+				this.preferences.insert_space_before_comma_in_attribute_group,
+				this.preferences.insert_space_after_comma_in_attribute_group,
+				this.preferences.line_wrap_arguments_in_attribute_group_line_wrap_policy, indentationGap,
+				this.preferences.line_wrap_arguments_in_attribute_group_force_split);
+
+		if (this.preferences.insert_space_before_attribute_group_end) {
+			insertSpace();
+		}
+		handleChars(pos, attribute.getEnd());
+		appendToBuffer(CLOSE_BRACKET);
+
+		return false;
+	}
+
+	/**
+	 * Attribute shares settings with Allocation (instance creation)
+	 */
+	@Override
+	public boolean visit(Attribute attribute) {
+		attribute.getAttributeName().accept(this);
+		if (attribute.parameters().size() == 0) {
+			handleChars(attribute.getAttributeName().getEnd(), attribute.getEnd());
+			return false;
+		}
+		appendToBuffer(OPEN_PARN);
+
+		int addSpacesNoNewLineAfterLastSingleLineComment = 0;
+
+		int lastPosition = attribute.getAttributeName().getEnd();
+		if (!(attribute.parameters().get(0) instanceof EmptyExpression)) {
+			if (this.preferences.insert_space_after_opening_paren_in_function) {
+				insertSpace();
+			}
+			int indentationGap = calculateIndentGap(
+					this.preferences.line_wrap_arguments_in_allocation_expression_indent_policy,
+					this.preferences.line_wrap_wrapped_lines_indentation);
+
+			List<Expression> parametersList = attribute.parameters();
+			Expression[] parameters = new Expression[parametersList.size()];
+			parameters = parametersList.toArray(parameters);
+
+			lastPosition = handleCommaList(parameters, lastPosition, this.preferences.line_keep_trailing_comma_in_list,
+					this.preferences.insert_space_before_comma_in_function,
+					this.preferences.insert_space_after_comma_in_function,
+					this.preferences.line_wrap_arguments_in_allocation_expression_line_wrap_policy, indentationGap,
+					this.preferences.line_wrap_arguments_in_allocation_expression_force_split);
+
+			if (this.preferences.insert_space_before_closing_paren_in_function) {
+				addSpacesNoNewLineAfterLastSingleLineComment = 1;
+				insertSpace();
+			}
+
+		} else {
+			if (this.preferences.insert_space_between_empty_paren_in_function) {
+				addSpacesNoNewLineAfterLastSingleLineComment = 1;
+				insertSpace();
+			}
+		}
+
+		if (attribute.getEnd() == 0 || !isContainChar(attribute.getEnd() - 1, attribute.getEnd(), CLOSE_PARN)) {
+			appendToBuffer(CLOSE_PARN);
+			handleChars(lastPosition, attribute.getEnd());
+		} else {
+			handleChars(lastPosition, attribute.getEnd() - 1, addSpacesNoNewLineAfterLastSingleLineComment);
+			addNonBlanksToLineWidth(1);// we need to add the closing
+										// parenthesis
+		}
+
+		return false;
+	}
+
+	protected int handleAttributes(IAttributed node, boolean newLine) {
+		return handleAttributes(node.getStart(), node, newLine);
+	}
+
+	protected int handleAttributes(int initialStart, IAttributed node, boolean newLine) {
+		List<AttributeGroup> attributes = node.attributes();
+		if (attributes.isEmpty()) {
+			return initialStart;
+		}
+		int lastPos = initialStart;
+		for (AttributeGroup group : node.attributes()) {
+			if (lastPos > initialStart) {
+				insertNewLines(1);
+				indent();
+			}
+			handleChars(lastPos, group.getStart());
+			group.accept(this);
+			lastPos = group.getEnd();
+		}
+		if (newLine) {
+			insertNewLines(1);
+			indent();
+		} else {
+			insertSpace();
+		}
+
+		return lastPos;
+	}
+
+	@Override
+	public boolean visit(NamedExpression namedExpresion) {
+		addNonBlanksToLineWidth(namedExpresion.getName().length());
+		if (this.preferences.insert_space_before_colon_in_named_arguments) {
+			insertSpace();
+		}
+		appendToBuffer(':');
+		if (this.preferences.insert_space_after_colon_in_named_arguments) {
+			insertSpace();
+		}
+		handleChars(namedExpresion.getStart() + namedExpresion.getName().length(),
+				namedExpresion.getExpression().getStart());
+		namedExpresion.getExpression().accept(this);
+		handleChars(namedExpresion.getExpression().getEnd(), namedExpresion.getEnd());
+
+		return false;
+	}
+
+	// XXX add match configuration
+	@Override
+	public boolean visit(MatchExpression matchExpression) {
+		addNonBlanksToLineWidth(5);
+		// handle the chars between the 'match' and the expr start position
+		if (this.preferences.insert_space_before_opening_paren_in_match) {
+			insertSpace();
+		}
+		appendToBuffer(OPEN_PARN);
+		if (this.preferences.insert_space_after_opening_paren_in_match) {
+			insertSpace();
+		}
+		Expression expression = matchExpression.getExpression();
+		handleChars(matchExpression.getStart() + 5, expression.getStart());
+
+		// handle the match expr
+		expression.accept(this);
+
+		// handle the chars between the expression end position and action start
+		// position
+
+		// set the match closing parn spaces
+		if (this.preferences.insert_space_before_closing_paren_in_match) {
+			insertSpace();
+		}
+		appendToBuffer(CLOSE_PARN);
+
+		// match body
+		boolean isIndentationAdded = false;
+		isIndentationAdded = handleBlockOpenBrace(this.preferences.brace_position_for_match,
+				this.preferences.insert_space_before_opening_brace_in_match);
+		Block body = matchExpression.getBody();
+		handleChars(expression.getEnd(), body.getStart());
+		addNonBlanksToLineWidth(1);
+		ASTNode[] nodes = body.statements().toArray(new ASTNode[0]);
+		if (nodes.length > 0 && nodes[nodes.length - 1] instanceof EmptyStatement) {
+			nodes[nodes.length - 1] = body.getAST().newEmptyExpression();
+
+		}
+		int indentationGap = calculateIndentGap(this.preferences.line_wrap_arguments_in_match_expression_indent_policy,
+				this.preferences.line_wrap_wrapped_lines_indentation);
+		int lastPosition = handleCommaList(nodes, body.getStart() + 1,
+				this.preferences.line_keep_trailing_comma_in_list, this.preferences.insert_space_before_comma_in_match,
+				this.preferences.insert_space_after_comma_in_match,
+				this.preferences.line_wrap_arguments_in_match_expression_line_wrap_policy, indentationGap,
+				this.preferences.line_wrap_arguments_in_match_expression_force_split);
+		insertNewLines(1);
+		indent();
+
+		if (isIndentationAdded) {
+			indentationLevel--;
+			indentationLevelDescending = true;
+		}
+		handleChars(lastPosition, body.getEnd() - 1);
+		addNonBlanksToLineWidth(1);
+		return false;
+	}
+
+	@Override
+	public boolean visit(MatchArm matchArm) {
+
+		int lastPosition = matchArm.getStart();
+		if (matchArm.isDefault()) {
+			addNonBlanksToLineWidth(7);
+			lastPosition += 7;
+		} else {
+			int indentationGap = calculateIndentGap(
+					this.preferences.line_wrap_arguments_in_match_expression_indent_policy,
+					this.preferences.line_wrap_wrapped_lines_indentation);
+			lastPosition = handleCommaList(matchArm.conditions().toArray(new ASTNode[0]), lastPosition,
+					this.preferences.line_keep_trailing_comma_in_list,
+					this.preferences.insert_space_before_comma_in_match_arm_conditions,
+					this.preferences.insert_space_after_comma_in_match_arm_conditions, NO_LINE_WRAP, indentationGap,
+					false);
+		}
+		if (this.preferences.insert_space_before_arrow_in_match_arm) {
+			insertSpace();
+		}
+		appendToBuffer(KEY_VALUE_OPERATOR);
+		if (this.preferences.insert_space_after_arrow_in_match_arm) {
+			insertSpace();
+		}
+		handleChars(lastPosition, matchArm.getValue().getStart());
+		matchArm.getValue().accept(this);
+
+		handleChars(matchArm.getValue().getEnd(), matchArm.getEnd());
+
+		return false;
+	}
+
+	@Override
+	public boolean visit(DNFType dnfType) {
+		addNonBlanksToLineWidth(dnfType.getLength()); // copy AS IS
+		return false;
+	}
+
+	// php8.1
+	@Override
+	public boolean visit(EnumDeclaration enumDeclaration) {
+		int lastPosition = handleAttributes(enumDeclaration, true);
+		addNonBlanksToLineWidth(4);// enum
+		insertSpace();
+		handleChars(lastPosition + 4, enumDeclaration.getName().getStart());
+		enumDeclaration.getName().accept(this);
+
+		lastPosition = enumDeclaration.getName().getEnd();
+
+		if (enumDeclaration.getEnumType() != null) {
+			if (this.preferences.insert_space_before_colon_in_enum_type) {
+				insertSpace();
+			}
+			appendToBuffer(':');
+			if (this.preferences.insert_space_after_colon_in_enum_type) {
+				insertSpace();
+			}
+			handleChars(lastPosition, enumDeclaration.getEnumType().getStart());
+			enumDeclaration.getEnumType().accept(this);
+			lastPosition = enumDeclaration.getEnumType().getEnd();
+		}
+
+		List<Identifier> interfaceList = enumDeclaration.interfaces();
+		Identifier[] interfaces = new Identifier[interfaceList.size()];
+		interfaces = interfaceList.toArray(interfaces);
+
+		if (interfaces.length > 0) {
+			appendToBuffer(" implements "); //$NON-NLS-1$
+			int indentationGap = calculateIndentGap(
+					this.preferences.line_wrap_superinterfaces_in_type_declaration_indent_policy,
+					this.preferences.line_wrap_wrapped_lines_indentation);
+			lastPosition = handleCommaList(interfaces, lastPosition,
+					this.preferences.insert_space_before_comma_in_implements,
+					this.preferences.insert_space_after_comma_in_implements,
+					this.preferences.line_wrap_superinterfaces_in_type_declaration_line_wrap_policy, indentationGap,
+					this.preferences.line_wrap_superinterfaces_in_type_declaration_force_split);
+		}
+
+		boolean isIndentationAdded = handleBlockOpenBrace(this.preferences.brace_position_for_class,
+				this.preferences.insert_space_before_opening_brace_in_class);
+		handleChars(lastPosition, enumDeclaration.getBody().getStart());
+
+		enumDeclaration.getBody().accept(this);
+
+		if (isIndentationAdded) {
+			indentationLevel--;
+			indentationLevelDescending = true;
+		}
+		return false;
+	}
+
+	@Override
+	public boolean visit(EnumCaseDeclaration enumCaseDeclaration) {
+		int lastPosition = handleAttributes(enumCaseDeclaration, true);
+		addNonBlanksToLineWidth(4);// case
+		insertSpace();
+		handleChars(lastPosition + 4, enumCaseDeclaration.getName().getStart());
+		enumCaseDeclaration.getName().accept(this);
+		lastPosition = enumCaseDeclaration.getName().getEnd();
+		if (enumCaseDeclaration.getInitializer() != null) {
+			if (this.preferences.insert_space_before_equal_in_enum_case) {
+				insertSpace();
+			}
+			appendToBuffer(EQUAL);
+			if (this.preferences.insert_space_after_equal_in_enum_case) {
+				insertSpace();
+			}
+			handleChars(lastPosition, enumCaseDeclaration.getInitializer().getStart());
+			enumCaseDeclaration.getInitializer().accept(this);
+			lastPosition = enumCaseDeclaration.getInitializer().getEnd();
+		}
+		handleSemicolon(lastPosition, enumCaseDeclaration.getEnd());
+
+		return false;
+	}
+
+	@Override
+	public boolean visit(AsCallableExpression asCallableExpression) {
+		addNonBlanksToLineWidth(3);
+		return false;
 	}
 
 	/*
