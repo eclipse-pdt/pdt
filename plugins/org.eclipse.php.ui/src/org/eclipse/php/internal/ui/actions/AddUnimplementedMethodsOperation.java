@@ -72,8 +72,8 @@ public final class AddUnimplementedMethodsOperation implements IWorkspaceRunnabl
 	 * @param type
 	 *            the type to add the methods to
 	 * @param methodsToImplement
-	 *            the method bindings to implement or <code>null</code> to implement
-	 *            all unimplemented methods
+	 *            the method bindings to implement or <code>null</code> to
+	 *            implement all unimplemented methods
 	 * @param insertPos
 	 *            the insertion point, or <code>-1</code>
 	 * @param imports
@@ -83,8 +83,8 @@ public final class AddUnimplementedMethodsOperation implements IWorkspaceRunnabl
 	 *            <code>true</code> if the resulting edit should be applied,
 	 *            <code>false</code> otherwise
 	 * @param save
-	 *            <code>true</code> if the changed compilation unit should be saved,
-	 *            <code>false</code> otherwise
+	 *            <code>true</code> if the changed compilation unit should be
+	 *            saved, <code>false</code> otherwise
 	 * @param doc
 	 */
 	public AddUnimplementedMethodsOperation(Program astRoot, IType element, ITypeBinding type,
@@ -141,6 +141,9 @@ public final class AddUnimplementedMethodsOperation implements IWorkspaceRunnabl
 				}
 				if (node instanceof ClassDeclaration) {
 					memberRewriter = astRewrite.getListRewrite(((ClassDeclaration) node).getBody(),
+							Block.STATEMENTS_PROPERTY);
+				} else if (node instanceof EnumDeclaration) {
+					memberRewriter = astRewrite.getListRewrite(((EnumDeclaration) node).getBody(),
 							Block.STATEMENTS_PROPERTY);
 				} else if (node instanceof AnonymousClassDeclaration) {
 					memberRewriter = astRewrite.getListRewrite(((AnonymousClassDeclaration) node).getBody(),

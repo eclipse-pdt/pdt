@@ -56,6 +56,12 @@ public class UnimplementedMethodsCorrectionProposal extends ASTRewriteCorrection
 			listRewrite = rewrite.getListRewrite(decl.getBody(), Block.STATEMENTS_PROPERTY);
 			methods = PHPModelUtils.getUnimplementedMethods((IType) binding.getPHPElement(), null);
 			isInterface = binding.isInterface();
+		} else if (fTypeNode instanceof EnumDeclaration) {
+			EnumDeclaration decl = (EnumDeclaration) fTypeNode;
+			ITypeBinding binding = decl.resolveTypeBinding();
+			listRewrite = rewrite.getListRewrite(decl.getBody(), Block.STATEMENTS_PROPERTY);
+			methods = PHPModelUtils.getUnimplementedMethods((IType) binding.getPHPElement(), null);
+			isInterface = binding.isInterface();
 		} else if (fTypeNode instanceof AnonymousClassDeclaration) {
 			AnonymousClassDeclaration decl = (AnonymousClassDeclaration) fTypeNode;
 			listRewrite = rewrite.getListRewrite(decl.getBody(), Block.STATEMENTS_PROPERTY);

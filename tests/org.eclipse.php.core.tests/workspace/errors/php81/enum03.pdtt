@@ -1,0 +1,10 @@
+--TEST--
+New in initializers
+--FILE--
+<?php
+class MyClass {
+	case X;
+}
+?>
+--EXPECT--
+[line=3, start=28, end=29] Enum case can only be used in enums

@@ -1,0 +1,14 @@
+--TEST--
+New in initializers
+--FILE--
+<?php
+interface FooInterface
+{
+	public function bar();
+}
+
+enum Test implements FooInterface {
+}
+?>
+--EXPECT--
+[line=7, start=63, end=67] The type Test must implement the inherited abstract method FooInterface::bar()

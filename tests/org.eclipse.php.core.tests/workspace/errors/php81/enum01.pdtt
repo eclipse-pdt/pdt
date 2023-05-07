@@ -1,0 +1,13 @@
+--TEST--
+New in initializers
+--FILE--
+<?php
+enum Foo {
+	case A;
+	case X =1;
+	private $el;
+}
+?>
+--EXPECT--
+[line=4, start=32, end=33] Case Foo of non-backed enum X must not have a value
+[line=5, start=47, end=50] Enum may not include properties

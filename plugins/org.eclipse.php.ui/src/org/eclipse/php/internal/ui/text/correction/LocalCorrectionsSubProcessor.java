@@ -58,6 +58,11 @@ public class LocalCorrectionsSubProcessor {
 						hasProposal = true;
 					}
 					break;
+				} else if (typeNode instanceof EnumDeclaration) {
+					if (((EnumDeclaration) typeNode).resolveTypeBinding() != null) {
+						hasProposal = true;
+					}
+					break;
 				}
 			}
 		}

@@ -92,6 +92,7 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 		RESERVED_WORDS.add(new SimpleProposal("null", PHPVersion.PHP7_0)); //$NON-NLS-1$
 		RESERVED_WORDS.add(new SimpleProposal("true", PHPVersion.PHP7_0)); //$NON-NLS-1$
 		RESERVED_WORDS.add(new SimpleProposal("false", PHPVersion.PHP7_0)); //$NON-NLS-1$
+		RESERVED_WORDS.add(new SimpleProposal("never", PHPVersion.PHP8_1)); //$NON-NLS-1$
 	}
 
 	static {
@@ -99,6 +100,9 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 		TYPE_SKIP.add("self"); //$NON-NLS-1$
 		TYPE_SKIP.add("static"); //$NON-NLS-1$
 		TYPE_SKIP.add("null"); //$NON-NLS-1$
+		TYPE_SKIP.add("false"); //$NON-NLS-1$
+		TYPE_SKIP.add("true"); //$NON-NLS-1$
+
 		COMMENT_TYPE_SKIP.add("true"); //$NON-NLS-1$
 		COMMENT_TYPE_SKIP.add("false"); //$NON-NLS-1$
 	}
@@ -254,6 +258,10 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 		String id = "f" + s.getName(); //$NON-NLS-1$
 		Map<String, ISourceNode> childs = declarationScope.peekLast();
 		ISourceNode parentType = typeDeclarations.peekLast();
+		if (parentType instanceof EnumDeclaration) {
+			reportProblem(s, Messages.PropertyInEnum, PHPProblemIdentifier.InvalidClassBodyStatement, new String[] {},
+					ProblemSeverities.Error);
+		}
 		if (childs.containsKey(id) && !(parentType instanceof NamespaceDeclaration)
 				&& !(parentType instanceof IModuleDeclaration)) {
 			reportProblem(s.getNameStart(), s.getNameEnd(), Messages.DuplicateFieldDeclaration,
@@ -371,6 +379,21 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 				checkSuperclass(itf, true, s.getName());
 			}
 		}
+		return super.visit(s);
+	}
+
+	@Override
+	public boolean visit(EnumDeclaration s) throws Exception {
+		currentDeclaration = s;
+		checkReservedWord(s, "enum"); //$NON-NLS-1$
+		checkUnimplementedMethods(s, s.getRef());
+		if (s.getSuperClasses() != null) {
+			for (ASTNode node : s.getSuperClasses().getChilds()) {
+				checkSuperclass((TypeReference) node, true, s.getName());
+			}
+
+		}
+
 		return super.visit(s);
 	}
 
@@ -1121,7 +1144,27 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 	@Override
 	public boolean visit(ConstantDeclaration s) throws Exception {
 		currentDeclaration = s;
-		validateConstantExpression(s.getConstantValue(), ALLOW_NEW);
+		if (PHPFlags.isEnumCase(s.getModifiers())) {
+			ISourceNode parentType = typeDeclarations.peekLast();
+			if (parentType instanceof EnumDeclaration) {
+				EnumDeclaration decl = (EnumDeclaration) parentType;
+				if (decl.getBackingType() != null && s.getConstantValue() == null) {
+					reportProblem(s.getConstantName(), Messages.EnumCaseWithoutType,
+							PHPProblemIdentifier.InvalidClassBodyStatement,
+							new String[] { decl.getName(), s.getName() }, ProblemSeverities.Error);
+				} else if (decl.getBackingType() == null && s.getConstantValue() != null) {
+					reportProblem(s.getConstantName(), Messages.EnumCaseWithType,
+							PHPProblemIdentifier.InvalidClassBodyStatement,
+							new String[] { decl.getName(), s.getName() }, ProblemSeverities.Error);
+				}
+			} else {
+				reportProblem(s.getConstantName(), Messages.EnumCaseInClass,
+						PHPProblemIdentifier.InvalidClassBodyStatement, new String[] { s.getName() },
+						ProblemSeverities.Error);
+			}
+		} else {
+			validateConstantExpression(s.getConstantValue(), ALLOW_NEW);
+		}
 		String id = "c" + s.getName(); //$NON-NLS-1$
 		Map<String, ISourceNode> childs = declarationScope.peekLast();
 		if (childs.containsKey(id)) {

@@ -1,0 +1,56 @@
+--TEST--
+Test method generation
+--FILE--
+<?php
+
+namespace Foo;
+
+use Something\Test;
+
+enum |Service| implements \ArrayAccess {
+}
+--EXPECT--
+<?php
+
+namespace Foo;
+
+use Something\Test;
+
+enum Service implements \ArrayAccess {
+	/**
+	 * {@inheritDoc}
+	 * @see ArrayAccess::offsetExists()
+	 */
+	public function offsetExists($offset) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * @see ArrayAccess::offsetGet()
+	 */
+	public function offsetGet($offset) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * @see ArrayAccess::offsetSet()
+	 */
+	public function offsetSet($offset, $value) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * @see ArrayAccess::offsetUnset()
+	 */
+	public function offsetUnset($offset) {
+		// TODO Auto-generated method stub
+		
+	}
+
+}

@@ -79,7 +79,7 @@ public class DefaultPHPGoalEvaluatorFactory implements IGoalEvaluatorFactory {
 		Class<?> expressionClass = expression.getClass();
 
 		if (expressionClass == InterfaceDeclaration.class || expressionClass == ClassDeclaration.class
-				|| expressionClass == TraitDeclaration.class) {
+				|| expressionClass == TraitDeclaration.class || expressionClass == EnumDeclaration.class) {
 			return new PHPClassEvaluator(exprGoal, (TypeDeclaration) expression);
 		}
 		if (expressionClass == Assignment.class) {

@@ -34,8 +34,7 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
  * }
  * </pre>
  */
-public class EnumDeclaration extends TypeDeclaration
-		implements IPHPDocAwareDeclaration, IRecoverable, IAttributed {
+public class EnumDeclaration extends TypeDeclaration implements IPHPDocAwareDeclaration, IRecoverable, IAttributed {
 
 	private PHPDocBlock phpDoc;
 	private boolean isRecovered;
@@ -64,6 +63,7 @@ public class EnumDeclaration extends TypeDeclaration
 		setBody(body);
 
 		setModifier(IPHPModifiers.AccEnum | Modifiers.AccFinal);
+		this.backingType = backingType;
 	}
 
 	@Override

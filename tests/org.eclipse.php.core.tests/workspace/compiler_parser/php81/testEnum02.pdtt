@@ -11,7 +11,9 @@ enum Status: string
 ?>
 --EXPECT--
 <ModuleDeclaration start="0" end="126">
-	<EnumDeclaration start="6" end="122" modifiers="final" name="Status">
+	<EnumDeclaration start="6" end="122" modifiers="final" name="Status" type="string">
+		<FullyQualifiedReference start="19" end="25" name="string">
+		</FullyQualifiedReference>
 		<ConstantDeclaration start="32" end="53" modifiers="final,public,enum_case">
 			<ConstantReference start="37" end="42" name="Draft">
 			</ConstantReference>

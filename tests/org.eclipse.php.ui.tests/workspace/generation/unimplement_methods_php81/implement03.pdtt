@@ -1,0 +1,25 @@
+--TEST--
+Test method generation
+--FILE--
+<?php
+interface Foo {
+	static function abc();
+}
+enum |Bar| implements Foo {
+}
+--EXPECT--
+<?php
+interface Foo {
+	static function abc();
+}
+enum Bar implements Foo {
+	/**
+	 * {@inheritDoc}
+	 * @see Foo::abc()
+	 */
+	public static function abc() {
+		// TODO Auto-generated method stub
+		
+	}
+
+}

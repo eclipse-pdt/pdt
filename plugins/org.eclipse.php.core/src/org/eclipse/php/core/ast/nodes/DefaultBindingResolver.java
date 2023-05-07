@@ -797,6 +797,11 @@ public class DefaultBindingResolver extends BindingResolver {
 		}
 
 		@Override
+		public boolean visit(EnumDeclaration classDeclaration) {
+			return !isProgramScope;
+		}
+
+		@Override
 		public boolean visit(InterfaceDeclaration interfaceDeclaration) {
 			return !isProgramScope;
 		}

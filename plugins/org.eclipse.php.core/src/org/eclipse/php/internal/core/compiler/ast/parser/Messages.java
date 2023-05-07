@@ -66,6 +66,10 @@ public class Messages extends NLS {
 	public static String CannotUseReservedWord;
 	public static String UnexpectedNamespaceDeclaration;
 	public static String FirstTypeMustMatchFileName;
+	public static String PropertyInEnum;
+	public static String EnumCaseInClass;
+	public static String EnumCaseWithType;
+	public static String EnumCaseWithoutType;
 
 	static {
 		// initialize resource bundle

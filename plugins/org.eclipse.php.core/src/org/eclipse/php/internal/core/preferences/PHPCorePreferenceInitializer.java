@@ -44,6 +44,8 @@ public class PHPCorePreferenceInitializer extends AbstractPreferenceInitializer 
 				DefaultScope.INSTANCE);
 		problemPreferences.setSeverity(PHPProblemIdentifier.MethodRequiresBody, ProblemSeverity.ERROR,
 				DefaultScope.INSTANCE);
+		problemPreferences.setSeverity(PHPProblemIdentifier.InvalidClassBodyStatement, ProblemSeverity.ERROR,
+				DefaultScope.INSTANCE);
 		problemPreferences.setSeverity(PHPProblemIdentifier.AbstractMethodsInConcreteClass, ProblemSeverity.ERROR,
 				DefaultScope.INSTANCE);
 		problemPreferences.setSeverity(PHPProblemIdentifier.UndefinedType, ProblemSeverity.ERROR,
