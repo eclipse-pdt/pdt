@@ -15,6 +15,8 @@ package org.eclipse.php.internal.core.codeassist.contexts;
 
 import org.eclipse.dltk.annotations.NonNull;
 import org.eclipse.dltk.core.*;
+import org.eclipse.php.core.codeassist.ICompletionScope;
+import org.eclipse.php.core.codeassist.ICompletionScope.Type;
 import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 
@@ -42,7 +44,11 @@ public class GlobalMethodStatementContext extends AbstractGlobalStatementContext
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
 		}
-
+		ICompletionScope scope = getCompanion().getScope();
+		if (scope.getType() == Type.ATTRIBUTE
+				|| (scope.getType() == Type.HEAD && scope.getParent().getType() == Type.ATTRIBUTE)) {
+			return false;
+		}
 		// check whether enclosing element is a method
 		IModelElement enclosingElement = getEnclosingElement();
 		while (enclosingElement instanceof IField) {

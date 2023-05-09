@@ -24,7 +24,7 @@ import org.junit.runners.Suite.SuiteClasses;
 @RunWith(Suite.class)
 @SuiteClasses({ PHPElementConciliatorTest.class, PHPElementConciliatorV5_3Test.class,
 		PHPElementConciliatorV5_4Test.class, PHPElementConciliatorV5_5Test.class, PHPElementConciliatorV5_6Test.class,
-		PHPElementConciliatorV7Test.class })
+		PHPElementConciliatorV7Test.class, PHPElementConciliatorV8_0Test.class })
 public class AllTests {
 
 	@ClassRule

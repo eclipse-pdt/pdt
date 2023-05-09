@@ -177,8 +177,12 @@ public class ScopeParser {
 									pushState(new NamedState(Type.CLASS, tokenStart));
 								}
 								break;
+
 							case PHPRegionTypes.PHP_TRAIT:
 								pushState(new NamedState(Type.TRAIT, tokenStart));
+								break;
+							case PHPRegionTypes.PHP_ENUM:
+								pushState(new NamedState(Type.ENUM, tokenStart));
 								break;
 							case PHPRegionTypes.PHP_INTERFACE:
 								pushState(new NamedState(Type.INTERFACE, tokenStart));
@@ -216,6 +220,9 @@ public class ScopeParser {
 								} else if (current.type != Type.USE_GROUP) {
 									pushState(new NamedState(Type.FUNCTION, tokenStart));
 								}
+								break;
+							case PHPRegionTypes.PHP_ATTRIBUTE:
+								pushState(new ControlState(Type.ATTRIBUTE, tokenStart));
 								break;
 							case PHPRegionTypes.PHP_CURLY_OPEN:
 								if (current.type == Type.HEAD && current.nest == -1) {
@@ -270,9 +277,24 @@ public class ScopeParser {
 							case PHPRegionTypes.PHP_CATCH:
 								pushState(new ControlState(Type.CATCH, tokenStart));
 								break;
+							case PHPRegionTypes.PHP_CASE:
+								if (current.type == Type.BLOCK) {
+									State pop = states.pop();
+									if (states.peek() != null && states.peek().type == Type.ENUM) {
+										states.push(pop);
+										pushState(new NamedState(Type.ENUM_CASE, tokenStart));
+									} else {
+										states.push(pop);
+									}
+								}
+								break;
+							case PHPRegionTypes.PHP_MATCH:
+								pushState(new ControlState(Type.MATCH, tokenStart));
+								break;
 							case PHPRegionTypes.PHP_FINALLY:
 								pushState(new ControlState(Type.FINALLY, tokenStart));
 								break;
+
 							case PHPRegionTypes.PHP_DO:
 								pushState(new ControlState(Type.DOWHILE, tokenStart));
 								break;
@@ -305,6 +327,7 @@ public class ScopeParser {
 									buffer.add(phpToken);
 									current = states.peek();
 								}
+
 							case PHPRegionTypes.PHP_LABEL:
 								if (current instanceof NamedState && collectName) {
 									((NamedState) current).name
@@ -337,6 +360,7 @@ public class ScopeParser {
 								case USE_FUNCTION:
 								case USE_CONST:
 								case TRAIT_USE:
+								case ENUM_CASE:
 									popState(tokenEnd);
 									break;
 								case WHILE:
@@ -384,6 +408,16 @@ public class ScopeParser {
 									default:
 									}
 									break;
+								case '[':
+									current.nest++;
+									break;
+								case ']':
+									if (current.nest > 0) {
+										current.nest--;
+									} else if (current.type == Type.ATTRIBUTE) {
+										popState(tokenEnd);
+									}
+									break;
 								case '(':
 									if (current instanceof OneLinerState) {
 										current.nest++;
@@ -397,6 +431,9 @@ public class ScopeParser {
 									case DOWHILE:
 									case CATCH:
 									case FUNCTION:
+									case ATTRIBUTE:
+									case MATCH:
+									case ENUM:
 									case IF:
 										pushState(new State(Type.HEAD, tokenStart));
 										collectName = false;
@@ -496,6 +533,9 @@ public class ScopeParser {
 									pushState(new State(Type.USE_CONST, current.start));
 									current = states.peek();
 								} else if (current.type != Type.USE_GROUP) {
+									if (current.type == Type.TYPE_STATEMENT) {
+										states.pop();
+									}
 									pushState(new State(Type.CONST, tokenStart));
 								}
 								break;
@@ -505,7 +545,12 @@ public class ScopeParser {
 							case PHPRegionTypes.PHP_PROTECTED:
 							case PHPRegionTypes.PHP_PUBLIC:
 							case PHPRegionTypes.PHP_READONLY:
-								if (current.type != Type.TYPE_STATEMENT) {
+							case PHPRegionTypes.PHP_MIXED:
+							case PHPRegionTypes.PHP_NEVER:
+								if (current instanceof NamedState && collectName) {
+									((NamedState) current).name
+											.append(document.get(tokenStart, phpToken.getTextLength()));
+								} else if (current.type != Type.TYPE_STATEMENT) {
 									pushState(new State(Type.TYPE_STATEMENT, tokenStart));
 								}
 								break;

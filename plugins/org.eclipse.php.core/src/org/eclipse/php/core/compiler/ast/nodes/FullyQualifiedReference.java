@@ -56,6 +56,8 @@ public class FullyQualifiedReference extends TypeReference {
 			// ignore
 			if (global) {
 				setNamespace(new NamespaceReference(start, start + 1, NamespaceReference.EMPTY, global, local));
+			} else if (local) {
+				setNamespace(new NamespaceReference(start, start, NamespaceReference.EMPTY, global, local));
 			}
 		} else {
 			setNamespace(new NamespaceReference(start, start + pos + (global ? 1 : 0), fqn.substring(0, pos), global,

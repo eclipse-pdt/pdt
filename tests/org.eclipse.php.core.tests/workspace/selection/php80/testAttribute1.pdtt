@@ -1,0 +1,10 @@
+--TEST--
+--FILE--
+<?php
+#[|PDO|()]
+class My {
+
+}
+?>
+--EXPECT--
+method(__construct)

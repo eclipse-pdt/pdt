@@ -1,0 +1,21 @@
+--TEST--
+
+--FILE--
+<?php 
+
+class Text {
+
+	public function __constructor(
+		#[PropAttr(|)]
+		public int $variable;
+	) {}
+}
+
+--EXPECT--
+HEAD(66,2)
+ATTRIBUTE(56,13)
+HEAD(52,44)
+FUNCTION(23,76,__constructor)
+BLOCK(19,82)
+CLASS(8,93,Text)
+FILE(0,103)

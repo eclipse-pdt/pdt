@@ -148,6 +148,19 @@ public class CodeAssistScopeTests {
 						"/workspace/codeassist_scope/php56", "/workspace/codeassist_scope/php7",
 						"/workspace/codeassist_scope/php71", "/workspace/codeassist_scope/php72",
 						"/workspace/codeassist_scope/php74" });
+		TESTS.put(PHPVersion.PHP8_0,
+				new String[] { "/workspace/codeassist_scope/php5", "/workspace/codeassist_scope/php53",
+						"/workspace/codeassist_scope/php54", "/workspace/codeassist_scope/php55",
+						"/workspace/codeassist_scope/php56", "/workspace/codeassist_scope/php7",
+						"/workspace/codeassist_scope/php71", "/workspace/codeassist_scope/php72",
+						"/workspace/codeassist_scope/php74", "/workspace/codeassist_scope/php80" });
+		TESTS.put(PHPVersion.PHP8_1,
+				new String[] { "/workspace/codeassist_scope/php5", "/workspace/codeassist_scope/php53",
+						"/workspace/codeassist_scope/php54", "/workspace/codeassist_scope/php55",
+						"/workspace/codeassist_scope/php56", "/workspace/codeassist_scope/php7",
+						"/workspace/codeassist_scope/php71", "/workspace/codeassist_scope/php72",
+						"/workspace/codeassist_scope/php74", "/workspace/codeassist_scope/php80",
+						"/workspace/codeassist_scope/php81" });
 	};
 
 	private IProject project;

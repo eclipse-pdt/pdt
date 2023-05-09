@@ -1,0 +1,10 @@
+--TEST--
+
+--FILE--
+<?php 
+#[|]
+class Text {}
+
+--EXPECT--
+ATTRIBUTE(7,3)
+FILE(0,26)

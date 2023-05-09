@@ -78,15 +78,16 @@ public class CompletionContextResolver implements ICompletionContextResolver {
 				new PHPDocReturnTagContext(), new PHPDocMagicTagsContext(), new PHPDocTagInnerContext(),
 				new ArrayKeyContext(), new CatchTypeContext(), new CatchVariableContext(),
 				new ClassDeclarationKeywordContext(), new ClassExtendsContext(), new ClassImplementsContext(),
-				new ClassInstantiationContext(), new ClassObjMemberContext(), new TypeStatementContext(),
-				new ClassStaticMemberContext(), new FunctionParameterTypeContext(), new FunctionReturnTypeContext(),
-				new FunctionParameterValueContext(), new FunctionParameterVariableContext(), new MethodNameContext(),
-				new GlobalStatementContext(), new GlobalMethodStatementContext(), new InstanceOfContext(),
-				new InterfaceExtendsContext(), new InterfaceDeclarationKeywordContext(), new UseAliasContext(),
-				new UseNameContext(), new UseConstNameContext(), new UseFunctionNameContext(),
-				new GotoStatementContext(), new NamespaceDeclContext(), new IncludeStatementContext(),
-				new ExceptionClassInstantiationContext(), new TypeCastingContext(), new QuotesContext(),
-				new TraitConflictContext() };
+				new ClassInstantiationContext(), new AttributeInstantiationContext(), new ClassObjMemberContext(),
+				new TypeStatementContext(), new ClassStaticMemberContext(), new FunctionParameterTypeContext(),
+				new FunctionReturnTypeContext(), new FunctionParameterValueContext(),
+				new FunctionParameterVariableContext(), new MethodNameContext(), new GlobalStatementContext(),
+				new GlobalMethodStatementContext(), new InstanceOfContext(), new InterfaceExtendsContext(),
+				new InterfaceDeclarationKeywordContext(), new UseAliasContext(), new UseNameContext(),
+				new UseConstNameContext(), new UseFunctionNameContext(), new GotoStatementContext(),
+				new NamespaceDeclContext(), new IncludeStatementContext(), new ExceptionClassInstantiationContext(),
+				new TypeCastingContext(), new QuotesContext(), new TraitConflictContext(),
+				new FunctionCallParameterContext() };
 	}
 
 	@Override

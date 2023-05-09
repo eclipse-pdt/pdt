@@ -16,6 +16,8 @@ package org.eclipse.php.internal.core.codeassist.contexts;
 import org.eclipse.dltk.annotations.NonNull;
 import org.eclipse.dltk.core.*;
 import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.php.core.codeassist.ICompletionScope;
+import org.eclipse.php.core.codeassist.ICompletionScope.Type;
 import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
@@ -43,6 +45,11 @@ public class GlobalStatementContext extends AbstractGlobalStatementContext {
 			return false;
 		}
 
+		ICompletionScope scope = getCompanion().getScope();
+		if (scope.getType() == Type.ATTRIBUTE
+				|| (scope.getType() == Type.HEAD && scope.getParent().getType() == Type.ATTRIBUTE)) {
+			return false;
+		}
 		// check whether enclosing element is not a class
 		try {
 			IModelElement enclosingElement = getEnclosingElement();

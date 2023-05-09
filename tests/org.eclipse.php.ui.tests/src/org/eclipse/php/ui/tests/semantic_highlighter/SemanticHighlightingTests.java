@@ -104,9 +104,12 @@ public class SemanticHighlightingTests {
 		TESTS.put(PHPVersion.PHP5_3, new String[] { "/workspace/semantic_highlighting/php53" });
 		TESTS.put(PHPVersion.PHP5_4, new String[] { "/workspace/semantic_highlighting/php54" });
 		TESTS.put(PHPVersion.PHP7_1, new String[] { "/workspace/semantic_highlighting/php71" });
-		TESTS.put(PHPVersion.PHP8_0, new String[] { "/workspace/semantic_highlighting/php71" });
-		TESTS.put(PHPVersion.PHP8_1, new String[] { "/workspace/semantic_highlighting/php71" });
-		TESTS.put(PHPVersion.PHP8_2, new String[] { "/workspace/semantic_highlighting/php71" });
+		TESTS.put(PHPVersion.PHP8_0,
+				new String[] { "/workspace/semantic_highlighting/php71", "/workspace/semantic_highlighting/php80" });
+		TESTS.put(PHPVersion.PHP8_1,
+				new String[] { "/workspace/semantic_highlighting/php71", "/workspace/semantic_highlighting/php80" });
+		TESTS.put(PHPVersion.PHP8_2,
+				new String[] { "/workspace/semantic_highlighting/php71", "/workspace/semantic_highlighting/php80" });
 	};
 
 	@Context

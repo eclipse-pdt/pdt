@@ -1,0 +1,15 @@
+--TEST--
+
+--FILE--
+<?php 
+enum MyEnum: str|ing implements Something {
+	case X;
+	case Y;
+	
+	public static function test() {
+		
+	}
+}
+--EXPECT--
+ENUM(7,103,MyEnum)
+FILE(0,111)

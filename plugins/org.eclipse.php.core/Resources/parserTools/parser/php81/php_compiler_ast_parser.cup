@@ -950,7 +950,7 @@ string_st:i
 :}
 | T_NAME_RELATIVE:i
 {:
-	RESULT = new FullyQualifiedReference(ileft, iright, i, false, true);
+	RESULT = new FullyQualifiedReference(ileft+ 10, iright, i.substring(10), false, true);
 :}
 ;
 

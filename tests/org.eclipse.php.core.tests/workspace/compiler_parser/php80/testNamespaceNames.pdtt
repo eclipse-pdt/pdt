@@ -40,8 +40,8 @@ new namespace\Some();
 	</UseStatement>
 	<ExpressionStatement start="43" end="64">
 		<ClassInstanceCreation start="43" end="63">
-			<FullyQualifiedReference start="47" end="61" name="namespace\namespace\Some">
-				<NamespaceReference start="47" end="56" name="namespace\namespace" global="false" local="true">
+			<FullyQualifiedReference start="57" end="61" name="namespace\Some">
+				<NamespaceReference start="57" end="57" name="namespace\" global="false" local="true">
 				</NamespaceReference>
 			</FullyQualifiedReference>
 			<PHPCallArgumentsList start="62" end="62">

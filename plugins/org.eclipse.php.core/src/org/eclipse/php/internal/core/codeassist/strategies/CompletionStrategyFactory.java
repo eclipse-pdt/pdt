@@ -162,6 +162,9 @@ public class CompletionStrategyFactory implements ICompletionStrategyFactory {
 			return new ICompletionStrategy[] { new ClassInstantiationStrategy(context),
 					new VariablesStrategy(context, false) };
 		}
+		if (contextClass == AttributeInstantiationContext.class) {
+			return new ICompletionStrategy[] { new AttributeInstantiationStrategy(context) };
+		}
 		if (contextClass == InstanceOfContext.class) {
 			return new ICompletionStrategy[] { new InstanceOfStrategy(context) };
 		}

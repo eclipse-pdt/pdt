@@ -87,6 +87,11 @@ public class SelectionEngineTests {
 				new String[] { "/workspace/selection/php5", "/workspace/selection/php53", "/workspace/selection/php54",
 						"/workspace/selection/php55", "/workspace/selection/php56", "/workspace/selection/php7",
 						"/workspace/selection/php71", "/workspace/selection/php72", "/workspace/selection/php73" });
+		TESTS.put(PHPVersion.PHP8_0,
+				new String[] { "/workspace/selection/php5", "/workspace/selection/php53", "/workspace/selection/php54",
+						"/workspace/selection/php55", "/workspace/selection/php56", "/workspace/selection/php7",
+						"/workspace/selection/php71", "/workspace/selection/php72", "/workspace/selection/php73",
+						"/workspace/selection/php80" });
 	};
 
 	protected IProject project;

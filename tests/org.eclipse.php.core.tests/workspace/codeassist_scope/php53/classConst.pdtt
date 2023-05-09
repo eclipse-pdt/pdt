@@ -1,0 +1,18 @@
+--TEST--
+Global
+--FILE--
+<?php 
+class T {
+	public $x;
+	const X = 1;
+	public function x() {
+		|
+	}
+}
+
+--EXPECT--
+BLOCK(64,7)
+FUNCTION(44,27,x)
+BLOCK(15,58)
+CLASS(7,66,T)
+FILE(0,75)

@@ -119,7 +119,6 @@ public class PHPTemplateCompletionProcessor extends ScriptTemplateCompletionProc
 				enclosingElement = enclosingElement.getParent();
 			}
 			enclosingType = (IType) enclosingElement;
-
 			if (enclosingMethod == null && enclosingType == null && !isFieldAccess) {
 				contextIds.add(PHPTemplateContextType.PHP_STATEMENTS_CONTEXT_TYPE_ID);
 				contextIds.add(PHPTemplateContextType.PHP_GLOBAL_MEMBERS_CONTEXT_TYPE_ID);
@@ -445,7 +444,8 @@ public class PHPTemplateCompletionProcessor extends ScriptTemplateCompletionProc
 
 	/*
 	 * @see
-	 * org.eclipse.dltk.ui.templates.ScriptTemplateCompletionProcessor#getIgnore ()
+	 * org.eclipse.dltk.ui.templates.ScriptTemplateCompletionProcessor#getIgnore
+	 * ()
 	 */
 	@Override
 	protected char[] getIgnore() {
@@ -462,12 +462,12 @@ public class PHPTemplateCompletionProcessor extends ScriptTemplateCompletionProc
 	}
 
 	/**
-	 * Returns <code>true</code> if one line is completely selected or if multiple
-	 * lines are selected. Being completely selected means that all characters
-	 * except the new line characters are selected.
+	 * Returns <code>true</code> if one line is completely selected or if
+	 * multiple lines are selected. Being completely selected means that all
+	 * characters except the new line characters are selected.
 	 * 
 	 * @param viewer
-	 *                   the text viewer
+	 *            the text viewer
 	 * @return <code>true</code> if one or multiple lines are selected
 	 * @since 2.1
 	 */

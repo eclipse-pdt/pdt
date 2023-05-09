@@ -132,7 +132,7 @@ public class PHPElementConciliator {
 			parent = ((Identifier) locateNode).getParent();
 			parent = parent.getParent();
 		} else if (type == ASTNode.SINGLE_FIELD_DECLARATION || type == ASTNode.FIELD_DECLARATION
-				|| type == ASTNode.METHOD_DECLARATION) {
+				|| type == ASTNode.ENUM_CASE_DECLARATION || type == ASTNode.METHOD_DECLARATION) {
 			parent = locateNode;
 		} else {
 			parent = locateNode.getParent();
@@ -171,7 +171,8 @@ public class PHPElementConciliator {
 			}
 		}
 
-		if (parent.getType() == ASTNode.FIELD_DECLARATION || parent.getType() == ASTNode.METHOD_DECLARATION) {
+		if (parent.getType() == ASTNode.FIELD_DECLARATION || parent.getType() == ASTNode.ENUM_CASE_DECLARATION
+				|| parent.getType() == ASTNode.METHOD_DECLARATION) {
 			return true;
 		}
 
@@ -182,7 +183,8 @@ public class PHPElementConciliator {
 			}
 		}
 
-		// look for "const FOO = ..." declarations INSIDE class or interface declaration
+		// look for "const FOO = ..." declarations INSIDE class or interface
+		// declaration
 		if (parent.getType() == ASTNode.CONSTANT_DECLARATION && !isGlobalConstDeclaration(locateNode)) {
 			return true;
 		}
@@ -279,8 +281,8 @@ public class PHPElementConciliator {
 		assert locateNode != null;
 
 		ASTNode parent = null;
-		if (locateNode.getType() == ASTNode.CLASS_DECLARATION
-				|| locateNode.getType() == ASTNode.INTERFACE_DECLARATION) {
+		if (locateNode.getType() == ASTNode.CLASS_DECLARATION || locateNode.getType() == ASTNode.INTERFACE_DECLARATION
+				|| locateNode.getType() == ASTNode.ENUM_DECLARATION) {
 			parent = locateNode;
 		} else if (locateNode.getType() == ASTNode.IDENTIFIER) {
 			parent = locateNode.getParent();
@@ -297,8 +299,9 @@ public class PHPElementConciliator {
 			return false;
 		}
 		final int parentType = parent.getType();
-		if (parentType == ASTNode.CLASS_NAME || parentType == ASTNode.CLASS_DECLARATION
-				|| parentType == ASTNode.INTERFACE_DECLARATION || parentType == ASTNode.CATCH_CLAUSE
+		if (parentType == ASTNode.CLASS_NAME || parentType == ASTNode.ATTRIBUTE
+				|| parentType == ASTNode.CLASS_DECLARATION || parentType == ASTNode.INTERFACE_DECLARATION
+				|| parentType == ASTNode.ENUM_DECLARATION || parentType == ASTNode.CATCH_CLAUSE
 				|| parentType == ASTNode.FORMAL_PARAMETER || parentType == ASTNode.USE_STATEMENT_PART
 				|| parentType == ASTNode.RETURN_TYPE || parentType == ASTNode.ANONYMOUS_CLASS_DECLARATION) {
 			return true;

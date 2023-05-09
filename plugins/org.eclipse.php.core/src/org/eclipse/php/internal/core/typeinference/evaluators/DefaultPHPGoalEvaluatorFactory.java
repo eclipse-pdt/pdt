@@ -107,6 +107,10 @@ public class DefaultPHPGoalEvaluatorFactory implements IGoalEvaluatorFactory {
 		if (expressionClass == ClassInstanceCreation.class) {
 			return new InstanceCreationEvaluator(exprGoal);
 		}
+
+		if (expressionClass == Attribute.class) {
+			return new AttributeCreationEvaluator(exprGoal);
+		}
 		if (expressionClass == InfixExpression.class) {
 			return new InfixExpressionEvaluator(exprGoal);
 		}

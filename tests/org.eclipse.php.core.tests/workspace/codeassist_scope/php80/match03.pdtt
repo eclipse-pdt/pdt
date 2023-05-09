@@ -1,0 +1,13 @@
+--TEST--
+
+--FILE--
+<?php 
+echo match (8.0|) {
+  '8.0'| => "Oh no!",
+  8.0 => "This is what I expected",
+};
+--EXPECT--
+BLOCK(25,60)
+MATCH(12,73)
+FILE(0,87)
+

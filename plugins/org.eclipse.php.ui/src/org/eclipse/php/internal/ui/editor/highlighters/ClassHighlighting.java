@@ -96,6 +96,12 @@ public class ClassHighlighting extends AbstractSemanticHighlighting {
 		}
 
 		@Override
+		public boolean visit(Attribute attribute) {
+			highlightIdentifier(attribute.getAttributeName(), false);
+			return true;
+		}
+
+		@Override
 		public boolean visit(FunctionDeclaration functionDeclaration) {
 			if (functionDeclaration.getReturnType() == null) {
 				return true;

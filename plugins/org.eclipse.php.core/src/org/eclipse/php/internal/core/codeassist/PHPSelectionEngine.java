@@ -455,6 +455,15 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 			}
 			return elements;
 		}
+		// attribute
+		else if (node instanceof Attribute) {
+			IEvaluatedType evaluatedType = PHPTypeInferenceUtils.resolveExpression(sourceModule, node);
+			if (evaluatedType != null) {
+				return getConstructorsIfAny(extractClasses(
+						PHPModelUtils.getTypes(evaluatedType.getTypeName(), sourceModule, offset, cache, null)));
+			}
+
+		}
 		// 'new' statement
 		else if (node instanceof ClassInstanceCreation) {
 			ClassInstanceCreation newNode = (ClassInstanceCreation) node;

@@ -1,0 +1,13 @@
+--TEST--
+
+--FILE--
+<?php 
+#[Attr, Attr([
+	'' => '|'
+])]
+class Text {}
+
+--EXPECT--
+HEAD(19,15)
+ATTRIBUTE(7,28)
+FILE(0,51)

@@ -1,0 +1,11 @@
+--TEST--
+Test Class Semantic highlighting
+--FILE--
+<?php
+#[PDO]
+class Test {}
+?>
+--EXPECT--
+org.eclipse.php.internal.ui.editor.highlighters.ClassHighlighting:
+highlight(Test)
+highlight(PDO)
