@@ -73,6 +73,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 
 	private static final String OPEN_BRACE = "("; //$NON-NLS-1$
 	private static final String PROTECTED = "protected"; //$NON-NLS-1$
+	private static final String READONLY = "readonly"; //$NON-NLS-1$
 	private static final String PUBLIC = "public"; //$NON-NLS-1$
 	private static final String OBJECT_OPERATOR = "->"; //$NON-NLS-1$
 	private static final String PAAMAYIM_NEKUDOTAIM = "::"; //$NON-NLS-1$
@@ -85,6 +86,8 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 	private static final String EXTENDS = "extends"; //$NON-NLS-1$
 	private static final String NEW = "new"; //$NON-NLS-1$
 	private static final String INTERFACE = "interface"; //$NON-NLS-1$
+	private static final String ENUM = "enum"; //$NON-NLS-1$
+	private static final String TRAIT = "trait"; //$NON-NLS-1$
 	private static final String CLASS = "class"; //$NON-NLS-1$
 	private static final String FUNCTION = "function"; //$NON-NLS-1$
 	private static final String INSTEADOF = "insteadof"; //$NON-NLS-1$
@@ -305,6 +308,9 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 		if (context instanceof IModelCacheContext) {
 			((IModelCacheContext) context).setCache(cache);
 		}
+		if (node instanceof NamedExpression) {
+			return processNamedExpression((NamedExpression) node, sourceModule, parsedUnit, offset, context, cache);
+		}
 
 		// Function call:
 		if (node instanceof PHPCallExpression) {
@@ -466,60 +472,9 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 		}
 		// 'new' statement
 		else if (node instanceof ClassInstanceCreation) {
-			ClassInstanceCreation newNode = (ClassInstanceCreation) node;
-			Expression className = newNode.getClassName();
+			return processClassInstanceCreation((ClassInstanceCreation) node, sourceModule, parsedUnit, offset, context,
+					cache);
 
-			if ((className instanceof SimpleReference || className instanceof FullyQualifiedReference)) {
-				IEvaluatedType evaluatedType = PHPTypeInferenceUtils.resolveExpression(sourceModule, node);
-				if (evaluatedType != null) {
-					return getConstructorsIfAny(extractClasses(
-							PHPModelUtils.getTypes(evaluatedType.getTypeName(), sourceModule, offset, cache, null)));
-				}
-			} else if ((className instanceof StaticFieldAccess)) {
-				StaticFieldAccess staticFieldAccess = (StaticFieldAccess) className;
-				if ((offset >= staticFieldAccess.getDispatcher().sourceStart())
-						&& (offset <= staticFieldAccess.getDispatcher().sourceEnd())) {
-					className = staticFieldAccess.getDispatcher();
-					IEvaluatedType evaluatedType = PHPTypeInferenceUtils.resolveExpression(sourceModule, className);
-					if (evaluatedType != null) {
-						return extractClasses(
-								PHPModelUtils.getTypes(evaluatedType.getTypeName(), sourceModule, offset, cache, null));
-					}
-				} else if ((offset >= staticFieldAccess.getField().sourceStart())
-						&& (offset <= staticFieldAccess.getField().sourceEnd())) {
-					className = staticFieldAccess.getField();
-
-					String fieldName = null;
-					ASTNode field = staticFieldAccess.getField();
-					if (field instanceof VariableReference) {
-						fieldName = ((VariableReference) field).getName();
-					}
-					if (fieldName != null && staticFieldAccess.getDispatcher() != null) {
-						IEvaluatedType dispatcherType = PHPTypeInferenceUtils.resolveExpression(sourceModule,
-								parsedUnit, context, staticFieldAccess.getDispatcher());
-						if (dispatcherType != null) {
-							IModelElement[] elements = PHPTypeInferenceUtils.getModelElements(dispatcherType,
-									(ISourceModuleContext) context, offset);
-							List<IModelElement> fields = new LinkedList<>();
-							if (elements != null) {
-								for (IModelElement element : elements) {
-									if (element instanceof IType) {
-										IType type = (IType) element;
-										try {
-											fields.addAll(
-													Arrays.asList(PHPModelUtils.getTypeField(type, fieldName, true)));
-										} catch (ModelException e) {
-											PHPCorePlugin.log(e);
-										}
-									}
-								}
-							}
-							return fields.toArray(new IModelElement[fields.size()]);
-						}
-					}
-				}
-
-			}
 		}
 		// Class name in declaration
 		else if ((node instanceof TypeDeclaration || node instanceof MethodDeclaration)
@@ -785,7 +740,8 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 			}
 
 			// If we are in class declaration:
-			if (CLASS.equalsIgnoreCase(prevWord) || INTERFACE.equalsIgnoreCase(prevWord)) {
+			if (CLASS.equalsIgnoreCase(prevWord) || INTERFACE.equalsIgnoreCase(prevWord)
+					|| ENUM.equalsIgnoreCase(prevWord) || TRAIT.equalsIgnoreCase(prevWord)) {
 				if (containerType != null) {
 					if (containerType.getElementName().equalsIgnoreCase(elementName)) {
 						containerType = PHPModelUtils.getCurrentNamespace(sourceModule, offset);
@@ -861,15 +817,17 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 				}
 
 				// If we are in var definition:
+				IMethod currentMethod = PHPModelUtils.getCurrentMethod(sourceModule, offset);
 				if (containerType != null) {
-					if (VAR.equalsIgnoreCase(firstWord) || PRIVATE.equalsIgnoreCase(firstWord)
-							|| STATIC.equalsIgnoreCase(firstWord) || PUBLIC.equalsIgnoreCase(firstWord)
-							|| PROTECTED.equalsIgnoreCase(firstWord)) {
-						return PHPModelUtils.getTypeField(containerType, elementName, true);
-					}
-					if (THIS.equalsIgnoreCase(elementName)) {
+					if (THIS.equalsIgnoreCase(elementName) || elementName.substring(1).equalsIgnoreCase(THIS)) {
 						return new IModelElement[] { containerType };
 					}
+					if (currentMethod == null && (VAR.equalsIgnoreCase(firstWord) || PRIVATE.equalsIgnoreCase(firstWord)
+							|| STATIC.equalsIgnoreCase(firstWord) || PUBLIC.equalsIgnoreCase(firstWord)
+							|| PROTECTED.equalsIgnoreCase(firstWord) || READONLY.equalsIgnoreCase(firstWord))) {
+						return PHPModelUtils.getTypeField(containerType, elementName, true);
+					}
+
 				}
 
 				return getGlobalOrMethodFields(sourceModule, offset, elementName);
@@ -965,6 +923,106 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 		}
 
 		return EMPTY;
+	}
+
+	private IModelElement[] processClassInstanceCreation(ClassInstanceCreation newNode, ISourceModule sourceModule,
+			ModuleDeclaration parsedUnit, int offset, IContext context, IModelAccessCache cache) throws ModelException {
+		Expression className = newNode.getClassName();
+
+		if ((className instanceof SimpleReference || className instanceof FullyQualifiedReference)) {
+			IEvaluatedType evaluatedType = PHPTypeInferenceUtils.resolveExpression(sourceModule, newNode);
+			if (evaluatedType != null) {
+				return getConstructorsIfAny(extractClasses(
+						PHPModelUtils.getTypes(evaluatedType.getTypeName(), sourceModule, offset, cache, null)));
+			}
+		} else if ((className instanceof StaticFieldAccess)) {
+			StaticFieldAccess staticFieldAccess = (StaticFieldAccess) className;
+			if ((offset >= staticFieldAccess.getDispatcher().sourceStart())
+					&& (offset <= staticFieldAccess.getDispatcher().sourceEnd())) {
+				className = staticFieldAccess.getDispatcher();
+				IEvaluatedType evaluatedType = PHPTypeInferenceUtils.resolveExpression(sourceModule, className);
+				if (evaluatedType != null) {
+					return extractClasses(
+							PHPModelUtils.getTypes(evaluatedType.getTypeName(), sourceModule, offset, cache, null));
+				}
+			} else if ((offset >= staticFieldAccess.getField().sourceStart())
+					&& (offset <= staticFieldAccess.getField().sourceEnd())) {
+				className = staticFieldAccess.getField();
+
+				String fieldName = null;
+				ASTNode field = staticFieldAccess.getField();
+				if (field instanceof VariableReference) {
+					fieldName = ((VariableReference) field).getName();
+				}
+				if (fieldName != null && staticFieldAccess.getDispatcher() != null) {
+					IEvaluatedType dispatcherType = PHPTypeInferenceUtils.resolveExpression(sourceModule, parsedUnit,
+							context, staticFieldAccess.getDispatcher());
+					if (dispatcherType != null) {
+						IModelElement[] elements = PHPTypeInferenceUtils.getModelElements(dispatcherType,
+								(ISourceModuleContext) context, offset);
+						List<IModelElement> fields = new LinkedList<>();
+						if (elements != null) {
+							for (IModelElement element : elements) {
+								if (element instanceof IType) {
+									IType type = (IType) element;
+									try {
+										fields.addAll(Arrays.asList(PHPModelUtils.getTypeField(type, fieldName, true)));
+									} catch (ModelException e) {
+										PHPCorePlugin.log(e);
+									}
+								}
+							}
+						}
+						return fields.toArray(new IModelElement[fields.size()]);
+					}
+				}
+			}
+
+		}
+		return EMPTY;
+	}
+
+	private IModelElement[] processAttribute(Attribute namedExpression, ISourceModule sourceModule,
+			ModuleDeclaration parsedUnit, int offset, IContext context, IModelAccessCache cache) {
+
+		return EMPTY;
+	}
+
+	private IModelElement[] processNamedExpression(NamedExpression namedExpression, ISourceModule sourceModule,
+			ModuleDeclaration parsedUnit, int offset, IContext context, IModelAccessCache cache) throws ModelException {
+		ASTNode call = null;
+		for (ASTNode node : ASTUtils.restoreWayToNode(parsedUnit, namedExpression)) {
+			if (node instanceof PHPCallExpression || node instanceof ClassInstanceCreation
+					|| node instanceof Attribute) {
+				call = node;
+			}
+		}
+		if (call == null) {
+			return EMPTY;
+		}
+		IModelElement[] result = EMPTY;
+		if (call instanceof PHPCallExpression) {
+			result = processPHPCallExpression((PHPCallExpression) call, sourceModule, parsedUnit, offset, context,
+					cache);
+		} else if (call instanceof Attribute) {
+			IEvaluatedType evaluatedType = PHPTypeInferenceUtils.resolveExpression(sourceModule, call);
+			if (evaluatedType != null) {
+				result = getConstructorsIfAny(extractClasses(
+						PHPModelUtils.getTypes(evaluatedType.getTypeName(), sourceModule, offset, cache, null)));
+			}
+		} else if (call instanceof ClassInstanceCreation) {
+			result = processClassInstanceCreation((ClassInstanceCreation) call, sourceModule, parsedUnit, offset,
+					context, cache);
+		}
+		if (result.length > 0 && result[0] instanceof IMethod) {
+			IMethod method = (IMethod) result[0];
+			for (IModelElement f : method.getChildren()) {
+				if (f instanceof IField && f.getElementName().equals('$' + namedExpression.getName())) {
+					return new IModelElement[] { f };
+				}
+			}
+		}
+		return result;
 	}
 
 	private IModelElement[] processPHPCallExpression(PHPCallExpression callExpression, ISourceModule sourceModule,

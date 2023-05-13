@@ -1,0 +1,9 @@
+--TEST--
+--FILE--
+<?php
+class MyClass {
+	public function f(int |$param|) {}
+}
+?>
+--EXPECT--
+field($param)

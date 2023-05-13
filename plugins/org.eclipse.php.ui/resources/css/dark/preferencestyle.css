@@ -53,6 +53,12 @@ IEclipsePreferences#org-eclipse-php-ui {
         'semanticHighlighting.org.eclipse.php.internal.ui.editor.highlighters.VarDocCommentHighlighting.color=#626262'
         'semanticHighlighting.org.eclipse.php.internal.ui.editor.highlighters.VarDocHighlighting.bold=true'
         'semanticHighlighting.org.eclipse.php.internal.ui.editor.highlighters.VarDocHighlighting.color=#9a8c7c'
+        'semanticHighlighting.org.eclipse.php.internal.ui.editor.highlighters.AttributeHighlighting.bold=true'
+        'semanticHighlighting.org.eclipse.php.internal.ui.editor.highlighters.AttributeHighlighting.italic=false'
+        'semanticHighlighting.org.eclipse.php.internal.ui.editor.highlighters.AttributeHighlighting.color=#afb3b1'
+        'semanticHighlighting.org.eclipse.php.internal.ui.editor.highlighters.NamedExpressionHighlighting.bold=false'
+        'semanticHighlighting.org.eclipse.php.internal.ui.editor.highlighters.NamedExpressionHighlighting.italic=false'
+        'semanticHighlighting.org.eclipse.php.internal.ui.editor.highlighters.NamedExpressionHighlighting.color=#eb4b64'
 }
 
 IEclipsePreferences#org-eclipse-ui-editors:org-eclipse-php-ui {

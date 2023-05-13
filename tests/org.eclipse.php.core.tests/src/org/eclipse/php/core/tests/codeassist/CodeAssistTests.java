@@ -150,6 +150,23 @@ public class CodeAssistTests {
 						"/workspace/codeassist/php54", "/workspace/codeassist/php55", "/workspace/codeassist/php56",
 						"/workspace/codeassist/php7", "/workspace/codeassist/php71", "/workspace/codeassist/php72",
 						"/workspace/codeassist/php74" });
+		TESTS.put(PHPVersion.PHP8_0,
+				new String[] { "/workspace/codeassist/php5", "/workspace/codeassist/php53",
+						"/workspace/codeassist/php54", "/workspace/codeassist/php55", "/workspace/codeassist/php56",
+						"/workspace/codeassist/php7", "/workspace/codeassist/php71", "/workspace/codeassist/php72",
+						"/workspace/codeassist/php74", "/workspace/codeassist/php80" });
+
+		TESTS.put(PHPVersion.PHP8_1,
+				new String[] { "/workspace/codeassist/php5", "/workspace/codeassist/php53",
+						"/workspace/codeassist/php54", "/workspace/codeassist/php55", "/workspace/codeassist/php56",
+						"/workspace/codeassist/php7", "/workspace/codeassist/php71", "/workspace/codeassist/php72",
+						"/workspace/codeassist/php74", "/workspace/codeassist/php80", "/workspace/codeassist/php81" });
+
+		TESTS.put(PHPVersion.PHP8_2,
+				new String[] { "/workspace/codeassist/php5", "/workspace/codeassist/php53",
+						"/workspace/codeassist/php54", "/workspace/codeassist/php55", "/workspace/codeassist/php56",
+						"/workspace/codeassist/php7", "/workspace/codeassist/php71", "/workspace/codeassist/php72",
+						"/workspace/codeassist/php74", "/workspace/codeassist/php80", "/workspace/codeassist/php81" });
 	};
 
 	private IProject project;

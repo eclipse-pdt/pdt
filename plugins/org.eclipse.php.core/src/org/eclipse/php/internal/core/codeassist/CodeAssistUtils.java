@@ -356,6 +356,9 @@ public class CodeAssistUtils {
 					endPosition - triggerText.length());
 		}
 		if (triggerText.equals(OBJECT_FUNCTIONS_TRIGGER)) {
+			if (statementText.charAt(endPosition - 3) == '?') {
+				propertyEndPosition--;
+			}
 		} else if (triggerText.equals(PAAMAYIM_NEKUDOTAIM)) {
 			isClassTrigger = true;
 		} else {

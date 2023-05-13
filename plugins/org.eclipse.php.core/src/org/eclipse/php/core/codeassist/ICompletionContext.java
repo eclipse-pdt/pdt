@@ -53,6 +53,10 @@ public interface ICompletionContext {
 	 */
 	public boolean isExclusive();
 
+	default boolean isExclusive(ICompletionContext ctx) {
+		return isExclusive();
+	};
+
 	/**
 	 * This method is called by the completion engine when initializing this
 	 * context

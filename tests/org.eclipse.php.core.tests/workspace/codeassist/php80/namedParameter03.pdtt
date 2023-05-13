@@ -1,0 +1,16 @@
+--TEST--
+
+--FILE--
+<?php 
+class TestAttr {
+	public function __construct($fooParam1 = 12, $fooParam2 = 3, $fooParamAnother) {}
+}
+#[TestAttr(fooPa|)]
+class Test {
+
+}
+
+--EXPECT--
+field($fooParam1)
+field($fooParam2)
+field($fooParamAnother)

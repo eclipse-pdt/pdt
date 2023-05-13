@@ -33,6 +33,8 @@ public class Messages extends NLS {
 	public static String TaskTagHighlighting_0;
 	public static String VarDocCommentHighlighting_0;
 	public static String VarDocHighlighting_0;
+	public static String AttributeHighlighting_0;
+	public static String NamedParameterHighlighting_0;
 
 	static {
 		// initialize resource bundle

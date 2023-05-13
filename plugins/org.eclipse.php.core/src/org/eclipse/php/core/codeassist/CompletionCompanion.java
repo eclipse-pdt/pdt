@@ -120,7 +120,8 @@ public class CompletionCompanion {
 	}
 
 	/**
-	 * Returns document associated with the editor where code assist was requested
+	 * Returns document associated with the editor where code assist was
+	 * requested
 	 * 
 	 * @return document
 	 * @see #isValid(ISourceModule, int, CompletionRequestor)
@@ -184,8 +185,8 @@ public class CompletionCompanion {
 	}
 
 	/**
-	 * Determines the document associated with the editor where code assist has been
-	 * invoked.
+	 * Determines the document associated with the editor where code assist has
+	 * been invoked.
 	 * 
 	 * @param module
 	 *            Source module ({@link ISourceModule})
@@ -237,8 +238,8 @@ public class CompletionCompanion {
 	 * Determines the structured document region of the place in PHP code where
 	 * completion was requested
 	 * 
-	 * @return structured document region or <code>null</code> in case it could not
-	 *         be determined
+	 * @return structured document region or <code>null</code> in case it could
+	 *         not be determined
 	 */
 	private IStructuredDocumentRegion determineStructuredDocumentRegion(IStructuredDocument document, int offset) {
 
@@ -258,8 +259,8 @@ public class CompletionCompanion {
 	 * Determines the relevant region collection of the place in PHP code where
 	 * completion was requested
 	 * 
-	 * @return text region collection or <code>null</code> in case it could not be
-	 *         determined
+	 * @return text region collection or <code>null</code> in case it could not
+	 *         be determined
 	 */
 	private ITextRegionCollection determineRegionCollection(IStructuredDocument document,
 			IStructuredDocumentRegion sdRegion, int offset) {
@@ -291,7 +292,8 @@ public class CompletionCompanion {
 	}
 
 	/**
-	 * Determines the PHP script region of PHP code where completion was requested
+	 * Determines the PHP script region of PHP code where completion was
+	 * requested
 	 * 
 	 * @return php script region or <code>null</code> in case it could not be
 	 *         determined
@@ -389,26 +391,20 @@ public class CompletionCompanion {
 	 * 
 	 * @param context
 	 *            Completion context
-	 * @return right hand type(s) for the expression that encloses current offset
+	 * @return right hand type(s) for the expression that encloses current
+	 *         offset
 	 */
 	public IType[] getLeftHandType(ICompletionContext context) {
 		AbstractCompletionContext aContext = (AbstractCompletionContext) context;
 		if (!rhTypesCache.containsKey(offset)) {
-
 			TextSequence statementText = aContext.getStatementText();
-			int triggerEnd = PHPTextSequenceUtilities.readBackwardSpaces(statementText, statementText.length());
-			triggerEnd = PHPTextSequenceUtilities.readIdentifierStartIndex(statementText, triggerEnd, true);
-			triggerEnd = PHPTextSequenceUtilities.readBackwardSpaces(statementText, triggerEnd);
-
-			rhTypesCache.put(offset, CodeAssistUtils.getTypesFor(getSourceModule(), statementText, triggerEnd, offset));
+			return getLeftHandType(statementText, offset, false);
 		}
 		return rhTypesCache.get(offset);
 	}
 
-	public IType[] getLeftHandType(ICompletionContext context, boolean isType) {
-		AbstractCompletionContext aContext = (AbstractCompletionContext) context;
+	private IType[] getLeftHandType(TextSequence statementText, int offset, boolean isType) {
 		if (!rhTypesCache.containsKey(offset)) {
-			TextSequence statementText = aContext.getStatementText();
 			int triggerEnd = PHPTextSequenceUtilities.readBackwardSpaces(statementText, statementText.length());
 			triggerEnd = PHPTextSequenceUtilities.readIdentifierStartIndex(statementText, triggerEnd, true);
 			triggerEnd = PHPTextSequenceUtilities.readBackwardSpaces(statementText, triggerEnd);
@@ -420,6 +416,15 @@ public class CompletionCompanion {
 				rhTypesCache.put(offset,
 						CodeAssistUtils.getTraitsFor(getSourceModule(), statementText, triggerEnd, offset));
 			}
+		}
+		return rhTypesCache.get(offset);
+	}
+
+	public IType[] getLeftHandType(ICompletionContext context, boolean isType) {
+		AbstractCompletionContext aContext = (AbstractCompletionContext) context;
+		if (!rhTypesCache.containsKey(offset)) {
+			TextSequence statementText = aContext.getStatementText();
+			return getLeftHandType(statementText, offset, isType);
 		}
 		return rhTypesCache.get(offset);
 	}

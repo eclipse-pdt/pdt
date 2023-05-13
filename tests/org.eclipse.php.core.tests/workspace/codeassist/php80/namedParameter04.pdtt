@@ -1,0 +1,15 @@
+--TEST--
+
+--FILE--
+<?php 
+class Test {
+	public function foo($fooParam1 = 12, $fooParam2 = 3, $fooParamAnother) {}
+}
+$tmp = new Test();
+$tmp->foo(fooP|);
+
+
+--EXPECT--
+field($fooParam1)
+field($fooParam2)
+field($fooParamAnother)

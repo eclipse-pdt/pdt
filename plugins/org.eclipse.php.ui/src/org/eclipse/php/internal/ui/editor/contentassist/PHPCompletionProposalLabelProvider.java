@@ -32,6 +32,7 @@ import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.codeassist.AliasField;
 import org.eclipse.php.internal.core.codeassist.AliasMethod;
 import org.eclipse.php.internal.core.codeassist.AliasType;
+import org.eclipse.php.internal.core.codeassist.ProposalExtraInfo;
 import org.eclipse.php.internal.core.typeinference.FakeConstructor;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
@@ -216,7 +217,10 @@ public class PHPCompletionProposalLabelProvider extends CompletionProposalLabelP
 	@Override
 	public StyledString createStyledFieldProposalLabel(CompletionProposal proposal) {
 		StyledString buffer = new StyledString();
-		if (proposal.getModelElement() instanceof AliasField) {
+		if (ProposalExtraInfo.isNamedParameter(proposal.getExtraInfo())) {
+			buffer.append(proposal.getName().substring(1));
+			buffer.append(':');
+		} else if (proposal.getModelElement() instanceof AliasField) {
 			AliasField aliasField = (AliasField) proposal.getModelElement();
 			buffer.append(aliasField.getAlias());
 		} else {

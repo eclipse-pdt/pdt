@@ -1273,6 +1273,40 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements IWork
 					}
 				});
 
+				highlightings.add(new AttributeHighlighting() {
+					@Override
+					protected Program getProgram(IStructuredDocumentRegion region) {
+						return program;
+					}
+
+					@Override
+					public ISourceModule getSourceModule() {
+						return sourceModule;
+					}
+
+					@Override
+					public String getPreferenceKey() {
+						return AttributeHighlighting.class.getName();
+					}
+				});
+
+				highlightings.add(new NamedExpressionHighlighting() {
+					@Override
+					protected Program getProgram(IStructuredDocumentRegion region) {
+						return program;
+					}
+
+					@Override
+					public ISourceModule getSourceModule() {
+						return sourceModule;
+					}
+
+					@Override
+					public String getPreferenceKey() {
+						return NamedExpressionHighlighting.class.getName();
+					}
+				});
+
 				Collections.sort(highlightings);
 
 				for (Iterator<AbstractSemanticHighlighting> iterator = highlightings.iterator(); iterator.hasNext();) {

@@ -43,6 +43,11 @@ public final class ProposalExtraInfo {
 	 */
 	public static final int ABSOLUTE_NAME = 1 << 10;
 
+	/**
+	 * @since 8.0
+	 */
+	public static final int NAMED_PARAMETER = 1 << 11;
+
 	public static boolean isTypeOnly(int flags) {
 		return (flags & TYPE_ONLY) != 0;
 	}
@@ -183,6 +188,17 @@ public final class ProposalExtraInfo {
 	 */
 	public static boolean isAbsoluteName(int flags) {
 		return contain(flags, ABSOLUTE_NAME);
+	}
+
+	/**
+	 * @since 5.1
+	 */
+	public static boolean isNamedParameter(Object flags) {
+		if (flags instanceof Integer) {
+			return contain(((Integer) flags).intValue(), NAMED_PARAMETER);
+		} else {
+			return false;
+		}
 	}
 
 	public static boolean contain(int flags, int flag) {

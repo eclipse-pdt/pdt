@@ -1,0 +1,8 @@
+--TEST--
+--FILE--
+<?php
+function fnc($param='') {}
+fnc(|param|: 1);
+?>
+--EXPECT--
+field($param)

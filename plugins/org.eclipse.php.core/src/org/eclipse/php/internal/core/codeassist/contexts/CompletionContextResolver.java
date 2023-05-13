@@ -116,7 +116,17 @@ public class CompletionContextResolver implements ICompletionContextResolver {
 		if (result.size() > 1) {
 			List<ICompletionContext> filteredResult = new LinkedList<>();
 			for (ICompletionContext context : result) {
-				if (!context.isExclusive()) {
+				if (context.isExclusive()) {
+					continue;
+				}
+				boolean skip = false;
+				for (ICompletionContext compareContext : result) {
+					if (context != compareContext && context.isExclusive(compareContext)) {
+						skip = true;
+						break;
+					}
+				}
+				if (!skip) {
 					filteredResult.add(context);
 				}
 			}

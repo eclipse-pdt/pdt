@@ -55,7 +55,7 @@ public final class TypeStatementContext extends AbstractGlobalStatementContext i
 			}
 			ICompletionScope scope = getCompanion().getScope();
 
-			if (scope.getType() == Type.FIELD || scope.getType() == Type.FUNCTION
+			if (scope.getType() == Type.FIELD || scope.getType() == Type.ENUM_CASE || scope.getType() == Type.FUNCTION
 					|| scope.getType() == Type.TYPE_STATEMENT) {
 				scope = scope.getParent();
 			}
@@ -67,6 +67,7 @@ public final class TypeStatementContext extends AbstractGlobalStatementContext i
 			case CLASS:
 			case INTERFACE:
 			case TRAIT:
+			case ENUM:
 				break;
 			default:
 				return false;

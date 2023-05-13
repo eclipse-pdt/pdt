@@ -19,6 +19,7 @@ import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ISourceReference;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.internal.core.codeassist.IPHPCompletionRequestor;
 import org.eclipse.php.internal.core.util.text.TextSequence;
 
@@ -62,6 +63,11 @@ public abstract class AbstractGlobalStatementContext extends StatementContext {
 
 	@Override
 	public boolean isExclusive() {
-		return true;
+		return false;
+	}
+
+	@Override
+	public boolean isExclusive(ICompletionContext ctx) {
+		return !(ctx instanceof FunctionCallParameterContext);
 	}
 }

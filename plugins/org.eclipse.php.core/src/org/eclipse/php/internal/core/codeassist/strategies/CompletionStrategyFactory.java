@@ -149,6 +149,9 @@ public class CompletionStrategyFactory implements ICompletionStrategyFactory {
 				};
 			}
 		}
+		if (contextClass == FunctionCallParameterContext.class) {
+			return new ICompletionStrategy[] { new FunctionCallParameterNameStrategy(context) };
+		}
 		if (contextClass == GlobalStatementContext.class) {
 			return new ICompletionStrategy[] { new ElementsCompositeStrategy(context, true) };
 		}

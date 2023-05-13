@@ -2194,6 +2194,17 @@
 	        target="org.eclipse.php.core.phpsource"
 	        id="org.eclipse.php.ui.editor.highlighters.internalClass"
 	        after="org.eclipse.php.ui.editor.highlighters.class" />
+	        
+	    <highlighting
+	        class="org.eclipse.php.internal.ui.editor.highlighters.AttributeHighlighting"
+	        target="org.eclipse.php.core.phpsource" 
+	        id="org.eclipse.php.ui.editor.highlighters.attribute"
+	        after="org.eclipse.php.ui.editor.highlighters.internalClass" />
+	    <highlighting
+	        class="org.eclipse.php.internal.ui.editor.highlighters.NamedExpressionHighlighting"
+	        target="org.eclipse.php.core.phpsource" 
+	        id="org.eclipse.php.ui.editor.highlighters.namedExpression"
+	        after="org.eclipse.php.ui.editor.highlighters.attribute" />
         
         <highlighting
 	        class="org.eclipse.php.internal.ui.editor.highlighters.InternalFunctionHighlighting"
@@ -2254,6 +2265,9 @@
 	        target="org.eclipse.php.core.phpsource" 
 	        id="org.eclipse.php.ui.editor.highlighters.varDoc"
 	        after="org.eclipse.php.ui.editor.highlighters.varDocComment" />
+	    
+	        
+	    
     </extension>
     <extension
           id="commentTemplateProposalCategory"
