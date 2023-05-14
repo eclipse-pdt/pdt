@@ -4,7 +4,7 @@ Test function return type completion
 org.eclipse.php.core/contentAssistShowStrictOptions=false
 --FILE--
 <?php
-function function_name(): str| {
+function function_name(): boo| {
 }
 --EXPECT--
-keyword(string)
+keyword(bool)

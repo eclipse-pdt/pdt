@@ -613,49 +613,56 @@ public class PHPIndexingVisitor extends PHPIndexingVisitorExtension {
 
 	protected String[] processSuperClasses(TypeDeclaration type) {
 		ASTListNode superClasses = type.getSuperClasses();
-		if (superClasses == null) {
+		if (superClasses == null && !(type instanceof EnumDeclaration)) {
 			return new String[] {};
 		}
-		List<ASTNode> superClassNames = superClasses.getChilds();
-		List<String> result = new ArrayList<>(superClassNames.size());
-		Iterator<ASTNode> iterator = superClassNames.iterator();
-		while (iterator.hasNext()) {
-			ASTNode nameNode = iterator.next();
-			String name;
-			if (nameNode instanceof FullyQualifiedReference) {
-				FullyQualifiedReference fullyQualifiedName = (FullyQualifiedReference) nameNode;
-				name = fullyQualifiedName.getFullyQualifiedName();
-				if (fullyQualifiedName.getNamespace() != null) {
-					String namespace = fullyQualifiedName.getNamespace().getName();
-					String subnamespace = ""; //$NON-NLS-1$
-					if (namespace.charAt(0) != NamespaceReference.NAMESPACE_SEPARATOR
-							&& namespace.indexOf(NamespaceReference.NAMESPACE_SEPARATOR) > 0) {
-						int firstNSLocation = namespace.indexOf(NamespaceReference.NAMESPACE_SEPARATOR);
-						subnamespace = namespace.substring(firstNSLocation);
-						namespace = namespace.substring(0, firstNSLocation);
+		List<String> result = new ArrayList<>();
+		if (superClasses != null) {
+			List<ASTNode> superClassNames = superClasses.getChilds();
+			Iterator<ASTNode> iterator = superClassNames.iterator();
+			while (iterator.hasNext()) {
+				ASTNode nameNode = iterator.next();
+				String name;
+				if (nameNode instanceof FullyQualifiedReference) {
+					FullyQualifiedReference fullyQualifiedName = (FullyQualifiedReference) nameNode;
+					name = fullyQualifiedName.getFullyQualifiedName();
+					if (fullyQualifiedName.getNamespace() != null) {
+						String namespace = fullyQualifiedName.getNamespace().getName();
+						String subnamespace = ""; //$NON-NLS-1$
+						if (namespace.charAt(0) != NamespaceReference.NAMESPACE_SEPARATOR
+								&& namespace.indexOf(NamespaceReference.NAMESPACE_SEPARATOR) > 0) {
+							int firstNSLocation = namespace.indexOf(NamespaceReference.NAMESPACE_SEPARATOR);
+							subnamespace = namespace.substring(firstNSLocation);
+							namespace = namespace.substring(0, firstNSLocation);
+						}
+						if (name.charAt(0) == NamespaceReference.NAMESPACE_SEPARATOR) {
+							name = name.substring(1);
+						} else if (fLastUseParts.containsKey(namespace)) {
+							name = new StringBuilder(fLastUseParts.get(namespace).getFullUseStatementName())
+									.append(subnamespace).append(NamespaceReference.NAMESPACE_SEPARATOR)
+									.append(fullyQualifiedName.getName()).toString();
+						} else if (fCurrentNamespace != null) {
+							name = new StringBuilder(fCurrentNamespace.getName())
+									.append(NamespaceReference.NAMESPACE_SEPARATOR).append(name).toString();
+						}
+					} else if (fLastUseParts.containsKey(name)) {
+						name = fLastUseParts.get(name).getFullUseStatementName();
+					} else {
+						if (fCurrentNamespace != null) {
+							name = new StringBuilder(fCurrentNamespace.getName())
+									.append(NamespaceReference.NAMESPACE_SEPARATOR).append(name).toString();
+						}
 					}
-					if (name.charAt(0) == NamespaceReference.NAMESPACE_SEPARATOR) {
-						name = name.substring(1);
-					} else if (fLastUseParts.containsKey(namespace)) {
-						name = new StringBuilder(fLastUseParts.get(namespace).getFullUseStatementName())
-								.append(subnamespace).append(NamespaceReference.NAMESPACE_SEPARATOR)
-								.append(fullyQualifiedName.getName()).toString();
-					} else if (fCurrentNamespace != null) {
-						name = new StringBuilder(fCurrentNamespace.getName())
-								.append(NamespaceReference.NAMESPACE_SEPARATOR).append(name).toString();
-					}
-				} else if (fLastUseParts.containsKey(name)) {
-					name = fLastUseParts.get(name).getFullUseStatementName();
-				} else {
-					if (fCurrentNamespace != null) {
-						name = new StringBuilder(fCurrentNamespace.getName())
-								.append(NamespaceReference.NAMESPACE_SEPARATOR).append(name).toString();
-					}
+					result.add(name);
+				} else if (nameNode instanceof SimpleReference) {
+					result.add(((SimpleReference) nameNode).getName());
 				}
-				result.add(name);
-			} else if (nameNode instanceof SimpleReference) {
-				result.add(((SimpleReference) nameNode).getName());
 			}
+		}
+		if (type instanceof EnumDeclaration) {
+			EnumDeclaration decl = (EnumDeclaration) type;
+			String name = decl.getBackingType() != null ? "BackedEnum" : "UnitEnum"; //$NON-NLS-1$ //$NON-NLS-2$
+			result.add(name);
 		}
 		return result.toArray(new String[result.size()]);
 	}

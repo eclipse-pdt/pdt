@@ -1,0 +1,15 @@
+--TEST--
+
+--FILE--
+<?php 
+enum Test {
+	case MyCase;
+}
+
+Test::|
+
+
+--EXPECT--
+field(MyCase)
+field(class)
+method(cases)

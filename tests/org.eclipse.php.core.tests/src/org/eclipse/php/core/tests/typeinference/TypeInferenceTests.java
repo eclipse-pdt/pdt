@@ -95,6 +95,9 @@ public class TypeInferenceTests {
 		TESTS.put(PHPVersion.PHP8_0, new String[] { "/workspace/typeinference/php5", "/workspace/typeinference/php53",
 				"/workspace/typeinference/php54", "/workspace/typeinference/php55", "/workspace/typeinference/php56",
 				"/workspace/typeinference/php70", "/workspace/typeinference/php80" });
+		TESTS.put(PHPVersion.PHP8_1, new String[] { "/workspace/typeinference/php5", "/workspace/typeinference/php53",
+				"/workspace/typeinference/php54", "/workspace/typeinference/php55", "/workspace/typeinference/php56",
+				"/workspace/typeinference/php70", "/workspace/typeinference/php80", "/workspace/typeinference/php81" });
 	};
 
 	private static int counter = 0;

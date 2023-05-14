@@ -42,6 +42,7 @@ import org.eclipse.dltk.compiler.SourceElementRequestVisitor;
 import org.eclipse.dltk.compiler.env.IModuleSource;
 import org.eclipse.dltk.core.Flags;
 import org.eclipse.php.core.compiler.IPHPModifiers;
+import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.core.compiler.PHPSourceElementRequestorExtension;
 import org.eclipse.php.core.compiler.ast.nodes.*;
 import org.eclipse.php.core.compiler.ast.nodes.PHPDocTag.TagKind;
@@ -688,18 +689,26 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 	@Override
 	protected String[] processSuperClasses(TypeDeclaration type) {
 		ASTListNode superClasses = type.getSuperClasses();
-		if (superClasses == null) {
+		if (superClasses == null && !(type instanceof EnumDeclaration)) {
 			return new String[] {};
 		}
-		List<ASTNode> superClassNames = superClasses.getChilds();
-		List<String> result = new ArrayList<>(superClassNames.size());
-		Iterator<ASTNode> iterator = superClassNames.iterator();
-		while (iterator.hasNext()) {
-			String name = processNameNode(iterator.next());
-			if (name != null) {
-				result.add(name);
+		List<String> result = new ArrayList<>();
+		if (superClasses != null) {
+			List<ASTNode> superClassNames = superClasses.getChilds();
+			Iterator<ASTNode> iterator = superClassNames.iterator();
+			while (iterator.hasNext()) {
+				String name = processNameNode(iterator.next());
+				if (name != null) {
+					result.add(name);
+				}
 			}
 		}
+		if (type instanceof EnumDeclaration) {
+			EnumDeclaration decl = (EnumDeclaration) type;
+			String name = decl.getBackingType() != null ? "BackedEnum" : "UnitEnum"; //$NON-NLS-1$ //$NON-NLS-2$
+			result.add(name);
+		}
+
 		return result.toArray(new String[result.size()]);
 	}
 
@@ -1038,6 +1047,12 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		info.nameSourceStart = constantName.sourceStart();
 		info.declarationStart = declaration.sourceStart();
 		info.modifiers = markAsDeprecated(info.modifiers, declaration);
+		if (PHPFlags.isEnumCase(declaration.getModifiers())) {
+			info.type = getCurrentClass().getName();
+			if (fLastNamespace != null && !fLastNamespace.isGlobal()) {
+				info.type = fLastNamespace.getName() + '\\' + info.type;
+			}
+		}
 
 		fInfoStack.push(info);
 		fRequestor.enterField(info);

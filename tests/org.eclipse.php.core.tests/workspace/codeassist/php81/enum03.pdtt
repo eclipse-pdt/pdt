@@ -1,0 +1,17 @@
+--TEST--
+
+--FILE--
+<?php 
+enum Test: string {
+	case MyCase = 'test';
+}
+
+Test::MyCase->|
+
+
+--EXPECT--
+field($name)
+field($value)
+method(from)
+method(tryFrom)
+method(cases)

@@ -132,7 +132,21 @@ $intClasses = array_merge(get_declared_classes(), get_declared_interfaces());
 foreach ($intClasses as $intClass) {
     $intClassLower = strtolower($intClass);
     if (! isset($processedClasses[$intClassLower]) || ! $processedClasses[$intClassLower]) {
-        print_class(new ReflectionClass($intClass));
+        if (version_compare(phpversion(), "8.1.0") >= 0 && enum_exists($intClassLower)) {
+            print_class(new ReflectionEnum($intClass));
+        } else {
+            print_class(new ReflectionClass($intClass));
+        }
+        
+    }
+}
+if (version_compare(phpversion(), "5.4.0") >= 0) {
+    $intTraits = array_merge(get_declared_traits());
+    foreach ($intTraits as $intTrait) {
+        $intTraitLower = strtolower($intTrait);
+        if (! isset($processedClasses[$intTraitLower]) || ! $processedClasses[$intTraitLower]) {
+            print_class(new ReflectionClass($intTrait));
+        }
     }
 }
 
@@ -154,6 +168,9 @@ $intConstants['__METHOD__'] = null;
 if (version_compare(phpversion(), "5.3.0") >= 0) {
     $intConstants['__DIR__'] = null;
     $intConstants['__NAMESPACE__'] = null;
+}
+if (version_compare(phpversion(), "5.4.0") >= 0) {
+    $intConstants['__TRAIT__'] = null;
 }
 foreach ($intConstants as $name => $value) {
     if (! isset($processedConstants[$name]) || ! $processedConstants[$name]) {
@@ -240,13 +257,13 @@ function clean_php_identifier($name, $isInPhpdoc = false, $removeDollars = false
         if ($isInPhpdoc) {
             $name = preg_replace('/[^?\\\\$\\w_|[\\]]+/', '_', $name);
         } else {
-            $name = preg_replace('/[^?\\\\$\\w_]+/', '_', $name);
+            $name = preg_replace('/[^?\\\\$\\w_|&?]+/', '_', $name);
         }
     } else {
         if ($isInPhpdoc) {
             $name = preg_replace('/[^$\\w_|[\\]]+/', '_', $name);
         } else {
-            $name = preg_replace('/[^$\\w_]+/', '_', $name);
+            $name = preg_replace('/[^$\\w_|&?]+/', '_', $name);
         }
     }
     if ($removeDollars) {
@@ -366,6 +383,9 @@ function parse_phpdoc_functions($phpdocDir)
     $functionsDoc = array();
     foreach ($xml_files as $xml_file) {
         $xml = load_xml($xml_file);
+    
+        
+      
 
         if (preg_match('@<refentry.*?xml:id=["\'](.*?)["\'].*?>.*?<refname(?:\s(?:[^>]*?[^/>])?)?>(.*?)</refname>.*?<refpurpose(?:\s(?:[^>]*?[^/>])?)?>(.*?)</refpurpose>@s', $xml, $match)) {
 
@@ -406,6 +426,7 @@ function parse_phpdoc_functions($phpdocDir)
                                 $functionsDoc[$refname]['returntype'] = trim($match[1]);
                             }
                         } else {
+                            
                             $functionsDoc[$refname]['returntype'] = trim($match[1]);
                         }
                         $functionsDoc[$refname]['methodname'] = trim($match[2]);
@@ -689,6 +710,7 @@ function print_class($classRef, $tabs = 0)
     $classRefName = $classRef->getName();
     $className = strtolower($classRefName);
     $processedClasses[$className] = true;
+    
 
     print "\n";
     if ($handleNamespaces) {
@@ -707,13 +729,42 @@ function print_class($classRef, $tabs = 0)
         $lastBackslashIdx = false;
     }
     print_doccomment($classRef, $tabs);
+   
+    if (version_compare(phpversion(), "8.0.0") >= 0) {
+        foreach ($classRef->getAttributes() as $attr) {
+            print_tabs($tabs);
+            print '#[';
+            print $attr->getName();
+            if (count($attr->getArguments())) {
+                print '(';
+                foreach ($attr->getArguments() as $arg) {
+                    var_export($arg);
+                    print ', ';
+                }
+                print ')';
+            }
+
+            print "]\n";
+        }
+    }
     print_tabs($tabs);
     if ($classRef->isFinal())
         print "final ";
+    if (version_compare(phpversion(), "8.2.0") >= 0 && $classRef->isReadOnly())  {
+        print 'readonly ';
+    }
     if (! $classRef->isInterface() && $classRef->isAbstract())
         print "abstract ";
+    if ($classRef->isInterface()) {
+        print 'interface ';
+    } elseif ($classRef->isTrait()) {
+        print 'trait ';
+    } else if ($classRef instanceof ReflectionEnum) {
+        print 'enum ';
+    } else {
+        print 'class ';
+    }
 
-    print $classRef->isInterface() ? "interface " : "class ";
     if ($lastBackslashIdx !== false) {
         print clean_php_identifier(substr($classRef->getName(), $lastBackslashIdx + 1)) . " ";
     } else {
@@ -893,16 +944,22 @@ function print_function($functionRef, $tabs = 0, $isMethod = false)
     } else {
         print "{$functionRef->getName()} (";
     }
+    
     $parameters = isset($functionsDoc[$funckey]['parameters']) ? $functionsDoc[$funckey]['parameters'] : null;
     if ($parameters) {
         print_parameters($parameters);
     } else {
         print_parameters_ref($functionRef->getParameters());
     }
+    print ')';
+    if ($functionRef->getReturnType() != null) {
+        print ': ' . ($functionRef->getReturnType()->allowsNull() ? '?' : '') . $functionRef->getReturnType()->__toString();
+        
+    }
     if ($functionRef instanceof ReflectionMethod && $functionRef->isAbstract()) {
-        print ");\n";
+        print "\n";
     } else {
-        print ") {}\n";
+        print " {}\n";
     }
 }
 
@@ -973,6 +1030,8 @@ function print_parameters_ref($paramsRef)
                 $realType = build_php_type($className, $addGlobalNSPrefix, true, true);
                 $printType = build_php_type($className, $addGlobalNSPrefix === '\\' && class_exists($realType) ? '\\' : '', true);
                 print "{$printType} ";
+            } else if ($paramRef->getType() != null) {
+                print ($paramRef->getType()->allowsNull() ? '?' : '') . $paramRef->getType()->__toString() . ' ';
             }
         }
         $name = $paramRef->getName() ? $paramRef->getName() : "var" . ($i + 1);
@@ -1027,7 +1086,9 @@ function print_constant($name, $value = null, $tabs = 0)
     $processedConstants[$name] = true;
 
     if ($value === null) {
-        $value = @constant($name);
+        try {
+            $value = @constant($name);
+        } catch(Throwable $e) {}
     }
     $value = escape_const_value($value);
 
@@ -1182,6 +1243,7 @@ function print_doccomment($ref, $tabs = 0)
             if ($parameters) {
                 foreach ($parameters as $parameter) {
                     print_tabs($tabs);
+                    
                     if (clean_php_identifier($parameter['type'], true) === $parameter['type']) {
                         $realType = build_php_type($parameter['type'], $addGlobalNSPrefix, true, true);
                         $printType = build_php_type($parameter['type'], $addGlobalNSPrefix === '\\' && class_exists($realType) ? '\\' : '', true);
@@ -1305,6 +1367,10 @@ function print_tabs($tabs)
  */
 function get_parameter_classname(ReflectionParameter $paramRef)
 {
+    if ($paramRef->getType() != null) {
+        return ($paramRef->getType()->allowsNull() ? '?' :'') . $paramRef->getType()->__toString();
+    
+    }
     try {
         if ($classRef = $paramRef->getClass()) {
             return $classRef->getName();

@@ -80,6 +80,8 @@ public class PHPPluginImages {
 	public static final String IMG_OBJS_OCCURRENCES = NAME_PREFIX + "searchm_obj.png"; //$NON-NLS-1$
 	public static final String IMG_OBJS_TRAIT = NAME_PREFIX + "trait_obj.png"; //$NON-NLS-1$
 
+	public static final String IMG_OBJS_ENUM = NAME_PREFIX + "enum_obj.png"; //$NON-NLS-1$
+
 	public static final String IMG_OBJS_EXTZIP = NAME_PREFIX + "zip_l_obj.png"; //$NON-NLS-1$
 	public static final String IMG_OBJS_ENV_VAR = NAME_PREFIX + "envvar_obj.png"; //$NON-NLS-1$
 	public static final String IMG_OBJS_LIBRARY = NAME_PREFIX + "library_obj.png"; //$NON-NLS-1$
@@ -135,6 +137,7 @@ public class PHPPluginImages {
 
 	public static final ImageDescriptor DESC_OBJS_LIBRARY = createManaged(T_OBJ, IMG_OBJS_LIBRARY);
 	public static final ImageDescriptor DESC_OBJS_TRAIT = createManaged(T_OBJ, IMG_OBJS_TRAIT);
+	public static final ImageDescriptor DESC_OBJS_ENUM = createManaged(T_OBJ, IMG_OBJS_ENUM);
 
 	public static final ImageDescriptor DESC_DLCL_CONFIGURE_ANNOTATIONS = create(T_DLCL, "configure_annotations.gif"); //$NON-NLS-1$
 	public static final ImageDescriptor DESC_ELCL_CONFIGURE_ANNOTATIONS = create(T_ELCL, "configure_annotations.gif"); //$NON-NLS-1$
@@ -204,8 +207,9 @@ public class PHPPluginImages {
 		}
 
 		/*
-		 * try { ImageDescriptor id= ImageDescriptor.createFromURL(makeIconFileURL("c" +
-		 * type, relPath)); if (id != null) action.setHoverImageDescriptor(id); } catch
+		 * try { ImageDescriptor id=
+		 * ImageDescriptor.createFromURL(makeIconFileURL("c" + type, relPath));
+		 * if (id != null) action.setHoverImageDescriptor(id); } catch
 		 * (MalformedURLException e) { }
 		 */
 

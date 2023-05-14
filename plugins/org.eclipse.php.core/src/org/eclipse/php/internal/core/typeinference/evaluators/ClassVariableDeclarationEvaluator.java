@@ -35,9 +35,11 @@ import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.core.PHPVersion;
+import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.core.compiler.ast.nodes.*;
 import org.eclipse.php.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.typeinference.IModelAccessCache;
+import org.eclipse.php.internal.core.typeinference.PHPClassType;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
 import org.eclipse.php.internal.core.typeinference.context.ContextFinder;
@@ -94,8 +96,10 @@ public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator 
 					IType declaringType = field.getDeclaringType();
 					if (declaringType != null) {
 						fieldDeclaringTypeSet.put(declaringType, type);
-
-						if (field instanceof SourceRefElement) {
+						if (PHPFlags.isEnumCase(field.getFlags())) {
+							evaluated.add(PHPClassType.fromIType(declaringType));
+							return IGoal.NO_GOALS;
+						} else if (field instanceof SourceRefElement) {
 							ISourceReference sourceRefElement = field;
 							ISourceRange sourceRange = sourceRefElement.getSourceRange();
 							ISourceModule sourceModule = declaringType.getSourceModule();

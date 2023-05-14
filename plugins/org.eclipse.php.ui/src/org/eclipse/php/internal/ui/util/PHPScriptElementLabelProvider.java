@@ -28,8 +28,12 @@ public class PHPScriptElementLabelProvider extends LabelProvider implements ILab
 	@Override
 	public Image getImage(Object o) {
 		try {
-			if (o instanceof IType && PHPFlags.isTrait(((IType) o).getFlags())) {
-				return PHPPluginImages.get(PHPPluginImages.IMG_OBJS_TRAIT);
+			if (o instanceof IType) {
+				if (PHPFlags.isTrait(((IType) o).getFlags())) {
+					return PHPPluginImages.get(PHPPluginImages.IMG_OBJS_TRAIT);
+				} else if (PHPFlags.isEnum(((IType) o).getFlags())) {
+					return PHPPluginImages.get(PHPPluginImages.IMG_OBJS_ENUM);
+				}
 			}
 		} catch (ModelException e) {
 		}

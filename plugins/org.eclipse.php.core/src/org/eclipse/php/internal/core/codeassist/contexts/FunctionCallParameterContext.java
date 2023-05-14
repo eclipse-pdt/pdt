@@ -77,6 +77,9 @@ public class FunctionCallParameterContext extends StatementContext {
 				return false;
 			}
 			ITextRegion textRegion = scanner.getTextRegion(open);
+			if (textRegion == null) {
+				return false;
+			}
 			if (!textRegion.getType().equals(PHPRegionTypes.PHP_LABEL)) {
 				return false;
 			}
@@ -97,7 +100,9 @@ public class FunctionCallParameterContext extends StatementContext {
 			if (open == PHPHeuristicScanner.NOT_FOUND) {
 				return false;
 			}
-
+			if (textRegion.getType() == PHPRegionTypes.PHP_FUNCTION) {
+				return false;
+			}
 			if (textRegion.getType().equals(PHPRegionTypes.PHP_OBJECT_OPERATOR)
 					|| textRegion.getType().equals(PHPRegionTypes.PHP_PAAMAYIM_NEKUDOTAYIM)) {
 				isMethod = true;

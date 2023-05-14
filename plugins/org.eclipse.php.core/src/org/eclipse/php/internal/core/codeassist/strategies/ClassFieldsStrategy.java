@@ -22,12 +22,14 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.core.ModelElement;
+import org.eclipse.dltk.internal.core.SourceType;
 import org.eclipse.dltk.internal.core.hierarchy.FakeType;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.core.codeassist.ICompletionReporter;
 import org.eclipse.php.core.codeassist.IElementFilter;
+import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
@@ -48,6 +50,8 @@ public class ClassFieldsStrategy extends ClassMembersStrategy {
 
 	private static final String CLASS_KEYWORD = "class"; //$NON-NLS-1$
 	private static final String STD_CLASS = "stdClass"; //$NON-NLS-1$
+	private static final String ENUM_NAME_FIELD = "$name"; //$NON-NLS-1$
+	private static final String ENUM_VALUE_FIELD = "$value"; //$NON-NLS-1$
 
 	public ClassFieldsStrategy(ICompletionContext context, IElementFilter elementFilter) {
 		super(context, elementFilter);
@@ -95,10 +99,25 @@ public class ClassFieldsStrategy extends ClassMembersStrategy {
 						result.add(field);
 					}
 				}
+				if (concreteContext.getTriggerType() == Trigger.OBJECT && PHPFlags.isEnum(type.getFlags())) {
+					if (ENUM_NAME_FIELD.startsWith(prefix.toLowerCase())
+							|| ENUM_NAME_FIELD.equals(prefix.toLowerCase())) {
+						result.add(new FakeField((SourceType) type, ENUM_NAME_FIELD, Modifiers.AccPublic));
+					}
+					for (String className : type.getSuperClasses()) {
+						if (className.equals("BackedEnum") && ENUM_VALUE_FIELD.startsWith(prefix.toLowerCase()) //$NON-NLS-1$
+								|| ENUM_VALUE_FIELD.equals(prefix.toLowerCase())) {
+							result.add(new FakeField((SourceType) type, ENUM_VALUE_FIELD, Modifiers.AccPublic));
+						}
+					}
+
+				}
 			} catch (CoreException e) {
 				PHPCorePlugin.log(e);
 			}
+
 		}
+
 		if (concreteContext instanceof ClassStaticMemberContext && concreteContext.getTriggerType() == Trigger.CLASS
 				&& PHPVersion.PHP5_4.isLessThan(getCompanion().getPHPVersion())
 				&& (CLASS_KEYWORD.startsWith(prefix.toLowerCase()) || CLASS_KEYWORD.equals(prefix.toLowerCase()))) {

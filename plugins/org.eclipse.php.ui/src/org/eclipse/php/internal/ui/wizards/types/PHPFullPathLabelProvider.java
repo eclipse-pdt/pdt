@@ -31,11 +31,13 @@ public class PHPFullPathLabelProvider extends LabelProvider implements ILabelDec
 	private Image fClassImage;
 	private Image fTraitImage;
 	private Image fMethodImage;
+	private Image fEnumImage;
 
 	public PHPFullPathLabelProvider() {
 		fInterfaceImage = PHPPluginImages.get(PHPPluginImages.IMG_OBJS_INTERFACE);
 		fClassImage = DLTKPluginImages.get(DLTKPluginImages.IMG_OBJS_CLASS);
 		fTraitImage = PHPPluginImages.get(PHPPluginImages.IMG_OBJS_TRAIT);
+		fEnumImage = PHPPluginImages.get(PHPPluginImages.IMG_OBJS_ENUM);
 		fMethodImage = DLTKPluginImages.get(DLTKPluginImages.IMG_METHOD_PUBLIC);
 	}
 
@@ -81,7 +83,9 @@ public class PHPFullPathLabelProvider extends LabelProvider implements ILabelDec
 			}
 			if (type != null) {
 				try {
-					if (PHPFlags.isClass(type.getFlags())) {
+					if (PHPFlags.isEnum(type.getFlags())) {
+						result = fEnumImage;
+					} else if (PHPFlags.isClass(type.getFlags())) {
 						result = fClassImage;
 					} else if (PHPFlags.isInterface(type.getFlags())) {
 						result = fInterfaceImage;

@@ -4,7 +4,7 @@ Bug 502699 - Primitive types proposed after global character
 <?php
 /**
  * 
- * @param \b| $param
+ * @param \bad| $param
  */
 function function_name($param) {
 }

@@ -2,7 +2,7 @@
 
 --FILE--
 <?php 
-fn(): stri| => $cl;
+fn(): boo| => $cl;
 
 --EXPECT--
-keyword(string)
+keyword(bool)

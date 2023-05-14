@@ -1,0 +1,11 @@
+--TEST--
+--FILE--
+<?php 
+enum MyEnum {
+	case FOO;
+}
+$tmp = MyEnum::FOO;
+
+testEnumType2($tmp); ?>
+--EXPECT--
+MyEnum

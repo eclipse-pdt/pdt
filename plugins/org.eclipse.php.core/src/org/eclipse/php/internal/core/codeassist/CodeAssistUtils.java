@@ -101,9 +101,6 @@ public class CodeAssistUtils {
 				TypeContext typeContext = new TypeContext(fileContext, classType);
 				PHPTypeInferencer typeInferencer = new PHPTypeInferencer();
 
-				if (!propertyName.startsWith(DOLLAR)) {
-					propertyName = DOLLAR + propertyName;
-				}
 				PHPDocClassVariableGoal phpDocGoal = new PHPDocClassVariableGoal(typeContext, propertyName, offset);
 				IEvaluatedType evaluatedType = typeInferencer.evaluateTypePHPDoc(phpDocGoal, 3000);
 
@@ -120,6 +117,9 @@ public class CodeAssistUtils {
 					return modelElements;
 				}
 			}
+		}
+		if (!propertyName.startsWith(DOLLAR)) {
+			return getVariableType(types, DOLLAR + propertyName, offset);
 		}
 		return EMPTY_TYPES;
 	}

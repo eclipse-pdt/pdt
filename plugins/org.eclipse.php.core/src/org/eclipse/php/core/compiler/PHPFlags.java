@@ -166,6 +166,13 @@ public class PHPFlags extends Flags implements IPHPModifiers {
 	/**
 	 * @since 8.0
 	 */
+	public static boolean isEnum(int flags) {
+		return (flags & AccEnum) != 0;
+	}
+
+	/**
+	 * @since 8.0
+	 */
 	public static boolean isEnumCase(int flags) {
 		return (flags & AccEnumCase) != 0;
 	}

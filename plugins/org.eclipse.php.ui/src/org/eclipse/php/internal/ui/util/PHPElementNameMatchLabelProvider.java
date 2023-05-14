@@ -50,6 +50,7 @@ public class PHPElementNameMatchLabelProvider extends LabelProvider {
 	private static final Image CLASS_ICON = DLTKPluginImages.get(DLTKPluginImages.IMG_OBJS_CLASS);
 	private static final Image INTERFACE_ICON = PHPPluginImages.get(PHPPluginImages.IMG_OBJS_INTERFACE);
 	private static final Image TRAIT_ICON = PHPPluginImages.get(PHPPluginImages.IMG_OBJS_TRAIT);
+	private static final Image ENUM_ICON = PHPPluginImages.get(PHPPluginImages.IMG_OBJS_ENUM);
 	private static final Image METHOD_ICON = DLTKPluginImages.get(DLTKPluginImages.IMG_METHOD_PUBLIC);
 	private static final Image FIELD_ICON = DLTKPluginImages.get(DLTKPluginImages.IMG_FIELD_PUBLIC);
 	private static final Image CONSTANT_ICON = PHPUiPlugin.getImageDescriptorRegistry()
@@ -141,6 +142,8 @@ public class PHPElementNameMatchLabelProvider extends LabelProvider {
 					return INTERFACE_ICON;
 				} else if (PHPFlags.isTrait(modifiers)) {
 					return TRAIT_ICON;
+				} else if (PHPFlags.isEnum(modifiers)) {
+					return ENUM_ICON;
 				}
 				return CLASS_ICON;
 			} else if (element instanceof MethodNameMatch) {

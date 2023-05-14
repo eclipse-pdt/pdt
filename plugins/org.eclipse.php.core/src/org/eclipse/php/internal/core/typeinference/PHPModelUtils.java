@@ -2120,6 +2120,7 @@ public class PHPModelUtils {
 				}
 			}
 			if (isAbstract || PHPFlags.isInterface(typeFlags)) {
+
 				if (!abstractMethods.containsKey(methodName)) {
 					abstractMethods.put(methodName, method);
 				}
@@ -2131,6 +2132,10 @@ public class PHPModelUtils {
 		String[] superClasses = type.getSuperClasses();
 		if (superClasses != null) {
 			for (String superClass : superClasses) {
+				if (PHPFlags.isEnum(type.getFlags())
+						&& (superClass.equals("BackedEnum") || superClass.equals("UnitEnum"))) { //$NON-NLS-1$ //$NON-NLS-2$
+					continue;
+				}
 				if (!processedTypes.add(superClass)) {
 					continue;
 				}
