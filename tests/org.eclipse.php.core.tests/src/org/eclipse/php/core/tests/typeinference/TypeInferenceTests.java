@@ -63,7 +63,8 @@ public class TypeInferenceTests {
 
 	static {
 
-		TESTS.put(PHPVersion.PHP5, new String[] { "/workspace/typeinference/php5" });
+		TESTS.put(PHPVersion.PHP5,
+				new String[] { "/workspace/typeinference/php5", "/workspace/typeinference/php5/exclusive" });
 		TESTS.put(PHPVersion.PHP5_3,
 				new String[] { "/workspace/typeinference/php5", "/workspace/typeinference/php53" });
 		TESTS.put(PHPVersion.PHP5_4, new String[] { "/workspace/typeinference/php5", "/workspace/typeinference/php53",
@@ -98,6 +99,11 @@ public class TypeInferenceTests {
 		TESTS.put(PHPVersion.PHP8_1, new String[] { "/workspace/typeinference/php5", "/workspace/typeinference/php53",
 				"/workspace/typeinference/php54", "/workspace/typeinference/php55", "/workspace/typeinference/php56",
 				"/workspace/typeinference/php70", "/workspace/typeinference/php80", "/workspace/typeinference/php81" });
+
+		TESTS.put(PHPVersion.PHP8_2, new String[] { "/workspace/typeinference/php5", "/workspace/typeinference/php53",
+				"/workspace/typeinference/php54", "/workspace/typeinference/php55", "/workspace/typeinference/php56",
+				"/workspace/typeinference/php70", "/workspace/typeinference/php80", "/workspace/typeinference/php81",
+				"/workspace/typeinference/php82" });
 	};
 
 	private static int counter = 0;
