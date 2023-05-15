@@ -939,7 +939,7 @@ class ZendPHPUnitErrorHandlerTracer extends ZendPHPUnitErrorHandler
             'file' => $errfile,
             'line' => $errline,
             'trace' => filterTrace(debug_backtrace()),
-            'time' => Timer::resourceUsage()
+            'time' => is_callable(['Timer', 'resourceUsage']) ? Timer::resourceUsage() : ''
         );
         $return = false;
         switch ($errno) { // ignoring user abort
