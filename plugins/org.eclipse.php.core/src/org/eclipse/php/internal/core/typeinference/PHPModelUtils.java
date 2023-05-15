@@ -1899,7 +1899,11 @@ public class PHPModelUtils {
 			String name = extractElementName(fullName);
 			if (cache == null) {
 				IDLTKSearchScope scope = SearchEngine.createSearchScope(sourceModule.getScriptProject());
-				return PHPModelAccess.getDefault().findTypes(typeNameSpaceName, name, MatchRule.EXACT, 0, 0, scope,
+				if (isType) {
+					return PHPModelAccess.getDefault().findTypes(typeNameSpaceName, name, MatchRule.EXACT, 0, 0, scope,
+							monitor);
+				}
+				return PHPModelAccess.getDefault().findTraits(typeNameSpaceName, name, MatchRule.EXACT, 0, 0, scope,
 						monitor);
 			} else if (isType) {
 				Collection<IType> types = cache.getTypes(sourceModule, name, typeNameSpaceName, monitor);
