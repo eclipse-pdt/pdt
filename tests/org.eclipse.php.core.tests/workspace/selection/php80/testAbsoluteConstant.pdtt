@@ -1,0 +1,7 @@
+--TEST--
+--FILE--
+<?php
+\Attribute::|TARGET_CLASS|
+?>
+--EXPECT--
+field(TARGET_CLASS)

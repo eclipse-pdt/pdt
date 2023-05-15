@@ -1890,6 +1890,29 @@ public class PHPModelUtils {
 		if (typeName == null || typeName.length() == 0) {
 			return PHPModelAccess.NULL_TYPES;
 		}
+		if (typeName.charAt(0) == '\\') {
+			String fullName = typeName.substring(1);
+			String typeNameSpaceName = extractNameSpaceName(fullName);
+			if (typeNameSpaceName == null) {
+				typeNameSpaceName = PHPCoreConstants.GLOBAL_NAMESPACE;
+			}
+			String name = extractElementName(fullName);
+			if (cache == null) {
+				IDLTKSearchScope scope = SearchEngine.createSearchScope(sourceModule.getScriptProject());
+				return PHPModelAccess.getDefault().findTypes(typeNameSpaceName, name, MatchRule.EXACT, 0, 0, scope,
+						monitor);
+			} else if (isType) {
+				Collection<IType> types = cache.getTypes(sourceModule, name, typeNameSpaceName, monitor);
+				if (!types.isEmpty()) {
+					return types.toArray(new IType[0]);
+				}
+			} else {
+				Collection<IType> types = cache.getTraits(sourceModule, name, typeNameSpaceName, monitor);
+				if (!types.isEmpty()) {
+					return types.toArray(new IType[0]);
+				}
+			}
+		}
 
 		if (!isGlobal) {
 			String fullTypeName = typeName;
