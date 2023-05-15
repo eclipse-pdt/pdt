@@ -1,0 +1,11 @@
+--TEST--
+Test union
+--FILE--
+<?php 
+class ExtraClass {}
+function myFunc(): PDO&ExtraClass {
+}
+$tmp = myFunc();
+testIntersectionType02($tmp);
+--EXPECT--
+Combined <PDO, ExtraClass>

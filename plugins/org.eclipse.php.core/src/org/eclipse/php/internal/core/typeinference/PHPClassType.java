@@ -13,16 +13,22 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.typeinference;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.references.SimpleReference;
+import org.eclipse.dltk.ast.references.TypeReference;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.core.SourceParserUtil;
+import org.eclipse.dltk.evaluation.types.AmbiguousType;
 import org.eclipse.dltk.evaluation.types.IClassType;
 import org.eclipse.dltk.ti.types.ClassType;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.core.compiler.PHPFlags;
+import org.eclipse.php.core.compiler.ast.nodes.DNFTypeReference;
 import org.eclipse.php.core.compiler.ast.nodes.FullyQualifiedReference;
 import org.eclipse.php.core.compiler.ast.nodes.NamespaceReference;
 import org.eclipse.php.internal.core.typeinference.evaluators.PHPTraitType;
@@ -212,6 +218,9 @@ public class PHPClassType extends ClassType implements IClassType {
 	 * @return evaluated type
 	 */
 	public static IEvaluatedType fromSimpleReference(SimpleReference name) {
+		if (name instanceof DNFTypeReference) {
+			return fromDNFType((DNFTypeReference) name);
+		}
 		String typeName = name instanceof FullyQualifiedReference
 				? ((FullyQualifiedReference) name).getFullyQualifiedName()
 				: name.getName();
@@ -220,6 +229,22 @@ public class PHPClassType extends ClassType implements IClassType {
 			return simpleType;
 		}
 		return new PHPClassType(typeName);
+	}
+
+	private static IEvaluatedType fromDNFType(DNFTypeReference name) {
+		List<IEvaluatedType> list = new ArrayList<>();
+		for (TypeReference ref : name.getReferences()) {
+			list.add(fromSimpleReference(ref));
+
+		}
+		IEvaluatedType[] arr = list.toArray(new IEvaluatedType[0]);
+		if (name.getType() == DNFTypeReference.T_INTERSECTION) {
+			return new IntersectionType(arr);
+		} else {
+
+			return new AmbiguousType(arr);
+		}
+
 	}
 
 	@Override

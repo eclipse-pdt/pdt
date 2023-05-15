@@ -25,11 +25,13 @@ import org.eclipse.dltk.ast.references.TypeReference;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.evaluation.types.MultiTypeType;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
+import org.eclipse.php.core.compiler.ast.nodes.DNFTypeReference;
 import org.eclipse.php.core.compiler.ast.nodes.NamespaceReference;
 import org.eclipse.php.core.compiler.ast.nodes.PHPDocTag;
 import org.eclipse.php.core.compiler.ast.nodes.UsePart;
 import org.eclipse.php.internal.core.Constants;
 import org.eclipse.php.internal.core.Logger;
+import org.eclipse.php.internal.core.typeinference.IntersectionType;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.core.typeinference.PHPSimpleTypes;
@@ -243,9 +245,70 @@ public class PHPEvaluationUtils {
 	}
 
 	@SuppressWarnings("null")
+	private static List<IEvaluatedType> parseReturnType(@NonNull String typeName, @NonNull IModelElement space,
+			int offset, @Nullable IType[] selfTypes) {
+		StringBuilder sb = new StringBuilder();
+		List<IEvaluatedType> list = new ArrayList<>();
+		int group = 0;
+		int type = 0;
+		for (char ch : typeName.toCharArray()) {
+			if (Character.isWhitespace(ch)) {
+				continue;
+			}
+			switch (ch) {
+			case '(':
+				group++;
+				break;
+			case ')':
+				group--;
+				if (group == 0) {
+					list.addAll(evaluateSinglePHPDocType(sb.toString(), space, offset, selfTypes));
+					sb.setLength(0);
+				}
+				break;
+			case '|':
+			case '&':
+				if (group == 0) {
+					if (sb.length() > 0) {
+						list.addAll(evaluateSinglePHPDocType(sb.toString(), space, offset, selfTypes));
+					}
+					if (ch == '|') {
+						type = DNFTypeReference.T_UNION;
+					} else {
+						type = DNFTypeReference.T_INTERSECTION;
+					}
+					sb.setLength(0);
+				} else {
+					sb.append(ch);
+				}
+				break;
+			default:
+				sb.append(ch);
+			}
+		}
+		if (sb.length() > 0) {
+			list.addAll(evaluateSinglePHPDocType(sb.toString(), space, offset, selfTypes));
+		}
+		if (list.size() > 1 && type == DNFTypeReference.T_INTERSECTION) {
+			IntersectionType tmp = new IntersectionType();
+			for (IEvaluatedType ev : list) {
+				tmp.appendType(ev);
+			}
+			list = new ArrayList<>(1);
+			list.add(tmp);
+		}
+
+		return list;
+
+	}
+
+	@SuppressWarnings("null")
 	@NonNull
 	private static List<IEvaluatedType> evaluateSinglePHPDocType(@NonNull String typeName, @NonNull IModelElement space,
 			int offset, @Nullable IType[] selfTypes) {
+		if (typeName.indexOf('|') != -1 || typeName.indexOf('&') != -1) {
+			return parseReturnType(typeName, space, offset, selfTypes);
+		}
 		IType currentNamespace = space instanceof IType ? (IType) space : null;
 		ISourceModule sourceModule = space.getAncestor(ISourceModule.class);
 

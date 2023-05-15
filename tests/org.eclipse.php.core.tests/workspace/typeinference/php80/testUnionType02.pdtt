@@ -1,0 +1,11 @@
+--TEST--
+Test union
+--FILE--
+<?php 
+class ExtraClass {}
+function myFunc(): PDO|ExtraClass {
+}
+$tmp = myFunc();
+testUnionType02($tmp);
+--EXPECT--
+Ambigous <PDO, ExtraClass>

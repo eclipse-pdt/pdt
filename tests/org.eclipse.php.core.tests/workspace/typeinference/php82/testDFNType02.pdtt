@@ -1,0 +1,11 @@
+--TEST--
+Test union
+--FILE--
+<?php 
+class ExtraClass {}
+function myFunc(): (PDO&ExtraClass)|Exception {
+}
+$tmp = myFunc();
+testDFNType02($tmp);
+--EXPECT--
+Ambigous <Combined <PDO, ExtraClass>, Exception>

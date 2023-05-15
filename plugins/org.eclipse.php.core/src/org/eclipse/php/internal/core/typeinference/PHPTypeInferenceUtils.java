@@ -24,6 +24,7 @@ import org.eclipse.dltk.internal.core.ScriptProject;
 import org.eclipse.dltk.ti.IContext;
 import org.eclipse.dltk.ti.ISourceModuleContext;
 import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
+import org.eclipse.dltk.ti.types.CombinedType;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
@@ -214,6 +215,17 @@ public class PHPTypeInferenceUtils {
 		} else if (evaluatedType instanceof AmbiguousType) {
 			List<IType> tmpList = new LinkedList<>();
 			IEvaluatedType[] possibleTypes = ((AmbiguousType) evaluatedType).getPossibleTypes();
+			for (IEvaluatedType possibleType : possibleTypes) {
+				IType[] tmpArray = internalGetModelElements(possibleType, context, offset, cache);
+				if (tmpArray != null) {
+					tmpList.addAll(Arrays.asList(tmpArray));
+				}
+			}
+			// the elements are filtered already
+			return tmpList.toArray(new IType[tmpList.size()]);
+		} else if (evaluatedType instanceof CombinedType) {
+			List<IType> tmpList = new LinkedList<>();
+			IEvaluatedType[] possibleTypes = ((CombinedType) evaluatedType).getTypes();
 			for (IEvaluatedType possibleType : possibleTypes) {
 				IType[] tmpArray = internalGetModelElements(possibleType, context, offset, cache);
 				if (tmpArray != null) {

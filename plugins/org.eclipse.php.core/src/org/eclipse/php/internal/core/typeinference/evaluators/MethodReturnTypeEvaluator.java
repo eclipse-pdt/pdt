@@ -90,6 +90,7 @@ public class MethodReturnTypeEvaluator extends AbstractMethodReturnTypeEvaluator
 						// BUG 525480, we don't stop and use an ASTVisitor
 						// when typehint is a "generic" simple element
 						if (!PHPTypeInferenceUtils.isGenericSimple(returnEvaluatedType)) {
+							evaluated.add(returnEvaluatedType);
 							continue;
 						}
 					}

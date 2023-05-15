@@ -72,7 +72,7 @@ public class PHPDocMethodReturnTypeEvaluator extends AbstractMethodReturnTypeEva
 				try {
 					String returnType = method.getType();
 					if (returnType != null) {
-						typeNames = StringUtils.split(returnType, Constants.TYPE_SEPARATOR_CHAR);
+						typeNames = new String[] { returnType };
 					} else {
 						List<String> returnTypeList = new LinkedList<>();
 						evaluateReturnType(returnTypeList, method);

@@ -60,6 +60,9 @@ public class FunctionCallParameterContext extends StatementContext {
 
 		PHPHeuristicScanner scanner;
 		try {
+			if (offset >= phpReq.getDocument().getLength()) {
+				offset = phpReq.getDocument().getLength() - 1;
+			}
 			if (phpReq.getDocument().getChar(offset) == ')') { // we are before
 																// end
 				offset--;
