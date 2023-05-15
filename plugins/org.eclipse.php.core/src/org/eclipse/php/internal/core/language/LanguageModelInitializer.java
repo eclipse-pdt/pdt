@@ -29,6 +29,7 @@ import org.eclipse.dltk.internal.core.search.ProjectIndexerManager;
 import org.eclipse.php.core.PHPToolkitUtil;
 import org.eclipse.php.core.language.ILanguageModelProvider;
 import org.eclipse.php.internal.core.Logger;
+import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.preferences.IPreferencesPropagatorListener;
 import org.eclipse.php.internal.core.preferences.PreferencesPropagatorEvent;
@@ -167,8 +168,8 @@ public class LanguageModelInitializer extends BuildpathContainerInitializer {
 	}
 
 	/**
-	 * Modifies PHP project buildpath so it will contain path to the language model
-	 * library
+	 * Modifies PHP project buildpath so it will contain path to the language
+	 * model library
 	 * 
 	 * @param project
 	 *            Project handle
@@ -222,8 +223,8 @@ public class LanguageModelInitializer extends BuildpathContainerInitializer {
 
 	static IPath getTargetLocation(ILanguageModelProvider provider, IPath sourcePath, IScriptProject project) {
 
-		return provider.getPlugin().getStateLocation().append(LANGUAGE_PREFIX)
-				.append(Integer.toHexString(sourcePath.toOSString().hashCode()));
+		return provider.getPlugin().getStateLocation().append(LANGUAGE_PREFIX).append(Integer.toHexString(
+				sourcePath.toOSString().hashCode() + PHPCoreConstants.LANGUAGE_LIBRARY_VERSION.hashCode()));
 	}
 
 	/**
