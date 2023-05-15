@@ -18,9 +18,9 @@ final class DOMException extends Exception implements Throwable, Stringable {
 	/**
 	 * @param string $message [optional]
 	 * @param int $code [optional]
-	 * @param ?Throwable|null $previous [optional]
+	 * @param Throwable|null $previous [optional]
 	 */
-	public function __construct (string $message = ''int , $code = 0?Throwable|null , $previous = null) {}
+	public function __construct (string $message = '', int $code = 0, Throwable|null $previous = null) {}
 
 	public function __wakeup () {}
 
@@ -34,7 +34,7 @@ final class DOMException extends Exception implements Throwable, Stringable {
 
 	final public function getTrace (): array {}
 
-	final public function getPrevious (): ??Throwable {}
+	final public function getPrevious (): ?Throwable {}
 
 	final public function getTraceAsString (): string {}
 
@@ -115,7 +115,7 @@ class DOMImplementation  {
 	 * @param string $feature
 	 * @param string $version
 	 */
-	public function getFeature (string $featurestring , $version) {}
+	public function getFeature (string $feature, string $version) {}
 
 	/**
 	 * Test if the DOM implementation implements a specific feature
@@ -837,7 +837,7 @@ class DOMDocument extends DOMNode implements DOMParentNode {
 	 * @param string $version [optional]
 	 * @param string $encoding [optional]
 	 */
-	public function __construct (string $version = 1.0string , $encoding = '') {}
+	public function __construct (string $version = 1.0, string $encoding = '') {}
 
 	/**
 	 * Create new attribute
@@ -1692,7 +1692,7 @@ class DOMAttr extends DOMNode  {
 	 * @param string $name
 	 * @param string $value [optional]
 	 */
-	public function __construct (string $namestring , $value = '') {}
+	public function __construct (string $name, string $value = '') {}
 
 	/**
 	 * Checks if attribute is a defined ID
@@ -1911,10 +1911,10 @@ class DOMElement extends DOMNode implements DOMParentNode, DOMChildNode {
 	 * Creates a new DOMElement object
 	 * @link http://www.php.net/manual/en/domelement.construct.php
 	 * @param string $qualifiedName
-	 * @param ?string|null $value [optional]
+	 * @param string|null $value [optional]
 	 * @param string $namespace [optional]
 	 */
-	public function __construct (string $qualifiedName?string|null , $value = nullstring , $namespace = '') {}
+	public function __construct (string $qualifiedName, string|null $value = null, string $namespace = '') {}
 
 	/**
 	 * Returns value of attribute
@@ -3805,7 +3805,7 @@ class DOMProcessingInstruction extends DOMNode  {
 	 * @param string $name
 	 * @param string $value [optional]
 	 */
-	public function __construct (string $namestring , $value = '') {}
+	public function __construct (string $name, string $value = '') {}
 
 	/**
 	 * Adds new child at the end of the children
@@ -3985,7 +3985,7 @@ class DOMXPath  {
 	 * @param DOMDocument $document
 	 * @param bool $registerNodeNS [optional]
 	 */
-	public function __construct (DOMDocument $documentbool , $registerNodeNS = 1) {}
+	public function __construct (DOMDocument $document, bool $registerNodeNS = 1) {}
 
 	/**
 	 * Evaluates the given XPath expression and returns a typed result if possible

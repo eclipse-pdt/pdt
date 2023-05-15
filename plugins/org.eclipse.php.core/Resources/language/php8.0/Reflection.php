@@ -16,9 +16,9 @@ class ReflectionException extends Exception implements Throwable, Stringable {
 	/**
 	 * @param string $message [optional]
 	 * @param int $code [optional]
-	 * @param ?Throwable|null $previous [optional]
+	 * @param Throwable|null $previous [optional]
 	 */
-	public function __construct (string $message = ''int , $code = 0?Throwable|null , $previous = null) {}
+	public function __construct (string $message = '', int $code = 0, Throwable|null $previous = null) {}
 
 	public function __wakeup () {}
 
@@ -32,7 +32,7 @@ class ReflectionException extends Exception implements Throwable, Stringable {
 
 	final public function getTrace (): array {}
 
-	final public function getPrevious (): ??Throwable {}
+	final public function getPrevious (): ?Throwable {}
 
 	final public function getTraceAsString (): string {}
 
@@ -655,7 +655,7 @@ class ReflectionParameter implements Stringable, Reflector {
 	 * @param mixed $function
 	 * @param string|int $param
 	 */
-	public function __construct ($function = nullstring|int , $param) {}
+	public function __construct ($function = null, string|int $param) {}
 
 	/**
 	 * To string
@@ -925,9 +925,9 @@ class ReflectionMethod extends ReflectionFunctionAbstract implements Stringable,
 	 * Constructs a ReflectionMethod
 	 * @link http://www.php.net/manual/en/reflectionmethod.construct.php
 	 * @param object|string $objectOrMethod
-	 * @param ?string|null $method [optional]
+	 * @param string|null $method [optional]
 	 */
-	public function __construct (object|string $objectOrMethod?string|null , $method = null) {}
+	public function __construct (object|string $objectOrMethod, string|null $method = null) {}
 
 	/**
 	 * Returns the string representation of the Reflection method object
@@ -2176,7 +2176,7 @@ class ReflectionProperty implements Stringable, Reflector {
 	 * @param object|string $class
 	 * @param string $property
 	 */
-	public function __construct (object|string $classstring , $property) {}
+	public function __construct (object|string $class, string $property) {}
 
 	/**
 	 * To string
@@ -2365,7 +2365,7 @@ class ReflectionClassConstant implements Stringable, Reflector {
 	 * @param object|string $class
 	 * @param string $constant
 	 */
-	public function __construct (object|string $classstring , $constant) {}
+	public function __construct (object|string $class, string $constant) {}
 
 	/**
 	 * Returns the string representation of the ReflectionClassConstant object
@@ -2643,7 +2643,7 @@ final class ReflectionReference  {
 	 * @return mixed a ReflectionReference instance if
 	 * $array[$key] is a reference, or null otherwise.
 	 */
-	public static function fromArrayElement (array $array, $key): ??ReflectionReference {}
+	public static function fromArrayElement (array $array, $key): ?ReflectionReference {}
 
 	/**
 	 * Get unique ID of a reference

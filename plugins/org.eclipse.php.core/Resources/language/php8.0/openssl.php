@@ -507,9 +507,9 @@ function openssl_pkey_get_private ($private_key, $passphrase = null): OpenSSLAsy
  * Alias: openssl_pkey_get_private
  * @link http://www.php.net/manual/en/function.openssl-get-privatekey.php
  * @param mixed $private_key
- * @param ?string|null $passphrase [optional]
+ * @param string|null $passphrase [optional]
  */
-function openssl_get_privatekey ($private_key = null?string|null , $passphrase = null): OpenSSLAsymmetricKey|false {}
+function openssl_get_privatekey ($private_key = null, string|null $passphrase = null): OpenSSLAsymmetricKey|false {}
 
 /**
  * Returns an array with the key details

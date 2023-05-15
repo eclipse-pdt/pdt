@@ -20,9 +20,9 @@ class AssertionError extends Error implements Throwable, Stringable {
 	/**
 	 * @param string $message [optional]
 	 * @param int $code [optional]
-	 * @param ?Throwable|null $previous [optional]
+	 * @param Throwable|null $previous [optional]
 	 */
-	public function __construct (string $message = ''int , $code = 0?Throwable|null , $previous = null) {}
+	public function __construct (string $message = '', int $code = 0, Throwable|null $previous = null) {}
 
 	public function __wakeup () {}
 
@@ -36,7 +36,7 @@ class AssertionError extends Error implements Throwable, Stringable {
 
 	final public function getTrace (): array {}
 
-	final public function getPrevious (): ??Throwable {}
+	final public function getPrevious (): ?Throwable {}
 
 	final public function getTraceAsString (): string {}
 
@@ -485,7 +485,7 @@ function stream_wrapper_register (string $protocol, string $class, int $flags = 
  * @param string $class
  * @param int $flags [optional]
  */
-function stream_register_wrapper (string $protocolstring , $classint , $flags = 0): bool {}
+function stream_register_wrapper (string $protocol, string $class, int $flags = 0): bool {}
 
 /**
  * Unregister a URL wrapper
@@ -561,7 +561,7 @@ function count ($value, int $mode = null): int {}
  * @param Countable|array[] $value
  * @param int $mode [optional]
  */
-function sizeof (array $valueint , $mode = 0): int {}
+function sizeof (array $value, int $mode = 0): int {}
 
 /**
  * Sort an array using a "natural order" algorithm
@@ -651,7 +651,7 @@ function uksort (array &$array, callable $callback): bool {}
  * passed by reference.
  * @return mixed the value of the last element or false for empty array.
  */
-function end (&$array): ?mixed {}
+function end (&$array): mixed {}
 
 /**
  * Rewind the internal array pointer
@@ -661,7 +661,7 @@ function end (&$array): ?mixed {}
  * the internal array pointer, or false if there are no more
  * elements.
  */
-function prev (&$array): ?mixed {}
+function prev (&$array): mixed {}
 
 /**
  * Advance the internal pointer of an array
@@ -670,7 +670,7 @@ function prev (&$array): ?mixed {}
  * @return mixed the array value in the next place that's pointed to by the
  * internal array pointer, or false if there are no more elements.
  */
-function next (&$array): ?mixed {}
+function next (&$array): mixed {}
 
 /**
  * Set the internal pointer of an array to its first element
@@ -679,7 +679,7 @@ function next (&$array): ?mixed {}
  * @return mixed the value of the first array element, or false if the array is
  * empty.
  */
-function reset (&$array): ?mixed {}
+function reset (&$array): mixed {}
 
 /**
  * Return the current element in an array
@@ -691,14 +691,14 @@ function reset (&$array): ?mixed {}
  * internal pointer points beyond the end of the elements list or the array is 
  * empty, current returns false.
  */
-function current ($array): ?mixed {}
+function current ($array): mixed {}
 
 /**
  * Alias: current
  * @link http://www.php.net/manual/en/function.pos.php
  * @param object|array $array
  */
-function pos (object|array $array): ?mixed {}
+function pos (object|array $array): mixed {}
 
 /**
  * Fetch a key from an array
@@ -710,7 +710,7 @@ function pos (object|array $array): ?mixed {}
  * internal pointer points beyond the end of the elements list or the array is 
  * empty, key returns null.
  */
-function key ($array): ?string|int|null {}
+function key ($array): string|int|null {}
 
 /**
  * Find lowest value
@@ -723,7 +723,7 @@ function key ($array): ?string|int|null {}
  * comparisons. If multiple values of different types evaluate as equal (e.g. 0
  * and 'abc') the first provided to the function will be returned.
  */
-function min ($value, $values): ?mixed {}
+function min ($value, $values): mixed {}
 
 /**
  * Find highest value
@@ -736,7 +736,7 @@ function min ($value, $values): ?mixed {}
  * comparisons. If multiple values of different types evaluate as equal (e.g. 0
  * and 'abc') the first provided to the function will be returned.
  */
-function max ($value, $values): ?mixed {}
+function max ($value, $values): mixed {}
 
 /**
  * Apply a user supplied function to every member of an array
@@ -1005,7 +1005,7 @@ function shuffle (array &$array): bool {}
  * If array is empty,
  * null will be returned.
  */
-function array_pop (array &$array): ?mixed {}
+function array_pop (array &$array): mixed {}
 
 /**
  * Shift an element off the beginning of array
@@ -1014,7 +1014,7 @@ function array_pop (array &$array): ?mixed {}
  * @return mixed the shifted value, or null if array is
  * empty or is not an array.
  */
-function array_shift (array &$array): ?mixed {}
+function array_shift (array &$array): mixed {}
 
 /**
  * Prepend one or more elements to the beginning of an array
@@ -1177,7 +1177,7 @@ function array_keys (array $array): array {}
  * @return mixed the first key of array if the array is not empty;
  * null otherwise.
  */
-function array_key_first (array $array): ?string|int|null {}
+function array_key_first (array $array): string|int|null {}
 
 /**
  * Gets the last key of an array
@@ -1186,7 +1186,7 @@ function array_key_first (array $array): ?string|int|null {}
  * @return mixed the last key of array if the array is not empty;
  * null otherwise.
  */
-function array_key_last (array $array): ?string|int|null {}
+function array_key_last (array $array): string|int|null {}
 
 /**
  * Return all the values of an array
@@ -1601,7 +1601,7 @@ function array_product (array $array): int|float {}
  * array_reduce returns null.
  * </p>
  */
-function array_reduce (array $array, callable $callback, $initial = null): ?mixed {}
+function array_reduce (array $array, callable $callback, $initial = null): mixed {}
 
 /**
  * Filters elements of an array using a callback function
@@ -1678,7 +1678,7 @@ function array_key_exists ($key, array $array): bool {}
  * @param mixed $key
  * @param array[] $array
  */
-function key_exists ($key = nullarray , $array): bool {}
+function key_exists ($key = null, array $array): bool {}
 
 /**
  * Split an array into chunks
@@ -1738,7 +1738,7 @@ function base64_decode (string $string, bool $strict = null): string|false {}
  * @param string $name The constant name.
  * @return mixed the value of the constant.
  */
-function constant (string $name): ?mixed {}
+function constant (string $name): mixed {}
 
 /**
  * Converts a string containing an (IPv4) Internet Protocol dotted address into a long integer
@@ -1963,7 +1963,7 @@ function error_log (string $message, int $message_type = null, $destination = nu
  * internal function then the "message" begins with its name.
  * Returns null if there hasn't been an error yet.
  */
-function error_get_last (): ??array {}
+function error_get_last (): ?array {}
 
 /**
  * Clear the most recent error
@@ -2013,7 +2013,7 @@ function error_clear_last (): void {}
  * </p>
  * @return mixed the return value of the callback.
  */
-function call_user_func (callable $callback, $args): ?mixed {}
+function call_user_func (callable $callback, $args): mixed {}
 
 /**
  * Call a callback with an array of parameters
@@ -2040,7 +2040,7 @@ function call_user_func (callable $callback, $args): ?mixed {}
  * </p>
  * @return mixed the return value of the callback, or false on error.
  */
-function call_user_func_array (callable $callback, array $args): ?mixed {}
+function call_user_func_array (callable $callback, array $args): mixed {}
 
 /**
  * Call a static method
@@ -2051,7 +2051,7 @@ function call_user_func_array (callable $callback, array $args): ?mixed {}
  * @param mixed $args Zero or more parameters to be passed to the function.
  * @return mixed the function result, or false on error.
  */
-function forward_static_call (callable $callback, $args): ?mixed {}
+function forward_static_call (callable $callback, $args): mixed {}
 
 /**
  * Call a static method and pass the arguments as array
@@ -2062,7 +2062,7 @@ function forward_static_call (callable $callback, $args): ?mixed {}
  * @param array $args 
  * @return mixed the function result, or false on error.
  */
-function forward_static_call_array (callable $callback, array $args): ?mixed {}
+function forward_static_call_array (callable $callback, array $args): mixed {}
 
 /**
  * Register a function for execution on shutdown
@@ -2078,7 +2078,7 @@ function forward_static_call_array (callable $callback, array $args): ?mixed {}
  * additional parameters.
  * @return void 
  */
-function register_shutdown_function (callable $callback, $args): ??bool {}
+function register_shutdown_function (callable $callback, $args): ?bool {}
 
 /**
  * Syntax highlighting of a file
@@ -2098,7 +2098,7 @@ function highlight_file (string $filename, bool $return = null): string|bool {}
  * @param string $filename
  * @param bool $return [optional]
  */
-function show_source (string $filenamebool , $return = ''): string|bool {}
+function show_source (string $filename, bool $return = ''): string|bool {}
 
 /**
  * Return source with stripped comments and whitespace
@@ -2186,9 +2186,9 @@ function ini_set (string $option, $value): string|false {}
  * Alias: ini_set
  * @link http://www.php.net/manual/en/function.ini-alter.php
  * @param string $option
- * @param string|int|float|bool|null|null $value
+ * @param string|int|float|bool|null $value
  */
-function ini_alter (string $optionstring|int|float|bool|null|null , $value = null): string|false {}
+function ini_alter (string $option, string|int|float|bool|null $value = null): string|false {}
 
 /**
  * Restores the value of a configuration option
@@ -2559,7 +2559,7 @@ function gethostbynamel (string $hostname): array|false {}
  * @param string $hostname
  * @param string $type [optional]
  */
-function dns_check_record (string $hostnamestring , $type = 'MX'): bool {}
+function dns_check_record (string $hostname, string $type = 'MX'): bool {}
 
 /**
  * Check DNS records corresponding to a given Internet host name or IP address
@@ -3909,7 +3909,7 @@ function assert ($assertion, string $description = null): bool {}
  * </p>
  * @return mixed the original setting of any option or false on errors.
  */
-function assert_options (int $what, $value = null): ?mixed {}
+function assert_options (int $what, $value = null): mixed {}
 
 /**
  * Convert binary data into hexadecimal representation
@@ -4288,7 +4288,7 @@ function rtrim (string $string, string $characters = null): string {}
  * @param string $string
  * @param string $characters [optional]
  */
-function chop (string $stringstring , $characters = ' 
+function chop (string $string, string $characters = ' 
 	 '): string {}
 
 /**
@@ -4391,9 +4391,9 @@ function implode (string $separator, array $array): string {}
  * Alias: implode
  * @link http://www.php.net/manual/en/function.join.php
  * @param array|string $separator
- * @param ?array|null[] $array [optional]
+ * @param array|null[] $array [optional]
  */
-function join (array|string $separatorarray , $array = null): string {}
+function join (array|string $separator, array $array = null): string {}
 
 /**
  * Tokenize string
@@ -4550,7 +4550,7 @@ function strstr (string $haystack, string $needle, bool $before_needle = null): 
  * @param string $needle
  * @param bool $before_needle [optional]
  */
-function strchr (string $haystackstring , $needlebool , $before_needle = ''): string|false {}
+function strchr (string $haystack, string $needle, bool $before_needle = ''): string|false {}
 
 /**
  * Find the position of the first occurrence of a substring in a string
@@ -5441,7 +5441,7 @@ function str_pad (string $string, int $length, string $pad_string = null, int $p
  * null will be returned.
  * </p>
  */
-function sscanf (string $string, string $format, &$vars): ?array|int|null {}
+function sscanf (string $string, string $format, &$vars): array|int|null {}
 
 /**
  * Perform the rot13 transform on a string
@@ -5752,7 +5752,7 @@ function system (string $command, int &$result_code = null): string|false {}
  * return status of the Unix command will be placed here.
  * @return mixed null on successreturn.falseforfailure.
  */
-function passthru (string $command, int &$result_code = null): ??bool {}
+function passthru (string $command, int &$result_code = null): ?bool {}
 
 /**
  * Escape shell metacharacters
@@ -5783,7 +5783,7 @@ function escapeshellarg (string $arg): string {}
  * program exit code is required.
  * </p>
  */
-function shell_exec (string $command): ?string|false|null {}
+function shell_exec (string $command): string|false|null {}
 
 /**
  * Change the priority of the current process
@@ -6255,7 +6255,7 @@ function fopen (string $filename, string $mode, bool $use_include_path = null, $
  * null will be returned. On other errors, false will be returned.
  * </p>
  */
-function fscanf ($stream, string $format, &$vars): ?array|int|false|null {}
+function fscanf ($stream, string $format, &$vars): array|int|false|null {}
 
 /**
  * Output all remaining data on a file pointer
@@ -6381,9 +6381,9 @@ function fwrite ($stream, string $data, $length = null): int|false {}
  * @link http://www.php.net/manual/en/function.fputs.php
  * @param mixed $stream
  * @param string $data
- * @param ?int|null $length [optional]
+ * @param int|null $length [optional]
  */
-function fputs ($stream = nullstring , $data?int|null , $length = null): int|false {}
+function fputs ($stream = null, string $data, int|null $length = null): int|false {}
 
 /**
  * Makes directory
@@ -9138,7 +9138,7 @@ function srand (int $seed = null, int $mode = null): void {}
  * @return int A pseudo random value between min
  * (or 0) and max (or getrandmax, inclusive).
  */
-function rand (int $min = nullint , $max = null): int {}
+function rand (int $min = null, int $max = null): int {}
 
 /**
  * Generate a random value via the Mersenne Twister Random Number Generator
@@ -9149,7 +9149,7 @@ function rand (int $min = nullint , $max = null): int {}
  * and max (or mt_getrandmax, inclusive),
  * or false if max is less than min.
  */
-function mt_rand (int $min = nullint , $max = null): int {}
+function mt_rand (int $min = null, int $max = null): int {}
 
 /**
  * Show largest possible random value
@@ -9741,7 +9741,7 @@ function stream_set_write_buffer ($stream, int $size): int {}
  * @param mixed $stream
  * @param int $size
  */
-function set_file_buffer ($stream = nullint , $size): int {}
+function set_file_buffer ($stream = null, int $size): int {}
 
 /**
  * Set read file buffering on the given stream
@@ -9778,7 +9778,7 @@ function stream_set_blocking ($stream, bool $enable): bool {}
  * @param mixed $stream
  * @param bool $enable
  */
-function socket_set_blocking ($stream = nullbool , $enable): bool {}
+function socket_set_blocking ($stream = null, bool $enable): bool {}
 
 /**
  * Retrieves header/meta data from streams/file pointers
@@ -9942,7 +9942,7 @@ function stream_set_timeout ($stream, int $seconds, int $microseconds = null): b
  * @param int $seconds
  * @param int $microseconds [optional]
  */
-function socket_set_timeout ($stream = nullint , $secondsint , $microseconds = 0): bool {}
+function socket_set_timeout ($stream = null, int $seconds, int $microseconds = 0): bool {}
 
 /**
  * Get the type of a variable
@@ -10139,9 +10139,9 @@ function floatval ($value): float {}
 /**
  * Alias: floatval
  * @link http://www.php.net/manual/en/function.doubleval.php
- * @param mixed|null $value
+ * @param mixed $value
  */
-function doubleval (mixed|null $value = null): float {}
+function doubleval (mixed $value = null): float {}
 
 /**
  * Get the boolean value of a variable
@@ -10207,16 +10207,16 @@ function is_int ($value): bool {}
 /**
  * Alias: is_int
  * @link http://www.php.net/manual/en/function.is-integer.php
- * @param mixed|null $value
+ * @param mixed $value
  */
-function is_integer (mixed|null $value = null): bool {}
+function is_integer (mixed $value = null): bool {}
 
 /**
  * Alias: is_int
  * @link http://www.php.net/manual/en/function.is-long.php
- * @param mixed|null $value
+ * @param mixed $value
  */
-function is_long (mixed|null $value = null): bool {}
+function is_long (mixed $value = null): bool {}
 
 /**
  * Finds whether the type of a variable is float
@@ -10230,9 +10230,9 @@ function is_float ($value): bool {}
 /**
  * Alias: is_float
  * @link http://www.php.net/manual/en/function.is-double.php
- * @param mixed|null $value
+ * @param mixed $value
  */
-function is_double (mixed|null $value = null): bool {}
+function is_double (mixed $value = null): bool {}
 
 /**
  * Finds whether a variable is a number or a numeric string
@@ -10404,7 +10404,7 @@ function uniqid (string $prefix = null, bool $more_entropy = null): string {}
  * components are replaced with underscores (_).
  * </p>
  */
-function parse_url (string $url, int $component = null): ?array|string|int|false|null {}
+function parse_url (string $url, int $component = null): array|string|int|false|null {}
 
 /**
  * URL-encodes string
@@ -10487,7 +10487,7 @@ function get_headers (string $url, bool $associative = null, $context = null): a
  * </p>
  * </p>
  */
-function stream_bucket_make_writeable ($brigade): ??object {}
+function stream_bucket_make_writeable ($brigade): ?object {}
 
 /**
  * Prepend bucket to brigade
@@ -10580,7 +10580,7 @@ function var_dump ($value, $values): void {}
  * parameter is used and evaluates to true. Otherwise, this function will
  * return null.
  */
-function var_export ($value, bool $return = null): ??string {}
+function var_export ($value, bool $return = null): ?string {}
 
 /**
  * Dumps a string representation of an internal zval structure to output
@@ -10696,7 +10696,7 @@ function serialize ($value): string {}
  * E_NOTICE is issued.
  * </p>
  */
-function unserialize (string $data, array $options = null): ?mixed {}
+function unserialize (string $data, array $options = null): mixed {}
 
 /**
  * Returns the amount of memory allocated to PHP
@@ -10811,7 +10811,7 @@ function cli_set_process_title (string $title): bool {}
  * @link http://www.php.net/manual/en/function.cli-get-process-title.php
  * @return mixed Return a string with the current process title or null on error.
  */
-function cli_get_process_title (): ??string {}
+function cli_get_process_title (): ?string {}
 
 
 /**

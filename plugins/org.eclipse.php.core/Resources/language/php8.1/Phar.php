@@ -17,9 +17,9 @@ class PharException extends Exception implements Throwable, Stringable {
 	/**
 	 * @param string $message [optional]
 	 * @param int $code [optional]
-	 * @param ?Throwable|null $previous [optional]
+	 * @param Throwable|null $previous [optional]
 	 */
-	public function __construct (string $message = ''int , $code = 0?Throwable|null , $previous = null) {}
+	public function __construct (string $message = '', int $code = 0, Throwable|null $previous = null) {}
 
 	public function __wakeup () {}
 
@@ -33,7 +33,7 @@ class PharException extends Exception implements Throwable, Stringable {
 
 	final public function getTrace (): array {}
 
-	final public function getPrevious (): ??Throwable {}
+	final public function getPrevious (): ?Throwable {}
 
 	final public function getTraceAsString (): string {}
 
@@ -82,9 +82,9 @@ class Phar extends RecursiveDirectoryIterator implements RecursiveIterator, Iter
 	 * @link http://www.php.net/manual/en/phar.construct.php
 	 * @param string $filename
 	 * @param int $flags [optional]
-	 * @param ?string|null $alias [optional]
+	 * @param string|null $alias [optional]
 	 */
-	public function __construct (string $filenameint , $flags = 12288?string|null , $alias = null) {}
+	public function __construct (string $filename, int $flags = 12288, string|null $alias = null) {}
 
 	/**
 	 * Destructs a Phar archive object
@@ -1041,10 +1041,10 @@ class PharData extends RecursiveDirectoryIterator implements RecursiveIterator, 
 	 * @link http://www.php.net/manual/en/phardata.construct.php
 	 * @param string $filename
 	 * @param int $flags [optional]
-	 * @param ?string|null $alias [optional]
+	 * @param string|null $alias [optional]
 	 * @param int $format [optional]
 	 */
-	public function __construct (string $filenameint , $flags = 12288?string|null , $alias = nullint , $format = 0) {}
+	public function __construct (string $filename, int $flags = 12288, string|null $alias = null, int $format = 0) {}
 
 	/**
 	 * Destructs a non-executable tar or zip archive object
@@ -1368,10 +1368,10 @@ class PharData extends RecursiveDirectoryIterator implements RecursiveIterator, 
 	final public static function canWrite (): bool {}
 
 	/**
-	 * @param ?string|null $index [optional]
-	 * @param ?string|null $webIndex [optional]
+	 * @param string|null $index [optional]
+	 * @param string|null $webIndex [optional]
 	 */
-	final public static function createDefaultStub (?string|null $index = null?string|null , $webIndex = null): string {}
+	final public static function createDefaultStub (string|null $index = null, string|null $webIndex = null): string {}
 
 	final public static function getSupportedCompression (): array {}
 
@@ -1383,19 +1383,19 @@ class PharData extends RecursiveDirectoryIterator implements RecursiveIterator, 
 	 * @param string $filename
 	 * @param bool $executable [optional]
 	 */
-	final public static function isValidPharFilename (string $filenamebool , $executable = 1): bool {}
+	final public static function isValidPharFilename (string $filename, bool $executable = 1): bool {}
 
 	/**
 	 * @param string $filename
-	 * @param ?string|null $alias [optional]
+	 * @param string|null $alias [optional]
 	 */
-	final public static function loadPhar (string $filename?string|null , $alias = null): bool {}
+	final public static function loadPhar (string $filename, string|null $alias = null): bool {}
 
 	/**
-	 * @param ?string|null $alias [optional]
+	 * @param string|null $alias [optional]
 	 * @param int $offset [optional]
 	 */
-	final public static function mapPhar (?string|null $alias = nullint , $offset = 0): bool {}
+	final public static function mapPhar (string|null $alias = null, int $offset = 0): bool {}
 
 	/**
 	 * @param bool $returnPhar [optional]
@@ -1406,7 +1406,7 @@ class PharData extends RecursiveDirectoryIterator implements RecursiveIterator, 
 	 * @param string $pharPath
 	 * @param string $externalPath
 	 */
-	final public static function mount (string $pharPathstring , $externalPath): void {}
+	final public static function mount (string $pharPath, string $externalPath): void {}
 
 	/**
 	 * @param array[] $variables
@@ -1419,13 +1419,13 @@ class PharData extends RecursiveDirectoryIterator implements RecursiveIterator, 
 	final public static function unlinkArchive (string $filename): bool {}
 
 	/**
-	 * @param ?string|null $alias [optional]
-	 * @param ?string|null $index [optional]
-	 * @param ?string|null $fileNotFoundScript [optional]
+	 * @param string|null $alias [optional]
+	 * @param string|null $index [optional]
+	 * @param string|null $fileNotFoundScript [optional]
 	 * @param array[] $mimeTypes [optional]
-	 * @param ?callable|null $rewrite [optional]
+	 * @param callable|null $rewrite [optional]
 	 */
-	final public static function webPhar (?string|null $alias = null?string|null , $index = null?string|null , $fileNotFoundScript = nullarray , $mimeTypes = 'Array'?callable|null , $rewrite = null): void {}
+	final public static function webPhar (string|null $alias = null, string|null $index = null, string|null $fileNotFoundScript = null, array $mimeTypes = 'Array', callable|null $rewrite = null): void {}
 
 	/**
 	 * Returns whether current entry is a directory and not '.' or '..'

@@ -49,9 +49,9 @@ class RandomError extends \Error implements \Throwable, \Stringable {
 	/**
 	 * @param string $message [optional]
 	 * @param int $code [optional]
-	 * @param ?Throwable|null $previous [optional]
+	 * @param Throwable|null $previous [optional]
 	 */
-	public function __construct (string $message = ''int , $code = 0?Throwable|null , $previous = null) {}
+	public function __construct (string $message = '', int $code = 0, Throwable|null $previous = null) {}
 
 	public function __wakeup () {}
 
@@ -65,7 +65,7 @@ class RandomError extends \Error implements \Throwable, \Stringable {
 
 	final public function getTrace (): array {}
 
-	final public function getPrevious (): ??Throwable {}
+	final public function getPrevious (): ?Throwable {}
 
 	final public function getTraceAsString (): string {}
 
@@ -87,9 +87,9 @@ class BrokenRandomEngineError extends \Random\RandomError implements \Stringable
 	/**
 	 * @param string $message [optional]
 	 * @param int $code [optional]
-	 * @param ?Throwable|null $previous [optional]
+	 * @param Throwable|null $previous [optional]
 	 */
-	public function __construct (string $message = ''int , $code = 0?Throwable|null , $previous = null) {}
+	public function __construct (string $message = '', int $code = 0, Throwable|null $previous = null) {}
 
 	public function __wakeup () {}
 
@@ -103,7 +103,7 @@ class BrokenRandomEngineError extends \Random\RandomError implements \Stringable
 
 	final public function getTrace (): array {}
 
-	final public function getPrevious (): ??Throwable {}
+	final public function getPrevious (): ?Throwable {}
 
 	final public function getTraceAsString (): string {}
 
@@ -125,9 +125,9 @@ class RandomException extends \Exception implements \Throwable, \Stringable {
 	/**
 	 * @param string $message [optional]
 	 * @param int $code [optional]
-	 * @param ?Throwable|null $previous [optional]
+	 * @param Throwable|null $previous [optional]
 	 */
-	public function __construct (string $message = ''int , $code = 0?Throwable|null , $previous = null) {}
+	public function __construct (string $message = '', int $code = 0, Throwable|null $previous = null) {}
 
 	public function __wakeup () {}
 
@@ -141,7 +141,7 @@ class RandomException extends \Exception implements \Throwable, \Stringable {
 
 	final public function getTrace (): array {}
 
-	final public function getPrevious (): ??Throwable {}
+	final public function getPrevious (): ?Throwable {}
 
 	final public function getTraceAsString (): string {}
 
@@ -162,10 +162,10 @@ namespace Random\Engine {
 final class Mt19937 implements \Random\Engine {
 
 	/**
-	 * @param ?int|null $seed [optional]
+	 * @param int|null $seed [optional]
 	 * @param int $mode [optional]
 	 */
-	public function __construct (?int|null $seed = nullint , $mode = 0) {}
+	public function __construct (int|null $seed = null, int $mode = 0) {}
 
 	public function generate (): string {}
 
@@ -188,9 +188,9 @@ final class Mt19937 implements \Random\Engine {
 final class PcgOneseq128XslRr64 implements \Random\Engine {
 
 	/**
-	 * @param string|int|null|null $seed [optional]
+	 * @param string|int|null $seed [optional]
 	 */
-	public function __construct (string|int|null|null $seed = null) {}
+	public function __construct (string|int|null $seed = null) {}
 
 	public function generate (): string {}
 
@@ -217,9 +217,9 @@ final class PcgOneseq128XslRr64 implements \Random\Engine {
 final class Xoshiro256StarStar implements \Random\Engine {
 
 	/**
-	 * @param string|int|null|null $seed [optional]
+	 * @param string|int|null $seed [optional]
 	 */
-	public function __construct (string|int|null|null $seed = null) {}
+	public function __construct (string|int|null $seed = null) {}
 
 	public function generate (): string {}
 
@@ -268,9 +268,9 @@ final class Randomizer  {
 
 
 	/**
-	 * @param ?Random\Engine|null $engine [optional]
+	 * @param Random\Engine|null $engine [optional]
 	 */
-	public function __construct (?Random\Engine|null $engine = null) {}
+	public function __construct (Random\Engine|null $engine = null) {}
 
 	public function nextInt (): int {}
 
@@ -278,7 +278,7 @@ final class Randomizer  {
 	 * @param int $min
 	 * @param int $max
 	 */
-	public function getInt (int $minint , $max): int {}
+	public function getInt (int $min, int $max): int {}
 
 	/**
 	 * @param int $length
@@ -299,7 +299,7 @@ final class Randomizer  {
 	 * @param array[] $array
 	 * @param int $num
 	 */
-	public function pickArrayKeys (array $arrayint , $num): array {}
+	public function pickArrayKeys (array $array, int $num): array {}
 
 	public function __serialize (): array {}
 
@@ -358,7 +358,7 @@ function srand (int $seed = null, int $mode = null): void {}
  * @return int A pseudo random value between min
  * (or 0) and max (or getrandmax, inclusive).
  */
-function rand (int $min = nullint , $max = null): int {}
+function rand (int $min = null, int $max = null): int {}
 
 /**
  * Generate a random value via the Mersenne Twister Random Number Generator
@@ -369,7 +369,7 @@ function rand (int $min = nullint , $max = null): int {}
  * and max (or mt_getrandmax, inclusive),
  * or false if max is less than min.
  */
-function mt_rand (int $min = nullint , $max = null): int {}
+function mt_rand (int $min = null, int $max = null): int {}
 
 /**
  * Show largest possible random value

@@ -1031,7 +1031,7 @@ function mb_eregi (string $pattern, string $string, array &$matches = null): boo
  * If string is not valid for the current encoding, null
  * is returned.
  */
-function mb_ereg_replace (string $pattern, string $replacement, string $string, $options = null): ?string|false|null {}
+function mb_ereg_replace (string $pattern, string $replacement, string $string, $options = null): string|false|null {}
 
 /**
  * Replace regular expression with multibyte support ignoring case
@@ -1044,7 +1044,7 @@ function mb_ereg_replace (string $pattern, string $replacement, string $string, 
  * If string is not valid for the current encoding, null
  * is returned.
  */
-function mb_eregi_replace (string $pattern, string $replacement, string $string, $options = null): ?string|false|null {}
+function mb_eregi_replace (string $pattern, string $replacement, string $string, $options = null): string|false|null {}
 
 /**
  * Perform a regular expression search and replace with multibyte support using a callback
@@ -1077,7 +1077,7 @@ function mb_eregi_replace (string $pattern, string $replacement, string $string,
  * If string is not valid for the current encoding, null
  * is returned.
  */
-function mb_ereg_replace_callback (string $pattern, callable $callback, string $string, $options = null): ?string|false|null {}
+function mb_ereg_replace_callback (string $pattern, callable $callback, string $string, $options = null): string|false|null {}
 
 /**
  * Split multibyte string using regular expression

@@ -18,7 +18,7 @@ class GMP  {
 	 * @param string|int $num [optional]
 	 * @param int $base [optional]
 	 */
-	public function __construct (string|int $num = 0int , $base = 0) {}
+	public function __construct (string|int $num = 0, int $base = 0) {}
 
 	/**
 	 * Serializes the GMP object
@@ -221,7 +221,7 @@ function gmp_div_r ($num1, $num2, int $rounding_mode = null): GMP {}
  * @param GMP|string|int $num2
  * @param int $rounding_mode [optional]
  */
-function gmp_div (GMP|string|int $num1GMP|string|int , $num2int , $rounding_mode = 0): GMP {}
+function gmp_div (GMP|string|int $num1, GMP|string|int $num2, int $rounding_mode = 0): GMP {}
 
 /**
  * Modulo operation

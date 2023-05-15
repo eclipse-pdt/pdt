@@ -776,7 +776,7 @@ function imagecolorexact (GdImage $image, int $red, int $green, int $blue): int 
  * @param int $alpha [optional] Value of alpha component.
  * @return mixed The function returns null on success, or false on failure.
  */
-function imagecolorset (GdImage $image, int $color, int $red, int $green, int $blue, int $alpha = null): ??bool {}
+function imagecolorset (GdImage $image, int $color, int $red, int $green, int $blue, int $alpha = null): ?bool {}
 
 /**
  * Get the colors for an index

@@ -413,7 +413,7 @@ function preg_match_all (string $pattern, string $subject, array &$matches = nul
  * returned unchanged or null if an error occurred.
  * </p>
  */
-function preg_replace ($pattern, $replacement, $subject, int $limit = null, int &$count = null): ?array|string|null {}
+function preg_replace ($pattern, $replacement, $subject, int $limit = null, int &$count = null): array|string|null {}
 
 /**
  * Perform a regular expression search and replace
@@ -431,7 +431,7 @@ function preg_replace ($pattern, $replacement, $subject, int $limit = null, int 
  * or null otherwise.
  * </p>
  */
-function preg_filter ($pattern, $replacement, $subject, int $limit = null, int &$count = null): ?array|string|null {}
+function preg_filter ($pattern, $replacement, $subject, int $limit = null, int &$count = null): array|string|null {}
 
 /**
  * Perform a regular expression search and replace using a callback
@@ -500,7 +500,7 @@ function preg_filter ($pattern, $replacement, $subject, int $limit = null, int &
  * subject will be returned unchanged.
  * </p>
  */
-function preg_replace_callback ($pattern, callable $callback, $subject, int $limit = null, int &$count = null, int $flags = null): ?array|string|null {}
+function preg_replace_callback ($pattern, callable $callback, $subject, int $limit = null, int &$count = null, int $flags = null): array|string|null {}
 
 /**
  * Perform a regular expression search and replace using callbacks
@@ -525,7 +525,7 @@ function preg_replace_callback ($pattern, callable $callback, $subject, int $lim
  * subject will be returned unchanged. 
  * </p>
  */
-function preg_replace_callback_array (array $pattern, $subject, int $limit = null, int &$count = null, int $flags = null): ?array|string|null {}
+function preg_replace_callback_array (array $pattern, $subject, int $limit = null, int &$count = null, int $flags = null): array|string|null {}
 
 /**
  * Split string by a regular expression

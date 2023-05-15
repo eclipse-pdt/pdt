@@ -50,10 +50,10 @@ class SoapClient  {
 	/**
 	 * SoapClient constructor
 	 * @link http://www.php.net/manual/en/soapclient.construct.php
-	 * @param ?string|null $wsdl
+	 * @param string|null $wsdl
 	 * @param array[] $options [optional]
 	 */
-	public function __construct (?string|null $wsdl = nullarray , $options = 'Array') {}
+	public function __construct (string|null $wsdl = null, array $options = 'Array') {}
 
 	/**
 	 * Calls a SOAP function (deprecated)
@@ -216,14 +216,14 @@ class SoapVar  {
 	/**
 	 * SoapVar constructor
 	 * @link http://www.php.net/manual/en/soapvar.construct.php
-	 * @param mixed|null $data
-	 * @param ?int|null $encoding
-	 * @param ?string|null $typeName [optional]
-	 * @param ?string|null $typeNamespace [optional]
-	 * @param ?string|null $nodeName [optional]
-	 * @param ?string|null $nodeNamespace [optional]
+	 * @param mixed $data
+	 * @param int|null $encoding
+	 * @param string|null $typeName [optional]
+	 * @param string|null $typeNamespace [optional]
+	 * @param string|null $nodeName [optional]
+	 * @param string|null $nodeNamespace [optional]
 	 */
-	public function __construct (mixed|null $data = null?int|null , $encoding = null?string|null , $typeName = null?string|null , $typeNamespace = null?string|null , $nodeName = null?string|null , $nodeNamespace = null) {}
+	public function __construct (mixed $data = null, int|null $encoding = null, string|null $typeName = null, string|null $typeNamespace = null, string|null $nodeName = null, string|null $nodeNamespace = null) {}
 
 }
 
@@ -240,10 +240,10 @@ class SoapServer  {
 	/**
 	 * SoapServer constructor
 	 * @link http://www.php.net/manual/en/soapserver.construct.php
-	 * @param ?string|null $wsdl
+	 * @param string|null $wsdl
 	 * @param array[] $options [optional]
 	 */
-	public function __construct (?string|null $wsdl = nullarray , $options = 'Array') {}
+	public function __construct (string|null $wsdl = null, array $options = 'Array') {}
 
 	/**
 	 * Issue SoapServer fault indicating an error
@@ -366,14 +366,14 @@ class SoapFault extends Exception implements Stringable, Throwable {
 	/**
 	 * SoapFault constructor
 	 * @link http://www.php.net/manual/en/soapfault.construct.php
-	 * @param array|string|null|null $code
+	 * @param array|string|null $code
 	 * @param string $string
-	 * @param ?string|null $actor [optional]
-	 * @param mixed|null $details [optional]
-	 * @param ?string|null $name [optional]
-	 * @param mixed|null $headerFault [optional]
+	 * @param string|null $actor [optional]
+	 * @param mixed $details [optional]
+	 * @param string|null $name [optional]
+	 * @param mixed $headerFault [optional]
 	 */
-	public function __construct (array|string|null|null $code = nullstring , $string?string|null , $actor = nullmixed|null , $details = null?string|null , $name = nullmixed|null , $headerFault = null) {}
+	public function __construct (array|string|null $code = null, string $string, string|null $actor = null, mixed $details = null, string|null $name = null, mixed $headerFault = null) {}
 
 	/**
 	 * Obtain a string representation of a SoapFault
@@ -394,7 +394,7 @@ class SoapFault extends Exception implements Stringable, Throwable {
 
 	final public function getTrace (): array {}
 
-	final public function getPrevious (): ??Throwable {}
+	final public function getPrevious (): ?Throwable {}
 
 	final public function getTraceAsString (): string {}
 
@@ -412,10 +412,10 @@ class SoapParam  {
 	/**
 	 * SoapParam constructor
 	 * @link http://www.php.net/manual/en/soapparam.construct.php
-	 * @param mixed|null $data
+	 * @param mixed $data
 	 * @param string $name
 	 */
-	public function __construct (mixed|null $data = nullstring , $name) {}
+	public function __construct (mixed $data = null, string $name) {}
 
 }
 
@@ -436,11 +436,11 @@ class SoapHeader  {
 	 * @link http://www.php.net/manual/en/soapheader.construct.php
 	 * @param string $namespace
 	 * @param string $name
-	 * @param mixed|null $data [optional]
+	 * @param mixed $data [optional]
 	 * @param bool $mustUnderstand [optional]
-	 * @param string|int|null|null $actor [optional]
+	 * @param string|int|null $actor [optional]
 	 */
-	public function __construct (string $namespacestring , $namemixed|null , $data = nullbool , $mustUnderstand = ''string|int|null|null , $actor = null) {}
+	public function __construct (string $namespace, string $name, mixed $data = null, bool $mustUnderstand = '', string|int|null $actor = null) {}
 
 }
 

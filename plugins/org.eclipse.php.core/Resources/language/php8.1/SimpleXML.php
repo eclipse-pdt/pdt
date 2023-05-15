@@ -44,9 +44,9 @@ class SimpleXMLElement implements Stringable, Countable, RecursiveIterator, Trav
 	/**
 	 * Alias: SimpleXMLElement::asXML
 	 * @link http://www.php.net/manual/en/simplexmlelement.savexml.php
-	 * @param ?string|null $filename [optional]
+	 * @param string|null $filename [optional]
 	 */
-	public function saveXML (?string|null $filename = null) {}
+	public function saveXML (string|null $filename = null) {}
 
 	/**
 	 * Returns namespaces used in document
@@ -107,7 +107,7 @@ class SimpleXMLElement implements Stringable, Countable, RecursiveIterator, Trav
 	 * @param string $namespaceOrPrefix [optional]
 	 * @param bool $isPrefix [optional]
 	 */
-	public function __construct (string $dataint , $options = 0bool , $dataIsURL = ''string , $namespaceOrPrefix = ''bool , $isPrefix = '') {}
+	public function __construct (string $data, int $options = 0, bool $dataIsURL = '', string $namespaceOrPrefix = '', bool $isPrefix = '') {}
 
 	/**
 	 * Adds a child element to the XML node
@@ -246,9 +246,9 @@ class SimpleXMLIterator extends SimpleXMLElement implements Iterator, Traversabl
 	/**
 	 * Alias: SimpleXMLElement::asXML
 	 * @link http://www.php.net/manual/en/simplexmlelement.savexml.php
-	 * @param ?string|null $filename [optional]
+	 * @param string|null $filename [optional]
 	 */
-	public function saveXML (?string|null $filename = null) {}
+	public function saveXML (string|null $filename = null) {}
 
 	/**
 	 * Returns namespaces used in document
@@ -309,7 +309,7 @@ class SimpleXMLIterator extends SimpleXMLElement implements Iterator, Traversabl
 	 * @param string $namespaceOrPrefix [optional]
 	 * @param bool $isPrefix [optional]
 	 */
-	public function __construct (string $dataint , $options = 0bool , $dataIsURL = ''string , $namespaceOrPrefix = ''bool , $isPrefix = '') {}
+	public function __construct (string $data, int $options = 0, bool $dataIsURL = '', string $namespaceOrPrefix = '', bool $isPrefix = '') {}
 
 	/**
 	 * Adds a child element to the XML node
@@ -452,6 +452,6 @@ function simplexml_load_string (string $data, $class_name = null, int $options =
  * SimpleXMLElement class.
  * @return mixed a SimpleXMLElement or null on failure.
  */
-function simplexml_import_dom ($node, $class_name = null): ??SimpleXMLElement {}
+function simplexml_import_dom ($node, $class_name = null): ?SimpleXMLElement {}
 
 // End of SimpleXML v.8.1.19

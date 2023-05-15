@@ -20,12 +20,12 @@ class tidy  {
 	/**
 	 * Constructs a new tidy object
 	 * @link http://www.php.net/manual/en/tidy.construct.php
-	 * @param ?string|null $filename [optional]
-	 * @param array|string|null|null $config [optional]
-	 * @param ?string|null $encoding [optional]
+	 * @param string|null $filename [optional]
+	 * @param array|string|null $config [optional]
+	 * @param string|null $encoding [optional]
 	 * @param bool $useIncludePath [optional]
 	 */
-	public function __construct (?string|null $filename = nullarray|string|null|null , $config = null?string|null , $encoding = nullbool , $useIncludePath = '') {}
+	public function __construct (string|null $filename = null, array|string|null $config = null, string|null $encoding = null, bool $useIncludePath = '') {}
 
 	/**
 	 * Returns the value of the specified configuration option for the tidy document
@@ -401,16 +401,16 @@ final class tidyNode  {
 	 * @return mixed a tidyNode if the node has a parent, or null
 	 * otherwise.
 	 */
-	public function getParent (): ??tidyNode {}
+	public function getParent (): ?tidyNode {}
 
 }
 
 /**
  * @param string $string
- * @param array|string|null|null $config [optional]
- * @param ?string|null $encoding [optional]
+ * @param array|string|null $config [optional]
+ * @param string|null $encoding [optional]
  */
-function tidy_parse_string (string $stringarray|string|null|null , $config = null?string|null , $encoding = null): tidy|false {}
+function tidy_parse_string (string $string, array|string|null $config = null, string|null $encoding = null): tidy|false {}
 
 /**
  * @param tidy $tidy
@@ -427,11 +427,11 @@ function tidy_get_output (tidy $tidy): string {}
 
 /**
  * @param string $filename
- * @param array|string|null|null $config [optional]
- * @param ?string|null $encoding [optional]
+ * @param array|string|null $config [optional]
+ * @param string|null $encoding [optional]
  * @param bool $useIncludePath [optional]
  */
-function tidy_parse_file (string $filenamearray|string|null|null , $config = null?string|null , $encoding = nullbool , $useIncludePath = ''): tidy|false {}
+function tidy_parse_file (string $filename, array|string|null $config = null, string|null $encoding = null, bool $useIncludePath = ''): tidy|false {}
 
 /**
  * @param tidy $tidy
@@ -440,18 +440,18 @@ function tidy_clean_repair (tidy $tidy): bool {}
 
 /**
  * @param string $string
- * @param array|string|null|null $config [optional]
- * @param ?string|null $encoding [optional]
+ * @param array|string|null $config [optional]
+ * @param string|null $encoding [optional]
  */
-function tidy_repair_string (string $stringarray|string|null|null , $config = null?string|null , $encoding = null): string|false {}
+function tidy_repair_string (string $string, array|string|null $config = null, string|null $encoding = null): string|false {}
 
 /**
  * @param string $filename
- * @param array|string|null|null $config [optional]
- * @param ?string|null $encoding [optional]
+ * @param array|string|null $config [optional]
+ * @param string|null $encoding [optional]
  * @param bool $useIncludePath [optional]
  */
-function tidy_repair_file (string $filenamearray|string|null|null , $config = null?string|null , $encoding = nullbool , $useIncludePath = ''): string|false {}
+function tidy_repair_file (string $filename, array|string|null $config = null, string|null $encoding = null, bool $useIncludePath = ''): string|false {}
 
 /**
  * @param tidy $tidy
@@ -464,7 +464,7 @@ function tidy_get_release (): string {}
  * @param tidy $tidy
  * @param string $option
  */
-function tidy_get_opt_doc (tidy $tidystring , $option): string|false {}
+function tidy_get_opt_doc (tidy $tidy, string $option): string|false {}
 
 /**
  * @param tidy $tidy
@@ -527,27 +527,27 @@ function tidy_config_count (tidy $tidy): int {}
  * @param tidy $tidy
  * @param string $option
  */
-function tidy_getopt (tidy $tidystring , $option): string|int|bool {}
+function tidy_getopt (tidy $tidy, string $option): string|int|bool {}
 
 /**
  * @param tidy $tidy
  */
-function tidy_get_root (tidy $tidy): ??tidyNode {}
+function tidy_get_root (tidy $tidy): ?tidyNode {}
 
 /**
  * @param tidy $tidy
  */
-function tidy_get_html (tidy $tidy): ??tidyNode {}
+function tidy_get_html (tidy $tidy): ?tidyNode {}
 
 /**
  * @param tidy $tidy
  */
-function tidy_get_head (tidy $tidy): ??tidyNode {}
+function tidy_get_head (tidy $tidy): ?tidyNode {}
 
 /**
  * @param tidy $tidy
  */
-function tidy_get_body (tidy $tidy): ??tidyNode {}
+function tidy_get_body (tidy $tidy): ?tidyNode {}
 
 
 /**

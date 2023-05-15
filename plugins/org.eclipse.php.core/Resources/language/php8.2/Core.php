@@ -83,25 +83,25 @@ interface Serializable  {
 interface ArrayAccess  {
 
 	/**
-	 * @param mixed|null $offset
+	 * @param mixed $offset
 	 */
-	abstract public function offsetExists (mixed|null $offset = null)
+	abstract public function offsetExists (mixed $offset = null)
 
 	/**
-	 * @param mixed|null $offset
+	 * @param mixed $offset
 	 */
-	abstract public function offsetGet (mixed|null $offset = null)
+	abstract public function offsetGet (mixed $offset = null)
 
 	/**
-	 * @param mixed|null $offset
-	 * @param mixed|null $value
+	 * @param mixed $offset
+	 * @param mixed $value
 	 */
-	abstract public function offsetSet (mixed|null $offset = nullmixed|null , $value = null)
+	abstract public function offsetSet (mixed $offset = null, mixed $value = null)
 
 	/**
-	 * @param mixed|null $offset
+	 * @param mixed $offset
 	 */
-	abstract public function offsetUnset (mixed|null $offset = null)
+	abstract public function offsetUnset (mixed $offset = null)
 
 }
 
@@ -150,9 +150,9 @@ final class InternalIterator implements Iterator, Traversable {
 
 	private function __construct () {}
 
-	public function current (): ?mixed {}
+	public function current (): mixed {}
 
-	public function key (): ?mixed {}
+	public function key (): mixed {}
 
 	public function next (): void {}
 
@@ -183,7 +183,7 @@ interface Throwable extends Stringable {
 
 	abstract public function getTrace (): array
 
-	abstract public function getPrevious (): ??Throwable
+	abstract public function getPrevious (): ?Throwable
 
 	abstract public function getTraceAsString (): string
 
@@ -211,9 +211,9 @@ class Exception implements Stringable, Throwable {
 	/**
 	 * @param string $message [optional]
 	 * @param int $code [optional]
-	 * @param ?Throwable|null $previous [optional]
+	 * @param Throwable|null $previous [optional]
 	 */
-	public function __construct (string $message = ''int , $code = 0?Throwable|null , $previous = null) {}
+	public function __construct (string $message = '', int $code = 0, Throwable|null $previous = null) {}
 
 	public function __wakeup () {}
 
@@ -227,7 +227,7 @@ class Exception implements Stringable, Throwable {
 
 	final public function getTrace (): array {}
 
-	final public function getPrevious (): ??Throwable {}
+	final public function getPrevious (): ?Throwable {}
 
 	final public function getTraceAsString (): string {}
 
@@ -251,11 +251,11 @@ class ErrorException extends Exception implements Throwable, Stringable {
 	 * @param string $message [optional]
 	 * @param int $code [optional]
 	 * @param int $severity [optional]
-	 * @param ?string|null $filename [optional]
-	 * @param ?int|null $line [optional]
-	 * @param ?Throwable|null $previous [optional]
+	 * @param string|null $filename [optional]
+	 * @param int|null $line [optional]
+	 * @param Throwable|null $previous [optional]
 	 */
-	public function __construct (string $message = ''int , $code = 0int , $severity = 1?string|null , $filename = null?int|null , $line = null?Throwable|null , $previous = null) {}
+	public function __construct (string $message = '', int $code = 0, int $severity = 1, string|null $filename = null, int|null $line = null, Throwable|null $previous = null) {}
 
 	final public function getSeverity (): int {}
 
@@ -271,7 +271,7 @@ class ErrorException extends Exception implements Throwable, Stringable {
 
 	final public function getTrace (): array {}
 
-	final public function getPrevious (): ??Throwable {}
+	final public function getPrevious (): ?Throwable {}
 
 	final public function getTraceAsString (): string {}
 
@@ -299,9 +299,9 @@ class Error implements Stringable, Throwable {
 	/**
 	 * @param string $message [optional]
 	 * @param int $code [optional]
-	 * @param ?Throwable|null $previous [optional]
+	 * @param Throwable|null $previous [optional]
 	 */
-	public function __construct (string $message = ''int , $code = 0?Throwable|null , $previous = null) {}
+	public function __construct (string $message = '', int $code = 0, Throwable|null $previous = null) {}
 
 	public function __wakeup () {}
 
@@ -315,7 +315,7 @@ class Error implements Stringable, Throwable {
 
 	final public function getTrace (): array {}
 
-	final public function getPrevious (): ??Throwable {}
+	final public function getPrevious (): ?Throwable {}
 
 	final public function getTraceAsString (): string {}
 
@@ -338,9 +338,9 @@ class CompileError extends Error implements Throwable, Stringable {
 	/**
 	 * @param string $message [optional]
 	 * @param int $code [optional]
-	 * @param ?Throwable|null $previous [optional]
+	 * @param Throwable|null $previous [optional]
 	 */
-	public function __construct (string $message = ''int , $code = 0?Throwable|null , $previous = null) {}
+	public function __construct (string $message = '', int $code = 0, Throwable|null $previous = null) {}
 
 	public function __wakeup () {}
 
@@ -354,7 +354,7 @@ class CompileError extends Error implements Throwable, Stringable {
 
 	final public function getTrace (): array {}
 
-	final public function getPrevious (): ??Throwable {}
+	final public function getPrevious (): ?Throwable {}
 
 	final public function getTraceAsString (): string {}
 
@@ -378,9 +378,9 @@ class ParseError extends CompileError implements Stringable, Throwable {
 	/**
 	 * @param string $message [optional]
 	 * @param int $code [optional]
-	 * @param ?Throwable|null $previous [optional]
+	 * @param Throwable|null $previous [optional]
 	 */
-	public function __construct (string $message = ''int , $code = 0?Throwable|null , $previous = null) {}
+	public function __construct (string $message = '', int $code = 0, Throwable|null $previous = null) {}
 
 	public function __wakeup () {}
 
@@ -394,7 +394,7 @@ class ParseError extends CompileError implements Stringable, Throwable {
 
 	final public function getTrace (): array {}
 
-	final public function getPrevious (): ??Throwable {}
+	final public function getPrevious (): ?Throwable {}
 
 	final public function getTraceAsString (): string {}
 
@@ -424,9 +424,9 @@ class TypeError extends Error implements Throwable, Stringable {
 	/**
 	 * @param string $message [optional]
 	 * @param int $code [optional]
-	 * @param ?Throwable|null $previous [optional]
+	 * @param Throwable|null $previous [optional]
 	 */
-	public function __construct (string $message = ''int , $code = 0?Throwable|null , $previous = null) {}
+	public function __construct (string $message = '', int $code = 0, Throwable|null $previous = null) {}
 
 	public function __wakeup () {}
 
@@ -440,7 +440,7 @@ class TypeError extends Error implements Throwable, Stringable {
 
 	final public function getTrace (): array {}
 
-	final public function getPrevious (): ??Throwable {}
+	final public function getPrevious (): ?Throwable {}
 
 	final public function getTraceAsString (): string {}
 
@@ -463,9 +463,9 @@ class ArgumentCountError extends TypeError implements Stringable, Throwable {
 	/**
 	 * @param string $message [optional]
 	 * @param int $code [optional]
-	 * @param ?Throwable|null $previous [optional]
+	 * @param Throwable|null $previous [optional]
 	 */
-	public function __construct (string $message = ''int , $code = 0?Throwable|null , $previous = null) {}
+	public function __construct (string $message = '', int $code = 0, Throwable|null $previous = null) {}
 
 	public function __wakeup () {}
 
@@ -479,7 +479,7 @@ class ArgumentCountError extends TypeError implements Stringable, Throwable {
 
 	final public function getTrace (): array {}
 
-	final public function getPrevious (): ??Throwable {}
+	final public function getPrevious (): ?Throwable {}
 
 	final public function getTraceAsString (): string {}
 
@@ -505,9 +505,9 @@ class ValueError extends Error implements Throwable, Stringable {
 	/**
 	 * @param string $message [optional]
 	 * @param int $code [optional]
-	 * @param ?Throwable|null $previous [optional]
+	 * @param Throwable|null $previous [optional]
 	 */
-	public function __construct (string $message = ''int , $code = 0?Throwable|null , $previous = null) {}
+	public function __construct (string $message = '', int $code = 0, Throwable|null $previous = null) {}
 
 	public function __wakeup () {}
 
@@ -521,7 +521,7 @@ class ValueError extends Error implements Throwable, Stringable {
 
 	final public function getTrace (): array {}
 
-	final public function getPrevious (): ??Throwable {}
+	final public function getPrevious (): ?Throwable {}
 
 	final public function getTraceAsString (): string {}
 
@@ -547,9 +547,9 @@ class ArithmeticError extends Error implements Throwable, Stringable {
 	/**
 	 * @param string $message [optional]
 	 * @param int $code [optional]
-	 * @param ?Throwable|null $previous [optional]
+	 * @param Throwable|null $previous [optional]
 	 */
-	public function __construct (string $message = ''int , $code = 0?Throwable|null , $previous = null) {}
+	public function __construct (string $message = '', int $code = 0, Throwable|null $previous = null) {}
 
 	public function __wakeup () {}
 
@@ -563,7 +563,7 @@ class ArithmeticError extends Error implements Throwable, Stringable {
 
 	final public function getTrace (): array {}
 
-	final public function getPrevious (): ??Throwable {}
+	final public function getPrevious (): ?Throwable {}
 
 	final public function getTraceAsString (): string {}
 
@@ -586,9 +586,9 @@ class DivisionByZeroError extends ArithmeticError implements Stringable, Throwab
 	/**
 	 * @param string $message [optional]
 	 * @param int $code [optional]
-	 * @param ?Throwable|null $previous [optional]
+	 * @param Throwable|null $previous [optional]
 	 */
-	public function __construct (string $message = ''int , $code = 0?Throwable|null , $previous = null) {}
+	public function __construct (string $message = '', int $code = 0, Throwable|null $previous = null) {}
 
 	public function __wakeup () {}
 
@@ -602,7 +602,7 @@ class DivisionByZeroError extends ArithmeticError implements Stringable, Throwab
 
 	final public function getTrace (): array {}
 
-	final public function getPrevious (): ??Throwable {}
+	final public function getPrevious (): ?Throwable {}
 
 	final public function getTraceAsString (): string {}
 
@@ -626,9 +626,9 @@ class UnhandledMatchError extends Error implements Throwable, Stringable {
 	/**
 	 * @param string $message [optional]
 	 * @param int $code [optional]
-	 * @param ?Throwable|null $previous [optional]
+	 * @param Throwable|null $previous [optional]
 	 */
-	public function __construct (string $message = ''int , $code = 0?Throwable|null , $previous = null) {}
+	public function __construct (string $message = '', int $code = 0, Throwable|null $previous = null) {}
 
 	public function __wakeup () {}
 
@@ -642,7 +642,7 @@ class UnhandledMatchError extends Error implements Throwable, Stringable {
 
 	final public function getTrace (): array {}
 
-	final public function getPrevious (): ??Throwable {}
+	final public function getPrevious (): ?Throwable {}
 
 	final public function getTraceAsString (): string {}
 
@@ -668,22 +668,22 @@ final class Closure  {
 
 	/**
 	 * @param Closure $closure
-	 * @param ?object|null $newThis
-	 * @param object|string|null|null $newScope [optional]
+	 * @param object|null $newThis
+	 * @param object|string|null $newScope [optional]
 	 */
-	public static function bind (Closure $closure?object|null , $newThis = nullobject|string|null|null , $newScope = null): ??Closure {}
+	public static function bind (Closure $closure, object|null $newThis = null, object|string|null $newScope = null): ?Closure {}
 
 	/**
-	 * @param ?object|null $newThis
-	 * @param object|string|null|null $newScope [optional]
+	 * @param object|null $newThis
+	 * @param object|string|null $newScope [optional]
 	 */
-	public function bindTo (?object|null $newThis = nullobject|string|null|null , $newScope = null): ??Closure {}
+	public function bindTo (object|null $newThis = null, object|string|null $newScope = null): ?Closure {}
 
 	/**
 	 * @param object $newThis
-	 * @param mixed|null $args [optional]
+	 * @param mixed $args [optional]
 	 */
-	public function call (object $newThismixed|null , ...$args): ?mixed {}
+	public function call (object $newThis, mixed ...$args): mixed {}
 
 	/**
 	 * @param callable $callback
@@ -706,23 +706,23 @@ final class Generator implements Iterator, Traversable {
 
 	public function valid (): bool {}
 
-	public function current (): ?mixed {}
+	public function current (): mixed {}
 
-	public function key (): ?mixed {}
+	public function key (): mixed {}
 
 	public function next (): void {}
 
 	/**
-	 * @param mixed|null $value
+	 * @param mixed $value
 	 */
-	public function send (mixed|null $value = null): ?mixed {}
+	public function send (mixed $value = null): mixed {}
 
 	/**
 	 * @param Throwable $exception
 	 */
-	public function throw (Throwable $exception): ?mixed {}
+	public function throw (Throwable $exception): mixed {}
 
-	public function getReturn (): ?mixed {}
+	public function getReturn (): mixed {}
 
 }
 
@@ -736,9 +736,9 @@ class ClosedGeneratorException extends Exception implements Throwable, Stringabl
 	/**
 	 * @param string $message [optional]
 	 * @param int $code [optional]
-	 * @param ?Throwable|null $previous [optional]
+	 * @param Throwable|null $previous [optional]
 	 */
-	public function __construct (string $message = ''int , $code = 0?Throwable|null , $previous = null) {}
+	public function __construct (string $message = '', int $code = 0, Throwable|null $previous = null) {}
 
 	public function __wakeup () {}
 
@@ -752,7 +752,7 @@ class ClosedGeneratorException extends Exception implements Throwable, Stringabl
 
 	final public function getTrace (): array {}
 
-	final public function getPrevious (): ??Throwable {}
+	final public function getPrevious (): ?Throwable {}
 
 	final public function getTraceAsString (): string {}
 
@@ -775,7 +775,7 @@ final class WeakReference  {
 	 */
 	public static function create (object $object): WeakReference {}
 
-	public function get (): ??object {}
+	public function get (): ?object {}
 
 }
 
@@ -796,13 +796,13 @@ final class WeakMap implements ArrayAccess, Countable, IteratorAggregate, Traver
 	/**
 	 * @param mixed $object
 	 */
-	public function offsetGet ($object = null): ?mixed {}
+	public function offsetGet ($object = null): mixed {}
 
 	/**
 	 * @param mixed $object
-	 * @param mixed|null $value
+	 * @param mixed $value
 	 */
-	public function offsetSet ($object = nullmixed|null , $value = null): void {}
+	public function offsetSet ($object = null, mixed $value = null): void {}
 
 	/**
 	 * @param mixed $object
@@ -875,11 +875,11 @@ final class SensitiveParameterValue  {
 
 
 	/**
-	 * @param mixed|null $value
+	 * @param mixed $value
 	 */
-	public function __construct (mixed|null $value = null) {}
+	public function __construct (mixed $value = null) {}
 
-	public function getValue (): ?mixed {}
+	public function getValue (): mixed {}
 
 	public function __debugInfo (): array {}
 
@@ -915,7 +915,7 @@ interface BackedEnum extends UnitEnum {
 	/**
 	 * @param string|int $value
 	 */
-	abstract public static function tryFrom (string|int $value): ??static
+	abstract public static function tryFrom (string|int $value): ?static
 
 	abstract public static function cases (): array
 
@@ -934,19 +934,19 @@ final class Fiber  {
 	public function __construct (callable $callback) {}
 
 	/**
-	 * @param mixed|null $args [optional]
+	 * @param mixed $args [optional]
 	 */
-	public function start (mixed|null ...$args): ?mixed {}
+	public function start (mixed ...$args): mixed {}
 
 	/**
-	 * @param mixed|null $value [optional]
+	 * @param mixed $value [optional]
 	 */
-	public function resume (mixed|null $value = null): ?mixed {}
+	public function resume (mixed $value = null): mixed {}
 
 	/**
 	 * @param Throwable $exception
 	 */
-	public function throw (Throwable $exception): ?mixed {}
+	public function throw (Throwable $exception): mixed {}
 
 	public function isStarted (): bool {}
 
@@ -956,14 +956,14 @@ final class Fiber  {
 
 	public function isTerminated (): bool {}
 
-	public function getReturn (): ?mixed {}
+	public function getReturn (): mixed {}
 
-	public static function getCurrent (): ??Fiber {}
+	public static function getCurrent (): ?Fiber {}
 
 	/**
-	 * @param mixed|null $value [optional]
+	 * @param mixed $value [optional]
 	 */
-	public static function suspend (mixed|null $value = null): ?mixed {}
+	public static function suspend (mixed $value = null): mixed {}
 
 }
 
@@ -993,7 +993,7 @@ final class FiberError extends Error implements Throwable, Stringable {
 
 	final public function getTrace (): array {}
 
-	final public function getPrevious (): ??Throwable {}
+	final public function getPrevious (): ?Throwable {}
 
 	final public function getTraceAsString (): string {}
 
@@ -1045,7 +1045,7 @@ function func_num_args (): int {}
  * zero.
  * @return mixed the specified argument, or false on error.
  */
-function func_get_arg (int $position): ?mixed {}
+function func_get_arg (int $position): mixed {}
 
 /**
  * Returns an array comprising a function's argument list
@@ -1417,7 +1417,7 @@ function trigger_error (string $message, int $error_level = null): bool {}
  * @param string $message
  * @param int $error_level [optional]
  */
-function user_error (string $messageint , $error_level = 1024): bool {}
+function user_error (string $message, int $error_level = 1024): bool {}
 
 /**
  * Sets a user-defined error handler function

@@ -88,7 +88,7 @@ function ftp_exec ($ftp, string $command): bool {}
  * No parsing is performed on the response string, nor does
  * ftp_raw determine if the command succeeded.
  */
-function ftp_raw ($ftp, string $command): ??array {}
+function ftp_raw ($ftp, string $command): ?array {}
 
 /**
  * Creates a directory

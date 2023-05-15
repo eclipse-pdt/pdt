@@ -37,9 +37,9 @@ class JsonException extends Exception implements Throwable, Stringable {
 	/**
 	 * @param string $message [optional]
 	 * @param int $code [optional]
-	 * @param ?Throwable|null $previous [optional]
+	 * @param Throwable|null $previous [optional]
 	 */
-	public function __construct (string $message = ''int , $code = 0?Throwable|null , $previous = null) {}
+	public function __construct (string $message = '', int $code = 0, Throwable|null $previous = null) {}
 
 	public function __wakeup () {}
 
@@ -53,7 +53,7 @@ class JsonException extends Exception implements Throwable, Stringable {
 
 	final public function getTrace (): array {}
 
-	final public function getPrevious (): ??Throwable {}
+	final public function getPrevious (): ?Throwable {}
 
 	final public function getTraceAsString (): string {}
 
@@ -127,7 +127,7 @@ function json_encode ($value, int $flags = null, int $depth = null): string|fals
  * respectively. null is returned if the json cannot
  * be decoded or if the encoded data is deeper than the nesting limit.
  */
-function json_decode (string $json, $associative = null, int $depth = null, int $flags = null): ?mixed {}
+function json_decode (string $json, $associative = null, int $depth = null, int $flags = null): mixed {}
 
 /**
  * Returns the last error occurred

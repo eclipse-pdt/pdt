@@ -271,10 +271,10 @@ function curl_exec (CurlHandle $handle): string|bool {}
 
 /**
  * @param string $filename
- * @param ?string|null $mime_type [optional]
- * @param ?string|null $posted_filename [optional]
+ * @param string|null $mime_type [optional]
+ * @param string|null $posted_filename [optional]
  */
-function curl_file_create (string $filename?string|null , $mime_type = null?string|null , $posted_filename = null): CURLFile {}
+function curl_file_create (string $filename, string|null $mime_type = null, string|null $posted_filename = null): CURLFile {}
 
 /**
  * Get information regarding a specific transfer
@@ -473,7 +473,7 @@ function curl_file_create (string $filename?string|null , $mime_type = null?stri
  * </p>
  * Note that private data is not included in the associative array and must be retrieved individually with the CURLINFO_PRIVATE option.
  */
-function curl_getinfo (CurlHandle $handle, $option = null): ?mixed {}
+function curl_getinfo (CurlHandle $handle, $option = null): mixed {}
 
 /**
  * Initialize a cURL session
@@ -537,7 +537,7 @@ function curl_multi_exec (CurlMultiHandle $multi_handle, int &$still_running): i
  * @param CurlHandle $handle 
  * @return mixed Return the content of a cURL handle if CURLOPT_RETURNTRANSFER is set or null if not set.
  */
-function curl_multi_getcontent (CurlHandle $handle): ??string {}
+function curl_multi_getcontent (CurlHandle $handle): ?string {}
 
 /**
  * Get information about the current transfers
@@ -608,7 +608,7 @@ function curl_multi_select (CurlMultiHandle $multi_handle, float $timeout = null
  * @param int $error_code One of the CURLM error codes constants.
  * @return mixed error string for valid error code, null otherwise.
  */
-function curl_multi_strerror (int $error_code): ??string {}
+function curl_multi_strerror (int $error_code): ?string {}
 
 /**
  * Pause and unpause a connection
@@ -2885,7 +2885,7 @@ function curl_share_setopt (CurlShareHandle $share_handle, int $option, $value):
  * @param int $error_code One of the cURL error codes constants.
  * @return mixed error description or null for invalid error code.
  */
-function curl_share_strerror (int $error_code): ??string {}
+function curl_share_strerror (int $error_code): ?string {}
 
 /**
  * Return string describing the given error code
@@ -2893,7 +2893,7 @@ function curl_share_strerror (int $error_code): ??string {}
  * @param int $error_code One of the cURL error codes constants.
  * @return mixed error description or null for invalid error code.
  */
-function curl_strerror (int $error_code): ??string {}
+function curl_strerror (int $error_code): ?string {}
 
 /**
  * Gets cURL version information

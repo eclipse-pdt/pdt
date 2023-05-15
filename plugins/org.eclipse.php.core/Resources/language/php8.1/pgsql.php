@@ -142,10 +142,10 @@ function pg_dbname ($connection = null): string {}
 function pg_last_error ($connection = null): string {}
 
 /**
- * @param ?PgSql\Connection|null $connection [optional]
+ * @param PgSql\Connection|null $connection [optional]
  * @deprecated 
  */
-function pg_errormessage (?PgSql\Connection|null $connection = null): string {}
+function pg_errormessage (PgSql\Connection|null $connection = null): string {}
 
 /**
  * Get the options associated with the connection
@@ -243,7 +243,7 @@ function pg_query (PgSql\Connection $connection = null, string $query): PgSql\Re
  * @param mixed $connection
  * @param string $query [optional]
  */
-function pg_exec ($connection = nullstring , $query = null): PgSql\Result|false {}
+function pg_exec ($connection = null, string $query = null): PgSql\Result|false {}
 
 /**
  * Submits a command to the server and waits for the result, with the ability to pass parameters separately from the SQL command text
@@ -396,7 +396,7 @@ function pg_field_name (PgSql\Result $result, int $field): string {}
  * @param int $field
  * @deprecated 
  */
-function pg_fieldname (PgSql\Result $resultint , $field): string {}
+function pg_fieldname (PgSql\Result $result, int $field): string {}
 
 /**
  * Returns the internal storage size of the named field
@@ -413,7 +413,7 @@ function pg_field_size (PgSql\Result $result, int $field): int {}
  * @param int $field
  * @deprecated 
  */
-function pg_fieldsize (PgSql\Result $resultint , $field): int {}
+function pg_fieldsize (PgSql\Result $result, int $field): int {}
 
 /**
  * Returns the type name for the corresponding field number
@@ -429,7 +429,7 @@ function pg_field_type (PgSql\Result $result, int $field): string {}
  * @param int $field
  * @deprecated 
  */
-function pg_fieldtype (PgSql\Result $resultint , $field): string {}
+function pg_fieldtype (PgSql\Result $result, int $field): string {}
 
 /**
  * Returns the type ID (OID) for the corresponding field number
@@ -456,7 +456,7 @@ function pg_field_num (PgSql\Result $result, string $field): int {}
  * @param string $field
  * @deprecated 
  */
-function pg_fieldnum (PgSql\Result $resultstring , $field): int {}
+function pg_fieldnum (PgSql\Result $result, string $field): int {}
 
 /**
  * Returns values from a result instance
@@ -477,7 +477,7 @@ function pg_fieldnum (PgSql\Result $resultstring , $field): int {}
  * of rows in the set, or on any other error.
  * </p>
  */
-function pg_fetch_result (PgSql\Result $result, int $row, $field): ?string|false|null {}
+function pg_fetch_result (PgSql\Result $result, int $row, $field): string|false|null {}
 
 /**
  * @param PgSql\Result $result
@@ -485,7 +485,7 @@ function pg_fetch_result (PgSql\Result $result, int $row, $field): ?string|false
  * @param string|int $field [optional]
  * @deprecated 
  */
-function pg_result (PgSql\Result $result, $row = nullstring|int , $field = null): ?string|false|null {}
+function pg_result (PgSql\Result $result, $row = null, string|int $field = null): string|false|null {}
 
 /**
  * Get a row as an enumerated array
@@ -606,7 +606,7 @@ function pg_field_prtlen (PgSql\Result $result, int $row_number, $field_name_or_
  * @param string|int $field [optional]
  * @deprecated 
  */
-function pg_fieldprtlen (PgSql\Result $result, $row = nullstring|int , $field = null): int|false {}
+function pg_fieldprtlen (PgSql\Result $result, $row = null, string|int $field = null): int|false {}
 
 /**
  * Test if a field is SQL NULL
@@ -627,7 +627,7 @@ function pg_field_is_null (PgSql\Result $result, int $row, $field): int|false {}
  * @param string|int $field [optional]
  * @deprecated 
  */
-function pg_fieldisnull (PgSql\Result $result, $row = nullstring|int , $field = null): int|false {}
+function pg_fieldisnull (PgSql\Result $result, $row = null, string|int $field = null): int|false {}
 
 /**
  * Free result memory
@@ -731,7 +731,7 @@ function pg_lo_open (PgSql\Connection $connection, int $oid, string $mode): PgSq
  * @param string $mode [optional]
  * @deprecated 
  */
-function pg_loopen ($connection = null, $oid = nullstring , $mode = null): PgSql\Lob|false {}
+function pg_loopen ($connection = null, $oid = null, string $mode = null): PgSql\Lob|false {}
 
 /**
  * Close a large object
@@ -762,7 +762,7 @@ function pg_lo_read (PgSql\Lob $lob, int $length = null): string|false {}
  * @param int $length [optional]
  * @deprecated 
  */
-function pg_loread (PgSql\Lob $lobint , $length = 8192): string|false {}
+function pg_loread (PgSql\Lob $lob, int $length = 8192): string|false {}
 
 /**
  * Write to a large object
@@ -781,10 +781,10 @@ function pg_lo_write (PgSql\Lob $lob, string $data, $length = null): int|false {
 /**
  * @param PgSql\Lob $lob
  * @param string $data
- * @param ?int|null $length [optional]
+ * @param int|null $length [optional]
  * @deprecated 
  */
-function pg_lowrite (PgSql\Lob $lobstring , $data?int|null , $length = null): int|false {}
+function pg_lowrite (PgSql\Lob $lob, string $data, int|null $length = null): int|false {}
 
 /**
  * Reads an entire large object and send straight to browser
@@ -910,7 +910,7 @@ function pg_set_client_encoding (PgSql\Connection $connection = null, string $en
  * @param string $encoding [optional]
  * @deprecated 
  */
-function pg_setclientencoding ($connection = nullstring , $encoding = null): int {}
+function pg_setclientencoding ($connection = null, string $encoding = null): int {}
 
 /**
  * Gets the client encoding
@@ -921,10 +921,10 @@ function pg_setclientencoding ($connection = nullstring , $encoding = null): int
 function pg_client_encoding ($connection = null): string {}
 
 /**
- * @param ?PgSql\Connection|null $connection [optional]
+ * @param PgSql\Connection|null $connection [optional]
  * @deprecated 
  */
-function pg_clientencoding (?PgSql\Connection|null $connection = null): string {}
+function pg_clientencoding (PgSql\Connection|null $connection = null): string {}
 
 /**
  * Sync with PostgreSQL backend
@@ -1045,7 +1045,7 @@ function pg_result_error (PgSql\Result $result): string|false {}
  * @return mixed A string containing the contents of the error field, null if the field does not exist or false
  * on failure.
  */
-function pg_result_error_field (PgSql\Result $result, int $field_code): ?string|false|null {}
+function pg_result_error_field (PgSql\Result $result, int $field_code): string|false|null {}
 
 /**
  * Get connection status

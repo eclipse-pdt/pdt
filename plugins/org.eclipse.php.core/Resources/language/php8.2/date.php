@@ -434,9 +434,9 @@ class DateTime implements DateTimeInterface {
 	 * Returns new DateTime object
 	 * @link http://www.php.net/manual/en/datetime.construct.php
 	 * @param string $datetime [optional]
-	 * @param ?DateTimeZone|null $timezone [optional]
+	 * @param DateTimeZone|null $timezone [optional]
 	 */
-	public function __construct (string $datetime = 'now'?DateTimeZone|null , $timezone = null) {}
+	public function __construct (string $datetime = 'now', DateTimeZone|null $timezone = null) {}
 
 	public function __serialize (): array {}
 
@@ -589,7 +589,7 @@ class DateTime implements DateTimeInterface {
 	 * @param DateTimeInterface $targetObject
 	 * @param bool $absolute [optional]
 	 */
-	public function diff (DateTimeInterface $targetObjectbool , $absolute = '') {}
+	public function diff (DateTimeInterface $targetObject, bool $absolute = '') {}
 
 }
 
@@ -697,7 +697,7 @@ class DateTimeImmutable implements DateTimeInterface {
 	 * @param DateTimeInterface $targetObject
 	 * @param bool $absolute [optional]
 	 */
-	public function diff (DateTimeInterface $targetObjectbool , $absolute = '') {}
+	public function diff (DateTimeInterface $targetObject, bool $absolute = '') {}
 
 	/**
 	 * Creates a new object with modified timestamp
@@ -1995,18 +1995,18 @@ function date_create_immutable (string $datetime = null, $timezone = null): Date
  * @link http://www.php.net/manual/en/function.date-create-from-format.php
  * @param string $format
  * @param string $datetime
- * @param ?DateTimeZone|null $timezone [optional]
+ * @param DateTimeZone|null $timezone [optional]
  */
-function date_create_from_format (string $formatstring , $datetime?DateTimeZone|null , $timezone = null): DateTime|false {}
+function date_create_from_format (string $format, string $datetime, DateTimeZone|null $timezone = null): DateTime|false {}
 
 /**
  * Alias: DateTimeImmutable::createFromFormat
  * @link http://www.php.net/manual/en/function.date-create-immutable-from-format.php
  * @param string $format
  * @param string $datetime
- * @param ?DateTimeZone|null $timezone [optional]
+ * @param DateTimeZone|null $timezone [optional]
  */
-function date_create_immutable_from_format (string $formatstring , $datetime?DateTimeZone|null , $timezone = null): DateTimeImmutable|false {}
+function date_create_immutable_from_format (string $format, string $datetime, DateTimeZone|null $timezone = null): DateTimeImmutable|false {}
 
 /**
  * Returns associative array with detailed info about given date/time
@@ -2129,7 +2129,7 @@ function date_get_last_errors (): array|false {}
  * @param DateTimeInterface $object
  * @param string $format
  */
-function date_format (DateTimeInterface $objectstring , $format): string {}
+function date_format (DateTimeInterface $object, string $format): string {}
 
 /**
  * Alias: DateTime::modify
@@ -2137,7 +2137,7 @@ function date_format (DateTimeInterface $objectstring , $format): string {}
  * @param DateTime $object
  * @param string $modifier
  */
-function date_modify (DateTime $objectstring , $modifier): DateTime|false {}
+function date_modify (DateTime $object, string $modifier): DateTime|false {}
 
 /**
  * Alias: DateTime::add
@@ -2145,7 +2145,7 @@ function date_modify (DateTime $objectstring , $modifier): DateTime|false {}
  * @param DateTime $object
  * @param DateInterval $interval
  */
-function date_add (DateTime $objectDateInterval , $interval): DateTime {}
+function date_add (DateTime $object, DateInterval $interval): DateTime {}
 
 /**
  * Alias: DateTime::sub
@@ -2153,7 +2153,7 @@ function date_add (DateTime $objectDateInterval , $interval): DateTime {}
  * @param DateTime $object
  * @param DateInterval $interval
  */
-function date_sub (DateTime $objectDateInterval , $interval): DateTime {}
+function date_sub (DateTime $object, DateInterval $interval): DateTime {}
 
 /**
  * Alias: DateTime::getTimezone
@@ -2168,7 +2168,7 @@ function date_timezone_get (DateTimeInterface $object): DateTimeZone|false {}
  * @param DateTime $object
  * @param DateTimeZone $timezone
  */
-function date_timezone_set (DateTime $objectDateTimeZone , $timezone): DateTime {}
+function date_timezone_set (DateTime $object, DateTimeZone $timezone): DateTime {}
 
 /**
  * Alias: DateTime::getOffset
@@ -2184,7 +2184,7 @@ function date_offset_get (DateTimeInterface $object): int {}
  * @param DateTimeInterface $targetObject
  * @param bool $absolute [optional]
  */
-function date_diff (DateTimeInterface $baseObjectDateTimeInterface , $targetObjectbool , $absolute = ''): DateInterval {}
+function date_diff (DateTimeInterface $baseObject, DateTimeInterface $targetObject, bool $absolute = ''): DateInterval {}
 
 /**
  * Alias: DateTime::setTime
@@ -2195,7 +2195,7 @@ function date_diff (DateTimeInterface $baseObjectDateTimeInterface , $targetObje
  * @param int $second [optional]
  * @param int $microsecond [optional]
  */
-function date_time_set (DateTime $objectint , $hourint , $minuteint , $second = 0int , $microsecond = 0): DateTime {}
+function date_time_set (DateTime $object, int $hour, int $minute, int $second = 0, int $microsecond = 0): DateTime {}
 
 /**
  * Alias: DateTime::setDate
@@ -2205,7 +2205,7 @@ function date_time_set (DateTime $objectint , $hourint , $minuteint , $second = 
  * @param int $month
  * @param int $day
  */
-function date_date_set (DateTime $objectint , $yearint , $monthint , $day): DateTime {}
+function date_date_set (DateTime $object, int $year, int $month, int $day): DateTime {}
 
 /**
  * Alias: DateTime::setISODate
@@ -2215,7 +2215,7 @@ function date_date_set (DateTime $objectint , $yearint , $monthint , $day): Date
  * @param int $week
  * @param int $dayOfWeek [optional]
  */
-function date_isodate_set (DateTime $objectint , $yearint , $weekint , $dayOfWeek = 1): DateTime {}
+function date_isodate_set (DateTime $object, int $year, int $week, int $dayOfWeek = 1): DateTime {}
 
 /**
  * Alias: DateTime::setTimestamp
@@ -2223,7 +2223,7 @@ function date_isodate_set (DateTime $objectint , $yearint , $weekint , $dayOfWee
  * @param DateTime $object
  * @param int $timestamp
  */
-function date_timestamp_set (DateTime $objectint , $timestamp): DateTime {}
+function date_timestamp_set (DateTime $object, int $timestamp): DateTime {}
 
 /**
  * Alias: DateTime::getTimestamp
@@ -2273,7 +2273,7 @@ function timezone_name_from_abbr (string $abbr, int $utcOffset = null, int $isDS
  * @param DateTimeZone $object
  * @param DateTimeInterface $datetime
  */
-function timezone_offset_get (DateTimeZone $objectDateTimeInterface , $datetime): int {}
+function timezone_offset_get (DateTimeZone $object, DateTimeInterface $datetime): int {}
 
 /**
  * Alias: DateTimeZone::getTransitions
@@ -2282,7 +2282,7 @@ function timezone_offset_get (DateTimeZone $objectDateTimeInterface , $datetime)
  * @param int $timestampBegin [optional]
  * @param int $timestampEnd [optional]
  */
-function timezone_transitions_get (DateTimeZone $objectint , $timestampBegin = -9223372036854775808int , $timestampEnd = 9223372036854775807): array|false {}
+function timezone_transitions_get (DateTimeZone $object, int $timestampBegin = -9223372036854775808, int $timestampEnd = 9223372036854775807): array|false {}
 
 /**
  * Alias: DateTimeZone::getLocation
@@ -2295,9 +2295,9 @@ function timezone_location_get (DateTimeZone $object): array|false {}
  * Alias: DateTimeZone::listIdentifiers
  * @link http://www.php.net/manual/en/function.timezone-identifiers-list.php
  * @param int $timezoneGroup [optional]
- * @param ?string|null $countryCode [optional]
+ * @param string|null $countryCode [optional]
  */
-function timezone_identifiers_list (int $timezoneGroup = 2047?string|null , $countryCode = null): array {}
+function timezone_identifiers_list (int $timezoneGroup = 2047, string|null $countryCode = null): array {}
 
 /**
  * Alias: DateTimeZone::listAbbreviations
@@ -2338,7 +2338,7 @@ function date_interval_create_from_date_string (string $datetime): DateInterval|
  * @param DateInterval $object
  * @param string $format
  */
-function date_interval_format (DateInterval $objectstring , $format): string {}
+function date_interval_format (DateInterval $object, string $format): string {}
 
 /**
  * Sets the default timezone used by all date/time functions in a script

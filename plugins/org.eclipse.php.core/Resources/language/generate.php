@@ -953,7 +953,7 @@ function print_function($functionRef, $tabs = 0, $isMethod = false)
     }
     print ')';
     if ($functionRef->getReturnType() != null) {
-        print ': ' . ($functionRef->getReturnType()->allowsNull() ? '?' : '') . $functionRef->getReturnType()->__toString();
+        print ': ' . $functionRef->getReturnType()->__toString();
         
     }
     if ($functionRef instanceof ReflectionMethod && $functionRef->isAbstract()) {
@@ -1023,6 +1023,9 @@ function print_parameters_ref($paramsRef)
     global $addGlobalNSPrefix;
     $i = 0;
     foreach ($paramsRef as $paramRef) {
+        if ($i ++ > 0) {
+            print ", ";
+        }
         if ($paramRef->isArray()) {
             print "array ";
         } else {
@@ -1031,14 +1034,12 @@ function print_parameters_ref($paramsRef)
                 $printType = build_php_type($className, $addGlobalNSPrefix === '\\' && class_exists($realType) ? '\\' : '', true);
                 print "{$printType} ";
             } else if ($paramRef->getType() != null) {
-                print ($paramRef->getType()->allowsNull() ? '?' : '') . $paramRef->getType()->__toString() . ' ';
+                print $paramRef->getType()->__toString() . ' ';
             }
         }
         $name = $paramRef->getName() ? $paramRef->getName() : "var" . ($i + 1);
         if ($name != "...") {
-            if ($i ++ > 0) {
-                print ", ";
-            }
+           
             if ($paramRef->isPassedByReference()) {
                 print "&";
             }
@@ -1368,7 +1369,7 @@ function print_tabs($tabs)
 function get_parameter_classname(ReflectionParameter $paramRef)
 {
     if ($paramRef->getType() != null) {
-        return ($paramRef->getType()->allowsNull() ? '?' :'') . $paramRef->getType()->__toString();
+        return  $paramRef->getType()->__toString();
     
     }
     try {

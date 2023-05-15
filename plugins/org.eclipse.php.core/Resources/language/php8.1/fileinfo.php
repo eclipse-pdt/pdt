@@ -13,9 +13,9 @@ class finfo  {
 	 * Alias: finfo_open
 	 * @link http://www.php.net/manual/en/finfo.construct.php
 	 * @param int $flags [optional]
-	 * @param ?string|null $magic_database [optional]
+	 * @param string|null $magic_database [optional]
 	 */
-	public function __construct (int $flags = 0?string|null , $magic_database = null) {}
+	public function __construct (int $flags = 0, string|null $magic_database = null) {}
 
 	/**
 	 * Alias: finfo_file()

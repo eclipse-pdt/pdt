@@ -17,9 +17,9 @@ class Exception extends \Error implements \Throwable, \Stringable {
 	/**
 	 * @param string $message [optional]
 	 * @param int $code [optional]
-	 * @param ?Throwable|null $previous [optional]
+	 * @param Throwable|null $previous [optional]
 	 */
-	public function __construct (string $message = ''int , $code = 0?Throwable|null , $previous = null) {}
+	public function __construct (string $message = '', int $code = 0, Throwable|null $previous = null) {}
 
 	public function __wakeup () {}
 
@@ -33,7 +33,7 @@ class Exception extends \Error implements \Throwable, \Stringable {
 
 	final public function getTrace (): array {}
 
-	final public function getPrevious (): ??Throwable {}
+	final public function getPrevious (): ?Throwable {}
 
 	final public function getTraceAsString (): string {}
 
@@ -54,9 +54,9 @@ final class ParserException extends \FFI\Exception implements \Stringable, \Thro
 	/**
 	 * @param string $message [optional]
 	 * @param int $code [optional]
-	 * @param ?Throwable|null $previous [optional]
+	 * @param Throwable|null $previous [optional]
 	 */
-	public function __construct (string $message = ''int , $code = 0?Throwable|null , $previous = null) {}
+	public function __construct (string $message = '', int $code = 0, Throwable|null $previous = null) {}
 
 	public function __wakeup () {}
 
@@ -70,7 +70,7 @@ final class ParserException extends \FFI\Exception implements \Stringable, \Thro
 
 	final public function getTrace (): array {}
 
-	final public function getPrevious (): ??Throwable {}
+	final public function getPrevious (): ?Throwable {}
 
 	final public function getTraceAsString (): string {}
 
@@ -156,7 +156,7 @@ final class FFI  {
 	 * </p>
 	 * @return mixed the freshly created FFI object, or null on failure.
 	 */
-	public static function load (string $filename): ??FFI {}
+	public static function load (string $filename): ?FFI {}
 
 	/**
 	 * Instantiates an FFI object with C declarations parsed during preloading
@@ -181,7 +181,7 @@ final class FFI  {
 	 * @return mixed the freshly created FFI\CData object,
 	 * or null on failure.
 	 */
-	public static function new ($type, bool $owned = null, bool $persistent = null): ??FFI\CData {}
+	public static function new ($type, bool $owned = null, bool $persistent = null): ?FFI\CData {}
 
 	/**
 	 * Releases an unmanaged data structure
@@ -199,7 +199,7 @@ final class FFI  {
 	 * @param mixed $ptr The handle of the pointer to a C data structure.
 	 * @return mixed the freshly created FFI\CData object.
 	 */
-	public static function cast ($type, &$ptr): ??FFI\CData {}
+	public static function cast ($type, &$ptr): ?FFI\CData {}
 
 	/**
 	 * Creates an FFI\CType object from a C declaration
@@ -209,7 +209,7 @@ final class FFI  {
 	 * @return mixed the freshly created FFI\CType object,
 	 * or null on failure.
 	 */
-	public static function type (string $type): ??FFI\CType {}
+	public static function type (string $type): ?FFI\CType {}
 
 	/**
 	 * Gets the FFI\CType of FFI\CData

@@ -53,7 +53,7 @@ class SQLite3  {
 	 * @param int $flags [optional]
 	 * @param string $encryptionKey [optional]
 	 */
-	public function __construct (string $filenameint , $flags = 6string , $encryptionKey = '') {}
+	public function __construct (string $filename, int $flags = 6, string $encryptionKey = '') {}
 
 	/**
 	 * Opens an SQLite database
@@ -429,7 +429,7 @@ class SQLite3Stmt  {
 	 * @param SQLite3 $sqlite3
 	 * @param string $query
 	 */
-	private function __construct (SQLite3 $sqlite3string , $query) {}
+	private function __construct (SQLite3 $sqlite3, string $query) {}
 
 	/**
 	 * Binds a parameter to a statement variable

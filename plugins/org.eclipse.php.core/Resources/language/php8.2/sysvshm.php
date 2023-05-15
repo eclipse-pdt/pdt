@@ -66,7 +66,7 @@ function shm_put_var (SysvSharedMemory $shm, int $key, $value): bool {}
  * @param int $key The variable key.
  * @return mixed the variable with the given key.
  */
-function shm_get_var (SysvSharedMemory $shm, int $key): ?mixed {}
+function shm_get_var (SysvSharedMemory $shm, int $key): mixed {}
 
 /**
  * Removes a variable from shared memory

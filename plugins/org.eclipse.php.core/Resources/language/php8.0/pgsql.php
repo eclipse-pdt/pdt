@@ -214,7 +214,7 @@ function pg_query ($connection = null, string $query) {}
  * @param mixed $connection
  * @param string $query [optional]
  */
-function pg_exec ($connection = nullstring , $query = null) {}
+function pg_exec ($connection = null, string $query = null) {}
 
 /**
  * Submits a command to the server and waits for the result, with the ability to pass parameters separately from the SQL command text
@@ -367,7 +367,7 @@ function pg_field_name ($result, int $field): string {}
  * @param int $field
  * @deprecated 
  */
-function pg_fieldname ($result = nullint , $field): string {}
+function pg_fieldname ($result = null, int $field): string {}
 
 /**
  * Returns the internal storage size of the named field
@@ -384,7 +384,7 @@ function pg_field_size ($result, int $field): int {}
  * @param int $field
  * @deprecated 
  */
-function pg_fieldsize ($result = nullint , $field): int {}
+function pg_fieldsize ($result = null, int $field): int {}
 
 /**
  * Returns the type name for the corresponding field number
@@ -400,7 +400,7 @@ function pg_field_type ($result, int $field): string {}
  * @param int $field
  * @deprecated 
  */
-function pg_fieldtype ($result = nullint , $field): string {}
+function pg_fieldtype ($result = null, int $field): string {}
 
 /**
  * Returns the type ID (OID) for the corresponding field number
@@ -427,7 +427,7 @@ function pg_field_num ($result, string $field): int {}
  * @param string $field
  * @deprecated 
  */
-function pg_fieldnum ($result = nullstring , $field): int {}
+function pg_fieldnum ($result = null, string $field): int {}
 
 /**
  * Returns values from a result instance
@@ -448,7 +448,7 @@ function pg_fieldnum ($result = nullstring , $field): int {}
  * of rows in the set, or on any other error.
  * </p>
  */
-function pg_fetch_result ($result, int $row, $field): ?string|false|null {}
+function pg_fetch_result ($result, int $row, $field): string|false|null {}
 
 /**
  * @param mixed $result
@@ -456,7 +456,7 @@ function pg_fetch_result ($result, int $row, $field): ?string|false|null {}
  * @param string|int $field [optional]
  * @deprecated 
  */
-function pg_result ($result = null, $row = nullstring|int , $field = null): ?string|false|null {}
+function pg_result ($result = null, $row = null, string|int $field = null): string|false|null {}
 
 /**
  * Get a row as an enumerated array
@@ -577,7 +577,7 @@ function pg_field_prtlen ($result, int $row_number, $field_name_or_number): int|
  * @param string|int $field [optional]
  * @deprecated 
  */
-function pg_fieldprtlen ($result = null, $row = nullstring|int , $field = null): int|false {}
+function pg_fieldprtlen ($result = null, $row = null, string|int $field = null): int|false {}
 
 /**
  * Test if a field is SQL NULL
@@ -598,7 +598,7 @@ function pg_field_is_null ($result, int $row, $field): int|false {}
  * @param string|int $field [optional]
  * @deprecated 
  */
-function pg_fieldisnull ($result = null, $row = nullstring|int , $field = null): int|false {}
+function pg_fieldisnull ($result = null, $row = null, string|int $field = null): int|false {}
 
 /**
  * Free result memory
@@ -702,7 +702,7 @@ function pg_lo_open ($connection, int $oid, string $mode) {}
  * @param string $mode [optional]
  * @deprecated 
  */
-function pg_loopen ($connection = null, $oid = nullstring , $mode = null) {}
+function pg_loopen ($connection = null, $oid = null, string $mode = null) {}
 
 /**
  * Close a large object
@@ -733,7 +733,7 @@ function pg_lo_read ($lob, int $length = null): string|false {}
  * @param int $length [optional]
  * @deprecated 
  */
-function pg_loread ($lob = nullint , $length = 8192): string|false {}
+function pg_loread ($lob = null, int $length = 8192): string|false {}
 
 /**
  * Write to a large object
@@ -752,10 +752,10 @@ function pg_lo_write ($lob, string $data, $length = null): int|false {}
 /**
  * @param mixed $lob
  * @param string $data
- * @param ?int|null $length [optional]
+ * @param int|null $length [optional]
  * @deprecated 
  */
-function pg_lowrite ($lob = nullstring , $data?int|null , $length = null): int|false {}
+function pg_lowrite ($lob = null, string $data, int|null $length = null): int|false {}
 
 /**
  * Reads an entire large object and send straight to browser
@@ -881,7 +881,7 @@ function pg_set_client_encoding ($connection = null, string $encoding): int {}
  * @param string $encoding [optional]
  * @deprecated 
  */
-function pg_setclientencoding ($connection = nullstring , $encoding = null): int {}
+function pg_setclientencoding ($connection = null, string $encoding = null): int {}
 
 /**
  * Gets the client encoding
@@ -1016,7 +1016,7 @@ function pg_result_error ($result): string|false {}
  * @return mixed A string containing the contents of the error field, null if the field does not exist or false
  * on failure.
  */
-function pg_result_error_field ($result, int $field_code): ?string|false|null {}
+function pg_result_error_field ($result, int $field_code): string|false|null {}
 
 /**
  * Get connection status

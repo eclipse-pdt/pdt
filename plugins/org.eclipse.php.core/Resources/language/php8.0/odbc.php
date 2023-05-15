@@ -120,7 +120,7 @@ function odbc_exec ($odbc, string $query) {}
  * @param mixed $odbc
  * @param string $query
  */
-function odbc_do ($odbc = nullstring , $query) {}
+function odbc_do ($odbc = null, string $query) {}
 
 /**
  * Fetch a result row as an object
@@ -189,7 +189,7 @@ function odbc_fetch_row ($statement, $row = null): bool {}
  * @return mixed the string contents of the field, false on error, null for
  * NULL data, or true for binary data.
  */
-function odbc_result ($statement, $field): ?string|bool|null {}
+function odbc_result ($statement, $field): string|bool|null {}
 
 /**
  * Print result as HTML table
@@ -313,7 +313,7 @@ function odbc_field_len ($statement, int $field): int|false {}
  * @param mixed $statement
  * @param int $field
  */
-function odbc_field_precision ($statement = nullint , $field): int|false {}
+function odbc_field_precision ($statement = null, int $field): int|false {}
 
 /**
  * Get the scale of a field

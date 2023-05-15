@@ -105,7 +105,7 @@ function libxml_set_external_entity_loader ($resolver_function): bool {}
  * libxml_set_external_entity_loader. If that function was
  * never called, or if it was called with null, null will be returned.
  */
-function libxml_get_external_entity_loader (): ??callable {}
+function libxml_get_external_entity_loader (): ?callable {}
 
 
 /**

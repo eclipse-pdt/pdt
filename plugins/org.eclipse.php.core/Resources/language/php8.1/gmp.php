@@ -215,7 +215,7 @@ function gmp_div_r ($num1, $num2, int $rounding_mode = null): GMP {}
  * @param GMP|string|int $num2
  * @param int $rounding_mode [optional]
  */
-function gmp_div (GMP|string|int $num1GMP|string|int , $num2int , $rounding_mode = 0): GMP {}
+function gmp_div (GMP|string|int $num1, GMP|string|int $num2, int $rounding_mode = 0): GMP {}
 
 /**
  * Modulo operation

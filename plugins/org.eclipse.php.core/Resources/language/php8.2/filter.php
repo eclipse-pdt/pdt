@@ -28,7 +28,7 @@ function filter_has_var (int $input_type, string $var_name): bool {}
  * If the flag FILTER_NULL_ON_FAILURE is used, it
  * returns false if the variable is not set and null if the filter fails.
  */
-function filter_input (int $type, string $var_name, int $filter = null, $options = null): ?mixed {}
+function filter_input (int $type, string $var_name, int $filter = null, $options = null): mixed {}
 
 /**
  * Filters a variable with a specified filter
@@ -81,7 +81,7 @@ function filter_input (int $type, string $var_name, int $filter = null, $options
  * </p>
  * @return mixed the filtered data, or false if the filter fails.
  */
-function filter_var ($value, int $filter = null, $options = null): ?mixed {}
+function filter_var ($value, int $filter = null, $options = null): mixed {}
 
 /**
  * Gets external variables and optionally filters them
@@ -116,7 +116,7 @@ function filter_var ($value, int $filter = null, $options = null): ?mixed {}
  * element will be added for unset variables.
  * </p>
  */
-function filter_input_array (int $type, $options = null, bool $add_empty = null): ?array|false|null {}
+function filter_input_array (int $type, $options = null, bool $add_empty = null): array|false|null {}
 
 /**
  * Gets multiple variables and optionally filters them
@@ -142,7 +142,7 @@ function filter_input_array (int $type, $options = null, bool $add_empty = null)
  * on failure. An array value will be false if the filter fails, or null if 
  * the variable is not set.
  */
-function filter_var_array (array $array, $options = null, bool $add_empty = null): ?array|false|null {}
+function filter_var_array (array $array, $options = null, bool $add_empty = null): array|false|null {}
 
 /**
  * Returns a list of all supported filters

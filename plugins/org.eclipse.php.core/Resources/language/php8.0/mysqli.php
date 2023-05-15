@@ -17,9 +17,9 @@ final class mysqli_sql_exception extends RuntimeException implements Stringable,
 	/**
 	 * @param string $message [optional]
 	 * @param int $code [optional]
-	 * @param ?Throwable|null $previous [optional]
+	 * @param Throwable|null $previous [optional]
 	 */
-	public function __construct (string $message = ''int , $code = 0?Throwable|null , $previous = null) {}
+	public function __construct (string $message = '', int $code = 0, Throwable|null $previous = null) {}
 
 	public function __wakeup () {}
 
@@ -33,7 +33,7 @@ final class mysqli_sql_exception extends RuntimeException implements Stringable,
 
 	final public function getTrace (): array {}
 
-	final public function getPrevious (): ??Throwable {}
+	final public function getPrevious (): ?Throwable {}
 
 	final public function getTraceAsString (): string {}
 
@@ -204,14 +204,14 @@ class mysqli  {
 	public function commit (int $flags = null, $name = null) {}
 
 	/**
-	 * @param ?string|null $hostname [optional]
-	 * @param ?string|null $username [optional]
-	 * @param ?string|null $password [optional]
-	 * @param ?string|null $database [optional]
-	 * @param ?int|null $port [optional]
-	 * @param ?string|null $socket [optional]
+	 * @param string|null $hostname [optional]
+	 * @param string|null $username [optional]
+	 * @param string|null $password [optional]
+	 * @param string|null $database [optional]
+	 * @param int|null $port [optional]
+	 * @param string|null $socket [optional]
 	 */
-	public function connect (?string|null $hostname = null?string|null , $username = null?string|null , $password = null?string|null , $database = null?int|null , $port = null?string|null , $socket = null) {}
+	public function connect (string|null $hostname = null, string|null $username = null, string|null $password = null, string|null $database = null, int|null $port = null, string|null $socket = null) {}
 
 	/**
 	 * Dump debugging information into the log
@@ -851,7 +851,7 @@ class mysqli_result implements IteratorAggregate, Traversable {
 	 * @param mysqli $mysql
 	 * @param int $result_mode [optional]
 	 */
-	public function __construct (mysqli $mysqlint , $result_mode = 0) {}
+	public function __construct (mysqli $mysql, int $result_mode = 0) {}
 
 	public function close () {}
 
@@ -1176,9 +1176,9 @@ class mysqli_stmt  {
 	 * Constructs a new mysqli_stmt object
 	 * @link http://www.php.net/manual/en/mysqli-stmt.construct.php
 	 * @param mysqli $mysql
-	 * @param ?string|null $query [optional]
+	 * @param string|null $query [optional]
 	 */
-	public function __construct (mysqli $mysql?string|null , $query = null) {}
+	public function __construct (mysqli $mysql, string|null $query = null) {}
 
 	/**
 	 * Used to get the current value of a statement attribute
@@ -1429,22 +1429,22 @@ function mysqli_affected_rows (mysqli $mysql): string|int {}
  * @param mysqli $mysql
  * @param bool $enable
  */
-function mysqli_autocommit (mysqli $mysqlbool , $enable): bool {}
+function mysqli_autocommit (mysqli $mysql, bool $enable): bool {}
 
 /**
  * @param mysqli $mysql
  * @param int $flags [optional]
- * @param ?string|null $name [optional]
+ * @param string|null $name [optional]
  */
-function mysqli_begin_transaction (mysqli $mysqlint , $flags = 0?string|null , $name = null): bool {}
+function mysqli_begin_transaction (mysqli $mysql, int $flags = 0, string|null $name = null): bool {}
 
 /**
  * @param mysqli $mysql
  * @param string $username
  * @param string $password
- * @param ?string|null $database
+ * @param string|null $database
  */
-function mysqli_change_user (mysqli $mysqlstring , $usernamestring , $password?string|null , $database = null): bool {}
+function mysqli_change_user (mysqli $mysql, string $username, string $password, string|null $database = null): bool {}
 
 /**
  * @param mysqli $mysql
@@ -1459,31 +1459,31 @@ function mysqli_close (mysqli $mysql): bool {}
 /**
  * @param mysqli $mysql
  * @param int $flags [optional]
- * @param ?string|null $name [optional]
+ * @param string|null $name [optional]
  */
-function mysqli_commit (mysqli $mysqlint , $flags = 0?string|null , $name = null): bool {}
+function mysqli_commit (mysqli $mysql, int $flags = 0, string|null $name = null): bool {}
 
 /**
  * Alias: mysqli::__construct
  * @link http://www.php.net/manual/en/function.mysqli-connect.php
- * @param ?string|null $hostname [optional]
- * @param ?string|null $username [optional]
- * @param ?string|null $password [optional]
- * @param ?string|null $database [optional]
- * @param ?int|null $port [optional]
- * @param ?string|null $socket [optional]
+ * @param string|null $hostname [optional]
+ * @param string|null $username [optional]
+ * @param string|null $password [optional]
+ * @param string|null $database [optional]
+ * @param int|null $port [optional]
+ * @param string|null $socket [optional]
  */
-function mysqli_connect (?string|null $hostname = null?string|null , $username = null?string|null , $password = null?string|null , $database = null?int|null , $port = null?string|null , $socket = null): mysqli|false {}
+function mysqli_connect (string|null $hostname = null, string|null $username = null, string|null $password = null, string|null $database = null, int|null $port = null, string|null $socket = null): mysqli|false {}
 
 function mysqli_connect_errno (): int {}
 
-function mysqli_connect_error (): ??string {}
+function mysqli_connect_error (): ?string {}
 
 /**
  * @param mysqli_result $result
  * @param int $offset
  */
-function mysqli_data_seek (mysqli_result $resultint , $offset): bool {}
+function mysqli_data_seek (mysqli_result $result, int $offset): bool {}
 
 /**
  * @param mysqli $mysql
@@ -1536,7 +1536,7 @@ function mysqli_fetch_fields (mysqli_result $result): array {}
  * @param mysqli_result $result
  * @param int $index
  */
-function mysqli_fetch_field_direct (mysqli_result $resultint , $index): object|false {}
+function mysqli_fetch_field_direct (mysqli_result $result, int $index): object|false {}
 
 /**
  * @param mysqli_result $result
@@ -1547,30 +1547,30 @@ function mysqli_fetch_lengths (mysqli_result $result): array|false {}
  * @param mysqli_result $result
  * @param int $mode [optional]
  */
-function mysqli_fetch_all (mysqli_result $resultint , $mode = 2): array {}
+function mysqli_fetch_all (mysqli_result $result, int $mode = 2): array {}
 
 /**
  * @param mysqli_result $result
  * @param int $mode [optional]
  */
-function mysqli_fetch_array (mysqli_result $resultint , $mode = 3): ?array|false|null {}
+function mysqli_fetch_array (mysqli_result $result, int $mode = 3): array|false|null {}
 
 /**
  * @param mysqli_result $result
  */
-function mysqli_fetch_assoc (mysqli_result $result): ?array|false|null {}
+function mysqli_fetch_assoc (mysqli_result $result): array|false|null {}
 
 /**
  * @param mysqli_result $result
  * @param string $class [optional]
  * @param array[] $constructor_args [optional]
  */
-function mysqli_fetch_object (mysqli_result $resultstring , $class = 'stdClass'array , $constructor_args = 'Array'): ?object|false|null {}
+function mysqli_fetch_object (mysqli_result $result, string $class = 'stdClass', array $constructor_args = 'Array'): object|false|null {}
 
 /**
  * @param mysqli_result $result
  */
-function mysqli_fetch_row (mysqli_result $result): ?array|false|null {}
+function mysqli_fetch_row (mysqli_result $result): array|false|null {}
 
 /**
  * @param mysqli $mysql
@@ -1581,7 +1581,7 @@ function mysqli_field_count (mysqli $mysql): int {}
  * @param mysqli_result $result
  * @param int $index
  */
-function mysqli_field_seek (mysqli_result $resultint , $index): bool {}
+function mysqli_field_seek (mysqli_result $result, int $index): bool {}
 
 /**
  * @param mysqli_result $result
@@ -1608,12 +1608,12 @@ function mysqli_get_client_stats (): array {}
 /**
  * @param mysqli $mysql
  */
-function mysqli_get_charset (mysqli $mysql): ??object {}
+function mysqli_get_charset (mysqli $mysql): ?object {}
 
 /**
- * @param ?mysqli|null $mysql [optional]
+ * @param mysqli|null $mysql [optional]
  */
-function mysqli_get_client_info (?mysqli|null $mysql = null): string {}
+function mysqli_get_client_info (mysqli|null $mysql = null): string {}
 
 function mysqli_get_client_version (): int {}
 
@@ -1675,7 +1675,7 @@ function mysqli_init (): mysqli|false {}
 /**
  * @param mysqli $mysql
  */
-function mysqli_info (mysqli $mysql): ??string {}
+function mysqli_info (mysqli $mysql): ?string {}
 
 /**
  * @param mysqli $mysql
@@ -1686,7 +1686,7 @@ function mysqli_insert_id (mysqli $mysql): string|int {}
  * @param mysqli $mysql
  * @param int $process_id
  */
-function mysqli_kill (mysqli $mysqlint , $process_id): bool {}
+function mysqli_kill (mysqli $mysql, int $process_id): bool {}
 
 /**
  * @param mysqli $mysql
@@ -1697,7 +1697,7 @@ function mysqli_more_results (mysqli $mysql): bool {}
  * @param mysqli $mysql
  * @param string $query
  */
-function mysqli_multi_query (mysqli $mysqlstring , $query): bool {}
+function mysqli_multi_query (mysqli $mysql, string $query): bool {}
 
 /**
  * @param mysqli $mysql
@@ -1719,14 +1719,14 @@ function mysqli_num_rows (mysqli_result $result): string|int {}
  * @param int $option
  * @param mixed $value
  */
-function mysqli_options (mysqli $mysqlint , $option, $value = null): bool {}
+function mysqli_options (mysqli $mysql, int $option, $value = null): bool {}
 
 /**
  * @param mysqli $mysql
  * @param int $option
  * @param mixed $value
  */
-function mysqli_set_opt (mysqli $mysqlint , $option, $value = null): bool {}
+function mysqli_set_opt (mysqli $mysql, int $option, $value = null): bool {}
 
 /**
  * @param mysqli $mysql
@@ -1734,19 +1734,19 @@ function mysqli_set_opt (mysqli $mysqlint , $option, $value = null): bool {}
 function mysqli_ping (mysqli $mysql): bool {}
 
 /**
- * @param ?array|null[] $read
- * @param ?array|null[] $error
+ * @param array|null[] $read
+ * @param array|null[] $error
  * @param array[] $reject
  * @param int $seconds
  * @param int $microseconds [optional]
  */
-function mysqli_poll (array &$read = nullarray , &$error = nullarray , &$rejectint , $secondsint , $microseconds = 0): int|false {}
+function mysqli_poll (array &$read = null, array &$error = null, array &$reject, int $seconds, int $microseconds = 0): int|false {}
 
 /**
  * @param mysqli $mysql
  * @param string $query
  */
-function mysqli_prepare (mysqli $mysqlstring , $query): mysqli_stmt|false {}
+function mysqli_prepare (mysqli $mysql, string $query): mysqli_stmt|false {}
 
 /**
  * Alias: mysqli_driver->report_mode
@@ -1760,37 +1760,37 @@ function mysqli_report (int $flags): bool {}
  * @param string $query
  * @param int $result_mode [optional]
  */
-function mysqli_query (mysqli $mysqlstring , $queryint , $result_mode = 0): mysqli_result|bool {}
+function mysqli_query (mysqli $mysql, string $query, int $result_mode = 0): mysqli_result|bool {}
 
 /**
  * @param mysqli $mysql
- * @param ?string|null $hostname [optional]
- * @param ?string|null $username [optional]
- * @param ?string|null $password [optional]
- * @param ?string|null $database [optional]
- * @param ?int|null $port [optional]
- * @param ?string|null $socket [optional]
+ * @param string|null $hostname [optional]
+ * @param string|null $username [optional]
+ * @param string|null $password [optional]
+ * @param string|null $database [optional]
+ * @param int|null $port [optional]
+ * @param string|null $socket [optional]
  * @param int $flags [optional]
  */
-function mysqli_real_connect (mysqli $mysql?string|null , $hostname = null?string|null , $username = null?string|null , $password = null?string|null , $database = null?int|null , $port = null?string|null , $socket = nullint , $flags = 0): bool {}
+function mysqli_real_connect (mysqli $mysql, string|null $hostname = null, string|null $username = null, string|null $password = null, string|null $database = null, int|null $port = null, string|null $socket = null, int $flags = 0): bool {}
 
 /**
  * @param mysqli $mysql
  * @param string $string
  */
-function mysqli_real_escape_string (mysqli $mysqlstring , $string): string {}
+function mysqli_real_escape_string (mysqli $mysql, string $string): string {}
 
 /**
  * @param mysqli $mysql
  * @param string $string
  */
-function mysqli_escape_string (mysqli $mysqlstring , $string): string {}
+function mysqli_escape_string (mysqli $mysql, string $string): string {}
 
 /**
  * @param mysqli $mysql
  * @param string $query
  */
-function mysqli_real_query (mysqli $mysqlstring , $query): bool {}
+function mysqli_real_query (mysqli $mysql, string $query): bool {}
 
 /**
  * @param mysqli $mysql
@@ -1801,32 +1801,32 @@ function mysqli_reap_async_query (mysqli $mysql): mysqli_result|bool {}
  * @param mysqli $mysql
  * @param string $name
  */
-function mysqli_release_savepoint (mysqli $mysqlstring , $name): bool {}
+function mysqli_release_savepoint (mysqli $mysql, string $name): bool {}
 
 /**
  * @param mysqli $mysql
  * @param int $flags [optional]
- * @param ?string|null $name [optional]
+ * @param string|null $name [optional]
  */
-function mysqli_rollback (mysqli $mysqlint , $flags = 0?string|null , $name = null): bool {}
+function mysqli_rollback (mysqli $mysql, int $flags = 0, string|null $name = null): bool {}
 
 /**
  * @param mysqli $mysql
  * @param string $name
  */
-function mysqli_savepoint (mysqli $mysqlstring , $name): bool {}
+function mysqli_savepoint (mysqli $mysql, string $name): bool {}
 
 /**
  * @param mysqli $mysql
  * @param string $database
  */
-function mysqli_select_db (mysqli $mysqlstring , $database): bool {}
+function mysqli_select_db (mysqli $mysql, string $database): bool {}
 
 /**
  * @param mysqli $mysql
  * @param string $charset
  */
-function mysqli_set_charset (mysqli $mysqlstring , $charset): bool {}
+function mysqli_set_charset (mysqli $mysql, string $charset): bool {}
 
 /**
  * @param mysqli_stmt $statement
@@ -1837,27 +1837,27 @@ function mysqli_stmt_affected_rows (mysqli_stmt $statement): string|int {}
  * @param mysqli_stmt $statement
  * @param int $attribute
  */
-function mysqli_stmt_attr_get (mysqli_stmt $statementint , $attribute): int {}
+function mysqli_stmt_attr_get (mysqli_stmt $statement, int $attribute): int {}
 
 /**
  * @param mysqli_stmt $statement
  * @param int $attribute
  * @param int $value
  */
-function mysqli_stmt_attr_set (mysqli_stmt $statementint , $attributeint , $value): bool {}
+function mysqli_stmt_attr_set (mysqli_stmt $statement, int $attribute, int $value): bool {}
 
 /**
  * @param mysqli_stmt $statement
  * @param string $types
- * @param mixed|null $vars [optional]
+ * @param mixed $vars [optional]
  */
-function mysqli_stmt_bind_param (mysqli_stmt $statementstring , $typesmixed|null , &...$vars): bool {}
+function mysqli_stmt_bind_param (mysqli_stmt $statement, string $types, mixed &...$vars): bool {}
 
 /**
  * @param mysqli_stmt $statement
- * @param mixed|null $vars [optional]
+ * @param mixed $vars [optional]
  */
-function mysqli_stmt_bind_result (mysqli_stmt $statementmixed|null , &...$vars): bool {}
+function mysqli_stmt_bind_result (mysqli_stmt $statement, mixed &...$vars): bool {}
 
 /**
  * @param mysqli_stmt $statement
@@ -1868,7 +1868,7 @@ function mysqli_stmt_close (mysqli_stmt $statement): bool {}
  * @param mysqli_stmt $statement
  * @param int $offset
  */
-function mysqli_stmt_data_seek (mysqli_stmt $statementint , $offset): void {}
+function mysqli_stmt_data_seek (mysqli_stmt $statement, int $offset): void {}
 
 /**
  * @param mysqli_stmt $statement
@@ -1888,7 +1888,7 @@ function mysqli_stmt_error_list (mysqli_stmt $statement): array {}
 /**
  * @param mysqli_stmt $statement
  */
-function mysqli_stmt_fetch (mysqli_stmt $statement): ??bool {}
+function mysqli_stmt_fetch (mysqli_stmt $statement): ?bool {}
 
 /**
  * @param mysqli_stmt $statement
@@ -1944,7 +1944,7 @@ function mysqli_stmt_param_count (mysqli_stmt $statement): int {}
  * @param mysqli_stmt $statement
  * @param string $query
  */
-function mysqli_stmt_prepare (mysqli_stmt $statementstring , $query): bool {}
+function mysqli_stmt_prepare (mysqli_stmt $statement, string $query): bool {}
 
 /**
  * @param mysqli_stmt $statement
@@ -1961,7 +1961,7 @@ function mysqli_stmt_result_metadata (mysqli_stmt $statement): mysqli_result|fal
  * @param int $param_num
  * @param string $data
  */
-function mysqli_stmt_send_long_data (mysqli_stmt $statementint , $param_numstring , $data): bool {}
+function mysqli_stmt_send_long_data (mysqli_stmt $statement, int $param_num, string $data): bool {}
 
 /**
  * @param mysqli_stmt $statement
@@ -1980,13 +1980,13 @@ function mysqli_sqlstate (mysqli $mysql): string {}
 
 /**
  * @param mysqli $mysql
- * @param ?string|null $key
- * @param ?string|null $certificate
- * @param ?string|null $ca_certificate
- * @param ?string|null $ca_path
- * @param ?string|null $cipher_algos
+ * @param string|null $key
+ * @param string|null $certificate
+ * @param string|null $ca_certificate
+ * @param string|null $ca_path
+ * @param string|null $cipher_algos
  */
-function mysqli_ssl_set (mysqli $mysql?string|null , $key = null?string|null , $certificate = null?string|null , $ca_certificate = null?string|null , $ca_path = null?string|null , $cipher_algos = null): bool {}
+function mysqli_ssl_set (mysqli $mysql, string|null $key = null, string|null $certificate = null, string|null $ca_certificate = null, string|null $ca_path = null, string|null $cipher_algos = null): bool {}
 
 /**
  * @param mysqli $mysql
@@ -1997,7 +1997,7 @@ function mysqli_stat (mysqli $mysql): string|false {}
  * @param mysqli $mysql
  * @param int $mode [optional]
  */
-function mysqli_store_result (mysqli $mysqlint , $mode = 0): mysqli_result|false {}
+function mysqli_store_result (mysqli $mysql, int $mode = 0): mysqli_result|false {}
 
 /**
  * @param mysqli $mysql
@@ -2020,7 +2020,7 @@ function mysqli_warning_count (mysqli $mysql): int {}
  * @param mysqli $mysql
  * @param int $flags
  */
-function mysqli_refresh (mysqli $mysqlint , $flags): bool {}
+function mysqli_refresh (mysqli $mysql, int $flags): bool {}
 
 
 /**

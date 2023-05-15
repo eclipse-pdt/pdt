@@ -1216,7 +1216,7 @@ function socket_get_option (Socket $socket, int $level, int $option): array|int|
  * @param int $level
  * @param int $option
  */
-function socket_getopt (Socket $socketint , $levelint , $option): array|int|false {}
+function socket_getopt (Socket $socket, int $level, int $option): array|int|false {}
 
 /**
  * Sets socket options for the socket
@@ -1245,7 +1245,7 @@ function socket_set_option (Socket $socket, int $level, int $option, $value): bo
  * @param int $option
  * @param mixed $value
  */
-function socket_setopt (Socket $socketint , $levelint , $option, $value = null): bool {}
+function socket_setopt (Socket $socket, int $level, int $option, $value = null): bool {}
 
 /**
  * Creates a pair of indistinguishable sockets and stores them in an array
@@ -1366,7 +1366,7 @@ function socket_recvmsg (Socket $socket, array &$message, int $flags = null): in
  * @param int $num [optional] 
  * @return mixed 
  */
-function socket_cmsg_space (int $level, int $type, int $num = null): ??int {}
+function socket_cmsg_space (int $level, int $type, int $num = null): ?int {}
 
 /**
  * Get array with contents of getaddrinfo about the given hostname

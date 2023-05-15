@@ -593,9 +593,9 @@ function ldap_mod_replace ($ldap, string $dn, array $entry, $controls = null): b
  * @param mixed $ldap
  * @param string $dn
  * @param array[] $entry
- * @param ?array|null[] $controls [optional]
+ * @param array|null[] $controls [optional]
  */
-function ldap_modify ($ldap = nullstring , $dnarray , $entryarray , $controls = null): bool {}
+function ldap_modify ($ldap = null, string $dn, array $entry, array $controls = null): bool {}
 
 /**
  * Replace attribute values with new ones

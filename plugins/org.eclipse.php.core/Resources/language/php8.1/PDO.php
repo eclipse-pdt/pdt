@@ -20,9 +20,9 @@ class PDOException extends RuntimeException implements Stringable, Throwable {
 	/**
 	 * @param string $message [optional]
 	 * @param int $code [optional]
-	 * @param ?Throwable|null $previous [optional]
+	 * @param Throwable|null $previous [optional]
 	 */
-	public function __construct (string $message = ''int , $code = 0?Throwable|null , $previous = null) {}
+	public function __construct (string $message = '', int $code = 0, Throwable|null $previous = null) {}
 
 	public function __wakeup () {}
 
@@ -36,7 +36,7 @@ class PDOException extends RuntimeException implements Stringable, Throwable {
 
 	final public function getTrace (): array {}
 
-	final public function getPrevious (): ??Throwable {}
+	final public function getPrevious (): ?Throwable {}
 
 	final public function getTraceAsString (): string {}
 
@@ -170,11 +170,11 @@ class PDO  {
 	 * Creates a PDO instance representing a connection to a database
 	 * @link http://www.php.net/manual/en/pdo.construct.php
 	 * @param string $dsn
-	 * @param ?string|null $username [optional]
-	 * @param ?string|null $password [optional]
-	 * @param ?array|null[] $options [optional]
+	 * @param string|null $username [optional]
+	 * @param string|null $password [optional]
+	 * @param array|null[] $options [optional]
 	 */
-	public function __construct (string $dsn?string|null , $username = null?string|null , $password = nullarray , $options = null) {}
+	public function __construct (string $dsn, string|null $username = null, string|null $password = null, array $options = null) {}
 
 	/**
 	 * Initiates a transaction

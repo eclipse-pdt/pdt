@@ -348,9 +348,9 @@ class NumberFormatter  {
 	/**
 	 * @param string $locale
 	 * @param int $style
-	 * @param ?string|null $pattern [optional]
+	 * @param string|null $pattern [optional]
 	 */
-	public function __construct (string $localeint , $style?string|null , $pattern = null) {}
+	public function __construct (string $locale, int $style, string|null $pattern = null) {}
 
 	/**
 	 * Create a number formatter
@@ -811,7 +811,7 @@ class MessageFormatter  {
 	 * @param string $locale
 	 * @param string $pattern
 	 */
-	public function __construct (string $localestring , $pattern) {}
+	public function __construct (string $locale, string $pattern) {}
 
 	/**
 	 * Constructs a new Message Formatter
@@ -920,14 +920,14 @@ class IntlDateFormatter  {
 
 
 	/**
-	 * @param ?string|null $locale
+	 * @param string|null $locale
 	 * @param int $dateType
 	 * @param int $timeType
 	 * @param mixed $timezone [optional]
 	 * @param mixed $calendar [optional]
-	 * @param ?string|null $pattern [optional]
+	 * @param string|null $pattern [optional]
 	 */
-	public function __construct (?string|null $locale = nullint , $dateTypeint , $timeType, $timezone = null, $calendar = null?string|null , $pattern = null) {}
+	public function __construct (string|null $locale = null, int $dateType, int $timeType, $timezone = null, $calendar = null, string|null $pattern = null) {}
 
 	/**
 	 * Create a date formatter
@@ -1192,11 +1192,11 @@ class IntlDateFormatter  {
 class ResourceBundle implements IteratorAggregate, Traversable, Countable {
 
 	/**
-	 * @param ?string|null $locale
-	 * @param ?string|null $bundle
+	 * @param string|null $locale
+	 * @param string|null $bundle
 	 * @param bool $fallback [optional]
 	 */
-	public function __construct (?string|null $locale = null?string|null , $bundle = nullbool , $fallback = 1) {}
+	public function __construct (string|null $locale = null, string|null $bundle = null, bool $fallback = 1) {}
 
 	/**
 	 * Create a resource bundle
@@ -2649,9 +2649,9 @@ class IntlException extends Exception implements Throwable, Stringable {
 	/**
 	 * @param string $message [optional]
 	 * @param int $code [optional]
-	 * @param ?Throwable|null $previous [optional]
+	 * @param Throwable|null $previous [optional]
 	 */
-	public function __construct (string $message = ''int , $code = 0?Throwable|null , $previous = null) {}
+	public function __construct (string $message = '', int $code = 0, Throwable|null $previous = null) {}
 
 	public function __wakeup () {}
 
@@ -2665,7 +2665,7 @@ class IntlException extends Exception implements Throwable, Stringable {
 
 	final public function getTrace (): array {}
 
-	final public function getPrevious (): ??Throwable {}
+	final public function getPrevious (): ?Throwable {}
 
 	final public function getTraceAsString (): string {}
 
@@ -2976,7 +2976,7 @@ class IntlRuleBasedBreakIterator extends IntlBreakIterator implements Traversabl
 	 * @param string $rules
 	 * @param bool $compiled [optional]
 	 */
-	public function __construct (string $rulesbool , $compiled = '') {}
+	public function __construct (string $rules, bool $compiled = '') {}
 
 	/**
 	 * Get the binary form of compiled rules
@@ -3484,10 +3484,10 @@ class UConverter  {
 	/**
 	 * Create UConverter object
 	 * @link http://www.php.net/manual/en/uconverter.construct.php
-	 * @param ?string|null $destination_encoding [optional]
-	 * @param ?string|null $source_encoding [optional]
+	 * @param string|null $destination_encoding [optional]
+	 * @param string|null $source_encoding [optional]
 	 */
-	public function __construct (?string|null $destination_encoding = null?string|null , $source_encoding = null) {}
+	public function __construct (string|null $destination_encoding = null, string|null $source_encoding = null) {}
 
 	/**
 	 * Convert string from one charset to another
@@ -5021,16 +5021,16 @@ class IntlChar  {
 
 /**
  * @param mixed $timezone [optional]
- * @param ?string|null $locale [optional]
+ * @param string|null $locale [optional]
  */
-function intlcal_create_instance ($timezone = null?string|null , $locale = null): ??IntlCalendar {}
+function intlcal_create_instance ($timezone = null, string|null $locale = null): ?IntlCalendar {}
 
 /**
  * @param string $keyword
  * @param string $locale
  * @param bool $onlyCommon
  */
-function intlcal_get_keyword_values_for_locale (string $keywordstring , $localebool , $onlyCommon): IntlIterator|false {}
+function intlcal_get_keyword_values_for_locale (string $keyword, string $locale, bool $onlyCommon): IntlIterator|false {}
 
 function intlcal_get_now (): float {}
 
@@ -5040,7 +5040,7 @@ function intlcal_get_available_locales (): array {}
  * @param IntlCalendar $calendar
  * @param int $field
  */
-function intlcal_get (IntlCalendar $calendarint , $field): int|false {}
+function intlcal_get (IntlCalendar $calendar, int $field): int|false {}
 
 /**
  * @param IntlCalendar $calendar
@@ -5051,14 +5051,14 @@ function intlcal_get_time (IntlCalendar $calendar): float|false {}
  * @param IntlCalendar $calendar
  * @param float $timestamp
  */
-function intlcal_set_time (IntlCalendar $calendarfloat , $timestamp): bool {}
+function intlcal_set_time (IntlCalendar $calendar, float $timestamp): bool {}
 
 /**
  * @param IntlCalendar $calendar
  * @param int $field
  * @param int $value
  */
-function intlcal_add (IntlCalendar $calendarint , $fieldint , $value): bool {}
+function intlcal_add (IntlCalendar $calendar, int $field, int $value): bool {}
 
 /**
  * @param IntlCalendar $calendar
@@ -5070,13 +5070,13 @@ function intlcal_set_time_zone (IntlCalendar $calendar, $timezone = null): bool 
  * @param IntlCalendar $calendar
  * @param IntlCalendar $other
  */
-function intlcal_after (IntlCalendar $calendarIntlCalendar , $other): bool {}
+function intlcal_after (IntlCalendar $calendar, IntlCalendar $other): bool {}
 
 /**
  * @param IntlCalendar $calendar
  * @param IntlCalendar $other
  */
-function intlcal_before (IntlCalendar $calendarIntlCalendar , $other): bool {}
+function intlcal_before (IntlCalendar $calendar, IntlCalendar $other): bool {}
 
 /**
  * @param IntlCalendar $calendar
@@ -5087,45 +5087,45 @@ function intlcal_before (IntlCalendar $calendarIntlCalendar , $other): bool {}
  * @param int $minute [optional]
  * @param int $second [optional]
  */
-function intlcal_set (IntlCalendar $calendarint , $yearint , $monthint , $dayOfMonth = nullint , $hour = nullint , $minute = nullint , $second = null): bool {}
+function intlcal_set (IntlCalendar $calendar, int $year, int $month, int $dayOfMonth = null, int $hour = null, int $minute = null, int $second = null): bool {}
 
 /**
  * @param IntlCalendar $calendar
  * @param int $field
  * @param mixed $value
  */
-function intlcal_roll (IntlCalendar $calendarint , $field, $value = null): bool {}
+function intlcal_roll (IntlCalendar $calendar, int $field, $value = null): bool {}
 
 /**
  * @param IntlCalendar $calendar
- * @param ?int|null $field [optional]
+ * @param int|null $field [optional]
  */
-function intlcal_clear (IntlCalendar $calendar?int|null , $field = null): bool {}
+function intlcal_clear (IntlCalendar $calendar, int|null $field = null): bool {}
 
 /**
  * @param IntlCalendar $calendar
  * @param float $timestamp
  * @param int $field
  */
-function intlcal_field_difference (IntlCalendar $calendarfloat , $timestampint , $field): int|false {}
+function intlcal_field_difference (IntlCalendar $calendar, float $timestamp, int $field): int|false {}
 
 /**
  * @param IntlCalendar $calendar
  * @param int $field
  */
-function intlcal_get_actual_maximum (IntlCalendar $calendarint , $field): int|false {}
+function intlcal_get_actual_maximum (IntlCalendar $calendar, int $field): int|false {}
 
 /**
  * @param IntlCalendar $calendar
  * @param int $field
  */
-function intlcal_get_actual_minimum (IntlCalendar $calendarint , $field): int|false {}
+function intlcal_get_actual_minimum (IntlCalendar $calendar, int $field): int|false {}
 
 /**
  * @param IntlCalendar $calendar
  * @param int $dayOfWeek
  */
-function intlcal_get_day_of_week_type (IntlCalendar $calendarint , $dayOfWeek): int|false {}
+function intlcal_get_day_of_week_type (IntlCalendar $calendar, int $dayOfWeek): int|false {}
 
 /**
  * @param IntlCalendar $calendar
@@ -5136,25 +5136,25 @@ function intlcal_get_first_day_of_week (IntlCalendar $calendar): int|false {}
  * @param IntlCalendar $calendar
  * @param int $field
  */
-function intlcal_get_least_maximum (IntlCalendar $calendarint , $field): int|false {}
+function intlcal_get_least_maximum (IntlCalendar $calendar, int $field): int|false {}
 
 /**
  * @param IntlCalendar $calendar
  * @param int $field
  */
-function intlcal_get_greatest_minimum (IntlCalendar $calendarint , $field): int|false {}
+function intlcal_get_greatest_minimum (IntlCalendar $calendar, int $field): int|false {}
 
 /**
  * @param IntlCalendar $calendar
  * @param int $type
  */
-function intlcal_get_locale (IntlCalendar $calendarint , $type): string|false {}
+function intlcal_get_locale (IntlCalendar $calendar, int $type): string|false {}
 
 /**
  * @param IntlCalendar $calendar
  * @param int $field
  */
-function intlcal_get_maximum (IntlCalendar $calendarint , $field): int|false {}
+function intlcal_get_maximum (IntlCalendar $calendar, int $field): int|false {}
 
 /**
  * @param IntlCalendar $calendar
@@ -5165,13 +5165,13 @@ function intlcal_get_minimal_days_in_first_week (IntlCalendar $calendar): int|fa
  * @param IntlCalendar $calendar
  * @param int $days
  */
-function intlcal_set_minimal_days_in_first_week (IntlCalendar $calendarint , $days): bool {}
+function intlcal_set_minimal_days_in_first_week (IntlCalendar $calendar, int $days): bool {}
 
 /**
  * @param IntlCalendar $calendar
  * @param int $field
  */
-function intlcal_get_minimum (IntlCalendar $calendarint , $field): int|false {}
+function intlcal_get_minimum (IntlCalendar $calendar, int $field): int|false {}
 
 /**
  * @param IntlCalendar $calendar
@@ -5187,7 +5187,7 @@ function intlcal_get_type (IntlCalendar $calendar): string {}
  * @param IntlCalendar $calendar
  * @param int $dayOfWeek
  */
-function intlcal_get_weekend_transition (IntlCalendar $calendarint , $dayOfWeek): int|false {}
+function intlcal_get_weekend_transition (IntlCalendar $calendar, int $dayOfWeek): int|false {}
 
 /**
  * @param IntlCalendar $calendar
@@ -5203,31 +5203,31 @@ function intlcal_is_lenient (IntlCalendar $calendar): bool {}
  * @param IntlCalendar $calendar
  * @param int $field
  */
-function intlcal_is_set (IntlCalendar $calendarint , $field): bool {}
+function intlcal_is_set (IntlCalendar $calendar, int $field): bool {}
 
 /**
  * @param IntlCalendar $calendar
  * @param IntlCalendar $other
  */
-function intlcal_is_equivalent_to (IntlCalendar $calendarIntlCalendar , $other): bool {}
+function intlcal_is_equivalent_to (IntlCalendar $calendar, IntlCalendar $other): bool {}
 
 /**
  * @param IntlCalendar $calendar
- * @param ?float|null $timestamp [optional]
+ * @param float|null $timestamp [optional]
  */
-function intlcal_is_weekend (IntlCalendar $calendar?float|null , $timestamp = null): bool {}
+function intlcal_is_weekend (IntlCalendar $calendar, float|null $timestamp = null): bool {}
 
 /**
  * @param IntlCalendar $calendar
  * @param int $dayOfWeek
  */
-function intlcal_set_first_day_of_week (IntlCalendar $calendarint , $dayOfWeek): bool {}
+function intlcal_set_first_day_of_week (IntlCalendar $calendar, int $dayOfWeek): bool {}
 
 /**
  * @param IntlCalendar $calendar
  * @param bool $lenient
  */
-function intlcal_set_lenient (IntlCalendar $calendarbool , $lenient): bool {}
+function intlcal_set_lenient (IntlCalendar $calendar, bool $lenient): bool {}
 
 /**
  * @param IntlCalendar $calendar
@@ -5238,7 +5238,7 @@ function intlcal_get_repeated_wall_time_option (IntlCalendar $calendar): int {}
  * @param IntlCalendar $calendar
  * @param IntlCalendar $other
  */
-function intlcal_equals (IntlCalendar $calendarIntlCalendar , $other): bool {}
+function intlcal_equals (IntlCalendar $calendar, IntlCalendar $other): bool {}
 
 /**
  * @param IntlCalendar $calendar
@@ -5249,19 +5249,19 @@ function intlcal_get_skipped_wall_time_option (IntlCalendar $calendar): int {}
  * @param IntlCalendar $calendar
  * @param int $option
  */
-function intlcal_set_repeated_wall_time_option (IntlCalendar $calendarint , $option): bool {}
+function intlcal_set_repeated_wall_time_option (IntlCalendar $calendar, int $option): bool {}
 
 /**
  * @param IntlCalendar $calendar
  * @param int $option
  */
-function intlcal_set_skipped_wall_time_option (IntlCalendar $calendarint , $option): bool {}
+function intlcal_set_skipped_wall_time_option (IntlCalendar $calendar, int $option): bool {}
 
 /**
  * @param DateTime|string $datetime
- * @param ?string|null $locale [optional]
+ * @param string|null $locale [optional]
  */
-function intlcal_from_date_time (DateTime|string $datetime?string|null , $locale = null): ??IntlCalendar {}
+function intlcal_from_date_time (DateTime|string $datetime, string|null $locale = null): ?IntlCalendar {}
 
 /**
  * @param IntlCalendar $calendar
@@ -5286,13 +5286,13 @@ function intlcal_get_error_message (IntlCalendar $calendar): string|false {}
  * @param mixed $minute [optional]
  * @param mixed $second [optional]
  */
-function intlgregcal_create_instance ($timezoneOrYear = null, $localeOrMonth = null, $day = null, $hour = null, $minute = null, $second = null): ??IntlGregorianCalendar {}
+function intlgregcal_create_instance ($timezoneOrYear = null, $localeOrMonth = null, $day = null, $hour = null, $minute = null, $second = null): ?IntlGregorianCalendar {}
 
 /**
  * @param IntlGregorianCalendar $calendar
  * @param float $timestamp
  */
-function intlgregcal_set_gregorian_change (IntlGregorianCalendar $calendarfloat , $timestamp): bool {}
+function intlgregcal_set_gregorian_change (IntlGregorianCalendar $calendar, float $timestamp): bool {}
 
 /**
  * @param IntlGregorianCalendar $calendar
@@ -5303,32 +5303,32 @@ function intlgregcal_get_gregorian_change (IntlGregorianCalendar $calendar): flo
  * @param IntlGregorianCalendar $calendar
  * @param int $year
  */
-function intlgregcal_is_leap_year (IntlGregorianCalendar $calendarint , $year): bool {}
+function intlgregcal_is_leap_year (IntlGregorianCalendar $calendar, int $year): bool {}
 
 /**
  * @param string $locale
  */
-function collator_create (string $locale): ??Collator {}
+function collator_create (string $locale): ?Collator {}
 
 /**
  * @param Collator $object
  * @param string $string1
  * @param string $string2
  */
-function collator_compare (Collator $objectstring , $string1string , $string2): int|false {}
+function collator_compare (Collator $object, string $string1, string $string2): int|false {}
 
 /**
  * @param Collator $object
  * @param int $attribute
  */
-function collator_get_attribute (Collator $objectint , $attribute): int|false {}
+function collator_get_attribute (Collator $object, int $attribute): int|false {}
 
 /**
  * @param Collator $object
  * @param int $attribute
  * @param int $value
  */
-function collator_set_attribute (Collator $objectint , $attributeint , $value): bool {}
+function collator_set_attribute (Collator $object, int $attribute, int $value): bool {}
 
 /**
  * @param Collator $object
@@ -5339,33 +5339,33 @@ function collator_get_strength (Collator $object): int {}
  * @param Collator $object
  * @param int $strength
  */
-function collator_set_strength (Collator $objectint , $strength): bool {}
+function collator_set_strength (Collator $object, int $strength): bool {}
 
 /**
  * @param Collator $object
  * @param array[] $array
  * @param int $flags [optional]
  */
-function collator_sort (Collator $objectarray , &$arrayint , $flags = 0): bool {}
+function collator_sort (Collator $object, array &$array, int $flags = 0): bool {}
 
 /**
  * @param Collator $object
  * @param array[] $array
  */
-function collator_sort_with_sort_keys (Collator $objectarray , &$array): bool {}
+function collator_sort_with_sort_keys (Collator $object, array &$array): bool {}
 
 /**
  * @param Collator $object
  * @param array[] $array
  * @param int $flags [optional]
  */
-function collator_asort (Collator $objectarray , &$arrayint , $flags = 0): bool {}
+function collator_asort (Collator $object, array &$array, int $flags = 0): bool {}
 
 /**
  * @param Collator $object
  * @param int $type
  */
-function collator_get_locale (Collator $objectint , $type): string|false {}
+function collator_get_locale (Collator $object, int $type): string|false {}
 
 /**
  * @param Collator $object
@@ -5381,7 +5381,7 @@ function collator_get_error_message (Collator $object): string|false {}
  * @param Collator $object
  * @param string $string
  */
-function collator_get_sort_key (Collator $objectstring , $string): string|false {}
+function collator_get_sort_key (Collator $object, string $string): string|false {}
 
 /**
  * Get the last error code
@@ -5418,14 +5418,14 @@ function intl_is_failure (int $errorCode): bool {}
 function intl_error_name (int $errorCode): string {}
 
 /**
- * @param ?string|null $locale
+ * @param string|null $locale
  * @param int $dateType
  * @param int $timeType
  * @param mixed $timezone [optional]
- * @param IntlCalendar|int|null|null $calendar [optional]
- * @param ?string|null $pattern [optional]
+ * @param IntlCalendar|int|null $calendar [optional]
+ * @param string|null $pattern [optional]
  */
-function datefmt_create (?string|null $locale = nullint , $dateTypeint , $timeType, $timezone = nullIntlCalendar|int|null|null , $calendar = null?string|null , $pattern = null): ??IntlDateFormatter {}
+function datefmt_create (string|null $locale = null, int $dateType, int $timeType, $timezone = null, IntlCalendar|int|null $calendar = null, string|null $pattern = null): ?IntlDateFormatter {}
 
 /**
  * @param IntlDateFormatter $formatter
@@ -5444,9 +5444,9 @@ function datefmt_get_calendar (IntlDateFormatter $formatter): int|false {}
 
 /**
  * @param IntlDateFormatter $formatter
- * @param IntlCalendar|int|null|null $calendar
+ * @param IntlCalendar|int|null $calendar
  */
-function datefmt_set_calendar (IntlDateFormatter $formatterIntlCalendar|int|null|null , $calendar = null): bool {}
+function datefmt_set_calendar (IntlDateFormatter $formatter, IntlCalendar|int|null $calendar = null): bool {}
 
 /**
  * @param IntlDateFormatter $formatter
@@ -5456,7 +5456,7 @@ function datefmt_get_timezone_id (IntlDateFormatter $formatter): string|false {}
 /**
  * @param IntlDateFormatter $formatter
  */
-function datefmt_get_calendar_object (IntlDateFormatter $formatter): ?IntlCalendar|false|null {}
+function datefmt_get_calendar_object (IntlDateFormatter $formatter): IntlCalendar|false|null {}
 
 /**
  * @param IntlDateFormatter $formatter
@@ -5467,13 +5467,13 @@ function datefmt_get_timezone (IntlDateFormatter $formatter): IntlTimeZone|false
  * @param IntlDateFormatter $formatter
  * @param mixed $timezone
  */
-function datefmt_set_timezone (IntlDateFormatter $formatter, $timezone = null): ??bool {}
+function datefmt_set_timezone (IntlDateFormatter $formatter, $timezone = null): ?bool {}
 
 /**
  * @param IntlDateFormatter $formatter
  * @param string $pattern
  */
-function datefmt_set_pattern (IntlDateFormatter $formatterstring , $pattern): bool {}
+function datefmt_set_pattern (IntlDateFormatter $formatter, string $pattern): bool {}
 
 /**
  * @param IntlDateFormatter $formatter
@@ -5484,13 +5484,13 @@ function datefmt_get_pattern (IntlDateFormatter $formatter): string|false {}
  * @param IntlDateFormatter $formatter
  * @param int $type [optional]
  */
-function datefmt_get_locale (IntlDateFormatter $formatterint , $type = 0): string|false {}
+function datefmt_get_locale (IntlDateFormatter $formatter, int $type = 0): string|false {}
 
 /**
  * @param IntlDateFormatter $formatter
  * @param bool $lenient
  */
-function datefmt_set_lenient (IntlDateFormatter $formatterbool , $lenient): void {}
+function datefmt_set_lenient (IntlDateFormatter $formatter, bool $lenient): void {}
 
 /**
  * @param IntlDateFormatter $formatter
@@ -5506,23 +5506,23 @@ function datefmt_format (IntlDateFormatter $formatter, $datetime = null): string
 /**
  * @param mixed $datetime
  * @param mixed $format [optional]
- * @param ?string|null $locale [optional]
+ * @param string|null $locale [optional]
  */
-function datefmt_format_object ($datetime = null, $format = null?string|null , $locale = null): string|false {}
+function datefmt_format_object ($datetime = null, $format = null, string|null $locale = null): string|false {}
 
 /**
  * @param IntlDateFormatter $formatter
  * @param string $string
  * @param mixed $offset [optional]
  */
-function datefmt_parse (IntlDateFormatter $formatterstring , $string, &$offset = null): int|float|false {}
+function datefmt_parse (IntlDateFormatter $formatter, string $string, &$offset = null): int|float|false {}
 
 /**
  * @param IntlDateFormatter $formatter
  * @param string $string
  * @param mixed $offset [optional]
  */
-function datefmt_localtime (IntlDateFormatter $formatterstring , $string, &$offset = null): array|false {}
+function datefmt_localtime (IntlDateFormatter $formatter, string $string, &$offset = null): array|false {}
 
 /**
  * @param IntlDateFormatter $formatter
@@ -5537,16 +5537,16 @@ function datefmt_get_error_message (IntlDateFormatter $formatter): string {}
 /**
  * @param string $locale
  * @param int $style
- * @param ?string|null $pattern [optional]
+ * @param string|null $pattern [optional]
  */
-function numfmt_create (string $localeint , $style?string|null , $pattern = null): ??NumberFormatter {}
+function numfmt_create (string $locale, int $style, string|null $pattern = null): ?NumberFormatter {}
 
 /**
  * @param NumberFormatter $formatter
  * @param int|float $num
  * @param int $type [optional]
  */
-function numfmt_format (NumberFormatter $formatterint|float , $numint , $type = 0): string|false {}
+function numfmt_format (NumberFormatter $formatter, int|float $num, int $type = 0): string|false {}
 
 /**
  * @param NumberFormatter $formatter
@@ -5554,14 +5554,14 @@ function numfmt_format (NumberFormatter $formatterint|float , $numint , $type = 
  * @param int $type [optional]
  * @param mixed $offset [optional]
  */
-function numfmt_parse (NumberFormatter $formatterstring , $stringint , $type = 3, &$offset = null): int|float|false {}
+function numfmt_parse (NumberFormatter $formatter, string $string, int $type = 3, &$offset = null): int|float|false {}
 
 /**
  * @param NumberFormatter $formatter
  * @param float $amount
  * @param string $currency
  */
-function numfmt_format_currency (NumberFormatter $formatterfloat , $amountstring , $currency): string|false {}
+function numfmt_format_currency (NumberFormatter $formatter, float $amount, string $currency): string|false {}
 
 /**
  * @param NumberFormatter $formatter
@@ -5569,52 +5569,52 @@ function numfmt_format_currency (NumberFormatter $formatterfloat , $amountstring
  * @param mixed $currency
  * @param mixed $offset [optional]
  */
-function numfmt_parse_currency (NumberFormatter $formatterstring , $string, &$currency = null, &$offset = null): float|false {}
+function numfmt_parse_currency (NumberFormatter $formatter, string $string, &$currency = null, &$offset = null): float|false {}
 
 /**
  * @param NumberFormatter $formatter
  * @param int $attribute
  * @param int|float $value
  */
-function numfmt_set_attribute (NumberFormatter $formatterint , $attributeint|float , $value): bool {}
+function numfmt_set_attribute (NumberFormatter $formatter, int $attribute, int|float $value): bool {}
 
 /**
  * @param NumberFormatter $formatter
  * @param int $attribute
  */
-function numfmt_get_attribute (NumberFormatter $formatterint , $attribute): int|float|false {}
+function numfmt_get_attribute (NumberFormatter $formatter, int $attribute): int|float|false {}
 
 /**
  * @param NumberFormatter $formatter
  * @param int $attribute
  * @param string $value
  */
-function numfmt_set_text_attribute (NumberFormatter $formatterint , $attributestring , $value): bool {}
+function numfmt_set_text_attribute (NumberFormatter $formatter, int $attribute, string $value): bool {}
 
 /**
  * @param NumberFormatter $formatter
  * @param int $attribute
  */
-function numfmt_get_text_attribute (NumberFormatter $formatterint , $attribute): string|false {}
+function numfmt_get_text_attribute (NumberFormatter $formatter, int $attribute): string|false {}
 
 /**
  * @param NumberFormatter $formatter
  * @param int $symbol
  * @param string $value
  */
-function numfmt_set_symbol (NumberFormatter $formatterint , $symbolstring , $value): bool {}
+function numfmt_set_symbol (NumberFormatter $formatter, int $symbol, string $value): bool {}
 
 /**
  * @param NumberFormatter $formatter
  * @param int $symbol
  */
-function numfmt_get_symbol (NumberFormatter $formatterint , $symbol): string|false {}
+function numfmt_get_symbol (NumberFormatter $formatter, int $symbol): string|false {}
 
 /**
  * @param NumberFormatter $formatter
  * @param string $pattern
  */
-function numfmt_set_pattern (NumberFormatter $formatterstring , $pattern): bool {}
+function numfmt_set_pattern (NumberFormatter $formatter, string $pattern): bool {}
 
 /**
  * @param NumberFormatter $formatter
@@ -5625,7 +5625,7 @@ function numfmt_get_pattern (NumberFormatter $formatter): string|false {}
  * @param NumberFormatter $formatter
  * @param int $type [optional]
  */
-function numfmt_get_locale (NumberFormatter $formatterint , $type = 0): string|false {}
+function numfmt_get_locale (NumberFormatter $formatter, int $type = 0): string|false {}
 
 /**
  * @param NumberFormatter $formatter
@@ -5643,7 +5643,7 @@ function numfmt_get_error_message (NumberFormatter $formatter): string {}
  * @param string $string The string being measured for length. It must be a valid UTF-8 string.
  * @return mixed The length of the string on success, or false on failure.
  */
-function grapheme_strlen (string $string): ?int|false|null {}
+function grapheme_strlen (string $string): int|false|null {}
 
 /**
  * Find position (in grapheme units) of first occurrence of a string
@@ -5826,52 +5826,52 @@ function locale_set_default (string $locale): bool {}
 /**
  * @param string $locale
  */
-function locale_get_primary_language (string $locale): ??string {}
+function locale_get_primary_language (string $locale): ?string {}
 
 /**
  * @param string $locale
  */
-function locale_get_script (string $locale): ??string {}
+function locale_get_script (string $locale): ?string {}
 
 /**
  * @param string $locale
  */
-function locale_get_region (string $locale): ??string {}
+function locale_get_region (string $locale): ?string {}
 
 /**
  * @param string $locale
  */
-function locale_get_keywords (string $locale): ?array|false|null {}
+function locale_get_keywords (string $locale): array|false|null {}
 
 /**
  * @param string $locale
- * @param ?string|null $displayLocale [optional]
+ * @param string|null $displayLocale [optional]
  */
-function locale_get_display_script (string $locale?string|null , $displayLocale = null): string|false {}
+function locale_get_display_script (string $locale, string|null $displayLocale = null): string|false {}
 
 /**
  * @param string $locale
- * @param ?string|null $displayLocale [optional]
+ * @param string|null $displayLocale [optional]
  */
-function locale_get_display_region (string $locale?string|null , $displayLocale = null): string|false {}
+function locale_get_display_region (string $locale, string|null $displayLocale = null): string|false {}
 
 /**
  * @param string $locale
- * @param ?string|null $displayLocale [optional]
+ * @param string|null $displayLocale [optional]
  */
-function locale_get_display_name (string $locale?string|null , $displayLocale = null): string|false {}
+function locale_get_display_name (string $locale, string|null $displayLocale = null): string|false {}
 
 /**
  * @param string $locale
- * @param ?string|null $displayLocale [optional]
+ * @param string|null $displayLocale [optional]
  */
-function locale_get_display_language (string $locale?string|null , $displayLocale = null): string|false {}
+function locale_get_display_language (string $locale, string|null $displayLocale = null): string|false {}
 
 /**
  * @param string $locale
- * @param ?string|null $displayLocale [optional]
+ * @param string|null $displayLocale [optional]
  */
-function locale_get_display_variant (string $locale?string|null , $displayLocale = null): string|false {}
+function locale_get_display_variant (string $locale, string|null $displayLocale = null): string|false {}
 
 /**
  * @param array[] $subtags
@@ -5881,32 +5881,32 @@ function locale_compose (array $subtags): string|false {}
 /**
  * @param string $locale
  */
-function locale_parse (string $locale): ??array {}
+function locale_parse (string $locale): ?array {}
 
 /**
  * @param string $locale
  */
-function locale_get_all_variants (string $locale): ??array {}
+function locale_get_all_variants (string $locale): ?array {}
 
 /**
  * @param string $languageTag
  * @param string $locale
  * @param bool $canonicalize [optional]
  */
-function locale_filter_matches (string $languageTagstring , $localebool , $canonicalize = ''): ??bool {}
+function locale_filter_matches (string $languageTag, string $locale, bool $canonicalize = ''): ?bool {}
 
 /**
  * @param string $locale
  */
-function locale_canonicalize (string $locale): ??string {}
+function locale_canonicalize (string $locale): ?string {}
 
 /**
  * @param array[] $languageTag
  * @param string $locale
  * @param bool $canonicalize [optional]
- * @param ?string|null $defaultLocale [optional]
+ * @param string|null $defaultLocale [optional]
  */
-function locale_lookup (array $languageTagstring , $localebool , $canonicalize = ''?string|null , $defaultLocale = null): ??string {}
+function locale_lookup (array $languageTag, string $locale, bool $canonicalize = '', string|null $defaultLocale = null): ?string {}
 
 /**
  * @param string $header
@@ -5917,39 +5917,39 @@ function locale_accept_from_http (string $header): string|false {}
  * @param string $locale
  * @param string $pattern
  */
-function msgfmt_create (string $localestring , $pattern): ??MessageFormatter {}
+function msgfmt_create (string $locale, string $pattern): ?MessageFormatter {}
 
 /**
  * @param MessageFormatter $formatter
  * @param array[] $values
  */
-function msgfmt_format (MessageFormatter $formatterarray , $values): string|false {}
+function msgfmt_format (MessageFormatter $formatter, array $values): string|false {}
 
 /**
  * @param string $locale
  * @param string $pattern
  * @param array[] $values
  */
-function msgfmt_format_message (string $localestring , $patternarray , $values): string|false {}
+function msgfmt_format_message (string $locale, string $pattern, array $values): string|false {}
 
 /**
  * @param MessageFormatter $formatter
  * @param string $string
  */
-function msgfmt_parse (MessageFormatter $formatterstring , $string): array|false {}
+function msgfmt_parse (MessageFormatter $formatter, string $string): array|false {}
 
 /**
  * @param string $locale
  * @param string $pattern
  * @param string $message
  */
-function msgfmt_parse_message (string $localestring , $patternstring , $message): array|false {}
+function msgfmt_parse_message (string $locale, string $pattern, string $message): array|false {}
 
 /**
  * @param MessageFormatter $formatter
  * @param string $pattern
  */
-function msgfmt_set_pattern (MessageFormatter $formatterstring , $pattern): bool {}
+function msgfmt_set_pattern (MessageFormatter $formatter, string $pattern): bool {}
 
 /**
  * @param MessageFormatter $formatter
@@ -5975,33 +5975,33 @@ function msgfmt_get_error_message (MessageFormatter $formatter): string {}
  * @param string $string
  * @param int $form [optional]
  */
-function normalizer_normalize (string $stringint , $form = 16): string|false {}
+function normalizer_normalize (string $string, int $form = 16): string|false {}
 
 /**
  * @param string $string
  * @param int $form [optional]
  */
-function normalizer_is_normalized (string $stringint , $form = 16): bool {}
+function normalizer_is_normalized (string $string, int $form = 16): bool {}
 
 /**
  * @param string $string
  * @param int $form [optional]
  */
-function normalizer_get_raw_decomposition (string $stringint , $form = 16): ??string {}
+function normalizer_get_raw_decomposition (string $string, int $form = 16): ?string {}
 
 /**
- * @param ?string|null $locale
- * @param ?string|null $bundle
+ * @param string|null $locale
+ * @param string|null $bundle
  * @param bool $fallback [optional]
  */
-function resourcebundle_create (?string|null $locale = null?string|null , $bundle = nullbool , $fallback = 1): ??ResourceBundle {}
+function resourcebundle_create (string|null $locale = null, string|null $bundle = null, bool $fallback = 1): ?ResourceBundle {}
 
 /**
  * @param ResourceBundle $bundle
  * @param mixed $index
  * @param bool $fallback [optional]
  */
-function resourcebundle_get (ResourceBundle $bundle, $index = nullbool , $fallback = 1): ?mixed {}
+function resourcebundle_get (ResourceBundle $bundle, $index = null, bool $fallback = 1): mixed {}
 
 /**
  * @param ResourceBundle $bundle
@@ -6038,19 +6038,19 @@ function intltz_create_enumeration ($countryOrRawOffset = null): IntlIterator|fa
 /**
  * @param string $timezoneId
  */
-function intltz_create_time_zone (string $timezoneId): ??IntlTimeZone {}
+function intltz_create_time_zone (string $timezoneId): ?IntlTimeZone {}
 
 /**
  * @param int $type
- * @param ?string|null $region [optional]
- * @param ?int|null $rawOffset [optional]
+ * @param string|null $region [optional]
+ * @param int|null $rawOffset [optional]
  */
-function intltz_create_time_zone_id_enumeration (int $type?string|null , $region = null?int|null , $rawOffset = null): IntlIterator|false {}
+function intltz_create_time_zone_id_enumeration (int $type, string|null $region = null, int|null $rawOffset = null): IntlIterator|false {}
 
 /**
  * @param DateTimeZone $timezone
  */
-function intltz_from_date_time_zone (DateTimeZone $timezone): ??IntlTimeZone {}
+function intltz_from_date_time_zone (DateTimeZone $timezone): ?IntlTimeZone {}
 
 /**
  * @param string $timezoneId
@@ -6062,9 +6062,9 @@ function intltz_get_canonical_id (string $timezoneId, &$isSystemId = null): stri
  * @param IntlTimeZone $timezone
  * @param bool $dst [optional]
  * @param int $style [optional]
- * @param ?string|null $locale [optional]
+ * @param string|null $locale [optional]
  */
-function intltz_get_display_name (IntlTimeZone $timezonebool , $dst = ''int , $style = 2?string|null , $locale = null): string|false {}
+function intltz_get_display_name (IntlTimeZone $timezone, bool $dst = '', int $style = 2, string|null $locale = null): string|false {}
 
 /**
  * @param IntlTimeZone $timezone
@@ -6075,7 +6075,7 @@ function intltz_get_dst_savings (IntlTimeZone $timezone): int {}
  * @param string $timezoneId
  * @param int $offset
  */
-function intltz_get_equivalent_id (string $timezoneIdint , $offset): string|false {}
+function intltz_get_equivalent_id (string $timezoneId, int $offset): string|false {}
 
 /**
  * @param IntlTimeZone $timezone
@@ -6101,7 +6101,7 @@ function intltz_get_id (IntlTimeZone $timezone): string|false {}
  * @param mixed $rawOffset
  * @param mixed $dstOffset
  */
-function intltz_get_offset (IntlTimeZone $timezonefloat , $timestampbool , $local, &$rawOffset = null, &$dstOffset = null): bool {}
+function intltz_get_offset (IntlTimeZone $timezone, float $timestamp, bool $local, &$rawOffset = null, &$dstOffset = null): bool {}
 
 /**
  * @param IntlTimeZone $timezone
@@ -6124,15 +6124,15 @@ function intltz_get_windows_id (string $timezoneId): string|false {}
 
 /**
  * @param string $timezoneId
- * @param ?string|null $region [optional]
+ * @param string|null $region [optional]
  */
-function intltz_get_id_for_windows_id (string $timezoneId?string|null , $region = null): string|false {}
+function intltz_get_id_for_windows_id (string $timezoneId, string|null $region = null): string|false {}
 
 /**
  * @param IntlTimeZone $timezone
  * @param IntlTimeZone $other
  */
-function intltz_has_same_rules (IntlTimeZone $timezoneIntlTimeZone , $other): bool {}
+function intltz_has_same_rules (IntlTimeZone $timezone, IntlTimeZone $other): bool {}
 
 /**
  * @param IntlTimeZone $timezone
@@ -6148,20 +6148,20 @@ function intltz_use_daylight_time (IntlTimeZone $timezone): bool {}
  * @param string $id
  * @param int $direction [optional]
  */
-function transliterator_create (string $idint , $direction = 0): ??Transliterator {}
+function transliterator_create (string $id, int $direction = 0): ?Transliterator {}
 
 /**
  * @param string $rules
  * @param int $direction [optional]
  */
-function transliterator_create_from_rules (string $rulesint , $direction = 0): ??Transliterator {}
+function transliterator_create_from_rules (string $rules, int $direction = 0): ?Transliterator {}
 
 function transliterator_list_ids (): array|false {}
 
 /**
  * @param Transliterator $transliterator
  */
-function transliterator_create_inverse (Transliterator $transliterator): ??Transliterator {}
+function transliterator_create_inverse (Transliterator $transliterator): ?Transliterator {}
 
 /**
  * @param Transliterator|string $transliterator
@@ -6169,7 +6169,7 @@ function transliterator_create_inverse (Transliterator $transliterator): ??Trans
  * @param int $start [optional]
  * @param int $end [optional]
  */
-function transliterator_transliterate (Transliterator|string $transliteratorstring , $stringint , $start = 0int , $end = -1): string|false {}
+function transliterator_transliterate (Transliterator|string $transliterator, string $string, int $start = 0, int $end = -1): string|false {}
 
 /**
  * @param Transliterator $transliterator

@@ -17,9 +17,9 @@ class LogicException extends Exception implements Throwable, Stringable {
 	/**
 	 * @param string $message [optional]
 	 * @param int $code [optional]
-	 * @param ?Throwable|null $previous [optional]
+	 * @param Throwable|null $previous [optional]
 	 */
-	public function __construct (string $message = ''int , $code = 0?Throwable|null , $previous = null) {}
+	public function __construct (string $message = '', int $code = 0, Throwable|null $previous = null) {}
 
 	public function __wakeup () {}
 
@@ -33,7 +33,7 @@ class LogicException extends Exception implements Throwable, Stringable {
 
 	final public function getTrace (): array {}
 
-	final public function getPrevious (): ??Throwable {}
+	final public function getPrevious (): ?Throwable {}
 
 	final public function getTraceAsString (): string {}
 
@@ -56,9 +56,9 @@ class BadFunctionCallException extends LogicException implements Stringable, Thr
 	/**
 	 * @param string $message [optional]
 	 * @param int $code [optional]
-	 * @param ?Throwable|null $previous [optional]
+	 * @param Throwable|null $previous [optional]
 	 */
-	public function __construct (string $message = ''int , $code = 0?Throwable|null , $previous = null) {}
+	public function __construct (string $message = '', int $code = 0, Throwable|null $previous = null) {}
 
 	public function __wakeup () {}
 
@@ -72,7 +72,7 @@ class BadFunctionCallException extends LogicException implements Stringable, Thr
 
 	final public function getTrace (): array {}
 
-	final public function getPrevious (): ??Throwable {}
+	final public function getPrevious (): ?Throwable {}
 
 	final public function getTraceAsString (): string {}
 
@@ -95,9 +95,9 @@ class BadMethodCallException extends BadFunctionCallException implements Throwab
 	/**
 	 * @param string $message [optional]
 	 * @param int $code [optional]
-	 * @param ?Throwable|null $previous [optional]
+	 * @param Throwable|null $previous [optional]
 	 */
-	public function __construct (string $message = ''int , $code = 0?Throwable|null , $previous = null) {}
+	public function __construct (string $message = '', int $code = 0, Throwable|null $previous = null) {}
 
 	public function __wakeup () {}
 
@@ -111,7 +111,7 @@ class BadMethodCallException extends BadFunctionCallException implements Throwab
 
 	final public function getTrace (): array {}
 
-	final public function getPrevious (): ??Throwable {}
+	final public function getPrevious (): ?Throwable {}
 
 	final public function getTraceAsString (): string {}
 
@@ -133,9 +133,9 @@ class DomainException extends LogicException implements Stringable, Throwable {
 	/**
 	 * @param string $message [optional]
 	 * @param int $code [optional]
-	 * @param ?Throwable|null $previous [optional]
+	 * @param Throwable|null $previous [optional]
 	 */
-	public function __construct (string $message = ''int , $code = 0?Throwable|null , $previous = null) {}
+	public function __construct (string $message = '', int $code = 0, Throwable|null $previous = null) {}
 
 	public function __wakeup () {}
 
@@ -149,7 +149,7 @@ class DomainException extends LogicException implements Stringable, Throwable {
 
 	final public function getTrace (): array {}
 
-	final public function getPrevious (): ??Throwable {}
+	final public function getPrevious (): ?Throwable {}
 
 	final public function getTraceAsString (): string {}
 
@@ -171,9 +171,9 @@ class InvalidArgumentException extends LogicException implements Stringable, Thr
 	/**
 	 * @param string $message [optional]
 	 * @param int $code [optional]
-	 * @param ?Throwable|null $previous [optional]
+	 * @param Throwable|null $previous [optional]
 	 */
-	public function __construct (string $message = ''int , $code = 0?Throwable|null , $previous = null) {}
+	public function __construct (string $message = '', int $code = 0, Throwable|null $previous = null) {}
 
 	public function __wakeup () {}
 
@@ -187,7 +187,7 @@ class InvalidArgumentException extends LogicException implements Stringable, Thr
 
 	final public function getTrace (): array {}
 
-	final public function getPrevious (): ??Throwable {}
+	final public function getPrevious (): ?Throwable {}
 
 	final public function getTraceAsString (): string {}
 
@@ -209,9 +209,9 @@ class LengthException extends LogicException implements Stringable, Throwable {
 	/**
 	 * @param string $message [optional]
 	 * @param int $code [optional]
-	 * @param ?Throwable|null $previous [optional]
+	 * @param Throwable|null $previous [optional]
 	 */
-	public function __construct (string $message = ''int , $code = 0?Throwable|null , $previous = null) {}
+	public function __construct (string $message = '', int $code = 0, Throwable|null $previous = null) {}
 
 	public function __wakeup () {}
 
@@ -225,7 +225,7 @@ class LengthException extends LogicException implements Stringable, Throwable {
 
 	final public function getTrace (): array {}
 
-	final public function getPrevious (): ??Throwable {}
+	final public function getPrevious (): ?Throwable {}
 
 	final public function getTraceAsString (): string {}
 
@@ -248,9 +248,9 @@ class OutOfRangeException extends LogicException implements Stringable, Throwabl
 	/**
 	 * @param string $message [optional]
 	 * @param int $code [optional]
-	 * @param ?Throwable|null $previous [optional]
+	 * @param Throwable|null $previous [optional]
 	 */
-	public function __construct (string $message = ''int , $code = 0?Throwable|null , $previous = null) {}
+	public function __construct (string $message = '', int $code = 0, Throwable|null $previous = null) {}
 
 	public function __wakeup () {}
 
@@ -264,7 +264,7 @@ class OutOfRangeException extends LogicException implements Stringable, Throwabl
 
 	final public function getTrace (): array {}
 
-	final public function getPrevious (): ??Throwable {}
+	final public function getPrevious (): ?Throwable {}
 
 	final public function getTraceAsString (): string {}
 
@@ -286,9 +286,9 @@ class RuntimeException extends Exception implements Throwable, Stringable {
 	/**
 	 * @param string $message [optional]
 	 * @param int $code [optional]
-	 * @param ?Throwable|null $previous [optional]
+	 * @param Throwable|null $previous [optional]
 	 */
-	public function __construct (string $message = ''int , $code = 0?Throwable|null , $previous = null) {}
+	public function __construct (string $message = '', int $code = 0, Throwable|null $previous = null) {}
 
 	public function __wakeup () {}
 
@@ -302,7 +302,7 @@ class RuntimeException extends Exception implements Throwable, Stringable {
 
 	final public function getTrace (): array {}
 
-	final public function getPrevious (): ??Throwable {}
+	final public function getPrevious (): ?Throwable {}
 
 	final public function getTraceAsString (): string {}
 
@@ -325,9 +325,9 @@ class OutOfBoundsException extends RuntimeException implements Stringable, Throw
 	/**
 	 * @param string $message [optional]
 	 * @param int $code [optional]
-	 * @param ?Throwable|null $previous [optional]
+	 * @param Throwable|null $previous [optional]
 	 */
-	public function __construct (string $message = ''int , $code = 0?Throwable|null , $previous = null) {}
+	public function __construct (string $message = '', int $code = 0, Throwable|null $previous = null) {}
 
 	public function __wakeup () {}
 
@@ -341,7 +341,7 @@ class OutOfBoundsException extends RuntimeException implements Stringable, Throw
 
 	final public function getTrace (): array {}
 
-	final public function getPrevious (): ??Throwable {}
+	final public function getPrevious (): ?Throwable {}
 
 	final public function getTraceAsString (): string {}
 
@@ -363,9 +363,9 @@ class OverflowException extends RuntimeException implements Stringable, Throwabl
 	/**
 	 * @param string $message [optional]
 	 * @param int $code [optional]
-	 * @param ?Throwable|null $previous [optional]
+	 * @param Throwable|null $previous [optional]
 	 */
-	public function __construct (string $message = ''int , $code = 0?Throwable|null , $previous = null) {}
+	public function __construct (string $message = '', int $code = 0, Throwable|null $previous = null) {}
 
 	public function __wakeup () {}
 
@@ -379,7 +379,7 @@ class OverflowException extends RuntimeException implements Stringable, Throwabl
 
 	final public function getTrace (): array {}
 
-	final public function getPrevious (): ??Throwable {}
+	final public function getPrevious (): ?Throwable {}
 
 	final public function getTraceAsString (): string {}
 
@@ -404,9 +404,9 @@ class RangeException extends RuntimeException implements Stringable, Throwable {
 	/**
 	 * @param string $message [optional]
 	 * @param int $code [optional]
-	 * @param ?Throwable|null $previous [optional]
+	 * @param Throwable|null $previous [optional]
 	 */
-	public function __construct (string $message = ''int , $code = 0?Throwable|null , $previous = null) {}
+	public function __construct (string $message = '', int $code = 0, Throwable|null $previous = null) {}
 
 	public function __wakeup () {}
 
@@ -420,7 +420,7 @@ class RangeException extends RuntimeException implements Stringable, Throwable {
 
 	final public function getTrace (): array {}
 
-	final public function getPrevious (): ??Throwable {}
+	final public function getPrevious (): ?Throwable {}
 
 	final public function getTraceAsString (): string {}
 
@@ -443,9 +443,9 @@ class UnderflowException extends RuntimeException implements Stringable, Throwab
 	/**
 	 * @param string $message [optional]
 	 * @param int $code [optional]
-	 * @param ?Throwable|null $previous [optional]
+	 * @param Throwable|null $previous [optional]
 	 */
-	public function __construct (string $message = ''int , $code = 0?Throwable|null , $previous = null) {}
+	public function __construct (string $message = '', int $code = 0, Throwable|null $previous = null) {}
 
 	public function __wakeup () {}
 
@@ -459,7 +459,7 @@ class UnderflowException extends RuntimeException implements Stringable, Throwab
 
 	final public function getTrace (): array {}
 
-	final public function getPrevious (): ??Throwable {}
+	final public function getPrevious (): ?Throwable {}
 
 	final public function getTraceAsString (): string {}
 
@@ -484,9 +484,9 @@ class UnexpectedValueException extends RuntimeException implements Stringable, T
 	/**
 	 * @param string $message [optional]
 	 * @param int $code [optional]
-	 * @param ?Throwable|null $previous [optional]
+	 * @param Throwable|null $previous [optional]
 	 */
-	public function __construct (string $message = ''int , $code = 0?Throwable|null , $previous = null) {}
+	public function __construct (string $message = '', int $code = 0, Throwable|null $previous = null) {}
 
 	public function __wakeup () {}
 
@@ -500,7 +500,7 @@ class UnexpectedValueException extends RuntimeException implements Stringable, T
 
 	final public function getTrace (): array {}
 
-	final public function getPrevious (): ??Throwable {}
+	final public function getPrevious (): ?Throwable {}
 
 	final public function getTraceAsString (): string {}
 
@@ -559,7 +559,7 @@ class RecursiveIteratorIterator implements Iterator, Traversable, OuterIterator 
 	 * @param int $mode [optional]
 	 * @param int $flags [optional]
 	 */
-	public function __construct (Traversable $iteratorint , $mode = 0int , $flags = 0) {}
+	public function __construct (Traversable $iterator, int $mode = 0, int $flags = 0) {}
 
 	/**
 	 * Rewind the iterator to the first element of the top level inner iterator
@@ -726,9 +726,9 @@ class IteratorIterator implements Iterator, Traversable, OuterIterator {
 	 * Create an iterator from anything that is traversable
 	 * @link http://www.php.net/manual/en/iteratoriterator.construct.php
 	 * @param Traversable $iterator
-	 * @param ?string|null $class [optional]
+	 * @param string|null $class [optional]
 	 */
-	public function __construct (Traversable $iterator?string|null , $class = null) {}
+	public function __construct (Traversable $iterator, string|null $class = null) {}
 
 	/**
 	 * Get the inner iterator
@@ -931,7 +931,7 @@ class CallbackFilterIterator extends FilterIterator implements Iterator, Travers
 	 * @param Iterator $iterator
 	 * @param callable $callback
 	 */
-	public function __construct (Iterator $iteratorcallable , $callback) {}
+	public function __construct (Iterator $iterator, callable $callback) {}
 
 	/**
 	 * Calls the callback with the current value, the current key and the inner iterator as arguments
@@ -995,7 +995,7 @@ class RecursiveCallbackFilterIterator extends CallbackFilterIterator implements 
 	 * @param RecursiveIterator $iterator
 	 * @param callable $callback
 	 */
-	public function __construct (RecursiveIterator $iteratorcallable , $callback) {}
+	public function __construct (RecursiveIterator $iterator, callable $callback) {}
 
 	/**
 	 * Check whether the inner iterator's current element has children
@@ -1183,7 +1183,7 @@ class LimitIterator extends IteratorIterator implements OuterIterator, Traversab
 	 * @param int $offset [optional]
 	 * @param int $limit [optional]
 	 */
-	public function __construct (Iterator $iteratorint , $offset = 0int , $limit = -1) {}
+	public function __construct (Iterator $iterator, int $offset = 0, int $limit = -1) {}
 
 	/**
 	 * Rewind the iterator to the specified starting offset
@@ -1263,7 +1263,7 @@ class CachingIterator extends IteratorIterator implements Stringable, OuterItera
 	 * @param Iterator $iterator
 	 * @param int $flags [optional]
 	 */
-	public function __construct (Iterator $iteratorint , $flags = 1) {}
+	public function __construct (Iterator $iterator, int $flags = 1) {}
 
 	/**
 	 * Rewind the iterator
@@ -1404,7 +1404,7 @@ class RecursiveCachingIterator extends CachingIterator implements Countable, Arr
 	 * @param Iterator $iterator
 	 * @param int $flags [optional]
 	 */
-	public function __construct (Iterator $iteratorint , $flags = 1) {}
+	public function __construct (Iterator $iterator, int $flags = 1) {}
 
 	/**
 	 * Check whether the current element of the inner iterator has children
@@ -1760,7 +1760,7 @@ class RegexIterator extends FilterIterator implements Iterator, Traversable, Out
 	 * @param int $flags [optional]
 	 * @param int $pregFlags [optional]
 	 */
-	public function __construct (Iterator $iteratorstring , $patternint , $mode = 0int , $flags = 0int , $pregFlags = 0) {}
+	public function __construct (Iterator $iterator, string $pattern, int $mode = 0, int $flags = 0, int $pregFlags = 0) {}
 
 	/**
 	 * Get accept status
@@ -1959,7 +1959,7 @@ class RecursiveRegexIterator extends RegexIterator implements OuterIterator, Tra
 	 * @param int $flags [optional]
 	 * @param int $pregFlags [optional]
 	 */
-	public function __construct (RecursiveIterator $iteratorstring , $patternint , $mode = 0int , $flags = 0int , $pregFlags = 0) {}
+	public function __construct (RecursiveIterator $iterator, string $pattern, int $mode = 0, int $flags = 0, int $pregFlags = 0) {}
 
 	public function accept () {}
 
@@ -2212,7 +2212,7 @@ class RecursiveTreeIterator extends RecursiveIteratorIterator implements OuterIt
 	 * @param int $cachingIteratorFlags [optional]
 	 * @param int $mode [optional]
 	 */
-	public function __construct ($iterator = nullint , $flags = 8int , $cachingIteratorFlags = 16int , $mode = 1) {}
+	public function __construct ($iterator = null, int $flags = 8, int $cachingIteratorFlags = 16, int $mode = 1) {}
 
 	/**
 	 * Get the key of the current element
@@ -2392,7 +2392,7 @@ class ArrayObject implements IteratorAggregate, Traversable, ArrayAccess, Serial
 	 * @param int $flags [optional]
 	 * @param string $iteratorClass [optional]
 	 */
-	public function __construct (object|array $array = 'Array'int , $flags = 0string , $iteratorClass = 'ArrayIterator') {}
+	public function __construct (object|array $array = 'Array', int $flags = 0, string $iteratorClass = 'ArrayIterator') {}
 
 	/**
 	 * Returns whether the requested index exists
@@ -2621,7 +2621,7 @@ class ArrayIterator implements Iterator, Traversable, ArrayAccess, SeekableItera
 	 * @param object|array $array [optional]
 	 * @param int $flags [optional]
 	 */
-	public function __construct (object|array $array = 'Array'int , $flags = 0) {}
+	public function __construct (object|array $array = 'Array', int $flags = 0) {}
 
 	/**
 	 * Check if offset exists
@@ -2874,7 +2874,7 @@ class RecursiveArrayIterator extends ArrayIterator implements Countable, Seriali
 	 * @param object|array $array [optional]
 	 * @param int $flags [optional]
 	 */
-	public function __construct (object|array $array = 'Array'int , $flags = 0) {}
+	public function __construct (object|array $array = 'Array', int $flags = 0) {}
 
 	/**
 	 * Check if offset exists
@@ -3637,7 +3637,7 @@ class FilesystemIterator extends DirectoryIterator implements SeekableIterator, 
 	 * @param string $directory
 	 * @param int $flags [optional]
 	 */
-	public function __construct (string $directoryint , $flags = 4096) {}
+	public function __construct (string $directory, int $flags = 4096) {}
 
 	/**
 	 * Rewinds back to the beginning
@@ -3954,7 +3954,7 @@ class RecursiveDirectoryIterator extends FilesystemIterator implements Stringabl
 	 * @param string $directory
 	 * @param int $flags [optional]
 	 */
-	public function __construct (string $directoryint , $flags = 0) {}
+	public function __construct (string $directory, int $flags = 0) {}
 
 	/**
 	 * Returns whether current entry is a directory and not '.' or '..'
@@ -4302,7 +4302,7 @@ class GlobIterator extends FilesystemIterator implements Stringable, Iterator, T
 	 * @param string $pattern
 	 * @param int $flags [optional]
 	 */
-	public function __construct (string $patternint , $flags = 0) {}
+	public function __construct (string $pattern, int $flags = 0) {}
 
 	/**
 	 * Get the number of directories and files
@@ -4620,7 +4620,7 @@ class SplFileObject extends SplFileInfo implements Stringable, RecursiveIterator
 	 * @param bool $useIncludePath [optional]
 	 * @param mixed $context [optional]
 	 */
-	public function __construct (string $filenamestring , $mode = 'r'bool , $useIncludePath = '', $context = null) {}
+	public function __construct (string $filename, string $mode = 'r', bool $useIncludePath = '', $context = null) {}
 
 	/**
 	 * Rewind the file to the first line

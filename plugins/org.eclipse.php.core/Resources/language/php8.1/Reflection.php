@@ -16,9 +16,9 @@ class ReflectionException extends Exception implements Throwable, Stringable {
 	/**
 	 * @param string $message [optional]
 	 * @param int $code [optional]
-	 * @param ?Throwable|null $previous [optional]
+	 * @param Throwable|null $previous [optional]
 	 */
-	public function __construct (string $message = ''int , $code = 0?Throwable|null , $previous = null) {}
+	public function __construct (string $message = '', int $code = 0, Throwable|null $previous = null) {}
 
 	public function __wakeup () {}
 
@@ -32,7 +32,7 @@ class ReflectionException extends Exception implements Throwable, Stringable {
 
 	final public function getTrace (): array {}
 
-	final public function getPrevious (): ??Throwable {}
+	final public function getPrevious (): ?Throwable {}
 
 	final public function getTraceAsString (): string {}
 
@@ -294,7 +294,7 @@ abstract class ReflectionFunctionAbstract implements Reflector, Stringable {
 	 * @return mixed a ReflectionType object if a tentative return type is
 	 * specified, null otherwise.
 	 */
-	public function getTentativeReturnType (): ??ReflectionType {}
+	public function getTentativeReturnType (): ?ReflectionType {}
 
 	/**
 	 * Gets Attributes
@@ -580,7 +580,7 @@ class ReflectionFunction extends ReflectionFunctionAbstract implements Stringabl
 	 * @return mixed a ReflectionType object if a tentative return type is
 	 * specified, null otherwise.
 	 */
-	public function getTentativeReturnType (): ??ReflectionType {}
+	public function getTentativeReturnType (): ?ReflectionType {}
 
 	/**
 	 * Gets Attributes
@@ -713,7 +713,7 @@ class ReflectionParameter implements Stringable, Reflector {
 	 * @param mixed $function
 	 * @param string|int $param
 	 */
-	public function __construct ($function = nullstring|int , $param) {}
+	public function __construct ($function = null, string|int $param) {}
 
 	/**
 	 * To string
@@ -1011,9 +1011,9 @@ class ReflectionMethod extends ReflectionFunctionAbstract implements Stringable,
 	 * Constructs a ReflectionMethod
 	 * @link http://www.php.net/manual/en/reflectionmethod.construct.php
 	 * @param object|string $objectOrMethod
-	 * @param ?string|null $method [optional]
+	 * @param string|null $method [optional]
 	 */
-	public function __construct (object|string $objectOrMethod?string|null , $method = null) {}
+	public function __construct (object|string $objectOrMethod, string|null $method = null) {}
 
 	/**
 	 * Returns the string representation of the Reflection method object
@@ -1344,7 +1344,7 @@ class ReflectionMethod extends ReflectionFunctionAbstract implements Stringable,
 	 * @return mixed a ReflectionType object if a tentative return type is
 	 * specified, null otherwise.
 	 */
-	public function getTentativeReturnType (): ??ReflectionType {}
+	public function getTentativeReturnType (): ?ReflectionType {}
 
 	/**
 	 * Gets Attributes
@@ -2304,7 +2304,7 @@ class ReflectionProperty implements Stringable, Reflector {
 	 * @param object|string $class
 	 * @param string $property
 	 */
-	public function __construct (object|string $classstring , $property) {}
+	public function __construct (object|string $class, string $property) {}
 
 	/**
 	 * To string
@@ -2501,7 +2501,7 @@ class ReflectionClassConstant implements Stringable, Reflector {
 	 * @param object|string $class
 	 * @param string $constant
 	 */
-	public function __construct (object|string $classstring , $constant) {}
+	public function __construct (object|string $class, string $constant) {}
 
 	/**
 	 * Returns the string representation of the ReflectionClassConstant object
@@ -2793,7 +2793,7 @@ final class ReflectionReference  {
 	 * @return mixed a ReflectionReference instance if
 	 * $array[$key] is a reference, or null otherwise.
 	 */
-	public static function fromArrayElement (array $array, $key): ??ReflectionReference {}
+	public static function fromArrayElement (array $array, $key): ?ReflectionReference {}
 
 	/**
 	 * Get unique ID of a reference
@@ -2927,7 +2927,7 @@ class ReflectionEnum extends ReflectionClass implements Reflector, Stringable {
 	 * @return mixed An instance of ReflectionNamedType, or null
 	 * if the Enum has no backing type.
 	 */
-	public function getBackingType (): ??ReflectionType {}
+	public function getBackingType (): ?ReflectionType {}
 
 	/**
 	 * Returns the string representation of the ReflectionClass object
@@ -3388,7 +3388,7 @@ class ReflectionEnumUnitCase extends ReflectionClassConstant implements Reflecto
 	 * @param object|string $class
 	 * @param string $constant
 	 */
-	public function __construct (object|string $classstring , $constant) {}
+	public function __construct (object|string $class, string $constant) {}
 
 	/**
 	 * Gets the reflection of the enum of this case
@@ -3509,7 +3509,7 @@ class ReflectionEnumBackedCase extends ReflectionEnumUnitCase implements Stringa
 	 * @param object|string $class
 	 * @param string $constant
 	 */
-	public function __construct (object|string $classstring , $constant) {}
+	public function __construct (object|string $class, string $constant) {}
 
 	/**
 	 * Gets the scalar value backing this Enum case
@@ -3640,14 +3640,14 @@ final class ReflectionFiber  {
 	 * @link http://www.php.net/manual/en/reflectionfiber.getexecutingfile.php
 	 * @return string The full path and file name of the reflected fiber.
 	 */
-	public function getExecutingFile (): ??string {}
+	public function getExecutingFile (): ?string {}
 
 	/**
 	 * Get the line number of the current execution point
 	 * @link http://www.php.net/manual/en/reflectionfiber.getexecutingline.php
 	 * @return int The line number of the current execution point in the fiber.
 	 */
-	public function getExecutingLine (): ??int {}
+	public function getExecutingLine (): ?int {}
 
 	/**
 	 * Gets the callable used to create the Fiber

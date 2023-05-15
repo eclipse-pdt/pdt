@@ -526,7 +526,7 @@ function xml_get_error_code (XMLParser $parser): int {}
  * @return mixed a string with a textual description of the error
  * error_code, or null if no description was found.
  */
-function xml_error_string (int $error_code): ??string {}
+function xml_error_string (int $error_code): ?string {}
 
 /**
  * Get current line number for an XML parser

@@ -622,9 +622,9 @@ function ldap_mod_replace (LDAP\Connection $ldap, string $dn, array $entry, $con
  * @param LDAP\Connection $ldap
  * @param string $dn
  * @param array[] $entry
- * @param ?array|null[] $controls [optional]
+ * @param array|null[] $controls [optional]
  */
-function ldap_modify (LDAP\Connection $ldapstring , $dnarray , $entryarray , $controls = null): bool {}
+function ldap_modify (LDAP\Connection $ldap, string $dn, array $entry, array $controls = null): bool {}
 
 /**
  * Replace attribute values with new ones

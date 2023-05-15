@@ -398,13 +398,13 @@ function xmlwriter_open_memory (): XMLWriter|false {}
  * @param XMLWriter $writer
  * @param bool $enable
  */
-function xmlwriter_set_indent (XMLWriter $writerbool , $enable): bool {}
+function xmlwriter_set_indent (XMLWriter $writer, bool $enable): bool {}
 
 /**
  * @param XMLWriter $writer
  * @param string $indentation
  */
-function xmlwriter_set_indent_string (XMLWriter $writerstring , $indentation): bool {}
+function xmlwriter_set_indent_string (XMLWriter $writer, string $indentation): bool {}
 
 /**
  * @param XMLWriter $writer
@@ -420,7 +420,7 @@ function xmlwriter_end_comment (XMLWriter $writer): bool {}
  * @param XMLWriter $writer
  * @param string $name
  */
-function xmlwriter_start_attribute (XMLWriter $writerstring , $name): bool {}
+function xmlwriter_start_attribute (XMLWriter $writer, string $name): bool {}
 
 /**
  * @param XMLWriter $writer
@@ -432,30 +432,30 @@ function xmlwriter_end_attribute (XMLWriter $writer): bool {}
  * @param string $name
  * @param string $value
  */
-function xmlwriter_write_attribute (XMLWriter $writerstring , $namestring , $value): bool {}
+function xmlwriter_write_attribute (XMLWriter $writer, string $name, string $value): bool {}
 
 /**
  * @param XMLWriter $writer
- * @param ?string|null $prefix
+ * @param string|null $prefix
  * @param string $name
- * @param ?string|null $namespace
+ * @param string|null $namespace
  */
-function xmlwriter_start_attribute_ns (XMLWriter $writer?string|null , $prefix = nullstring , $name?string|null , $namespace = null): bool {}
+function xmlwriter_start_attribute_ns (XMLWriter $writer, string|null $prefix = null, string $name, string|null $namespace = null): bool {}
 
 /**
  * @param XMLWriter $writer
- * @param ?string|null $prefix
+ * @param string|null $prefix
  * @param string $name
- * @param ?string|null $namespace
+ * @param string|null $namespace
  * @param string $value
  */
-function xmlwriter_write_attribute_ns (XMLWriter $writer?string|null , $prefix = nullstring , $name?string|null , $namespace = nullstring , $value): bool {}
+function xmlwriter_write_attribute_ns (XMLWriter $writer, string|null $prefix = null, string $name, string|null $namespace = null, string $value): bool {}
 
 /**
  * @param XMLWriter $writer
  * @param string $name
  */
-function xmlwriter_start_element (XMLWriter $writerstring , $name): bool {}
+function xmlwriter_start_element (XMLWriter $writer, string $name): bool {}
 
 /**
  * @param XMLWriter $writer
@@ -469,33 +469,33 @@ function xmlwriter_full_end_element (XMLWriter $writer): bool {}
 
 /**
  * @param XMLWriter $writer
- * @param ?string|null $prefix
+ * @param string|null $prefix
  * @param string $name
- * @param ?string|null $namespace
+ * @param string|null $namespace
  */
-function xmlwriter_start_element_ns (XMLWriter $writer?string|null , $prefix = nullstring , $name?string|null , $namespace = null): bool {}
+function xmlwriter_start_element_ns (XMLWriter $writer, string|null $prefix = null, string $name, string|null $namespace = null): bool {}
 
 /**
  * @param XMLWriter $writer
  * @param string $name
- * @param ?string|null $content [optional]
+ * @param string|null $content [optional]
  */
-function xmlwriter_write_element (XMLWriter $writerstring , $name?string|null , $content = null): bool {}
+function xmlwriter_write_element (XMLWriter $writer, string $name, string|null $content = null): bool {}
 
 /**
  * @param XMLWriter $writer
- * @param ?string|null $prefix
+ * @param string|null $prefix
  * @param string $name
- * @param ?string|null $namespace
- * @param ?string|null $content [optional]
+ * @param string|null $namespace
+ * @param string|null $content [optional]
  */
-function xmlwriter_write_element_ns (XMLWriter $writer?string|null , $prefix = nullstring , $name?string|null , $namespace = null?string|null , $content = null): bool {}
+function xmlwriter_write_element_ns (XMLWriter $writer, string|null $prefix = null, string $name, string|null $namespace = null, string|null $content = null): bool {}
 
 /**
  * @param XMLWriter $writer
  * @param string $target
  */
-function xmlwriter_start_pi (XMLWriter $writerstring , $target): bool {}
+function xmlwriter_start_pi (XMLWriter $writer, string $target): bool {}
 
 /**
  * @param XMLWriter $writer
@@ -507,7 +507,7 @@ function xmlwriter_end_pi (XMLWriter $writer): bool {}
  * @param string $target
  * @param string $content
  */
-function xmlwriter_write_pi (XMLWriter $writerstring , $targetstring , $content): bool {}
+function xmlwriter_write_pi (XMLWriter $writer, string $target, string $content): bool {}
 
 /**
  * @param XMLWriter $writer
@@ -523,27 +523,27 @@ function xmlwriter_end_cdata (XMLWriter $writer): bool {}
  * @param XMLWriter $writer
  * @param string $content
  */
-function xmlwriter_write_cdata (XMLWriter $writerstring , $content): bool {}
+function xmlwriter_write_cdata (XMLWriter $writer, string $content): bool {}
 
 /**
  * @param XMLWriter $writer
  * @param string $content
  */
-function xmlwriter_text (XMLWriter $writerstring , $content): bool {}
+function xmlwriter_text (XMLWriter $writer, string $content): bool {}
 
 /**
  * @param XMLWriter $writer
  * @param string $content
  */
-function xmlwriter_write_raw (XMLWriter $writerstring , $content): bool {}
+function xmlwriter_write_raw (XMLWriter $writer, string $content): bool {}
 
 /**
  * @param XMLWriter $writer
- * @param ?string|null $version [optional]
- * @param ?string|null $encoding [optional]
- * @param ?string|null $standalone [optional]
+ * @param string|null $version [optional]
+ * @param string|null $encoding [optional]
+ * @param string|null $standalone [optional]
  */
-function xmlwriter_start_document (XMLWriter $writer?string|null , $version = null?string|null , $encoding = null?string|null , $standalone = null): bool {}
+function xmlwriter_start_document (XMLWriter $writer, string|null $version = null, string|null $encoding = null, string|null $standalone = null): bool {}
 
 /**
  * @param XMLWriter $writer
@@ -554,15 +554,15 @@ function xmlwriter_end_document (XMLWriter $writer): bool {}
  * @param XMLWriter $writer
  * @param string $content
  */
-function xmlwriter_write_comment (XMLWriter $writerstring , $content): bool {}
+function xmlwriter_write_comment (XMLWriter $writer, string $content): bool {}
 
 /**
  * @param XMLWriter $writer
  * @param string $qualifiedName
- * @param ?string|null $publicId [optional]
- * @param ?string|null $systemId [optional]
+ * @param string|null $publicId [optional]
+ * @param string|null $systemId [optional]
  */
-function xmlwriter_start_dtd (XMLWriter $writerstring , $qualifiedName?string|null , $publicId = null?string|null , $systemId = null): bool {}
+function xmlwriter_start_dtd (XMLWriter $writer, string $qualifiedName, string|null $publicId = null, string|null $systemId = null): bool {}
 
 /**
  * @param XMLWriter $writer
@@ -572,17 +572,17 @@ function xmlwriter_end_dtd (XMLWriter $writer): bool {}
 /**
  * @param XMLWriter $writer
  * @param string $name
- * @param ?string|null $publicId [optional]
- * @param ?string|null $systemId [optional]
- * @param ?string|null $content [optional]
+ * @param string|null $publicId [optional]
+ * @param string|null $systemId [optional]
+ * @param string|null $content [optional]
  */
-function xmlwriter_write_dtd (XMLWriter $writerstring , $name?string|null , $publicId = null?string|null , $systemId = null?string|null , $content = null): bool {}
+function xmlwriter_write_dtd (XMLWriter $writer, string $name, string|null $publicId = null, string|null $systemId = null, string|null $content = null): bool {}
 
 /**
  * @param XMLWriter $writer
  * @param string $qualifiedName
  */
-function xmlwriter_start_dtd_element (XMLWriter $writerstring , $qualifiedName): bool {}
+function xmlwriter_start_dtd_element (XMLWriter $writer, string $qualifiedName): bool {}
 
 /**
  * @param XMLWriter $writer
@@ -594,13 +594,13 @@ function xmlwriter_end_dtd_element (XMLWriter $writer): bool {}
  * @param string $name
  * @param string $content
  */
-function xmlwriter_write_dtd_element (XMLWriter $writerstring , $namestring , $content): bool {}
+function xmlwriter_write_dtd_element (XMLWriter $writer, string $name, string $content): bool {}
 
 /**
  * @param XMLWriter $writer
  * @param string $name
  */
-function xmlwriter_start_dtd_attlist (XMLWriter $writerstring , $name): bool {}
+function xmlwriter_start_dtd_attlist (XMLWriter $writer, string $name): bool {}
 
 /**
  * @param XMLWriter $writer
@@ -612,14 +612,14 @@ function xmlwriter_end_dtd_attlist (XMLWriter $writer): bool {}
  * @param string $name
  * @param string $content
  */
-function xmlwriter_write_dtd_attlist (XMLWriter $writerstring , $namestring , $content): bool {}
+function xmlwriter_write_dtd_attlist (XMLWriter $writer, string $name, string $content): bool {}
 
 /**
  * @param XMLWriter $writer
  * @param string $name
  * @param bool $isParam
  */
-function xmlwriter_start_dtd_entity (XMLWriter $writerstring , $namebool , $isParam): bool {}
+function xmlwriter_start_dtd_entity (XMLWriter $writer, string $name, bool $isParam): bool {}
 
 /**
  * @param XMLWriter $writer
@@ -631,22 +631,22 @@ function xmlwriter_end_dtd_entity (XMLWriter $writer): bool {}
  * @param string $name
  * @param string $content
  * @param bool $isParam [optional]
- * @param ?string|null $publicId [optional]
- * @param ?string|null $systemId [optional]
- * @param ?string|null $notationData [optional]
+ * @param string|null $publicId [optional]
+ * @param string|null $systemId [optional]
+ * @param string|null $notationData [optional]
  */
-function xmlwriter_write_dtd_entity (XMLWriter $writerstring , $namestring , $contentbool , $isParam = ''?string|null , $publicId = null?string|null , $systemId = null?string|null , $notationData = null): bool {}
+function xmlwriter_write_dtd_entity (XMLWriter $writer, string $name, string $content, bool $isParam = '', string|null $publicId = null, string|null $systemId = null, string|null $notationData = null): bool {}
 
 /**
  * @param XMLWriter $writer
  * @param bool $flush [optional]
  */
-function xmlwriter_output_memory (XMLWriter $writerbool , $flush = 1): string {}
+function xmlwriter_output_memory (XMLWriter $writer, bool $flush = 1): string {}
 
 /**
  * @param XMLWriter $writer
  * @param bool $empty [optional]
  */
-function xmlwriter_flush (XMLWriter $writerbool , $empty = 1): string|int {}
+function xmlwriter_flush (XMLWriter $writer, bool $empty = 1): string|int {}
 
 // End of xmlwriter v.8.1.19

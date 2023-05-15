@@ -41,7 +41,7 @@ class PhpToken implements Stringable {
 	 * @param int $line [optional]
 	 * @param int $pos [optional]
 	 */
-	final public function __construct (int $idstring , $textint , $line = -1int , $pos = -1) {}
+	final public function __construct (int $id, string $text, int $line = -1, int $pos = -1) {}
 
 	/**
 	 * Tells whether the token is of given kind.
@@ -65,7 +65,7 @@ class PhpToken implements Stringable {
 	 * or one of T_&#42; constant names for known tokens (see ),
 	 * or null for unknown tokens.
 	 */
-	public function getTokenName (): ??string {}
+	public function getTokenName (): ?string {}
 
 	/**
 	 * Returns the textual content of the token.

@@ -205,9 +205,9 @@ function gzwrite ($stream, string $data, $length = null): int|false {}
  * @link http://www.php.net/manual/en/function.gzputs.php
  * @param mixed $stream
  * @param string $data
- * @param ?int|null $length [optional]
+ * @param int|null $length [optional]
  */
-function gzputs ($stream = nullstring , $data?int|null , $length = null): int|false {}
+function gzputs ($stream = null, string $data, int|null $length = null): int|false {}
 
 /**
  * Rewind the position of a gz-file pointer

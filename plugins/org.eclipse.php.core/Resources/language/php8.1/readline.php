@@ -28,7 +28,7 @@ function readline ($prompt = null): string|false {}
  * If called with one or two parameters, the old value is returned.
  * </p>
  */
-function readline_info ($var_name = null, $value = null): ?mixed {}
+function readline_info ($var_name = null, $value = null): mixed {}
 
 /**
  * Adds a line to the history
