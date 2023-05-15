@@ -589,6 +589,8 @@ class PHPUnitEclipseLogger
     private $warnings;
 
     private $varx;
+    
+    private $out;
 
     /**
      * data provider support - enumerates the test cases

@@ -556,9 +556,10 @@ public class InstalledPHPsBlock {
 	}
 
 	/**
-	 * Searches the specified directory recursively for installed PHP executables,
-	 * adding each detected executable to the <code>found</code> list. Any
-	 * directories specified in the <code>ignore</code> are not traversed.
+	 * Searches the specified directory recursively for installed PHP
+	 * executables, adding each detected executable to the <code>found</code>
+	 * list. Any directories specified in the <code>ignore</code> are not
+	 * traversed.
 	 * 
 	 * @param directory
 	 * @param found
@@ -631,11 +632,10 @@ public class InstalledPHPsBlock {
 	 * Bring up a dialog that lets the user create a new VM definition.
 	 */
 	private void addPHPexe() {
-		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 		NullProgressMonitor monitor = new NullProgressMonitor();
 		PHPexeItem phpExeItem = null;
 		PHPExeWizard wizard = new PHPExeWizard(PHPexes.getInstance().getAllItems());
-		ClosableWizardDialog dialog = new ClosableWizardDialog(shell, wizard);
+		ClosableWizardDialog dialog = new ClosableWizardDialog(getShell(), wizard);
 		if (dialog.open() == Window.CANCEL) {
 			monitor.setCanceled(true);
 			return;
@@ -768,8 +768,9 @@ public class InstalledPHPsBlock {
 	}
 
 	/**
-	 * Locate a PHP executable file in the PHP location given to this method. The
-	 * location should be a directory. The search is done for php and php.exe only.
+	 * Locate a PHP executable file in the PHP location given to this method.
+	 * The location should be a directory. The search is done for php and
+	 * php.exe only.
 	 * 
 	 * @param phpLocation
 	 *            A directory that might hold a PHP executable.
