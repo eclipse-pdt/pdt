@@ -70,10 +70,10 @@ public class CodeGenerationUtils {
 	}
 
 	/**
-	 * Finds a method in a type. This searches for a method with the same name and
-	 * signature. Parameter types are only compared by the simple name, no resolving
-	 * for the fully qualified type name is done. Constructors are only compared by
-	 * parameters, not the name.
+	 * Finds a method in a type. This searches for a method with the same name
+	 * and signature. Parameter types are only compared by the simple name, no
+	 * resolving for the fully qualified type name is done. Constructors are
+	 * only compared by parameters, not the name.
 	 * 
 	 * @param name
 	 *            The name of the method to find
@@ -101,8 +101,8 @@ public class CodeGenerationUtils {
 
 	/**
 	 * Tests if a method equals to the given signature. Parameter types are only
-	 * compared by the simple name, no resolving for the fully qualified type name
-	 * is done. Constructors are only compared by parameters, not the name.
+	 * compared by the simple name, no resolving for the fully qualified type
+	 * name is done. Constructors are only compared by parameters, not the name.
 	 * 
 	 * @param name
 	 *            Name of the method
@@ -157,10 +157,11 @@ public class CodeGenerationUtils {
 	 * @param s
 	 *            input string
 	 * @param toUpper
-	 *            if true change first letter to upper case, false change to lower
-	 *            case
-	 * @return the given string with the first letter changed to upper/lower case -
-	 *         according to the flag. Empty string for null or empty strings.
+	 *            if true change first letter to upper case, false change to
+	 *            lower case
+	 * @return the given string with the first letter changed to upper/lower
+	 *         case - according to the flag. Empty string for null or empty
+	 *         strings.
 	 */
 	private static String toInitialCaps(String label, boolean toUpper) {
 		String s = label;
@@ -224,8 +225,8 @@ public class CodeGenerationUtils {
 	}
 
 	/**
-	 * Create a stub for a getter of the given field using getter/setter templates.
-	 * The resulting code has to be formatted and indented.
+	 * Create a stub for a getter of the given field using getter/setter
+	 * templates. The resulting code has to be formatted and indented.
 	 * 
 	 * @param field
 	 *            The field to create a getter for
@@ -234,7 +235,8 @@ public class CodeGenerationUtils {
 	 * @param addComments
 	 *            If <code>true</code>, comments will be added.
 	 * @param flags
-	 *            The flags signaling visibility, if static, synchronized or final
+	 *            The flags signaling visibility, if static, synchronized or
+	 *            final
 	 * @return Returns the generated stub.
 	 * @throws CoreException
 	 *             when stub creation failed
@@ -387,8 +389,8 @@ public class CodeGenerationUtils {
 	}
 
 	/**
-	 * Create a stub for a getter of the given field using getter/setter templates.
-	 * The resulting code has to be formatted and indented.
+	 * Create a stub for a getter of the given field using getter/setter
+	 * templates. The resulting code has to be formatted and indented.
 	 * 
 	 * @param field
 	 *            The field to create a getter for
@@ -397,7 +399,8 @@ public class CodeGenerationUtils {
 	 * @param addComments
 	 *            If <code>true</code>, comments will be added.
 	 * @param flags
-	 *            The flags signaling visibility, if static, synchronized or final
+	 *            The flags signaling visibility, if static, synchronized or
+	 *            final
 	 * @param insertion
 	 * @param rewrite
 	 * @param field2
@@ -500,7 +503,8 @@ public class CodeGenerationUtils {
 	 *            The list rewriter to which the new node will be added
 	 * @param sibling
 	 *            The Java element before which the new element should be added.
-	 * @return the AST node of the list to insert before or null to insert as last.
+	 * @return the AST node of the list to insert before or null to insert as
+	 *         last.
 	 * @throws ModelException
 	 *             thrown if accessing the Model element failed
 	 */
@@ -525,7 +529,8 @@ public class CodeGenerationUtils {
 	 *            The list rewriter to which the new node will be added
 	 * @param insertPos
 	 *            The position of the element.
-	 * @return the AST node of the list to insert before or null to insert as last.
+	 * @return the AST node of the list to insert before or null to insert as
+	 *         last.
 	 * @throws ModelException
 	 *             thrown if accessing the Model element failed
 	 */
@@ -602,6 +607,7 @@ public class CodeGenerationUtils {
 		}
 		ITypeBinding clazz = typeBinding.getSuperclass();
 		while (clazz != null) {
+
 			IMethodBinding[] methods = clazz.getDeclaredMethods();
 			for (IMethodBinding methodBinding : methods) {
 				final int modifiers = methodBinding.getModifiers();
@@ -615,6 +621,11 @@ public class CodeGenerationUtils {
 		while (clazz != null) {
 			ITypeBinding[] superInterfaces = clazz.getInterfaces();
 			for (ITypeBinding superInterface : superInterfaces) {
+				if (typeBinding.isEnum()) {
+					if (superInterface.getName().equals("BackedEnum") || superInterface.getName().equals("UnitEnum")) { //$NON-NLS-1$//$NON-NLS-2$
+						continue;
+					}
+				}
 				getOverridableMethods(ast, superInterface, allMethods);
 			}
 			clazz = clazz.getSuperclass();
@@ -692,6 +703,7 @@ public class CodeGenerationUtils {
 		ITypeBinding superClass = typeBinding.getSuperclass();
 		Set<ITypeBinding> bindingSet = new HashSet<>();
 		while (superClass != null && !bindingSet.contains(superClass)) {
+
 			bindingSet.add(superClass);
 			typeMethods = superClass.getDeclaredMethods();
 			for (IMethodBinding curr : typeMethods) {
@@ -928,18 +940,19 @@ public class CodeGenerationUtils {
 	}
 
 	/**
-	 * Opens the editor currently associated with the given element (IJavaElement,
-	 * IFile, IStorage...)
+	 * Opens the editor currently associated with the given element
+	 * (IJavaElement, IFile, IStorage...)
 	 * 
 	 * @param inputElement
 	 *            the input element
 	 * @param activate
 	 *            <code>true</code> if the editor should be activated
-	 * @return an open editor or <code>null</code> if an external editor was opened
+	 * @return an open editor or <code>null</code> if an external editor was
+	 *         opened
 	 * @throws PartInitException
 	 *             if the editor could not be opened or the input element is not
-	 *             valid Status code if opening the editor failed as no editor input
-	 *             could be created for the given element.
+	 *             valid Status code if opening the editor failed as no editor
+	 *             input could be created for the given element.
 	 */
 	public static IEditorPart openInEditor(IModelElement inputElement, boolean activate) throws PartInitException {
 		if (inputElement instanceof IField) {
@@ -1086,9 +1099,9 @@ public class CodeGenerationUtils {
 	}
 
 	/**
-	 * Creates the Program instance for the given document. Especially the Comment
-	 * Mapper is initialised, so that the generating of the code can aware of the
-	 * existing of the comments.
+	 * Creates the Program instance for the given document. Especially the
+	 * Comment Mapper is initialised, so that the generating of the code can
+	 * aware of the existing of the comments.
 	 * 
 	 * @param source
 	 * @param document

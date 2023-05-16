@@ -363,6 +363,11 @@ public interface ITypeBinding extends IBinding {
 	boolean isClass();
 
 	/**
+	 * @since 8.0
+	 */
+	boolean isEnum();
+
+	/**
 	 * Returns whether this type binding represents a class type or a recovered
 	 * binding.
 	 * 

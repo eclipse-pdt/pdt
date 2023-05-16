@@ -184,6 +184,16 @@ public class MultiTypeBinding implements ITypeBinding {
 	}
 
 	@Override
+	public boolean isEnum() {
+		for (ITypeBinding t : subtypes) {
+			if (t.isEnum()) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	@Override
 	public boolean isNullType() {
 		for (ITypeBinding t : subtypes) {
 			if (t.isNullType()) {

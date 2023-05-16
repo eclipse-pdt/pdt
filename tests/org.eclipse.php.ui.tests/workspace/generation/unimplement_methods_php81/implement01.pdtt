@@ -11,46 +11,39 @@ enum |Service| implements \ArrayAccess {
 }
 --EXPECT--
 <?php
-
 namespace Foo;
-
 use Something\Test;
-
 enum Service implements \ArrayAccess {
 	/**
 	 * {@inheritDoc}
-	 * @see ArrayAccess::offsetExists()
+	 * @see ArrayAccess::offsetExists($offset)
 	 */
-	public function offsetExists($offset) {
+	public function offsetExists() {
 		// TODO Auto-generated method stub
 		
 	}
-
 	/**
 	 * {@inheritDoc}
-	 * @see ArrayAccess::offsetGet()
+	 * @see ArrayAccess::offsetGet($offset)
 	 */
-	public function offsetGet($offset) {
+	public function offsetGet() {
 		// TODO Auto-generated method stub
 		
 	}
-
 	/**
 	 * {@inheritDoc}
-	 * @see ArrayAccess::offsetSet()
+	 * @see ArrayAccess::offsetSet($offset, $value)
 	 */
-	public function offsetSet($offset, $value) {
+	public function offsetSet() {
 		// TODO Auto-generated method stub
 		
 	}
-
 	/**
 	 * {@inheritDoc}
-	 * @see ArrayAccess::offsetUnset()
+	 * @see ArrayAccess::offsetUnset($offset)
 	 */
-	public function offsetUnset($offset) {
+	public function offsetUnset() {
 		// TODO Auto-generated method stub
 		
 	}
-
 }

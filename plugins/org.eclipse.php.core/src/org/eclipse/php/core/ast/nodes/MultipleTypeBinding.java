@@ -220,14 +220,17 @@ public class MultipleTypeBinding implements ITypeBinding {
 
 	@Override
 	public List<IType> getTraitList(boolean isMethod, String classMemberName, boolean includeSuper) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public IModelElement[] getPHPElements() {
-		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public boolean isEnum() {
+		return false;
 	}
 
 }
