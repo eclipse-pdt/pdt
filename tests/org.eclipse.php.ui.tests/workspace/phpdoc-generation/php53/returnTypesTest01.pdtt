@@ -8,7 +8,7 @@ cursor: _
 namespace Boo {
 
 	use Boo as MyAlias;
-
+	class MyClass1 {} class MyClass2 {}
 	class MyClass3 {
 		/**
 		 *
@@ -30,7 +30,7 @@ namespace Boo {
 namespace Boo {
 
 	use Boo as MyAlias;
-
+	class MyClass1 {} class MyClass2 {}
 	class MyClass3 {
 		/**
 		 *

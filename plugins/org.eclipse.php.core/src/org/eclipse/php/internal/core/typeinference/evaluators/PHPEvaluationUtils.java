@@ -230,12 +230,17 @@ public class PHPEvaluationUtils {
 			if (StringUtils.isBlank(typeName)) {
 				continue;
 			}
-			IEvaluatedType evaluatedType = extractArrayType(typeName, space, offset, selfTypes);
-			if (evaluatedType != null) {
-				res.add(evaluatedType);
+			if (typeName.indexOf('|') != -1) {
+				res.addAll(parseReturnType(typeName, space, offset, selfTypes));
 			} else {
-				res.addAll(evaluateSinglePHPDocType(typeName, space, offset, selfTypes));
+				IEvaluatedType evaluatedType = extractArrayType(typeName, space, offset, selfTypes);
+				if (evaluatedType != null) {
+					res.add(evaluatedType);
+				} else {
+					res.addAll(evaluateSinglePHPDocType(typeName, space, offset, selfTypes));
+				}
 			}
+
 		}
 		if (res.isEmpty()) {
 			return EMPTY_LIST;
@@ -262,7 +267,12 @@ public class PHPEvaluationUtils {
 			case ')':
 				group--;
 				if (group == 0) {
-					list.addAll(evaluateSinglePHPDocType(sb.toString(), space, offset, selfTypes));
+					IEvaluatedType arr = extractArrayType(sb.toString(), space, offset, selfTypes);
+					if (arr != null) {
+						list.add(arr);
+					} else {
+						list.addAll(evaluateSinglePHPDocType(sb.toString(), space, offset, selfTypes));
+					}
 					sb.setLength(0);
 				}
 				break;
@@ -270,7 +280,12 @@ public class PHPEvaluationUtils {
 			case '&':
 				if (group == 0) {
 					if (sb.length() > 0) {
-						list.addAll(evaluateSinglePHPDocType(sb.toString(), space, offset, selfTypes));
+						IEvaluatedType arr = extractArrayType(sb.toString(), space, offset, selfTypes);
+						if (arr != null) {
+							list.add(arr);
+						} else {
+							list.addAll(evaluateSinglePHPDocType(sb.toString(), space, offset, selfTypes));
+						}
 					}
 					if (ch == '|') {
 						type = DNFTypeReference.T_UNION;
@@ -287,7 +302,12 @@ public class PHPEvaluationUtils {
 			}
 		}
 		if (sb.length() > 0) {
-			list.addAll(evaluateSinglePHPDocType(sb.toString(), space, offset, selfTypes));
+			IEvaluatedType arr = extractArrayType(sb.toString(), space, offset, selfTypes);
+			if (arr != null) {
+				list.add(arr);
+			} else {
+				list.addAll(evaluateSinglePHPDocType(sb.toString(), space, offset, selfTypes));
+			}
 		}
 		if (list.size() > 1 && type == DNFTypeReference.T_INTERSECTION) {
 			IntersectionType tmp = new IntersectionType();
