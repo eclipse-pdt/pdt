@@ -171,7 +171,7 @@ public class ClassHighlighting extends AbstractSemanticHighlighting {
 		 */
 		private void highlightStatic(StaticDispatch dispatch) {
 			Expression className = dispatch.getClassName();
-			highlightIdentifier(className, false);
+			highlightIdentifier(className, true);
 		}
 
 		/**
