@@ -171,7 +171,7 @@ public class ClassHighlighting extends AbstractSemanticHighlighting {
 		 */
 		private void highlightStatic(StaticDispatch dispatch) {
 			Expression className = dispatch.getClassName();
-			highlightIdentifier(className, true);
+			highlightIdentifier(className, false);
 		}
 
 		/**
@@ -184,7 +184,7 @@ public class ClassHighlighting extends AbstractSemanticHighlighting {
 
 				if (segments.size() > 1 || name.isGlobal()
 						|| !(PHPSimpleTypes.isHintable(segment.getName(), name.getAST().apiLevel())
-								|| (excludeSelf && SELF.equalsIgnoreCase(segment.getName()))
+								|| (SELF.equalsIgnoreCase(segment.getName()) && !excludeSelf)
 								|| PARENT.equalsIgnoreCase(segment.getName()))) {
 					highlight(segment);
 				}
