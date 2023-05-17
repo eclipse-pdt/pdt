@@ -177,6 +177,22 @@ public class DefaultBindingResolver extends BindingResolver {
 	}
 
 	@Override
+	ITypeBinding getTypeBinding(IField field) {
+		try {
+			if (field.getType() != null) {
+				return internalGetTypeBinding(PHPClassType.fromTypeName(field.getType(), field.getSourceModule(),
+						field.getSourceRange().getOffset()), field);
+			}
+		} catch (ModelException e) {
+			if (DLTKCore.DEBUG) {
+				e.printStackTrace();
+			}
+		}
+
+		return null;
+	}
+
+	@Override
 	ITypeBinding getTypeBinding(IType[] types) {
 		if (ArrayUtils.isNotEmpty(types)) {
 			return internalGetTypeBinding(PHPClassType.fromIType(types[0]), types);
@@ -199,6 +215,29 @@ public class DefaultBindingResolver extends BindingResolver {
 			// Cache?
 			return new VariableBinding(this, field);
 		}
+		return null;
+	}
+
+	@Override
+	IVariableBinding getVariableBinding(SingleFieldDeclaration field) {
+		IModelElement[] modelElements;
+		try {
+			modelElements = sourceModule.codeSelect(field.getStart(), field.getLength());
+		} catch (ModelException e) {
+			if (DLTKCore.DEBUG) {
+				Logger.logException(e);
+			}
+			return null;
+		}
+
+		if (ArrayUtils.isNotEmpty(modelElements)) {
+			for (IModelElement element : modelElements) {
+				if (element.getElementType() == IModelElement.FIELD) {
+					return getVariableBinding((IField) element);
+				}
+			}
+		}
+
 		return null;
 	}
 

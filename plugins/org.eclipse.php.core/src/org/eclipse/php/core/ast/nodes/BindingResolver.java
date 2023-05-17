@@ -165,6 +165,22 @@ public class BindingResolver {
 	}
 
 	/**
+	 * Returns the new type binding corresponding to the given field.
+	 * 
+	 * <p>
+	 * The default implementation of this method returns <code>null</code>.
+	 * Subclasses may reimplement.
+	 * </p>
+	 * 
+	 * @param type
+	 *            the given type
+	 * @return the new type binding
+	 */
+	ITypeBinding getTypeBinding(IField field) {
+		return null;
+	}
+
+	/**
 	 * Returns the new type binding corresponding to given types, resulting in
 	 * an ambiguous type binding.
 	 * 
@@ -194,6 +210,10 @@ public class BindingResolver {
 	 * @return the new variable binding
 	 */
 	IVariableBinding getVariableBinding(IField field) {
+		return null;
+	}
+
+	IVariableBinding getVariableBinding(SingleFieldDeclaration field) {
 		return null;
 	}
 

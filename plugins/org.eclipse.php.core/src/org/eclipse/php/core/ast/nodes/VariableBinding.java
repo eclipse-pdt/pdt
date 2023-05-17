@@ -67,9 +67,9 @@ public class VariableBinding implements IVariableBinding {
 	}
 
 	/**
-	 * Returns this binding's constant value if it has one. Some variables may have
-	 * a value computed at compile-time. If the variable has no compile-time
-	 * computed value, the result is <code>null</code>.
+	 * Returns this binding's constant value if it has one. Some variables may
+	 * have a value computed at compile-time. If the variable has no
+	 * compile-time computed value, the result is <code>null</code>.
 	 * 
 	 * @return the constant value, or <code>null</code> if none
 	 * @since 3.0
@@ -81,16 +81,16 @@ public class VariableBinding implements IVariableBinding {
 	}
 
 	/**
-	 * Returns the type binding representing the class or interface that declares
-	 * this field.
+	 * Returns the type binding representing the class or interface that
+	 * declares this field.
 	 * <p>
 	 * The declaring class of a field is the class or interface of which it is a
-	 * member. Local variables have no declaring class. The field length of an array
-	 * type has no declaring class.
+	 * member. Local variables have no declaring class. The field length of an
+	 * array type has no declaring class.
 	 * </p>
 	 * 
-	 * @return the binding of the class or interface that declares this field, or
-	 *         <code>null</code> if none
+	 * @return the binding of the class or interface that declares this field,
+	 *         or <code>null</code> if none
 	 */
 	@Override
 	public ITypeBinding getDeclaringClass() {
@@ -132,14 +132,18 @@ public class VariableBinding implements IVariableBinding {
 	 */
 	@Override
 	public ITypeBinding getType() {
-		// TODO: Do we need type information for PHP Element?
+		if (modelElement instanceof IField) {
+			return resolver.getTypeBinding((IField) modelElement);
+
+		}
 		return null;
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.php.internal.core.ast.nodes.IVariableBinding#getVariableId()
+	 * @see
+	 * org.eclipse.php.internal.core.ast.nodes.IVariableBinding#getVariableId()
 	 */
 	@Override
 	public int getVariableId() {
@@ -180,7 +184,8 @@ public class VariableBinding implements IVariableBinding {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.php.internal.core.ast.nodes.IVariableBinding#isParameter()
+	 * @see
+	 * org.eclipse.php.internal.core.ast.nodes.IVariableBinding#isParameter()
 	 */
 	@Override
 	public boolean isParameter() {

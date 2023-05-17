@@ -231,4 +231,8 @@ public class SingleFieldDeclaration extends ASTNode {
 	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(PHPVersion apiLevel) {
 		return PROPERTY_DESCRIPTORS;
 	}
+
+	public IVariableBinding resolveVariableBinding() {
+		return this.ast.getBindingResolver().getVariableBinding(this);
+	}
 }

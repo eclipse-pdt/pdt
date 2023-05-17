@@ -56,8 +56,8 @@ public class CodeGeneration {
 
 	/**
 	 * Constant ID for the type kind to be used in
-	 * {@link #getTypeBody(String, IScriptProject, String, String)} to get the code
-	 * template used for a new class type body.
+	 * {@link #getTypeBody(String, IScriptProject, String, String)} to get the
+	 * code template used for a new class type body.
 	 * 
 	 * @since 3.2
 	 */
@@ -65,8 +65,8 @@ public class CodeGeneration {
 
 	/**
 	 * Constant ID for the type kind to be used in
-	 * {@link #getTypeBody(String, IScriptProject, String, String)} to get the code
-	 * template used for a new interface type body.
+	 * {@link #getTypeBody(String, IScriptProject, String, String)} to get the
+	 * code template used for a new interface type body.
 	 * 
 	 * @since 3.2
 	 */
@@ -74,8 +74,8 @@ public class CodeGeneration {
 
 	/**
 	 * Constant ID for the type kind to be used in
-	 * {@link #getTypeBody(String, IScriptProject, String, String)} to get the code
-	 * template used for a new enum type body.
+	 * {@link #getTypeBody(String, IScriptProject, String, String)} to get the
+	 * code template used for a new enum type body.
 	 * 
 	 * @since 3.2
 	 */
@@ -83,8 +83,8 @@ public class CodeGeneration {
 
 	/**
 	 * Constant ID for the type kind to be used in
-	 * {@link #getTypeBody(String, IScriptProject, String, String)} to get the code
-	 * template used for a new annotation type body.
+	 * {@link #getTypeBody(String, IScriptProject, String, String)} to get the
+	 * code template used for a new annotation type body.
 	 * 
 	 * @since 3.2
 	 */
@@ -96,8 +96,8 @@ public class CodeGeneration {
 	}
 
 	/**
-	 * Returns the content for a new compilation unit using the 'new Java file' code
-	 * template.
+	 * Returns the content for a new compilation unit using the 'new Java file'
+	 * code template.
 	 * 
 	 * @param sp
 	 *            The compilation unit to create the source for. The compilation
@@ -122,8 +122,8 @@ public class CodeGeneration {
 	}
 
 	/**
-	 * Returns the content for a new compilation unit using the 'new Java file' code
-	 * template.
+	 * Returns the content for a new compilation unit using the 'new Java file'
+	 * code template.
 	 * 
 	 * @param sp
 	 *            The compilation unit to create the source for. The compilation
@@ -156,13 +156,13 @@ public class CodeGeneration {
 	 * template. The returned content is unformatted and is not indented.
 	 * 
 	 * @param sp
-	 *            The compilation unit to add the comment to. The compilation unit
-	 *            does not need to exist.
+	 *            The compilation unit to add the comment to. The compilation
+	 *            unit does not need to exist.
 	 * @param lineDelimiter
 	 *            The line delimiter to be used.
-	 * @return Returns the new content or <code>null</code> if the code template is
-	 *         undefined or empty. The returned content is unformatted and is not
-	 *         indented.
+	 * @return Returns the new content or <code>null</code> if the code template
+	 *         is undefined or empty. The returned content is unformatted and is
+	 *         not indented.
 	 * @throws CoreException
 	 *             Thrown when the evaluation of the code template fails.
 	 * @since 3.1
@@ -180,18 +180,18 @@ public class CodeGeneration {
 	 * template. The returned content is unformatted and is not indented.
 	 * 
 	 * @param sp
-	 *            The compilation unit where the type is contained. The compilation
-	 *            unit does not need to exist.
+	 *            The compilation unit where the type is contained. The
+	 *            compilation unit does not need to exist.
 	 * @param typeQualifiedName
 	 *            The name of the type to which the comment is added. For inner
-	 *            types the name must be qualified and include the outer types names
-	 *            (dot separated). See
+	 *            types the name must be qualified and include the outer types
+	 *            names (dot separated). See
 	 *            {@link org.eclipse.jdt.core.IType#getTypeQualifiedName(char)}.
 	 * @param lineDelimiter
 	 *            The line delimiter to be used.
-	 * @return Returns the new content or <code>null</code> if the code template is
-	 *         undefined or empty. The returned content is unformatted and is not
-	 *         indented.
+	 * @return Returns the new content or <code>null</code> if the code template
+	 *         is undefined or empty. The returned content is unformatted and is
+	 *         not indented.
 	 * @throws CoreException
 	 *             Thrown when the evaluation of the code template fails.
 	 */
@@ -205,20 +205,20 @@ public class CodeGeneration {
 	 * template. The returned content is unformatted and is not indented.
 	 * 
 	 * @param sp
-	 *            The compilation unit where the type is contained. The compilation
-	 *            unit does not need to exist.
+	 *            The compilation unit where the type is contained. The
+	 *            compilation unit does not need to exist.
 	 * @param typeQualifiedName
 	 *            The name of the type to which the comment is added. For inner
-	 *            types the name must be qualified and include the outer types names
-	 *            (dot separated). See
+	 *            types the name must be qualified and include the outer types
+	 *            names (dot separated). See
 	 *            {@link org.eclipse.jdt.core.IType#getTypeQualifiedName(char)}.
 	 * @param typeParameterNames
 	 *            The type parameter names
 	 * @param lineDelimiter
 	 *            The line delimiter to be used.
-	 * @return Returns the new content or <code>null</code> if the code template is
-	 *         undefined or empty. The returned content is unformatted and is not
-	 *         indented.
+	 * @return Returns the new content or <code>null</code> if the code template
+	 *         is undefined or empty. The returned content is unformatted and is
+	 *         not indented.
 	 * @throws CoreException
 	 *             Thrown when the evaluation of the code template fails.
 	 * @since 3.1
@@ -239,16 +239,16 @@ public class CodeGeneration {
 	 *            {@link #ENUM_BODY_TEMPLATE_ID} and
 	 *            {@link #ANNOTATION_BODY_TEMPLATE_ID}.
 	 * @param sp
-	 *            The compilation unit where the type is contained. The compilation
-	 *            unit does not need to exist.
+	 *            The compilation unit where the type is contained. The
+	 *            compilation unit does not need to exist.
 	 * @param typeName
 	 *            The name of the type(for embedding in the template as a user
 	 *            variable).
 	 * @param lineDelim
 	 *            The line delimiter to be used.
-	 * @return Returns the new content or <code>null</code> if the code template is
-	 *         undefined or empty. The returned content is unformatted and is not
-	 *         indented.
+	 * @return Returns the new content or <code>null</code> if the code template
+	 *         is undefined or empty. The returned content is unformatted and is
+	 *         not indented.
 	 * @throws CoreException
 	 *             Thrown when the evaluation of the code template fails.
 	 * @since 3.2
@@ -259,21 +259,21 @@ public class CodeGeneration {
 	}
 
 	/**
-	 * Returns the content for a new field comment using the 'field comment' code
-	 * template. The returned content is unformatted and is not indented.
+	 * Returns the content for a new field comment using the 'field comment'
+	 * code template. The returned content is unformatted and is not indented.
 	 * 
 	 * @param sp
-	 *            The compilation unit where the field is contained. The compilation
-	 *            unit does not need to exist.
+	 *            The compilation unit where the field is contained. The
+	 *            compilation unit does not need to exist.
 	 * @param fieldType
 	 *            The name of the field declared type.
 	 * @param fieldName
 	 *            The name of the field to which the comment is added.
 	 * @param lineDelimiter
 	 *            The line delimiter to be used.
-	 * @return Returns the new content or <code>null</code> if the code template is
-	 *         undefined or empty. The returned content is unformatted and is not
-	 *         indented.
+	 * @return Returns the new content or <code>null</code> if the code template
+	 *         is undefined or empty. The returned content is unformatted and is
+	 *         not indented.
 	 * @throws CoreException
 	 *             Thrown when the evaluation of the code template fails.
 	 * @since 3.0
@@ -322,8 +322,9 @@ public class CodeGeneration {
 
 				varTypes = new ITypeBinding[varDeclarations.length];
 				fieldNames = new String[varDeclarations.length];
+
 				for (int i = 0; i < varDeclarations.length; i++) {
-					varTypes[i] = varDeclarations[i].resolveTypeBinding();
+					varTypes[i] = fieldDeclaration.fields().get(i).resolveVariableBinding().getType();
 					fieldNames[i] = getVarName(varDeclarations[i]);
 				}
 			}
@@ -428,68 +429,70 @@ public class CodeGeneration {
 
 	/**
 	 * Returns the comment for a method or constructor using the comment code
-	 * templates (constructor / method / overriding method). <code>null</code> is
-	 * returned if the template is empty.
+	 * templates (constructor / method / overriding method). <code>null</code>
+	 * is returned if the template is empty.
 	 * 
 	 * @param sp
-	 *            The compilation unit to which the method belongs. The compilation
-	 *            unit does not need to exist.
+	 *            The compilation unit to which the method belongs. The
+	 *            compilation unit does not need to exist.
 	 * @param declaringTypeName
-	 *            Name of the type to which the method belongs. For inner types the
-	 *            name must be qualified and include the outer types names (dot
-	 *            separated). See
+	 *            Name of the type to which the method belongs. For inner types
+	 *            the name must be qualified and include the outer types names
+	 *            (dot separated). See
 	 *            {@link org.eclipse.jdt.core.IType#getTypeQualifiedName(char)}.
 	 * @param decl
-	 *            The MethodDeclaration AST node that will be added as new method.
-	 *            The node does not need to exist in an AST (no parent needed) and
-	 *            does not need to resolve. See
-	 *            {@link org.eclipse.jdt.core.dom.AST#newMethodDeclaration()} for
-	 *            how to create such a node.
+	 *            The MethodDeclaration AST node that will be added as new
+	 *            method. The node does not need to exist in an AST (no parent
+	 *            needed) and does not need to resolve. See
+	 *            {@link org.eclipse.jdt.core.dom.AST#newMethodDeclaration()}
+	 *            for how to create such a node.
 	 * @param overridden
 	 *            The binding of the method to which to add an "@see" link or
 	 *            <code>null</code> if no link should be created.
 	 * @param lineDelimiter
 	 *            The line delimiter to be used.
-	 * @return Returns the generated method comment or <code>null</code> if the code
-	 *         template is empty. The returned content is unformatted and not
-	 *         indented (formatting required).
+	 * @return Returns the generated method comment or <code>null</code> if the
+	 *         code template is empty. The returned content is unformatted and
+	 *         not indented (formatting required).
 	 * @throws CoreException
 	 *             Thrown when the evaluation of the code template fails.
 	 */
 	/*
 	 * public static String getMethodComment(IScriptProject sp, String
-	 * declaringTypeName, MethodDeclaration decl, IMethodBinding overridden, String
-	 * lineDelimiter) throws CoreException { if (overridden != null) { overridden=
-	 * overridden.getMethodDeclaration(); String declaringClassQualifiedName=
-	 * overridden.getDeclaringClass().getQualifiedName(); String linkToMethodName=
-	 * overridden.getName(); String[] parameterTypesQualifiedNames=
+	 * declaringTypeName, MethodDeclaration decl, IMethodBinding overridden,
+	 * String lineDelimiter) throws CoreException { if (overridden != null) {
+	 * overridden= overridden.getMethodDeclaration(); String
+	 * declaringClassQualifiedName=
+	 * overridden.getDeclaringClass().getQualifiedName(); String
+	 * linkToMethodName= overridden.getName(); String[]
+	 * parameterTypesQualifiedNames=
 	 * StubUtility.getParameterTypeNamesForSeeTag(overridden); return
 	 * StubUtility.getMethodComment(sp, declaringTypeName, decl,
 	 * overridden.isDeprecated(), linkToMethodName, declaringClassQualifiedName,
 	 * parameterTypesQualifiedNames, false, lineDelimiter); } else { return
-	 * StubUtility.getMethodComment(sp, declaringTypeName, decl, false, null, null,
-	 * null, false, lineDelimiter); } }
+	 * StubUtility.getMethodComment(sp, declaringTypeName, decl, false, null,
+	 * null, null, false, lineDelimiter); } }
 	 */
 
 	/**
 	 * Returns the comment for a method or constructor using the comment code
-	 * templates (constructor / method / overriding method). <code>null</code> is
-	 * returned if the template is empty.
+	 * templates (constructor / method / overriding method). <code>null</code>
+	 * is returned if the template is empty.
 	 * <p>
 	 * The returned string is unformatted and not indented.
 	 * <p>
 	 * Exception types and return type are in signature notation. e.g. a source
 	 * method declared as <code>public void foo(String text, int length)</code>
-	 * would return the array <code>{"QString;","I"}</code> as parameter types. See
-	 * {@link org.eclipse.jdt.core.Signature}.
+	 * would return the array <code>{"QString;","I"}</code> as parameter types.
+	 * See {@link org.eclipse.jdt.core.Signature}.
 	 * 
 	 * @param sp
-	 *            The compilation unit to which the method belongs. The compilation
-	 *            unit does not need to exist.
+	 *            The compilation unit to which the method belongs. The
+	 *            compilation unit does not need to exist.
 	 * @param declaringTypeName
-	 *            Name of the type to which the method belongs. For inner types the
-	 *            name must be qualified and include the outer types names (dot
-	 *            separated). See
+	 *            Name of the type to which the method belongs. For inner types
+	 *            the name must be qualified and include the outer types names
+	 *            (dot separated). See
 	 *            {@link org.eclipse.jdt.core.IType#getTypeQualifiedName(char)}.
 	 * @param methodName
 	 *            Name of the method.
@@ -506,9 +509,9 @@ public class CodeGeneration {
 	 *            <code>null</code>, the method must exist.
 	 * @param lineDelimiter
 	 *            The line delimiter to be used.
-	 * @return Returns the constructed comment or <code>null</code> if the comment
-	 *         code template is empty. The returned content is unformatted and not
-	 *         indented (formatting required).
+	 * @return Returns the constructed comment or <code>null</code> if the
+	 *         comment code template is empty. The returned content is
+	 *         unformatted and not indented (formatting required).
 	 * @throws CoreException
 	 *             Thrown when the evaluation of the code template fails.
 	 */
@@ -521,23 +524,23 @@ public class CodeGeneration {
 
 	/**
 	 * Returns the comment for a method or constructor using the comment code
-	 * templates (constructor / method / overriding method). <code>null</code> is
-	 * returned if the template is empty.
+	 * templates (constructor / method / overriding method). <code>null</code>
+	 * is returned if the template is empty.
 	 * <p>
 	 * The returned string is unformatted and not indented.
 	 * <p>
 	 * Exception types and return type are in signature notation. e.g. a source
 	 * method declared as <code>public void foo(String text, int length)</code>
-	 * would return the array <code>{"QString;","I"}</code> as parameter types. See
-	 * {@link org.eclipse.jdt.core.Signature}.
+	 * would return the array <code>{"QString;","I"}</code> as parameter types.
+	 * See {@link org.eclipse.jdt.core.Signature}.
 	 * 
 	 * @param sp
-	 *            The compilation unit to which the method belongs. The compilation
-	 *            unit does not need to exist.
+	 *            The compilation unit to which the method belongs. The
+	 *            compilation unit does not need to exist.
 	 * @param declaringTypeName
-	 *            Name of the type to which the method belongs. For inner types the
-	 *            name must be qualified and include the outer types names (dot
-	 *            separated). See
+	 *            Name of the type to which the method belongs. For inner types
+	 *            the name must be qualified and include the outer types names
+	 *            (dot separated). See
 	 *            {@link org.eclipse.jdt.core.IType#getTypeQualifiedName(char)}.
 	 * @param methodName
 	 *            Name of the method.
@@ -556,9 +559,9 @@ public class CodeGeneration {
 	 *            <code>null</code>, the method must exist.
 	 * @param lineDelimiter
 	 *            The line delimiter to be used.
-	 * @return Returns the constructed comment or <code>null</code> if the comment
-	 *         code template is empty. The returned content is unformatted and not
-	 *         indented (formatting required).
+	 * @return Returns the constructed comment or <code>null</code> if the
+	 *         comment code template is empty. The returned content is
+	 *         unformatted and not indented (formatting required).
 	 * @throws CoreException
 	 *             Thrown when the evaluation of the code template fails.
 	 * @since 3.1
@@ -572,8 +575,8 @@ public class CodeGeneration {
 
 	/**
 	 * Returns the comment for a method or constructor using the comment code
-	 * templates (constructor / method / overriding method). <code>null</code> is
-	 * returned if the template is empty.
+	 * templates (constructor / method / overriding method). <code>null</code>
+	 * is returned if the template is empty.
 	 * <p>
 	 * The returned string is unformatted and not indented.
 	 * 
@@ -585,13 +588,13 @@ public class CodeGeneration {
 	 *            <code>null</code>, the method must exist.
 	 * @param lineDelimiter
 	 *            The line delimiter to be used.
-	 * @return Returns the constructed comment or <code>null</code> if the comment
-	 *         code template is empty. The returned string is unformatted and and
-	 *         has no indent (formatting required).
+	 * @return Returns the constructed comment or <code>null</code> if the
+	 *         comment code template is empty. The returned string is
+	 *         unformatted and and has no indent (formatting required).
 	 * @throws CoreException
 	 *             Thrown when the evaluation of the code template fails.
-	 *             Contributed by zhaozw - bug #255204 [regression] Parameters type
-	 *             is not displayed in Generated element comments doc block
+	 *             Contributed by zhaozw - bug #255204 [regression] Parameters
+	 *             type is not displayed in Generated element comments doc block
 	 */
 	public static String getMethodComment(IMethod method, IMethod overridden, String lineDelimiter)
 			throws CoreException {
@@ -936,8 +939,8 @@ public class CodeGeneration {
 	/**
 	 * Checks if the parameter "type" is a type container object (whose class is
 	 * AmbiguousType or MultiTypeType) and prints its content recursively in
-	 * "buffer". If "type" is not a type container object, no data will be printed
-	 * in "buffer" and false will be returned.
+	 * "buffer". If "type" is not a type container object, no data will be
+	 * printed in "buffer" and false will be returned.
 	 * 
 	 * When a (non-empty) type container is printed, last printed character will
 	 * always be '|'.
@@ -1026,44 +1029,44 @@ public class CodeGeneration {
 
 	/**
 	 * Returns the comment for a method or constructor using the comment code
-	 * templates (constructor / method / overriding method). <code>null</code> is
-	 * returned if the template is empty.
+	 * templates (constructor / method / overriding method). <code>null</code>
+	 * is returned if the template is empty.
 	 * <p>
 	 * The returned string is unformatted and not indented.
 	 * 
 	 * @param sp
-	 *            The compilation unit to which the method belongs. The compilation
-	 *            unit does not need to exist.
+	 *            The compilation unit to which the method belongs. The
+	 *            compilation unit does not need to exist.
 	 * @param declaringTypeName
-	 *            Name of the type to which the method belongs. For inner types the
-	 *            name must be qualified and include the outer types names (dot
-	 *            separated). See
+	 *            Name of the type to which the method belongs. For inner types
+	 *            the name must be qualified and include the outer types names
+	 *            (dot separated). See
 	 *            {@link org.eclipse.jdt.core.IType#getTypeQualifiedName(char)}.
 	 * 
 	 * @param decl
-	 *            The MethodDeclaration AST node that will be added as new method.
-	 *            The node does not need to exist in an AST (no parent needed) and
-	 *            does not need to resolve. See
-	 *            {@link org.eclipse.jdt.core.dom.AST#newMethodDeclaration()} for
-	 *            how to create such a node.
+	 *            The MethodDeclaration AST node that will be added as new
+	 *            method. The node does not need to exist in an AST (no parent
+	 *            needed) and does not need to resolve. See
+	 *            {@link org.eclipse.jdt.core.dom.AST#newMethodDeclaration()}
+	 *            for how to create such a node.
 	 * @param isDeprecated
 	 *            If set, the method is deprecated
 	 * @param overriddenMethodName
 	 *            If a method is overridden, the simple name of the overridden
 	 *            method, or <code>null</code> if no method is overridden.
 	 * @param overriddenMethodDeclaringTypeName
-	 *            If a method is overridden, the fully qualified type name of the
-	 *            overridden method's declaring type, or <code>null</code> if no
-	 *            method is overridden.
+	 *            If a method is overridden, the fully qualified type name of
+	 *            the overridden method's declaring type, or <code>null</code>
+	 *            if no method is overridden.
 	 * @param overriddenMethodParameterTypeNames
 	 *            If a method is overridden, the fully qualified parameter type
-	 *            names of the overridden method, or <code>null</code> if no method
-	 *            is overridden.
+	 *            names of the overridden method, or <code>null</code> if no
+	 *            method is overridden.
 	 * @param lineDelimiter
 	 *            The line delimiter to be used.
-	 * @return Returns the constructed comment or <code>null</code> if the comment
-	 *         code template is empty. The returned string is unformatted and and
-	 *         has no indent (formatting required).
+	 * @return Returns the constructed comment or <code>null</code> if the
+	 *         comment code template is empty. The returned string is
+	 *         unformatted and and has no indent (formatting required).
 	 * @throws CoreException
 	 *             Thrown when the evaluation of the code template fails.
 	 * @since 3.2
@@ -1079,18 +1082,19 @@ public class CodeGeneration {
 	// overriddenMethodParameterTypeNames, false, lineDelimiter);
 	// }
 	/**
-	 * Returns the content of the body for a method or constructor using the method
-	 * body templates. <code>null</code> is returned if the template is empty.
+	 * Returns the content of the body for a method or constructor using the
+	 * method body templates. <code>null</code> is returned if the template is
+	 * empty.
 	 * <p>
 	 * The returned string is unformatted and not indented.
 	 * 
 	 * @param sp
-	 *            The compilation unit to which the method belongs. The compilation
-	 *            unit does not need to exist.
+	 *            The compilation unit to which the method belongs. The
+	 *            compilation unit does not need to exist.
 	 * @param declaringTypeName
-	 *            Name of the type to which the method belongs. For inner types the
-	 *            name must be qualified and include the outer types names (dot
-	 *            separated). See
+	 *            Name of the type to which the method belongs. For inner types
+	 *            the name must be qualified and include the outer types names
+	 *            (dot separated). See
 	 *            {@link org.eclipse.jdt.core.IType#getTypeQualifiedName(char)}.
 	 * @param methodName
 	 *            Name of the method.
@@ -1102,8 +1106,8 @@ public class CodeGeneration {
 	 * @param lineDelimiter
 	 *            The line delimiter to be used.
 	 * @return Returns the constructed body content or <code>null</code> if the
-	 *         comment code template is empty. The returned string is unformatted
-	 *         and and has no indent (formatting required).
+	 *         comment code template is empty. The returned string is
+	 *         unformatted and and has no indent (formatting required).
 	 * @throws CoreException
 	 *             Thrown when the evaluation of the code template fails.
 	 */
@@ -1114,29 +1118,29 @@ public class CodeGeneration {
 	}
 
 	/**
-	 * Returns the content of body for a getter method using the getter method body
-	 * template. <code>null</code> is returned if the template is empty.
+	 * Returns the content of body for a getter method using the getter method
+	 * body template. <code>null</code> is returned if the template is empty.
 	 * <p>
 	 * The returned string is unformatted and not indented.
 	 * 
 	 * @param sp
-	 *            The compilation unit to which the method belongs. The compilation
-	 *            unit does not need to exist.
+	 *            The compilation unit to which the method belongs. The
+	 *            compilation unit does not need to exist.
 	 * @param declaringTypeName
-	 *            Name of the type to which the method belongs. For inner types the
-	 *            name must be qualified and include the outer types names (dot
-	 *            separated). See
+	 *            Name of the type to which the method belongs. For inner types
+	 *            the name must be qualified and include the outer types names
+	 *            (dot separated). See
 	 *            {@link org.eclipse.jdt.core.IType#getTypeQualifiedName(char)}.
 	 * @param methodName
 	 *            The name of the getter method.
 	 * @param fieldName
-	 *            The name of the field to get in the getter method, corresponding
-	 *            to the template variable for ${field}.
+	 *            The name of the field to get in the getter method,
+	 *            corresponding to the template variable for ${field}.
 	 * @param lineDelimiter
 	 *            The line delimiter to be used.
 	 * @return Returns the constructed body content or <code>null</code> if the
-	 *         comment code template is empty. The returned string is unformatted
-	 *         and and has no indent (formatting required).
+	 *         comment code template is empty. The returned string is
+	 *         unformatted and and has no indent (formatting required).
 	 * @throws CoreException
 	 *             Thrown when the evaluation of the code template fails.
 	 * @since 3.0
@@ -1147,18 +1151,18 @@ public class CodeGeneration {
 	}
 
 	/**
-	 * Returns the content of body for a setter method using the setter method body
-	 * template. <code>null</code> is returned if the template is empty.
+	 * Returns the content of body for a setter method using the setter method
+	 * body template. <code>null</code> is returned if the template is empty.
 	 * <p>
 	 * The returned string is unformatted and not indented.
 	 * 
 	 * @param sp
-	 *            The compilation unit to which the method belongs. The compilation
-	 *            unit does not need to exist.
+	 *            The compilation unit to which the method belongs. The
+	 *            compilation unit does not need to exist.
 	 * @param declaringTypeName
-	 *            Name of the type to which the method belongs. For inner types the
-	 *            name must be qualified and include the outer types names (dot
-	 *            separated). See
+	 *            Name of the type to which the method belongs. For inner types
+	 *            the name must be qualified and include the outer types names
+	 *            (dot separated). See
 	 *            {@link org.eclipse.jdt.core.IType#getTypeQualifiedName(char)}.
 	 * @param methodName
 	 *            The name of the setter method.
@@ -1171,8 +1175,8 @@ public class CodeGeneration {
 	 * @param lineDelimiter
 	 *            The line delimiter to be used.
 	 * @return Returns the constructed body content or <code>null</code> if the
-	 *         comment code template is empty. The returned string is unformatted
-	 *         and and has no indent (formatting required).
+	 *         comment code template is empty. The returned string is
+	 *         unformatted and and has no indent (formatting required).
 	 * @throws CoreException
 	 *             Thrown when the evaluation of the code template fails.
 	 * @since 3.0
@@ -1184,18 +1188,18 @@ public class CodeGeneration {
 	}
 
 	/**
-	 * Returns the comment for a getter method using the getter comment template.
-	 * <code>null</code> is returned if the template is empty.
+	 * Returns the comment for a getter method using the getter comment
+	 * template. <code>null</code> is returned if the template is empty.
 	 * <p>
 	 * The returned string is unformatted and not indented.
 	 * 
 	 * @param sp
-	 *            The compilation unit to which the method belongs. The compilation
-	 *            unit does not need to exist.
+	 *            The compilation unit to which the method belongs. The
+	 *            compilation unit does not need to exist.
 	 * @param declaringTypeName
-	 *            Name of the type to which the method belongs. For inner types the
-	 *            name must be qualified and include the outer types names (dot
-	 *            separated). See
+	 *            Name of the type to which the method belongs. For inner types
+	 *            the name must be qualified and include the outer types names
+	 *            (dot separated). See
 	 *            {@link org.eclipse.jdt.core.IType#getTypeQualifiedName(char)}.
 	 * @param methodName
 	 *            Name of the method.
@@ -1207,8 +1211,8 @@ public class CodeGeneration {
 	 *            The field name without prefix or suffix.
 	 * @param lineDelimiter
 	 *            The line delimiter to be used.
-	 * @return Returns the generated getter comment or <code>null</code> if the code
-	 *         template is empty. The returned content is not indented.
+	 * @return Returns the generated getter comment or <code>null</code> if the
+	 *         code template is empty. The returned content is not indented.
 	 * @throws CoreException
 	 *             Thrown when the evaluation of the code template fails.
 	 * @since 3.0
@@ -1226,12 +1230,12 @@ public class CodeGeneration {
 	 * The returned string is unformatted and not indented.
 	 * 
 	 * @param sp
-	 *            The compilation unit to which the method belongs. The compilation
-	 *            unit does not need to exist.
+	 *            The compilation unit to which the method belongs. The
+	 *            compilation unit does not need to exist.
 	 * @param declaringTypeName
-	 *            Name of the type to which the method belongs. For inner types the
-	 *            name must be qualified and include the outer types names (dot
-	 *            separated). See
+	 *            Name of the type to which the method belongs. For inner types
+	 *            the name must be qualified and include the outer types names
+	 *            (dot separated). See
 	 *            {@link org.eclipse.jdt.core.IType#getTypeQualifiedName(char)}.
 	 * @param methodName
 	 *            Name of the method.
@@ -1245,8 +1249,8 @@ public class CodeGeneration {
 	 *            The field name without prefix or suffix.
 	 * @param lineDelimiter
 	 *            The line delimiter to be used.
-	 * @return Returns the generated setter comment or <code>null</code> if the code
-	 *         template is empty. The returned comment is not indented.
+	 * @return Returns the generated setter comment or <code>null</code> if the
+	 *         code template is empty. The returned comment is not indented.
 	 * @throws CoreException
 	 *             Thrown when the evaluation of the code template fails.
 	 * @since 3.0
