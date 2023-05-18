@@ -3455,7 +3455,7 @@ class_name:className
 
 | T_OPEN_PARENTHESE:l expr:expr T_CLOSE_PARENTHESE:r
 {:
-	RESULT = new ClassName(lleft, rright, parser.ast, new ParenthesisExpression(lleft, lright, parser.ast, expr));
+	RESULT = new ClassName(lleft, rright, parser.ast, new ParenthesisExpression(lleft, rright, parser.ast, expr));
 :}
 ;
 

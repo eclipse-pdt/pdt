@@ -143,7 +143,7 @@ if ($x instanceof ($x)) {
 		<ExpressionStatement start='125' length='9'>
 			<ClassInstanceCreation start='125' length='8'>
 				<ClassName start='129' length='4'>
-					<ParenthesisExpression start='129' length='1'>
+					<ParenthesisExpression start='129' length='4'>
 						<Variable start='130' length='2' isDollared='true'>
 							<Identifier start='131' length='1' name='x'/>
 						</Variable>
@@ -160,7 +160,7 @@ if ($x instanceof ($x)) {
 						<Identifier start='140' length='1' name='x'/>
 					</Variable>
 					<ClassName start='153' length='4'>
-						<ParenthesisExpression start='153' length='1'>
+						<ParenthesisExpression start='153' length='4'>
 							<Variable start='154' length='2' isDollared='true'>
 								<Identifier start='155' length='1' name='x'/>
 							</Variable>

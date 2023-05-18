@@ -644,6 +644,18 @@ public class VariableValidator implements IValidatorExtension {
 		}
 
 		@Override
+		public boolean visit(EnumDeclaration s) throws Exception {
+			enterType();
+			return true;
+		}
+
+		@Override
+		public boolean endvisit(EnumDeclaration s) throws Exception {
+			exitType();
+			return false;
+		}
+
+		@Override
 		public boolean visit(ClassDeclaration s) throws Exception {
 			if (s.isInterface()) {
 				return false;

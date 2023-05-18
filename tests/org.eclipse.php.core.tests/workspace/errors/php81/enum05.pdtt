@@ -1,0 +1,21 @@
+--TEST--
+New in initializers
+--FILE--
+<?php
+
+enum Test {
+	case SimplCase;
+	
+	public function isSimple(): bool
+	{
+		return $this == self::SimpleCase;
+	}
+	
+	public function invalid(): bool
+	{
+		return $this === $sample;
+	}
+}
+?>
+--EXPECT--
+[line=13, start=171, end=178] Variable '$sample' is undefined

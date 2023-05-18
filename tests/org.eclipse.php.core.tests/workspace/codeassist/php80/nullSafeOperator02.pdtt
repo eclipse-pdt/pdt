@@ -1,0 +1,13 @@
+--TEST--
+
+--FILE--
+<?php 
+class Test {
+	public function foo(): self {}
+}
+$tmp = new Test();
+$tmp->foo()?->|;
+
+
+--EXPECT--
+method(foo)
