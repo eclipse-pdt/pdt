@@ -39,9 +39,9 @@ public enum PHPVersion {
 	/**
 	 * @since 8.0
 	 */
-	PHP8_0("php8.0", true), //$NON-NLS-1$
-	PHP8_1("php8.1", true), //$NON-NLS-1$
-	PHP8_2("php8.2", true); //$NON-NLS-1$
+	PHP8_0("php8.0"), //$NON-NLS-1$
+	PHP8_1("php8.1"), //$NON-NLS-1$
+	PHP8_2("php8.2"); //$NON-NLS-1$
 
 	private String alias;
 	private boolean isExperimentalSupport;
