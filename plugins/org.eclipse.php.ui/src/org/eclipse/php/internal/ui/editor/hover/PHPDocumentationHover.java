@@ -582,7 +582,19 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover
 				label.append('=');
 				label.append(' ');
 				label.append(constantValue);
-			}
+			} else
+				try {
+					if (((IField) element).getType() != null) {
+						label.append(' ');
+						label.append(':');
+						label.append(' ');
+						if (PHPFlags.isNullable(((IMember) element).getFlags())) {
+							label.append('?');
+						}
+						label.append(((IField) element).getType());
+					}
+				} catch (ModelException e) {
+				}
 		}
 
 		String imageName = null;

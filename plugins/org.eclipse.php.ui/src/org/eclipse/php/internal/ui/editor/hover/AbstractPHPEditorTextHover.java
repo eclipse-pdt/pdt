@@ -103,9 +103,9 @@ public class AbstractPHPEditorTextHover extends AbstractScriptEditorTextHover im
 	 */
 	protected IModelElement[] getElementsAt(ITextViewer textViewer, IRegion hoverRegion) {
 		/*
-		 * The region should be a word region an not of length 0. This check is needed
-		 * because codeSelect(...) also finds the Java element if the offset is behind
-		 * the word.
+		 * The region should be a word region an not of length 0. This check is
+		 * needed because codeSelect(...) also finds the Java element if the
+		 * offset is behind the word.
 		 */
 		if (hoverRegion.getLength() == 0) {
 			return null;

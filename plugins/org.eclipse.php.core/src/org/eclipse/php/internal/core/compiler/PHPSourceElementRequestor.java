@@ -231,6 +231,8 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		String[] parameters;
 		ISourceElementRequestor.MethodInfo mi = new ISourceElementRequestor.MethodInfo();
 		mi.modifiers = Modifiers.AccPublic;
+
+		processArguments(mi, arrowMethod.getArguments(), arrowMethod);
 		if (arguments != null) {
 			parameters = new String[arguments.size()];
 			Iterator<FormalParameter> i = arguments.iterator();
@@ -265,19 +267,8 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		fInfoStack.push(mi);
 		this.fRequestor.enterMethod(mi);
 		this.fInMethod = true;
+		populateArguments(mi, arrowMethod.getArguments());
 
-		if (arguments != null) {
-			for (Argument arg : arguments) {
-				ISourceElementRequestor.FieldInfo info = new ISourceElementRequestor.FieldInfo();
-				info.name = arg.getName();
-				info.modifiers = Modifiers.AccPublic;
-				info.nameSourceStart = arg.getNameStart();
-				info.nameSourceEnd = arg.getNameEnd() - 1;
-				info.declarationStart = arg.sourceStart();
-				fRequestor.enterField(info);
-				fRequestor.exitField(arg.sourceEnd() - 1);
-			}
-		}
 		return true;
 	}
 
@@ -300,7 +291,9 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		StringBuilder metadata = new StringBuilder();
 		String[] parameters;
 		ISourceElementRequestor.MethodInfo mi = new ISourceElementRequestor.MethodInfo();
+
 		mi.modifiers = Modifiers.AccPublic | IPHPModifiers.AccArrow;
+		processArguments(mi, lambdaMethod.getArguments(), lambdaMethod);
 		if (arguments != null) {
 			parameters = new String[arguments.size()];
 			Iterator<FormalParameter> i = arguments.iterator();
@@ -336,20 +329,117 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		this.fRequestor.enterMethod(mi);
 		this.fInMethod = true;
 
-		if (arguments != null) {
-			for (Argument arg : arguments) {
-				ISourceElementRequestor.FieldInfo info = new ISourceElementRequestor.FieldInfo();
-				info.name = arg.getName();
-				info.modifiers = Modifiers.AccPublic;
-				info.nameSourceStart = arg.getNameStart();
-				info.nameSourceEnd = arg.getNameEnd() - 1;
-				info.declarationStart = arg.sourceStart();
-				fRequestor.enterField(info);
-				fRequestor.exitField(arg.sourceEnd() - 1);
-			}
-		}
+		populateArguments(mi, lambdaMethod.getArguments());
 
 		return true;
+	}
+
+	private void processArguments(MethodInfo mi, Collection<? extends Argument> args, ASTNode node) {
+		if (args == null) {
+			args = new ArrayList<>();
+		}
+		PHPDocBlock docBlock = null;
+		if (node instanceof IPHPDocAwareDeclaration) {
+			docBlock = ((IPHPDocAwareDeclaration) node).getPHPDoc();
+		}
+		String[] parameter = new String[args.size()];
+		String[] initializers = new String[args.size()];
+		String[] types = new String[args.size()];
+		int[] flags = new int[args.size()];
+		int a = 0;
+		for (Argument arg : args) {
+			flags[a] = arg.getModifiers();
+			parameter[a] = arg.getName();
+			if (arg.getInitialization() != null) {
+				if (arg.getInitialization() instanceof UnaryOperation) {
+					UnaryOperation initialization = (UnaryOperation) arg.getInitialization();
+					if (initialization.getExpr() instanceof Literal) {
+						Literal scalar = (Literal) initialization.getExpr();
+						initializers[a] = initialization.getOperator() + scalar.getValue();
+					} else {
+						initializers[a] = PHPIndexingVisitor.DEFAULT_VALUE;
+					}
+				} else if (arg.getInitialization() instanceof Literal) {
+					Literal scalar = (Literal) arg.getInitialization();
+					initializers[a] = scalar.getValue();
+				} else if (arg.getInitialization() instanceof ArrayCreation) {
+					ArrayCreation arrayCreation = (ArrayCreation) arg.getInitialization();
+					if (arrayCreation.getElements().isEmpty()) {
+						initializers[a] = PHPIndexingVisitor.EMPTY_ARRAY_VALUE;
+					} else {
+						initializers[a] = PHPIndexingVisitor.ARRAY_VALUE;
+					}
+				} else {
+					initializers[a] = PHPIndexingVisitor.DEFAULT_VALUE;
+				}
+			}
+			if (arg instanceof FormalParameterByReference) {
+				flags[a] |= IPHPModifiers.AccReference;
+			}
+			if (arg instanceof FormalParameter) {
+				FormalParameter fp = (FormalParameter) arg;
+				if (fp.isVariadic()) {
+					mi.modifiers |= IPHPModifiers.AccVariadic;
+				}
+				if (fp.getParameterType() instanceof FullyQualifiedReference) {
+					types[a] = ((FullyQualifiedReference) fp.getParameterType()).getFullyQualifiedName();
+					if (((FullyQualifiedReference) fp.getParameterType()).isNullable()) {
+						flags[a] |= IPHPModifiers.AccNullable;
+					}
+				} else if (fp.getParameterType() != null) {
+					types[a] = fp.getParameterType().getName();
+				}
+			}
+			if (types[a] == null && docBlock != null) {
+				for (PHPDocTag tag : docBlock.getTags(TagKind.PARAM)) {
+					if (tag.isValidParamTag() && tag.getVariableReference().getName().equals(arg.getName())) {
+						types[a] = tag.getSingleTypeReference().getName();
+						break;
+					}
+				}
+			}
+			if (!PHPFlags.isDefault(flags[a])) {
+				ISourceElementRequestor.FieldInfo info = new ISourceElementRequestor.FieldInfo();
+				info.name = arg.getName();
+				info.modifiers = flags[a];
+				info.nameSourceStart = arg.getNameStart();
+				info.nameSourceEnd = arg.getNameEnd();
+				info.declarationStart = arg.sourceStart();
+				info.type = types[a];
+				fRequestor.enterField(info);
+				fRequestor.exitField(arg.sourceEnd());
+			}
+			a++;
+		}
+
+		mi.parameterNames = parameter;
+		mi.parameterInitializers = initializers;
+		mi.parameterFlags = flags;
+		mi.parameterTypes = types;
+
+	}
+
+	private void populateArguments(MethodInfo mi, Collection<? extends Argument> arguments) {
+		if (arguments == null) {
+			return;
+		}
+		int a = 0;
+		for (Argument arg : arguments) {
+			ISourceElementRequestor.FieldInfo info = new ISourceElementRequestor.FieldInfo();
+			info.name = arg.getName();
+			info.modifiers = mi.parameterFlags[a] | IPHPModifiers.AccPublic;
+			if (PHPFlags.isDeprecated(mi.modifiers)) {
+				info.modifiers |= IPHPModifiers.AccDeprecated;
+			}
+			info.nameSourceStart = arg.getNameStart();
+			info.nameSourceEnd = arg.getNameEnd();
+			info.declarationStart = arg.sourceStart();
+			info.type = mi.parameterTypes[a];
+			fRequestor.enterField(info);
+			fRequestor.exitField(arg.sourceEnd());
+			a++;
+		}
+
 	}
 
 	public boolean visit(AnonymousClassDeclaration anonymousClassDeclaration) throws Exception {
@@ -454,81 +544,20 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 
 		boolean visit = visitMethodDeclaration(method);
 
-		if (visit) {
-			// Process method argument (local variable) declarations:
-			List<Argument> arguments = method.getArguments();
-			for (Argument arg : arguments) {
-				ISourceElementRequestor.FieldInfo info = new ISourceElementRequestor.FieldInfo();
-				info.name = arg.getName();
-				info.modifiers = Modifiers.AccPublic;
-				info.nameSourceStart = arg.getNameStart();
-				info.nameSourceEnd = arg.getNameEnd() - 1;
-				info.declarationStart = arg.sourceStart();
-				fRequestor.enterField(info);
-				fRequestor.exitField(arg.sourceEnd() - 1);
-			}
-		}
 		return visit;
 	}
 
 	private boolean visitMethodDeclaration(MethodDeclaration method) throws Exception {
 		this.fNodes.push(method);
-		List<?> args = method.getArguments();
 
-		String[] parameter = new String[args.size()];
-		String[] initializers = new String[args.size()];
-		int[] flags = new int[args.size()];
 		ISourceElementRequestor.MethodInfo mi = new ISourceElementRequestor.MethodInfo();
 		mi.modifiers = method.getModifiers();
-		for (int a = 0; a < args.size(); a++) {
-			Argument arg = (Argument) args.get(a);
-			parameter[a] = arg.getName();
-			if (arg.getInitialization() != null) {
-				if (arg.getInitialization() instanceof UnaryOperation) {
-					UnaryOperation initialization = (UnaryOperation) arg.getInitialization();
-					if (initialization.getExpr() instanceof Literal) {
-						Literal scalar = (Literal) initialization.getExpr();
-						initializers[a] = initialization.getOperator() + scalar.getValue();
-					} else {
-						initializers[a] = PHPIndexingVisitor.DEFAULT_VALUE;
-					}
-				} else if (arg.getInitialization() instanceof Literal) {
-					Literal scalar = (Literal) arg.getInitialization();
-					initializers[a] = scalar.getValue();
-				} else if (arg.getInitialization() instanceof ArrayCreation) {
-					ArrayCreation arrayCreation = (ArrayCreation) arg.getInitialization();
-					if (arrayCreation.getElements().isEmpty()) {
-						initializers[a] = PHPIndexingVisitor.EMPTY_ARRAY_VALUE;
-					} else {
-						initializers[a] = PHPIndexingVisitor.ARRAY_VALUE;
-					}
-				} else {
-					initializers[a] = PHPIndexingVisitor.DEFAULT_VALUE;
-				}
-			}
-			if (arg instanceof FormalParameterByReference) {
-				flags[a] = IPHPModifiers.AccReference;
-			}
-			if (arg instanceof FormalParameter) {
-				FormalParameter fp = (FormalParameter) arg;
-				if (fp.isVariadic()) {
-					mi.modifiers |= IPHPModifiers.AccVariadic;
-				}
-				if (fp.getParameterType() instanceof FullyQualifiedReference) {
-					if (((FullyQualifiedReference) fp.getParameterType()).isNullable()) {
-						flags[a] |= IPHPModifiers.AccNullable;
-					}
-				}
-			}
-		}
+		processArguments(mi, method.getArguments(), method);
 
-		mi.parameterNames = parameter;
 		mi.name = method.getName();
 		mi.nameSourceStart = method.getNameStart();
 		mi.nameSourceEnd = method.getNameEnd() - 1;
 		mi.declarationStart = method.sourceStart();
-		mi.parameterInitializers = initializers;
-		mi.parameterFlags = flags;
 
 		modifyMethodInfo(method, mi);
 
@@ -537,6 +566,9 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 
 		this.fInMethod = true;
 		this.fCurrentMethod = method;
+
+		populateArguments(mi, method.getArguments());
+
 		return true;
 	}
 
@@ -550,7 +582,6 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 			parentDeclaration = declarations.peek();
 		}
 		mi.isConstructor = ASTUtils.isConstructor(mi.name, parentDeclaration, fLastNamespace);
-		mi.parameterTypes = processParameterTypes(mi, methodDeclaration);
 
 		declarations.push(methodDeclaration);
 
@@ -593,46 +624,6 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 			return false;
 		}
 		return docBlock.getTags(TagKind.INHERITDOC).length != 0;
-	}
-
-	private String[] processParameterTypes(MethodInfo mi, MethodDeclaration methodDeclaration) {
-		List<?> args = methodDeclaration.getArguments();
-		PHPDocBlock docBlock = ((PHPMethodDeclaration) methodDeclaration).getPHPDoc();
-		String[] parameterType = new String[args.size()];
-		for (int a = 0; a < args.size(); a++) {
-			Argument arg = (Argument) args.get(a);
-			if (arg instanceof FormalParameter) {
-				SimpleReference type = ((FormalParameter) arg).getParameterType();
-				if (type != null) {
-					parameterType[a] = type.getName();
-				} else if (docBlock != null) {
-					for (PHPDocTag tag : docBlock.getTags(TagKind.PARAM)) {
-						if (tag.isValidParamTag() && tag.getVariableReference().getName().equals(arg.getName())) {
-							parameterType[a] = tag.getSingleTypeReference().getName();
-							break;
-						}
-					}
-				}
-				if (mi.isConstructor && arg.getModifiers() != 0) {
-					ISourceElementRequestor.FieldInfo info = new ISourceElementRequestor.FieldInfo();
-					info.modifiers = arg.getModifiers();
-					info.name = arg.getName();
-					SimpleReference var = arg.getRef();
-					info.nameSourceEnd = var.sourceEnd() - 1;
-					info.nameSourceStart = var.sourceStart();
-					info.declarationStart = arg.start();
-					info.modifiers = markAsDeprecated(info.modifiers, methodDeclaration);
-					if (type != null) {
-						info.type = type.getName();
-					}
-
-					fInfoStack.push(info);
-					fRequestor.enterField(info);
-					fRequestor.exitField(arg.end());
-				}
-			}
-		}
-		return parameterType;
 	}
 
 	private void modifyReturnTypeInfo(MethodDeclaration methodDeclaration, ISourceElementRequestor.MethodInfo mi) {
