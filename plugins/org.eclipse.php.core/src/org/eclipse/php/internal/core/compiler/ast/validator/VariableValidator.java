@@ -489,13 +489,12 @@ public class VariableValidator implements IValidatorExtension {
 
 		@Override
 		public boolean visit(ReflectionArrayVariableReference s) throws Exception {
-			if (s.getExpression() instanceof Scalar) {
-				Scalar name = (Scalar) s.getExpression();
-				if (name.getScalarType() == Scalar.TYPE_STRING) {
-					String dolarName = DOLLAR + name.getValue();
-					check(dolarName, name.start(), name.end());
-				}
-			}
+			/*
+			 * if (s.getExpression() instanceof Scalar) { Scalar name = (Scalar)
+			 * s.getExpression(); if (name.getScalarType() ==
+			 * Scalar.TYPE_STRING) { String dolarName = DOLLAR +
+			 * name.getValue(); check(dolarName, name.start(), name.end()); } }
+			 */
 			operations.push(Operation.USE);
 
 			return true;
