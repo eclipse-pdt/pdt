@@ -1,15 +1,13 @@
 <?php
 
-// Start of ssh2 v.0.12
+// Start of ssh2 v.1.4
 
 /**
  * Connect to an SSH server
  * @link http://www.php.net/manual/en/function.ssh2-connect.php
- * @param host string <p>
- * </p>
- * @param port int[optional] <p>
- * </p>
- * @param methods array[optional] <p>
+ * @param string $host 
+ * @param int $port [optional] 
+ * @param array $methods [optional] <p>
  * methods may be an associative array with up to four parameters
  * as described below.
  * </p>
@@ -17,10 +15,11 @@
  * <table>
  * methods may be an associative array
  * with any or all of the following parameters.
+ * <table>
  * <tr valign="top">
  * <td>Index</td>
  * <td>Meaning</td>
- * <td>Supported Values*</td>
+ * <td>Supported Values&#42;</td>
  * </tr>
  * <tr valign="top">
  * <td>kex</td>
@@ -62,9 +61,10 @@
  * </td>
  * </tr>
  * </table>
+ * </table>
  * </p>
  * <p>
- * * - Supported Values are dependent on methods supported by underlying library.
+ * &#42; - Supported Values are dependent on methods supported by underlying library.
  * See libssh2 documentation for additional
  * information.
  * </p>
@@ -73,10 +73,11 @@
  * client_to_server and
  * server_to_client may be an associative array
  * with any or all of the following parameters.
+ * <table>
  * <tr valign="top">
  * <td>Index</td>
  * <td>Meaning</td>
- * <td>Supported Values*</td>
+ * <td>Supported Values&#42;</td>
  * </tr>
  * <tr valign="top">
  * <td>crypt</td>
@@ -91,7 +92,7 @@
  * blowfish-cbc,
  * cast128-cbc,
  * arcfour, and
- * none**
+ * none&#42;&#42;
  * </td>
  * </tr>
  * <tr valign="top">
@@ -112,9 +113,10 @@
  * hmac-sha1-96,
  * hmac-ripemd160,
  * hmac-ripemd160@openssh.com, and
- * none**
+ * none&#42;&#42;
  * </td>
  * </tr>
+ * </table>
  * </table>
  * </p>
  * <p>
@@ -126,11 +128,11 @@
  * for the underlying library for more information.
  * </p>
  * </p>
- * @param callbacks array[optional] <p>
- * callbacks may be an associative array with any
+ * @param array $callbacks [optional] callbacks may be an associative array with any
  * or all of the following parameters.
  * <table>
  * Callbacks parameters
+ * <table>
  * <tr valign="top">
  * <td>Index</td>
  * <td>Meaning</td>
@@ -171,18 +173,25 @@
  * <td>void disconnect_cb($reason, $message, $language)</td>
  * </tr>
  * </table>
- * </p>
- * @return resource a resource on success, or false on error.
+ * </table>
+ * @return mixed a resource on success, or false on error.
  */
-function ssh2_connect ($host, $port = null, array $methods = null, array $callbacks = null) {}
+function ssh2_connect (string $host, int $port = null, array $methods = null, array $callbacks = null) {}
+
+/**
+ * Close a connection to a remote SSH server
+ * @link http://www.php.net/manual/en/function.ssh2-disconnect.php
+ * @param resource $session An SSH connection link identifier, obtained from a call to
+ * ssh2_connect.
+ * @return bool true on success or false on failure
+ */
+function ssh2_disconnect ($session) {}
 
 /**
  * Return list of negotiated methods
  * @link http://www.php.net/manual/en/function.ssh2-methods-negotiated.php
- * @param session resource <p>
- * An SSH connection link identifier, obtained from a call to
+ * @param resource $session An SSH connection link identifier, obtained from a call to
  * ssh2_connect.
- * </p>
  * @return array 
  */
 function ssh2_methods_negotiated ($session) {}
@@ -190,459 +199,370 @@ function ssh2_methods_negotiated ($session) {}
 /**
  * Retrieve fingerprint of remote server
  * @link http://www.php.net/manual/en/function.ssh2-fingerprint.php
- * @param session resource <p>
- * An SSH connection link identifier, obtained from a call to
+ * @param resource $session An SSH connection link identifier, obtained from a call to
  * ssh2_connect.
- * </p>
- * @param flags int[optional] <p>
- * flags may be either of
+ * @param int $flags [optional] flags may be either of
  * SSH2_FINGERPRINT_MD5 or
  * SSH2_FINGERPRINT_SHA1 logically ORed with
  * SSH2_FINGERPRINT_HEX or
  * SSH2_FINGERPRINT_RAW.
- * </p>
  * @return string the hostkey hash as a string.
  */
-function ssh2_fingerprint ($session, $flags = null) {}
+function ssh2_fingerprint ($session, int $flags = null) {}
 
 /**
  * Authenticate as "none"
  * @link http://www.php.net/manual/en/function.ssh2-auth-none.php
- * @param session resource <p>
- * An SSH connection link identifier, obtained from a call to
+ * @param resource $session An SSH connection link identifier, obtained from a call to
  * ssh2_connect.
- * </p>
- * @param username string <p>
- * Remote user name.
- * </p>
+ * @param string $username Remote user name.
  * @return mixed true if the server does accept "none" as an authentication
  * method, or an array of accepted authentication methods on failure.
  */
-function ssh2_auth_none ($session, $username) {}
+function ssh2_auth_none ($session, string $username) {}
 
 /**
  * Authenticate over SSH using a plain password
  * @link http://www.php.net/manual/en/function.ssh2-auth-password.php
- * @param session resource <p>
- * An SSH connection link identifier, obtained from a call to
+ * @param resource $session An SSH connection link identifier, obtained from a call to
  * ssh2_connect.
- * </p>
- * @param username string <p>
- * Remote user name.
- * </p>
- * @param password string <p>
- * Password for username
- * </p>
+ * @param string $username Remote user name.
+ * @param string $password Password for username
  * @return bool true on success or false on failure
  */
-function ssh2_auth_password ($session, $username, $password) {}
+function ssh2_auth_password ($session, string $username, string $password) {}
 
 /**
  * Authenticate using a public key
  * @link http://www.php.net/manual/en/function.ssh2-auth-pubkey-file.php
- * @param session resource <p>
- * An SSH connection link identifier, obtained from a call to
+ * @param resource $session An SSH connection link identifier, obtained from a call to
  * ssh2_connect.
- * </p>
- * @param username string <p>
- * </p>
- * @param pubkeyfile string <p>
+ * @param string $username 
+ * @param string $pubkeyfile <p>
  * The public key file needs to be in OpenSSH's format. It should look something like:
  * </p>
  * <p>
  * ssh-rsa AAAAB3NzaC1yc2EAAA....NX6sqSnHA8= rsa-key-20121110
  * </p>
- * @param privkeyfile string <p>
- * </p>
- * @param passphrase string[optional] <p>
- * If privkeyfile is encrypted (which it should
+ * @param string $privkeyfile 
+ * @param string $passphrase [optional] If privkeyfile is encrypted (which it should
  * be), the passphrase must be provided.
- * </p>
  * @return bool true on success or false on failure
  */
-function ssh2_auth_pubkey_file ($session, $username, $pubkeyfile, $privkeyfile, $passphrase = null) {}
+function ssh2_auth_pubkey_file ($session, string $username, string $pubkeyfile, string $privkeyfile, string $passphrase = null) {}
+
+/**
+ * @param mixed $session
+ * @param mixed $username
+ * @param mixed $pubkey
+ * @param mixed $privkey
+ * @param mixed $passphrase [optional]
+ */
+function ssh2_auth_pubkey ($session = null, $username = null, $pubkey = null, $privkey = null, $passphrase = null) {}
 
 /**
  * Authenticate using a public hostkey
  * @link http://www.php.net/manual/en/function.ssh2-auth-hostbased-file.php
- * @param session resource <p>
- * An SSH connection link identifier, obtained from a call to
+ * @param resource $session An SSH connection link identifier, obtained from a call to
  * ssh2_connect.
- * </p>
- * @param username string <p>
- * </p>
- * @param hostname string <p>
- * </p>
- * @param pubkeyfile string <p>
- * </p>
- * @param privkeyfile string <p>
- * </p>
- * @param passphrase string[optional] <p>
- * If privkeyfile is encrypted (which it should
+ * @param string $username 
+ * @param string $hostname 
+ * @param string $pubkeyfile 
+ * @param string $privkeyfile 
+ * @param string $passphrase [optional] If privkeyfile is encrypted (which it should
  * be), the passphrase must be provided.
- * </p>
- * @param local_username string[optional] <p>
- * If local_username is omitted, then the value
+ * @param string $local_username [optional] If local_username is omitted, then the value
  * for username will be used for it.
- * </p>
  * @return bool true on success or false on failure
  */
-function ssh2_auth_hostbased_file ($session, $username, $hostname, $pubkeyfile, $privkeyfile, $passphrase = null, $local_username = null) {}
+function ssh2_auth_hostbased_file ($session, string $username, string $hostname, string $pubkeyfile, string $privkeyfile, string $passphrase = null, string $local_username = null) {}
 
-function ssh2_forward_listen () {}
+/**
+ * Bind a port on the remote server and listen for connections
+ * @link http://www.php.net/manual/en/function.ssh2-forward-listen.php
+ * @param resource $session An SSH Session resource, obtained from a call to ssh2_connect.
+ * @param int $port The port of the remote server.
+ * @param string $host [optional] 
+ * @param int $max_connections [optional] 
+ * @return mixed an SSH2 Listener, or false on failure.
+ */
+function ssh2_forward_listen ($session, int $port, string $host = null, int $max_connections = null) {}
 
-function ssh2_forward_accept () {}
+/**
+ * Accept a connection created by a listener
+ * @link http://www.php.net/manual/en/function.ssh2-forward-accept.php
+ * @param resource $listener 
+ * @return mixed a stream resource, or false on failure.
+ */
+function ssh2_forward_accept ($listener) {}
 
 /**
  * Request an interactive shell
  * @link http://www.php.net/manual/en/function.ssh2-shell.php
- * @param session resource <p>
- * An SSH connection link identifier, obtained from a call to
+ * @param resource $session An SSH connection link identifier, obtained from a call to
  * ssh2_connect.
- * </p>
- * @param term_type string[optional] <p>
- * term_type should correspond to one of the
+ * @param string $termtype [optional] termtype should correspond to one of the
  * entries in the target system's /etc/termcap file.
- * </p>
- * @param env array[optional] <p>
- * env may be passed as an associative array of
+ * @param mixed $env [optional] env may be passed as an associative array of
  * name/value pairs to set in the target environment.
- * </p>
- * @param width int[optional] <p>
- * Width of the virtual terminal.
- * </p>
- * @param height int[optional] <p>
- * Height of the virtual terminal.
- * </p>
- * @param width_height_type int[optional] <p>
- * width_height_type should be one of
+ * @param int $width [optional] Width of the virtual terminal.
+ * @param int $height [optional] Height of the virtual terminal.
+ * @param int $width_height_type [optional] width_height_type should be one of
  * SSH2_TERM_UNIT_CHARS or
  * SSH2_TERM_UNIT_PIXELS.
- * </p>
- * @return resource 
+ * @return mixed a stream resource on success, or false on failure.
  */
-function ssh2_shell ($session, $term_type = null, array $env = null, $width = null, $height = null, $width_height_type = null) {}
+function ssh2_shell ($session, string $termtype = null, $env = null, int $width = null, int $height = null, int $width_height_type = null) {}
 
 /**
  * Execute a command on a remote server
  * @link http://www.php.net/manual/en/function.ssh2-exec.php
- * @param session resource <p>
- * An SSH connection link identifier, obtained from a call to
+ * @param resource $session An SSH connection link identifier, obtained from a call to
  * ssh2_connect.
- * </p>
- * @param command string <p>
- * </p>
- * @param pty string[optional] <p>
- * </p>
- * @param env array[optional] <p>
- * env may be passed as an associative array of
+ * @param string $command 
+ * @param string $pty [optional] 
+ * @param array $env [optional] env may be passed as an associative array of
  * name/value pairs to set in the target environment.
- * </p>
- * @param width int[optional] <p>
- * Width of the virtual terminal.
- * </p>
- * @param height int[optional] <p>
- * Height of the virtual terminal.
- * </p>
- * @param width_height_type int[optional] <p>
- * width_height_type should be one of
+ * @param int $width [optional] Width of the virtual terminal.
+ * @param int $height [optional] Height of the virtual terminal.
+ * @param int $width_height_type [optional] width_height_type should be one of
  * SSH2_TERM_UNIT_CHARS or
  * SSH2_TERM_UNIT_PIXELS.
- * </p>
- * @return resource a stream on success or false on failure.
+ * @return mixed a stream on success or false on failure.
  */
-function ssh2_exec ($session, $command, $pty = null, array $env = null, $width = null, $height = null, $width_height_type = null) {}
+function ssh2_exec ($session, string $command, string $pty = null, array $env = null, int $width = null, int $height = null, int $width_height_type = null) {}
 
 /**
  * Open a tunnel through a remote server
  * @link http://www.php.net/manual/en/function.ssh2-tunnel.php
- * @param session resource <p>
- * An SSH connection link identifier, obtained from a call to
+ * @param resource $session An SSH connection link identifier, obtained from a call to
  * ssh2_connect.
- * </p>
- * @param host string <p>
- * </p>
- * @param port int <p>
- * </p>
+ * @param string $host 
+ * @param int $port 
  * @return resource 
  */
-function ssh2_tunnel ($session, $host, $port) {}
+function ssh2_tunnel ($session, string $host, int $port) {}
 
 /**
  * Request a file via SCP
  * @link http://www.php.net/manual/en/function.ssh2-scp-recv.php
- * @param session resource <p>
- * An SSH connection link identifier, obtained from a call to
+ * @param resource $session An SSH connection link identifier, obtained from a call to
  * ssh2_connect.
- * </p>
- * @param remote_file string <p>
- * Path to the remote file.
- * </p>
- * @param local_file string <p>
- * Path to the local file.
- * </p>
+ * @param string $remote_file Path to the remote file.
+ * @param string $local_file Path to the local file.
  * @return bool true on success or false on failure
  */
-function ssh2_scp_recv ($session, $remote_file, $local_file) {}
+function ssh2_scp_recv ($session, string $remote_file, string $local_file) {}
 
 /**
  * Send a file via SCP
  * @link http://www.php.net/manual/en/function.ssh2-scp-send.php
- * @param session resource <p>
- * An SSH connection link identifier, obtained from a call to
+ * @param resource $session An SSH connection link identifier, obtained from a call to
  * ssh2_connect.
- * </p>
- * @param local_file string <p>
- * Path to the local file.
- * </p>
- * @param remote_file string <p>
- * Path to the remote file.
- * </p>
- * @param create_mode int[optional] <p>
- * The file will be created with the mode specified by
+ * @param string $local_file Path to the local file.
+ * @param string $remote_file Path to the remote file.
+ * @param int $create_mode [optional] The file will be created with the mode specified by
  * create_mode.
- * </p>
  * @return bool true on success or false on failure
  */
-function ssh2_scp_send ($session, $local_file, $remote_file, $create_mode = null) {}
+function ssh2_scp_send ($session, string $local_file, string $remote_file, int $create_mode = null) {}
 
 /**
  * Fetch an extended data stream
  * @link http://www.php.net/manual/en/function.ssh2-fetch-stream.php
- * @param channel resource <p>
- * </p>
- * @param streamid int <p>
- * An SSH2 channel stream.
- * </p>
+ * @param resource $channel 
+ * @param int $streamid An SSH2 channel stream.
  * @return resource the requested stream resource.
  */
-function ssh2_fetch_stream ($channel, $streamid) {}
+function ssh2_fetch_stream ($channel, int $streamid) {}
 
 /**
- * @param var1
+ * Poll the channels/listeners/streams for events
+ * @link http://www.php.net/manual/en/function.ssh2-poll.php
+ * @param array $desc An indexed array of subarrays with the keys
+ * 'resource' and 'events'.
+ * The value of the resource is a (channel) stream or an SSH2 Listener resource.
+ * The value of the event are SSH2_POLL&#42; flags bitwise ORed together.
+ * Each subarray will be populated with an 'revents' element on return,
+ * whose values are SSH2_POLL&#42; flags bitwise ORed together of the events that occurred.
+ * @param int $timeout [optional] The timeout in seconds.
+ * @return int the number of descriptors which returned non-zero revents.
  */
-function ssh2_poll (&$var1) {}
+function ssh2_poll (array &$desc, int $timeout = null) {}
+
+/**
+ * Send EOF to stream
+ * @link http://www.php.net/manual/en/function.ssh2-send-eof.php
+ * @param resource $channel An SSH stream; can be acquired through functions like ssh2_fetch_stream
+ * or ssh2_connect.
+ * @return bool true on success or false on failure
+ */
+function ssh2_send_eof ($channel) {}
+
+/**
+ * @param mixed $session
+ * @param mixed $width
+ * @param mixed $height
+ */
+function ssh2_shell_resize ($session = null, $width = null, $height = null) {}
 
 /**
  * Initialize SFTP subsystem
  * @link http://www.php.net/manual/en/function.ssh2-sftp.php
- * @param session resource <p>
- * An SSH connection link identifier, obtained from a call to
+ * @param resource $session An SSH connection link identifier, obtained from a call to
  * ssh2_connect.
- * </p>
- * @return resource This method returns an SSH2 SFTP resource for use with
- * all other ssh2_sftp_*() methods and the
- * ssh2.sftp:// fopen wrapper.
+ * @return mixed This method returns an SSH2 SFTP resource for use with
+ * all other ssh2_sftp_&#42;() methods and the
+ * ssh2.sftp:// fopen wrapper,
+ * or false on failure.
  */
 function ssh2_sftp ($session) {}
 
 /**
  * Rename a remote file
  * @link http://www.php.net/manual/en/function.ssh2-sftp-rename.php
- * @param sftp resource <p>
- * An SSH2 SFTP resource opened by ssh2_sftp.
- * </p>
- * @param from string <p>
- * The current file that is being renamed.
- * </p>
- * @param to string <p>
- * The new file name that replaces from.
- * </p>
+ * @param resource $sftp An SSH2 SFTP resource opened by ssh2_sftp.
+ * @param string $from The current file that is being renamed.
+ * @param string $to The new file name that replaces from.
  * @return bool true on success or false on failure
  */
-function ssh2_sftp_rename ($sftp, $from, $to) {}
+function ssh2_sftp_rename ($sftp, string $from, string $to) {}
 
 /**
  * Delete a file
  * @link http://www.php.net/manual/en/function.ssh2-sftp-unlink.php
- * @param sftp resource <p>
- * An SSH2 SFTP resource opened by ssh2_sftp.
- * </p>
- * @param filename string <p>
- * </p>
+ * @param resource $sftp An SSH2 SFTP resource opened by ssh2_sftp.
+ * @param string $filename 
  * @return bool true on success or false on failure
  */
-function ssh2_sftp_unlink ($sftp, $filename) {}
+function ssh2_sftp_unlink ($sftp, string $filename) {}
 
 /**
  * Create a directory
  * @link http://www.php.net/manual/en/function.ssh2-sftp-mkdir.php
- * @param sftp resource <p>
- * An SSH2 SFTP resource opened by ssh2_sftp.
- * </p>
- * @param dirname string <p>
- * Path of the new directory.
- * </p>
- * @param mode int[optional] <p>
- * Permissions on the new directory.
- * </p>
- * @param recursive bool[optional] <p>
- * If recursive is true any parent directories
+ * @param resource $sftp An SSH2 SFTP resource opened by ssh2_sftp.
+ * @param string $dirname Path of the new directory.
+ * @param int $mode [optional] Permissions on the new directory.
+ * The actual mode is affected by the current umask.
+ * @param bool $recursive [optional] If recursive is true any parent directories
  * required for dirname will be automatically created as well.
- * </p>
  * @return bool true on success or false on failure
  */
-function ssh2_sftp_mkdir ($sftp, $dirname, $mode = null, $recursive = null) {}
+function ssh2_sftp_mkdir ($sftp, string $dirname, int $mode = null, bool $recursive = null) {}
 
 /**
  * Remove a directory
  * @link http://www.php.net/manual/en/function.ssh2-sftp-rmdir.php
- * @param sftp resource <p>
- * An SSH2 SFTP resource opened by ssh2_sftp.
- * </p>
- * @param dirname string <p>
- * </p>
+ * @param resource $sftp An SSH2 SFTP resource opened by ssh2_sftp.
+ * @param string $dirname 
  * @return bool true on success or false on failure
  */
-function ssh2_sftp_rmdir ($sftp, $dirname) {}
+function ssh2_sftp_rmdir ($sftp, string $dirname) {}
 
 /**
  * Changes file mode
  * @link http://www.php.net/manual/en/function.ssh2-sftp-chmod.php
- * @param sftp resource <p>
- * An SSH2 SFTP resource opened by ssh2_sftp.
- * </p>
- * @param filename string <p>
- * Path to the file.
- * </p>
- * @param mode int <p>
- * Permissions on the file. See the chmod for more details on this parameter.
- * </p>
+ * @param resource $sftp An SSH2 SFTP resource opened by ssh2_sftp.
+ * @param string $filename Path to the file.
+ * @param int $mode Permissions on the file. See the chmod for more details on this parameter.
  * @return bool true on success or false on failure
  */
-function ssh2_sftp_chmod ($sftp, $filename, $mode) {}
+function ssh2_sftp_chmod ($sftp, string $filename, int $mode) {}
 
 /**
  * Stat a file on a remote filesystem
  * @link http://www.php.net/manual/en/function.ssh2-sftp-stat.php
- * @param sftp resource <p>
- * An SSH2 SFTP resource opened by ssh2_sftp.
- * </p>
- * @param path string <p>
- * </p>
+ * @param resource $sftp An SSH2 SFTP resource opened by ssh2_sftp.
+ * @param string $path 
  * @return array See the documentation for stat for details on the
  * values which may be returned.
  */
-function ssh2_sftp_stat ($sftp, $path) {}
+function ssh2_sftp_stat ($sftp, string $path) {}
 
 /**
  * Stat a symbolic link
  * @link http://www.php.net/manual/en/function.ssh2-sftp-lstat.php
- * @param sftp resource <p>
- * </p>
- * @param path string <p>
- * Path to the remote symbolic link.
- * </p>
+ * @param resource $sftp An SSH2 SFTP resource opened by ssh2_sftp.
+ * @param string $path Path to the remote symbolic link.
  * @return array See the documentation for stat for details on the
  * values which may be returned.
  */
-function ssh2_sftp_lstat ($sftp, $path) {}
+function ssh2_sftp_lstat ($sftp, string $path) {}
 
 /**
  * Create a symlink
  * @link http://www.php.net/manual/en/function.ssh2-sftp-symlink.php
- * @param sftp resource <p>
- * An SSH2 SFTP resource opened by ssh2_sftp.
- * </p>
- * @param target string <p>
- * Target of the symbolic link.
- * </p>
- * @param link string <p>
- * </p>
+ * @param resource $sftp An SSH2 SFTP resource opened by ssh2_sftp.
+ * @param string $target Target of the symbolic link.
+ * @param string $link 
  * @return bool true on success or false on failure
  */
-function ssh2_sftp_symlink ($sftp, $target, $link) {}
+function ssh2_sftp_symlink ($sftp, string $target, string $link) {}
 
 /**
  * Return the target of a symbolic link
  * @link http://www.php.net/manual/en/function.ssh2-sftp-readlink.php
- * @param sftp resource <p>
- * An SSH2 SFTP resource opened by ssh2_sftp.
- * </p>
- * @param link string <p>
- * Path of the symbolic link.
- * </p>
+ * @param resource $sftp An SSH2 SFTP resource opened by ssh2_sftp.
+ * @param string $link Path of the symbolic link.
  * @return string the target of the symbolic link.
  */
-function ssh2_sftp_readlink ($sftp, $link) {}
+function ssh2_sftp_readlink ($sftp, string $link) {}
 
 /**
  * Resolve the realpath of a provided path string
  * @link http://www.php.net/manual/en/function.ssh2-sftp-realpath.php
- * @param sftp resource <p>
- * An SSH2 SFTP resource opened by ssh2_sftp.
- * </p>
- * @param filename string <p>
- * </p>
+ * @param resource $sftp An SSH2 SFTP resource opened by ssh2_sftp.
+ * @param string $filename 
  * @return string the real path as a string.
  */
-function ssh2_sftp_realpath ($sftp, $filename) {}
+function ssh2_sftp_realpath ($sftp, string $filename) {}
 
 /**
  * Initialize Publickey subsystem
  * @link http://www.php.net/manual/en/function.ssh2-publickey-init.php
- * @param session resource <p>
- * </p>
- * @return resource an SSH2 Publickey Subsystem resource for use
- * with all other ssh2_publickey_*() methods or false on failure.
+ * @param resource $session 
+ * @return mixed an SSH2 Publickey Subsystem resource for use
+ * with all other ssh2_publickey_&#42;() methods or false on failure.
  */
 function ssh2_publickey_init ($session) {}
 
 /**
  * Add an authorized publickey
  * @link http://www.php.net/manual/en/function.ssh2-publickey-add.php
- * @param pkey resource <p>
- * Publickey Subsystem resource created by ssh2_publickey_init.
- * </p>
- * @param algoname string <p>
- * Publickey algorithm (e.g.): ssh-dss, ssh-rsa
- * </p>
- * @param blob string <p>
- * Publickey blob as raw binary data
- * </p>
- * @param overwrite bool[optional] <p>
- * If the specified key already exists, should it be overwritten?
- * </p>
- * @param attributes array[optional] <p>
- * Associative array of attributes to assign to this public key.
+ * @param resource $pkey Publickey Subsystem resource created by ssh2_publickey_init.
+ * @param string $algoname Publickey algorithm (e.g.): ssh-dss, ssh-rsa
+ * @param string $blob Publickey blob as raw binary data
+ * @param bool $overwrite [optional] If the specified key already exists, should it be overwritten?
+ * @param array $attributes [optional] Associative array of attributes to assign to this public key.
  * Refer to ietf-secsh-publickey-subsystem for a list of supported attributes.
  * To mark an attribute as mandatory, precede its name with an asterisk.
  * If the server is unable to support an attribute marked mandatory,
  * it will abort the add process.
- * </p>
  * @return bool true on success or false on failure
  */
-function ssh2_publickey_add ($pkey, $algoname, $blob, $overwrite = null, array $attributes = null) {}
+function ssh2_publickey_add ($pkey, string $algoname, string $blob, bool $overwrite = null, array $attributes = null) {}
 
 /**
  * Remove an authorized publickey
  * @link http://www.php.net/manual/en/function.ssh2-publickey-remove.php
- * @param pkey resource <p>
- * Publickey Subsystem Resource
- * </p>
- * @param algoname string <p>
- * Publickey algorithm (e.g.): ssh-dss, ssh-rsa
- * </p>
- * @param blob string <p>
- * Publickey blob as raw binary data
- * </p>
+ * @param resource $pkey Publickey Subsystem Resource
+ * @param string $algoname Publickey algorithm (e.g.): ssh-dss, ssh-rsa
+ * @param string $blob Publickey blob as raw binary data
  * @return bool true on success or false on failure
  */
-function ssh2_publickey_remove ($pkey, $algoname, $blob) {}
+function ssh2_publickey_remove ($pkey, string $algoname, string $blob) {}
 
 /**
  * List currently authorized publickeys
  * @link http://www.php.net/manual/en/function.ssh2-publickey-list.php
- * @param pkey resource <p>
- * Publickey Subsystem resource
- * </p>
+ * @param resource $pkey Publickey Subsystem resource
  * @return array a numerically indexed array of keys,
  * each of which is an associative array containing:
  * name, blob, and attrs elements.
- * </p>
  * <p>
  * <table>
  * Publickey elements
+ * <table>
  * <tr valign="top">
  * <td>Array Key</td>
  * <td>Meaning</td>
@@ -664,22 +584,20 @@ function ssh2_publickey_remove ($pkey, $algoname, $blob) {}
  * string.</td>
  * </tr>
  * </table>
+ * </table>
+ * </p>
  */
 function ssh2_publickey_list ($pkey) {}
 
 /**
  * Authenticate over SSH using the ssh agent
  * @link http://www.php.net/manual/en/function.ssh2-auth-agent.php
- * @param session resource <p>
- * An SSH connection link identifier, obtained from a call to
+ * @param resource $session An SSH connection link identifier, obtained from a call to
  * ssh2_connect.
- * </p>
- * @param username string <p>
- * Remote user name.
- * </p>
+ * @param string $username Remote user name.
  * @return bool true on success or false on failure
  */
-function ssh2_auth_agent ($session, $username) {}
+function ssh2_auth_agent ($session, string $username) {}
 
 
 /**
@@ -762,14 +680,59 @@ define ('SSH2_STREAM_STDIO', 0);
  * @link http://www.php.net/manual/en/ssh2.constants.php
  */
 define ('SSH2_STREAM_STDERR', 1);
+
+/**
+ * 
+ * @link http://www.php.net/manual/en/ssh2.constants.php
+ */
 define ('SSH2_POLLIN', 1);
+
+/**
+ * 
+ * @link http://www.php.net/manual/en/ssh2.constants.php
+ */
 define ('SSH2_POLLEXT', 2);
+
+/**
+ * 
+ * @link http://www.php.net/manual/en/ssh2.constants.php
+ */
 define ('SSH2_POLLOUT', 4);
+
+/**
+ * 
+ * @link http://www.php.net/manual/en/ssh2.constants.php
+ */
 define ('SSH2_POLLERR', 8);
+
+/**
+ * 
+ * @link http://www.php.net/manual/en/ssh2.constants.php
+ */
 define ('SSH2_POLLHUP', 16);
+
+/**
+ * 
+ * @link http://www.php.net/manual/en/ssh2.constants.php
+ */
 define ('SSH2_POLLNVAL', 32);
+
+/**
+ * 
+ * @link http://www.php.net/manual/en/ssh2.constants.php
+ */
 define ('SSH2_POLL_SESSION_CLOSED', 16);
+
+/**
+ * 
+ * @link http://www.php.net/manual/en/ssh2.constants.php
+ */
 define ('SSH2_POLL_CHANNEL_CLOSED', 128);
+
+/**
+ * 
+ * @link http://www.php.net/manual/en/ssh2.constants.php
+ */
 define ('SSH2_POLL_LISTENER_CLOSED', 128);
 
-// End of ssh2 v.0.12
+// End of ssh2 v.1.4

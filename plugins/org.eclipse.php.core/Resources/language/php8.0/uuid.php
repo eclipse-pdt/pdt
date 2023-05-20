@@ -1,67 +1,68 @@
 <?php
 
-// Start of uuid v.1.0.3
+// Start of uuid v.1.2.0
 
 /**
- * @param uuid_type[optional]
+ * @param int $uuid_type [optional]
  */
-function uuid_create ($uuid_type = null) {}
+function uuid_create (int $uuid_type = 0): string {}
 
 /**
- * @param uuid
+ * @param string $uuid
  */
-function uuid_is_valid ($uuid) {}
+function uuid_is_valid (string $uuid): bool {}
 
 /**
- * @param uuid1
- * @param uuid2
+ * @param string $uuid1
+ * @param string $uuid2
  */
-function uuid_compare ($uuid1, $uuid2) {}
+function uuid_compare (string $uuid1, string $uuid2): int {}
 
 /**
- * @param uuid
+ * @param string $uuid
  */
-function uuid_is_null ($uuid) {}
+function uuid_is_null (string $uuid): bool {}
 
 /**
- * @param uuid
+ * @param string $uuid
  */
-function uuid_type ($uuid) {}
+function uuid_type (string $uuid): int {}
 
 /**
- * @param uuid
+ * @param string $uuid
  */
-function uuid_variant ($uuid) {}
+function uuid_variant (string $uuid): int {}
 
 /**
- * @param uuid
+ * @param string $uuid
  */
-function uuid_time ($uuid) {}
+function uuid_time (string $uuid): int {}
 
 /**
- * @param uuid
+ * @param string $uuid
  */
-function uuid_mac ($uuid) {}
+function uuid_mac (string $uuid): string {}
 
 /**
- * @param uuid
+ * @param string $uuid
  */
-function uuid_parse ($uuid) {}
+function uuid_parse (string $uuid): string {}
 
 /**
- * @param uuid
+ * @param string $uuid
  */
-function uuid_unparse ($uuid) {}
+function uuid_unparse (string $uuid): string {}
 
+define ('UUID_VARIANT_NCS', 0);
 define ('UUID_VARIANT_DCE', 1);
 define ('UUID_VARIANT_MICROSOFT', 2);
 define ('UUID_VARIANT_OTHER', 3);
 define ('UUID_TYPE_DEFAULT', 0);
-define ('UUID_TYPE_TIME', 1);
 define ('UUID_TYPE_DCE', 4);
 define ('UUID_TYPE_NAME', 1);
+define ('UUID_TYPE_TIME', 1);
 define ('UUID_TYPE_RANDOM', 4);
 define ('UUID_TYPE_NULL', -1);
 define ('UUID_TYPE_INVALID', -42);
 
-// End of uuid v.1.0.3
+// End of uuid v.1.2.0

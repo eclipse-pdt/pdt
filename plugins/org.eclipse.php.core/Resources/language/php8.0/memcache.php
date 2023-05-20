@@ -1,67 +1,192 @@
 <?php
 
-// Start of memcache v.3.0.8
+// Start of memcache v.8.2
 
 class MemcachePool  {
 
-	public function connect () {}
+	/**
+	 * @param mixed $host
+	 * @param mixed $tcp_port [optional]
+	 * @param mixed $udp_port [optional]
+	 * @param mixed $persistent [optional]
+	 * @param mixed $weight [optional]
+	 * @param mixed $timeout [optional]
+	 * @param mixed $retry_interval [optional]
+	 */
+	public function connect ($host = null, $tcp_port = null, $udp_port = null, $persistent = null, $weight = null, $timeout = null, $retry_interval = null) {}
 
-	public function addserver () {}
+	/**
+	 * @param mixed $host
+	 * @param mixed $tcp_port [optional]
+	 * @param mixed $udp_port [optional]
+	 * @param mixed $persistent [optional]
+	 * @param mixed $weight [optional]
+	 * @param mixed $timeout [optional]
+	 * @param mixed $retry_interval [optional]
+	 * @param mixed $status [optional]
+	 */
+	public function addserver ($host = null, $tcp_port = null, $udp_port = null, $persistent = null, $weight = null, $timeout = null, $retry_interval = null, $status = null): bool {}
 
-	public function setserverparams () {}
+	/**
+	 * @param string $host
+	 * @param int $tcp_port [optional]
+	 * @param float $timeout [optional]
+	 * @param int $retry_interval [optional]
+	 * @param bool $status [optional]
+	 * @param mixed $failure_callback [optional]
+	 */
+	public function setserverparams (string $host, int $tcp_port = null, float $timeout = null, int $retry_interval = null, bool $status = null, $failure_callback = null): bool {}
 
-	public function setfailurecallback () {}
+	/**
+	 * @param callable|null $failure_callback
+	 */
+	public function setfailurecallback (callable|null $failure_callback = null): bool {}
 
-	public function getserverstatus () {}
+	/**
+	 * @param string $host
+	 * @param int $tcp_port [optional]
+	 */
+	public function getserverstatus (string $host, int $tcp_port = null): int|bool {}
 
-	public function findserver () {}
+	/**
+	 * @param string $key
+	 */
+	public function findserver (string $key): string|bool {}
 
-	public function getversion () {}
+	public function getversion (): string|bool {}
 
-	public function add () {}
+	/**
+	 * @param array|string $key
+	 * @param mixed $value [optional]
+	 * @param int $flags [optional]
+	 * @param int $exptime [optional]
+	 * @param int $cas [optional]
+	 */
+	public function add (array|string $key, mixed $value = null, int $flags = null, int $exptime = null, int $cas = null): bool {}
 
-	public function set () {}
+	/**
+	 * @param array|string $key
+	 * @param mixed $value [optional]
+	 * @param int $flags [optional]
+	 * @param int $exptime [optional]
+	 * @param int $cas [optional]
+	 */
+	public function set (array|string $key, mixed $value = null, int $flags = null, int $exptime = null, int $cas = null): bool {}
 
-	public function replace () {}
+	/**
+	 * @param array|string $key
+	 * @param mixed $value [optional]
+	 * @param int $flags [optional]
+	 * @param int $exptime [optional]
+	 * @param int $cas [optional]
+	 */
+	public function replace (array|string $key, mixed $value = null, int $flags = null, int $exptime = null, int $cas = null): bool {}
 
-	public function cas () {}
+	/**
+	 * @param array|string $key
+	 * @param mixed $value [optional]
+	 * @param int $flags [optional]
+	 * @param int $exptime [optional]
+	 * @param int $cas [optional]
+	 */
+	public function cas (array|string $key, mixed $value = null, int $flags = null, int $exptime = null, int $cas = null): bool {}
 
-	public function append () {}
+	/**
+	 * @param array|string $key
+	 * @param mixed $value [optional]
+	 * @param int $flags [optional]
+	 * @param int $exptime [optional]
+	 * @param int $cas [optional]
+	 */
+	public function append (array|string $key, mixed $value = null, int $flags = null, int $exptime = null, int $cas = null): bool {}
 
-	public function prepend () {}
+	/**
+	 * @param array|string $key
+	 * @param mixed $value [optional]
+	 * @param int $flags [optional]
+	 * @param int $exptime [optional]
+	 * @param int $cas [optional]
+	 */
+	public function prepend (array|string $key, mixed $value = null, int $flags = null, int $exptime = null, int $cas = null): bool {}
 
-	public function get () {}
+	/**
+	 * @param array|string $key
+	 * @param mixed $flags [optional]
+	 * @param mixed $cas [optional]
+	 */
+	public function get (array|string $key, mixed &$flags = null, mixed &$cas = null): mixed {}
 
-	public function delete () {}
+	/**
+	 * @param array|string $key
+	 * @param int $exptime [optional]
+	 */
+	public function delete (array|string $key, int $exptime = null): array|bool {}
 
-	public function getstats () {}
+	/**
+	 * @param string $type [optional]
+	 * @param int $slabid [optional]
+	 * @param int $limit [optional]
+	 */
+	public function getstats (string $type = null, int $slabid = null, int $limit = null): array|bool {}
 
-	public function getextendedstats () {}
+	/**
+	 * @param string $type [optional]
+	 * @param int $slabid [optional]
+	 * @param int $limit [optional]
+	 */
+	public function getextendedstats (string $type = null, int $slabid = null, int $limit = null): array|bool {}
 
-	public function setcompressthreshold () {}
+	/**
+	 * @param int $threshold
+	 * @param float $min_savings [optional]
+	 */
+	public function setcompressthreshold (int $threshold, float $min_savings = null): bool {}
 
-	public function increment () {}
+	/**
+	 * @param array|string $key
+	 * @param int $value [optional]
+	 * @param int $defval [optional]
+	 * @param int $exptime [optional]
+	 */
+	public function increment (array|string $key, int $value = null, int $defval = null, int $exptime = null): array|int|bool {}
 
-	public function decrement () {}
+	/**
+	 * @param array|string $key
+	 * @param int $value [optional]
+	 * @param int $defval [optional]
+	 * @param int $exptime [optional]
+	 */
+	public function decrement (array|string $key, int $value = null, int $defval = null, int $exptime = null): array|int|bool {}
 
-	public function close () {}
+	public function close (): bool {}
 
-	public function flush () {}
+	/**
+	 * @param int $delay [optional]
+	 */
+	public function flush (int $delay = null): bool {}
+
+	/**
+	 * @param string $username
+	 * @param string $password
+	 */
+	public function setSaslAuthData (string $username, string $password): bool {}
 
 }
 
+/**
+ * Represents a connection to a set of memcache servers.
+ * @link http://www.php.net/manual/en/class.memcache.php
+ */
 class Memcache extends MemcachePool  {
 
 	/**
 	 * Open memcached server connection
 	 * @link http://www.php.net/manual/en/memcache.connect.php
-	 * @param host string <p>
-	 * Point to the host where memcached is listening for connections. This parameter
+	 * @param string $host Point to the host where memcached is listening for connections. This parameter
 	 * may also specify other transports like unix:///path/to/memcached.sock
 	 * to use UNIX domain sockets, in this case port must also
 	 * be set to 0.
-	 * </p>
-	 * @param port int[optional] <p>
+	 * @param int $port [optional] <p>
 	 * Point to the port where memcached is listening for connections. Set this
 	 * parameter to 0 when using UNIX domain sockets.
 	 * </p>
@@ -71,47 +196,37 @@ class Memcache extends MemcachePool  {
 	 * if not specified. For this reason it is wise to specify the port
 	 * explicitly in this method call.
 	 * </p>
-	 * @param timeout int[optional] <p>
-	 * Value in seconds which will be used for connecting to the daemon. Think
+	 * @param int $timeout [optional] Value in seconds which will be used for connecting to the daemon. Think
 	 * twice before changing the default value of 1 second - you can lose all
 	 * the advantages of caching if your connection is too slow.
-	 * </p>
 	 * @return bool true on success or false on failure
 	 */
-	public function connect ($host, $port = null, $timeout = null) {}
+	public function connect (string $host, int $port = null, int $timeout = null) {}
 
 	/**
 	 * Open memcached server persistent connection
 	 * @link http://www.php.net/manual/en/memcache.pconnect.php
-	 * @param host string <p>
-	 * Point to the host where memcached is listening for connections. This parameter
+	 * @param string $host Point to the host where memcached is listening for connections. This parameter
 	 * may also specify other transports like unix:///path/to/memcached.sock
 	 * to use UNIX domain sockets, in this case port must also
 	 * be set to 0.
-	 * </p>
-	 * @param port int[optional] <p>
-	 * Point to the port where memcached is listening for connections. Set this
+	 * @param int $port [optional] Point to the port where memcached is listening for connections. Set this
 	 * parameter to 0 when using UNIX domain sockets.
-	 * </p>
-	 * @param timeout int[optional] <p>
-	 * Value in seconds which will be used for connecting to the daemon. Think
+	 * @param int $timeout [optional] Value in seconds which will be used for connecting to the daemon. Think
 	 * twice before changing the default value of 1 second - you can lose all
 	 * the advantages of caching if your connection is too slow.
-	 * </p>
 	 * @return mixed a Memcache object or false on failure.
 	 */
-	public function pconnect ($host, $port = null, $timeout = null) {}
+	public function pconnect (string $host, int $port = null, int $timeout = null) {}
 
 	/**
 	 * Add a memcached server to connection pool
 	 * @link http://www.php.net/manual/en/memcache.addserver.php
-	 * @param host string <p>
-	 * Point to the host where memcached is listening for connections. This parameter
+	 * @param string $host Point to the host where memcached is listening for connections. This parameter
 	 * may also specify other transports like unix:///path/to/memcached.sock
 	 * to use UNIX domain sockets, in this case port must also
 	 * be set to 0.
-	 * </p>
-	 * @param port int[optional] <p>
+	 * @param int $port [optional] <p>
 	 * Point to the port where memcached is listening for connections.
 	 * Set this
 	 * parameter to 0 when using UNIX domain sockets.
@@ -122,20 +237,14 @@ class Memcache extends MemcachePool  {
 	 * if not specified. For this reason it is wise to specify the port
 	 * explicitly in this method call.
 	 * </p>
-	 * @param persistent bool[optional] <p>
-	 * Controls the use of a persistent connection. Default to true.
-	 * </p>
-	 * @param weight int[optional] <p>
-	 * Number of buckets to create for this server which in turn control its
+	 * @param bool $persistent [optional] Controls the use of a persistent connection. Default to true.
+	 * @param int $weight [optional] Number of buckets to create for this server which in turn control its
 	 * probability of it being selected. The probability is relative to the
 	 * total weight of all servers.
-	 * </p>
-	 * @param timeout int[optional] <p>
-	 * Value in seconds which will be used for connecting to the daemon. Think
+	 * @param int $timeout [optional] Value in seconds which will be used for connecting to the daemon. Think
 	 * twice before changing the default value of 1 second - you can lose all
 	 * the advantages of caching if your connection is too slow.
-	 * </p>
-	 * @param retry_interval int[optional] <p>
+	 * @param int $retry_interval [optional] <p>
 	 * Controls how often a failed server will be retried, the default value
 	 * is 15 seconds. Setting this parameter to -1 disables automatic retry. 
 	 * Neither this nor the persistent parameter has any 
@@ -149,128 +258,427 @@ class Memcache extends MemcachePool  {
 	 * effect is that each web server child will retry the connection about every
 	 * retry_interval seconds when serving a page.
 	 * </p>
-	 * @param status bool[optional] <p>
-	 * Controls if the server should be flagged as online. Setting this parameter
+	 * @param bool $status [optional] Controls if the server should be flagged as online. Setting this parameter
 	 * to false and retry_interval to -1 allows a failed 
 	 * server to be kept in the pool so as not to affect the key distribution 
 	 * algorithm. Requests for this server will then failover or fail immediately 
 	 * depending on the memcache.allow_failover setting.
 	 * Default to true, meaning the server should be considered online.
-	 * </p>
-	 * @param failure_callback callable[optional] <p>
-	 * Allows the user to specify a callback function to run upon encountering an 
+	 * @param callable $failure_callback [optional] Allows the user to specify a callback function to run upon encountering an 
 	 * error. The callback is run before failover is attempted. The function takes 
 	 * two parameters, the hostname and port of the failed server.
-	 * </p>
-	 * @param timeoutms int[optional] <p>
-	 * </p>
+	 * @param int $timeoutms [optional] 
 	 * @return bool true on success or false on failure
 	 */
-	public function addserver ($host, $port = null, $persistent = null, $weight = null, $timeout = null, $retry_interval = null, $status = null, $failure_callback = null, $timeoutms = null) {}
+	public function addserver (string $host, int $port = null, bool $persistent = null, int $weight = null, int $timeout = null, int $retry_interval = null, bool $status = null, callable $failure_callback = null, int $timeoutms = null): bool {}
 
-	public function setserverparams () {}
+	/**
+	 * @param string $host
+	 * @param int $tcp_port [optional]
+	 * @param float $timeout [optional]
+	 * @param int $retry_interval [optional]
+	 * @param bool $status [optional]
+	 * @param mixed $failure_callback [optional]
+	 */
+	public function setserverparams (string $host, int $tcp_port = null, float $timeout = null, int $retry_interval = null, bool $status = null, $failure_callback = null): bool {}
 
-	public function setfailurecallback () {}
+	/**
+	 * @param callable|null $failure_callback
+	 */
+	public function setfailurecallback (callable|null $failure_callback = null): bool {}
 
-	public function getserverstatus () {}
+	/**
+	 * @param string $host
+	 * @param int $tcp_port [optional]
+	 */
+	public function getserverstatus (string $host, int $tcp_port = null): int|bool {}
 
-	public function findserver () {}
+	/**
+	 * @param string $key
+	 */
+	public function findserver (string $key): string|bool {}
 
-	public function getversion () {}
+	public function getversion (): string|bool {}
 
-	public function add () {}
+	/**
+	 * @param array|string $key
+	 * @param mixed $value [optional]
+	 * @param int $flags [optional]
+	 * @param int $exptime [optional]
+	 * @param int $cas [optional]
+	 */
+	public function add (array|string $key, mixed $value = null, int $flags = null, int $exptime = null, int $cas = null): bool {}
 
-	public function set () {}
+	/**
+	 * @param array|string $key
+	 * @param mixed $value [optional]
+	 * @param int $flags [optional]
+	 * @param int $exptime [optional]
+	 * @param int $cas [optional]
+	 */
+	public function set (array|string $key, mixed $value = null, int $flags = null, int $exptime = null, int $cas = null): bool {}
 
-	public function replace () {}
+	/**
+	 * @param array|string $key
+	 * @param mixed $value [optional]
+	 * @param int $flags [optional]
+	 * @param int $exptime [optional]
+	 * @param int $cas [optional]
+	 */
+	public function replace (array|string $key, mixed $value = null, int $flags = null, int $exptime = null, int $cas = null): bool {}
 
-	public function cas () {}
+	/**
+	 * @param array|string $key
+	 * @param mixed $value [optional]
+	 * @param int $flags [optional]
+	 * @param int $exptime [optional]
+	 * @param int $cas [optional]
+	 */
+	public function cas (array|string $key, mixed $value = null, int $flags = null, int $exptime = null, int $cas = null): bool {}
 
-	public function append () {}
+	/**
+	 * @param array|string $key
+	 * @param mixed $value [optional]
+	 * @param int $flags [optional]
+	 * @param int $exptime [optional]
+	 * @param int $cas [optional]
+	 */
+	public function append (array|string $key, mixed $value = null, int $flags = null, int $exptime = null, int $cas = null): bool {}
 
-	public function prepend () {}
+	/**
+	 * @param array|string $key
+	 * @param mixed $value [optional]
+	 * @param int $flags [optional]
+	 * @param int $exptime [optional]
+	 * @param int $cas [optional]
+	 */
+	public function prepend (array|string $key, mixed $value = null, int $flags = null, int $exptime = null, int $cas = null): bool {}
 
-	public function get () {}
+	/**
+	 * @param array|string $key
+	 * @param mixed $flags [optional]
+	 * @param mixed $cas [optional]
+	 */
+	public function get (array|string $key, mixed &$flags = null, mixed &$cas = null): mixed {}
 
-	public function delete () {}
+	/**
+	 * @param array|string $key
+	 * @param int $exptime [optional]
+	 */
+	public function delete (array|string $key, int $exptime = null): array|bool {}
 
-	public function getstats () {}
+	/**
+	 * @param string $type [optional]
+	 * @param int $slabid [optional]
+	 * @param int $limit [optional]
+	 */
+	public function getstats (string $type = null, int $slabid = null, int $limit = null): array|bool {}
 
-	public function getextendedstats () {}
+	/**
+	 * @param string $type [optional]
+	 * @param int $slabid [optional]
+	 * @param int $limit [optional]
+	 */
+	public function getextendedstats (string $type = null, int $slabid = null, int $limit = null): array|bool {}
 
-	public function setcompressthreshold () {}
+	/**
+	 * @param int $threshold
+	 * @param float $min_savings [optional]
+	 */
+	public function setcompressthreshold (int $threshold, float $min_savings = null): bool {}
 
-	public function increment () {}
+	/**
+	 * @param array|string $key
+	 * @param int $value [optional]
+	 * @param int $defval [optional]
+	 * @param int $exptime [optional]
+	 */
+	public function increment (array|string $key, int $value = null, int $defval = null, int $exptime = null): array|int|bool {}
 
-	public function decrement () {}
+	/**
+	 * @param array|string $key
+	 * @param int $value [optional]
+	 * @param int $defval [optional]
+	 * @param int $exptime [optional]
+	 */
+	public function decrement (array|string $key, int $value = null, int $defval = null, int $exptime = null): array|int|bool {}
 
-	public function close () {}
+	public function close (): bool {}
 
-	public function flush () {}
+	/**
+	 * @param int $delay [optional]
+	 */
+	public function flush (int $delay = null): bool {}
+
+	/**
+	 * @param string $username
+	 * @param string $password
+	 */
+	public function setSaslAuthData (string $username, string $password): bool {}
 
 }
 
-function memcache_connect () {}
+/**
+ * @param mixed $host
+ * @param mixed $port [optional]
+ * @param mixed $timeout [optional]
+ * @param mixed $unused4 [optional]
+ * @param mixed $unused5 [optional]
+ * @param mixed $unused6 [optional]
+ * @param mixed $unused7 [optional]
+ * @param mixed $unugsed8 [optional]
+ */
+function memcache_connect ($host = null, $port = null, $timeout = null, $unused4 = null, $unused5 = null, $unused6 = null, $unused7 = null, $unugsed8 = null) {}
 
-function memcache_pconnect () {}
+/**
+ * @param mixed $host
+ * @param mixed $port [optional]
+ * @param mixed $timeout [optional]
+ * @param mixed $unused4 [optional]
+ * @param mixed $unused5 [optional]
+ * @param mixed $unused6 [optional]
+ * @param mixed $unused7 [optional]
+ * @param mixed $unugsed8 [optional]
+ */
+function memcache_pconnect ($host = null, $port = null, $timeout = null, $unused4 = null, $unused5 = null, $unused6 = null, $unused7 = null, $unugsed8 = null) {}
 
-function memcache_add_server () {}
+/**
+ * @param MemcachePool $memcache
+ * @param mixed $host
+ * @param mixed $port [optional]
+ * @param mixed $tcp_port [optional]
+ * @param mixed $persistent [optional]
+ * @param mixed $weight [optional]
+ * @param mixed $timeout [optional]
+ * @param mixed $retry_interval [optional]
+ * @param mixed $status [optional]
+ * @param mixed $failure_callback [optional]
+ */
+function memcache_add_server (MemcachePool $memcache, $host = null, $port = null, $tcp_port = null, $persistent = null, $weight = null, $timeout = null, $retry_interval = null, $status = null, $failure_callback = null): bool {}
 
-function memcache_set_server_params () {}
+/**
+ * @param MemcachePool $memcache
+ * @param string $host
+ * @param int $tcp_port [optional]
+ * @param float $timeout [optional]
+ * @param int $retry_interval [optional]
+ * @param bool $status [optional]
+ * @param mixed $failure_callback [optional]
+ */
+function memcache_set_server_params (MemcachePool $memcache, string $host, int $tcp_port = null, float $timeout = null, int $retry_interval = null, bool $status = null, $failure_callback = null): bool {}
 
-function memcache_set_failure_callback () {}
+/**
+ * @param MemcachePool $memcache
+ * @param callable|null $failure_callback
+ */
+function memcache_set_failure_callback (MemcachePool $memcache, callable|null $failure_callback = null): bool {}
 
-function memcache_get_server_status () {}
+/**
+ * @param MemcachePool $memcache
+ * @param string $host
+ * @param int $tcp_port [optional]
+ */
+function memcache_get_server_status (MemcachePool $memcache, string $host, int $tcp_port = null): int|bool {}
 
-function memcache_get_version () {}
+/**
+ * @param MemcachePool $memcache
+ */
+function memcache_get_version (MemcachePool $memcache): string|bool {}
 
-function memcache_add () {}
+/**
+ * @param MemcachePool $memcache
+ * @param array|string $key
+ * @param mixed $value [optional]
+ * @param int $flags [optional]
+ * @param int $exptime [optional]
+ * @param int $cas [optional]
+ */
+function memcache_add (MemcachePool $memcache, array|string $key, mixed $value = null, int $flags = null, int $exptime = null, int $cas = null): bool {}
 
-function memcache_set () {}
+/**
+ * @param MemcachePool $memcache
+ * @param array|string $key
+ * @param mixed $value [optional]
+ * @param int $flags [optional]
+ * @param int $exptime [optional]
+ * @param int $cas [optional]
+ */
+function memcache_set (MemcachePool $memcache, array|string $key, mixed $value = null, int $flags = null, int $exptime = null, int $cas = null): bool {}
 
-function memcache_replace () {}
+/**
+ * @param MemcachePool $memcache
+ * @param array|string $key
+ * @param mixed $value [optional]
+ * @param int $flags [optional]
+ * @param int $exptime [optional]
+ * @param int $cas [optional]
+ */
+function memcache_replace (MemcachePool $memcache, array|string $key, mixed $value = null, int $flags = null, int $exptime = null, int $cas = null): bool {}
 
-function memcache_cas () {}
+/**
+ * @param MemcachePool $memcache
+ * @param array|string $key
+ * @param mixed $value [optional]
+ * @param int $flags [optional]
+ * @param int $exptime [optional]
+ * @param int $cas [optional]
+ */
+function memcache_cas (MemcachePool $memcache, array|string $key, mixed $value = null, int $flags = null, int $exptime = null, int $cas = null): bool {}
 
-function memcache_append () {}
+/**
+ * @param MemcachePool $memcache
+ * @param array|string $key
+ * @param mixed $value [optional]
+ * @param int $flags [optional]
+ * @param int $exptime [optional]
+ * @param int $cas [optional]
+ */
+function memcache_append (MemcachePool $memcache, array|string $key, mixed $value = null, int $flags = null, int $exptime = null, int $cas = null): bool {}
 
-function memcache_prepend () {}
+/**
+ * @param MemcachePool $memcache
+ * @param array|string $key
+ * @param mixed $value [optional]
+ * @param int $flags [optional]
+ * @param int $exptime [optional]
+ * @param int $cas [optional]
+ */
+function memcache_prepend (MemcachePool $memcache, array|string $key, mixed $value = null, int $flags = null, int $exptime = null, int $cas = null): bool {}
 
-function memcache_get () {}
+/**
+ * @param MemcachePool $memcache
+ * @param mixed $key
+ * @param mixed $flags [optional]
+ * @param mixed $cas [optional]
+ */
+function memcache_get (MemcachePool $memcache, $key = null, &$flags = null, &$cas = null): mixed {}
 
-function memcache_delete () {}
+/**
+ * @param MemcachePool $memcache
+ * @param mixed $key
+ * @param mixed $exptime [optional]
+ */
+function memcache_delete (MemcachePool $memcache, $key = null, $exptime = null): array|bool {}
 
 /**
  * Turn debug output on/off
  * @link http://www.php.net/manual/en/function.memcache-debug.php
- * @param on_off bool <p>
- * Turns debug output on if equals to true.
+ * @param bool $on_off Turns debug output on if equals to true.
  * Turns debug output off if equals to false.
- * </p>
  * @return bool true if PHP was built with --enable-debug option, otherwise
  * returns false.
  */
-function memcache_debug ($on_off) {}
+function memcache_debug (bool $on_off): bool {}
 
-function memcache_get_stats () {}
+/**
+ * @param MemcachePool $memcache
+ * @param string $type [optional]
+ * @param int $slabid [optional]
+ * @param int $limit [optional]
+ */
+function memcache_get_stats (MemcachePool $memcache, string $type = null, int $slabid = null, int $limit = null): array|bool {}
 
-function memcache_get_extended_stats () {}
+/**
+ * @param MemcachePool $memcache
+ * @param string $type [optional]
+ * @param int $slabid [optional]
+ * @param int $limit [optional]
+ */
+function memcache_get_extended_stats (MemcachePool $memcache, string $type = null, int $slabid = null, int $limit = null): array|bool {}
 
-function memcache_set_compress_threshold () {}
+/**
+ * @param MemcachePool $memcache
+ * @param int $threshold
+ * @param float $min_savings [optional]
+ */
+function memcache_set_compress_threshold (MemcachePool $memcache, int $threshold, float $min_savings = null): bool {}
 
-function memcache_increment () {}
+/**
+ * @param MemcachePool $memcache
+ * @param array|string $key
+ * @param int $value [optional]
+ * @param int $defval [optional]
+ * @param int $exptime [optional]
+ */
+function memcache_increment (MemcachePool $memcache, array|string $key, int $value = null, int $defval = null, int $exptime = null): array|int|bool {}
 
-function memcache_decrement () {}
+/**
+ * @param MemcachePool $memcache
+ * @param array|string $key
+ * @param int $value [optional]
+ * @param int $defval [optional]
+ * @param int $exptime [optional]
+ */
+function memcache_decrement (MemcachePool $memcache, array|string $key, int $value = null, int $defval = null, int $exptime = null): array|int|bool {}
 
-function memcache_close () {}
+/**
+ * @param MemcachePool $memcache
+ */
+function memcache_close (MemcachePool $memcache): bool {}
 
-function memcache_flush () {}
+/**
+ * @param MemcachePool $memcache
+ * @param int $delay [optional]
+ */
+function memcache_flush (MemcachePool $memcache, int $delay = null): bool {}
 
+/**
+ * @param MemcachePool $memcache
+ * @param string $username
+ * @param string $password
+ */
+function memcache_set_sasl_auth_data (MemcachePool $memcache, string $username, string $password): bool {}
+
+
+/**
+ * Used to turn on-the-fly data compression on with
+ * Memcache::set, 
+ * Memcache::add and
+ * Memcache::replace.
+ * @link http://www.php.net/manual/en/memcache.constants.php
+ */
 define ('MEMCACHE_COMPRESSED', 2);
+
+/**
+ * Used to turn user-defined application flag on with
+ * Memcache::set, 
+ * Memcache::add and
+ * Memcache::replace.
+ * @link http://www.php.net/manual/en/memcache.constants.php
+ */
 define ('MEMCACHE_USER1', 65536);
+
+/**
+ * Used to turn user-defined application flag on with
+ * Memcache::set, 
+ * Memcache::add and
+ * Memcache::replace.
+ * @link http://www.php.net/manual/en/memcache.constants.php
+ */
 define ('MEMCACHE_USER2', 131072);
+
+/**
+ * Used to turn user-defined application flag on with
+ * Memcache::set, 
+ * Memcache::add and
+ * Memcache::replace.
+ * @link http://www.php.net/manual/en/memcache.constants.php
+ */
 define ('MEMCACHE_USER3', 262144);
+
+/**
+ * Used to turn user-defined application flag on with
+ * Memcache::set, 
+ * Memcache::add and
+ * Memcache::replace.
+ * @link http://www.php.net/manual/en/memcache.constants.php
+ */
 define ('MEMCACHE_USER4', 524288);
+
+/**
+ * 1 if this Memcache session handler is available, 0 otherwise.
+ * @link http://www.php.net/manual/en/memcache.constants.php
+ */
 define ('MEMCACHE_HAVE_SESSION', 1);
 
-// End of memcache v.3.0.8
+// End of memcache v.8.2

@@ -1116,6 +1116,8 @@ function escape_const_value($value)
 {
     if (is_resource($value)) {
         $value = "\"${value}\"";
+    } elseif (is_array($value)) {
+       $value = var_export($value, true);
     } elseif (! is_numeric($value) && ! is_bool($value) && $value !== null) {
         if ($value === '\\') {
             $value = '"' . addcslashes($value, "\\\"\r\n\t") . '"';

@@ -1,6 +1,6 @@
 <?php
 
-// Start of apcu v.5.1.8
+// Start of apcu v.5.1.22
 
 /**
  * The APCUIterator class makes it easier to iterate
@@ -11,24 +11,45 @@
  * matching is more efficient as it's been moved to the C level.
  * @link http://www.php.net/manual/en/class.apcuiterator.php
  */
-class APCuIterator implements Iterator, Traversable {
+class APCUIterator implements Iterator, Traversable {
 
 	/**
 	 * Constructs an APCUIterator iterator object
 	 * @link http://www.php.net/manual/en/apcuiterator.construct.php
 	 * @param mixed $search [optional]
-	 * @param mixed $format [optional]
-	 * @param mixed $chunk_size [optional]
-	 * @param mixed $list [optional]
+	 * @param int $format [optional]
+	 * @param int $chunk_size [optional]
+	 * @param int $list [optional]
 	 */
-	public function __construct ($search = null, $format = null, $chunk_size = null, $list = null) {}
+	public function __construct ($search = null, int $format = 4294967295, int $chunk_size = 0, int $list = 1) {}
 
 	/**
 	 * Rewinds iterator
 	 * @link http://www.php.net/manual/en/apcuiterator.rewind.php
 	 * @return void 
 	 */
-	public function rewind () {}
+	public function rewind (): void {}
+
+	/**
+	 * Move pointer to next item
+	 * @link http://www.php.net/manual/en/apcuiterator.next.php
+	 * @return bool true on success or false on failure
+	 */
+	public function next (): void {}
+
+	/**
+	 * Checks if current position is valid
+	 * @link http://www.php.net/manual/en/apcuiterator.valid.php
+	 * @return bool true if the current iterator position is valid, otherwise false.
+	 */
+	public function valid (): bool {}
+
+	/**
+	 * Get iterator key
+	 * @link http://www.php.net/manual/en/apcuiterator.key.php
+	 * @return string the key on success, or false upon failure.
+	 */
+	public function key (): string|int {}
 
 	/**
 	 * Get current item
@@ -36,51 +57,37 @@ class APCuIterator implements Iterator, Traversable {
 	 * @return mixed the current item on success, or false if no
 	 * more items or exist, or on failure.
 	 */
-	public function current () {}
-
-	/**
-	 * Get iterator key
-	 * @link http://www.php.net/manual/en/apcuiterator.key.php
-	 * @return string the key on success, or false upon failure.
-	 */
-	public function key () {}
-
-	/**
-	 * Move pointer to next item
-	 * @link http://www.php.net/manual/en/apcuiterator.next.php
-	 * @return void true on success or false on failure
-	 */
-	public function next () {}
-
-	/**
-	 * Checks if current position is valid
-	 * @link http://www.php.net/manual/en/apcuiterator.valid.php
-	 * @return void true if the current iterator position is valid, otherwise false.
-	 */
-	public function valid () {}
+	public function current (): mixed {}
 
 	/**
 	 * Get total cache hits
 	 * @link http://www.php.net/manual/en/apcuiterator.gettotalhits.php
 	 * @return int The number of hits on success, or false on failure.
 	 */
-	public function getTotalHits () {}
+	public function getTotalHits (): int {}
 
 	/**
 	 * Get total cache size
 	 * @link http://www.php.net/manual/en/apcuiterator.gettotalsize.php
 	 * @return int The total cache size.
 	 */
-	public function getTotalSize () {}
+	public function getTotalSize (): int {}
 
 	/**
 	 * Get total count
 	 * @link http://www.php.net/manual/en/apcuiterator.gettotalcount.php
 	 * @return int The total count.
 	 */
-	public function getTotalCount () {}
+	public function getTotalCount (): int {}
 
 }
+
+/**
+ * Clears the APCu cache
+ * @link http://www.php.net/manual/en/function.apcu-clear-cache.php
+ * @return bool true always
+ */
+function apcu_clear_cache (): bool {}
 
 /**
  * Retrieves cached information from APCu's data store
@@ -88,32 +95,33 @@ class APCuIterator implements Iterator, Traversable {
  * @param bool $limited [optional] If limited is true, the
  * return value will exclude the individual list of cache entries. This
  * is useful when trying to optimize calls for statistics gathering.
- * @return array Array of cached data (and meta-data) or false on failure
+ * @return mixed Array of cached data (and meta-data) or false on failure
  */
-function apcu_cache_info (bool $limited = null) {}
+function apcu_cache_info (bool $limited = null): array|false {}
 
 /**
- * Clears the APCu cache
- * @link http://www.php.net/manual/en/function.apcu-clear-cache.php
- * @return bool true always
+ * Get detailed information about the cache key
+ * @link http://www.php.net/manual/en/function.apcu-key-info.php
+ * @param string $key Get detailed information about the cache key
+ * @return mixed An array containing the detailed information about the cache key, or null if the key does not exist.
  */
-function apcu_clear_cache () {}
+function apcu_key_info (string $key): ?array {}
 
 /**
  * Retrieves APCu Shared Memory Allocation information
  * @link http://www.php.net/manual/en/function.apcu-sma-info.php
  * @param bool $limited [optional] When set to false (default) apcu_sma_info will
  * return a detailed information about each segment.
- * @return array Array of Shared Memory Allocation data; false on failure.
+ * @return mixed Array of Shared Memory Allocation data; false on failure.
  */
-function apcu_sma_info (bool $limited = null) {}
+function apcu_sma_info (bool $limited = null): array|false {}
 
 /**
- * @param $key
+ * Whether APCu is usable in the current environment
+ * @link http://www.php.net/manual/en/function.apcu-enabled.php
+ * @return bool true when APCu is usable in the current environment, false otherwise.
  */
-function apcu_key_info ($key) {}
-
-function apcu_enabled () {}
+function apcu_enabled (): bool {}
 
 /**
  * Cache a variable in the data store
@@ -133,29 +141,7 @@ function apcu_enabled () {}
  * @return bool true on success or false on failure
  * Second syntax returns array with error keys.
  */
-function apcu_store (string $key, $var, int $ttl = null) {}
-
-/**
- * Fetch a stored variable from the cache
- * @link http://www.php.net/manual/en/function.apcu-fetch.php
- * @param mixed $key The key used to store the value (with
- * apcu_store). If an array is passed then each
- * element is fetched and returned.
- * @param bool $success [optional] Set to true in success and false in failure.
- * @return mixed The stored variable or array of variables on success; false on failure
- */
-function apcu_fetch ($key, bool &$success = null) {}
-
-/**
- * Removes a stored variable from the cache
- * @link http://www.php.net/manual/en/function.apcu-delete.php
- * @param mixed $key A key used to store the value as a
- * string for a single key,
- * or as an array of strings for several keys,
- * or as an APCUIterator object.
- * @return bool true on success or false on failure
- */
-function apcu_delete ($key) {}
+function apcu_store (string $key, $var, int $ttl = null): array|bool {}
 
 /**
  * Cache a new variable in the data store
@@ -178,7 +164,7 @@ function apcu_delete ($key) {}
  * @return bool TRUE if something has effectively been added into the cache, FALSE otherwise.
  * Second syntax returns array with error keys.
  */
-function apcu_add (string $key, $var, int $ttl = null) {}
+function apcu_add (string $key, $var, int $ttl = null): array|bool {}
 
 /**
  * Increase a stored number
@@ -187,10 +173,11 @@ function apcu_add (string $key, $var, int $ttl = null) {}
  * @param int $step [optional] The step, or value to increase.
  * @param bool $success [optional] Optionally pass the success or fail boolean value to
  * this referenced variable.
- * @return int the current value of key's value on success,
+ * @param int $ttl [optional] TTL to use if the operation inserts a new value (rather than incrementing an existing one).
+ * @return mixed the current value of key's value on success,
  * or false on failure
  */
-function apcu_inc (string $key, int $step = null, bool &$success = null) {}
+function apcu_inc (string $key, int $step = null, bool &$success = null, int $ttl = null): int|false {}
 
 /**
  * Decrease a stored number
@@ -199,10 +186,11 @@ function apcu_inc (string $key, int $step = null, bool &$success = null) {}
  * @param int $step [optional] The step, or value to decrease.
  * @param bool $success [optional] Optionally pass the success or fail boolean value to
  * this referenced variable.
- * @return int the current value of key's value on success,
+ * @param int $ttl [optional] TTL to use if the operation inserts a new value (rather than decrementing an existing one).
+ * @return mixed the current value of key's value on success,
  * or false on failure
  */
-function apcu_dec (string $key, int $step = null, bool &$success = null) {}
+function apcu_dec (string $key, int $step = null, bool &$success = null, int $ttl = null): int|false {}
 
 /**
  * Updates an old value with a new value
@@ -212,7 +200,18 @@ function apcu_dec (string $key, int $step = null, bool &$success = null) {}
  * @param int $new The new value to update to.
  * @return bool true on success or false on failure
  */
-function apcu_cas (string $key, int $old, int $new) {}
+function apcu_cas (string $key, int $old, int $new): bool {}
+
+/**
+ * Fetch a stored variable from the cache
+ * @link http://www.php.net/manual/en/function.apcu-fetch.php
+ * @param mixed $key The key used to store the value (with
+ * apcu_store). If an array is passed then each
+ * element is fetched and returned.
+ * @param bool $success [optional] Set to true in success and false in failure.
+ * @return mixed The stored variable or array of variables on success; false on failure
+ */
+function apcu_fetch ($key, bool &$success = null): mixed {}
 
 /**
  * Checks if entry exists
@@ -224,7 +223,19 @@ function apcu_cas (string $key, int $old, int $new) {}
  * an array is returned that contains all existing keys, or an empty
  * array if none exist.
  */
-function apcu_exists ($keys) {}
+function apcu_exists ($keys): array|bool {}
+
+/**
+ * Removes a stored variable from the cache
+ * @link http://www.php.net/manual/en/function.apcu-delete.php
+ * @param mixed $key A key used to store the value as a
+ * string for a single key,
+ * or as an array of strings for several keys,
+ * or as an APCUIterator object.
+ * @return mixed If key is an array, an indexed array of the keys is returned.
+ * Otherwise true is returned on success, or false on failure.
+ */
+function apcu_delete ($key): array|bool {}
 
 /**
  * Atomically fetch or generate a cache entry
@@ -241,7 +252,7 @@ function apcu_exists ($keys) {}
  * restart, etc.).
  * @return mixed the cached value
  */
-function apcu_entry (string $key, callable $generator, int $ttl = null) {}
+function apcu_entry (string $key, callable $generator, int $ttl = null): mixed {}
 
 
 /**
@@ -334,4 +345,4 @@ define ('APC_ITER_NONE', 0);
  */
 define ('APC_ITER_ALL', 4294967295);
 
-// End of apcu v.5.1.8
+// End of apcu v.5.1.22

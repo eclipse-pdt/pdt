@@ -1,12 +1,12 @@
 <?php
 
-// Start of mcrypt v.7.1.1
+// Start of mcrypt v.1.0.6
 
 /**
  * Gets the key size of the specified cipher
  * @link http://www.php.net/manual/en/function.mcrypt-get-key-size.php
  * @param int $cipher One of the MCRYPT_ciphername constants, or the name of the algorithm as string.
- * @return int the maximum supported key size of the algorithm in bytes
+ * @return mixed the maximum supported key size of the algorithm in bytes
  * or false on failure.
  * @deprecated 
  */
@@ -16,7 +16,7 @@ function mcrypt_get_key_size (int $cipher) {}
  * Gets the block size of the specified cipher
  * @link http://www.php.net/manual/en/function.mcrypt-get-block-size.php
  * @param int $cipher One of the MCRYPT_ciphername constants, or the name of the algorithm as string.
- * @return int the algorithm block size in bytes or false on failure.
+ * @return mixed the algorithm block size in bytes or false on failure.
  * @deprecated 
  */
 function mcrypt_get_block_size (int $cipher) {}
@@ -111,7 +111,7 @@ function mcrypt_get_iv_size (string $cipher, string $mode) {}
  * </p>
  * @param string $mode One of the MCRYPT_MODE_modename constants, or one of the following strings: "ecb", "cbc", "cfb", "ofb", "nofb" or "stream".
  * @param string $iv [optional] Used for the initialization in CBC, CFB, OFB modes, and in some algorithms in STREAM mode. If the provided IV size is not supported by the chaining mode or no IV was provided, but the chaining mode requires one, the function will emit a warning and return false.
- * @return string the encrypted data as a string or false on failure.
+ * @return mixed the encrypted data as a string or false on failure.
  * @deprecated 
  */
 function mcrypt_encrypt (string $cipher, string $key, string $data, string $mode, string $iv = null) {}
@@ -127,7 +127,7 @@ function mcrypt_encrypt (string $cipher, string $key, string $data, string $mode
  * the data will be padded with '\0'.
  * @param string $mode One of the MCRYPT_MODE_modename constants, or one of the following strings: "ecb", "cbc", "cfb", "ofb", "nofb" or "stream".
  * @param string $iv [optional] Used for the initialization in CBC, CFB, OFB modes, and in some algorithms in STREAM mode. If the provided IV size is not supported by the chaining mode or no IV was provided, but the chaining mode requires one, the function will emit a warning and return false.
- * @return string the decrypted data as a string or false on failure.
+ * @return mixed the decrypted data as a string or false on failure.
  * @deprecated 
  */
 function mcrypt_decrypt (string $cipher, string $key, string $data, string $mode, string $iv = null) {}
@@ -202,7 +202,7 @@ function mcrypt_generic ($td, string $data) {}
  * @param resource $td An encryption descriptor returned by
  * mcrypt_module_open
  * @param string $data Encrypted data.
- * @return string 
+ * @return string decrypted string.
  * @deprecated 
  */
 function mdecrypt_generic ($td, string $data) {}
@@ -220,8 +220,7 @@ function mcrypt_generic_deinit ($td) {}
  * Runs a self test on the opened module
  * @link http://www.php.net/manual/en/function.mcrypt-enc-self-test.php
  * @param resource $td The encryption descriptor.
- * @return int If the self test succeeds it returns false. In case of an error, it
- * returns true.
+ * @return int 0 on success and a negative integer on failure.
  * @deprecated 
  */
 function mcrypt_enc_self_test ($td) {}
@@ -477,4 +476,4 @@ define ('MCRYPT_MODE_NOFB', "nofb");
 define ('MCRYPT_MODE_OFB', "ofb");
 define ('MCRYPT_MODE_STREAM', "stream");
 
-// End of mcrypt v.7.1.1
+// End of mcrypt v.1.0.6
