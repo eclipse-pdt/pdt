@@ -552,7 +552,6 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 
 		ISourceElementRequestor.MethodInfo mi = new ISourceElementRequestor.MethodInfo();
 		mi.modifiers = method.getModifiers();
-		processArguments(mi, method.getArguments(), method);
 
 		mi.name = method.getName();
 		mi.nameSourceStart = method.getNameStart();
@@ -560,6 +559,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		mi.declarationStart = method.sourceStart();
 
 		modifyMethodInfo(method, mi);
+		processArguments(mi, method.getArguments(), method);
 
 		fInfoStack.push(mi);
 		this.fRequestor.enterMethod(mi);
