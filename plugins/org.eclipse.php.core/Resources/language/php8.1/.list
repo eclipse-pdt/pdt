@@ -71,13 +71,13 @@ pdo_dblib.php
 pdo_mysql.php
 pdo_pgsql.php
 pdo_sqlite.php
+pdo_sqlsrv.php
 pgsql.php
 phpdbg_webhelper.php
 phpiredis.php
 posix.php
 protobuf.php
 pspell.php
-psr.php
 pthreads.php
 raphf.php
 rdkafka.php

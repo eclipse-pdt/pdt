@@ -20,10 +20,10 @@ public interface PHPCoreConstants {
 	/**
 	 * Increase this value to force rebuilding PHP projects during startup
 	 */
-	String STRUCTURE_VERSION = "16"; //$NON-NLS-1$
+	String STRUCTURE_VERSION = "17"; //$NON-NLS-1$
 	String STRUCTURE_VERSION_PREFERENCE = "pdt.structure.version"; //$NON-NLS-1$
 
-	String LANGUAGE_LIBRARY_VERSION = "3"; //$NON-NLS-1$
+	String LANGUAGE_LIBRARY_VERSION = "4"; //$NON-NLS-1$
 
 	String FILE_PARENT = "<f>"; //$NON-NLS-1$
 	String GLOBAL_NAMESPACE = "<g>"; //$NON-NLS-1$

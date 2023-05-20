@@ -2,8 +2,9 @@
 Should complete global type
 --FILE--
 <?php 
+class TestLogicException extends LogicException {}
 $foo = [
-	'bar' => \	LogicExcept|
+	'bar' => \	TestLogicExc|
 ];
 --EXPECT--
-type(LogicException)
+type(TestLogicException)

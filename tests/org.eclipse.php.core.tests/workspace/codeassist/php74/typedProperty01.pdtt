@@ -2,10 +2,10 @@
 
 --FILE--
 <?php 
-class Foo {}
+class TestFoo {}
 class Bar {
-	private Fo|
+	private TestFo|
 }
 
 --EXPECT--
-type(Foo)
+type(TestFoo)

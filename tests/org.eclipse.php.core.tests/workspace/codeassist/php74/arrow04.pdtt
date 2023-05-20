@@ -2,8 +2,8 @@
 
 --FILE--
 <?php 
-class Foo {}
-fn() => new Fo|;
+class TestFoo {}
+fn() => new TestFo|;
 
 --EXPECT--
-method(Foo)
+method(TestFoo)

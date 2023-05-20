@@ -1,6 +1,6 @@
 --TEST--
 Test new exception in try/catch throw 
 --FILE--
-<?php class A{ function foo() { try {} catch (Exception $e) { throw  new Run|; }}} ?> 
+<?php class TestException extends RuntimeException {} class A{ function foo() { try {} catch (Exception $e) { throw  new TestE|; }}} ?> 
 --EXPECT--
-method(RuntimeException)
+method(TestException)
