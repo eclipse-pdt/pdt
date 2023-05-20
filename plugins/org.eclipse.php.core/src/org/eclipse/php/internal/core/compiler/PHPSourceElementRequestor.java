@@ -398,7 +398,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 					}
 				}
 			}
-			if (!PHPFlags.isDefault(flags[a])) {
+			if (mi.isConstructor && !PHPFlags.isDefault(flags[a])) {
 				ISourceElementRequestor.FieldInfo info = new ISourceElementRequestor.FieldInfo();
 				info.name = arg.getName();
 				info.modifiers = flags[a];
