@@ -10,14 +10,14 @@ function stop () {}
 
 /**
  * @param int $type [optional]
- * @param array[] $filter [optional]
+ * @param array $filter [optional]
  */
-function collect (int $type = null, array $filter = null) {}
+function collect (int $type = 'null', array $filter = 'null') {}
 
 /**
  * @param bool $files [optional]
  */
-function clear (bool $files = null) {}
+function clear (bool $files = 'null') {}
 
 function waiting () {}
 

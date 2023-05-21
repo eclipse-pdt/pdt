@@ -5,7 +5,7 @@
 /**
  * Resets the contents of the opcode cache
  * @link http://www.php.net/manual/en/function.opcache-reset.php
- * @return bool true if the opcode cache was reset, or false if the opcode
+ * @return bool Returns true if the opcode cache was reset, or false if the opcode
  * cache is disabled.
  */
 function opcache_reset (): bool {}
@@ -14,16 +14,16 @@ function opcache_reset (): bool {}
  * Get status information about the cache
  * @link http://www.php.net/manual/en/function.opcache-get-status.php
  * @param bool $include_scripts [optional] Include script specific state information
- * @return mixed an array of information, optionally containing script specific state information,
+ * @return array|bool Returns an array of information, optionally containing script specific state information,
  * or false on failure.
  */
-function opcache_get_status (bool $include_scripts = null): array|false {}
+function opcache_get_status (bool $include_scripts = true): array|bool {}
 
 /**
  * Compiles and caches a PHP script without executing it
  * @link http://www.php.net/manual/en/function.opcache-compile-file.php
  * @param string $filename The path to the PHP script to be compiled.
- * @return bool true if filename was compiled successfully
+ * @return bool Returns true if filename was compiled successfully
  * or false on failure.
  */
 function opcache_compile_file (string $filename): bool {}
@@ -34,24 +34,24 @@ function opcache_compile_file (string $filename): bool {}
  * @param string $filename The path to the script being invalidated.
  * @param bool $force [optional] If set to true, the script will be invalidated regardless of whether
  * invalidation is necessary.
- * @return bool true if the opcode cache for filename was
+ * @return bool Returns true if the opcode cache for filename was
  * invalidated or if there was nothing to invalidate, or false if the opcode
  * cache is disabled.
  */
-function opcache_invalidate (string $filename, bool $force = null): bool {}
+function opcache_invalidate (string $filename, bool $force = false): bool {}
 
 /**
  * Get configuration information about the cache
  * @link http://www.php.net/manual/en/function.opcache-get-configuration.php
- * @return mixed an array of information, including ini, blacklist and version
+ * @return array|bool Returns an array of information, including ini, blacklist and version
  */
-function opcache_get_configuration (): array|false {}
+function opcache_get_configuration (): array|bool {}
 
 /**
  * Tells whether a script is cached in OPCache
  * @link http://www.php.net/manual/en/function.opcache-is-script-cached.php
  * @param string $filename The path to the PHP script to be checked.
- * @return bool true if filename is cached in OPCache,
+ * @return bool Returns true if filename is cached in OPCache,
  * false otherwise.
  */
 function opcache_is_script_cached (string $filename): bool {}

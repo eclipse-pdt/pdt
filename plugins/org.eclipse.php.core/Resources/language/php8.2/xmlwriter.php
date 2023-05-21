@@ -10,643 +10,755 @@ class XMLWriter  {
 	/**
 	 * Create new xmlwriter using source uri for output
 	 * @link http://www.php.net/manual/en/xmlwriter.openuri.php
-	 * @param string $uri The URI of the resource for the output.
-	 * @return bool Object-oriented style: Returns true on success or false on failure
-	 * <p>
-	 * Procedural style: Returns a new XMLWriter instance for later use with the
-	 * xmlwriter functions on success, or false on failure.
-	 * </p>
+	 * @param string $uri 
+	 * @return bool Object-oriented style: Returns true on success or false on failure.
+	 * <p>Procedural style: Returns a new XMLWriter instance for later use with the
+	 * xmlwriter functions on success, or false on failure.</p>
 	 */
-	public function openUri (string $uri) {}
+	public function openUri (string $uri): bool {}
 
 	/**
 	 * Create new xmlwriter using memory for string output
 	 * @link http://www.php.net/manual/en/xmlwriter.openmemory.php
-	 * @return bool Object-oriented style: Returns true on success or false on failure
-	 * <p>
-	 * Procedural style: Returns a new XMLWriter for later use with the
-	 * xmlwriter functions on success, or false on failure.
-	 * </p>
+	 * @return bool Object-oriented style: Returns true on success or false on failure.
+	 * <p>Procedural style: Returns a new XMLWriter for later use with the
+	 * xmlwriter functions on success, or false on failure.</p>
 	 */
-	public function openMemory () {}
+	public function openMemory (): bool {}
 
 	/**
 	 * Toggle indentation on/off
 	 * @link http://www.php.net/manual/en/xmlwriter.setindent.php
-	 * @param bool $enable Whether indentation is enabled.
-	 * @return bool true on success or false on failure
+	 * @param bool $enable 
+	 * @return bool Returns true on success or false on failure.
 	 */
-	public function setIndent (bool $enable) {}
+	public function setIndent (bool $enable): bool {}
 
 	/**
 	 * Set string used for indenting
 	 * @link http://www.php.net/manual/en/xmlwriter.setindentstring.php
-	 * @param string $indentation The indentation string.
-	 * @return bool true on success or false on failure
+	 * @param string $indentation 
+	 * @return bool Returns true on success or false on failure.
 	 */
-	public function setIndentString (string $indentation) {}
+	public function setIndentString (string $indentation): bool {}
 
 	/**
 	 * Create start comment
 	 * @link http://www.php.net/manual/en/xmlwriter.startcomment.php
-	 * @return bool true on success or false on failure
+	 * @return bool Returns true on success or false on failure.
 	 */
-	public function startComment () {}
+	public function startComment (): bool {}
 
 	/**
 	 * Create end comment
 	 * @link http://www.php.net/manual/en/xmlwriter.endcomment.php
-	 * @return bool true on success or false on failure
+	 * @return bool Returns true on success or false on failure.
 	 */
-	public function endComment () {}
+	public function endComment (): bool {}
 
 	/**
 	 * Create start attribute
 	 * @link http://www.php.net/manual/en/xmlwriter.startattribute.php
-	 * @param string $name The attribute name.
-	 * @return bool true on success or false on failure
+	 * @param string $name 
+	 * @return bool Returns true on success or false on failure.
 	 */
-	public function startAttribute (string $name) {}
+	public function startAttribute (string $name): bool {}
 
 	/**
 	 * End attribute
 	 * @link http://www.php.net/manual/en/xmlwriter.endattribute.php
-	 * @return bool true on success or false on failure
+	 * @return bool Returns true on success or false on failure.
 	 */
-	public function endAttribute () {}
+	public function endAttribute (): bool {}
 
 	/**
 	 * Write full attribute
 	 * @link http://www.php.net/manual/en/xmlwriter.writeattribute.php
-	 * @param string $name The name of the attribute.
-	 * @param string $value The value of the attribute.
-	 * @return bool true on success or false on failure
+	 * @param string $name 
+	 * @param string $value 
+	 * @return bool Returns true on success or false on failure.
 	 */
-	public function writeAttribute (string $name, string $value) {}
+	public function writeAttribute (string $name, string $value): bool {}
 
 	/**
 	 * Create start namespaced attribute
 	 * @link http://www.php.net/manual/en/xmlwriter.startattributens.php
-	 * @param mixed $prefix The namespace prefix.
-	 * @param string $name The attribute name.
-	 * @param mixed $namespace The namespace URI.
-	 * If namespace is null, the namespace declaration will be
-	 * omitted.
-	 * @return bool true on success or false on failure
+	 * @param string|null $prefix 
+	 * @param string $name 
+	 * @param string|null $namespace 
+	 * @return bool Returns true on success or false on failure.
 	 */
-	public function startAttributeNs ($prefix, string $name, $namespace) {}
+	public function startAttributeNs (?string $prefix, string $name, ?string $namespace): bool {}
 
 	/**
 	 * Write full namespaced attribute
 	 * @link http://www.php.net/manual/en/xmlwriter.writeattributens.php
-	 * @param mixed $prefix The namespace prefix.
-	 * If prefix is null, the namespace will be omitted.
-	 * @param string $name The attribute name.
-	 * @param mixed $namespace The namespace URI.
-	 * If namespace is null, the namespace declaration will be
-	 * omitted.
-	 * @param string $value The attribute value.
-	 * @return bool true on success or false on failure
+	 * @param string|null $prefix 
+	 * @param string $name 
+	 * @param string|null $namespace 
+	 * @param string $value 
+	 * @return bool Returns true on success or false on failure.
 	 */
-	public function writeAttributeNs ($prefix, string $name, $namespace, string $value) {}
+	public function writeAttributeNs (?string $prefix, string $name, ?string $namespace, string $value): bool {}
 
 	/**
 	 * Create start element tag
 	 * @link http://www.php.net/manual/en/xmlwriter.startelement.php
-	 * @param string $name The element name.
-	 * @return bool true on success or false on failure
+	 * @param string $name 
+	 * @return bool Returns true on success or false on failure.
 	 */
-	public function startElement (string $name) {}
+	public function startElement (string $name): bool {}
 
 	/**
 	 * End current element
 	 * @link http://www.php.net/manual/en/xmlwriter.endelement.php
-	 * @return bool true on success or false on failure
+	 * @return bool Returns true on success or false on failure.
 	 */
-	public function endElement () {}
+	public function endElement (): bool {}
 
 	/**
 	 * End current element
 	 * @link http://www.php.net/manual/en/xmlwriter.fullendelement.php
-	 * @return bool true on success or false on failure
+	 * @return bool Returns true on success or false on failure.
 	 */
-	public function fullEndElement () {}
+	public function fullEndElement (): bool {}
 
 	/**
 	 * Create start namespaced element tag
 	 * @link http://www.php.net/manual/en/xmlwriter.startelementns.php
-	 * @param mixed $prefix The namespace prefix.
-	 * If prefix is null, the namespace will be omitted.
-	 * @param string $name The element name.
-	 * @param mixed $namespace The namespace URI.
-	 * If namespace is null, the namespace declaration will be
-	 * omitted.
-	 * @return bool true on success or false on failure
+	 * @param string|null $prefix 
+	 * @param string $name 
+	 * @param string|null $namespace 
+	 * @return bool Returns true on success or false on failure.
 	 */
-	public function startElementNs ($prefix, string $name, $namespace) {}
+	public function startElementNs (?string $prefix, string $name, ?string $namespace): bool {}
 
 	/**
 	 * Write full element tag
 	 * @link http://www.php.net/manual/en/xmlwriter.writeelement.php
-	 * @param string $name The element name.
-	 * @param mixed $content [optional] The element contents.
-	 * @return bool true on success or false on failure
+	 * @param string $name 
+	 * @param string|null $content [optional] 
+	 * @return bool Returns true on success or false on failure.
 	 */
-	public function writeElement (string $name, $content = null) {}
+	public function writeElement (string $name, ?string $content = null): bool {}
 
 	/**
 	 * Write full namespaced element tag
 	 * @link http://www.php.net/manual/en/xmlwriter.writeelementns.php
-	 * @param mixed $prefix The namespace prefix.
-	 * If prefix is null, the namespace will be omitted.
-	 * @param string $name The element name.
-	 * @param mixed $namespace The namespace URI.
-	 * If namespace is null, the namespace declaration will be
-	 * omitted.
-	 * @param mixed $content [optional] The element contents.
-	 * @return bool true on success or false on failure
+	 * @param string|null $prefix 
+	 * @param string $name 
+	 * @param string|null $namespace 
+	 * @param string|null $content [optional] 
+	 * @return bool Returns true on success or false on failure.
 	 */
-	public function writeElementNs ($prefix, string $name, $namespace, $content = null) {}
+	public function writeElementNs (?string $prefix, string $name, ?string $namespace, ?string $content = null): bool {}
 
 	/**
 	 * Create start PI tag
 	 * @link http://www.php.net/manual/en/xmlwriter.startpi.php
-	 * @param string $target The target of the processing instruction.
-	 * @return bool true on success or false on failure
+	 * @param string $target 
+	 * @return bool Returns true on success or false on failure.
 	 */
-	public function startPi (string $target) {}
+	public function startPi (string $target): bool {}
 
 	/**
 	 * End current PI
 	 * @link http://www.php.net/manual/en/xmlwriter.endpi.php
-	 * @return bool true on success or false on failure
+	 * @return bool Returns true on success or false on failure.
 	 */
-	public function endPi () {}
+	public function endPi (): bool {}
 
 	/**
 	 * Writes a PI
 	 * @link http://www.php.net/manual/en/xmlwriter.writepi.php
-	 * @param string $target The target of the processing instruction.
-	 * @param string $content The content of the processing instruction.
-	 * @return bool true on success or false on failure
+	 * @param string $target 
+	 * @param string $content 
+	 * @return bool Returns true on success or false on failure.
 	 */
-	public function writePi (string $target, string $content) {}
+	public function writePi (string $target, string $content): bool {}
 
 	/**
 	 * Create start CDATA tag
 	 * @link http://www.php.net/manual/en/xmlwriter.startcdata.php
-	 * @return bool true on success or false on failure
+	 * @return bool Returns true on success or false on failure.
 	 */
-	public function startCdata () {}
+	public function startCdata (): bool {}
 
 	/**
 	 * End current CDATA
 	 * @link http://www.php.net/manual/en/xmlwriter.endcdata.php
-	 * @return bool true on success or false on failure
+	 * @return bool Returns true on success or false on failure.
 	 */
-	public function endCdata () {}
+	public function endCdata (): bool {}
 
 	/**
 	 * Write full CDATA tag
 	 * @link http://www.php.net/manual/en/xmlwriter.writecdata.php
-	 * @param string $content The contents of the CDATA.
-	 * @return bool true on success or false on failure
+	 * @param string $content 
+	 * @return bool Returns true on success or false on failure.
 	 */
-	public function writeCdata (string $content) {}
+	public function writeCdata (string $content): bool {}
 
 	/**
 	 * Write text
 	 * @link http://www.php.net/manual/en/xmlwriter.text.php
-	 * @param string $content The contents of the text.
-	 * The characters &lt;, &gt;,
-	 * &amp; and " are written as
-	 * entity references (i.e. &amp;lt;, &amp;gt;,
-	 * &amp;amp; and &amp;quot;, respectively).
-	 * All other characters including apos are written literally.
-	 * To write the special XML characters literally, or to write literal entity references,
-	 * xmlwriter_write_raw has to be used.
-	 * @return bool true on success or false on failure
+	 * @param string $content 
+	 * @return bool Returns true on success or false on failure.
 	 */
-	public function text (string $content) {}
+	public function text (string $content): bool {}
 
 	/**
 	 * Write a raw XML text
 	 * @link http://www.php.net/manual/en/xmlwriter.writeraw.php
-	 * @param string $content The text string to write.
-	 * @return bool true on success or false on failure
+	 * @param string $content 
+	 * @return bool Returns true on success or false on failure.
 	 */
-	public function writeRaw (string $content) {}
+	public function writeRaw (string $content): bool {}
 
 	/**
 	 * Create document tag
 	 * @link http://www.php.net/manual/en/xmlwriter.startdocument.php
-	 * @param mixed $version [optional] The version number of the document as part of the XML declaration.
-	 * @param mixed $encoding [optional] The encoding of the document as part of the XML declaration.
-	 * @param mixed $standalone [optional] yes or no.
-	 * @return bool true on success or false on failure
+	 * @param string|null $version [optional] 
+	 * @param string|null $encoding [optional] 
+	 * @param string|null $standalone [optional] 
+	 * @return bool Returns true on success or false on failure.
 	 */
-	public function startDocument ($version = null, $encoding = null, $standalone = null) {}
+	public function startDocument (?string $version = "1.0", ?string $encoding = null, ?string $standalone = null): bool {}
 
 	/**
 	 * End current document
 	 * @link http://www.php.net/manual/en/xmlwriter.enddocument.php
-	 * @return bool true on success or false on failure
+	 * @return bool Returns true on success or false on failure.
 	 */
-	public function endDocument () {}
+	public function endDocument (): bool {}
 
 	/**
 	 * Write full comment tag
 	 * @link http://www.php.net/manual/en/xmlwriter.writecomment.php
-	 * @param string $content The contents of the comment.
-	 * @return bool true on success or false on failure
+	 * @param string $content 
+	 * @return bool Returns true on success or false on failure.
 	 */
-	public function writeComment (string $content) {}
+	public function writeComment (string $content): bool {}
 
 	/**
 	 * Create start DTD tag
 	 * @link http://www.php.net/manual/en/xmlwriter.startdtd.php
-	 * @param string $qualifiedName The qualified name of the document type to create.
-	 * @param mixed $publicId [optional] The external subset public identifier.
-	 * @param mixed $systemId [optional] The external subset system identifier.
-	 * @return bool true on success or false on failure
+	 * @param string $qualifiedName 
+	 * @param string|null $publicId [optional] 
+	 * @param string|null $systemId [optional] 
+	 * @return bool Returns true on success or false on failure.
 	 */
-	public function startDtd (string $qualifiedName, $publicId = null, $systemId = null) {}
+	public function startDtd (string $qualifiedName, ?string $publicId = null, ?string $systemId = null): bool {}
 
 	/**
 	 * End current DTD
 	 * @link http://www.php.net/manual/en/xmlwriter.enddtd.php
-	 * @return bool true on success or false on failure
+	 * @return bool Returns true on success or false on failure.
 	 */
-	public function endDtd () {}
+	public function endDtd (): bool {}
 
 	/**
 	 * Write full DTD tag
 	 * @link http://www.php.net/manual/en/xmlwriter.writedtd.php
-	 * @param string $name The DTD name.
-	 * @param mixed $publicId [optional] The external subset public identifier.
-	 * @param mixed $systemId [optional] The external subset system identifier.
-	 * @param mixed $content [optional] The content of the DTD.
-	 * @return bool true on success or false on failure
+	 * @param string $name 
+	 * @param string|null $publicId [optional] 
+	 * @param string|null $systemId [optional] 
+	 * @param string|null $content [optional] 
+	 * @return bool Returns true on success or false on failure.
 	 */
-	public function writeDtd (string $name, $publicId = null, $systemId = null, $content = null) {}
+	public function writeDtd (string $name, ?string $publicId = null, ?string $systemId = null, ?string $content = null): bool {}
 
 	/**
 	 * Create start DTD element
 	 * @link http://www.php.net/manual/en/xmlwriter.startdtdelement.php
-	 * @param string $qualifiedName The qualified name of the document type to create.
-	 * @return bool true on success or false on failure
+	 * @param string $qualifiedName 
+	 * @return bool Returns true on success or false on failure.
 	 */
-	public function startDtdElement (string $qualifiedName) {}
+	public function startDtdElement (string $qualifiedName): bool {}
 
 	/**
 	 * End current DTD element
 	 * @link http://www.php.net/manual/en/xmlwriter.enddtdelement.php
-	 * @return bool true on success or false on failure
+	 * @return bool Returns true on success or false on failure.
 	 */
-	public function endDtdElement () {}
+	public function endDtdElement (): bool {}
 
 	/**
 	 * Write full DTD element tag
 	 * @link http://www.php.net/manual/en/xmlwriter.writedtdelement.php
-	 * @param string $name The name of the DTD element.
-	 * @param string $content The content of the element.
-	 * @return bool true on success or false on failure
+	 * @param string $name 
+	 * @param string $content 
+	 * @return bool Returns true on success or false on failure.
 	 */
-	public function writeDtdElement (string $name, string $content) {}
+	public function writeDtdElement (string $name, string $content): bool {}
 
 	/**
 	 * Create start DTD AttList
 	 * @link http://www.php.net/manual/en/xmlwriter.startdtdattlist.php
-	 * @param string $name The attribute list name.
-	 * @return bool true on success or false on failure
+	 * @param string $name 
+	 * @return bool Returns true on success or false on failure.
 	 */
-	public function startDtdAttlist (string $name) {}
+	public function startDtdAttlist (string $name): bool {}
 
 	/**
 	 * End current DTD AttList
 	 * @link http://www.php.net/manual/en/xmlwriter.enddtdattlist.php
-	 * @return bool true on success or false on failure
+	 * @return bool Returns true on success or false on failure.
 	 */
-	public function endDtdAttlist () {}
+	public function endDtdAttlist (): bool {}
 
 	/**
 	 * Write full DTD AttList tag
 	 * @link http://www.php.net/manual/en/xmlwriter.writedtdattlist.php
-	 * @param string $name The name of the DTD attribute list.
-	 * @param string $content The content of the DTD attribute list.
-	 * @return bool true on success or false on failure
+	 * @param string $name 
+	 * @param string $content 
+	 * @return bool Returns true on success or false on failure.
 	 */
-	public function writeDtdAttlist (string $name, string $content) {}
+	public function writeDtdAttlist (string $name, string $content): bool {}
 
 	/**
 	 * Create start DTD Entity
 	 * @link http://www.php.net/manual/en/xmlwriter.startdtdentity.php
-	 * @param string $name The name of the entity.
+	 * @param string $name 
 	 * @param bool $isParam 
-	 * @return bool true on success or false on failure
+	 * @return bool Returns true on success or false on failure.
 	 */
-	public function startDtdEntity (string $name, bool $isParam) {}
+	public function startDtdEntity (string $name, bool $isParam): bool {}
 
 	/**
 	 * End current DTD Entity
 	 * @link http://www.php.net/manual/en/xmlwriter.enddtdentity.php
-	 * @return bool true on success or false on failure
+	 * @return bool Returns true on success or false on failure.
 	 */
-	public function endDtdEntity () {}
+	public function endDtdEntity (): bool {}
 
 	/**
 	 * Write full DTD Entity tag
 	 * @link http://www.php.net/manual/en/xmlwriter.writedtdentity.php
-	 * @param string $name The name of the entity.
-	 * @param string $content The content of the entity.
+	 * @param string $name 
+	 * @param string $content 
 	 * @param bool $isParam [optional] 
-	 * @param mixed $publicId [optional] 
-	 * @param mixed $systemId [optional] 
-	 * @param mixed $notationData [optional] 
-	 * @return bool true on success or false on failure
+	 * @param string|null $publicId [optional] 
+	 * @param string|null $systemId [optional] 
+	 * @param string|null $notationData [optional] 
+	 * @return bool Returns true on success or false on failure.
 	 */
-	public function writeDtdEntity (string $name, string $content, bool $isParam = null, $publicId = null, $systemId = null, $notationData = null) {}
+	public function writeDtdEntity (string $name, string $content, bool $isParam = false, ?string $publicId = null, ?string $systemId = null, ?string $notationData = null): bool {}
 
 	/**
 	 * Returns current buffer
 	 * @link http://www.php.net/manual/en/xmlwriter.outputmemory.php
-	 * @param bool $flush [optional] Whether to flush the output buffer or not. Default is true.
-	 * @return string the current buffer as a string.
+	 * @param bool $flush [optional] 
+	 * @return string Returns the current buffer as a string.
 	 */
-	public function outputMemory (bool $flush = null) {}
+	public function outputMemory (bool $flush = true): string {}
 
 	/**
 	 * Flush current buffer
 	 * @link http://www.php.net/manual/en/xmlwriter.flush.php
-	 * @param bool $empty [optional] Whether to empty the buffer or not. Default is true.
-	 * @return mixed If you opened the writer in memory, this function returns the generated XML buffer,
+	 * @param bool $empty [optional] 
+	 * @return string|int If you opened the writer in memory, this function returns the generated XML buffer,
 	 * Else, if using URI, this function will write the buffer and return the number of 
 	 * written bytes.
 	 */
-	public function flush (bool $empty = null) {}
+	public function flush (bool $empty = true): string|int {}
 
 }
 
 /**
- * @param string $uri
+ * Create new xmlwriter using source uri for output
+ * @link http://www.php.net/manual/en/xmlwriter.openuri.php
+ * @param string $uri 
+ * @return XMLWriter|false Object-oriented style: Returns true on success or false on failure.
+ * <p>Procedural style: Returns a new XMLWriter instance for later use with the
+ * xmlwriter functions on success, or false on failure.</p>
  */
 function xmlwriter_open_uri (string $uri): XMLWriter|false {}
 
+/**
+ * Create new xmlwriter using memory for string output
+ * @link http://www.php.net/manual/en/xmlwriter.openmemory.php
+ * @return XMLWriter|false Object-oriented style: Returns true on success or false on failure.
+ * <p>Procedural style: Returns a new XMLWriter for later use with the
+ * xmlwriter functions on success, or false on failure.</p>
+ */
 function xmlwriter_open_memory (): XMLWriter|false {}
 
 /**
- * @param XMLWriter $writer
- * @param bool $enable
+ * Toggle indentation on/off
+ * @link http://www.php.net/manual/en/xmlwriter.setindent.php
+ * @param XMLWriter $writer 
+ * @param bool $enable 
+ * @return bool Returns true on success or false on failure.
  */
 function xmlwriter_set_indent (XMLWriter $writer, bool $enable): bool {}
 
 /**
- * @param XMLWriter $writer
- * @param string $indentation
+ * Set string used for indenting
+ * @link http://www.php.net/manual/en/xmlwriter.setindentstring.php
+ * @param XMLWriter $writer 
+ * @param string $indentation 
+ * @return bool Returns true on success or false on failure.
  */
 function xmlwriter_set_indent_string (XMLWriter $writer, string $indentation): bool {}
 
 /**
- * @param XMLWriter $writer
+ * Create start comment
+ * @link http://www.php.net/manual/en/xmlwriter.startcomment.php
+ * @param XMLWriter $writer 
+ * @return bool Returns true on success or false on failure.
  */
 function xmlwriter_start_comment (XMLWriter $writer): bool {}
 
 /**
- * @param XMLWriter $writer
+ * Create end comment
+ * @link http://www.php.net/manual/en/xmlwriter.endcomment.php
+ * @param XMLWriter $writer 
+ * @return bool Returns true on success or false on failure.
  */
 function xmlwriter_end_comment (XMLWriter $writer): bool {}
 
 /**
- * @param XMLWriter $writer
- * @param string $name
+ * Create start attribute
+ * @link http://www.php.net/manual/en/xmlwriter.startattribute.php
+ * @param XMLWriter $writer 
+ * @param string $name 
+ * @return bool Returns true on success or false on failure.
  */
 function xmlwriter_start_attribute (XMLWriter $writer, string $name): bool {}
 
 /**
- * @param XMLWriter $writer
+ * End attribute
+ * @link http://www.php.net/manual/en/xmlwriter.endattribute.php
+ * @param XMLWriter $writer 
+ * @return bool Returns true on success or false on failure.
  */
 function xmlwriter_end_attribute (XMLWriter $writer): bool {}
 
 /**
- * @param XMLWriter $writer
- * @param string $name
- * @param string $value
+ * Write full attribute
+ * @link http://www.php.net/manual/en/xmlwriter.writeattribute.php
+ * @param XMLWriter $writer 
+ * @param string $name 
+ * @param string $value 
+ * @return bool Returns true on success or false on failure.
  */
 function xmlwriter_write_attribute (XMLWriter $writer, string $name, string $value): bool {}
 
 /**
- * @param XMLWriter $writer
- * @param string|null $prefix
- * @param string $name
- * @param string|null $namespace
+ * Create start namespaced attribute
+ * @link http://www.php.net/manual/en/xmlwriter.startattributens.php
+ * @param XMLWriter $writer 
+ * @param string|null $prefix 
+ * @param string $name 
+ * @param string|null $namespace 
+ * @return bool Returns true on success or false on failure.
  */
-function xmlwriter_start_attribute_ns (XMLWriter $writer, string|null $prefix = null, string $name, string|null $namespace = null): bool {}
+function xmlwriter_start_attribute_ns (XMLWriter $writer, ?string $prefix, string $name, ?string $namespace): bool {}
 
 /**
- * @param XMLWriter $writer
- * @param string|null $prefix
- * @param string $name
- * @param string|null $namespace
- * @param string $value
+ * Write full namespaced attribute
+ * @link http://www.php.net/manual/en/xmlwriter.writeattributens.php
+ * @param XMLWriter $writer 
+ * @param string|null $prefix 
+ * @param string $name 
+ * @param string|null $namespace 
+ * @param string $value 
+ * @return bool Returns true on success or false on failure.
  */
-function xmlwriter_write_attribute_ns (XMLWriter $writer, string|null $prefix = null, string $name, string|null $namespace = null, string $value): bool {}
+function xmlwriter_write_attribute_ns (XMLWriter $writer, ?string $prefix, string $name, ?string $namespace, string $value): bool {}
 
 /**
- * @param XMLWriter $writer
- * @param string $name
+ * Create start element tag
+ * @link http://www.php.net/manual/en/xmlwriter.startelement.php
+ * @param XMLWriter $writer 
+ * @param string $name 
+ * @return bool Returns true on success or false on failure.
  */
 function xmlwriter_start_element (XMLWriter $writer, string $name): bool {}
 
 /**
- * @param XMLWriter $writer
+ * End current element
+ * @link http://www.php.net/manual/en/xmlwriter.endelement.php
+ * @param XMLWriter $writer 
+ * @return bool Returns true on success or false on failure.
  */
 function xmlwriter_end_element (XMLWriter $writer): bool {}
 
 /**
- * @param XMLWriter $writer
+ * End current element
+ * @link http://www.php.net/manual/en/xmlwriter.fullendelement.php
+ * @param XMLWriter $writer 
+ * @return bool Returns true on success or false on failure.
  */
 function xmlwriter_full_end_element (XMLWriter $writer): bool {}
 
 /**
- * @param XMLWriter $writer
- * @param string|null $prefix
- * @param string $name
- * @param string|null $namespace
+ * Create start namespaced element tag
+ * @link http://www.php.net/manual/en/xmlwriter.startelementns.php
+ * @param XMLWriter $writer 
+ * @param string|null $prefix 
+ * @param string $name 
+ * @param string|null $namespace 
+ * @return bool Returns true on success or false on failure.
  */
-function xmlwriter_start_element_ns (XMLWriter $writer, string|null $prefix = null, string $name, string|null $namespace = null): bool {}
+function xmlwriter_start_element_ns (XMLWriter $writer, ?string $prefix, string $name, ?string $namespace): bool {}
 
 /**
- * @param XMLWriter $writer
- * @param string $name
- * @param string|null $content [optional]
+ * Write full element tag
+ * @link http://www.php.net/manual/en/xmlwriter.writeelement.php
+ * @param XMLWriter $writer 
+ * @param string $name 
+ * @param string|null $content [optional] 
+ * @return bool Returns true on success or false on failure.
  */
-function xmlwriter_write_element (XMLWriter $writer, string $name, string|null $content = null): bool {}
+function xmlwriter_write_element (XMLWriter $writer, string $name, ?string $content = null): bool {}
 
 /**
- * @param XMLWriter $writer
- * @param string|null $prefix
- * @param string $name
- * @param string|null $namespace
- * @param string|null $content [optional]
+ * Write full namespaced element tag
+ * @link http://www.php.net/manual/en/xmlwriter.writeelementns.php
+ * @param XMLWriter $writer 
+ * @param string|null $prefix 
+ * @param string $name 
+ * @param string|null $namespace 
+ * @param string|null $content [optional] 
+ * @return bool Returns true on success or false on failure.
  */
-function xmlwriter_write_element_ns (XMLWriter $writer, string|null $prefix = null, string $name, string|null $namespace = null, string|null $content = null): bool {}
+function xmlwriter_write_element_ns (XMLWriter $writer, ?string $prefix, string $name, ?string $namespace, ?string $content = null): bool {}
 
 /**
- * @param XMLWriter $writer
- * @param string $target
+ * Create start PI tag
+ * @link http://www.php.net/manual/en/xmlwriter.startpi.php
+ * @param XMLWriter $writer 
+ * @param string $target 
+ * @return bool Returns true on success or false on failure.
  */
 function xmlwriter_start_pi (XMLWriter $writer, string $target): bool {}
 
 /**
- * @param XMLWriter $writer
+ * End current PI
+ * @link http://www.php.net/manual/en/xmlwriter.endpi.php
+ * @param XMLWriter $writer 
+ * @return bool Returns true on success or false on failure.
  */
 function xmlwriter_end_pi (XMLWriter $writer): bool {}
 
 /**
- * @param XMLWriter $writer
- * @param string $target
- * @param string $content
+ * Writes a PI
+ * @link http://www.php.net/manual/en/xmlwriter.writepi.php
+ * @param XMLWriter $writer 
+ * @param string $target 
+ * @param string $content 
+ * @return bool Returns true on success or false on failure.
  */
 function xmlwriter_write_pi (XMLWriter $writer, string $target, string $content): bool {}
 
 /**
- * @param XMLWriter $writer
+ * Create start CDATA tag
+ * @link http://www.php.net/manual/en/xmlwriter.startcdata.php
+ * @param XMLWriter $writer 
+ * @return bool Returns true on success or false on failure.
  */
 function xmlwriter_start_cdata (XMLWriter $writer): bool {}
 
 /**
- * @param XMLWriter $writer
+ * End current CDATA
+ * @link http://www.php.net/manual/en/xmlwriter.endcdata.php
+ * @param XMLWriter $writer 
+ * @return bool Returns true on success or false on failure.
  */
 function xmlwriter_end_cdata (XMLWriter $writer): bool {}
 
 /**
- * @param XMLWriter $writer
- * @param string $content
+ * Write full CDATA tag
+ * @link http://www.php.net/manual/en/xmlwriter.writecdata.php
+ * @param XMLWriter $writer 
+ * @param string $content 
+ * @return bool Returns true on success or false on failure.
  */
 function xmlwriter_write_cdata (XMLWriter $writer, string $content): bool {}
 
 /**
- * @param XMLWriter $writer
- * @param string $content
+ * Write text
+ * @link http://www.php.net/manual/en/xmlwriter.text.php
+ * @param XMLWriter $writer 
+ * @param string $content 
+ * @return bool Returns true on success or false on failure.
  */
 function xmlwriter_text (XMLWriter $writer, string $content): bool {}
 
 /**
- * @param XMLWriter $writer
- * @param string $content
+ * Write a raw XML text
+ * @link http://www.php.net/manual/en/xmlwriter.writeraw.php
+ * @param XMLWriter $writer 
+ * @param string $content 
+ * @return bool Returns true on success or false on failure.
  */
 function xmlwriter_write_raw (XMLWriter $writer, string $content): bool {}
 
 /**
- * @param XMLWriter $writer
- * @param string|null $version [optional]
- * @param string|null $encoding [optional]
- * @param string|null $standalone [optional]
+ * Create document tag
+ * @link http://www.php.net/manual/en/xmlwriter.startdocument.php
+ * @param XMLWriter $writer 
+ * @param string|null $version [optional] 
+ * @param string|null $encoding [optional] 
+ * @param string|null $standalone [optional] 
+ * @return bool Returns true on success or false on failure.
  */
-function xmlwriter_start_document (XMLWriter $writer, string|null $version = null, string|null $encoding = null, string|null $standalone = null): bool {}
+function xmlwriter_start_document (XMLWriter $writer, ?string $version = "1.0", ?string $encoding = null, ?string $standalone = null): bool {}
 
 /**
- * @param XMLWriter $writer
+ * End current document
+ * @link http://www.php.net/manual/en/xmlwriter.enddocument.php
+ * @param XMLWriter $writer 
+ * @return bool Returns true on success or false on failure.
  */
 function xmlwriter_end_document (XMLWriter $writer): bool {}
 
 /**
- * @param XMLWriter $writer
- * @param string $content
+ * Write full comment tag
+ * @link http://www.php.net/manual/en/xmlwriter.writecomment.php
+ * @param XMLWriter $writer 
+ * @param string $content 
+ * @return bool Returns true on success or false on failure.
  */
 function xmlwriter_write_comment (XMLWriter $writer, string $content): bool {}
 
 /**
- * @param XMLWriter $writer
- * @param string $qualifiedName
- * @param string|null $publicId [optional]
- * @param string|null $systemId [optional]
+ * Create start DTD tag
+ * @link http://www.php.net/manual/en/xmlwriter.startdtd.php
+ * @param XMLWriter $writer 
+ * @param string $qualifiedName 
+ * @param string|null $publicId [optional] 
+ * @param string|null $systemId [optional] 
+ * @return bool Returns true on success or false on failure.
  */
-function xmlwriter_start_dtd (XMLWriter $writer, string $qualifiedName, string|null $publicId = null, string|null $systemId = null): bool {}
+function xmlwriter_start_dtd (XMLWriter $writer, string $qualifiedName, ?string $publicId = null, ?string $systemId = null): bool {}
 
 /**
- * @param XMLWriter $writer
+ * End current DTD
+ * @link http://www.php.net/manual/en/xmlwriter.enddtd.php
+ * @param XMLWriter $writer 
+ * @return bool Returns true on success or false on failure.
  */
 function xmlwriter_end_dtd (XMLWriter $writer): bool {}
 
 /**
- * @param XMLWriter $writer
- * @param string $name
- * @param string|null $publicId [optional]
- * @param string|null $systemId [optional]
- * @param string|null $content [optional]
+ * Write full DTD tag
+ * @link http://www.php.net/manual/en/xmlwriter.writedtd.php
+ * @param XMLWriter $writer 
+ * @param string $name 
+ * @param string|null $publicId [optional] 
+ * @param string|null $systemId [optional] 
+ * @param string|null $content [optional] 
+ * @return bool Returns true on success or false on failure.
  */
-function xmlwriter_write_dtd (XMLWriter $writer, string $name, string|null $publicId = null, string|null $systemId = null, string|null $content = null): bool {}
+function xmlwriter_write_dtd (XMLWriter $writer, string $name, ?string $publicId = null, ?string $systemId = null, ?string $content = null): bool {}
 
 /**
- * @param XMLWriter $writer
- * @param string $qualifiedName
+ * Create start DTD element
+ * @link http://www.php.net/manual/en/xmlwriter.startdtdelement.php
+ * @param XMLWriter $writer 
+ * @param string $qualifiedName 
+ * @return bool Returns true on success or false on failure.
  */
 function xmlwriter_start_dtd_element (XMLWriter $writer, string $qualifiedName): bool {}
 
 /**
- * @param XMLWriter $writer
+ * End current DTD element
+ * @link http://www.php.net/manual/en/xmlwriter.enddtdelement.php
+ * @param XMLWriter $writer 
+ * @return bool Returns true on success or false on failure.
  */
 function xmlwriter_end_dtd_element (XMLWriter $writer): bool {}
 
 /**
- * @param XMLWriter $writer
- * @param string $name
- * @param string $content
+ * Write full DTD element tag
+ * @link http://www.php.net/manual/en/xmlwriter.writedtdelement.php
+ * @param XMLWriter $writer 
+ * @param string $name 
+ * @param string $content 
+ * @return bool Returns true on success or false on failure.
  */
 function xmlwriter_write_dtd_element (XMLWriter $writer, string $name, string $content): bool {}
 
 /**
- * @param XMLWriter $writer
- * @param string $name
+ * Create start DTD AttList
+ * @link http://www.php.net/manual/en/xmlwriter.startdtdattlist.php
+ * @param XMLWriter $writer 
+ * @param string $name 
+ * @return bool Returns true on success or false on failure.
  */
 function xmlwriter_start_dtd_attlist (XMLWriter $writer, string $name): bool {}
 
 /**
- * @param XMLWriter $writer
+ * End current DTD AttList
+ * @link http://www.php.net/manual/en/xmlwriter.enddtdattlist.php
+ * @param XMLWriter $writer 
+ * @return bool Returns true on success or false on failure.
  */
 function xmlwriter_end_dtd_attlist (XMLWriter $writer): bool {}
 
 /**
- * @param XMLWriter $writer
- * @param string $name
- * @param string $content
+ * Write full DTD AttList tag
+ * @link http://www.php.net/manual/en/xmlwriter.writedtdattlist.php
+ * @param XMLWriter $writer 
+ * @param string $name 
+ * @param string $content 
+ * @return bool Returns true on success or false on failure.
  */
 function xmlwriter_write_dtd_attlist (XMLWriter $writer, string $name, string $content): bool {}
 
 /**
- * @param XMLWriter $writer
- * @param string $name
- * @param bool $isParam
+ * Create start DTD Entity
+ * @link http://www.php.net/manual/en/xmlwriter.startdtdentity.php
+ * @param XMLWriter $writer 
+ * @param string $name 
+ * @param bool $isParam 
+ * @return bool Returns true on success or false on failure.
  */
 function xmlwriter_start_dtd_entity (XMLWriter $writer, string $name, bool $isParam): bool {}
 
 /**
- * @param XMLWriter $writer
+ * End current DTD Entity
+ * @link http://www.php.net/manual/en/xmlwriter.enddtdentity.php
+ * @param XMLWriter $writer 
+ * @return bool Returns true on success or false on failure.
  */
 function xmlwriter_end_dtd_entity (XMLWriter $writer): bool {}
 
 /**
- * @param XMLWriter $writer
- * @param string $name
- * @param string $content
- * @param bool $isParam [optional]
- * @param string|null $publicId [optional]
- * @param string|null $systemId [optional]
- * @param string|null $notationData [optional]
+ * Write full DTD Entity tag
+ * @link http://www.php.net/manual/en/xmlwriter.writedtdentity.php
+ * @param XMLWriter $writer 
+ * @param string $name 
+ * @param string $content 
+ * @param bool $isParam [optional] 
+ * @param string|null $publicId [optional] 
+ * @param string|null $systemId [optional] 
+ * @param string|null $notationData [optional] 
+ * @return bool Returns true on success or false on failure.
  */
-function xmlwriter_write_dtd_entity (XMLWriter $writer, string $name, string $content, bool $isParam = '', string|null $publicId = null, string|null $systemId = null, string|null $notationData = null): bool {}
+function xmlwriter_write_dtd_entity (XMLWriter $writer, string $name, string $content, bool $isParam = false, ?string $publicId = null, ?string $systemId = null, ?string $notationData = null): bool {}
 
 /**
- * @param XMLWriter $writer
- * @param bool $flush [optional]
+ * Returns current buffer
+ * @link http://www.php.net/manual/en/xmlwriter.outputmemory.php
+ * @param XMLWriter $writer 
+ * @param bool $flush [optional] 
+ * @return string Returns the current buffer as a string.
  */
-function xmlwriter_output_memory (XMLWriter $writer, bool $flush = 1): string {}
+function xmlwriter_output_memory (XMLWriter $writer, bool $flush = true): string {}
 
 /**
- * @param XMLWriter $writer
- * @param bool $empty [optional]
+ * Flush current buffer
+ * @link http://www.php.net/manual/en/xmlwriter.flush.php
+ * @param XMLWriter $writer 
+ * @param bool $empty [optional] 
+ * @return string|int If you opened the writer in memory, this function returns the generated XML buffer,
+ * Else, if using URI, this function will write the buffer and return the number of 
+ * written bytes.
  */
-function xmlwriter_flush (XMLWriter $writer, bool $empty = 1): string|int {}
+function xmlwriter_flush (XMLWriter $writer, bool $empty = true): string|int {}
 
 // End of xmlwriter v.8.2.6

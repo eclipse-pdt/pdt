@@ -15,28 +15,75 @@ class PharException extends Exception implements Throwable, Stringable {
 
 
 	/**
-	 * @param string $message [optional]
-	 * @param int $code [optional]
-	 * @param Throwable|null $previous [optional]
+	 * Construct the exception
+	 * @link http://www.php.net/manual/en/exception.construct.php
+	 * @param string $message [optional] 
+	 * @param int $code [optional] 
+	 * @param Throwable|null $previous [optional] 
+	 * @return string 
 	 */
-	public function __construct (string $message = '', int $code = 0, Throwable|null $previous = null) {}
+	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
 
 	public function __wakeup () {}
 
+	/**
+	 * Gets the Exception message
+	 * @link http://www.php.net/manual/en/exception.getmessage.php
+	 * @return string Returns the Exception message as a string.
+	 */
 	final public function getMessage (): string {}
 
-	final public function getCode () {}
+	/**
+	 * Gets the Exception code
+	 * @link http://www.php.net/manual/en/exception.getcode.php
+	 * @return int Returns the exception code as int in
+	 * Exception but possibly as other type in
+	 * Exception descendants (for example as
+	 * string in PDOException).
+	 */
+	final public function getCode (): int {}
 
+	/**
+	 * Gets the file in which the exception was created
+	 * @link http://www.php.net/manual/en/exception.getfile.php
+	 * @return string Returns the filename in which the exception was created.
+	 */
 	final public function getFile (): string {}
 
+	/**
+	 * Gets the line in which the exception was created
+	 * @link http://www.php.net/manual/en/exception.getline.php
+	 * @return int Returns the line number where the exception was created.
+	 */
 	final public function getLine (): int {}
 
+	/**
+	 * Gets the stack trace
+	 * @link http://www.php.net/manual/en/exception.gettrace.php
+	 * @return array Returns the Exception stack trace as an array.
+	 */
 	final public function getTrace (): array {}
 
+	/**
+	 * Returns previous Throwable
+	 * @link http://www.php.net/manual/en/exception.getprevious.php
+	 * @return Throwable|null Returns the previous Throwable if available 
+	 * or null otherwise.
+	 */
 	final public function getPrevious (): ?Throwable {}
 
+	/**
+	 * Gets the stack trace as a string
+	 * @link http://www.php.net/manual/en/exception.gettraceasstring.php
+	 * @return string Returns the Exception stack trace as a string.
+	 */
 	final public function getTraceAsString (): string {}
 
+	/**
+	 * String representation of the exception
+	 * @link http://www.php.net/manual/en/exception.tostring.php
+	 * @return string Returns the string representation of the exception.
+	 */
 	public function __toString (): string {}
 
 }
@@ -80,169 +127,116 @@ class Phar extends RecursiveDirectoryIterator implements RecursiveIterator, Iter
 	/**
 	 * Construct a Phar archive object
 	 * @link http://www.php.net/manual/en/phar.construct.php
-	 * @param string $filename
-	 * @param int $flags [optional]
-	 * @param string|null $alias [optional]
+	 * @param string $filename 
+	 * @param int $flags [optional] 
+	 * @param string|null $alias [optional] 
+	 * @return string 
 	 */
-	public function __construct (string $filename, int $flags = 12288, string|null $alias = null) {}
+	public function __construct (string $filename, int $flags = FilesystemIterator::SKIP_DOTS | FilesystemIterator::UNIX_PATHS, ?string $alias = null): string {}
 
-	/**
-	 * Destructs a Phar archive object
-	 * @link http://www.php.net/manual/en/phar.destruct.php
-	 */
 	public function __destruct () {}
 
 	/**
 	 * Add an empty directory to the phar archive
 	 * @link http://www.php.net/manual/en/phar.addemptydir.php
-	 * @param string $directory The name of the empty directory to create in the phar archive
+	 * @param string $directory 
 	 * @return void no return value, exception is thrown on failure.
 	 */
-	public function addEmptyDir (string $directory) {}
+	public function addEmptyDir (string $directory): void {}
 
 	/**
 	 * Add a file from the filesystem to the phar archive
 	 * @link http://www.php.net/manual/en/phar.addfile.php
-	 * @param string $filename Full or relative path to a file on disk to be added
-	 * to the phar archive.
-	 * @param mixed $localName [optional] Path that the file will be stored in the archive.
+	 * @param string $filename 
+	 * @param string|null $localName [optional] 
 	 * @return void no return value, exception is thrown on failure.
 	 */
-	public function addFile (string $filename, $localName = null) {}
+	public function addFile (string $filename, ?string $localName = null): void {}
 
 	/**
 	 * Add a file from a string to the phar archive
 	 * @link http://www.php.net/manual/en/phar.addfromstring.php
-	 * @param string $localName Path that the file will be stored in the archive.
-	 * @param string $contents The file contents to store
+	 * @param string $localName 
+	 * @param string $contents 
 	 * @return void no return value, exception is thrown on failure.
 	 */
-	public function addFromString (string $localName, string $contents) {}
+	public function addFromString (string $localName, string $contents): void {}
 
 	/**
 	 * Construct a phar archive from the files within a directory
 	 * @link http://www.php.net/manual/en/phar.buildfromdirectory.php
-	 * @param string $directory The full or relative path to the directory that contains all files
-	 * to add to the archive.
-	 * @param string $pattern [optional] An optional pcre regular expression that is used to filter the
-	 * list of files. Only file paths matching the regular expression
-	 * will be included in the archive.
+	 * @param string $directory 
+	 * @param string $pattern [optional] 
 	 * @return array Phar::buildFromDirectory returns an associative array
 	 * mapping internal path of file to the full path of the file on the
 	 * filesystem.
 	 */
-	public function buildFromDirectory (string $directory, string $pattern = null) {}
+	public function buildFromDirectory (string $directory, string $pattern = ""): array {}
 
 	/**
 	 * Construct a phar archive from an iterator
 	 * @link http://www.php.net/manual/en/phar.buildfromiterator.php
-	 * @param Traversable $iterator Any iterator that either associatively maps phar file to location or
-	 * returns SplFileInfo objects
-	 * @param mixed $baseDirectory [optional] For iterators that return SplFileInfo objects, the portion of each
-	 * file's full path to remove when adding to the phar archive
+	 * @param Traversable $iterator 
+	 * @param string|null $baseDirectory [optional] 
 	 * @return array Phar::buildFromIterator returns an associative array
 	 * mapping internal path of file to the full path of the file on the
 	 * filesystem.
 	 */
-	public function buildFromIterator ($iterator, $baseDirectory = null) {}
+	public function buildFromIterator (Traversable $iterator, ?string $baseDirectory = null): array {}
 
 	/**
 	 * Compresses all files in the current Phar archive
 	 * @link http://www.php.net/manual/en/phar.compressfiles.php
-	 * @param int $compression Compression must be one of Phar::GZ,
-	 * Phar::BZ2 to add compression, or Phar::NONE
-	 * to remove compression.
-	 * @return void 
+	 * @param int $compression 
+	 * @return void No value is returned.
 	 */
-	public function compressFiles (int $compression) {}
+	public function compressFiles (int $compression): void {}
 
 	/**
 	 * Decompresses all files in the current Phar archive
 	 * @link http://www.php.net/manual/en/phar.decompressfiles.php
-	 * @return bool true on success or false on failure
+	 * @return bool Returns true on success or false on failure.
 	 */
-	public function decompressFiles () {}
+	public function decompressFiles (): bool {}
 
 	/**
 	 * Compresses the entire Phar archive using Gzip or Bzip2 compression
 	 * @link http://www.php.net/manual/en/phar.compress.php
-	 * @param int $compression Compression must be one of Phar::GZ,
-	 * Phar::BZ2 to add compression, or Phar::NONE
-	 * to remove compression.
-	 * @param mixed $extension [optional] By default, the extension is .phar.gz
-	 * or .phar.bz2 for compressing phar archives, and
-	 * .phar.tar.gz or .phar.tar.bz2 for
-	 * compressing tar archives. For decompressing, the default file extensions
-	 * are .phar and .phar.tar.
-	 * @return mixed a Phar object, or null on failure.
+	 * @param int $compression 
+	 * @param string|null $extension [optional] 
+	 * @return Phar|null Returns a Phar object, or null on failure.
 	 */
-	public function compress (int $compression, $extension = null) {}
+	public function compress (int $compression, ?string $extension = null): ?Phar {}
 
 	/**
 	 * Decompresses the entire Phar archive
 	 * @link http://www.php.net/manual/en/phar.decompress.php
-	 * @param mixed $extension [optional] For decompressing, the default file extensions
-	 * are .phar and .phar.tar.
-	 * Use this parameter to specify another file extension. Be aware
-	 * that all executable phar archives must contain .phar
-	 * in their filename.
-	 * @return mixed A Phar object is returned on success, and null on failure.
+	 * @param string|null $extension [optional] 
+	 * @return Phar|null A Phar object is returned on success, and null on failure.
 	 */
-	public function decompress ($extension = null) {}
+	public function decompress (?string $extension = null): ?Phar {}
 
 	/**
 	 * Convert a phar archive to another executable phar archive file format
 	 * @link http://www.php.net/manual/en/phar.converttoexecutable.php
-	 * @param mixed $format [optional] This should be one of Phar::PHAR, Phar::TAR,
-	 * or Phar::ZIP. If set to null, the existing file format
-	 * will be preserved.
-	 * @param mixed $compression [optional] This should be one of Phar::NONE for no whole-archive
-	 * compression, Phar::GZ for zlib-based compression, and
-	 * Phar::BZ2 for bzip-based compression.
-	 * @param mixed $extension [optional] <p>
-	 * This parameter is used to override the default file extension for a
-	 * converted archive. Note that all zip- and tar-based phar archives must contain
-	 * .phar in their file extension in order to be processed as a
-	 * phar archive.
-	 * </p>
-	 * <p>
-	 * If converting to a phar-based archive, the default extensions are
-	 * .phar, .phar.gz, or .phar.bz2
-	 * depending on the specified compression. For tar-based phar archives, the
-	 * default extensions are .phar.tar, .phar.tar.gz,
-	 * and .phar.tar.bz2. For zip-based phar archives, the
-	 * default extension is .phar.zip.
-	 * </p>
-	 * @return mixed The method returns a Phar object on success,
+	 * @param int|null $format [optional] 
+	 * @param int|null $compression [optional] 
+	 * @param string|null $extension [optional] 
+	 * @return Phar|null The method returns a Phar object on success,
 	 * or null on failure.
 	 */
-	public function convertToExecutable ($format = null, $compression = null, $extension = null) {}
+	public function convertToExecutable (?int $format = null, ?int $compression = null, ?string $extension = null): ?Phar {}
 
 	/**
 	 * Convert a phar archive to a non-executable tar or zip file
 	 * @link http://www.php.net/manual/en/phar.converttodata.php
-	 * @param mixed $format [optional] This should be one of Phar::TAR
-	 * or Phar::ZIP. If set to null, the existing file format
-	 * will be preserved.
-	 * @param mixed $compression [optional] This should be one of Phar::NONE for no whole-archive
-	 * compression, Phar::GZ for zlib-based compression, and
-	 * Phar::BZ2 for bzip-based compression.
-	 * @param mixed $extension [optional] <p>
-	 * This parameter is used to override the default file extension for a
-	 * converted archive. Note that .phar cannot be used
-	 * anywhere in the filename for a non-executable tar or zip archive.
-	 * </p>
-	 * <p>
-	 * If converting to a tar-based phar archive, the
-	 * default extensions are .tar, .tar.gz,
-	 * and .tar.bz2 depending on specified compression.
-	 * For zip-based archives, the
-	 * default extension is .zip.
-	 * </p>
-	 * @return mixed The method returns a PharData object on success,
+	 * @param int|null $format [optional] 
+	 * @param int|null $compression [optional] 
+	 * @param string|null $extension [optional] 
+	 * @return PharData|null The method returns a PharData object on success,
 	 * or null on failure.
 	 */
-	public function convertToData ($format = null, $compression = null, $extension = null) {}
+	public function convertToData (?int $format = null, ?int $compression = null, ?string $extension = null): ?PharData {}
 
 	/**
 	 * Copy a file internal to the phar archive to another new file within the phar
@@ -252,7 +246,7 @@ class Phar extends RecursiveDirectoryIterator implements RecursiveIterator, Iter
 	 * @return bool returns true on success, but it is safer to encase method call in a
 	 * try/catch block and assume success if no exception is thrown.
 	 */
-	public function copy (string $from, string $to) {}
+	public function copy (string $from, string $to): bool {}
 
 	/**
 	 * Returns the number of entries (files) in the Phar archive
@@ -265,16 +259,16 @@ class Phar extends RecursiveDirectoryIterator implements RecursiveIterator, Iter
 	 * @return int The number of files contained within this phar, or 0 (the number zero)
 	 * if none.
 	 */
-	public function count (int $mode = null) {}
+	public function count (int $mode = COUNT_NORMAL): int {}
 
 	/**
 	 * Delete a file within a phar archive
 	 * @link http://www.php.net/manual/en/phar.delete.php
-	 * @param string $localName Path within an archive to the file to delete.
+	 * @param string $localName 
 	 * @return bool returns true on success, but it is better to check for thrown exception,
 	 * and assume success if none is thrown.
 	 */
-	public function delete (string $localName) {}
+	public function delete (string $localName): bool {}
 
 	/**
 	 * Deletes the global metadata of the phar
@@ -282,33 +276,32 @@ class Phar extends RecursiveDirectoryIterator implements RecursiveIterator, Iter
 	 * @return bool returns true on success, but it is better to check for thrown exception,
 	 * and assume success if none is thrown.
 	 */
-	public function delMetadata () {}
+	public function delMetadata (): bool {}
 
 	/**
 	 * Extract the contents of a phar archive to a directory
 	 * @link http://www.php.net/manual/en/phar.extractto.php
-	 * @param string $directory Path to extract the given files to
-	 * @param mixed $files [optional] The name of a file or directory to extract, or an array of files/directories to extract,
-	 * null to skip this param
-	 * @param bool $overwrite [optional] Set to true to enable overwriting existing files
+	 * @param string $directory 
+	 * @param array|string|null $files [optional] 
+	 * @param bool $overwrite [optional] 
 	 * @return bool returns true on success, but it is better to check for thrown exception,
 	 * and assume success if none is thrown.
 	 */
-	public function extractTo (string $directory, $files = null, bool $overwrite = null) {}
+	public function extractTo (string $directory, array|string|null $files = null, bool $overwrite = false): bool {}
 
 	/**
 	 * Get the alias for Phar
 	 * @link http://www.php.net/manual/en/phar.getalias.php
-	 * @return mixed the alias or null if there's no alias.
+	 * @return string|null Returns the alias or null if there's no alias.
 	 */
-	public function getAlias () {}
+	public function getAlias (): ?string {}
 
 	/**
 	 * Get the real path to the Phar archive on disk
 	 * @link http://www.php.net/manual/en/phar.getpath.php
 	 * @return string 
 	 */
-	public function getPath () {}
+	public function getPath (): string {}
 
 	/**
 	 * Returns phar archive meta-data
@@ -317,19 +310,19 @@ class Phar extends RecursiveDirectoryIterator implements RecursiveIterator, Iter
 	 * @return mixed Any PHP value that can be serialized and is stored as meta-data for the Phar archive,
 	 * or null if no meta-data is stored.
 	 */
-	public function getMetadata (array $unserializeOptions = null) {}
+	public function getMetadata (array $unserializeOptions = []): mixed {}
 
 	/**
 	 * Return whether phar was modified
 	 * @link http://www.php.net/manual/en/phar.getmodified.php
 	 * @return bool true if the phar has been modified since opened, false if not.
 	 */
-	public function getModified () {}
+	public function getModified (): bool {}
 
 	/**
 	 * Return MD5/SHA1/SHA256/SHA512/OpenSSL signature of a Phar archive
 	 * @link http://www.php.net/manual/en/phar.getsignature.php
-	 * @return mixed Array with the opened archive's signature in hash key and MD5,
+	 * @return array|false Array with the opened archive's signature in hash key and MD5,
 	 * SHA-1,
 	 * SHA-256, SHA-512, or OpenSSL
 	 * in hash_type. This signature is a hash calculated on the
@@ -339,15 +332,15 @@ class Phar extends RecursiveDirectoryIterator implements RecursiveIterator, Iter
 	 * is set to true.
 	 * If there is no signature, the function returns false.
 	 */
-	public function getSignature () {}
+	public function getSignature (): array|false {}
 
 	/**
 	 * Return the PHP loader or bootstrap stub of a Phar archive
 	 * @link http://www.php.net/manual/en/phar.getstub.php
-	 * @return string a string containing the contents of the bootstrap loader (stub) of
+	 * @return string Returns a string containing the contents of the bootstrap loader (stub) of
 	 * the current Phar archive.
 	 */
-	public function getStub () {}
+	public function getStub (): string {}
 
 	/**
 	 * Return version info of Phar archive
@@ -358,164 +351,146 @@ class Phar extends RecursiveDirectoryIterator implements RecursiveIterator, Iter
 	 * its manifest. See Phar file format
 	 * documentation for more information.
 	 */
-	public function getVersion () {}
+	public function getVersion (): string {}
 
 	/**
 	 * Returns whether phar has global meta-data
 	 * @link http://www.php.net/manual/en/phar.hasmetadata.php
-	 * @return bool true if meta-data has been set, and false if not.
+	 * @return bool Returns true if meta-data has been set, and false if not.
 	 */
-	public function hasMetadata () {}
+	public function hasMetadata (): bool {}
 
 	/**
 	 * Used to determine whether Phar write operations are being buffered, or are flushing directly to disk
 	 * @link http://www.php.net/manual/en/phar.isbuffering.php
-	 * @return bool true if the write operations are being buffer, false otherwise.
+	 * @return bool Returns true if the write operations are being buffer, false otherwise.
 	 */
-	public function isBuffering () {}
+	public function isBuffering (): bool {}
 
 	/**
 	 * Returns Phar::GZ or PHAR::BZ2 if the entire phar archive is compressed (.tar.gz/tar.bz and so on)
 	 * @link http://www.php.net/manual/en/phar.iscompressed.php
-	 * @return mixed Phar::GZ, Phar::BZ2 or false.
+	 * @return int|false Phar::GZ, Phar::BZ2 or false.
 	 */
-	public function isCompressed () {}
+	public function isCompressed (): int|false {}
 
 	/**
 	 * Returns true if the phar archive is based on the tar/phar/zip file format depending on the parameter
 	 * @link http://www.php.net/manual/en/phar.isfileformat.php
-	 * @param int $format Either Phar::PHAR, Phar::TAR, or
-	 * Phar::ZIP to test for the format of the archive.
-	 * @return bool true if the phar archive matches the file format requested by the parameter
+	 * @param int $format 
+	 * @return bool Returns true if the phar archive matches the file format requested by the parameter
 	 */
-	public function isFileFormat (int $format) {}
+	public function isFileFormat (int $format): bool {}
 
 	/**
 	 * Returns true if the phar archive can be modified
 	 * @link http://www.php.net/manual/en/phar.iswritable.php
-	 * @return bool true if the phar archive can be modified
+	 * @return bool Returns true if the phar archive can be modified
 	 */
-	public function isWritable () {}
+	public function isWritable (): bool {}
 
 	/**
 	 * Determines whether a file exists in the phar
 	 * @link http://www.php.net/manual/en/phar.offsetexists.php
-	 * @param string $localName The filename (relative path) to look for in a Phar.
-	 * @return bool true if the file exists within the phar, or false if not.
+	 * @param string $localName 
+	 * @return bool Returns true if the file exists within the phar, or false if not.
 	 */
-	public function offsetExists (string $localName) {}
+	public function offsetExists (string $localName): bool {}
 
 	/**
 	 * Gets a PharFileInfo object for a specific file
 	 * @link http://www.php.net/manual/en/phar.offsetget.php
-	 * @param string $localName The filename (relative path) to look for in a Phar.
+	 * @param string $localName 
 	 * @return SplFileInfo A PharFileInfo object is returned that can be used to
 	 * iterate over a file's contents or to retrieve information about the current file.
 	 */
-	public function offsetGet (string $localName) {}
+	public function offsetGet (string $localName): SplFileInfo {}
 
 	/**
 	 * Set the contents of an internal file to those of an external file
 	 * @link http://www.php.net/manual/en/phar.offsetset.php
-	 * @param string $localName The filename (relative path) to modify in a Phar.
-	 * @param mixed $value Content of the file.
+	 * @param string $localName 
+	 * @param resource|string $value 
 	 * @return void No return values.
 	 */
-	public function offsetSet (string $localName, $value) {}
+	public function offsetSet (string $localName, resource|string $value): void {}
 
 	/**
 	 * Remove a file from a phar
 	 * @link http://www.php.net/manual/en/phar.offsetunset.php
-	 * @param string $localName The filename (relative path) to modify in a Phar.
-	 * @return void 
+	 * @param string $localName 
+	 * @return void No value is returned.
 	 */
-	public function offsetUnset (string $localName) {}
+	public function offsetUnset (string $localName): void {}
 
 	/**
 	 * Set the alias for the Phar archive
 	 * @link http://www.php.net/manual/en/phar.setalias.php
-	 * @param string $alias A shorthand string that this archive can be referred to in phar
-	 * stream wrapper access.
+	 * @param string $alias 
 	 * @return bool 
 	 */
-	public function setAlias (string $alias) {}
+	public function setAlias (string $alias): bool {}
 
 	/**
 	 * Used to set the PHP loader or bootstrap stub of a Phar archive to the default loader
 	 * @link http://www.php.net/manual/en/phar.setdefaultstub.php
-	 * @param mixed $index [optional] Relative path within the phar archive to run if accessed on the command-line
-	 * @param mixed $webIndex [optional] Relative path within the phar archive to run if accessed through a web browser
-	 * @return bool true on success or false on failure
+	 * @param string|null $index [optional] 
+	 * @param string|null $webIndex [optional] 
+	 * @return bool Returns true on success or false on failure.
 	 */
-	public function setDefaultStub ($index = null, $webIndex = null) {}
+	public function setDefaultStub (?string $index = null, ?string $webIndex = null): bool {}
 
 	/**
 	 * Sets phar archive meta-data
 	 * @link http://www.php.net/manual/en/phar.setmetadata.php
-	 * @param mixed $metadata Any PHP variable containing information to store that describes the phar archive
-	 * @return void 
+	 * @param mixed $metadata 
+	 * @return void No value is returned.
 	 */
-	public function setMetadata ($metadata) {}
+	public function setMetadata (mixed $metadata): void {}
 
 	/**
 	 * Set the signature algorithm for a phar and apply it
 	 * @link http://www.php.net/manual/en/phar.setsignaturealgorithm.php
-	 * @param int $algo One of Phar::MD5,
-	 * Phar::SHA1, Phar::SHA256,
-	 * Phar::SHA512, or Phar::OPENSSL
-	 * @param mixed $privateKey [optional] The contents of an OpenSSL private key, as extracted from a certificate or
-	 * OpenSSL key file:
-	 * <pre>
-	 * <code>&lt;?php
-	 * $private = openssl_get_privatekey(file_get_contents(&&#35;039;private.pem&&#35;039;));
-	 * $pkey = &&#35;039;&&#35;039;;
-	 * openssl_pkey_export($private, $pkey);
-	 * $p-&gt;setSignatureAlgorithm(Phar::OPENSSL, $pkey);
-	 * ?&gt;</code>
-	 * </pre>
-	 * See phar introduction for instructions on
-	 * naming and placement of the public key file.
-	 * @return void 
+	 * @param int $algo 
+	 * @param string|null $privateKey [optional] 
+	 * @return void No value is returned.
 	 */
-	public function setSignatureAlgorithm (int $algo, $privateKey = null) {}
+	public function setSignatureAlgorithm (int $algo, ?string $privateKey = null): void {}
 
 	/**
 	 * Used to set the PHP loader or bootstrap stub of a Phar archive
 	 * @link http://www.php.net/manual/en/phar.setstub.php
-	 * @param string $stub A string or an open stream handle to use as the executable stub for this
-	 * phar archive.
+	 * @param string $stub 
 	 * @param int $len [optional] 
-	 * @return bool true on success or false on failure
+	 * @return bool Returns true on success or false on failure.
 	 */
-	public function setStub (string $stub, int $len = null) {}
+	public function setStub (string $stub, int $len = -1): bool {}
 
 	/**
 	 * Start buffering Phar write operations, do not modify the Phar object on disk
 	 * @link http://www.php.net/manual/en/phar.startbuffering.php
-	 * @return void 
+	 * @return void No value is returned.
 	 */
-	public function startBuffering () {}
+	public function startBuffering (): void {}
 
 	/**
 	 * Stop buffering write requests to the Phar archive, and save changes to disk
 	 * @link http://www.php.net/manual/en/phar.stopbuffering.php
-	 * @return void 
+	 * @return void No value is returned.
 	 */
-	public function stopBuffering () {}
+	public function stopBuffering (): void {}
 
 	/**
 	 * Returns the api version
 	 * @link http://www.php.net/manual/en/phar.apiversion.php
-	 * @return string The API version string as in &quot;1.0.0&quot;.
+	 * @return string The API version string as in "1.0.0".
 	 */
 	final public static function apiVersion (): string {}
 
 	/**
 	 * Returns whether phar extension supports compression using either zlib or bzip2
 	 * @link http://www.php.net/manual/en/phar.cancompress.php
-	 * @param int $compression [optional] Either Phar::GZ or Phar::BZ2 can be
-	 * used to test whether compression is possible with a specific compression
-	 * algorithm (zlib or bzip2).
+	 * @param int $compression [optional] 
 	 * @return bool true if compression/decompression is available, false if not.
 	 */
 	final public static function canCompress (int $compression = null): bool {}
@@ -530,18 +505,18 @@ class Phar extends RecursiveDirectoryIterator implements RecursiveIterator, Iter
 	/**
 	 * Create a phar-file format specific stub
 	 * @link http://www.php.net/manual/en/phar.createdefaultstub.php
-	 * @param mixed $index [optional] Relative path within the phar archive to run if accessed on the command-line
-	 * @param mixed $webIndex [optional] Relative path within the phar archive to run if accessed through a web browser
-	 * @return string a string containing the contents of a customized bootstrap loader (stub)
+	 * @param string|null $index [optional] 
+	 * @param string|null $webIndex [optional] 
+	 * @return string Returns a string containing the contents of a customized bootstrap loader (stub)
 	 * that allows the created Phar archive to work with or without the Phar extension
 	 * enabled.
 	 */
-	final public static function createDefaultStub ($index = null, $webIndex = null): string {}
+	final public static function createDefaultStub (?string $index = null, ?string $webIndex = null): string {}
 
 	/**
 	 * Return array of supported compression algorithms
 	 * @link http://www.php.net/manual/en/phar.getsupportedcompression.php
-	 * @return array an array containing any of Phar::GZ or
+	 * @return array Returns an array containing any of Phar::GZ or
 	 * Phar::BZ2, depending on the availability of
 	 * the zlib extension or the
 	 * bz2 extension.
@@ -551,7 +526,7 @@ class Phar extends RecursiveDirectoryIterator implements RecursiveIterator, Iter
 	/**
 	 * Return array of supported signature types
 	 * @link http://www.php.net/manual/en/phar.getsupportedsignatures.php
-	 * @return array an array containing any of MD5, SHA-1,
+	 * @return array Returns an array containing any of MD5, SHA-1,
 	 * SHA-256, SHA-512, or OpenSSL.
 	 */
 	final public static function getSupportedSignatures (): array {}
@@ -566,50 +541,43 @@ class Phar extends RecursiveDirectoryIterator implements RecursiveIterator, Iter
 	/**
 	 * Returns whether the given filename is a valid phar filename
 	 * @link http://www.php.net/manual/en/phar.isvalidpharfilename.php
-	 * @param string $filename The name or full path to a phar archive not yet created
-	 * @param bool $executable [optional] This parameter determines whether the filename should be treated as
-	 * a phar executable archive, or a data non-executable archive
-	 * @return bool true if the filename is valid, false if not.
+	 * @param string $filename 
+	 * @param bool $executable [optional] 
+	 * @return bool Returns true if the filename is valid, false if not.
 	 */
-	final public static function isValidPharFilename (string $filename, bool $executable = null): bool {}
+	final public static function isValidPharFilename (string $filename, bool $executable = true): bool {}
 
 	/**
 	 * Loads any phar archive with an alias
 	 * @link http://www.php.net/manual/en/phar.loadphar.php
-	 * @param string $filename the full or relative path to the phar archive to open
-	 * @param mixed $alias [optional] The alias that may be used to refer to the phar archive. Note
-	 * that many phar archives specify an explicit alias inside the
-	 * phar archive, and a PharException will be thrown if
-	 * a new alias is specified in this case.
-	 * @return bool true on success or false on failure
+	 * @param string $filename 
+	 * @param string|null $alias [optional] 
+	 * @return bool Returns true on success or false on failure.
 	 */
-	final public static function loadPhar (string $filename, $alias = null): bool {}
+	final public static function loadPhar (string $filename, ?string $alias = null): bool {}
 
 	/**
 	 * Reads the currently executed file (a phar) and registers its manifest
 	 * @link http://www.php.net/manual/en/phar.mapphar.php
-	 * @param mixed $alias [optional] The alias that can be used in phar:// URLs to
-	 * refer to this archive, rather than its full path.
-	 * @param int $offset [optional] Unused variable, here for compatibility with PEAR's PHP_Archive.
-	 * @return bool true on success or false on failure
+	 * @param string|null $alias [optional] 
+	 * @param int $offset [optional] 
+	 * @return bool Returns true on success or false on failure.
 	 */
-	final public static function mapPhar ($alias = null, int $offset = null): bool {}
+	final public static function mapPhar (?string $alias = null, int $offset = null): bool {}
 
 	/**
 	 * Returns the full path on disk or full phar URL to the currently executing Phar archive
 	 * @link http://www.php.net/manual/en/phar.running.php
-	 * @param bool $returnPhar [optional] If false, the full path on disk to the phar
-	 * archive is returned. If true, a full phar URL is returned.
-	 * @return string the filename if valid, empty string otherwise.
+	 * @param bool $returnPhar [optional] 
+	 * @return string Returns the filename if valid, empty string otherwise.
 	 */
-	final public static function running (bool $returnPhar = null): string {}
+	final public static function running (bool $returnPhar = true): string {}
 
 	/**
 	 * Mount an external path or file to a virtual location within the phar archive
 	 * @link http://www.php.net/manual/en/phar.mount.php
-	 * @param string $pharPath The internal path within the phar archive to use as the mounted path location.
-	 * This must be a relative path within the phar archive, and must not already exist.
-	 * @param string $externalPath A path or URL to an external file or directory to mount within the phar archive
+	 * @param string $pharPath 
+	 * @param string $externalPath 
 	 * @return void No return. PharException is thrown on failure.
 	 */
 	final public static function mount (string $pharPath, string $externalPath): void {}
@@ -617,11 +585,7 @@ class Phar extends RecursiveDirectoryIterator implements RecursiveIterator, Iter
 	/**
 	 * Defines a list of up to 4 $_SERVER variables that should be modified for execution
 	 * @link http://www.php.net/manual/en/phar.mungserver.php
-	 * @param array $variables An array of any of the strings
-	 * REQUEST_URI, PHP_SELF,
-	 * SCRIPT_NAME and SCRIPT_FILENAME.
-	 * Other values trigger an exception, and Phar::mungServer
-	 * is case-sensitive.
+	 * @param array $variables 
 	 * @return void No return.
 	 */
 	final public static function mungServer (array $variables): void {}
@@ -629,91 +593,30 @@ class Phar extends RecursiveDirectoryIterator implements RecursiveIterator, Iter
 	/**
 	 * Completely remove a phar archive from disk and from memory
 	 * @link http://www.php.net/manual/en/phar.unlinkarchive.php
-	 * @param string $filename The path on disk to the phar archive.
-	 * @return bool true on success or false on failure
+	 * @param string $filename 
+	 * @return bool Returns true on success or false on failure.
 	 */
 	final public static function unlinkArchive (string $filename): bool {}
 
 	/**
 	 * Routes a request from a web browser to an internal file within the phar archive
 	 * @link http://www.php.net/manual/en/phar.webphar.php
-	 * @param mixed $alias [optional] The alias that can be used in phar:// URLs to
-	 * refer to this archive, rather than its full path.
-	 * @param mixed $index [optional] The location within the phar of the directory index.
-	 * @param mixed $fileNotFoundScript [optional] The location of the script to run when a file is not found. This
-	 * script should output the proper HTTP 404 headers.
-	 * @param array $mimeTypes [optional] An array mapping additional file extensions to MIME type.
-	 * If the default mapping is sufficient, pass an empty array.
-	 * By default, these extensions are mapped to these MIME types:
-	 * <pre>
-	 * <code>&lt;?php
-	 * $mimes = array(
-	 * &&#35;039;phps&&#35;039; =&gt; Phar::PHPS, &#47;&#47; pass to highlight_file()
-	 * &&#35;039;c&&#35;039; =&gt; &&#35;039;text&#47;plain&&#35;039;,
-	 * &&#35;039;cc&&#35;039; =&gt; &&#35;039;text&#47;plain&&#35;039;,
-	 * &&#35;039;cpp&&#35;039; =&gt; &&#35;039;text&#47;plain&&#35;039;,
-	 * &&#35;039;c++&&#35;039; =&gt; &&#35;039;text&#47;plain&&#35;039;,
-	 * &&#35;039;dtd&&#35;039; =&gt; &&#35;039;text&#47;plain&&#35;039;,
-	 * &&#35;039;h&&#35;039; =&gt; &&#35;039;text&#47;plain&&#35;039;,
-	 * &&#35;039;log&&#35;039; =&gt; &&#35;039;text&#47;plain&&#35;039;,
-	 * &&#35;039;rng&&#35;039; =&gt; &&#35;039;text&#47;plain&&#35;039;,
-	 * &&#35;039;txt&&#35;039; =&gt; &&#35;039;text&#47;plain&&#35;039;,
-	 * &&#35;039;xsd&&#35;039; =&gt; &&#35;039;text&#47;plain&&#35;039;,
-	 * &&#35;039;php&&#35;039; =&gt; Phar::PHP, &#47;&#47; parse as PHP
-	 * &&#35;039;inc&&#35;039; =&gt; Phar::PHP, &#47;&#47; parse as PHP
-	 * &&#35;039;avi&&#35;039; =&gt; &&#35;039;video&#47;avi&&#35;039;,
-	 * &&#35;039;bmp&&#35;039; =&gt; &&#35;039;image&#47;bmp&&#35;039;,
-	 * &&#35;039;css&&#35;039; =&gt; &&#35;039;text&#47;css&&#35;039;,
-	 * &&#35;039;gif&&#35;039; =&gt; &&#35;039;image&#47;gif&&#35;039;,
-	 * &&#35;039;htm&&#35;039; =&gt; &&#35;039;text&#47;html&&#35;039;,
-	 * &&#35;039;html&&#35;039; =&gt; &&#35;039;text&#47;html&&#35;039;,
-	 * &&#35;039;htmls&&#35;039; =&gt; &&#35;039;text&#47;html&&#35;039;,
-	 * &&#35;039;ico&&#35;039; =&gt; &&#35;039;image&#47;x-ico&&#35;039;,
-	 * &&#35;039;jpe&&#35;039; =&gt; &&#35;039;image&#47;jpeg&&#35;039;,
-	 * &&#35;039;jpg&&#35;039; =&gt; &&#35;039;image&#47;jpeg&&#35;039;,
-	 * &&#35;039;jpeg&&#35;039; =&gt; &&#35;039;image&#47;jpeg&&#35;039;,
-	 * &&#35;039;js&&#35;039; =&gt; &&#35;039;application&#47;x-javascript&&#35;039;,
-	 * &&#35;039;midi&&#35;039; =&gt; &&#35;039;audio&#47;midi&&#35;039;,
-	 * &&#35;039;mid&&#35;039; =&gt; &&#35;039;audio&#47;midi&&#35;039;,
-	 * &&#35;039;mod&&#35;039; =&gt; &&#35;039;audio&#47;mod&&#35;039;,
-	 * &&#35;039;mov&&#35;039; =&gt; &&#35;039;movie&#47;quicktime&&#35;039;,
-	 * &&#35;039;mp3&&#35;039; =&gt; &&#35;039;audio&#47;mp3&&#35;039;,
-	 * &&#35;039;mpg&&#35;039; =&gt; &&#35;039;video&#47;mpeg&&#35;039;,
-	 * &&#35;039;mpeg&&#35;039; =&gt; &&#35;039;video&#47;mpeg&&#35;039;,
-	 * &&#35;039;pdf&&#35;039; =&gt; &&#35;039;application&#47;pdf&&#35;039;,
-	 * &&#35;039;png&&#35;039; =&gt; &&#35;039;image&#47;png&&#35;039;,
-	 * &&#35;039;swf&&#35;039; =&gt; &&#35;039;application&#47;shockwave-flash&&#35;039;,
-	 * &&#35;039;tif&&#35;039; =&gt; &&#35;039;image&#47;tiff&&#35;039;,
-	 * &&#35;039;tiff&&#35;039; =&gt; &&#35;039;image&#47;tiff&&#35;039;,
-	 * &&#35;039;wav&&#35;039; =&gt; &&#35;039;audio&#47;wav&&#35;039;,
-	 * &&#35;039;xbm&&#35;039; =&gt; &&#35;039;image&#47;xbm&&#35;039;,
-	 * &&#35;039;xml&&#35;039; =&gt; &&#35;039;text&#47;xml&&#35;039;,
-	 * );
-	 * ?&gt;</code>
-	 * </pre>
-	 * @param mixed $rewrite [optional] <p>
-	 * The rewrites function is passed a string as its only parameter and must return a string or false.
-	 * </p>
-	 * <p>
-	 * If you are using fast-cgi or cgi then the parameter passed to the function is the value of the 
-	 * $_SERVER['PATH_INFO'] variable. Otherwise, the parameter passed to the function is the value
-	 * of the $_SERVER['REQUEST_URI'] variable.
-	 * </p>
-	 * <p>
-	 * If a string is returned it is used as the internal file path. If false is returned then webPhar() will
-	 * send a HTTP 403 Denied Code.
-	 * </p>
-	 * @return void 
+	 * @param string|null $alias [optional] 
+	 * @param string|null $index [optional] 
+	 * @param string|null $fileNotFoundScript [optional] 
+	 * @param array $mimeTypes [optional] 
+	 * @param callable|null $rewrite [optional] 
+	 * @return void No value is returned.
 	 */
-	final public static function webPhar ($alias = null, $index = null, $fileNotFoundScript = null, array $mimeTypes = null, $rewrite = null): void {}
+	final public static function webPhar (?string $alias = null, ?string $index = null, ?string $fileNotFoundScript = null, array $mimeTypes = [], ?callable $rewrite = null): void {}
 
 	/**
 	 * Returns whether current entry is a directory and not '.' or '..'
 	 * @link http://www.php.net/manual/en/recursivedirectoryiterator.haschildren.php
 	 * @param bool $allowLinks [optional] 
-	 * @return bool whether the current entry is a directory, but not '.' or '..'
+	 * @return bool Returns whether the current entry is a directory, but not '.' or '..'
 	 */
-	public function hasChildren (bool $allowLinks = null) {}
+	public function hasChildren (bool $allowLinks = false): bool {}
 
 	/**
 	 * Returns an iterator for the current entry if it is a directory
@@ -722,84 +625,82 @@ class Phar extends RecursiveDirectoryIterator implements RecursiveIterator, Iter
 	 * See the FilesystemIterator
 	 * constants.
 	 */
-	public function getChildren () {}
+	public function getChildren (): RecursiveDirectoryIterator {}
 
 	/**
 	 * Get sub path
 	 * @link http://www.php.net/manual/en/recursivedirectoryiterator.getsubpath.php
 	 * @return string The sub path.
 	 */
-	public function getSubPath () {}
+	public function getSubPath (): string {}
 
 	/**
 	 * Get sub path and name
 	 * @link http://www.php.net/manual/en/recursivedirectoryiterator.getsubpathname.php
 	 * @return string The sub path (sub directory) and filename.
 	 */
-	public function getSubPathname () {}
+	public function getSubPathname (): string {}
 
 	/**
 	 * Rewinds back to the beginning
 	 * @link http://www.php.net/manual/en/filesystemiterator.rewind.php
-	 * @return void 
+	 * @return void No value is returned.
 	 */
-	public function rewind () {}
+	public function rewind (): void {}
 
 	/**
 	 * Retrieve the key for the current file
 	 * @link http://www.php.net/manual/en/filesystemiterator.key.php
-	 * @return string the pathname or filename depending on the set flags.
+	 * @return string Returns the pathname or filename depending on the set flags.
 	 * See the FilesystemIterator constants.
 	 */
-	public function key () {}
+	public function key (): string {}
 
 	/**
 	 * The current file
 	 * @link http://www.php.net/manual/en/filesystemiterator.current.php
-	 * @return mixed The filename, file information, or $this depending on the set flags.
+	 * @return string|SplFileInfo|FilesystemIterator The filename, file information, or $this depending on the set flags.
 	 * See the FilesystemIterator constants.
 	 */
-	public function current () {}
+	public function current (): string|SplFileInfo|FilesystemIterator {}
 
 	/**
 	 * Get the handling flags
 	 * @link http://www.php.net/manual/en/filesystemiterator.getflags.php
 	 * @return int The integer value of the set flags.
 	 */
-	public function getFlags () {}
+	public function getFlags (): int {}
 
 	/**
 	 * Sets handling flags
 	 * @link http://www.php.net/manual/en/filesystemiterator.setflags.php
-	 * @param int $flags The handling flags to set.
-	 * See the FilesystemIterator constants.
-	 * @return void 
+	 * @param int $flags 
+	 * @return void No value is returned.
 	 */
-	public function setFlags (int $flags) {}
+	public function setFlags (int $flags): void {}
 
 	/**
 	 * Return file name of current DirectoryIterator item
 	 * @link http://www.php.net/manual/en/directoryiterator.getfilename.php
-	 * @return string the file name of the current DirectoryIterator item.
+	 * @return string Returns the file name of the current DirectoryIterator item.
 	 */
-	public function getFilename () {}
+	public function getFilename (): string {}
 
 	/**
 	 * Gets the file extension
 	 * @link http://www.php.net/manual/en/directoryiterator.getextension.php
-	 * @return string a string containing the file extension, or an
+	 * @return string Returns a string containing the file extension, or an
 	 * empty string if the file has no extension.
 	 */
-	public function getExtension () {}
+	public function getExtension (): string {}
 
 	/**
 	 * Get base name of current DirectoryIterator item
 	 * @link http://www.php.net/manual/en/directoryiterator.getbasename.php
-	 * @param string $suffix [optional] If the base name ends in suffix, 
-	 * this will be cut.
+	 * @param string $suffix [optional] 
 	 * @return string The base name of the current DirectoryIterator item.
 	 */
-	public function getBasename (string $suffix = null) {}
+	public function getBasename (string $suffix = ""): string {}
 
 	/**
 	 * Determine if current DirectoryIterator item is '.' or '..'
@@ -807,34 +708,34 @@ class Phar extends RecursiveDirectoryIterator implements RecursiveIterator, Iter
 	 * @return bool true if the entry is . or ..,
 	 * otherwise false
 	 */
-	public function isDot () {}
+	public function isDot (): bool {}
 
 	/**
 	 * Check whether current DirectoryIterator position is a valid file
 	 * @link http://www.php.net/manual/en/directoryiterator.valid.php
-	 * @return bool true if the position is valid, otherwise false
+	 * @return bool Returns true if the position is valid, otherwise false
 	 */
-	public function valid () {}
+	public function valid (): bool {}
 
 	/**
 	 * Move forward to next DirectoryIterator item
 	 * @link http://www.php.net/manual/en/directoryiterator.next.php
-	 * @return void 
+	 * @return void No value is returned.
 	 */
-	public function next () {}
+	public function next (): void {}
 
 	/**
 	 * Seek to a DirectoryIterator item
 	 * @link http://www.php.net/manual/en/directoryiterator.seek.php
-	 * @param int $offset The zero-based numeric position to seek to.
-	 * @return void 
+	 * @param int $offset 
+	 * @return void No value is returned.
 	 */
-	public function seek (int $offset) {}
+	public function seek (int $offset): void {}
 
 	/**
 	 * Get file name as a string
 	 * @link http://www.php.net/manual/en/directoryiterator.tostring.php
-	 * @return string the file name of the current DirectoryIterator item.
+	 * @return string Returns the file name of the current DirectoryIterator item.
 	 */
 	public function __toString (): string {}
 
@@ -843,169 +744,164 @@ class Phar extends RecursiveDirectoryIterator implements RecursiveIterator, Iter
 	 * @link http://www.php.net/manual/en/splfileinfo.getpathname.php
 	 * @return string The path to the file.
 	 */
-	public function getPathname () {}
+	public function getPathname (): string {}
 
 	/**
 	 * Gets file permissions
 	 * @link http://www.php.net/manual/en/splfileinfo.getperms.php
-	 * @return mixed the file permissions on success, or false on failure.
+	 * @return int|false Returns the file permissions on success, or false on failure.
 	 */
-	public function getPerms () {}
+	public function getPerms (): int|false {}
 
 	/**
 	 * Gets the inode for the file
 	 * @link http://www.php.net/manual/en/splfileinfo.getinode.php
-	 * @return mixed the inode number for the filesystem object on success, or false on failure.
+	 * @return int|false Returns the inode number for the filesystem object on success, or false on failure.
 	 */
-	public function getInode () {}
+	public function getInode (): int|false {}
 
 	/**
 	 * Gets file size
 	 * @link http://www.php.net/manual/en/splfileinfo.getsize.php
-	 * @return mixed The filesize in bytes on success, or false on failure.
+	 * @return int|false The filesize in bytes on success, or false on failure.
 	 */
-	public function getSize () {}
+	public function getSize (): int|false {}
 
 	/**
 	 * Gets the owner of the file
 	 * @link http://www.php.net/manual/en/splfileinfo.getowner.php
-	 * @return mixed The owner id in numerical format on success, or false on failure.
+	 * @return int|false The owner id in numerical format on success, or false on failure.
 	 */
-	public function getOwner () {}
+	public function getOwner (): int|false {}
 
 	/**
 	 * Gets the file group
 	 * @link http://www.php.net/manual/en/splfileinfo.getgroup.php
-	 * @return mixed The group id in numerical format on success, or false on failure.
+	 * @return int|false The group id in numerical format on success, or false on failure.
 	 */
-	public function getGroup () {}
+	public function getGroup (): int|false {}
 
 	/**
 	 * Gets last access time of the file
 	 * @link http://www.php.net/manual/en/splfileinfo.getatime.php
-	 * @return mixed the time the file was last accessed on success, or false on failure.
+	 * @return int|false Returns the time the file was last accessed on success, or false on failure.
 	 */
-	public function getATime () {}
+	public function getATime (): int|false {}
 
 	/**
 	 * Gets the last modified time
 	 * @link http://www.php.net/manual/en/splfileinfo.getmtime.php
-	 * @return mixed the last modified time for the file, in a Unix timestamp on success, or false on failure.
+	 * @return int|false Returns the last modified time for the file, in a Unix timestamp on success, or false on failure.
 	 */
-	public function getMTime () {}
+	public function getMTime (): int|false {}
 
 	/**
 	 * Gets the inode change time
 	 * @link http://www.php.net/manual/en/splfileinfo.getctime.php
-	 * @return mixed The last change time, in a Unix timestamp on success, or false on failure.
+	 * @return int|false The last change time, in a Unix timestamp on success, or false on failure.
 	 */
-	public function getCTime () {}
+	public function getCTime (): int|false {}
 
 	/**
 	 * Gets file type
 	 * @link http://www.php.net/manual/en/splfileinfo.gettype.php
-	 * @return mixed A string representing the type of the entry.
+	 * @return string|false A string representing the type of the entry.
 	 * May be one of file, link,
 	 * dir, block, fifo,
 	 * char, socket, or unknown, or false on failure.
 	 */
-	public function getType () {}
+	public function getType (): string|false {}
 
 	/**
 	 * Tells if file is readable
 	 * @link http://www.php.net/manual/en/splfileinfo.isreadable.php
-	 * @return bool true if readable, false otherwise.
+	 * @return bool Returns true if readable, false otherwise.
 	 */
-	public function isReadable () {}
+	public function isReadable (): bool {}
 
 	/**
 	 * Tells if the file is executable
 	 * @link http://www.php.net/manual/en/splfileinfo.isexecutable.php
-	 * @return bool true if executable, false otherwise.
+	 * @return bool Returns true if executable, false otherwise.
 	 */
-	public function isExecutable () {}
+	public function isExecutable (): bool {}
 
 	/**
 	 * Tells if the object references a regular file
 	 * @link http://www.php.net/manual/en/splfileinfo.isfile.php
-	 * @return bool true if the file exists and is a regular file (not a link), false otherwise.
+	 * @return bool Returns true if the file exists and is a regular file (not a link), false otherwise.
 	 */
-	public function isFile () {}
+	public function isFile (): bool {}
 
 	/**
 	 * Tells if the file is a directory
 	 * @link http://www.php.net/manual/en/splfileinfo.isdir.php
-	 * @return bool true if a directory, false otherwise.
+	 * @return bool Returns true if a directory, false otherwise.
 	 */
-	public function isDir () {}
+	public function isDir (): bool {}
 
 	/**
 	 * Tells if the file is a link
 	 * @link http://www.php.net/manual/en/splfileinfo.islink.php
-	 * @return bool true if the file is a link, false otherwise.
+	 * @return bool Returns true if the file is a link, false otherwise.
 	 */
-	public function isLink () {}
+	public function isLink (): bool {}
 
 	/**
 	 * Gets the target of a link
 	 * @link http://www.php.net/manual/en/splfileinfo.getlinktarget.php
-	 * @return mixed the target of the filesystem link on success, or false on failure.
+	 * @return string|false Returns the target of the filesystem link on success, or false on failure.
 	 */
-	public function getLinkTarget () {}
+	public function getLinkTarget (): string|false {}
 
 	/**
 	 * Gets absolute path to file
 	 * @link http://www.php.net/manual/en/splfileinfo.getrealpath.php
-	 * @return mixed the path to the file, or false if the file does not exist.
+	 * @return string|false Returns the path to the file, or false if the file does not exist.
 	 */
-	public function getRealPath () {}
+	public function getRealPath (): string|false {}
 
 	/**
 	 * Gets an SplFileInfo object for the file
 	 * @link http://www.php.net/manual/en/splfileinfo.getfileinfo.php
-	 * @param mixed $class [optional] Name of an SplFileInfo derived class to use.
+	 * @param string|null $class [optional] 
 	 * @return SplFileInfo An SplFileInfo object created for the file.
 	 */
-	public function getFileInfo ($class = null) {}
+	public function getFileInfo (?string $class = null): SplFileInfo {}
 
 	/**
 	 * Gets an SplFileInfo object for the path
 	 * @link http://www.php.net/manual/en/splfileinfo.getpathinfo.php
-	 * @param mixed $class [optional] Name of an SplFileInfo derived class to use, or itself if null.
-	 * @return mixed an SplFileInfo object for the parent path of the file on success, or null on failure.
+	 * @param string|null $class [optional] 
+	 * @return SplFileInfo|null Returns an SplFileInfo object for the parent path of the file on success, or null on failure.
 	 */
-	public function getPathInfo ($class = null) {}
+	public function getPathInfo (?string $class = null): ?SplFileInfo {}
 
 	/**
 	 * Gets an SplFileObject object for the file
 	 * @link http://www.php.net/manual/en/splfileinfo.openfile.php
-	 * @param string $mode [optional] The mode for opening the file. See the fopen
-	 * documentation for descriptions of possible modes. The default 
-	 * is read only.
-	 * @param bool $useIncludePath [optional] parameter.use_include_path
-	 * @param mixed $context [optional] parameter.context
+	 * @param string $mode [optional] 
+	 * @param bool $useIncludePath [optional] 
+	 * @param resource|null $context [optional] 
 	 * @return SplFileObject The opened file as an SplFileObject object.
 	 */
-	public function openFile (string $mode = null, bool $useIncludePath = null, $context = null) {}
+	public function openFile (string $mode = "r", bool $useIncludePath = false, ?resource $context = null): SplFileObject {}
 
 	/**
 	 * Sets the class used with SplFileInfo::openFile
 	 * @link http://www.php.net/manual/en/splfileinfo.setfileclass.php
-	 * @param string $class [optional] The class name to use when SplFileInfo::openFile
-	 * is called.
-	 * @return void 
+	 * @param string $class [optional] 
+	 * @return void No value is returned.
 	 */
-	public function setFileClass (string $class = null) {}
+	public function setFileClass (string $class = SplFileObject::class): void {}
 
 	/**
 	 * Sets the class used with SplFileInfo::getFileInfo and SplFileInfo::getPathInfo
 	 * @link http://www.php.net/manual/en/splfileinfo.setinfoclass.php
-	 * @param string $class [optional] The class name to use when
-	 * SplFileInfo::getFileInfo and
-	 * SplFileInfo::getPathInfo are called.
-	 * @return void 
+	 * @param string $class [optional] 
+	 * @return void No value is returned.
 	 */
-	public function setInfoClass (string $class = null) {}
+	public function setInfoClass (string $class = SplFileInfo::class): void {}
 
 	public function __debugInfo () {}
 
@@ -1039,168 +935,119 @@ class PharData extends RecursiveDirectoryIterator implements RecursiveIterator, 
 	/**
 	 * Construct a non-executable tar or zip archive object
 	 * @link http://www.php.net/manual/en/phardata.construct.php
-	 * @param string $filename
-	 * @param int $flags [optional]
-	 * @param string|null $alias [optional]
-	 * @param int $format [optional]
+	 * @param string $filename 
+	 * @param int $flags [optional] 
+	 * @param string|null $alias [optional] 
+	 * @param int $format [optional] 
+	 * @return string 
 	 */
-	public function __construct (string $filename, int $flags = 12288, string|null $alias = null, int $format = 0) {}
+	public function __construct (string $filename, int $flags = FilesystemIterator::SKIP_DOTS | FilesystemIterator::UNIX_PATHS, ?string $alias = null, int $format = null): string {}
 
-	/**
-	 * Destructs a non-executable tar or zip archive object
-	 * @link http://www.php.net/manual/en/phardata.destruct.php
-	 */
 	public function __destruct () {}
 
 	/**
 	 * Add an empty directory to the tar/zip archive
 	 * @link http://www.php.net/manual/en/phardata.addemptydir.php
-	 * @param string $directory The name of the empty directory to create in the phar archive
+	 * @param string $directory 
 	 * @return void no return value, exception is thrown on failure.
 	 */
-	public function addEmptyDir (string $directory) {}
+	public function addEmptyDir (string $directory): void {}
 
 	/**
 	 * Add a file from the filesystem to the tar/zip archive
 	 * @link http://www.php.net/manual/en/phardata.addfile.php
-	 * @param string $filename Full or relative path to a file on disk to be added
-	 * to the phar archive.
-	 * @param mixed $localName [optional] Path that the file will be stored in the archive.
+	 * @param string $filename 
+	 * @param string|null $localName [optional] 
 	 * @return void no return value, exception is thrown on failure.
 	 */
-	public function addFile (string $filename, $localName = null) {}
+	public function addFile (string $filename, ?string $localName = null): void {}
 
 	/**
 	 * Add a file from a string to the tar/zip archive
 	 * @link http://www.php.net/manual/en/phardata.addfromstring.php
-	 * @param string $localName Path that the file will be stored in the archive.
-	 * @param string $contents The file contents to store
+	 * @param string $localName 
+	 * @param string $contents 
 	 * @return void no return value, exception is thrown on failure.
 	 */
-	public function addFromString (string $localName, string $contents) {}
+	public function addFromString (string $localName, string $contents): void {}
 
 	/**
 	 * Construct a tar/zip archive from the files within a directory
 	 * @link http://www.php.net/manual/en/phardata.buildfromdirectory.php
-	 * @param string $directory The full or relative path to the directory that contains all files
-	 * to add to the archive.
-	 * @param string $pattern [optional] An optional pcre regular expression that is used to filter the
-	 * list of files. Only file paths matching the regular expression
-	 * will be included in the archive.
+	 * @param string $directory 
+	 * @param string $pattern [optional] 
 	 * @return array Phar::buildFromDirectory returns an associative array
 	 * mapping internal path of file to the full path of the file on the
 	 * filesystem, or false on failure.
 	 */
-	public function buildFromDirectory (string $directory, string $pattern = null) {}
+	public function buildFromDirectory (string $directory, string $pattern = ""): array {}
 
 	/**
 	 * Construct a tar or zip archive from an iterator
 	 * @link http://www.php.net/manual/en/phardata.buildfromiterator.php
-	 * @param Traversable $iterator Any iterator that either associatively maps tar/zip file to location or
-	 * returns SplFileInfo objects
-	 * @param mixed $baseDirectory [optional] For iterators that return SplFileInfo objects, the portion of each
-	 * file's full path to remove when adding to the tar/zip archive
+	 * @param Traversable $iterator 
+	 * @param string|null $baseDirectory [optional] 
 	 * @return array PharData::buildFromIterator returns an associative array
 	 * mapping internal path of file to the full path of the file on the
 	 * filesystem.
 	 */
-	public function buildFromIterator ($iterator, $baseDirectory = null) {}
+	public function buildFromIterator (Traversable $iterator, ?string $baseDirectory = null): array {}
 
 	/**
 	 * Compresses all files in the current tar/zip archive
 	 * @link http://www.php.net/manual/en/phardata.compressfiles.php
-	 * @param int $compression Compression must be one of Phar::GZ,
-	 * Phar::BZ2 to add compression, or Phar::NONE
-	 * to remove compression.
-	 * @return void 
+	 * @param int $compression 
+	 * @return void No value is returned.
 	 */
-	public function compressFiles (int $compression) {}
+	public function compressFiles (int $compression): void {}
 
 	/**
 	 * Decompresses all files in the current zip archive
 	 * @link http://www.php.net/manual/en/phardata.decompressfiles.php
-	 * @return bool true on success or false on failure
+	 * @return bool Returns true on success or false on failure.
 	 */
-	public function decompressFiles () {}
+	public function decompressFiles (): bool {}
 
 	/**
 	 * Compresses the entire tar/zip archive using Gzip or Bzip2 compression
 	 * @link http://www.php.net/manual/en/phardata.compress.php
-	 * @param int $compression Compression must be one of Phar::GZ,
-	 * Phar::BZ2 to add compression, or Phar::NONE
-	 * to remove compression.
-	 * @param mixed $extension [optional] By default, the extension is .tar.gz or .tar.bz2
-	 * for compressing a tar, and .tar for decompressing.
-	 * @return mixed A PharData object is returned on success,
+	 * @param int $compression 
+	 * @param string|null $extension [optional] 
+	 * @return PharData|null A PharData object is returned on success,
 	 * or null on failure.
 	 */
-	public function compress (int $compression, $extension = null) {}
+	public function compress (int $compression, ?string $extension = null): ?PharData {}
 
 	/**
 	 * Decompresses the entire Phar archive
 	 * @link http://www.php.net/manual/en/phardata.decompress.php
-	 * @param mixed $extension [optional] For decompressing, the default file extension
-	 * is .tar.
-	 * Use this parameter to specify another file extension. Be aware that only
-	 * executable archives can contain .phar in their filename.
-	 * @return mixed A PharData object is returned on success,
+	 * @param string|null $extension [optional] 
+	 * @return PharData|null A PharData object is returned on success,
 	 * or null on failure.
 	 */
-	public function decompress ($extension = null) {}
+	public function decompress (?string $extension = null): ?PharData {}
 
 	/**
 	 * Convert a non-executable tar/zip archive to an executable phar archive
 	 * @link http://www.php.net/manual/en/phardata.converttoexecutable.php
-	 * @param mixed $format [optional] This should be one of Phar::PHAR, Phar::TAR,
-	 * or Phar::ZIP. If set to null, the existing file format
-	 * will be preserved.
-	 * @param mixed $compression [optional] This should be one of Phar::NONE for no whole-archive
-	 * compression, Phar::GZ for zlib-based compression, and
-	 * Phar::BZ2 for bzip-based compression.
-	 * @param mixed $extension [optional] <p>
-	 * This parameter is used to override the default file extension for a
-	 * converted archive. Note that all zip- and tar-based phar archives must contain
-	 * .phar in their file extension in order to be processed as a
-	 * phar archive.
-	 * </p>
-	 * <p>
-	 * If converting to a phar-based archive, the default extensions are
-	 * .phar, .phar.gz, or .phar.bz2
-	 * depending on the specified compression. For tar-based phar archives, the
-	 * default extensions are .phar.tar, .phar.tar.gz,
-	 * and .phar.tar.bz2. For zip-based phar archives, the
-	 * default extension is .phar.zip.
-	 * </p>
-	 * @return mixed The method returns a Phar object on success,
+	 * @param int|null $format [optional] 
+	 * @param int|null $compression [optional] 
+	 * @param string|null $extension [optional] 
+	 * @return Phar|null The method returns a Phar object on success,
 	 * or null on failure.
 	 */
-	public function convertToExecutable ($format = null, $compression = null, $extension = null) {}
+	public function convertToExecutable (?int $format = null, ?int $compression = null, ?string $extension = null): ?Phar {}
 
 	/**
 	 * Convert a phar archive to a non-executable tar or zip file
 	 * @link http://www.php.net/manual/en/phardata.converttodata.php
-	 * @param mixed $format [optional] This should be one of Phar::TAR
-	 * or Phar::ZIP. If set to null, the existing file format
-	 * will be preserved.
-	 * @param mixed $compression [optional] This should be one of Phar::NONE for no whole-archive
-	 * compression, Phar::GZ for zlib-based compression, and
-	 * Phar::BZ2 for bzip-based compression.
-	 * @param mixed $extension [optional] <p>
-	 * This parameter is used to override the default file extension for a
-	 * converted archive. Note that .phar cannot be used
-	 * anywhere in the filename for a non-executable tar or zip archive.
-	 * </p>
-	 * <p>
-	 * If converting to a tar-based phar archive, the
-	 * default extensions are .tar, .tar.gz,
-	 * and .tar.bz2 depending on specified compression.
-	 * For zip-based archives, the
-	 * default extension is .zip.
-	 * </p>
-	 * @return mixed The method returns a PharData object on success,
+	 * @param int|null $format [optional] 
+	 * @param int|null $compression [optional] 
+	 * @param string|null $extension [optional] 
+	 * @return PharData|null The method returns a PharData object on success,
 	 * or null on failure.
 	 */
-	public function convertToData ($format = null, $compression = null, $extension = null) {}
+	public function convertToData (?int $format = null, ?int $compression = null, ?string $extension = null): ?PharData {}
 
 	/**
 	 * Copy a file internal to the phar archive to another new file within the phar
@@ -1210,7 +1057,7 @@ class PharData extends RecursiveDirectoryIterator implements RecursiveIterator, 
 	 * @return bool returns true on success, but it is safer to encase method call in a
 	 * try/catch block and assume success if no exception is thrown.
 	 */
-	public function copy (string $from, string $to) {}
+	public function copy (string $from, string $to): bool {}
 
 	/**
 	 * @param int $mode [optional]
@@ -1220,11 +1067,11 @@ class PharData extends RecursiveDirectoryIterator implements RecursiveIterator, 
 	/**
 	 * Delete a file within a tar/zip archive
 	 * @link http://www.php.net/manual/en/phardata.delete.php
-	 * @param string $localName Path within an archive to the file to delete.
+	 * @param string $localName 
 	 * @return bool returns true on success, but it is better to check for thrown exception,
 	 * and assume success if none is thrown.
 	 */
-	public function delete (string $localName) {}
+	public function delete (string $localName): bool {}
 
 	/**
 	 * Deletes the global metadata of a zip archive
@@ -1232,27 +1079,28 @@ class PharData extends RecursiveDirectoryIterator implements RecursiveIterator, 
 	 * @return bool returns true on success, but it is better to check for thrown exception,
 	 * and assume success if none is thrown.
 	 */
-	public function delMetadata () {}
+	public function delMetadata (): bool {}
 
 	/**
 	 * Extract the contents of a tar/zip archive to a directory
 	 * @link http://www.php.net/manual/en/phardata.extractto.php
-	 * @param string $directory Path to extract the given files to
-	 * @param mixed $files [optional] The name of a file or directory to extract, or an array of files/directories to extract
-	 * @param bool $overwrite [optional] Set to true to enable overwriting existing files
+	 * @param string $directory 
+	 * @param array|string|null $files [optional] 
+	 * @param bool $overwrite [optional] 
 	 * @return bool returns true on success, but it is better to check for thrown exception,
 	 * and assume success if none is thrown.
 	 */
-	public function extractTo (string $directory, $files = null, bool $overwrite = null) {}
+	public function extractTo (string $directory, array|string|null $files = null, bool $overwrite = false): bool {}
 
 	public function getAlias () {}
 
 	public function getPath () {}
 
 	/**
-	 * @param array[] $unserializeOptions [optional]
+	 * @param array $unserializeOptions [optional]
 	 */
-	public function getMetadata (array $unserializeOptions = 'Array') {}
+	public function getMetadata (array $unserializeOptions = array (
+)) {}
 
 	public function getModified () {}
 
@@ -1276,9 +1124,9 @@ class PharData extends RecursiveDirectoryIterator implements RecursiveIterator, 
 	/**
 	 * Returns true if the tar/zip archive can be modified
 	 * @link http://www.php.net/manual/en/phardata.iswritable.php
-	 * @return bool true if the tar/zip archive can be modified
+	 * @return bool Returns true if the tar/zip archive can be modified
 	 */
-	public function isWritable () {}
+	public function isWritable (): bool {}
 
 	/**
 	 * @param mixed $localName
@@ -1293,66 +1141,62 @@ class PharData extends RecursiveDirectoryIterator implements RecursiveIterator, 
 	/**
 	 * Set the contents of a file within the tar/zip to those of an external file or string
 	 * @link http://www.php.net/manual/en/phardata.offsetset.php
-	 * @param string $localName The filename (relative path) to modify in a tar or zip archive.
-	 * @param mixed $value Content of the file.
+	 * @param string $localName 
+	 * @param resource|string $value 
 	 * @return void No return values.
 	 */
-	public function offsetSet (string $localName, $value) {}
+	public function offsetSet (string $localName, resource|string $value): void {}
 
 	/**
 	 * Remove a file from a tar/zip archive
 	 * @link http://www.php.net/manual/en/phardata.offsetunset.php
-	 * @param string $localName The filename (relative path) to modify in the tar/zip archive.
-	 * @return void 
+	 * @param string $localName 
+	 * @return void No value is returned.
 	 */
-	public function offsetUnset (string $localName) {}
+	public function offsetUnset (string $localName): void {}
 
 	/**
 	 * Dummy function (Phar::setAlias is not valid for PharData)
 	 * @link http://www.php.net/manual/en/phardata.setalias.php
-	 * @param string $alias A shorthand string that this archive can be referred to in phar
-	 * stream wrapper access. This parameter is ignored.
+	 * @param string $alias 
 	 * @return bool 
 	 */
-	public function setAlias (string $alias) {}
+	public function setAlias (string $alias): bool {}
 
 	/**
 	 * Dummy function (Phar::setDefaultStub is not valid for PharData)
 	 * @link http://www.php.net/manual/en/phardata.setdefaultstub.php
-	 * @param mixed $index [optional] Relative path within the phar archive to run if accessed on the command-line
-	 * @param mixed $webIndex [optional] Relative path within the phar archive to run if accessed through a web browser
-	 * @return bool true on success or false on failure
+	 * @param string|null $index [optional] 
+	 * @param string|null $webIndex [optional] 
+	 * @return bool Returns true on success or false on failure.
 	 */
-	public function setDefaultStub ($index = null, $webIndex = null) {}
+	public function setDefaultStub (?string $index = null, ?string $webIndex = null): bool {}
 
 	/**
 	 * Sets phar archive meta-data
 	 * @link http://www.php.net/manual/en/phardata.setmetadata.php
-	 * @param mixed $metadata Any PHP variable containing information to store that describes the phar archive
-	 * @return void 
+	 * @param mixed $metadata 
+	 * @return void No value is returned.
 	 */
-	public function setMetadata ($metadata) {}
+	public function setMetadata (mixed $metadata): void {}
 
 	/**
 	 * Set the signature algorithm for a phar and apply it
 	 * @link http://www.php.net/manual/en/phardata.setsignaturealgorithm.php
-	 * @param int $algo One of Phar::MD5,
-	 * Phar::SHA1, Phar::SHA256,
-	 * Phar::SHA512, or Phar::OPENSSL
-	 * @param mixed $privateKey [optional] 
-	 * @return void 
+	 * @param int $algo 
+	 * @param string|null $privateKey [optional] 
+	 * @return void No value is returned.
 	 */
-	public function setSignatureAlgorithm (int $algo, $privateKey = null) {}
+	public function setSignatureAlgorithm (int $algo, ?string $privateKey = null): void {}
 
 	/**
 	 * Dummy function (Phar::setStub is not valid for PharData)
 	 * @link http://www.php.net/manual/en/phardata.setstub.php
-	 * @param string $stub A string or an open stream handle to use as the executable stub for this
-	 * phar archive. This parameter is ignored.
+	 * @param string $stub 
 	 * @param int $len [optional] 
-	 * @return bool true on success or false on failure
+	 * @return bool Returns true on success or false on failure.
 	 */
-	public function setStub (string $stub, int $len = null) {}
+	public function setStub (string $stub, int $len = -1): bool {}
 
 	public function startBuffering () {}
 
@@ -1368,10 +1212,10 @@ class PharData extends RecursiveDirectoryIterator implements RecursiveIterator, 
 	final public static function canWrite (): bool {}
 
 	/**
-	 * @param string|null $index [optional]
-	 * @param string|null $webIndex [optional]
+	 * @param ?string $index [optional]
+	 * @param ?string $webIndex [optional]
 	 */
-	final public static function createDefaultStub (string|null $index = null, string|null $webIndex = null): string {}
+	final public static function createDefaultStub (?string $index = null, ?string $webIndex = null): string {}
 
 	final public static function getSupportedCompression (): array {}
 
@@ -1383,24 +1227,24 @@ class PharData extends RecursiveDirectoryIterator implements RecursiveIterator, 
 	 * @param string $filename
 	 * @param bool $executable [optional]
 	 */
-	final public static function isValidPharFilename (string $filename, bool $executable = 1): bool {}
+	final public static function isValidPharFilename (string $filename, bool $executable = true): bool {}
 
 	/**
 	 * @param string $filename
-	 * @param string|null $alias [optional]
+	 * @param ?string $alias [optional]
 	 */
-	final public static function loadPhar (string $filename, string|null $alias = null): bool {}
+	final public static function loadPhar (string $filename, ?string $alias = null): bool {}
 
 	/**
-	 * @param string|null $alias [optional]
+	 * @param ?string $alias [optional]
 	 * @param int $offset [optional]
 	 */
-	final public static function mapPhar (string|null $alias = null, int $offset = 0): bool {}
+	final public static function mapPhar (?string $alias = null, int $offset = 0): bool {}
 
 	/**
 	 * @param bool $returnPhar [optional]
 	 */
-	final public static function running (bool $returnPhar = 1): string {}
+	final public static function running (bool $returnPhar = true): string {}
 
 	/**
 	 * @param string $pharPath
@@ -1409,7 +1253,7 @@ class PharData extends RecursiveDirectoryIterator implements RecursiveIterator, 
 	final public static function mount (string $pharPath, string $externalPath): void {}
 
 	/**
-	 * @param array[] $variables
+	 * @param array $variables
 	 */
 	final public static function mungServer (array $variables): void {}
 
@@ -1419,21 +1263,22 @@ class PharData extends RecursiveDirectoryIterator implements RecursiveIterator, 
 	final public static function unlinkArchive (string $filename): bool {}
 
 	/**
-	 * @param string|null $alias [optional]
-	 * @param string|null $index [optional]
-	 * @param string|null $fileNotFoundScript [optional]
-	 * @param array[] $mimeTypes [optional]
-	 * @param callable|null $rewrite [optional]
+	 * @param ?string $alias [optional]
+	 * @param ?string $index [optional]
+	 * @param ?string $fileNotFoundScript [optional]
+	 * @param array $mimeTypes [optional]
+	 * @param ?callable $rewrite [optional]
 	 */
-	final public static function webPhar (string|null $alias = null, string|null $index = null, string|null $fileNotFoundScript = null, array $mimeTypes = 'Array', callable|null $rewrite = null): void {}
+	final public static function webPhar (?string $alias = null, ?string $index = null, ?string $fileNotFoundScript = null, array $mimeTypes = array (
+), ?callable $rewrite = null): void {}
 
 	/**
 	 * Returns whether current entry is a directory and not '.' or '..'
 	 * @link http://www.php.net/manual/en/recursivedirectoryiterator.haschildren.php
 	 * @param bool $allowLinks [optional] 
-	 * @return bool whether the current entry is a directory, but not '.' or '..'
+	 * @return bool Returns whether the current entry is a directory, but not '.' or '..'
 	 */
-	public function hasChildren (bool $allowLinks = null) {}
+	public function hasChildren (bool $allowLinks = false): bool {}
 
 	/**
 	 * Returns an iterator for the current entry if it is a directory
@@ -1442,84 +1287,82 @@ class PharData extends RecursiveDirectoryIterator implements RecursiveIterator, 
 	 * See the FilesystemIterator
 	 * constants.
 	 */
-	public function getChildren () {}
+	public function getChildren (): RecursiveDirectoryIterator {}
 
 	/**
 	 * Get sub path
 	 * @link http://www.php.net/manual/en/recursivedirectoryiterator.getsubpath.php
 	 * @return string The sub path.
 	 */
-	public function getSubPath () {}
+	public function getSubPath (): string {}
 
 	/**
 	 * Get sub path and name
 	 * @link http://www.php.net/manual/en/recursivedirectoryiterator.getsubpathname.php
 	 * @return string The sub path (sub directory) and filename.
 	 */
-	public function getSubPathname () {}
+	public function getSubPathname (): string {}
 
 	/**
 	 * Rewinds back to the beginning
 	 * @link http://www.php.net/manual/en/filesystemiterator.rewind.php
-	 * @return void 
+	 * @return void No value is returned.
 	 */
-	public function rewind () {}
+	public function rewind (): void {}
 
 	/**
 	 * Retrieve the key for the current file
 	 * @link http://www.php.net/manual/en/filesystemiterator.key.php
-	 * @return string the pathname or filename depending on the set flags.
+	 * @return string Returns the pathname or filename depending on the set flags.
 	 * See the FilesystemIterator constants.
 	 */
-	public function key () {}
+	public function key (): string {}
 
 	/**
 	 * The current file
 	 * @link http://www.php.net/manual/en/filesystemiterator.current.php
-	 * @return mixed The filename, file information, or $this depending on the set flags.
+	 * @return string|SplFileInfo|FilesystemIterator The filename, file information, or $this depending on the set flags.
 	 * See the FilesystemIterator constants.
 	 */
-	public function current () {}
+	public function current (): string|SplFileInfo|FilesystemIterator {}
 
 	/**
 	 * Get the handling flags
 	 * @link http://www.php.net/manual/en/filesystemiterator.getflags.php
 	 * @return int The integer value of the set flags.
 	 */
-	public function getFlags () {}
+	public function getFlags (): int {}
 
 	/**
 	 * Sets handling flags
 	 * @link http://www.php.net/manual/en/filesystemiterator.setflags.php
-	 * @param int $flags The handling flags to set.
-	 * See the FilesystemIterator constants.
-	 * @return void 
+	 * @param int $flags 
+	 * @return void No value is returned.
 	 */
-	public function setFlags (int $flags) {}
+	public function setFlags (int $flags): void {}
 
 	/**
 	 * Return file name of current DirectoryIterator item
 	 * @link http://www.php.net/manual/en/directoryiterator.getfilename.php
-	 * @return string the file name of the current DirectoryIterator item.
+	 * @return string Returns the file name of the current DirectoryIterator item.
 	 */
-	public function getFilename () {}
+	public function getFilename (): string {}
 
 	/**
 	 * Gets the file extension
 	 * @link http://www.php.net/manual/en/directoryiterator.getextension.php
-	 * @return string a string containing the file extension, or an
+	 * @return string Returns a string containing the file extension, or an
 	 * empty string if the file has no extension.
 	 */
-	public function getExtension () {}
+	public function getExtension (): string {}
 
 	/**
 	 * Get base name of current DirectoryIterator item
 	 * @link http://www.php.net/manual/en/directoryiterator.getbasename.php
-	 * @param string $suffix [optional] If the base name ends in suffix, 
-	 * this will be cut.
+	 * @param string $suffix [optional] 
 	 * @return string The base name of the current DirectoryIterator item.
 	 */
-	public function getBasename (string $suffix = null) {}
+	public function getBasename (string $suffix = ""): string {}
 
 	/**
 	 * Determine if current DirectoryIterator item is '.' or '..'
@@ -1527,34 +1370,34 @@ class PharData extends RecursiveDirectoryIterator implements RecursiveIterator, 
 	 * @return bool true if the entry is . or ..,
 	 * otherwise false
 	 */
-	public function isDot () {}
+	public function isDot (): bool {}
 
 	/**
 	 * Check whether current DirectoryIterator position is a valid file
 	 * @link http://www.php.net/manual/en/directoryiterator.valid.php
-	 * @return bool true if the position is valid, otherwise false
+	 * @return bool Returns true if the position is valid, otherwise false
 	 */
-	public function valid () {}
+	public function valid (): bool {}
 
 	/**
 	 * Move forward to next DirectoryIterator item
 	 * @link http://www.php.net/manual/en/directoryiterator.next.php
-	 * @return void 
+	 * @return void No value is returned.
 	 */
-	public function next () {}
+	public function next (): void {}
 
 	/**
 	 * Seek to a DirectoryIterator item
 	 * @link http://www.php.net/manual/en/directoryiterator.seek.php
-	 * @param int $offset The zero-based numeric position to seek to.
-	 * @return void 
+	 * @param int $offset 
+	 * @return void No value is returned.
 	 */
-	public function seek (int $offset) {}
+	public function seek (int $offset): void {}
 
 	/**
 	 * Get file name as a string
 	 * @link http://www.php.net/manual/en/directoryiterator.tostring.php
-	 * @return string the file name of the current DirectoryIterator item.
+	 * @return string Returns the file name of the current DirectoryIterator item.
 	 */
 	public function __toString (): string {}
 
@@ -1563,169 +1406,164 @@ class PharData extends RecursiveDirectoryIterator implements RecursiveIterator, 
 	 * @link http://www.php.net/manual/en/splfileinfo.getpathname.php
 	 * @return string The path to the file.
 	 */
-	public function getPathname () {}
+	public function getPathname (): string {}
 
 	/**
 	 * Gets file permissions
 	 * @link http://www.php.net/manual/en/splfileinfo.getperms.php
-	 * @return mixed the file permissions on success, or false on failure.
+	 * @return int|false Returns the file permissions on success, or false on failure.
 	 */
-	public function getPerms () {}
+	public function getPerms (): int|false {}
 
 	/**
 	 * Gets the inode for the file
 	 * @link http://www.php.net/manual/en/splfileinfo.getinode.php
-	 * @return mixed the inode number for the filesystem object on success, or false on failure.
+	 * @return int|false Returns the inode number for the filesystem object on success, or false on failure.
 	 */
-	public function getInode () {}
+	public function getInode (): int|false {}
 
 	/**
 	 * Gets file size
 	 * @link http://www.php.net/manual/en/splfileinfo.getsize.php
-	 * @return mixed The filesize in bytes on success, or false on failure.
+	 * @return int|false The filesize in bytes on success, or false on failure.
 	 */
-	public function getSize () {}
+	public function getSize (): int|false {}
 
 	/**
 	 * Gets the owner of the file
 	 * @link http://www.php.net/manual/en/splfileinfo.getowner.php
-	 * @return mixed The owner id in numerical format on success, or false on failure.
+	 * @return int|false The owner id in numerical format on success, or false on failure.
 	 */
-	public function getOwner () {}
+	public function getOwner (): int|false {}
 
 	/**
 	 * Gets the file group
 	 * @link http://www.php.net/manual/en/splfileinfo.getgroup.php
-	 * @return mixed The group id in numerical format on success, or false on failure.
+	 * @return int|false The group id in numerical format on success, or false on failure.
 	 */
-	public function getGroup () {}
+	public function getGroup (): int|false {}
 
 	/**
 	 * Gets last access time of the file
 	 * @link http://www.php.net/manual/en/splfileinfo.getatime.php
-	 * @return mixed the time the file was last accessed on success, or false on failure.
+	 * @return int|false Returns the time the file was last accessed on success, or false on failure.
 	 */
-	public function getATime () {}
+	public function getATime (): int|false {}
 
 	/**
 	 * Gets the last modified time
 	 * @link http://www.php.net/manual/en/splfileinfo.getmtime.php
-	 * @return mixed the last modified time for the file, in a Unix timestamp on success, or false on failure.
+	 * @return int|false Returns the last modified time for the file, in a Unix timestamp on success, or false on failure.
 	 */
-	public function getMTime () {}
+	public function getMTime (): int|false {}
 
 	/**
 	 * Gets the inode change time
 	 * @link http://www.php.net/manual/en/splfileinfo.getctime.php
-	 * @return mixed The last change time, in a Unix timestamp on success, or false on failure.
+	 * @return int|false The last change time, in a Unix timestamp on success, or false on failure.
 	 */
-	public function getCTime () {}
+	public function getCTime (): int|false {}
 
 	/**
 	 * Gets file type
 	 * @link http://www.php.net/manual/en/splfileinfo.gettype.php
-	 * @return mixed A string representing the type of the entry.
+	 * @return string|false A string representing the type of the entry.
 	 * May be one of file, link,
 	 * dir, block, fifo,
 	 * char, socket, or unknown, or false on failure.
 	 */
-	public function getType () {}
+	public function getType (): string|false {}
 
 	/**
 	 * Tells if file is readable
 	 * @link http://www.php.net/manual/en/splfileinfo.isreadable.php
-	 * @return bool true if readable, false otherwise.
+	 * @return bool Returns true if readable, false otherwise.
 	 */
-	public function isReadable () {}
+	public function isReadable (): bool {}
 
 	/**
 	 * Tells if the file is executable
 	 * @link http://www.php.net/manual/en/splfileinfo.isexecutable.php
-	 * @return bool true if executable, false otherwise.
+	 * @return bool Returns true if executable, false otherwise.
 	 */
-	public function isExecutable () {}
+	public function isExecutable (): bool {}
 
 	/**
 	 * Tells if the object references a regular file
 	 * @link http://www.php.net/manual/en/splfileinfo.isfile.php
-	 * @return bool true if the file exists and is a regular file (not a link), false otherwise.
+	 * @return bool Returns true if the file exists and is a regular file (not a link), false otherwise.
 	 */
-	public function isFile () {}
+	public function isFile (): bool {}
 
 	/**
 	 * Tells if the file is a directory
 	 * @link http://www.php.net/manual/en/splfileinfo.isdir.php
-	 * @return bool true if a directory, false otherwise.
+	 * @return bool Returns true if a directory, false otherwise.
 	 */
-	public function isDir () {}
+	public function isDir (): bool {}
 
 	/**
 	 * Tells if the file is a link
 	 * @link http://www.php.net/manual/en/splfileinfo.islink.php
-	 * @return bool true if the file is a link, false otherwise.
+	 * @return bool Returns true if the file is a link, false otherwise.
 	 */
-	public function isLink () {}
+	public function isLink (): bool {}
 
 	/**
 	 * Gets the target of a link
 	 * @link http://www.php.net/manual/en/splfileinfo.getlinktarget.php
-	 * @return mixed the target of the filesystem link on success, or false on failure.
+	 * @return string|false Returns the target of the filesystem link on success, or false on failure.
 	 */
-	public function getLinkTarget () {}
+	public function getLinkTarget (): string|false {}
 
 	/**
 	 * Gets absolute path to file
 	 * @link http://www.php.net/manual/en/splfileinfo.getrealpath.php
-	 * @return mixed the path to the file, or false if the file does not exist.
+	 * @return string|false Returns the path to the file, or false if the file does not exist.
 	 */
-	public function getRealPath () {}
+	public function getRealPath (): string|false {}
 
 	/**
 	 * Gets an SplFileInfo object for the file
 	 * @link http://www.php.net/manual/en/splfileinfo.getfileinfo.php
-	 * @param mixed $class [optional] Name of an SplFileInfo derived class to use.
+	 * @param string|null $class [optional] 
 	 * @return SplFileInfo An SplFileInfo object created for the file.
 	 */
-	public function getFileInfo ($class = null) {}
+	public function getFileInfo (?string $class = null): SplFileInfo {}
 
 	/**
 	 * Gets an SplFileInfo object for the path
 	 * @link http://www.php.net/manual/en/splfileinfo.getpathinfo.php
-	 * @param mixed $class [optional] Name of an SplFileInfo derived class to use, or itself if null.
-	 * @return mixed an SplFileInfo object for the parent path of the file on success, or null on failure.
+	 * @param string|null $class [optional] 
+	 * @return SplFileInfo|null Returns an SplFileInfo object for the parent path of the file on success, or null on failure.
 	 */
-	public function getPathInfo ($class = null) {}
+	public function getPathInfo (?string $class = null): ?SplFileInfo {}
 
 	/**
 	 * Gets an SplFileObject object for the file
 	 * @link http://www.php.net/manual/en/splfileinfo.openfile.php
-	 * @param string $mode [optional] The mode for opening the file. See the fopen
-	 * documentation for descriptions of possible modes. The default 
-	 * is read only.
-	 * @param bool $useIncludePath [optional] parameter.use_include_path
-	 * @param mixed $context [optional] parameter.context
+	 * @param string $mode [optional] 
+	 * @param bool $useIncludePath [optional] 
+	 * @param resource|null $context [optional] 
 	 * @return SplFileObject The opened file as an SplFileObject object.
 	 */
-	public function openFile (string $mode = null, bool $useIncludePath = null, $context = null) {}
+	public function openFile (string $mode = "r", bool $useIncludePath = false, ?resource $context = null): SplFileObject {}
 
 	/**
 	 * Sets the class used with SplFileInfo::openFile
 	 * @link http://www.php.net/manual/en/splfileinfo.setfileclass.php
-	 * @param string $class [optional] The class name to use when SplFileInfo::openFile
-	 * is called.
-	 * @return void 
+	 * @param string $class [optional] 
+	 * @return void No value is returned.
 	 */
-	public function setFileClass (string $class = null) {}
+	public function setFileClass (string $class = SplFileObject::class): void {}
 
 	/**
 	 * Sets the class used with SplFileInfo::getFileInfo and SplFileInfo::getPathInfo
 	 * @link http://www.php.net/manual/en/splfileinfo.setinfoclass.php
-	 * @param string $class [optional] The class name to use when
-	 * SplFileInfo::getFileInfo and
-	 * SplFileInfo::getPathInfo are called.
-	 * @return void 
+	 * @param string $class [optional] 
+	 * @return void No value is returned.
 	 */
-	public function setInfoClass (string $class = null) {}
+	public function setInfoClass (string $class = SplFileInfo::class): void {}
 
 	public function __debugInfo () {}
 
@@ -1743,71 +1581,68 @@ class PharFileInfo extends SplFileInfo implements Stringable {
 	/**
 	 * Construct a Phar entry object
 	 * @link http://www.php.net/manual/en/pharfileinfo.construct.php
-	 * @param string $filename
+	 * @param string $filename 
+	 * @return string 
 	 */
-	public function __construct (string $filename) {}
+	public function __construct (string $filename): string {}
 
-	/**
-	 * Destructs a Phar entry object
-	 * @link http://www.php.net/manual/en/pharfileinfo.destruct.php
-	 */
 	public function __destruct () {}
 
 	/**
 	 * Sets file-specific permission bits
 	 * @link http://www.php.net/manual/en/pharfileinfo.chmod.php
-	 * @param int $perms permissions (see chmod)
-	 * @return void 
+	 * @param int $perms 
+	 * @return void No value is returned.
 	 */
-	public function chmod (int $perms) {}
+	public function chmod (int $perms): void {}
 
 	/**
 	 * Compresses the current Phar entry with either zlib or bzip2 compression
 	 * @link http://www.php.net/manual/en/pharfileinfo.compress.php
-	 * @param int $compression Compression must be Phar::GZ or Phar::BZ2.
-	 * @return bool true on success or false on failure
+	 * @param int $compression 
+	 * @return bool Returns true on success or false on failure.
 	 */
-	public function compress (int $compression) {}
+	public function compress (int $compression): bool {}
 
 	/**
 	 * Decompresses the current Phar entry within the phar
 	 * @link http://www.php.net/manual/en/pharfileinfo.decompress.php
-	 * @return bool true on success or false on failure
+	 * @return bool Returns true on success or false on failure.
 	 */
-	public function decompress () {}
+	public function decompress (): bool {}
 
 	/**
 	 * Deletes the metadata of the entry
 	 * @link http://www.php.net/manual/en/pharfileinfo.delmetadata.php
-	 * @return bool true if successful, false if the entry had no metadata.
+	 * @return bool Returns true if successful, false if the entry had no metadata.
 	 * As with all functionality that modifies the contents of
 	 * a phar, the phar.readonly INI variable
 	 * must be off in order to succeed if the file is within a Phar
 	 * archive. Files within PharData archives do not have
 	 * this restriction.
 	 */
-	public function delMetadata () {}
+	public function delMetadata (): bool {}
 
 	/**
 	 * Returns the actual size of the file (with compression) inside the Phar archive
 	 * @link http://www.php.net/manual/en/pharfileinfo.getcompressedsize.php
 	 * @return int The size in bytes of the file within the Phar archive on disk.
 	 */
-	public function getCompressedSize () {}
+	public function getCompressedSize (): int {}
 
 	/**
 	 * Returns CRC32 code or throws an exception if CRC has not been verified
 	 * @link http://www.php.net/manual/en/pharfileinfo.getcrc32.php
 	 * @return int The crc32 checksum of the file within the Phar archive.
 	 */
-	public function getCRC32 () {}
+	public function getCRC32 (): int {}
 
 	/**
 	 * Get the complete file contents of the entry
 	 * @link http://www.php.net/manual/en/pharfileinfo.getcontent.php
-	 * @return string the file contents.
+	 * @return string Returns the file contents.
 	 */
-	public function getContent () {}
+	public function getContent (): string {}
 
 	/**
 	 * Returns file-specific meta-data saved with a file
@@ -1816,256 +1651,250 @@ class PharFileInfo extends SplFileInfo implements Stringable {
 	 * @return mixed any PHP variable that can be serialized and is stored as meta-data for the file,
 	 * or null if no meta-data is stored.
 	 */
-	public function getMetadata (array $unserializeOptions = null) {}
+	public function getMetadata (array $unserializeOptions = []): mixed {}
 
 	/**
 	 * Returns the Phar file entry flags
 	 * @link http://www.php.net/manual/en/pharfileinfo.getpharflags.php
 	 * @return int The Phar flags (always 0 in the current implementation)
 	 */
-	public function getPharFlags () {}
+	public function getPharFlags (): int {}
 
 	/**
 	 * Returns the metadata of the entry
 	 * @link http://www.php.net/manual/en/pharfileinfo.hasmetadata.php
-	 * @return bool false if no metadata is set or is null, true if metadata is not null
+	 * @return bool Returns false if no metadata is set or is null, true if metadata is not null
 	 */
-	public function hasMetadata () {}
+	public function hasMetadata (): bool {}
 
 	/**
 	 * Returns whether the entry is compressed
 	 * @link http://www.php.net/manual/en/pharfileinfo.iscompressed.php
-	 * @param mixed $compression [optional] One of Phar::GZ or Phar::BZ2,
-	 * defaults to any compression.
+	 * @param int|null $compression [optional] 
 	 * @return bool true if the file is compressed within the Phar archive, false if not.
 	 */
-	public function isCompressed ($compression = null) {}
+	public function isCompressed (?int $compression = null): bool {}
 
 	/**
 	 * Returns whether file entry has had its CRC verified
 	 * @link http://www.php.net/manual/en/pharfileinfo.iscrcchecked.php
 	 * @return bool true if the file has had its CRC verified, false if not.
 	 */
-	public function isCRCChecked () {}
+	public function isCRCChecked (): bool {}
 
 	/**
 	 * Sets file-specific meta-data saved with a file
 	 * @link http://www.php.net/manual/en/pharfileinfo.setmetadata.php
-	 * @param mixed $metadata Any PHP variable containing information to store alongside a file
-	 * @return void 
+	 * @param mixed $metadata 
+	 * @return void No value is returned.
 	 */
-	public function setMetadata ($metadata) {}
+	public function setMetadata (mixed $metadata): void {}
 
 	/**
 	 * Gets the path without filename
 	 * @link http://www.php.net/manual/en/splfileinfo.getpath.php
-	 * @return string the path to the file.
+	 * @return string Returns the path to the file.
 	 */
-	public function getPath () {}
+	public function getPath (): string {}
 
 	/**
 	 * Gets the filename
 	 * @link http://www.php.net/manual/en/splfileinfo.getfilename.php
 	 * @return string The filename.
 	 */
-	public function getFilename () {}
+	public function getFilename (): string {}
 
 	/**
 	 * Gets the file extension
 	 * @link http://www.php.net/manual/en/splfileinfo.getextension.php
-	 * @return string a string containing the file extension, or an
+	 * @return string Returns a string containing the file extension, or an
 	 * empty string if the file has no extension.
 	 */
-	public function getExtension () {}
+	public function getExtension (): string {}
 
 	/**
 	 * Gets the base name of the file
 	 * @link http://www.php.net/manual/en/splfileinfo.getbasename.php
-	 * @param string $suffix [optional] Optional suffix to omit from the base name returned.
-	 * @return string the base name without path information.
+	 * @param string $suffix [optional] 
+	 * @return string Returns the base name without path information.
 	 */
-	public function getBasename (string $suffix = null) {}
+	public function getBasename (string $suffix = ""): string {}
 
 	/**
 	 * Gets the path to the file
 	 * @link http://www.php.net/manual/en/splfileinfo.getpathname.php
 	 * @return string The path to the file.
 	 */
-	public function getPathname () {}
+	public function getPathname (): string {}
 
 	/**
 	 * Gets file permissions
 	 * @link http://www.php.net/manual/en/splfileinfo.getperms.php
-	 * @return mixed the file permissions on success, or false on failure.
+	 * @return int|false Returns the file permissions on success, or false on failure.
 	 */
-	public function getPerms () {}
+	public function getPerms (): int|false {}
 
 	/**
 	 * Gets the inode for the file
 	 * @link http://www.php.net/manual/en/splfileinfo.getinode.php
-	 * @return mixed the inode number for the filesystem object on success, or false on failure.
+	 * @return int|false Returns the inode number for the filesystem object on success, or false on failure.
 	 */
-	public function getInode () {}
+	public function getInode (): int|false {}
 
 	/**
 	 * Gets file size
 	 * @link http://www.php.net/manual/en/splfileinfo.getsize.php
-	 * @return mixed The filesize in bytes on success, or false on failure.
+	 * @return int|false The filesize in bytes on success, or false on failure.
 	 */
-	public function getSize () {}
+	public function getSize (): int|false {}
 
 	/**
 	 * Gets the owner of the file
 	 * @link http://www.php.net/manual/en/splfileinfo.getowner.php
-	 * @return mixed The owner id in numerical format on success, or false on failure.
+	 * @return int|false The owner id in numerical format on success, or false on failure.
 	 */
-	public function getOwner () {}
+	public function getOwner (): int|false {}
 
 	/**
 	 * Gets the file group
 	 * @link http://www.php.net/manual/en/splfileinfo.getgroup.php
-	 * @return mixed The group id in numerical format on success, or false on failure.
+	 * @return int|false The group id in numerical format on success, or false on failure.
 	 */
-	public function getGroup () {}
+	public function getGroup (): int|false {}
 
 	/**
 	 * Gets last access time of the file
 	 * @link http://www.php.net/manual/en/splfileinfo.getatime.php
-	 * @return mixed the time the file was last accessed on success, or false on failure.
+	 * @return int|false Returns the time the file was last accessed on success, or false on failure.
 	 */
-	public function getATime () {}
+	public function getATime (): int|false {}
 
 	/**
 	 * Gets the last modified time
 	 * @link http://www.php.net/manual/en/splfileinfo.getmtime.php
-	 * @return mixed the last modified time for the file, in a Unix timestamp on success, or false on failure.
+	 * @return int|false Returns the last modified time for the file, in a Unix timestamp on success, or false on failure.
 	 */
-	public function getMTime () {}
+	public function getMTime (): int|false {}
 
 	/**
 	 * Gets the inode change time
 	 * @link http://www.php.net/manual/en/splfileinfo.getctime.php
-	 * @return mixed The last change time, in a Unix timestamp on success, or false on failure.
+	 * @return int|false The last change time, in a Unix timestamp on success, or false on failure.
 	 */
-	public function getCTime () {}
+	public function getCTime (): int|false {}
 
 	/**
 	 * Gets file type
 	 * @link http://www.php.net/manual/en/splfileinfo.gettype.php
-	 * @return mixed A string representing the type of the entry.
+	 * @return string|false A string representing the type of the entry.
 	 * May be one of file, link,
 	 * dir, block, fifo,
 	 * char, socket, or unknown, or false on failure.
 	 */
-	public function getType () {}
+	public function getType (): string|false {}
 
 	/**
 	 * Tells if the entry is writable
 	 * @link http://www.php.net/manual/en/splfileinfo.iswritable.php
-	 * @return bool true if writable, false otherwise;
+	 * @return bool Returns true if writable, false otherwise;
 	 */
-	public function isWritable () {}
+	public function isWritable (): bool {}
 
 	/**
 	 * Tells if file is readable
 	 * @link http://www.php.net/manual/en/splfileinfo.isreadable.php
-	 * @return bool true if readable, false otherwise.
+	 * @return bool Returns true if readable, false otherwise.
 	 */
-	public function isReadable () {}
+	public function isReadable (): bool {}
 
 	/**
 	 * Tells if the file is executable
 	 * @link http://www.php.net/manual/en/splfileinfo.isexecutable.php
-	 * @return bool true if executable, false otherwise.
+	 * @return bool Returns true if executable, false otherwise.
 	 */
-	public function isExecutable () {}
+	public function isExecutable (): bool {}
 
 	/**
 	 * Tells if the object references a regular file
 	 * @link http://www.php.net/manual/en/splfileinfo.isfile.php
-	 * @return bool true if the file exists and is a regular file (not a link), false otherwise.
+	 * @return bool Returns true if the file exists and is a regular file (not a link), false otherwise.
 	 */
-	public function isFile () {}
+	public function isFile (): bool {}
 
 	/**
 	 * Tells if the file is a directory
 	 * @link http://www.php.net/manual/en/splfileinfo.isdir.php
-	 * @return bool true if a directory, false otherwise.
+	 * @return bool Returns true if a directory, false otherwise.
 	 */
-	public function isDir () {}
+	public function isDir (): bool {}
 
 	/**
 	 * Tells if the file is a link
 	 * @link http://www.php.net/manual/en/splfileinfo.islink.php
-	 * @return bool true if the file is a link, false otherwise.
+	 * @return bool Returns true if the file is a link, false otherwise.
 	 */
-	public function isLink () {}
+	public function isLink (): bool {}
 
 	/**
 	 * Gets the target of a link
 	 * @link http://www.php.net/manual/en/splfileinfo.getlinktarget.php
-	 * @return mixed the target of the filesystem link on success, or false on failure.
+	 * @return string|false Returns the target of the filesystem link on success, or false on failure.
 	 */
-	public function getLinkTarget () {}
+	public function getLinkTarget (): string|false {}
 
 	/**
 	 * Gets absolute path to file
 	 * @link http://www.php.net/manual/en/splfileinfo.getrealpath.php
-	 * @return mixed the path to the file, or false if the file does not exist.
+	 * @return string|false Returns the path to the file, or false if the file does not exist.
 	 */
-	public function getRealPath () {}
+	public function getRealPath (): string|false {}
 
 	/**
 	 * Gets an SplFileInfo object for the file
 	 * @link http://www.php.net/manual/en/splfileinfo.getfileinfo.php
-	 * @param mixed $class [optional] Name of an SplFileInfo derived class to use.
+	 * @param string|null $class [optional] 
 	 * @return SplFileInfo An SplFileInfo object created for the file.
 	 */
-	public function getFileInfo ($class = null) {}
+	public function getFileInfo (?string $class = null): SplFileInfo {}
 
 	/**
 	 * Gets an SplFileInfo object for the path
 	 * @link http://www.php.net/manual/en/splfileinfo.getpathinfo.php
-	 * @param mixed $class [optional] Name of an SplFileInfo derived class to use, or itself if null.
-	 * @return mixed an SplFileInfo object for the parent path of the file on success, or null on failure.
+	 * @param string|null $class [optional] 
+	 * @return SplFileInfo|null Returns an SplFileInfo object for the parent path of the file on success, or null on failure.
 	 */
-	public function getPathInfo ($class = null) {}
+	public function getPathInfo (?string $class = null): ?SplFileInfo {}
 
 	/**
 	 * Gets an SplFileObject object for the file
 	 * @link http://www.php.net/manual/en/splfileinfo.openfile.php
-	 * @param string $mode [optional] The mode for opening the file. See the fopen
-	 * documentation for descriptions of possible modes. The default 
-	 * is read only.
-	 * @param bool $useIncludePath [optional] parameter.use_include_path
-	 * @param mixed $context [optional] parameter.context
+	 * @param string $mode [optional] 
+	 * @param bool $useIncludePath [optional] 
+	 * @param resource|null $context [optional] 
 	 * @return SplFileObject The opened file as an SplFileObject object.
 	 */
-	public function openFile (string $mode = null, bool $useIncludePath = null, $context = null) {}
+	public function openFile (string $mode = "r", bool $useIncludePath = false, ?resource $context = null): SplFileObject {}
 
 	/**
 	 * Sets the class used with SplFileInfo::openFile
 	 * @link http://www.php.net/manual/en/splfileinfo.setfileclass.php
-	 * @param string $class [optional] The class name to use when SplFileInfo::openFile
-	 * is called.
-	 * @return void 
+	 * @param string $class [optional] 
+	 * @return void No value is returned.
 	 */
-	public function setFileClass (string $class = null) {}
+	public function setFileClass (string $class = SplFileObject::class): void {}
 
 	/**
 	 * Sets the class used with SplFileInfo::getFileInfo and SplFileInfo::getPathInfo
 	 * @link http://www.php.net/manual/en/splfileinfo.setinfoclass.php
-	 * @param string $class [optional] The class name to use when
-	 * SplFileInfo::getFileInfo and
-	 * SplFileInfo::getPathInfo are called.
-	 * @return void 
+	 * @param string $class [optional] 
+	 * @return void No value is returned.
 	 */
-	public function setInfoClass (string $class = null) {}
+	public function setInfoClass (string $class = SplFileInfo::class): void {}
 
 	/**
 	 * Returns the path to the file as a string
 	 * @link http://www.php.net/manual/en/splfileinfo.tostring.php
-	 * @return string the path to the file.
+	 * @return string Returns the path to the file.
 	 */
 	public function __toString (): string {}
 

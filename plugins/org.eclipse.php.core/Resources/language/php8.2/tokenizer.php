@@ -20,13 +20,11 @@ class PhpToken implements Stringable {
 	 * Splits given source into PHP tokens, represented by PhpToken objects.
 	 * @link http://www.php.net/manual/en/phptoken.tokenize.php
 	 * @param string $code The PHP source to parse.
-	 * @param int $flags [optional] <p>
-	 * Valid flags:
+	 * @param int $flags [optional] Valid flags:
 	 * <p>
 	 * <br>
 	 * TOKEN_PARSE - Recognises the ability to use
 	 * reserved words in specific contexts.
-	 * </p>
 	 * </p>
 	 * @return array An array of PHP tokens represented by instances of PhpToken or its descendants.
 	 * This method returns static[] so that PhpToken can be seamlessly extended.
@@ -36,20 +34,21 @@ class PhpToken implements Stringable {
 	/**
 	 * Returns a new PhpToken object
 	 * @link http://www.php.net/manual/en/phptoken.construct.php
-	 * @param int $id
-	 * @param string $text
-	 * @param int $line [optional]
-	 * @param int $pos [optional]
+	 * @param int $id One of the T_&#42; constants (see ), or an ASCII codepoint representing a single-char token.
+	 * @param string $text The textual content of the token.
+	 * @param int $line [optional] The starting line number (1-based) of the token.
+	 * @param int $pos [optional] The starting position (0-based) in the tokenized string (the number of bytes).
+	 * @return int 
 	 */
-	final public function __construct (int $id, string $text, int $line = -1, int $pos = -1) {}
+	final public function __construct (int $id, string $text, int $line = -1, int $pos = -1): int {}
 
 	/**
 	 * Tells whether the token is of given kind.
 	 * @link http://www.php.net/manual/en/phptoken.is.php
-	 * @param mixed $kind Either a single value to match the token's id or textual content, or an array thereof.
+	 * @param int|string|array $kind Either a single value to match the token's id or textual content, or an array thereof.
 	 * @return bool A boolean value whether the token is of given kind.
 	 */
-	public function is ($kind): bool {}
+	public function is (int|string|array $kind): bool {}
 
 	/**
 	 * Tells whether the token would be ignored by the PHP parser.
@@ -61,7 +60,7 @@ class PhpToken implements Stringable {
 	/**
 	 * Returns the name of the token.
 	 * @link http://www.php.net/manual/en/phptoken.gettokenname.php
-	 * @return mixed An ASCII character for single-char tokens,
+	 * @return string|null An ASCII character for single-char tokens,
 	 * or one of T_&#42; constant names for known tokens (see ),
 	 * or null for unknown tokens.
 	 */
@@ -79,15 +78,8 @@ class PhpToken implements Stringable {
 /**
  * Split given source into PHP tokens
  * @link http://www.php.net/manual/en/function.token-get-all.php
- * @param string $code The PHP source to parse.
- * @param int $flags [optional] <p>
- * Valid flags:
- * <p>
- * <br>
- * TOKEN_PARSE - Recognises the ability to use
- * reserved words in specific contexts.
- * </p>
- * </p>
+ * @param string $code 
+ * @param int $flags [optional] 
  * @return array An array of token identifiers. Each individual token identifier is either
  * a single character (i.e.: ;, ., 
  * &gt;, !, etc...),
@@ -99,7 +91,7 @@ function token_get_all (string $code, int $flags = null): array {}
 /**
  * Get the symbolic name of a given PHP token
  * @link http://www.php.net/manual/en/function.token-name.php
- * @param int $id The token value.
+ * @param int $id 
  * @return string The symbolic name of the given id.
  */
 function token_name (int $id): string {}

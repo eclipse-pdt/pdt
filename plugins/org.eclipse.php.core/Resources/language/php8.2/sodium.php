@@ -14,28 +14,75 @@ class SodiumException extends Exception implements Throwable, Stringable {
 
 
 	/**
-	 * @param string $message [optional]
-	 * @param int $code [optional]
-	 * @param Throwable|null $previous [optional]
+	 * Construct the exception
+	 * @link http://www.php.net/manual/en/exception.construct.php
+	 * @param string $message [optional] 
+	 * @param int $code [optional] 
+	 * @param Throwable|null $previous [optional] 
+	 * @return string 
 	 */
-	public function __construct (string $message = '', int $code = 0, Throwable|null $previous = null) {}
+	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
 
 	public function __wakeup () {}
 
+	/**
+	 * Gets the Exception message
+	 * @link http://www.php.net/manual/en/exception.getmessage.php
+	 * @return string Returns the Exception message as a string.
+	 */
 	final public function getMessage (): string {}
 
-	final public function getCode () {}
+	/**
+	 * Gets the Exception code
+	 * @link http://www.php.net/manual/en/exception.getcode.php
+	 * @return int Returns the exception code as int in
+	 * Exception but possibly as other type in
+	 * Exception descendants (for example as
+	 * string in PDOException).
+	 */
+	final public function getCode (): int {}
 
+	/**
+	 * Gets the file in which the exception was created
+	 * @link http://www.php.net/manual/en/exception.getfile.php
+	 * @return string Returns the filename in which the exception was created.
+	 */
 	final public function getFile (): string {}
 
+	/**
+	 * Gets the line in which the exception was created
+	 * @link http://www.php.net/manual/en/exception.getline.php
+	 * @return int Returns the line number where the exception was created.
+	 */
 	final public function getLine (): int {}
 
+	/**
+	 * Gets the stack trace
+	 * @link http://www.php.net/manual/en/exception.gettrace.php
+	 * @return array Returns the Exception stack trace as an array.
+	 */
 	final public function getTrace (): array {}
 
+	/**
+	 * Returns previous Throwable
+	 * @link http://www.php.net/manual/en/exception.getprevious.php
+	 * @return Throwable|null Returns the previous Throwable if available 
+	 * or null otherwise.
+	 */
 	final public function getPrevious (): ?Throwable {}
 
+	/**
+	 * Gets the stack trace as a string
+	 * @link http://www.php.net/manual/en/exception.gettraceasstring.php
+	 * @return string Returns the Exception stack trace as a string.
+	 */
 	final public function getTraceAsString (): string {}
 
+	/**
+	 * String representation of the exception
+	 * @link http://www.php.net/manual/en/exception.tostring.php
+	 * @return string Returns the string representation of the exception.
+	 */
 	public function __toString (): string {}
 
 }
@@ -43,7 +90,7 @@ class SodiumException extends Exception implements Throwable, Stringable {
 /**
  * Check if hardware supports AES256-GCM
  * @link http://www.php.net/manual/en/function.sodium-crypto-aead-aes256gcm-is-available.php
- * @return bool true if it is safe to encrypt with AES-256-GCM, and false otherwise.
+ * @return bool Returns true if it is safe to encrypt with AES-256-GCM, and false otherwise.
  */
 function sodium_crypto_aead_aes256gcm_is_available (): bool {}
 
@@ -56,7 +103,7 @@ function sodium_crypto_aead_aes256gcm_is_available (): bool {}
  * appended to the ciphertext, but it is not encrypted or stored in the ciphertext.
  * @param string $nonce A number that must be only used once, per message. 8 bytes long.
  * @param string $key Encryption key (256-bit).
- * @return mixed the plaintext on success, or false on failure.
+ * @return string|false Returns the plaintext on success, or false on failure.
  */
 function sodium_crypto_aead_chacha20poly1305_decrypt (string $ciphertext, string $additional_data, string $nonce, string $key): string|false {}
 
@@ -68,14 +115,14 @@ function sodium_crypto_aead_chacha20poly1305_decrypt (string $ciphertext, string
  * appended to the ciphertext, but it is not encrypted or stored in the ciphertext.
  * @param string $nonce A number that must be only used once, per message. 8 bytes long.
  * @param string $key Encryption key (256-bit).
- * @return string the ciphertext and tag on success, or false on failure.
+ * @return string Returns the ciphertext and tag on success, or false on failure.
  */
 function sodium_crypto_aead_chacha20poly1305_encrypt (string $message, string $additional_data, string $nonce, string $key): string {}
 
 /**
  * Generate a random ChaCha20-Poly1305 key.
  * @link http://www.php.net/manual/en/function.sodium-crypto-aead-chacha20poly1305-keygen.php
- * @return string a 256-bit random key.
+ * @return string Returns a 256-bit random key.
  */
 function sodium_crypto_aead_chacha20poly1305_keygen (): string {}
 
@@ -88,7 +135,7 @@ function sodium_crypto_aead_chacha20poly1305_keygen (): string {}
  * appended to the ciphertext, but it is not encrypted or stored in the ciphertext.
  * @param string $nonce A number that must be only used once, per message. 12 bytes long.
  * @param string $key Encryption key (256-bit).
- * @return mixed the plaintext on success, or false on failure.
+ * @return string|false Returns the plaintext on success, or false on failure.
  */
 function sodium_crypto_aead_chacha20poly1305_ietf_decrypt (string $ciphertext, string $additional_data, string $nonce, string $key): string|false {}
 
@@ -100,14 +147,14 @@ function sodium_crypto_aead_chacha20poly1305_ietf_decrypt (string $ciphertext, s
  * appended to the ciphertext, but it is not encrypted or stored in the ciphertext.
  * @param string $nonce A number that must be only used once, per message. 12 bytes long.
  * @param string $key Encryption key (256-bit).
- * @return string the ciphertext and tag on success, or false on failure.
+ * @return string Returns the ciphertext and tag on success, or false on failure.
  */
 function sodium_crypto_aead_chacha20poly1305_ietf_encrypt (string $message, string $additional_data, string $nonce, string $key): string {}
 
 /**
  * Generate a random ChaCha20-Poly1305 (IETF) key.
  * @link http://www.php.net/manual/en/function.sodium-crypto-aead-chacha20poly1305-ietf-keygen.php
- * @return string a 256-bit random key.
+ * @return string Returns a 256-bit random key.
  */
 function sodium_crypto_aead_chacha20poly1305_ietf_keygen (): string {}
 
@@ -121,14 +168,14 @@ function sodium_crypto_aead_chacha20poly1305_ietf_keygen (): string {}
  * @param string $nonce A number that must be only used once, per message. 24 bytes long.
  * This is a large enough bound to generate randomly (i.e. random_bytes).
  * @param string $key Encryption key (256-bit).
- * @return mixed the plaintext on success, or false on failure.
+ * @return string|false Returns the plaintext on success, or false on failure.
  */
 function sodium_crypto_aead_xchacha20poly1305_ietf_decrypt (string $ciphertext, string $additional_data, string $nonce, string $key): string|false {}
 
 /**
  * Generate a random XChaCha20-Poly1305 key.
  * @link http://www.php.net/manual/en/function.sodium-crypto-aead-xchacha20poly1305-ietf-keygen.php
- * @return string a 256-bit random key.
+ * @return string Returns a 256-bit random key.
  */
 function sodium_crypto_aead_xchacha20poly1305_ietf_keygen (): string {}
 
@@ -141,7 +188,7 @@ function sodium_crypto_aead_xchacha20poly1305_ietf_keygen (): string {}
  * @param string $nonce A number that must be only used once, per message. 24 bytes long.
  * This is a large enough bound to generate randomly (i.e. random_bytes).
  * @param string $key Encryption key (256-bit).
- * @return string the ciphertext and tag on success, or false on failure.
+ * @return string Returns the ciphertext and tag on success, or false on failure.
  */
 function sodium_crypto_aead_xchacha20poly1305_ietf_encrypt (string $message, string $additional_data, string $nonce, string $key): string {}
 
@@ -157,7 +204,7 @@ function sodium_crypto_auth (string $message, string $key): string {}
 /**
  * Generate a random key for sodium_crypto_auth
  * @link http://www.php.net/manual/en/function.sodium-crypto-auth-keygen.php
- * @return string a 256-bit random key.
+ * @return string Returns a 256-bit random key.
  */
 function sodium_crypto_auth_keygen (): string {}
 
@@ -167,7 +214,7 @@ function sodium_crypto_auth_keygen (): string {}
  * @param string $mac Authentication tag produced by sodium_crypto_auth
  * @param string $message Message
  * @param string $key Authentication key
- * @return bool true on success or false on failure
+ * @return bool Returns true on success or false on failure.
  */
 function sodium_crypto_auth_verify (string $mac, string $message, string $key): bool {}
 
@@ -179,7 +226,7 @@ function sodium_crypto_auth_verify (string $mac, string $message, string $key): 
  * This is a large enough bound to generate randomly (i.e. random_bytes).
  * @param string $key_pair See sodium_crypto_box_keypair_from_secretkey_and_publickey.
  * This should include the sender's X25519 secret key and the recipient's X25519 public key.
- * @return string the encrypted message (ciphertext plus authentication tag). The ciphertext will be
+ * @return string Returns the encrypted message (ciphertext plus authentication tag). The ciphertext will be
  * 16 bytes longer than the plaintext, and a raw binary string. See sodium_bin2base64
  * for safe encoding for storage.
  */
@@ -217,7 +264,7 @@ function sodium_crypto_box_keypair_from_secretkey_and_publickey (string $secret_
  * This is a large enough bound to generate randomly (i.e. random_bytes).
  * @param string $key_pair See sodium_crypto_box_keypair_from_secretkey_and_publickey.
  * This should include the sender's public key and the recipient's secret key.
- * @return mixed the plaintext message on success, or false on failure.
+ * @return string|false Returns the plaintext message on success, or false on failure.
  */
 function sodium_crypto_box_open (string $ciphertext, string $nonce, string $key_pair): string|false {}
 
@@ -252,7 +299,7 @@ function sodium_crypto_box_seal (string $message, string $public_key): string {}
  * @link http://www.php.net/manual/en/function.sodium-crypto-box-seal-open.php
  * @param string $ciphertext The encrypted message
  * @param string $key_pair The keypair of the recipient. Must include the secret key.
- * @return mixed The plaintext on success, or false on failure.
+ * @return string|false The plaintext on success, or false on failure.
  */
 function sodium_crypto_box_seal_open (string $ciphertext, string $key_pair): string|false {}
 
@@ -270,7 +317,7 @@ function sodium_crypto_box_secretkey (string $key_pair): string {}
  * @link http://www.php.net/manual/en/function.sodium-crypto-core-ristretto255-add.php
  * @param string $p An element.
  * @param string $q An element.
- * @return string a 32-byte random string.
+ * @return string Returns a 32-byte random string.
  */
 function sodium_crypto_core_ristretto255_add (string $p, string $q): string {}
 
@@ -278,7 +325,7 @@ function sodium_crypto_core_ristretto255_add (string $p, string $q): string {}
  * Maps a vector
  * @link http://www.php.net/manual/en/function.sodium-crypto-core-ristretto255-from-hash.php
  * @param string $s A 64-bytes vector.
- * @return string a 32-byte random string.
+ * @return string Returns a 32-byte random string.
  */
 function sodium_crypto_core_ristretto255_from_hash (string $s): string {}
 
@@ -286,14 +333,14 @@ function sodium_crypto_core_ristretto255_from_hash (string $s): string {}
  * Determines if a point on the ristretto255 curve
  * @link http://www.php.net/manual/en/function.sodium-crypto-core-ristretto255-is-valid-point.php
  * @param string $s An Elliptic-curve point.
- * @return bool true if s is on the ristretto255 curve, false otherwise.
+ * @return bool Returns true if s is on the ristretto255 curve, false otherwise.
  */
 function sodium_crypto_core_ristretto255_is_valid_point (string $s): bool {}
 
 /**
  * Generates a random key
  * @link http://www.php.net/manual/en/function.sodium-crypto-core-ristretto255-random.php
- * @return string a 32-byte random string.
+ * @return string Returns a 32-byte random string.
  */
 function sodium_crypto_core_ristretto255_random (): string {}
 
@@ -302,7 +349,7 @@ function sodium_crypto_core_ristretto255_random (): string {}
  * @link http://www.php.net/manual/en/function.sodium-crypto-core-ristretto255-scalar-add.php
  * @param string $x Scalar, representing the X coordinate.
  * @param string $y Scalar, representing the Y coordinate.
- * @return string a 32-byte random string.
+ * @return string Returns a 32-byte random string.
  */
 function sodium_crypto_core_ristretto255_scalar_add (string $x, string $y): string {}
 
@@ -310,7 +357,7 @@ function sodium_crypto_core_ristretto255_scalar_add (string $x, string $y): stri
  * The sodium_crypto_core_ristretto255_scalar_complement purpose
  * @link http://www.php.net/manual/en/function.sodium-crypto-core-ristretto255-scalar-complement.php
  * @param string $s Scalar value.
- * @return string a 32-byte random string.
+ * @return string Returns a 32-byte random string.
  */
 function sodium_crypto_core_ristretto255_scalar_complement (string $s): string {}
 
@@ -318,7 +365,7 @@ function sodium_crypto_core_ristretto255_scalar_complement (string $s): string {
  * Inverts a scalar value
  * @link http://www.php.net/manual/en/function.sodium-crypto-core-ristretto255-scalar-invert.php
  * @param string $s Scalar value.
- * @return string a 32-byte random string.
+ * @return string Returns a 32-byte random string.
  */
 function sodium_crypto_core_ristretto255_scalar_invert (string $s): string {}
 
@@ -327,7 +374,7 @@ function sodium_crypto_core_ristretto255_scalar_invert (string $s): string {}
  * @link http://www.php.net/manual/en/function.sodium-crypto-core-ristretto255-scalar-mul.php
  * @param string $x Scalar, representing the X coordinate.
  * @param string $y Scalar, representing the Y coordinate.
- * @return string a 32-byte random string.
+ * @return string Returns a 32-byte random string.
  */
 function sodium_crypto_core_ristretto255_scalar_mul (string $x, string $y): string {}
 
@@ -335,14 +382,14 @@ function sodium_crypto_core_ristretto255_scalar_mul (string $x, string $y): stri
  * Negates a scalar value
  * @link http://www.php.net/manual/en/function.sodium-crypto-core-ristretto255-scalar-negate.php
  * @param string $s Scalar value.
- * @return string a 32-byte random string.
+ * @return string Returns a 32-byte random string.
  */
 function sodium_crypto_core_ristretto255_scalar_negate (string $s): string {}
 
 /**
  * Generates a random key
  * @link http://www.php.net/manual/en/function.sodium-crypto-core-ristretto255-scalar-random.php
- * @return string a 32-byte random string.
+ * @return string Returns a 32-byte random string.
  */
 function sodium_crypto_core_ristretto255_scalar_random (): string {}
 
@@ -350,7 +397,7 @@ function sodium_crypto_core_ristretto255_scalar_random (): string {}
  * Reduces a scalar value
  * @link http://www.php.net/manual/en/function.sodium-crypto-core-ristretto255-scalar-reduce.php
  * @param string $s Scalar value.
- * @return string a 32-byte random string.
+ * @return string Returns a 32-byte random string.
  */
 function sodium_crypto_core_ristretto255_scalar_reduce (string $s): string {}
 
@@ -359,7 +406,7 @@ function sodium_crypto_core_ristretto255_scalar_reduce (string $s): string {}
  * @link http://www.php.net/manual/en/function.sodium-crypto-core-ristretto255-scalar-sub.php
  * @param string $x Scalar, representing the X coordinate.
  * @param string $y Scalar, representing the Y coordinate.
- * @return string a 32-byte random string.
+ * @return string Returns a 32-byte random string.
  */
 function sodium_crypto_core_ristretto255_scalar_sub (string $x, string $y): string {}
 
@@ -368,14 +415,14 @@ function sodium_crypto_core_ristretto255_scalar_sub (string $x, string $y): stri
  * @link http://www.php.net/manual/en/function.sodium-crypto-core-ristretto255-sub.php
  * @param string $p An element.
  * @param string $q An element.
- * @return string a 32-byte random string.
+ * @return string Returns a 32-byte random string.
  */
 function sodium_crypto_core_ristretto255_sub (string $p, string $q): string {}
 
 /**
  * Creates a new sodium keypair
  * @link http://www.php.net/manual/en/function.sodium-crypto-kx-keypair.php
- * @return string the new keypair on success; throws an exception otherwise.
+ * @return string Returns the new keypair on success; throws an exception otherwise.
  */
 function sodium_crypto_kx_keypair (): string {}
 
@@ -435,7 +482,7 @@ function sodium_crypto_kx_server_session_keys (string $server_key_pair, string $
  * @return string The cryptographic hash as raw bytes. If a hex-encoded output is desired,
  * the result can be passed to sodium_bin2hex.
  */
-function sodium_crypto_generichash (string $message, string $key = null, int $length = null): string {}
+function sodium_crypto_generichash (string $message, string $key = "", int $length = SODIUM_CRYPTO_GENERICHASH_BYTES): string {}
 
 /**
  * Generate a random generichash key
@@ -449,9 +496,9 @@ function sodium_crypto_generichash_keygen (): string {}
  * @link http://www.php.net/manual/en/function.sodium-crypto-generichash-init.php
  * @param string $key [optional] The generichash key.
  * @param int $length [optional] The expected output length of the hash function.
- * @return string a hash state, serialized as a raw binary string.
+ * @return string Returns a hash state, serialized as a raw binary string.
  */
-function sodium_crypto_generichash_init (string $key = null, int $length = null): string {}
+function sodium_crypto_generichash_init (string $key = "", int $length = SODIUM_CRYPTO_GENERICHASH_BYTES): string {}
 
 /**
  * Add message to a hash
@@ -469,7 +516,7 @@ function sodium_crypto_generichash_update (string &$state, string $message): tru
  * @param int $length [optional] Output length.
  * @return string Cryptographic hash.
  */
-function sodium_crypto_generichash_final (string &$state, int $length = null): string {}
+function sodium_crypto_generichash_final (string &$state, int $length = SODIUM_CRYPTO_GENERICHASH_BYTES): string {}
 
 /**
  * Derive a subkey
@@ -498,9 +545,9 @@ function sodium_crypto_kdf_keygen (): string {}
  * @param int $opslimit Represents a maximum amount of computations to perform. Raising this number will make the function require more CPU cycles to compute a key. There are some constants available to set the operations limit to appropriate values depending on intended use, in order of strength: SODIUM_CRYPTO_PWHASH_OPSLIMIT_INTERACTIVE, SODIUM_CRYPTO_PWHASH_OPSLIMIT_MODERATE and SODIUM_CRYPTO_PWHASH_OPSLIMIT_SENSITIVE.
  * @param int $memlimit The maximum amount of RAM that the function will use, in bytes. There are constants to help you choose an appropriate value, in order of size: SODIUM_CRYPTO_PWHASH_MEMLIMIT_INTERACTIVE, SODIUM_CRYPTO_PWHASH_MEMLIMIT_MODERATE, and SODIUM_CRYPTO_PWHASH_MEMLIMIT_SENSITIVE. Typically these should be paired with the matching opslimit values.
  * @param int $algo [optional] int A number indicating the hash algorithm to use. By default SODIUM_CRYPTO_PWHASH_ALG_DEFAULT (the currently recommended algorithm, which can change from one version of libsodium to another), or explicitly using SODIUM_CRYPTO_PWHASH_ALG_ARGON2ID13, representing the Argon2id algorithm version 1.3.
- * @return string the derived key. The return value is a binary string of the hash, not an ASCII-encoded representation, and does not contain additional information about the parameters used to create the hash, so you will need to keep that information if you are ever going to verify the password in future. Use sodium_crypto_pwhash_str to avoid needing to do all that.
+ * @return string Returns the derived key. The return value is a binary string of the hash, not an ASCII-encoded representation, and does not contain additional information about the parameters used to create the hash, so you will need to keep that information if you are ever going to verify the password in future. Use sodium_crypto_pwhash_str to avoid needing to do all that.
  */
-function sodium_crypto_pwhash (int $length, string $password, string $salt, int $opslimit, int $memlimit, int $algo = null): string {}
+function sodium_crypto_pwhash (int $length, string $password, string $salt, int $opslimit, int $memlimit, int $algo = SODIUM_CRYPTO_PWHASH_ALG_DEFAULT): string {}
 
 /**
  * Get an ASCII-encoded hash
@@ -508,13 +555,11 @@ function sodium_crypto_pwhash (int $length, string $password, string $salt, int 
  * @param string $password string; The password to generate a hash for.
  * @param int $opslimit Represents a maximum amount of computations to perform. Raising this number will make the function require more CPU cycles to compute a key. There are constants available to set the operations limit to appropriate values depending on intended use, in order of strength: SODIUM_CRYPTO_PWHASH_OPSLIMIT_INTERACTIVE, SODIUM_CRYPTO_PWHASH_OPSLIMIT_MODERATE and SODIUM_CRYPTO_PWHASH_OPSLIMIT_SENSITIVE.
  * @param int $memlimit The maximum amount of RAM that the function will use, in bytes. There are constants to help you choose an appropriate value, in order of size: SODIUM_CRYPTO_PWHASH_MEMLIMIT_INTERACTIVE, SODIUM_CRYPTO_PWHASH_MEMLIMIT_MODERATE, and SODIUM_CRYPTO_PWHASH_MEMLIMIT_SENSITIVE. Typically these should be paired with the matching opslimit values.
- * @return string the hashed password.
- * <p>
- * In order to produce the same password hash from the same password, the same values for opslimit and memlimit must be used. These are embedded within the generated hash, so
+ * @return string Returns the hashed password.
+ * <p>In order to produce the same password hash from the same password, the same values for opslimit and memlimit must be used. These are embedded within the generated hash, so
  * everything that's needed to verify the hash is included. This allows
  * the sodium_crypto_pwhash_str_verify function to verify the hash without
- * needing separate storage for the other parameters.
- * </p>
+ * needing separate storage for the other parameters.</p>
  */
 function sodium_crypto_pwhash_str (string $password, int $opslimit, int $memlimit): string {}
 
@@ -522,8 +567,8 @@ function sodium_crypto_pwhash_str (string $password, int $opslimit, int $memlimi
  * Verifies that a password matches a hash
  * @link http://www.php.net/manual/en/function.sodium-crypto-pwhash-str-verify.php
  * @param string $hash A hash created by password_hash.
- * @param string $password The useraposs password.
- * @return bool true if the password and hash match, or false otherwise.
+ * @param string $password The user's password.
+ * @return bool Returns true if the password and hash match, or false otherwise.
  */
 function sodium_crypto_pwhash_str_verify (string $hash, string $password): bool {}
 
@@ -533,7 +578,7 @@ function sodium_crypto_pwhash_str_verify (string $hash, string $password): bool 
  * @param string $password Password hash
  * @param int $opslimit Configured opslimit; see sodium_crypto_pwhash_str
  * @param int $memlimit Configured memlimit; see sodium_crypto_pwhash_str
- * @return bool true if the provided memlimit/opslimit do not match what's stored in the hash.
+ * @return bool Returns true if the provided memlimit/opslimit do not match what's stored in the hash.
  * Returns false if they match.
  */
 function sodium_crypto_pwhash_str_needs_rehash (string $password, int $opslimit, int $memlimit): bool {}
@@ -583,7 +628,7 @@ function sodium_crypto_scalarmult (string $n, string $p): string {}
  * @link http://www.php.net/manual/en/function.sodium-crypto-scalarmult-ristretto255.php
  * @param string $n A scalar, which is typically a secret key.
  * @param string $p A point (x-coordinate), which is typically a public key.
- * @return string a 32-byte random string.
+ * @return string Returns a 32-byte random string.
  */
 function sodium_crypto_scalarmult_ristretto255 (string $n, string $p): string {}
 
@@ -591,7 +636,7 @@ function sodium_crypto_scalarmult_ristretto255 (string $n, string $p): string {}
  * Calculates the public key from a secret key
  * @link http://www.php.net/manual/en/function.sodium-crypto-scalarmult-ristretto255-base.php
  * @param string $n A secret key.
- * @return string a 32-byte random string.
+ * @return string Returns a 32-byte random string.
  */
 function sodium_crypto_scalarmult_ristretto255_base (string $n): string {}
 
@@ -602,14 +647,14 @@ function sodium_crypto_scalarmult_ristretto255_base (string $n): string {}
  * @param string $nonce A number that must be only used once, per message. 24 bytes long.
  * This is a large enough bound to generate randomly (i.e. random_bytes).
  * @param string $key Encryption key (256-bit).
- * @return string the encrypted string.
+ * @return string Returns the encrypted string.
  */
 function sodium_crypto_secretbox (string $message, string $nonce, string $key): string {}
 
 /**
  * Generate random key for sodium_crypto_secretbox
  * @link http://www.php.net/manual/en/function.sodium-crypto-secretbox-keygen.php
- * @return string the generated string of cryptographically secure random bytes.
+ * @return string Returns the generated string of cryptographically secure random bytes.
  */
 function sodium_crypto_secretbox_keygen (): string {}
 
@@ -621,14 +666,14 @@ function sodium_crypto_secretbox_keygen (): string {}
  * @param string $nonce A number that must be only used once, per message. 24 bytes long.
  * This is a large enough bound to generate randomly (i.e. random_bytes).
  * @param string $key Encryption key (256-bit).
- * @return mixed The decrypted string on success or false on failure.
+ * @return string|false The decrypted string on success or false on failure.
  */
 function sodium_crypto_secretbox_open (string $ciphertext, string $nonce, string $key): string|false {}
 
 /**
  * Generate a random secretstream key.
  * @link http://www.php.net/manual/en/function.sodium-crypto-secretstream-xchacha20poly1305-keygen.php
- * @return string a string of random bytes.
+ * @return string Returns a string of random bytes.
  */
 function sodium_crypto_secretstream_xchacha20poly1305_keygen (): string {}
 
@@ -647,25 +692,11 @@ function sodium_crypto_secretstream_xchacha20poly1305_init_push (string $key): a
  * and sodium_crypto_secretstream_xchacha20poly1305_init_push
  * @param string $message 
  * @param string $additional_data [optional] 
- * @param int $tag [optional] <p>
- * Optional. Can be used to assert decryption behavior
+ * @param int $tag [optional] Optional. Can be used to assert decryption behavior
  * (i.e. re-keying or indicating the final chunk in a stream).
- * </p>
- * <p>
- * SODIUM_CRYPTO_SECRETSTREAM_XCHACHA20POLY1305_TAG_MESSAGE:
- * the most common tag, that doesn't add any information about the nature of the message.
- * SODIUM_CRYPTO_SECRETSTREAM_XCHACHA20POLY1305_TAG_FINAL:
- * indicates that the message marks the end of the stream, and erases the secret key used to encrypt the previous sequence.
- * SODIUM_CRYPTO_SECRETSTREAM_XCHACHA20POLY1305_TAG_PUSH:
- * indicates that the message marks the end of a set of messages, but not the end of the stream.
- * For example, a huge JSON string sent as multiple chunks can use this tag to indicate to the application that the
- * string is complete and that it can be decoded. But the stream itself is not closed, and more data may follow.
- * SODIUM_CRYPTO_SECRETSTREAM_XCHACHA20POLY1305_TAG_REKEY:
- * "forget" the key used to encrypt this message and the previous ones, and derive a new secret key.
- * </p>
- * @return string the encrypted ciphertext.
+ * @return string Returns the encrypted ciphertext.
  */
-function sodium_crypto_secretstream_xchacha20poly1305_push (string &$state, string $message, string $additional_data = null, int $tag = null): string {}
+function sodium_crypto_secretstream_xchacha20poly1305_push (string &$state, string $message, string $additional_data = "", int $tag = SODIUM_CRYPTO_SECRETSTREAM_XCHACHA20POLY1305_TAG_MESSAGE): string {}
 
 /**
  * Initialize a secretstream context for decryption
@@ -684,11 +715,12 @@ function sodium_crypto_secretstream_xchacha20poly1305_init_pull (string $header,
  * and sodium_crypto_secretstream_xchacha20poly1305_init_push
  * @param string $ciphertext The ciphertext chunk to decrypt.
  * @param string $additional_data [optional] Optional additional data to include in the authentication tag.
- * @return mixed An array with two values:
+ * @return array|false An array with two values:
  * <p>
  * <br>
  * <p>
  * string; The decrypted chunk
+ * </p>
  * <br>
  * <p>
  * int; An optional tag (if provided during push). Possible values:
@@ -706,15 +738,28 @@ function sodium_crypto_secretstream_xchacha20poly1305_init_pull (string $header,
  * </p>
  * </p>
  * </p>
- * </p>
+ * <p>string; The decrypted chunk</p>
+ * <p>int; An optional tag (if provided during push). Possible values:
+ * <p>
+ * SODIUM_CRYPTO_SECRETSTREAM_XCHACHA20POLY1305_TAG_MESSAGE:
+ * the most common tag, that doesn't add any information about the nature of the message.
+ * SODIUM_CRYPTO_SECRETSTREAM_XCHACHA20POLY1305_TAG_FINAL:
+ * indicates that the message marks the end of the stream, and erases the secret key used to encrypt the previous sequence.
+ * SODIUM_CRYPTO_SECRETSTREAM_XCHACHA20POLY1305_TAG_PUSH:
+ * indicates that the message marks the end of a set of messages, but not the end of the stream.
+ * For example, a huge JSON string sent as multiple chunks can use this tag to indicate to the application that the
+ * string is complete and that it can be decoded. But the stream itself is not closed, and more data may follow.
+ * SODIUM_CRYPTO_SECRETSTREAM_XCHACHA20POLY1305_TAG_REKEY:
+ * "forget" the key used to encrypt this message and the previous ones, and derive a new secret key.
+ * </p></p>
  */
-function sodium_crypto_secretstream_xchacha20poly1305_pull (string &$state, string $ciphertext, string $additional_data = null): array|false {}
+function sodium_crypto_secretstream_xchacha20poly1305_pull (string &$state, string $ciphertext, string $additional_data = ""): array|false {}
 
 /**
  * Explicitly rotate the key in the secretstream state
  * @link http://www.php.net/manual/en/function.sodium-crypto-secretstream-xchacha20poly1305-rekey.php
  * @param string $state Secretstream state.
- * @return void 
+ * @return void No value is returned.
  */
 function sodium_crypto_secretstream_xchacha20poly1305_rekey (string &$state): void {}
 
@@ -789,7 +834,7 @@ function sodium_crypto_sign_keypair_from_secretkey_and_publickey (string $secret
  * @link http://www.php.net/manual/en/function.sodium-crypto-sign-open.php
  * @param string $signed_message A message signed with sodium_crypto_sign
  * @param string $public_key An Ed25519 public key
- * @return mixed the original signed message on success, or false on failure.
+ * @return string|false Returns the original signed message on success, or false on failure.
  */
 function sodium_crypto_sign_open (string $signed_message, string $public_key): string|false {}
 
@@ -831,7 +876,7 @@ function sodium_crypto_sign_seed_keypair (string $seed): string {}
  * @param string $signature The cryptographic signature obtained from sodium_crypto_sign_detached
  * @param string $message The message being verified
  * @param string $public_key Ed25519 public key
- * @return bool true on success or false on failure
+ * @return bool Returns true on success or false on failure.
  */
 function sodium_crypto_sign_verify_detached (string $signature, string $message, string $public_key): bool {}
 
@@ -870,14 +915,14 @@ function sodium_crypto_stream_xor (string $message, string $nonce, string $key):
  * @param int $length Number of bytes desired.
  * @param string $nonce 24-byte nonce.
  * @param string $key Key, possibly generated from sodium_crypto_stream_xchacha20_keygen.
- * @return string a pseudorandom stream that can be used with sodium_crypto_stream_xchacha20_xor.
+ * @return string Returns a pseudorandom stream that can be used with sodium_crypto_stream_xchacha20_xor.
  */
 function sodium_crypto_stream_xchacha20 (int $length, string $nonce, string $key): string {}
 
 /**
  * Returns a secure random key
  * @link http://www.php.net/manual/en/function.sodium-crypto-stream-xchacha20-keygen.php
- * @return string a 32-byte secure random key for use with sodium_crypto_stream_xchacha20.
+ * @return string Returns a 32-byte secure random key for use with sodium_crypto_stream_xchacha20.
  */
 function sodium_crypto_stream_xchacha20_keygen (): string {}
 
@@ -908,7 +953,7 @@ function sodium_crypto_stream_xchacha20_xor_ic (string $message, string $nonce, 
  * @param string $string1 String representing an arbitrary-length unsigned integer in little-endian byte order.
  * This parameter is passed by reference and will hold the sum of the two parameters.
  * @param string $string2 String representing an arbitrary-length unsigned integer in little-endian byte order.
- * @return void 
+ * @return void No value is returned.
  */
 function sodium_add (string &$string1, string $string2): void {}
 
@@ -917,13 +962,9 @@ function sodium_add (string &$string1, string $string2): void {}
  * @link http://www.php.net/manual/en/function.sodium-compare.php
  * @param string $string1 Left operand
  * @param string $string2 Right operand
- * @return int -1 if string1 is less than string2.
- * <p>
- * Returns 1 if string1 is greater than string2.
- * </p>
- * <p>
- * Returns 0 if both strings are equal.
- * </p>
+ * @return int Returns -1 if string1 is less than string2.
+ * <p>Returns 1 if string1 is greater than string2.</p>
+ * <p>Returns 0 if both strings are equal.</p>
  */
 function sodium_compare (string $string1, string $string2): int {}
 
@@ -931,7 +972,7 @@ function sodium_compare (string $string1, string $string2): int {}
  * Increment large number
  * @link http://www.php.net/manual/en/function.sodium-increment.php
  * @param string $string String to increment.
- * @return void 
+ * @return void No value is returned.
  */
 function sodium_increment (string &$string): void {}
 
@@ -940,7 +981,7 @@ function sodium_increment (string &$string): void {}
  * @link http://www.php.net/manual/en/function.sodium-memcmp.php
  * @param string $string1 String to compare
  * @param string $string2 Other string to compare
- * @return int 0 if both strings are equal; -1 otherwise.
+ * @return int Returns 0 if both strings are equal; -1 otherwise.
  */
 function sodium_memcmp (string $string1, string $string2): int {}
 
@@ -948,7 +989,7 @@ function sodium_memcmp (string $string1, string $string2): int {}
  * Overwrite a string with NUL characters
  * @link http://www.php.net/manual/en/function.sodium-memzero.php
  * @param string $string String.
- * @return void 
+ * @return void No value is returned.
  */
 function sodium_memzero (string &$string): void {}
 
@@ -983,9 +1024,9 @@ function sodium_bin2hex (string $string): string {}
  * @link http://www.php.net/manual/en/function.sodium-hex2bin.php
  * @param string $string Hexadecimal representation of data.
  * @param string $ignore [optional] Optional string argument for characters to ignore.
- * @return string the binary representation of the given string data.
+ * @return string Returns the binary representation of the given string data.
  */
-function sodium_hex2bin (string $string, string $ignore = null): string {}
+function sodium_hex2bin (string $string, string $ignore = ""): string {}
 
 /**
  * Encodes a raw binary string with base64.
@@ -1016,12 +1057,13 @@ function sodium_bin2base64 (string $string, int $id): string {}
  * @param string $ignore [optional] Characters to ignore when decoding (e.g. whitespace characters).
  * @return string Decoded string.
  */
-function sodium_base642bin (string $string, int $id, string $ignore = null): string {}
+function sodium_base642bin (string $string, int $id, string $ignore = ""): string {}
 
 /**
- * Alias: sodium_crypto_box_publickey_from_secretkey
+ * Alias of sodium_crypto_box_publickey_from_secretkey
  * @link http://www.php.net/manual/en/function.sodium-crypto-scalarmult-base.php
- * @param string $secret_key
+ * @param string $secret_key X25519 secret key
+ * @return string X25519 public key.
  */
 function sodium_crypto_scalarmult_base (string $secret_key): string {}
 
@@ -1029,66 +1071,77 @@ function sodium_crypto_scalarmult_base (string $secret_key): string {}
 /**
  * 
  * @link http://www.php.net/manual/en/sodium.constants.php
+ * @var string
  */
 define ('SODIUM_LIBRARY_VERSION', "1.0.18");
 
 /**
  * 
  * @link http://www.php.net/manual/en/sodium.constants.php
+ * @var int
  */
 define ('SODIUM_LIBRARY_MAJOR_VERSION', 10);
 
 /**
  * 
  * @link http://www.php.net/manual/en/sodium.constants.php
+ * @var int
  */
 define ('SODIUM_LIBRARY_MINOR_VERSION', 3);
 
 /**
  * 
  * @link http://www.php.net/manual/en/sodium.constants.php
+ * @var int
  */
 define ('SODIUM_CRYPTO_AEAD_CHACHA20POLY1305_KEYBYTES', 32);
 
 /**
  * 
  * @link http://www.php.net/manual/en/sodium.constants.php
+ * @var int
  */
 define ('SODIUM_CRYPTO_AEAD_CHACHA20POLY1305_NSECBYTES', 0);
 
 /**
  * 
  * @link http://www.php.net/manual/en/sodium.constants.php
+ * @var int
  */
 define ('SODIUM_CRYPTO_AEAD_CHACHA20POLY1305_NPUBBYTES', 8);
 
 /**
  * 
  * @link http://www.php.net/manual/en/sodium.constants.php
+ * @var int
  */
 define ('SODIUM_CRYPTO_AEAD_CHACHA20POLY1305_ABYTES', 16);
 
 /**
  * 
  * @link http://www.php.net/manual/en/sodium.constants.php
+ * @var int
  */
 define ('SODIUM_CRYPTO_AEAD_CHACHA20POLY1305_IETF_KEYBYTES', 32);
 
 /**
  * 
  * @link http://www.php.net/manual/en/sodium.constants.php
+ * @var int
  */
 define ('SODIUM_CRYPTO_AEAD_CHACHA20POLY1305_IETF_NSECBYTES', 0);
 
 /**
  * 
  * @link http://www.php.net/manual/en/sodium.constants.php
+ * @var int
  */
 define ('SODIUM_CRYPTO_AEAD_CHACHA20POLY1305_IETF_NPUBBYTES', 12);
 
 /**
  * 
  * @link http://www.php.net/manual/en/sodium.constants.php
+ * @var int
  */
 define ('SODIUM_CRYPTO_AEAD_CHACHA20POLY1305_IETF_ABYTES', 16);
 define ('SODIUM_CRYPTO_AEAD_XCHACHA20POLY1305_IETF_KEYBYTES', 32);
@@ -1099,108 +1152,126 @@ define ('SODIUM_CRYPTO_AEAD_XCHACHA20POLY1305_IETF_ABYTES', 16);
 /**
  * 
  * @link http://www.php.net/manual/en/sodium.constants.php
+ * @var int
  */
 define ('SODIUM_CRYPTO_AUTH_BYTES', 32);
 
 /**
  * 
  * @link http://www.php.net/manual/en/sodium.constants.php
+ * @var int
  */
 define ('SODIUM_CRYPTO_AUTH_KEYBYTES', 32);
 
 /**
  * 
  * @link http://www.php.net/manual/en/sodium.constants.php
+ * @var int
  */
 define ('SODIUM_CRYPTO_BOX_SEALBYTES', 48);
 
 /**
  * 
  * @link http://www.php.net/manual/en/sodium.constants.php
+ * @var int
  */
 define ('SODIUM_CRYPTO_BOX_SECRETKEYBYTES', 32);
 
 /**
  * 
  * @link http://www.php.net/manual/en/sodium.constants.php
+ * @var int
  */
 define ('SODIUM_CRYPTO_BOX_PUBLICKEYBYTES', 32);
 
 /**
  * 
  * @link http://www.php.net/manual/en/sodium.constants.php
+ * @var int
  */
 define ('SODIUM_CRYPTO_BOX_KEYPAIRBYTES', 64);
 
 /**
  * 
  * @link http://www.php.net/manual/en/sodium.constants.php
+ * @var int
  */
 define ('SODIUM_CRYPTO_BOX_MACBYTES', 16);
 
 /**
  * 
  * @link http://www.php.net/manual/en/sodium.constants.php
+ * @var int
  */
 define ('SODIUM_CRYPTO_BOX_NONCEBYTES', 24);
 
 /**
  * 
  * @link http://www.php.net/manual/en/sodium.constants.php
+ * @var int
  */
 define ('SODIUM_CRYPTO_BOX_SEEDBYTES', 32);
 
 /**
  * 
  * @link http://www.php.net/manual/en/sodium.constants.php
+ * @var int
  */
 define ('SODIUM_CRYPTO_KDF_BYTES_MIN', 16);
 
 /**
  * 
  * @link http://www.php.net/manual/en/sodium.constants.php
+ * @var int
  */
 define ('SODIUM_CRYPTO_KDF_BYTES_MAX', 64);
 
 /**
  * 
  * @link http://www.php.net/manual/en/sodium.constants.php
+ * @var int
  */
 define ('SODIUM_CRYPTO_KDF_CONTEXTBYTES', 8);
 
 /**
  * 
  * @link http://www.php.net/manual/en/sodium.constants.php
+ * @var int
  */
 define ('SODIUM_CRYPTO_KDF_KEYBYTES', 32);
 
 /**
  * 
  * @link http://www.php.net/manual/en/sodium.constants.php
+ * @var int
  */
 define ('SODIUM_CRYPTO_KX_SEEDBYTES', 32);
 
 /**
  * 
  * @link http://www.php.net/manual/en/sodium.constants.php
+ * @var int
  */
 define ('SODIUM_CRYPTO_KX_SESSIONKEYBYTES', 32);
 
 /**
  * 
  * @link http://www.php.net/manual/en/sodium.constants.php
+ * @var int
  */
 define ('SODIUM_CRYPTO_KX_PUBLICKEYBYTES', 32);
 
 /**
  * 
  * @link http://www.php.net/manual/en/sodium.constants.php
+ * @var int
  */
 define ('SODIUM_CRYPTO_KX_SECRETKEYBYTES', 32);
 
 /**
  * 
  * @link http://www.php.net/manual/en/sodium.constants.php
+ * @var int
  */
 define ('SODIUM_CRYPTO_KX_KEYPAIRBYTES', 64);
 define ('SODIUM_CRYPTO_SECRETSTREAM_XCHACHA20POLY1305_ABYTES', 17);
@@ -1215,234 +1286,273 @@ define ('SODIUM_CRYPTO_SECRETSTREAM_XCHACHA20POLY1305_TAG_FINAL', 3);
 /**
  * 
  * @link http://www.php.net/manual/en/sodium.constants.php
+ * @var int
  */
 define ('SODIUM_CRYPTO_GENERICHASH_BYTES', 32);
 
 /**
  * 
  * @link http://www.php.net/manual/en/sodium.constants.php
+ * @var int
  */
 define ('SODIUM_CRYPTO_GENERICHASH_BYTES_MIN', 16);
 
 /**
  * 
  * @link http://www.php.net/manual/en/sodium.constants.php
+ * @var int
  */
 define ('SODIUM_CRYPTO_GENERICHASH_BYTES_MAX', 64);
 
 /**
  * 
  * @link http://www.php.net/manual/en/sodium.constants.php
+ * @var int
  */
 define ('SODIUM_CRYPTO_GENERICHASH_KEYBYTES', 32);
 
 /**
  * 
  * @link http://www.php.net/manual/en/sodium.constants.php
+ * @var int
  */
 define ('SODIUM_CRYPTO_GENERICHASH_KEYBYTES_MIN', 16);
 
 /**
  * 
  * @link http://www.php.net/manual/en/sodium.constants.php
+ * @var int
  */
 define ('SODIUM_CRYPTO_GENERICHASH_KEYBYTES_MAX', 64);
 
 /**
  * 
  * @link http://www.php.net/manual/en/sodium.constants.php
+ * @var int
  */
 define ('SODIUM_CRYPTO_PWHASH_ALG_ARGON2I13', 1);
 
 /**
  * 
  * @link http://www.php.net/manual/en/sodium.constants.php
+ * @var int
  */
 define ('SODIUM_CRYPTO_PWHASH_ALG_ARGON2ID13', 2);
 
 /**
  * 
  * @link http://www.php.net/manual/en/sodium.constants.php
+ * @var int
  */
 define ('SODIUM_CRYPTO_PWHASH_ALG_DEFAULT', 2);
 
 /**
  * 
  * @link http://www.php.net/manual/en/sodium.constants.php
+ * @var int
  */
 define ('SODIUM_CRYPTO_PWHASH_SALTBYTES', 16);
 
 /**
  * 
  * @link http://www.php.net/manual/en/sodium.constants.php
+ * @var string
  */
 define ('SODIUM_CRYPTO_PWHASH_STRPREFIX', "$argon2id$");
 
 /**
  * 
  * @link http://www.php.net/manual/en/sodium.constants.php
+ * @var int
  */
 define ('SODIUM_CRYPTO_PWHASH_OPSLIMIT_INTERACTIVE', 2);
 
 /**
  * 
  * @link http://www.php.net/manual/en/sodium.constants.php
+ * @var int
  */
 define ('SODIUM_CRYPTO_PWHASH_MEMLIMIT_INTERACTIVE', 67108864);
 
 /**
  * 
  * @link http://www.php.net/manual/en/sodium.constants.php
+ * @var int
  */
 define ('SODIUM_CRYPTO_PWHASH_OPSLIMIT_MODERATE', 3);
 
 /**
  * 
  * @link http://www.php.net/manual/en/sodium.constants.php
+ * @var int
  */
 define ('SODIUM_CRYPTO_PWHASH_MEMLIMIT_MODERATE', 268435456);
 
 /**
  * 
  * @link http://www.php.net/manual/en/sodium.constants.php
+ * @var int
  */
 define ('SODIUM_CRYPTO_PWHASH_OPSLIMIT_SENSITIVE', 4);
 
 /**
  * 
  * @link http://www.php.net/manual/en/sodium.constants.php
+ * @var int
  */
 define ('SODIUM_CRYPTO_PWHASH_MEMLIMIT_SENSITIVE', 1073741824);
 
 /**
  * 
  * @link http://www.php.net/manual/en/sodium.constants.php
+ * @var int
  */
 define ('SODIUM_CRYPTO_PWHASH_SCRYPTSALSA208SHA256_SALTBYTES', 32);
 
 /**
  * 
  * @link http://www.php.net/manual/en/sodium.constants.php
+ * @var string
  */
 define ('SODIUM_CRYPTO_PWHASH_SCRYPTSALSA208SHA256_STRPREFIX', "$7$");
 
 /**
  * 
  * @link http://www.php.net/manual/en/sodium.constants.php
+ * @var int
  */
 define ('SODIUM_CRYPTO_PWHASH_SCRYPTSALSA208SHA256_OPSLIMIT_INTERACTIVE', 524288);
 
 /**
  * 
  * @link http://www.php.net/manual/en/sodium.constants.php
+ * @var int
  */
 define ('SODIUM_CRYPTO_PWHASH_SCRYPTSALSA208SHA256_MEMLIMIT_INTERACTIVE', 16777216);
 
 /**
  * 
  * @link http://www.php.net/manual/en/sodium.constants.php
+ * @var int
  */
 define ('SODIUM_CRYPTO_PWHASH_SCRYPTSALSA208SHA256_OPSLIMIT_SENSITIVE', 33554432);
 
 /**
  * 
  * @link http://www.php.net/manual/en/sodium.constants.php
+ * @var int
  */
 define ('SODIUM_CRYPTO_PWHASH_SCRYPTSALSA208SHA256_MEMLIMIT_SENSITIVE', 1073741824);
 
 /**
  * 
  * @link http://www.php.net/manual/en/sodium.constants.php
+ * @var int
  */
 define ('SODIUM_CRYPTO_SCALARMULT_BYTES', 32);
 
 /**
  * 
  * @link http://www.php.net/manual/en/sodium.constants.php
+ * @var int
  */
 define ('SODIUM_CRYPTO_SCALARMULT_SCALARBYTES', 32);
 
 /**
  * 
  * @link http://www.php.net/manual/en/sodium.constants.php
+ * @var int
  */
 define ('SODIUM_CRYPTO_SHORTHASH_BYTES', 8);
 
 /**
  * 
  * @link http://www.php.net/manual/en/sodium.constants.php
+ * @var int
  */
 define ('SODIUM_CRYPTO_SHORTHASH_KEYBYTES', 16);
 
 /**
  * 
  * @link http://www.php.net/manual/en/sodium.constants.php
+ * @var int
  */
 define ('SODIUM_CRYPTO_SECRETBOX_KEYBYTES', 32);
 
 /**
  * 
  * @link http://www.php.net/manual/en/sodium.constants.php
+ * @var int
  */
 define ('SODIUM_CRYPTO_SECRETBOX_MACBYTES', 16);
 
 /**
  * 
  * @link http://www.php.net/manual/en/sodium.constants.php
+ * @var int
  */
 define ('SODIUM_CRYPTO_SECRETBOX_NONCEBYTES', 24);
 
 /**
  * 
  * @link http://www.php.net/manual/en/sodium.constants.php
+ * @var int
  */
 define ('SODIUM_CRYPTO_SIGN_BYTES', 64);
 
 /**
  * 
  * @link http://www.php.net/manual/en/sodium.constants.php
+ * @var int
  */
 define ('SODIUM_CRYPTO_SIGN_SEEDBYTES', 32);
 
 /**
  * 
  * @link http://www.php.net/manual/en/sodium.constants.php
+ * @var int
  */
 define ('SODIUM_CRYPTO_SIGN_PUBLICKEYBYTES', 32);
 
 /**
  * 
  * @link http://www.php.net/manual/en/sodium.constants.php
+ * @var int
  */
 define ('SODIUM_CRYPTO_SIGN_SECRETKEYBYTES', 64);
 
 /**
  * 
  * @link http://www.php.net/manual/en/sodium.constants.php
+ * @var int
  */
 define ('SODIUM_CRYPTO_SIGN_KEYPAIRBYTES', 96);
 
 /**
  * 
  * @link http://www.php.net/manual/en/sodium.constants.php
+ * @var int
  */
 define ('SODIUM_CRYPTO_STREAM_NONCEBYTES', 24);
 
 /**
  * 
  * @link http://www.php.net/manual/en/sodium.constants.php
+ * @var int
  */
 define ('SODIUM_CRYPTO_STREAM_KEYBYTES', 32);
 
 /**
  * Available as of PHP 8.1.0.
  * @link http://www.php.net/manual/en/sodium.constants.php
+ * @var int
  */
 define ('SODIUM_CRYPTO_STREAM_XCHACHA20_NONCEBYTES', 24);
 
 /**
  * Available as of PHP 8.1.0.
  * @link http://www.php.net/manual/en/sodium.constants.php
+ * @var int
  */
 define ('SODIUM_CRYPTO_STREAM_XCHACHA20_KEYBYTES', 32);
 define ('SODIUM_BASE64_VARIANT_ORIGINAL', 1);
@@ -1453,36 +1563,42 @@ define ('SODIUM_BASE64_VARIANT_URLSAFE_NO_PADDING', 7);
 /**
  * Available as of PHP 8.1.0.
  * @link http://www.php.net/manual/en/sodium.constants.php
+ * @var int
  */
 define ('SODIUM_CRYPTO_SCALARMULT_RISTRETTO255_BYTES', 32);
 
 /**
  * Available as of PHP 8.1.0.
  * @link http://www.php.net/manual/en/sodium.constants.php
+ * @var int
  */
 define ('SODIUM_CRYPTO_SCALARMULT_RISTRETTO255_SCALARBYTES', 32);
 
 /**
  * Available as of PHP 8.1.0.
  * @link http://www.php.net/manual/en/sodium.constants.php
+ * @var int
  */
 define ('SODIUM_CRYPTO_CORE_RISTRETTO255_BYTES', 32);
 
 /**
  * Available as of PHP 8.1.0.
  * @link http://www.php.net/manual/en/sodium.constants.php
+ * @var int
  */
 define ('SODIUM_CRYPTO_CORE_RISTRETTO255_HASHBYTES', 64);
 
 /**
  * Available as of PHP 8.1.0.
  * @link http://www.php.net/manual/en/sodium.constants.php
+ * @var int
  */
 define ('SODIUM_CRYPTO_CORE_RISTRETTO255_SCALARBYTES', 32);
 
 /**
  * Available as of PHP 8.1.0.
  * @link http://www.php.net/manual/en/sodium.constants.php
+ * @var int
  */
 define ('SODIUM_CRYPTO_CORE_RISTRETTO255_NONREDUCEDSCALARBYTES', 64);
 

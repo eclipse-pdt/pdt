@@ -152,9 +152,9 @@ class ChannelCredentials  {
 	public static function createInsecure () {}
 
 	/**
-	 * @param \Grpc\ChannelCredentials|null $fallback_creds
+	 * @param ?Grpc\ChannelCredentials $fallback_creds
 	 */
-	public static function createXds (\Grpc\ChannelCredentials|null $fallback_creds = null) {}
+	public static function createXds (?Grpc\ChannelCredentials $fallback_creds = null) {}
 
 }
 

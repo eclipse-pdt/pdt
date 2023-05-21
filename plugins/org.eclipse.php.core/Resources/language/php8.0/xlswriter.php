@@ -12,28 +12,75 @@ class Exception extends \Exception implements \Throwable, \Stringable {
 
 
 	/**
-	 * @param string $message [optional]
-	 * @param int $code [optional]
-	 * @param Throwable|null $previous [optional]
+	 * Construct the exception
+	 * @link http://www.php.net/manual/en/exception.construct.php
+	 * @param string $message [optional] 
+	 * @param int $code [optional] 
+	 * @param Throwable|null $previous [optional] 
+	 * @return string 
 	 */
-	public function __construct (string $message = '', int $code = 0, Throwable|null $previous = null) {}
+	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
 
 	public function __wakeup () {}
 
+	/**
+	 * Gets the Exception message
+	 * @link http://www.php.net/manual/en/exception.getmessage.php
+	 * @return string Returns the Exception message as a string.
+	 */
 	final public function getMessage (): string {}
 
-	final public function getCode () {}
+	/**
+	 * Gets the Exception code
+	 * @link http://www.php.net/manual/en/exception.getcode.php
+	 * @return int Returns the exception code as int in
+	 * Exception but possibly as other type in
+	 * Exception descendants (for example as
+	 * string in PDOException).
+	 */
+	final public function getCode (): int {}
 
+	/**
+	 * Gets the file in which the exception was created
+	 * @link http://www.php.net/manual/en/exception.getfile.php
+	 * @return string Returns the filename in which the exception was created.
+	 */
 	final public function getFile (): string {}
 
+	/**
+	 * Gets the line in which the exception was created
+	 * @link http://www.php.net/manual/en/exception.getline.php
+	 * @return int Returns the line number where the exception was created.
+	 */
 	final public function getLine (): int {}
 
+	/**
+	 * Gets the stack trace
+	 * @link http://www.php.net/manual/en/exception.gettrace.php
+	 * @return array Returns the Exception stack trace as an array.
+	 */
 	final public function getTrace (): array {}
 
+	/**
+	 * Returns previous Throwable
+	 * @link http://www.php.net/manual/en/exception.getprevious.php
+	 * @return Throwable|null Returns the previous Throwable if available 
+	 * or null otherwise.
+	 */
 	final public function getPrevious (): ?Throwable {}
 
+	/**
+	 * Gets the stack trace as a string
+	 * @link http://www.php.net/manual/en/exception.gettraceasstring.php
+	 * @return string Returns the Exception stack trace as a string.
+	 */
 	final public function getTraceAsString (): string {}
 
+	/**
+	 * String representation of the exception
+	 * @link http://www.php.net/manual/en/exception.tostring.php
+	 * @return string Returns the string representation of the exception.
+	 */
 	public function __toString (): string {}
 
 }
@@ -105,26 +152,29 @@ class Excel  {
 	/**
 	 * Vtiful\Kernel\Excel constructor
 	 * @link http://www.php.net/manual/en/vtiful-kernel-excel.construct.php
-	 * @param mixed $config
+	 * @param array $config XLSX file export configuration
+	 * @return array 
 	 */
-	public function __construct ($config = null) {}
+	public function __construct (array $config): array {}
 
 	public function close () {}
 
 	/**
 	 * Vtiful\Kernel\Excel fileName
 	 * @link http://www.php.net/manual/en/vtiful-kernel-excel.filename.php
-	 * @param mixed $file_name
-	 * @param mixed $sheet_name [optional]
+	 * @param string $fileName XLSX file name
+	 * @param string $sheetName [optional] Worksheet name
+	 * @return string Vtiful\Kernel\Excel instance
 	 */
-	public function fileName ($file_name = null, $sheet_name = null) {}
+	public function fileName (string $fileName, string $sheetName = null): string {}
 
 	/**
 	 * Vtiful\Kernel\Excel addSheet
 	 * @link http://www.php.net/manual/en/vtiful-kernel-excel.addSheet.php
-	 * @param mixed $sheet_name
+	 * @param string $sheetName Worksheet name
+	 * @return string Vtiful\Kernel\Excel instance
 	 */
-	public function addSheet ($sheet_name = null) {}
+	public function addSheet (string $sheetName): string {}
 
 	/**
 	 * @param mixed $sheet_name
@@ -144,56 +194,60 @@ class Excel  {
 	/**
 	 * Vtiful\Kernel\Excel constMemory
 	 * @link http://www.php.net/manual/en/vtiful-kernel-excel.constMemory.php
-	 * @param mixed $file_name
-	 * @param mixed $sheet_name [optional]
-	 * @param mixed $use_zip64 [optional]
+	 * @param string $fileName XLSX file name
+	 * @param string $sheetName [optional] Worksheet name
+	 * @return string Vtiful\Kernel\Excel instance
 	 */
-	public function constMemory ($file_name = null, $sheet_name = null, $use_zip64 = null) {}
+	public function constMemory (string $fileName, string $sheetName = null): string {}
 
 	/**
 	 * Vtiful\Kernel\Excel header
 	 * @link http://www.php.net/manual/en/vtiful-kernel-excel.header.php
-	 * @param mixed $header
-	 * @param mixed $format_handle [optional]
+	 * @param array $headerData worksheet header data
+	 * @return array Vtiful\Kernel\Excel instance
 	 */
-	public function header ($header = null, $format_handle = null) {}
+	public function header (array $headerData): array {}
 
 	/**
 	 * Vtiful\Kernel\Excel data
 	 * @link http://www.php.net/manual/en/vtiful-kernel-excel.data.php
-	 * @param mixed $data
+	 * @param array $data worksheet data
+	 * @return array Vtiful\Kernel\Excel instance
 	 */
-	public function data ($data = null) {}
+	public function data (array $data): array {}
 
 	/**
 	 * Vtiful\Kernel\Excel output
 	 * @link http://www.php.net/manual/en/vtiful-kernel-excel.output.php
+	 * @return void XLSX file path;
 	 */
-	public function output () {}
+	public function output (): void {}
 
 	/**
 	 * Vtiful\Kernel\Excel getHandle
 	 * @link http://www.php.net/manual/en/vtiful-kernel-excel.getHandle.php
+	 * @return void Resource
 	 */
-	public function getHandle () {}
+	public function getHandle (): void {}
 
 	/**
 	 * Vtiful\Kernel\Excel autoFilter
 	 * @link http://www.php.net/manual/en/vtiful-kernel-excel.autoFilter.php
-	 * @param mixed $range
+	 * @param string $scope Cell start and end coordinate string.
+	 * @return string Vtiful\Kernel\Excel instance
 	 */
-	public function autoFilter ($range = null) {}
+	public function autoFilter (string $scope): string {}
 
 	/**
 	 * Vtiful\Kernel\Excel insertText
 	 * @link http://www.php.net/manual/en/vtiful-kernel-excel.insertText.php
-	 * @param mixed $row
-	 * @param mixed $column
-	 * @param mixed $data
-	 * @param mixed $format [optional]
-	 * @param mixed $format_handle [optional]
+	 * @param int $row cell row
+	 * @param int $column cell column
+	 * @param int|float|string $data data to be written
+	 * @param string $format [optional] String format
+	 * @return int Vtiful\Kernel\Excel instance
 	 */
-	public function insertText ($row = null, $column = null, $data = null, $format = null, $format_handle = null) {}
+	public function insertText (int $row, int $column, int|float|string $data, string $format = null): int {}
 
 	/**
 	 * @param mixed $row
@@ -232,23 +286,22 @@ class Excel  {
 	/**
 	 * Vtiful\Kernel\Excel insertImage
 	 * @link http://www.php.net/manual/en/vtiful-kernel-excel.insertImage.php
-	 * @param mixed $row
-	 * @param mixed $column
-	 * @param mixed $image
-	 * @param mixed $width [optional]
-	 * @param mixed $height [optional]
+	 * @param int $row cell row
+	 * @param int $column cell column
+	 * @param string $localImagePath local image path
+	 * @return int Vtiful\Kernel\Excel instance
 	 */
-	public function insertImage ($row = null, $column = null, $image = null, $width = null, $height = null) {}
+	public function insertImage (int $row, int $column, string $localImagePath): int {}
 
 	/**
 	 * Vtiful\Kernel\Excel insertFormula
 	 * @link http://www.php.net/manual/en/vtiful-kernel-excel.insertFormula.php
-	 * @param mixed $row
-	 * @param mixed $column
-	 * @param mixed $formula
-	 * @param mixed $format_handle [optional]
+	 * @param int $row cell row
+	 * @param int $column cell column
+	 * @param string $formula formula string
+	 * @return int Vtiful\Kernel\Excel instance
 	 */
-	public function insertFormula ($row = null, $column = null, $formula = null, $format_handle = null) {}
+	public function insertFormula (int $row, int $column, string $formula): int {}
 
 	/**
 	 * @param mixed $row
@@ -262,29 +315,31 @@ class Excel  {
 	/**
 	 * Vtiful\Kernel\Excel mergeCells
 	 * @link http://www.php.net/manual/en/vtiful-kernel-excel.mergeCells.php
-	 * @param mixed $range
-	 * @param mixed $data
-	 * @param mixed $format_handle [optional]
+	 * @param string $scope cell start and end coordinate strings
+	 * @param string $data string data
+	 * @return string Vtiful\Kernel\Excel instance
 	 */
-	public function mergeCells ($range = null, $data = null, $format_handle = null) {}
+	public function mergeCells (string $scope, string $data): string {}
 
 	/**
 	 * Vtiful\Kernel\Excel setColumn
 	 * @link http://www.php.net/manual/en/vtiful-kernel-excel.setColumn.php
-	 * @param mixed $format_handle
-	 * @param mixed $range
-	 * @param mixed $width
+	 * @param string $range cell start and end coordinate strings
+	 * @param float $width column width
+	 * @param resource $format [optional] cell format resource
+	 * @return string Vtiful\Kernel\Excel instance
 	 */
-	public function setColumn ($format_handle = null, $range = null, $width = null) {}
+	public function setColumn (string $range, float $width, resource $format = null): string {}
 
 	/**
 	 * Vtiful\Kernel\Excel setRow
 	 * @link http://www.php.net/manual/en/vtiful-kernel-excel.setRow.php
-	 * @param mixed $format_handle
-	 * @param mixed $range
-	 * @param mixed $height
+	 * @param string $range cell start and end coordinate strings
+	 * @param float $height row height
+	 * @param resource $format [optional] cell format resource
+	 * @return string Vtiful\Kernel\Excel instance
 	 */
-	public function setRow ($format_handle = null, $range = null, $height = null) {}
+	public function setRow (string $range, float $height, resource $format = null): string {}
 
 	public function getCurrentLine () {}
 
@@ -508,14 +563,18 @@ class Format  {
 	/**
 	 * Vtiful\Kernel\Format bold
 	 * @link http://www.php.net/manual/en/vtiful-kernel-format.bold.php
+	 * @param resource $handle xlsx file handle
+	 * @return resource Resource
 	 */
-	public function bold () {}
+	public function bold (resource $handle): resource {}
 
 	/**
 	 * Vtiful\Kernel\Format italic
 	 * @link http://www.php.net/manual/en/vtiful-kernel-format.italic.php
+	 * @param resource $handle xlsx file handle
+	 * @return resource Resource
 	 */
-	public function italic () {}
+	public function italic (resource $handle): resource {}
 
 	/**
 	 * @param mixed $style
@@ -546,9 +605,11 @@ class Format  {
 	/**
 	 * Vtiful\Kernel\Format align
 	 * @link http://www.php.net/manual/en/vtiful-kernel-format.align.php
-	 * @param mixed $style
+	 * @param resource $handle xlsx file handle
+	 * @param int $style Vtiful\Kernel\Format constant
+	 * @return resource Resource
 	 */
-	public function align (...$style) {}
+	public function align (resource $handle, int $style): resource {}
 
 	/**
 	 * @param mixed $format
@@ -575,9 +636,11 @@ class Format  {
 	/**
 	 * Vtiful\Kernel\Format underline
 	 * @link http://www.php.net/manual/en/vtiful-kernel-format.underline.php
-	 * @param mixed $style
+	 * @param resource $handle xlsx file handle
+	 * @param int $style Vtiful\Kernel\Format constant
+	 * @return resource Resource
 	 */
-	public function underline ($style = null) {}
+	public function underline (resource $handle, int $style): resource {}
 
 	public function unlocked () {}
 

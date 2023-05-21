@@ -51,128 +51,100 @@ class mimemessage  {
 /**
  * Parses a file
  * @link http://www.php.net/manual/en/function.mailparse-msg-parse-file.php
- * @param string $filename <p>
- * Path to the file holding the message.
- * The file is opened and streamed through the parser.
- * </p>
- * <p>
- * The message contained in filename is supposed to end with a newline
- * (CRLF); otherwise the last line of the message will not be parsed.
- * </p>
- * @return resource a MIME resource representing the structure, or
+ * @param string $filename 
+ * @return resource Returns a MIME resource representing the structure, or
  * false on error.
  */
-function mailparse_msg_parse_file (string $filename) {}
+function mailparse_msg_parse_file (string $filename): resource {}
 
 /**
  * Returns a handle on a given section in a mimemessage
  * @link http://www.php.net/manual/en/function.mailparse-msg-get-part.php
- * @param resource $mimemail A valid MIME resource.
+ * @param resource $mimemail 
  * @param string $mimesection 
  * @return resource 
  */
-function mailparse_msg_get_part ($mimemail, string $mimesection) {}
+function mailparse_msg_get_part (resource $mimemail, string $mimesection): resource {}
 
 /**
  * Returns an array of mime section names in the supplied message
  * @link http://www.php.net/manual/en/function.mailparse-msg-get-structure.php
- * @param resource $mimemail A valid MIME resource.
+ * @param resource $mimemail 
  * @return array 
  */
-function mailparse_msg_get_structure ($mimemail) {}
+function mailparse_msg_get_structure (resource $mimemail): array {}
 
 /**
  * Returns an associative array of info about the message
  * @link http://www.php.net/manual/en/function.mailparse-msg-get-part-data.php
- * @param resource $mimemail A valid MIME resource.
+ * @param resource $mimemail 
  * @return array 
  */
-function mailparse_msg_get_part_data ($mimemail) {}
+function mailparse_msg_get_part_data (resource $mimemail): array {}
 
 /**
  * Extracts/decodes a message section
  * @link http://www.php.net/manual/en/function.mailparse-msg-extract-part.php
- * @param resource $mimemail A valid MIME resource.
+ * @param resource $mimemail 
  * @param string $msgbody 
  * @param callable $callbackfunc [optional] 
- * @return void 
+ * @return void No value is returned.
  */
-function mailparse_msg_extract_part ($mimemail, string $msgbody, callable $callbackfunc = null) {}
+function mailparse_msg_extract_part (resource $mimemail, string $msgbody, callable $callbackfunc = null): void {}
 
 /**
  * Extracts/decodes a message section
  * @link http://www.php.net/manual/en/function.mailparse-msg-extract-part-file.php
- * @param resource $mimemail A valid MIME resource, created with
- * mailparse_msg_create.
- * @param mixed $filename Can be a file name or a valid stream resource.
- * @param callable $callbackfunc [optional] <p>
- * If set, this must be either a valid callback that will be passed the
- * extracted section, or null to make this function return the
- * extracted section.
- * </p>
- * <p>
- * If not specified, the contents will be sent to "stdout".
- * </p>
+ * @param resource $mimemail 
+ * @param mixed $filename 
+ * @param callable $callbackfunc [optional] 
  * @return string If callbackfunc is not null returns true on
  * success.
- * <p>
- * If callbackfunc is set to null, returns the
- * extracted section as a string.
- * </p>
- * <p>
- * Returns false on error.
- * </p>
+ * <p>If callbackfunc is set to null, returns the
+ * extracted section as a string.</p>
+ * <p>Returns false on error.</p>
  */
-function mailparse_msg_extract_part_file ($mimemail, $filename, callable $callbackfunc = null) {}
+function mailparse_msg_extract_part_file (resource $mimemail, mixed $filename, callable $callbackfunc = null): string {}
 
 /**
  * Extracts a message section including headers without decoding the transfer encoding
  * @link http://www.php.net/manual/en/function.mailparse-msg-extract-whole-part-file.php
- * @param resource $mimemail A valid MIME resource.
+ * @param resource $mimemail 
  * @param string $filename 
  * @param callable $callbackfunc [optional] 
  * @return string 
  */
-function mailparse_msg_extract_whole_part_file ($mimemail, string $filename, callable $callbackfunc = null) {}
+function mailparse_msg_extract_whole_part_file (resource $mimemail, string $filename, callable $callbackfunc = null): string {}
 
 /**
  * Create a mime mail resource
  * @link http://www.php.net/manual/en/function.mailparse-msg-create.php
- * @return resource a handle that can be used to parse a message.
+ * @return resource Returns a handle that can be used to parse a message.
  */
-function mailparse_msg_create () {}
+function mailparse_msg_create (): resource {}
 
 /**
  * Frees a MIME resource
  * @link http://www.php.net/manual/en/function.mailparse-msg-free.php
- * @param resource $mimemail A valid MIME resource allocated by
- * mailparse_msg_create or 
- * mailparse_msg_parse_file.
- * @return bool true on success or false on failure
+ * @param resource $mimemail 
+ * @return bool Returns true on success or false on failure.
  */
-function mailparse_msg_free ($mimemail) {}
+function mailparse_msg_free (resource $mimemail): bool {}
 
 /**
  * Incrementally parse data into buffer
  * @link http://www.php.net/manual/en/function.mailparse-msg-parse.php
- * @param resource $mimemail A valid MIME resource.
- * @param string $data The final chunk of data is supposed to end with a newline
- * (CRLF); otherwise the last line of the message will not be parsed.
- * @return bool true on success or false on failure
+ * @param resource $mimemail 
+ * @param string $data 
+ * @return bool Returns true on success or false on failure.
  */
-function mailparse_msg_parse ($mimemail, string $data) {}
+function mailparse_msg_parse (resource $mimemail, string $data): bool {}
 
 /**
  * Parse RFC 822 compliant addresses
  * @link http://www.php.net/manual/en/function.mailparse-rfc822-parse-addresses.php
- * @param string $addresses <p>
- * A string containing addresses, like in:
- * Wez Furlong &lt;wez@example.com&gt;, doe@example.com
- * </p>
- * <p>
- * This string must not include the header name.
- * </p>
- * @return array an array of associative arrays with the following keys for each
+ * @param string $addresses 
+ * @return array Returns an array of associative arrays with the following keys for each
  * recipient:
  * <table>
  * <tr valign="top">
@@ -193,33 +165,32 @@ function mailparse_msg_parse ($mimemail, string $data) {}
  * </tr>
  * </table>
  */
-function mailparse_rfc822_parse_addresses (string $addresses) {}
+function mailparse_rfc822_parse_addresses (string $addresses): array {}
 
 /**
  * Gets the best way of encoding
  * @link http://www.php.net/manual/en/function.mailparse-determine-best-xfer-encoding.php
- * @param resource $fp A valid file pointer, which must be seek-able.
- * @return string one of the character encodings supported by the
+ * @param resource $fp 
+ * @return string Returns one of the character encodings supported by the
  * mbstring module.
  */
-function mailparse_determine_best_xfer_encoding ($fp) {}
+function mailparse_determine_best_xfer_encoding (resource $fp): string {}
 
 /**
  * Streams data from source file pointer, apply encoding and write to destfp
  * @link http://www.php.net/manual/en/function.mailparse-stream-encode.php
- * @param resource $sourcefp A valid file handle. The file is streamed through the parser.
- * @param resource $destfp The destination file handle in which the encoded data will be written.
- * @param string $encoding One of the character encodings supported by the
- * mbstring module.
- * @return bool true on success or false on failure
+ * @param resource $sourcefp 
+ * @param resource $destfp 
+ * @param string $encoding 
+ * @return bool Returns true on success or false on failure.
  */
-function mailparse_stream_encode ($sourcefp, $destfp, string $encoding) {}
+function mailparse_stream_encode (resource $sourcefp, resource $destfp, string $encoding): bool {}
 
 /**
  * Scans the data from fp and extract each embedded uuencoded file
  * @link http://www.php.net/manual/en/function.mailparse-uudecode-all.php
- * @param resource $fp A valid file pointer.
- * @return array an array of associative arrays listing filename information.
+ * @param resource $fp 
+ * @return array Returns an array of associative arrays listing filename information.
  * <table>
  * <tr valign="top">
  * <td>filename</td>
@@ -233,7 +204,7 @@ function mailparse_stream_encode ($sourcefp, $destfp, string $encoding) {}
  * The first filename entry is the message body. The next entries are the
  * decoded uuencoded files.
  */
-function mailparse_uudecode_all ($fp) {}
+function mailparse_uudecode_all (resource $fp): array {}
 
 /**
  * @param mixed $header
@@ -244,18 +215,21 @@ function mailparse_test ($header = null) {}
 /**
  * 
  * @link http://www.php.net/manual/en/mailparse.constants.php
+ * @var int
  */
 define ('MAILPARSE_EXTRACT_OUTPUT', 0);
 
 /**
  * 
  * @link http://www.php.net/manual/en/mailparse.constants.php
+ * @var int
  */
 define ('MAILPARSE_EXTRACT_STREAM', 1);
 
 /**
  * 
  * @link http://www.php.net/manual/en/mailparse.constants.php
+ * @var int
  */
 define ('MAILPARSE_EXTRACT_RETURN', 2);
 

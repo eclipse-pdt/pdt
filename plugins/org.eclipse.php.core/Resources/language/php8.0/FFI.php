@@ -15,28 +15,72 @@ class Exception extends \Error implements \Throwable, \Stringable {
 
 
 	/**
-	 * @param string $message [optional]
-	 * @param int $code [optional]
-	 * @param Throwable|null $previous [optional]
+	 * Construct the error object
+	 * @link http://www.php.net/manual/en/error.construct.php
+	 * @param string $message [optional] 
+	 * @param int $code [optional] 
+	 * @param Throwable|null $previous [optional] 
+	 * @return string 
 	 */
-	public function __construct (string $message = '', int $code = 0, Throwable|null $previous = null) {}
+	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
 
 	public function __wakeup () {}
 
+	/**
+	 * Gets the error message
+	 * @link http://www.php.net/manual/en/error.getmessage.php
+	 * @return string Returns the error message as a string.
+	 */
 	final public function getMessage (): string {}
 
-	final public function getCode () {}
+	/**
+	 * Gets the error code
+	 * @link http://www.php.net/manual/en/error.getcode.php
+	 * @return int Returns the error code as int
+	 */
+	final public function getCode (): int {}
 
+	/**
+	 * Gets the file in which the error occurred
+	 * @link http://www.php.net/manual/en/error.getfile.php
+	 * @return string Returns the filename in which the error occurred.
+	 */
 	final public function getFile (): string {}
 
+	/**
+	 * Gets the line in which the error occurred
+	 * @link http://www.php.net/manual/en/error.getline.php
+	 * @return int Returns the line number where the error occurred.
+	 */
 	final public function getLine (): int {}
 
+	/**
+	 * Gets the stack trace
+	 * @link http://www.php.net/manual/en/error.gettrace.php
+	 * @return array Returns the stack trace as an array.
+	 */
 	final public function getTrace (): array {}
 
+	/**
+	 * Returns previous Throwable
+	 * @link http://www.php.net/manual/en/error.getprevious.php
+	 * @return Throwable|null Returns the previous Throwable if available 
+	 * or null otherwise.
+	 */
 	final public function getPrevious (): ?Throwable {}
 
+	/**
+	 * Gets the stack trace as a string
+	 * @link http://www.php.net/manual/en/error.gettraceasstring.php
+	 * @return string Returns the stack trace as a string.
+	 */
 	final public function getTraceAsString (): string {}
 
+	/**
+	 * String representation of the error
+	 * @link http://www.php.net/manual/en/error.tostring.php
+	 * @return string Returns the string representation of the error.
+	 */
 	public function __toString (): string {}
 
 }
@@ -52,28 +96,72 @@ final class ParserException extends \FFI\Exception implements \Stringable, \Thro
 
 
 	/**
-	 * @param string $message [optional]
-	 * @param int $code [optional]
-	 * @param Throwable|null $previous [optional]
+	 * Construct the error object
+	 * @link http://www.php.net/manual/en/error.construct.php
+	 * @param string $message [optional] 
+	 * @param int $code [optional] 
+	 * @param Throwable|null $previous [optional] 
+	 * @return string 
 	 */
-	public function __construct (string $message = '', int $code = 0, Throwable|null $previous = null) {}
+	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
 
 	public function __wakeup () {}
 
+	/**
+	 * Gets the error message
+	 * @link http://www.php.net/manual/en/error.getmessage.php
+	 * @return string Returns the error message as a string.
+	 */
 	final public function getMessage (): string {}
 
-	final public function getCode () {}
+	/**
+	 * Gets the error code
+	 * @link http://www.php.net/manual/en/error.getcode.php
+	 * @return int Returns the error code as int
+	 */
+	final public function getCode (): int {}
 
+	/**
+	 * Gets the file in which the error occurred
+	 * @link http://www.php.net/manual/en/error.getfile.php
+	 * @return string Returns the filename in which the error occurred.
+	 */
 	final public function getFile (): string {}
 
+	/**
+	 * Gets the line in which the error occurred
+	 * @link http://www.php.net/manual/en/error.getline.php
+	 * @return int Returns the line number where the error occurred.
+	 */
 	final public function getLine (): int {}
 
+	/**
+	 * Gets the stack trace
+	 * @link http://www.php.net/manual/en/error.gettrace.php
+	 * @return array Returns the stack trace as an array.
+	 */
 	final public function getTrace (): array {}
 
+	/**
+	 * Returns previous Throwable
+	 * @link http://www.php.net/manual/en/error.getprevious.php
+	 * @return Throwable|null Returns the previous Throwable if available 
+	 * or null otherwise.
+	 */
 	final public function getPrevious (): ?Throwable {}
 
+	/**
+	 * Gets the stack trace as a string
+	 * @link http://www.php.net/manual/en/error.gettraceasstring.php
+	 * @return string Returns the stack trace as a string.
+	 */
 	final public function getTraceAsString (): string {}
 
+	/**
+	 * String representation of the error
+	 * @link http://www.php.net/manual/en/error.tostring.php
+	 * @return string Returns the string representation of the error.
+	 */
 	public function __toString (): string {}
 
 }
@@ -109,52 +197,36 @@ final class FFI  {
 	/**
 	 * Creates a new FFI object
 	 * @link http://www.php.net/manual/en/ffi.cdef.php
-	 * @param string $code [optional] <p>
-	 * A string containing a sequence of declarations in regular C language
+	 * @param string $code [optional] A string containing a sequence of declarations in regular C language
 	 * (types, structures, functions, variables, etc). Actually, this string may
 	 * be copy-pasted from C header files.
-	 * </p>
-	 * <p>
-	 * C preprocessor directives are not supported, i.e. #include, 
-	 * #define and CPP macros do not work.
-	 * </p>
-	 * @param mixed $lib [optional] <p>
-	 * The name of a shared library file, to be loaded and linked with the
+	 * <p>C preprocessor directives are not supported, i.e. #include, 
+	 * #define and CPP macros do not work.</p>
+	 * @param string|null $lib [optional] The name of a shared library file, to be loaded and linked with the
 	 * definitions.
-	 * </p>
-	 * <p>
-	 * If lib is omitted, platforms supporting RTLD_DEFAULT
+	 * <p>If lib is omitted, platforms supporting RTLD_DEFAULT
 	 * attempt to lookup symbols declared in code in the normal global
-	 * scope. Other systems will fail to resolve these symbols.
-	 * </p>
-	 * @return FFI the freshly created FFI object.
+	 * scope. Other systems will fail to resolve these symbols.</p>
+	 * @return FFI Returns the freshly created FFI object.
 	 */
-	public static function cdef (string $code = null, $lib = null): FFI {}
+	public static function cdef (string $code = "", ?string $lib = null): FFI {}
 
 	/**
 	 * Loads C declarations from a C header file
 	 * @link http://www.php.net/manual/en/ffi.load.php
-	 * @param string $filename <p>
-	 * The name of a C header file.
-	 * </p>
-	 * <p>
-	 * C preprocessor directives are not supported, i.e. #include,
+	 * @param string $filename The name of a C header file.
+	 * <p>C preprocessor directives are not supported, i.e. #include,
 	 * #define and CPP macros do not work, except for special cases
-	 * listed below.
-	 * </p>
-	 * <p>
-	 * The header file should contain a #define statement for the
+	 * listed below.</p>
+	 * <p>The header file should contain a #define statement for the
 	 * FFI_SCOPE variable, e.g.: #define FFI_SCOPE "MYLIB".
-	 * Refer to the class introduction for details.
-	 * </p>
-	 * <p>
-	 * The header file may contain a #define statement for the
+	 * Refer to the class introduction for details.</p>
+	 * <p>The header file may contain a #define statement for the
 	 * FFI_LIB variable to specify the library it exposes. If it is
 	 * a system library only the file name is required, e.g.: #define FFI_LIB
 	 * "libc.so.6". If it is a custom library, a relative path is required,
-	 * e.g.: #define FFI_LIB "./mylib.so".
-	 * </p>
-	 * @return mixed the freshly created FFI object, or null on failure.
+	 * e.g.: #define FFI_LIB "./mylib.so".</p>
+	 * @return FFI|null Returns the freshly created FFI object, or null on failure.
 	 */
 	public static function load (string $filename): ?FFI {}
 
@@ -162,14 +234,14 @@ final class FFI  {
 	 * Instantiates an FFI object with C declarations parsed during preloading
 	 * @link http://www.php.net/manual/en/ffi.scope.php
 	 * @param string $name The scope name defined by a special FFI_SCOPE define.
-	 * @return FFI the freshly created FFI object.
+	 * @return FFI Returns the freshly created FFI object.
 	 */
 	public static function scope (string $name): FFI {}
 
 	/**
 	 * Creates a C data structure
 	 * @link http://www.php.net/manual/en/ffi.new.php
-	 * @param mixed $type type is a valid C declaration as string, or an
+	 * @param FFI\CType|string $type type is a valid C declaration as string, or an
 	 * instance of FFI\CType which has already been created.
 	 * @param bool $owned [optional] Whether to create owned (i.e. managed) or unmanaged data. Managed data lives together
 	 * with the returned FFI\CData object, and is released when the
@@ -178,35 +250,35 @@ final class FFI  {
 	 * when no longer needed.
 	 * @param bool $persistent [optional] Whether to allocate the C data structure permanently on the system heap (using 
 	 * malloc), or on the PHP request heap (using emalloc).
-	 * @return mixed the freshly created FFI\CData object,
+	 * @return FFI\CData|null Returns the freshly created FFI\CData object,
 	 * or null on failure.
 	 */
-	public static function new ($type, bool $owned = null, bool $persistent = null): ?FFI\CData {}
+	public static function new (FFI\CType|string $type, bool $owned = true, bool $persistent = false): ?FFI\CData {}
 
 	/**
 	 * Releases an unmanaged data structure
 	 * @link http://www.php.net/manual/en/ffi.free.php
 	 * @param FFI\CData $ptr The handle of the unmanaged pointer to a C data structure.
-	 * @return void 
+	 * @return void No value is returned.
 	 */
 	public static function free (FFI\CData &$ptr): void {}
 
 	/**
 	 * Performs a C type cast
 	 * @link http://www.php.net/manual/en/ffi.cast.php
-	 * @param mixed $type A valid C declaration as string, or an instance of FFI\CType
+	 * @param FFI\CType|string $type A valid C declaration as string, or an instance of FFI\CType
 	 * which has already been created.
-	 * @param mixed $ptr The handle of the pointer to a C data structure.
-	 * @return mixed the freshly created FFI\CData object.
+	 * @param FFI\CData|int|float|bool|null $ptr The handle of the pointer to a C data structure.
+	 * @return FFI\CData|null Returns the freshly created FFI\CData object.
 	 */
-	public static function cast ($type, &$ptr): ?FFI\CData {}
+	public static function cast (FFI\CType|string $type, FFI\CData|int|float|bool|null &$ptr): ?FFI\CData {}
 
 	/**
 	 * Creates an FFI\CType object from a C declaration
 	 * @link http://www.php.net/manual/en/ffi.type.php
 	 * @param string $type A valid C declaration as string, or an instance of FFI\CType
 	 * which has already been created.
-	 * @return mixed the freshly created FFI\CType object,
+	 * @return FFI\CType|null Returns the freshly created FFI\CType object,
 	 * or null on failure.
 	 */
 	public static function type (string $type): ?FFI\CType {}
@@ -215,7 +287,7 @@ final class FFI  {
 	 * Gets the FFI\CType of FFI\CData
 	 * @link http://www.php.net/manual/en/ffi.typeof.php
 	 * @param FFI\CData $ptr The handle of the pointer to a C data structure.
-	 * @return FFI\CType the FFI\CType object representing the type of the given
+	 * @return FFI\CType Returns the FFI\CType object representing the type of the given
 	 * FFI\CData object.
 	 */
 	public static function typeof (FFI\CData &$ptr): FFI\CType {}
@@ -226,7 +298,7 @@ final class FFI  {
 	 * @param FFI\CType $type A valid C declaration as string, or an instance of FFI\CType
 	 * which has already been created.
 	 * @param array $dimensions The dimensions of the type as array.
-	 * @return FFI\CType the freshly created FFI\CType object.
+	 * @return FFI\CType Returns the freshly created FFI\CType object.
 	 */
 	public static function arrayType (FFI\CType $type, array $dimensions): FFI\CType {}
 
@@ -234,49 +306,49 @@ final class FFI  {
 	 * Creates an unmanaged pointer to C data
 	 * @link http://www.php.net/manual/en/ffi.addr.php
 	 * @param FFI\CData $ptr The handle of the pointer to a C data structure.
-	 * @return FFI\CData the freshly created FFI\CData object.
+	 * @return FFI\CData Returns the freshly created FFI\CData object.
 	 */
 	public static function addr (FFI\CData &$ptr): FFI\CData {}
 
 	/**
 	 * Gets the size of C data or types
 	 * @link http://www.php.net/manual/en/ffi.sizeof.php
-	 * @param mixed $ptr The handle of the C data or type.
+	 * @param FFI\CData|FFI\CType $ptr The handle of the C data or type.
 	 * @return int The size of the memory area pointed at by ptr.
 	 */
-	public static function sizeof (&$ptr): int {}
+	public static function sizeof (FFI\CData|FFI\CType &$ptr): int {}
 
 	/**
 	 * Gets the alignment
 	 * @link http://www.php.net/manual/en/ffi.alignof.php
-	 * @param mixed $ptr The handle of the C data or type.
-	 * @return int the alignment of the given FFI\CData or
+	 * @param FFI\CData|FFI\CType $ptr The handle of the C data or type.
+	 * @return int Returns the alignment of the given FFI\CData or
 	 * FFI\CType object.
 	 */
-	public static function alignof (&$ptr): int {}
+	public static function alignof (FFI\CData|FFI\CType &$ptr): int {}
 
 	/**
 	 * Copies one memory area to another
 	 * @link http://www.php.net/manual/en/ffi.memcpy.php
 	 * @param FFI\CData $to The start of the memory area to copy to.
-	 * @param mixed $from The start of the memory area to copy from.
+	 * @param FFI\CData|string $from The start of the memory area to copy from.
 	 * @param int $size The number of bytes to copy.
-	 * @return void 
+	 * @return void No value is returned.
 	 */
-	public static function memcpy (FFI\CData &$to, &$from, int $size): void {}
+	public static function memcpy (FFI\CData &$to, FFI\CData|string &$from, int $size): void {}
 
 	/**
 	 * Compares memory areas
 	 * @link http://www.php.net/manual/en/ffi.memcmp.php
-	 * @param mixed $ptr1 The start of one memory area.
-	 * @param mixed $ptr2 The start of another memory area.
+	 * @param string|FFI\CData $ptr1 The start of one memory area.
+	 * @param string|FFI\CData $ptr2 The start of another memory area.
 	 * @param int $size The number of bytes to compare.
-	 * @return int &lt; 0 if the contents of the memory area starting at ptr1
+	 * @return int Returns &lt; 0 if the contents of the memory area starting at ptr1
 	 * are considered less than the contents of the memory area starting at ptr2,
 	 * &gt; 0 if the contents of the first memory area are considered greater than the second,
 	 * and 0 if they are equal.
 	 */
-	public static function memcmp (&$ptr1, &$ptr2, int $size): int {}
+	public static function memcmp (string|FFI\CData &$ptr1, string|FFI\CData &$ptr2, int $size): int {}
 
 	/**
 	 * Fills a memory area
@@ -284,7 +356,7 @@ final class FFI  {
 	 * @param FFI\CData $ptr The start of the memory area to fill.
 	 * @param int $value The byte to fill with.
 	 * @param int $size The number of bytes to fill.
-	 * @return void 
+	 * @return void No value is returned.
 	 */
 	public static function memset (FFI\CData &$ptr, int $value, int $size): void {}
 
@@ -292,18 +364,18 @@ final class FFI  {
 	 * Creates a PHP string from a memory area
 	 * @link http://www.php.net/manual/en/ffi.string.php
 	 * @param FFI\CData $ptr The start of the memory area from which to create a string.
-	 * @param mixed $size [optional] The number of bytes to copy to the string.
+	 * @param int|null $size [optional] The number of bytes to copy to the string.
 	 * If size is omitted, ptr must be a zero terminated
 	 * array of C chars.
 	 * @return string The freshly created PHP string.
 	 */
-	public static function string (FFI\CData &$ptr, $size = null): string {}
+	public static function string (FFI\CData &$ptr, ?int $size = null): string {}
 
 	/**
 	 * Checks whether a FFI\CData is a null pointer
 	 * @link http://www.php.net/manual/en/ffi.isnull.php
 	 * @param FFI\CData $ptr The handle of the pointer to a C data structure.
-	 * @return bool whether a FFI\CData is a null pointer.
+	 * @return bool Returns whether a FFI\CData is a null pointer.
 	 */
 	public static function isNull (FFI\CData &$ptr): bool {}
 

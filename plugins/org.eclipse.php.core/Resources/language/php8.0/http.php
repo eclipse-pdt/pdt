@@ -21,28 +21,75 @@ class RuntimeException extends \RuntimeException implements \Stringable, \Throwa
 
 
 	/**
-	 * @param string $message [optional]
-	 * @param int $code [optional]
-	 * @param Throwable|null $previous [optional]
+	 * Construct the exception
+	 * @link http://www.php.net/manual/en/exception.construct.php
+	 * @param string $message [optional] 
+	 * @param int $code [optional] 
+	 * @param Throwable|null $previous [optional] 
+	 * @return string 
 	 */
-	public function __construct (string $message = '', int $code = 0, Throwable|null $previous = null) {}
+	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
 
 	public function __wakeup () {}
 
+	/**
+	 * Gets the Exception message
+	 * @link http://www.php.net/manual/en/exception.getmessage.php
+	 * @return string Returns the Exception message as a string.
+	 */
 	final public function getMessage (): string {}
 
-	final public function getCode () {}
+	/**
+	 * Gets the Exception code
+	 * @link http://www.php.net/manual/en/exception.getcode.php
+	 * @return int Returns the exception code as int in
+	 * Exception but possibly as other type in
+	 * Exception descendants (for example as
+	 * string in PDOException).
+	 */
+	final public function getCode (): int {}
 
+	/**
+	 * Gets the file in which the exception was created
+	 * @link http://www.php.net/manual/en/exception.getfile.php
+	 * @return string Returns the filename in which the exception was created.
+	 */
 	final public function getFile (): string {}
 
+	/**
+	 * Gets the line in which the exception was created
+	 * @link http://www.php.net/manual/en/exception.getline.php
+	 * @return int Returns the line number where the exception was created.
+	 */
 	final public function getLine (): int {}
 
+	/**
+	 * Gets the stack trace
+	 * @link http://www.php.net/manual/en/exception.gettrace.php
+	 * @return array Returns the Exception stack trace as an array.
+	 */
 	final public function getTrace (): array {}
 
+	/**
+	 * Returns previous Throwable
+	 * @link http://www.php.net/manual/en/exception.getprevious.php
+	 * @return Throwable|null Returns the previous Throwable if available 
+	 * or null otherwise.
+	 */
 	final public function getPrevious (): ?Throwable {}
 
+	/**
+	 * Gets the stack trace as a string
+	 * @link http://www.php.net/manual/en/exception.gettraceasstring.php
+	 * @return string Returns the Exception stack trace as a string.
+	 */
 	final public function getTraceAsString (): string {}
 
+	/**
+	 * String representation of the exception
+	 * @link http://www.php.net/manual/en/exception.tostring.php
+	 * @return string Returns the string representation of the exception.
+	 */
 	public function __toString (): string {}
 
 }
@@ -55,28 +102,75 @@ class UnexpectedValueException extends \UnexpectedValueException implements \Thr
 
 
 	/**
-	 * @param string $message [optional]
-	 * @param int $code [optional]
-	 * @param Throwable|null $previous [optional]
+	 * Construct the exception
+	 * @link http://www.php.net/manual/en/exception.construct.php
+	 * @param string $message [optional] 
+	 * @param int $code [optional] 
+	 * @param Throwable|null $previous [optional] 
+	 * @return string 
 	 */
-	public function __construct (string $message = '', int $code = 0, Throwable|null $previous = null) {}
+	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
 
 	public function __wakeup () {}
 
+	/**
+	 * Gets the Exception message
+	 * @link http://www.php.net/manual/en/exception.getmessage.php
+	 * @return string Returns the Exception message as a string.
+	 */
 	final public function getMessage (): string {}
 
-	final public function getCode () {}
+	/**
+	 * Gets the Exception code
+	 * @link http://www.php.net/manual/en/exception.getcode.php
+	 * @return int Returns the exception code as int in
+	 * Exception but possibly as other type in
+	 * Exception descendants (for example as
+	 * string in PDOException).
+	 */
+	final public function getCode (): int {}
 
+	/**
+	 * Gets the file in which the exception was created
+	 * @link http://www.php.net/manual/en/exception.getfile.php
+	 * @return string Returns the filename in which the exception was created.
+	 */
 	final public function getFile (): string {}
 
+	/**
+	 * Gets the line in which the exception was created
+	 * @link http://www.php.net/manual/en/exception.getline.php
+	 * @return int Returns the line number where the exception was created.
+	 */
 	final public function getLine (): int {}
 
+	/**
+	 * Gets the stack trace
+	 * @link http://www.php.net/manual/en/exception.gettrace.php
+	 * @return array Returns the Exception stack trace as an array.
+	 */
 	final public function getTrace (): array {}
 
+	/**
+	 * Returns previous Throwable
+	 * @link http://www.php.net/manual/en/exception.getprevious.php
+	 * @return Throwable|null Returns the previous Throwable if available 
+	 * or null otherwise.
+	 */
 	final public function getPrevious (): ?Throwable {}
 
+	/**
+	 * Gets the stack trace as a string
+	 * @link http://www.php.net/manual/en/exception.gettraceasstring.php
+	 * @return string Returns the Exception stack trace as a string.
+	 */
 	final public function getTraceAsString (): string {}
 
+	/**
+	 * String representation of the exception
+	 * @link http://www.php.net/manual/en/exception.tostring.php
+	 * @return string Returns the string representation of the exception.
+	 */
 	public function __toString (): string {}
 
 }
@@ -89,28 +183,75 @@ class BadMethodCallException extends \BadMethodCallException implements \Stringa
 
 
 	/**
-	 * @param string $message [optional]
-	 * @param int $code [optional]
-	 * @param Throwable|null $previous [optional]
+	 * Construct the exception
+	 * @link http://www.php.net/manual/en/exception.construct.php
+	 * @param string $message [optional] 
+	 * @param int $code [optional] 
+	 * @param Throwable|null $previous [optional] 
+	 * @return string 
 	 */
-	public function __construct (string $message = '', int $code = 0, Throwable|null $previous = null) {}
+	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
 
 	public function __wakeup () {}
 
+	/**
+	 * Gets the Exception message
+	 * @link http://www.php.net/manual/en/exception.getmessage.php
+	 * @return string Returns the Exception message as a string.
+	 */
 	final public function getMessage (): string {}
 
-	final public function getCode () {}
+	/**
+	 * Gets the Exception code
+	 * @link http://www.php.net/manual/en/exception.getcode.php
+	 * @return int Returns the exception code as int in
+	 * Exception but possibly as other type in
+	 * Exception descendants (for example as
+	 * string in PDOException).
+	 */
+	final public function getCode (): int {}
 
+	/**
+	 * Gets the file in which the exception was created
+	 * @link http://www.php.net/manual/en/exception.getfile.php
+	 * @return string Returns the filename in which the exception was created.
+	 */
 	final public function getFile (): string {}
 
+	/**
+	 * Gets the line in which the exception was created
+	 * @link http://www.php.net/manual/en/exception.getline.php
+	 * @return int Returns the line number where the exception was created.
+	 */
 	final public function getLine (): int {}
 
+	/**
+	 * Gets the stack trace
+	 * @link http://www.php.net/manual/en/exception.gettrace.php
+	 * @return array Returns the Exception stack trace as an array.
+	 */
 	final public function getTrace (): array {}
 
+	/**
+	 * Returns previous Throwable
+	 * @link http://www.php.net/manual/en/exception.getprevious.php
+	 * @return Throwable|null Returns the previous Throwable if available 
+	 * or null otherwise.
+	 */
 	final public function getPrevious (): ?Throwable {}
 
+	/**
+	 * Gets the stack trace as a string
+	 * @link http://www.php.net/manual/en/exception.gettraceasstring.php
+	 * @return string Returns the Exception stack trace as a string.
+	 */
 	final public function getTraceAsString (): string {}
 
+	/**
+	 * String representation of the exception
+	 * @link http://www.php.net/manual/en/exception.tostring.php
+	 * @return string Returns the string representation of the exception.
+	 */
 	public function __toString (): string {}
 
 }
@@ -123,28 +264,75 @@ class InvalidArgumentException extends \InvalidArgumentException implements \Thr
 
 
 	/**
-	 * @param string $message [optional]
-	 * @param int $code [optional]
-	 * @param Throwable|null $previous [optional]
+	 * Construct the exception
+	 * @link http://www.php.net/manual/en/exception.construct.php
+	 * @param string $message [optional] 
+	 * @param int $code [optional] 
+	 * @param Throwable|null $previous [optional] 
+	 * @return string 
 	 */
-	public function __construct (string $message = '', int $code = 0, Throwable|null $previous = null) {}
+	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
 
 	public function __wakeup () {}
 
+	/**
+	 * Gets the Exception message
+	 * @link http://www.php.net/manual/en/exception.getmessage.php
+	 * @return string Returns the Exception message as a string.
+	 */
 	final public function getMessage (): string {}
 
-	final public function getCode () {}
+	/**
+	 * Gets the Exception code
+	 * @link http://www.php.net/manual/en/exception.getcode.php
+	 * @return int Returns the exception code as int in
+	 * Exception but possibly as other type in
+	 * Exception descendants (for example as
+	 * string in PDOException).
+	 */
+	final public function getCode (): int {}
 
+	/**
+	 * Gets the file in which the exception was created
+	 * @link http://www.php.net/manual/en/exception.getfile.php
+	 * @return string Returns the filename in which the exception was created.
+	 */
 	final public function getFile (): string {}
 
+	/**
+	 * Gets the line in which the exception was created
+	 * @link http://www.php.net/manual/en/exception.getline.php
+	 * @return int Returns the line number where the exception was created.
+	 */
 	final public function getLine (): int {}
 
+	/**
+	 * Gets the stack trace
+	 * @link http://www.php.net/manual/en/exception.gettrace.php
+	 * @return array Returns the Exception stack trace as an array.
+	 */
 	final public function getTrace (): array {}
 
+	/**
+	 * Returns previous Throwable
+	 * @link http://www.php.net/manual/en/exception.getprevious.php
+	 * @return Throwable|null Returns the previous Throwable if available 
+	 * or null otherwise.
+	 */
 	final public function getPrevious (): ?Throwable {}
 
+	/**
+	 * Gets the stack trace as a string
+	 * @link http://www.php.net/manual/en/exception.gettraceasstring.php
+	 * @return string Returns the Exception stack trace as a string.
+	 */
 	final public function getTraceAsString (): string {}
 
+	/**
+	 * String representation of the exception
+	 * @link http://www.php.net/manual/en/exception.tostring.php
+	 * @return string Returns the string representation of the exception.
+	 */
 	public function __toString (): string {}
 
 }
@@ -157,28 +345,75 @@ class BadHeaderException extends \DomainException implements \Throwable, \String
 
 
 	/**
-	 * @param string $message [optional]
-	 * @param int $code [optional]
-	 * @param Throwable|null $previous [optional]
+	 * Construct the exception
+	 * @link http://www.php.net/manual/en/exception.construct.php
+	 * @param string $message [optional] 
+	 * @param int $code [optional] 
+	 * @param Throwable|null $previous [optional] 
+	 * @return string 
 	 */
-	public function __construct (string $message = '', int $code = 0, Throwable|null $previous = null) {}
+	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
 
 	public function __wakeup () {}
 
+	/**
+	 * Gets the Exception message
+	 * @link http://www.php.net/manual/en/exception.getmessage.php
+	 * @return string Returns the Exception message as a string.
+	 */
 	final public function getMessage (): string {}
 
-	final public function getCode () {}
+	/**
+	 * Gets the Exception code
+	 * @link http://www.php.net/manual/en/exception.getcode.php
+	 * @return int Returns the exception code as int in
+	 * Exception but possibly as other type in
+	 * Exception descendants (for example as
+	 * string in PDOException).
+	 */
+	final public function getCode (): int {}
 
+	/**
+	 * Gets the file in which the exception was created
+	 * @link http://www.php.net/manual/en/exception.getfile.php
+	 * @return string Returns the filename in which the exception was created.
+	 */
 	final public function getFile (): string {}
 
+	/**
+	 * Gets the line in which the exception was created
+	 * @link http://www.php.net/manual/en/exception.getline.php
+	 * @return int Returns the line number where the exception was created.
+	 */
 	final public function getLine (): int {}
 
+	/**
+	 * Gets the stack trace
+	 * @link http://www.php.net/manual/en/exception.gettrace.php
+	 * @return array Returns the Exception stack trace as an array.
+	 */
 	final public function getTrace (): array {}
 
+	/**
+	 * Returns previous Throwable
+	 * @link http://www.php.net/manual/en/exception.getprevious.php
+	 * @return Throwable|null Returns the previous Throwable if available 
+	 * or null otherwise.
+	 */
 	final public function getPrevious (): ?Throwable {}
 
+	/**
+	 * Gets the stack trace as a string
+	 * @link http://www.php.net/manual/en/exception.gettraceasstring.php
+	 * @return string Returns the Exception stack trace as a string.
+	 */
 	final public function getTraceAsString (): string {}
 
+	/**
+	 * String representation of the exception
+	 * @link http://www.php.net/manual/en/exception.tostring.php
+	 * @return string Returns the string representation of the exception.
+	 */
 	public function __toString (): string {}
 
 }
@@ -191,28 +426,75 @@ class BadUrlException extends \DomainException implements \Throwable, \Stringabl
 
 
 	/**
-	 * @param string $message [optional]
-	 * @param int $code [optional]
-	 * @param Throwable|null $previous [optional]
+	 * Construct the exception
+	 * @link http://www.php.net/manual/en/exception.construct.php
+	 * @param string $message [optional] 
+	 * @param int $code [optional] 
+	 * @param Throwable|null $previous [optional] 
+	 * @return string 
 	 */
-	public function __construct (string $message = '', int $code = 0, Throwable|null $previous = null) {}
+	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
 
 	public function __wakeup () {}
 
+	/**
+	 * Gets the Exception message
+	 * @link http://www.php.net/manual/en/exception.getmessage.php
+	 * @return string Returns the Exception message as a string.
+	 */
 	final public function getMessage (): string {}
 
-	final public function getCode () {}
+	/**
+	 * Gets the Exception code
+	 * @link http://www.php.net/manual/en/exception.getcode.php
+	 * @return int Returns the exception code as int in
+	 * Exception but possibly as other type in
+	 * Exception descendants (for example as
+	 * string in PDOException).
+	 */
+	final public function getCode (): int {}
 
+	/**
+	 * Gets the file in which the exception was created
+	 * @link http://www.php.net/manual/en/exception.getfile.php
+	 * @return string Returns the filename in which the exception was created.
+	 */
 	final public function getFile (): string {}
 
+	/**
+	 * Gets the line in which the exception was created
+	 * @link http://www.php.net/manual/en/exception.getline.php
+	 * @return int Returns the line number where the exception was created.
+	 */
 	final public function getLine (): int {}
 
+	/**
+	 * Gets the stack trace
+	 * @link http://www.php.net/manual/en/exception.gettrace.php
+	 * @return array Returns the Exception stack trace as an array.
+	 */
 	final public function getTrace (): array {}
 
+	/**
+	 * Returns previous Throwable
+	 * @link http://www.php.net/manual/en/exception.getprevious.php
+	 * @return Throwable|null Returns the previous Throwable if available 
+	 * or null otherwise.
+	 */
 	final public function getPrevious (): ?Throwable {}
 
+	/**
+	 * Gets the stack trace as a string
+	 * @link http://www.php.net/manual/en/exception.gettraceasstring.php
+	 * @return string Returns the Exception stack trace as a string.
+	 */
 	final public function getTraceAsString (): string {}
 
+	/**
+	 * String representation of the exception
+	 * @link http://www.php.net/manual/en/exception.tostring.php
+	 * @return string Returns the string representation of the exception.
+	 */
 	public function __toString (): string {}
 
 }
@@ -225,28 +507,75 @@ class BadMessageException extends \DomainException implements \Throwable, \Strin
 
 
 	/**
-	 * @param string $message [optional]
-	 * @param int $code [optional]
-	 * @param Throwable|null $previous [optional]
+	 * Construct the exception
+	 * @link http://www.php.net/manual/en/exception.construct.php
+	 * @param string $message [optional] 
+	 * @param int $code [optional] 
+	 * @param Throwable|null $previous [optional] 
+	 * @return string 
 	 */
-	public function __construct (string $message = '', int $code = 0, Throwable|null $previous = null) {}
+	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
 
 	public function __wakeup () {}
 
+	/**
+	 * Gets the Exception message
+	 * @link http://www.php.net/manual/en/exception.getmessage.php
+	 * @return string Returns the Exception message as a string.
+	 */
 	final public function getMessage (): string {}
 
-	final public function getCode () {}
+	/**
+	 * Gets the Exception code
+	 * @link http://www.php.net/manual/en/exception.getcode.php
+	 * @return int Returns the exception code as int in
+	 * Exception but possibly as other type in
+	 * Exception descendants (for example as
+	 * string in PDOException).
+	 */
+	final public function getCode (): int {}
 
+	/**
+	 * Gets the file in which the exception was created
+	 * @link http://www.php.net/manual/en/exception.getfile.php
+	 * @return string Returns the filename in which the exception was created.
+	 */
 	final public function getFile (): string {}
 
+	/**
+	 * Gets the line in which the exception was created
+	 * @link http://www.php.net/manual/en/exception.getline.php
+	 * @return int Returns the line number where the exception was created.
+	 */
 	final public function getLine (): int {}
 
+	/**
+	 * Gets the stack trace
+	 * @link http://www.php.net/manual/en/exception.gettrace.php
+	 * @return array Returns the Exception stack trace as an array.
+	 */
 	final public function getTrace (): array {}
 
+	/**
+	 * Returns previous Throwable
+	 * @link http://www.php.net/manual/en/exception.getprevious.php
+	 * @return Throwable|null Returns the previous Throwable if available 
+	 * or null otherwise.
+	 */
 	final public function getPrevious (): ?Throwable {}
 
+	/**
+	 * Gets the stack trace as a string
+	 * @link http://www.php.net/manual/en/exception.gettraceasstring.php
+	 * @return string Returns the Exception stack trace as a string.
+	 */
 	final public function getTraceAsString (): string {}
 
+	/**
+	 * String representation of the exception
+	 * @link http://www.php.net/manual/en/exception.tostring.php
+	 * @return string Returns the string representation of the exception.
+	 */
 	public function __toString (): string {}
 
 }
@@ -259,28 +588,75 @@ class BadConversionException extends \DomainException implements \Throwable, \St
 
 
 	/**
-	 * @param string $message [optional]
-	 * @param int $code [optional]
-	 * @param Throwable|null $previous [optional]
+	 * Construct the exception
+	 * @link http://www.php.net/manual/en/exception.construct.php
+	 * @param string $message [optional] 
+	 * @param int $code [optional] 
+	 * @param Throwable|null $previous [optional] 
+	 * @return string 
 	 */
-	public function __construct (string $message = '', int $code = 0, Throwable|null $previous = null) {}
+	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
 
 	public function __wakeup () {}
 
+	/**
+	 * Gets the Exception message
+	 * @link http://www.php.net/manual/en/exception.getmessage.php
+	 * @return string Returns the Exception message as a string.
+	 */
 	final public function getMessage (): string {}
 
-	final public function getCode () {}
+	/**
+	 * Gets the Exception code
+	 * @link http://www.php.net/manual/en/exception.getcode.php
+	 * @return int Returns the exception code as int in
+	 * Exception but possibly as other type in
+	 * Exception descendants (for example as
+	 * string in PDOException).
+	 */
+	final public function getCode (): int {}
 
+	/**
+	 * Gets the file in which the exception was created
+	 * @link http://www.php.net/manual/en/exception.getfile.php
+	 * @return string Returns the filename in which the exception was created.
+	 */
 	final public function getFile (): string {}
 
+	/**
+	 * Gets the line in which the exception was created
+	 * @link http://www.php.net/manual/en/exception.getline.php
+	 * @return int Returns the line number where the exception was created.
+	 */
 	final public function getLine (): int {}
 
+	/**
+	 * Gets the stack trace
+	 * @link http://www.php.net/manual/en/exception.gettrace.php
+	 * @return array Returns the Exception stack trace as an array.
+	 */
 	final public function getTrace (): array {}
 
+	/**
+	 * Returns previous Throwable
+	 * @link http://www.php.net/manual/en/exception.getprevious.php
+	 * @return Throwable|null Returns the previous Throwable if available 
+	 * or null otherwise.
+	 */
 	final public function getPrevious (): ?Throwable {}
 
+	/**
+	 * Gets the stack trace as a string
+	 * @link http://www.php.net/manual/en/exception.gettraceasstring.php
+	 * @return string Returns the Exception stack trace as a string.
+	 */
 	final public function getTraceAsString (): string {}
 
+	/**
+	 * String representation of the exception
+	 * @link http://www.php.net/manual/en/exception.tostring.php
+	 * @return string Returns the string representation of the exception.
+	 */
 	public function __toString (): string {}
 
 }
@@ -293,28 +669,75 @@ class BadQueryStringException extends \DomainException implements \Throwable, \S
 
 
 	/**
-	 * @param string $message [optional]
-	 * @param int $code [optional]
-	 * @param Throwable|null $previous [optional]
+	 * Construct the exception
+	 * @link http://www.php.net/manual/en/exception.construct.php
+	 * @param string $message [optional] 
+	 * @param int $code [optional] 
+	 * @param Throwable|null $previous [optional] 
+	 * @return string 
 	 */
-	public function __construct (string $message = '', int $code = 0, Throwable|null $previous = null) {}
+	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
 
 	public function __wakeup () {}
 
+	/**
+	 * Gets the Exception message
+	 * @link http://www.php.net/manual/en/exception.getmessage.php
+	 * @return string Returns the Exception message as a string.
+	 */
 	final public function getMessage (): string {}
 
-	final public function getCode () {}
+	/**
+	 * Gets the Exception code
+	 * @link http://www.php.net/manual/en/exception.getcode.php
+	 * @return int Returns the exception code as int in
+	 * Exception but possibly as other type in
+	 * Exception descendants (for example as
+	 * string in PDOException).
+	 */
+	final public function getCode (): int {}
 
+	/**
+	 * Gets the file in which the exception was created
+	 * @link http://www.php.net/manual/en/exception.getfile.php
+	 * @return string Returns the filename in which the exception was created.
+	 */
 	final public function getFile (): string {}
 
+	/**
+	 * Gets the line in which the exception was created
+	 * @link http://www.php.net/manual/en/exception.getline.php
+	 * @return int Returns the line number where the exception was created.
+	 */
 	final public function getLine (): int {}
 
+	/**
+	 * Gets the stack trace
+	 * @link http://www.php.net/manual/en/exception.gettrace.php
+	 * @return array Returns the Exception stack trace as an array.
+	 */
 	final public function getTrace (): array {}
 
+	/**
+	 * Returns previous Throwable
+	 * @link http://www.php.net/manual/en/exception.getprevious.php
+	 * @return Throwable|null Returns the previous Throwable if available 
+	 * or null otherwise.
+	 */
 	final public function getPrevious (): ?Throwable {}
 
+	/**
+	 * Gets the stack trace as a string
+	 * @link http://www.php.net/manual/en/exception.gettraceasstring.php
+	 * @return string Returns the Exception stack trace as a string.
+	 */
 	final public function getTraceAsString (): string {}
 
+	/**
+	 * String representation of the exception
+	 * @link http://www.php.net/manual/en/exception.tostring.php
+	 * @return string Returns the string representation of the exception.
+	 */
 	public function __toString (): string {}
 
 }
@@ -667,7 +1090,7 @@ class Header implements \Stringable, \Serializable {
 	public function __construct ($name = null, $value = null) {}
 
 	/**
-	 * @param array[] $data
+	 * @param array $data
 	 */
 	public function __unserialize (array $data): void {}
 
@@ -734,16 +1157,16 @@ class Parser  {
 	/**
 	 * @param mixed $data
 	 * @param mixed $flags
-	 * @param array|null[] $headers
+	 * @param ?array $headers
 	 */
-	public function parse ($data = null, $flags = null, array &$headers = null) {}
+	public function parse ($data = null, $flags = null, ?array &$headers = null) {}
 
 	/**
 	 * @param mixed $stream
 	 * @param mixed $flags
-	 * @param array|null[] $headers
+	 * @param ?array $headers
 	 */
-	public function stream ($stream = null, $flags = null, array &$headers = null) {}
+	public function stream ($stream = null, $flags = null, ?array &$headers = null) {}
 
 }
 
@@ -778,14 +1201,14 @@ class Message implements \Stringable, \Countable, \Serializable, \Iterator, \Tra
 	public function getBody () {}
 
 	/**
-	 * @param \http\Message\Body $body
+	 * @param http\Message\Body $body
 	 */
-	public function setBody (\http\Message\Body $body) {}
+	public function setBody (http\Message\Body $body) {}
 
 	/**
-	 * @param \http\Message\Body $body
+	 * @param http\Message\Body $body
 	 */
-	public function addBody (\http\Message\Body $body) {}
+	public function addBody (http\Message\Body $body) {}
 
 	/**
 	 * @param mixed $header
@@ -808,12 +1231,12 @@ class Message implements \Stringable, \Countable, \Serializable, \Iterator, \Tra
 	public function getHeaders () {}
 
 	/**
-	 * @param array|null[] $headers
+	 * @param ?array $headers
 	 */
-	public function setHeaders (array $headers = null) {}
+	public function setHeaders (?array $headers = null) {}
 
 	/**
-	 * @param array[] $headers
+	 * @param array $headers
 	 * @param mixed $append [optional]
 	 */
 	public function addHeaders (array $headers, $append = null) {}
@@ -897,7 +1320,7 @@ class Message implements \Stringable, \Countable, \Serializable, \Iterator, \Tra
 	public function __serialize (): array {}
 
 	/**
-	 * @param array[] $data
+	 * @param array $data
 	 */
 	public function __unserialize (array $data): void {}
 
@@ -916,10 +1339,10 @@ class Message implements \Stringable, \Countable, \Serializable, \Iterator, \Tra
 	public function detach () {}
 
 	/**
-	 * @param \http\Message $message
+	 * @param http\Message $message
 	 * @param mixed $top [optional]
 	 */
-	public function prepend (\http\Message $message, $top = null) {}
+	public function prepend (http\Message $message, $top = null) {}
 
 	public function reverse () {}
 
@@ -995,7 +1418,7 @@ class Body implements \Stringable, \Serializable {
 	public function __serialize (): array {}
 
 	/**
-	 * @param array[] $data
+	 * @param array $data
 	 */
 	public function __unserialize (array $data): void {}
 
@@ -1023,15 +1446,15 @@ class Body implements \Stringable, \Serializable {
 	public function append ($string = null) {}
 
 	/**
-	 * @param array|null[] $fields [optional]
-	 * @param array|null[] $files [optional]
+	 * @param ?array $fields [optional]
+	 * @param ?array $files [optional]
 	 */
-	public function addForm (array $fields = null, array $files = null) {}
+	public function addForm (?array $fields = null, ?array $files = null) {}
 
 	/**
-	 * @param \http\Message $message
+	 * @param http\Message $message
 	 */
-	public function addPart (\http\Message $message) {}
+	public function addPart (http\Message $message) {}
 
 	public function etag () {}
 
@@ -1151,7 +1574,7 @@ class QueryString implements \Stringable, \Serializable, \ArrayAccess, \Iterator
 	public function __serialize (): array {}
 
 	/**
-	 * @param array[] $data
+	 * @param array $data
 	 */
 	public function __unserialize (array $data): void {}
 
@@ -1201,21 +1624,21 @@ class Client implements \SplSubject, \Countable {
 	public function reset () {}
 
 	/**
-	 * @param \http\Client\Request $request
+	 * @param http\Client\Request $request
 	 * @param mixed $callable [optional]
 	 */
-	public function enqueue (\http\Client\Request $request, $callable = null) {}
+	public function enqueue (http\Client\Request $request, $callable = null) {}
 
 	/**
-	 * @param \http\Client\Request $request
+	 * @param http\Client\Request $request
 	 */
-	public function dequeue (\http\Client\Request $request) {}
+	public function dequeue (http\Client\Request $request) {}
 
 	/**
-	 * @param \http\Client\Request $request
+	 * @param http\Client\Request $request
 	 * @param mixed $callable [optional]
 	 */
-	public function requeue (\http\Client\Request $request, $callable = null) {}
+	public function requeue (http\Client\Request $request, $callable = null) {}
 
 	public function count () {}
 
@@ -1229,16 +1652,16 @@ class Client implements \SplSubject, \Countable {
 	public function wait ($timeout = null) {}
 
 	/**
-	 * @param \http\Client\Request|null $request [optional]
+	 * @param ?http\Client\Request $request [optional]
 	 */
-	public function getResponse (\http\Client\Request|null $request = null) {}
+	public function getResponse (?http\Client\Request $request = null) {}
 
 	public function getHistory () {}
 
 	/**
-	 * @param array|null[] $settings
+	 * @param ?array $settings
 	 */
-	public function configure (array $settings = null) {}
+	public function configure (?array $settings = null) {}
 
 	/**
 	 * @param mixed $enable [optional]
@@ -1253,10 +1676,10 @@ class Client implements \SplSubject, \Countable {
 	public function enableEvents ($enable = null) {}
 
 	/**
-	 * @param \http\Client\Request|null $request [optional]
+	 * @param ?http\Client\Request $request [optional]
 	 * @param mixed $progress [optional]
 	 */
-	public function notify (\http\Client\Request|null $request = null, $progress = null) {}
+	public function notify (?http\Client\Request $request = null, $progress = null) {}
 
 	/**
 	 * @param SplObserver $observer
@@ -1271,43 +1694,43 @@ class Client implements \SplSubject, \Countable {
 	public function getObservers () {}
 
 	/**
-	 * @param \http\Client\Request $request
+	 * @param http\Client\Request $request
 	 */
-	public function getProgressInfo (\http\Client\Request $request) {}
+	public function getProgressInfo (http\Client\Request $request) {}
 
 	/**
-	 * @param \http\Client\Request $request
+	 * @param http\Client\Request $request
 	 */
-	public function getTransferInfo (\http\Client\Request $request) {}
+	public function getTransferInfo (http\Client\Request $request) {}
 
 	/**
-	 * @param array|null[] $options [optional]
+	 * @param ?array $options [optional]
 	 */
-	public function setOptions (array $options = null) {}
+	public function setOptions (?array $options = null) {}
 
 	public function getOptions () {}
 
 	/**
-	 * @param array|null[] $ssl_option [optional]
+	 * @param ?array $ssl_option [optional]
 	 */
-	public function setSslOptions (array $ssl_option = null) {}
+	public function setSslOptions (?array $ssl_option = null) {}
 
 	/**
-	 * @param array|null[] $ssl_options [optional]
+	 * @param ?array $ssl_options [optional]
 	 */
-	public function addSslOptions (array $ssl_options = null) {}
+	public function addSslOptions (?array $ssl_options = null) {}
 
 	public function getSslOptions () {}
 
 	/**
-	 * @param array|null[] $cookies [optional]
+	 * @param ?array $cookies [optional]
 	 */
-	public function setCookies (array $cookies = null) {}
+	public function setCookies (?array $cookies = null) {}
 
 	/**
-	 * @param array|null[] $cookies [optional]
+	 * @param ?array $cookies [optional]
 	 */
-	public function addCookies (array $cookies = null) {}
+	public function addCookies (?array $cookies = null) {}
 
 	public function getCookies () {}
 
@@ -1350,10 +1773,10 @@ class Request extends \http\Message implements \Traversable, \Iterator, \Seriali
 	/**
 	 * @param mixed $method [optional]
 	 * @param mixed $url [optional]
-	 * @param array|null[] $headers [optional]
-	 * @param \http\Message\Body|null $body [optional]
+	 * @param ?array $headers [optional]
+	 * @param ?http\Message\Body $body [optional]
 	 */
-	public function __construct ($method = null, $url = null, array $headers = null, \http\Message\Body|null $body = null) {}
+	public function __construct ($method = null, $url = null, ?array $headers = null, ?http\Message\Body $body = null) {}
 
 	/**
 	 * @param mixed $content_type
@@ -1375,35 +1798,35 @@ class Request extends \http\Message implements \Traversable, \Iterator, \Seriali
 	public function addQuery ($query_data = null) {}
 
 	/**
-	 * @param array|null[] $options [optional]
+	 * @param ?array $options [optional]
 	 */
-	public function setOptions (array $options = null) {}
+	public function setOptions (?array $options = null) {}
 
 	public function getOptions () {}
 
 	/**
-	 * @param array|null[] $ssl_options [optional]
+	 * @param ?array $ssl_options [optional]
 	 */
-	public function setSslOptions (array $ssl_options = null) {}
+	public function setSslOptions (?array $ssl_options = null) {}
 
 	public function getSslOptions () {}
 
 	/**
-	 * @param array|null[] $ssl_options [optional]
+	 * @param ?array $ssl_options [optional]
 	 */
-	public function addSslOptions (array $ssl_options = null) {}
+	public function addSslOptions (?array $ssl_options = null) {}
 
 	public function getBody () {}
 
 	/**
-	 * @param \http\Message\Body $body
+	 * @param http\Message\Body $body
 	 */
-	public function setBody (\http\Message\Body $body) {}
+	public function setBody (http\Message\Body $body) {}
 
 	/**
-	 * @param \http\Message\Body $body
+	 * @param http\Message\Body $body
 	 */
-	public function addBody (\http\Message\Body $body) {}
+	public function addBody (http\Message\Body $body) {}
 
 	/**
 	 * @param mixed $header
@@ -1426,12 +1849,12 @@ class Request extends \http\Message implements \Traversable, \Iterator, \Seriali
 	public function getHeaders () {}
 
 	/**
-	 * @param array|null[] $headers
+	 * @param ?array $headers
 	 */
-	public function setHeaders (array $headers = null) {}
+	public function setHeaders (?array $headers = null) {}
 
 	/**
-	 * @param array[] $headers
+	 * @param array $headers
 	 * @param mixed $append [optional]
 	 */
 	public function addHeaders (array $headers, $append = null) {}
@@ -1515,7 +1938,7 @@ class Request extends \http\Message implements \Traversable, \Iterator, \Seriali
 	public function __serialize (): array {}
 
 	/**
-	 * @param array[] $data
+	 * @param array $data
 	 */
 	public function __unserialize (array $data): void {}
 
@@ -1534,10 +1957,10 @@ class Request extends \http\Message implements \Traversable, \Iterator, \Seriali
 	public function detach () {}
 
 	/**
-	 * @param \http\Message $message
+	 * @param http\Message $message
 	 * @param mixed $top [optional]
 	 */
-	public function prepend (\http\Message $message, $top = null) {}
+	public function prepend (http\Message $message, $top = null) {}
 
 	public function reverse () {}
 
@@ -1587,14 +2010,14 @@ class Response extends \http\Message implements \Traversable, \Iterator, \Serial
 	public function getBody () {}
 
 	/**
-	 * @param \http\Message\Body $body
+	 * @param http\Message\Body $body
 	 */
-	public function setBody (\http\Message\Body $body) {}
+	public function setBody (http\Message\Body $body) {}
 
 	/**
-	 * @param \http\Message\Body $body
+	 * @param http\Message\Body $body
 	 */
-	public function addBody (\http\Message\Body $body) {}
+	public function addBody (http\Message\Body $body) {}
 
 	/**
 	 * @param mixed $header
@@ -1617,12 +2040,12 @@ class Response extends \http\Message implements \Traversable, \Iterator, \Serial
 	public function getHeaders () {}
 
 	/**
-	 * @param array|null[] $headers
+	 * @param ?array $headers
 	 */
-	public function setHeaders (array $headers = null) {}
+	public function setHeaders (?array $headers = null) {}
 
 	/**
-	 * @param array[] $headers
+	 * @param array $headers
 	 * @param mixed $append [optional]
 	 */
 	public function addHeaders (array $headers, $append = null) {}
@@ -1706,7 +2129,7 @@ class Response extends \http\Message implements \Traversable, \Iterator, \Serial
 	public function __serialize (): array {}
 
 	/**
-	 * @param array[] $data
+	 * @param array $data
 	 */
 	public function __unserialize (array $data): void {}
 
@@ -1725,10 +2148,10 @@ class Response extends \http\Message implements \Traversable, \Iterator, \Serial
 	public function detach () {}
 
 	/**
-	 * @param \http\Message $message
+	 * @param http\Message $message
 	 * @param mixed $top [optional]
 	 */
-	public function prepend (\http\Message $message, $top = null) {}
+	public function prepend (http\Message $message, $top = null) {}
 
 	public function reverse () {}
 
@@ -1776,7 +2199,7 @@ interface User  {
 	/**
 	 * @param int $timeout_ms [optional]
 	 */
-	abstract public function wait (int $timeout_ms = null)
+	abstract public function wait (int $timeout_ms = 'null')
 
 	abstract public function send ()
 
@@ -2042,14 +2465,14 @@ class Request extends \http\Message implements \Traversable, \Iterator, \Seriali
 	public function getBody () {}
 
 	/**
-	 * @param \http\Message\Body $body
+	 * @param http\Message\Body $body
 	 */
-	public function setBody (\http\Message\Body $body) {}
+	public function setBody (http\Message\Body $body) {}
 
 	/**
-	 * @param \http\Message\Body $body
+	 * @param http\Message\Body $body
 	 */
-	public function addBody (\http\Message\Body $body) {}
+	public function addBody (http\Message\Body $body) {}
 
 	/**
 	 * @param mixed $header
@@ -2072,12 +2495,12 @@ class Request extends \http\Message implements \Traversable, \Iterator, \Seriali
 	public function getHeaders () {}
 
 	/**
-	 * @param array|null[] $headers
+	 * @param ?array $headers
 	 */
-	public function setHeaders (array $headers = null) {}
+	public function setHeaders (?array $headers = null) {}
 
 	/**
-	 * @param array[] $headers
+	 * @param array $headers
 	 * @param mixed $append [optional]
 	 */
 	public function addHeaders (array $headers, $append = null) {}
@@ -2161,7 +2584,7 @@ class Request extends \http\Message implements \Traversable, \Iterator, \Seriali
 	public function __serialize (): array {}
 
 	/**
-	 * @param array[] $data
+	 * @param array $data
 	 */
 	public function __unserialize (array $data): void {}
 
@@ -2180,10 +2603,10 @@ class Request extends \http\Message implements \Traversable, \Iterator, \Seriali
 	public function detach () {}
 
 	/**
-	 * @param \http\Message $message
+	 * @param http\Message $message
 	 * @param mixed $top [optional]
 	 */
-	public function prepend (\http\Message $message, $top = null) {}
+	public function prepend (http\Message $message, $top = null) {}
 
 	public function reverse () {}
 
@@ -2236,9 +2659,9 @@ class Response extends \http\Message implements \Traversable, \Iterator, \Serial
 	public function __invoke ($ob_string = null, $ob_flags = null) {}
 
 	/**
-	 * @param \http\Message|null $env_request
+	 * @param ?http\Message $env_request
 	 */
-	public function setEnvRequest (\http\Message|null $env_request = null) {}
+	public function setEnvRequest (?http\Message $env_request = null) {}
 
 	/**
 	 * @param mixed $cookie
@@ -2251,9 +2674,9 @@ class Response extends \http\Message implements \Traversable, \Iterator, \Serial
 	public function setContentType ($content_type = null) {}
 
 	/**
-	 * @param array|null[] $disposition_params
+	 * @param ?array $disposition_params
 	 */
-	public function setContentDisposition (array $disposition_params = null) {}
+	public function setContentDisposition (?array $disposition_params = null) {}
 
 	/**
 	 * @param mixed $content_encoding
@@ -2299,14 +2722,14 @@ class Response extends \http\Message implements \Traversable, \Iterator, \Serial
 	public function getBody () {}
 
 	/**
-	 * @param \http\Message\Body $body
+	 * @param http\Message\Body $body
 	 */
-	public function setBody (\http\Message\Body $body) {}
+	public function setBody (http\Message\Body $body) {}
 
 	/**
-	 * @param \http\Message\Body $body
+	 * @param http\Message\Body $body
 	 */
-	public function addBody (\http\Message\Body $body) {}
+	public function addBody (http\Message\Body $body) {}
 
 	/**
 	 * @param mixed $header
@@ -2329,12 +2752,12 @@ class Response extends \http\Message implements \Traversable, \Iterator, \Serial
 	public function getHeaders () {}
 
 	/**
-	 * @param array|null[] $headers
+	 * @param ?array $headers
 	 */
-	public function setHeaders (array $headers = null) {}
+	public function setHeaders (?array $headers = null) {}
 
 	/**
-	 * @param array[] $headers
+	 * @param array $headers
 	 * @param mixed $append [optional]
 	 */
 	public function addHeaders (array $headers, $append = null) {}
@@ -2418,7 +2841,7 @@ class Response extends \http\Message implements \Traversable, \Iterator, \Serial
 	public function __serialize (): array {}
 
 	/**
-	 * @param array[] $data
+	 * @param array $data
 	 */
 	public function __unserialize (array $data): void {}
 
@@ -2437,10 +2860,10 @@ class Response extends \http\Message implements \Traversable, \Iterator, \Serial
 	public function detach () {}
 
 	/**
-	 * @param \http\Message $message
+	 * @param http\Message $message
 	 * @param mixed $top [optional]
 	 */
-	public function prepend (\http\Message $message, $top = null) {}
+	public function prepend (http\Message $message, $top = null) {}
 
 	public function reverse () {}
 

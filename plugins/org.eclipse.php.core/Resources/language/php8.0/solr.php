@@ -14,17 +14,13 @@ final class SolrObject implements ArrayAccess {
 	 */
 	public function __construct () {}
 
-	/**
-	 * Destructor
-	 * @link http://www.php.net/manual/en/solrobject.destruct.php
-	 */
 	public function __destruct () {}
 
 	/**
 	 * Sets the value for a property
 	 * @link http://www.php.net/manual/en/solrobject.offsetset.php
-	 * @param string $property_name The name of the property.
-	 * @param string $property_value The new value.
+	 * @param string $property_name 
+	 * @param string $property_value 
 	 * @return void None.
 	 */
 	public function offsetSet (string $property_name, string $property_value): void {}
@@ -32,33 +28,33 @@ final class SolrObject implements ArrayAccess {
 	/**
 	 * Used to retrieve a property
 	 * @link http://www.php.net/manual/en/solrobject.offsetget.php
-	 * @param string $property_name Name of the property.
-	 * @return mixed the property value.
+	 * @param string $property_name 
+	 * @return mixed Returns the property value.
 	 */
-	public function offsetGet (string $property_name) {}
+	public function offsetGet (string $property_name): mixed {}
 
 	/**
 	 * Checks if the property exists
 	 * @link http://www.php.net/manual/en/solrobject.offsetexists.php
-	 * @param string $property_name The name of the property.
-	 * @return bool true on success or false on failure
+	 * @param string $property_name 
+	 * @return bool Returns true on success or false on failure.
 	 */
 	public function offsetExists (string $property_name): bool {}
 
 	/**
 	 * Unsets the value for the property
 	 * @link http://www.php.net/manual/en/solrobject.offsetunset.php
-	 * @param string $property_name The name of the property.
-	 * @return void true on success or false on failure
+	 * @param string $property_name 
+	 * @return void Returns true on success or false on failure.
 	 */
 	public function offsetUnset (string $property_name): void {}
 
 	/**
 	 * Returns an array of all the names of the properties
 	 * @link http://www.php.net/manual/en/solrobject.getpropertynames.php
-	 * @return array an array.
+	 * @return array Returns an array.
 	 */
-	public function getPropertyNames () {}
+	public function getPropertyNames (): array {}
 
 }
 
@@ -67,11 +63,23 @@ final class SolrObject implements ArrayAccess {
  * @link http://www.php.net/manual/en/class.solrdocument.php
  */
 final class SolrDocument implements ArrayAccess, Iterator, Traversable, Serializable {
+	/**
+	 * Default mode for sorting fields within the document.
 	const SORT_DEFAULT = 1;
+	/**
+	 * Sorts the fields in ascending order
 	const SORT_ASC = 1;
+	/**
+	 * Sorts the fields in descending order
 	const SORT_DESC = 2;
+	/**
+	 * Sorts the fields by field name.
 	const SORT_FIELD_NAME = 1;
+	/**
+	 * Sorts the fields by number of values in each field.
 	const SORT_FIELD_VALUE_COUNT = 2;
+	/**
+	 * Sorts the fields by thier boost values.
 	const SORT_FIELD_BOOST_VALUE = 4;
 
 	private $_hashtable_index;
@@ -83,10 +91,6 @@ final class SolrDocument implements ArrayAccess, Iterator, Traversable, Serializ
 	 */
 	public function __construct () {}
 
-	/**
-	 * Destructor
-	 * @link http://www.php.net/manual/en/solrdocument.destruct.php
-	 */
 	public function __destruct () {}
 
 	/**
@@ -94,70 +98,70 @@ final class SolrDocument implements ArrayAccess, Iterator, Traversable, Serializ
 	 * @link http://www.php.net/manual/en/solrdocument.clone.php
 	 * @return void None.
 	 */
-	public function __clone () {}
+	public function __clone (): void {}
 
 	/**
 	 * Adds another field to the document
 	 * @link http://www.php.net/manual/en/solrdocument.set.php
-	 * @param string $fieldName Name of the field.
-	 * @param string $fieldValue Field value.
-	 * @return bool true on success or false on failure
+	 * @param string $fieldName 
+	 * @param string $fieldValue 
+	 * @return bool Returns true on success or false on failure.
 	 */
-	public function __set (string $fieldName, string $fieldValue) {}
+	public function __set (string $fieldName, string $fieldValue): bool {}
 
 	/**
 	 * Access the field as a property
 	 * @link http://www.php.net/manual/en/solrdocument.get.php
-	 * @param string $fieldName The name of the field.
-	 * @return SolrDocumentField a SolrDocumentField instance.
+	 * @param string $fieldName 
+	 * @return SolrDocumentField Returns a SolrDocumentField instance.
 	 */
-	public function __get (string $fieldName) {}
+	public function __get (string $fieldName): SolrDocumentField {}
 
 	/**
 	 * Checks if a field exists
 	 * @link http://www.php.net/manual/en/solrdocument.isset.php
-	 * @param string $fieldName Name of the field.
-	 * @return bool true on success or false on failure
+	 * @param string $fieldName 
+	 * @return bool Returns true on success or false on failure.
 	 */
-	public function __isset (string $fieldName) {}
+	public function __isset (string $fieldName): bool {}
 
 	/**
 	 * Removes a field from the document
 	 * @link http://www.php.net/manual/en/solrdocument.unset.php
-	 * @param string $fieldName The name of the field.
-	 * @return bool true on success or false on failure
+	 * @param string $fieldName 
+	 * @return bool Returns true on success or false on failure.
 	 */
-	public function __unset (string $fieldName) {}
+	public function __unset (string $fieldName): bool {}
 
 	/**
 	 * Adds a field to the document
 	 * @link http://www.php.net/manual/en/solrdocument.offsetset.php
-	 * @param string $fieldName The name of the field.
-	 * @param string $fieldValue The value for this field.
-	 * @return void true on success or false on failure
+	 * @param string $fieldName 
+	 * @param string $fieldValue 
+	 * @return void Returns true on success or false on failure.
 	 */
 	public function offsetSet (string $fieldName, string $fieldValue): void {}
 
 	/**
 	 * Retrieves a field
 	 * @link http://www.php.net/manual/en/solrdocument.offsetget.php
-	 * @param string $fieldName The name of the field.
-	 * @return SolrDocumentField a SolrDocumentField object.
+	 * @param string $fieldName 
+	 * @return SolrDocumentField Returns a SolrDocumentField object.
 	 */
-	public function offsetGet (string $fieldName) {}
+	public function offsetGet (string $fieldName): SolrDocumentField {}
 
 	/**
 	 * Checks if a particular field exists
 	 * @link http://www.php.net/manual/en/solrdocument.offsetexists.php
-	 * @param string $fieldName The name of the field.
-	 * @return bool true on success or false on failure
+	 * @param string $fieldName 
+	 * @return bool Returns true on success or false on failure.
 	 */
 	public function offsetExists (string $fieldName): bool {}
 
 	/**
 	 * Removes a field
 	 * @link http://www.php.net/manual/en/solrdocument.offsetunset.php
-	 * @param string $fieldName The name of the field.
+	 * @param string $fieldName 
 	 * @return void No return value.
 	 */
 	public function offsetUnset (string $fieldName): void {}
@@ -165,16 +169,16 @@ final class SolrDocument implements ArrayAccess, Iterator, Traversable, Serializ
 	/**
 	 * Retrieves the current field
 	 * @link http://www.php.net/manual/en/solrdocument.current.php
-	 * @return SolrDocumentField the field
+	 * @return SolrDocumentField Returns the field
 	 */
-	public function current () {}
+	public function current (): SolrDocumentField {}
 
 	/**
 	 * Retrieves the current key
 	 * @link http://www.php.net/manual/en/solrdocument.key.php
-	 * @return string the current key.
+	 * @return string Returns the current key.
 	 */
-	public function key () {}
+	public function key (): string {}
 
 	/**
 	 * Moves the internal pointer to the next field
@@ -193,138 +197,138 @@ final class SolrDocument implements ArrayAccess, Iterator, Traversable, Serializ
 	/**
 	 * Checks if the current position internally is still valid
 	 * @link http://www.php.net/manual/en/solrdocument.valid.php
-	 * @return bool true on success and false if the current position is no longer valid.
+	 * @return bool Returns true on success and false if the current position is no longer valid.
 	 */
 	public function valid (): bool {}
 
 	/**
 	 * Used for custom serialization
 	 * @link http://www.php.net/manual/en/solrdocument.serialize.php
-	 * @return string a string representing the serialized Solr document.
+	 * @return string Returns a string representing the serialized Solr document.
 	 */
-	public function serialize () {}
+	public function serialize (): string {}
 
 	/**
 	 * Custom serialization of SolrDocument objects
 	 * @link http://www.php.net/manual/en/solrdocument.unserialize.php
-	 * @param string $serialized An XML representation of the document.
+	 * @param string $serialized 
 	 * @return void None.
 	 */
-	public function unserialize (string $serialized) {}
+	public function unserialize (string $serialized): void {}
 
 	/**
 	 * Drops all the fields in the document
 	 * @link http://www.php.net/manual/en/solrdocument.clear.php
-	 * @return bool true on success or false on failure
+	 * @return bool Returns true on success or false on failure.
 	 */
-	public function clear () {}
+	public function clear (): bool {}
 
 	/**
-	 * Alias: SolrDocument::clear
+	 * Alias of SolrDocument::clear
 	 * @link http://www.php.net/manual/en/solrdocument.reset.php
-	 * @return bool true on success or false on failure
+	 * @return bool Returns true on success or false on failure.
 	 */
-	public function reset () {}
+	public function reset (): bool {}
 
 	/**
 	 * Adds a field to the document
 	 * @link http://www.php.net/manual/en/solrdocument.addfield.php
-	 * @param string $fieldName The name of the field
-	 * @param string $fieldValue The value of the field.
-	 * @return bool true on success or false on failure
+	 * @param string $fieldName 
+	 * @param string $fieldValue 
+	 * @return bool Returns true on success or false on failure.
 	 */
-	public function addField (string $fieldName, string $fieldValue) {}
+	public function addField (string $fieldName, string $fieldValue): bool {}
 
 	/**
 	 * Returns an array of fields names in the document
 	 * @link http://www.php.net/manual/en/solrdocument.getfieldnames.php
-	 * @return array an array containing the names of the fields in this document.
+	 * @return array Returns an array containing the names of the fields in this document.
 	 */
-	public function getFieldNames () {}
+	public function getFieldNames (): array {}
 
 	/**
 	 * Returns the number of fields in this document
 	 * @link http://www.php.net/manual/en/solrdocument.getfieldcount.php
-	 * @return int an integer on success and false on failure.
+	 * @return int Returns an integer on success and false on failure.
 	 */
-	public function getFieldCount () {}
+	public function getFieldCount (): int {}
 
 	/**
 	 * Retrieves a field by name
 	 * @link http://www.php.net/manual/en/solrdocument.getfield.php
-	 * @param string $fieldName Name of the field.
-	 * @return SolrDocumentField a SolrDocumentField on success and false on failure.
+	 * @param string $fieldName 
+	 * @return SolrDocumentField Returns a SolrDocumentField on success and false on failure.
 	 */
-	public function getField (string $fieldName) {}
+	public function getField (string $fieldName): SolrDocumentField {}
 
 	/**
 	 * Returns an array representation of the document
 	 * @link http://www.php.net/manual/en/solrdocument.toarray.php
-	 * @return array an array representation of the document.
+	 * @return array Returns an array representation of the document.
 	 */
-	public function toArray () {}
+	public function toArray (): array {}
 
 	/**
 	 * Checks if a field exists in the document
 	 * @link http://www.php.net/manual/en/solrdocument.fieldexists.php
-	 * @param string $fieldName The name of the field.
-	 * @return bool true if the field is present and false if it does not.
+	 * @param string $fieldName 
+	 * @return bool Returns true if the field is present and false if it does not.
 	 */
-	public function fieldExists (string $fieldName) {}
+	public function fieldExists (string $fieldName): bool {}
 
 	/**
 	 * Removes a field from the document
 	 * @link http://www.php.net/manual/en/solrdocument.deletefield.php
-	 * @param string $fieldName Name of the field
-	 * @return bool true on success or false on failure
+	 * @param string $fieldName 
+	 * @return bool Returns true on success or false on failure.
 	 */
-	public function deleteField (string $fieldName) {}
+	public function deleteField (string $fieldName): bool {}
 
 	/**
 	 * Sorts the fields in the document
 	 * @link http://www.php.net/manual/en/solrdocument.sort.php
-	 * @param int $sortOrderBy The sort criteria.
-	 * @param int $sortDirection [optional] The sort direction.
-	 * @return bool true on success or false on failure
+	 * @param int $sortOrderBy 
+	 * @param int $sortDirection [optional] 
+	 * @return bool Returns true on success or false on failure.
 	 */
-	public function sort (int $sortOrderBy, int $sortDirection = null) {}
+	public function sort (int $sortOrderBy, int $sortDirection = SolrDocument::SORT_ASC): bool {}
 
 	/**
 	 * Merges source to the current SolrDocument
 	 * @link http://www.php.net/manual/en/solrdocument.merge.php
-	 * @param SolrDocument $sourceDoc The source document.
-	 * @param bool $overwrite [optional] If this is true then fields with the same name in the destination document will be overwritten.
-	 * @return bool true on success or false on failure
+	 * @param SolrDocument $sourceDoc 
+	 * @param bool $overwrite [optional] 
+	 * @return bool Returns true on success or false on failure.
 	 */
-	public function merge (SolrDocument $sourceDoc, bool $overwrite = null) {}
+	public function merge (SolrDocument $sourceDoc, bool $overwrite = true): bool {}
 
 	/**
 	 * Returns a SolrInputDocument equivalent of the object
 	 * @link http://www.php.net/manual/en/solrdocument.getinputdocument.php
-	 * @return SolrInputDocument a SolrInputDocument on success and null on failure.
+	 * @return SolrInputDocument Returns a SolrInputDocument on success and null on failure.
 	 */
-	public function getInputDocument () {}
+	public function getInputDocument (): SolrInputDocument {}
 
 	/**
 	 * Returns the number of child documents
 	 * @link http://www.php.net/manual/en/solrdocument.getchilddocumentscount.php
 	 * @return int 
 	 */
-	public function getChildDocumentsCount () {}
+	public function getChildDocumentsCount (): int {}
 
 	/**
 	 * Checks whether the document has any child documents
 	 * @link http://www.php.net/manual/en/solrdocument.haschilddocuments.php
 	 * @return bool 
 	 */
-	public function hasChildDocuments () {}
+	public function hasChildDocuments (): bool {}
 
 	/**
 	 * Returns an array of child documents (SolrDocument)
 	 * @link http://www.php.net/manual/en/solrdocument.getchilddocuments.php
 	 * @return array 
 	 */
-	public function getChildDocuments () {}
+	public function getChildDocuments (): array {}
 
 }
 
@@ -344,10 +348,6 @@ final class SolrDocumentField  {
 	 */
 	public function __construct () {}
 
-	/**
-	 * Destructor
-	 * @link http://www.php.net/manual/en/solrdocumentfield.destruct.php
-	 */
 	public function __destruct () {}
 
 }
@@ -357,11 +357,23 @@ final class SolrDocumentField  {
  * @link http://www.php.net/manual/en/class.solrinputdocument.php
  */
 final class SolrInputDocument  {
+	/**
+	 * Sorts the fields in ascending order.
 	const SORT_DEFAULT = 1;
+	/**
+	 * Sorts the fields in ascending order.
 	const SORT_ASC = 1;
+	/**
+	 * Sorts the fields in descending order.
 	const SORT_DESC = 2;
+	/**
+	 * Sorts the fields by name
 	const SORT_FIELD_NAME = 1;
+	/**
+	 * Sorts the fields by number of values.
 	const SORT_FIELD_VALUE_COUNT = 2;
+	/**
+	 * Sorts the fields by boost value.
 	const SORT_FIELD_BOOST_VALUE = 4;
 	const UPDATE_MODIFIER_ADD = 1;
 	const UPDATE_MODIFIER_SET = 2;
@@ -381,10 +393,6 @@ final class SolrInputDocument  {
 	 */
 	public function __construct () {}
 
-	/**
-	 * Destructor
-	 * @link http://www.php.net/manual/en/solrinputdocument.destruct.php
-	 */
 	public function __destruct () {}
 
 	/**
@@ -392,7 +400,7 @@ final class SolrInputDocument  {
 	 * @link http://www.php.net/manual/en/solrinputdocument.clone.php
 	 * @return void Creates a new SolrInputDocument instance.
 	 */
-	public function __clone () {}
+	public function __clone (): void {}
 
 	public function __sleep () {}
 
@@ -401,41 +409,41 @@ final class SolrInputDocument  {
 	/**
 	 * Sets the boost value for this document
 	 * @link http://www.php.net/manual/en/solrinputdocument.setboost.php
-	 * @param float $documentBoostValue The index-time boost value for this document.
-	 * @return bool true on success or false on failure
+	 * @param float $documentBoostValue 
+	 * @return bool Returns true on success or false on failure.
 	 */
-	public function setBoost (float $documentBoostValue) {}
+	public function setBoost (float $documentBoostValue): bool {}
 
 	/**
 	 * Retrieves the current boost value for the document
 	 * @link http://www.php.net/manual/en/solrinputdocument.getboost.php
-	 * @return float the boost value on success and false on failure.
+	 * @return float Returns the boost value on success and false on failure.
 	 */
-	public function getBoost () {}
+	public function getBoost (): float {}
 
 	/**
 	 * Resets the input document
 	 * @link http://www.php.net/manual/en/solrinputdocument.clear.php
-	 * @return bool true on success or false on failure
+	 * @return bool Returns true on success or false on failure.
 	 */
-	public function clear () {}
+	public function clear (): bool {}
 
 	/**
-	 * Alias: SolrInputDocument::clear
+	 * Alias of SolrInputDocument::clear
 	 * @link http://www.php.net/manual/en/solrinputdocument.reset.php
-	 * @return bool true on success or false on failure
+	 * @return bool Returns true on success or false on failure.
 	 */
-	public function reset () {}
+	public function reset (): bool {}
 
 	/**
 	 * Adds a field to the document
 	 * @link http://www.php.net/manual/en/solrinputdocument.addfield.php
-	 * @param string $fieldName The name of the field
-	 * @param string $fieldValue The value for the field.
-	 * @param float $fieldBoostValue [optional] The index time boost for the field. Though this cannot be negative, you can still pass values less than 1.0 but they must be greater than zero.
-	 * @return bool true on success or false on failure
+	 * @param string $fieldName 
+	 * @param string $fieldValue 
+	 * @param float $fieldBoostValue [optional] 
+	 * @return bool Returns true on success or false on failure.
 	 */
-	public function addField (string $fieldName, string $fieldValue, float $fieldBoostValue = null) {}
+	public function addField (string $fieldName, string $fieldValue, float $fieldBoostValue = 0.0): bool {}
 
 	/**
 	 * @param mixed $fieldName
@@ -447,119 +455,119 @@ final class SolrInputDocument  {
 	/**
 	 * Retrieves the boost value for a particular field
 	 * @link http://www.php.net/manual/en/solrinputdocument.getfieldboost.php
-	 * @param string $fieldName The name of the field.
-	 * @return float the boost value for the field or false if there was an error.
+	 * @param string $fieldName 
+	 * @return float Returns the boost value for the field or false if there was an error.
 	 */
-	public function getFieldBoost (string $fieldName) {}
+	public function getFieldBoost (string $fieldName): float {}
 
 	/**
 	 * Sets the index-time boost value for a field
 	 * @link http://www.php.net/manual/en/solrinputdocument.setfieldboost.php
-	 * @param string $fieldName The name of the field.
-	 * @param float $fieldBoostValue The index time boost value.
-	 * @return bool true on success or false on failure
+	 * @param string $fieldName 
+	 * @param float $fieldBoostValue 
+	 * @return bool Returns true on success or false on failure.
 	 */
-	public function setFieldBoost (string $fieldName, float $fieldBoostValue) {}
+	public function setFieldBoost (string $fieldName, float $fieldBoostValue): bool {}
 
 	/**
 	 * Returns an array containing all the fields in the document
 	 * @link http://www.php.net/manual/en/solrinputdocument.getfieldnames.php
-	 * @return array an array on success and false on failure.
+	 * @return array Returns an array on success and false on failure.
 	 */
-	public function getFieldNames () {}
+	public function getFieldNames (): array {}
 
 	/**
 	 * Returns the number of fields in the document
 	 * @link http://www.php.net/manual/en/solrinputdocument.getfieldcount.php
-	 * @return mixed an integer on success or false on failure.
+	 * @return int|bool Returns an integer on success or false on failure.
 	 */
-	public function getFieldCount () {}
+	public function getFieldCount (): int|bool {}
 
 	/**
 	 * Retrieves a field by name
 	 * @link http://www.php.net/manual/en/solrinputdocument.getfield.php
-	 * @param string $fieldName The name of the field.
-	 * @return SolrDocumentField a SolrDocumentField object on success and false on failure.
+	 * @param string $fieldName 
+	 * @return SolrDocumentField Returns a SolrDocumentField object on success and false on failure.
 	 */
-	public function getField (string $fieldName) {}
+	public function getField (string $fieldName): SolrDocumentField {}
 
 	/**
 	 * Returns an array representation of the input document
 	 * @link http://www.php.net/manual/en/solrinputdocument.toarray.php
-	 * @return array an array containing the fields. It returns false on failure.
+	 * @return array Returns an array containing the fields. It returns false on failure.
 	 */
-	public function toArray () {}
+	public function toArray (): array {}
 
 	/**
 	 * Checks if a field exists
 	 * @link http://www.php.net/manual/en/solrinputdocument.fieldexists.php
-	 * @param string $fieldName Name of the field.
-	 * @return bool true if the field was found and false if it was not found.
+	 * @param string $fieldName 
+	 * @return bool Returns true if the field was found and false if it was not found.
 	 */
-	public function fieldExists (string $fieldName) {}
+	public function fieldExists (string $fieldName): bool {}
 
 	/**
 	 * Removes a field from the document
 	 * @link http://www.php.net/manual/en/solrinputdocument.deletefield.php
-	 * @param string $fieldName The name of the field.
-	 * @return bool true on success or false on failure
+	 * @param string $fieldName 
+	 * @return bool Returns true on success or false on failure.
 	 */
-	public function deleteField (string $fieldName) {}
+	public function deleteField (string $fieldName): bool {}
 
 	/**
 	 * Sorts the fields within the document
 	 * @link http://www.php.net/manual/en/solrinputdocument.sort.php
-	 * @param int $sortOrderBy The sort criteria
-	 * @param int $sortDirection [optional] The sort direction
-	 * @return bool true on success or false on failure
+	 * @param int $sortOrderBy 
+	 * @param int $sortDirection [optional] 
+	 * @return bool Returns true on success or false on failure.
 	 */
-	public function sort (int $sortOrderBy, int $sortDirection = null) {}
+	public function sort (int $sortOrderBy, int $sortDirection = SolrInputDocument::SORT_ASC): bool {}
 
 	/**
 	 * Merges one input document into another
 	 * @link http://www.php.net/manual/en/solrinputdocument.merge.php
-	 * @param SolrInputDocument $sourceDoc The source document.
-	 * @param bool $overwrite [optional] If this is true it will replace matching fields in the destination document.
-	 * @return bool true on success or false on failure In the future, this will be modified to return the number of fields in the new document.
+	 * @param SolrInputDocument $sourceDoc 
+	 * @param bool $overwrite [optional] 
+	 * @return bool Returns true on success or false on failure. In the future, this will be modified to return the number of fields in the new document.
 	 */
-	public function merge (SolrInputDocument $sourceDoc, bool $overwrite = null) {}
+	public function merge (SolrInputDocument $sourceDoc, bool $overwrite = true): bool {}
 
 	/**
 	 * Adds a child document for block indexing
 	 * @link http://www.php.net/manual/en/solrinputdocument.addchilddocument.php
 	 * @param SolrInputDocument $child A SolrInputDocument object.
-	 * @return void 
+	 * @return void No value is returned.
 	 */
-	public function addChildDocument (SolrInputDocument $child) {}
+	public function addChildDocument (SolrInputDocument $child): void {}
 
 	/**
 	 * Returns an array of child documents (SolrInputDocument)
 	 * @link http://www.php.net/manual/en/solrinputdocument.getchilddocuments.php
 	 * @return array 
 	 */
-	public function getChildDocuments () {}
+	public function getChildDocuments (): array {}
 
 	/**
 	 * Returns true if the document has any child documents
 	 * @link http://www.php.net/manual/en/solrinputdocument.haschilddocuments.php
 	 * @return bool 
 	 */
-	public function hasChildDocuments () {}
+	public function hasChildDocuments (): bool {}
 
 	/**
 	 * Returns the number of child documents
 	 * @link http://www.php.net/manual/en/solrinputdocument.getchilddocumentscount.php
 	 * @return int 
 	 */
-	public function getChildDocumentsCount () {}
+	public function getChildDocumentsCount (): int {}
 
 	/**
 	 * Adds an array of child documents
 	 * @link http://www.php.net/manual/en/solrinputdocument.addchilddocuments.php
 	 * @param array $docs An array of SolrInputDocument objects.
-	 * @return void 
+	 * @return void No value is returned.
 	 */
-	public function addChildDocuments (array &$docs) {}
+	public function addChildDocuments (array &$docs): void {}
 
 	/**
 	 * @param mixed $version
@@ -575,17 +583,41 @@ final class SolrInputDocument  {
  * @link http://www.php.net/manual/en/class.solrclient.php
  */
 class SolrClient  {
+	/**
+	 * Used when updating the search servlet.
 	const SEARCH_SERVLET_TYPE = 1;
+	/**
+	 * Used when updating the update servlet.
 	const UPDATE_SERVLET_TYPE = 2;
+	/**
+	 * Used when updating the threads servlet.
 	const THREADS_SERVLET_TYPE = 4;
+	/**
+	 * Used when updating the ping servlet.
 	const PING_SERVLET_TYPE = 8;
+	/**
+	 * Used when updating the terms servlet.
 	const TERMS_SERVLET_TYPE = 16;
+	/**
+	 * Used when retrieving system information from the system servlet.
 	const SYSTEM_SERVLET_TYPE = 32;
+	/**
+	 * This is the initial value for the search servlet.
 	const DEFAULT_SEARCH_SERVLET = "select";
+	/**
+	 * This is the initial value for the update servlet.
 	const DEFAULT_UPDATE_SERVLET = "update";
+	/**
+	 * This is the initial value for the threads servlet.
 	const DEFAULT_THREADS_SERVLET = "admin/threads";
+	/**
+	 * This is the initial value for the ping servlet.
 	const DEFAULT_PING_SERVLET = "admin/ping";
+	/**
+	 * This is the initial value for the terms servlet used for the TermsComponent
 	const DEFAULT_TERMS_SERVLET = "terms";
+	/**
+	 * This is the initial value for the system servlet used to obtain Solr Server information
 	const DEFAULT_SYSTEM_SERVLET = "admin/system";
 
 	private $_hashtable_index;
@@ -594,14 +626,11 @@ class SolrClient  {
 	/**
 	 * Constructor for the SolrClient object
 	 * @link http://www.php.net/manual/en/solrclient.construct.php
-	 * @param array[] $clientOptions
+	 * @param array $clientOptions 
+	 * @return array 
 	 */
-	public function __construct (array $clientOptions) {}
+	public function __construct (array $clientOptions): array {}
 
-	/**
-	 * Destructor for SolrClient
-	 * @link http://www.php.net/manual/en/solrclient.destruct.php
-	 */
 	public function __destruct () {}
 
 	public function __sleep () {}
@@ -613,96 +642,53 @@ class SolrClient  {
 	/**
 	 * Returns the client options set internally
 	 * @link http://www.php.net/manual/en/solrclient.getoptions.php
-	 * @return array an array containing all the options for the SolrClient object set internally.
+	 * @return array Returns an array containing all the options for the SolrClient object set internally.
 	 */
-	public function getOptions () {}
+	public function getOptions (): array {}
 
 	/**
 	 * Returns the debug data for the last connection attempt
 	 * @link http://www.php.net/manual/en/solrclient.getdebug.php
-	 * @return string a string on success and null if there is nothing to return.
+	 * @return string Returns a string on success and null if there is nothing to return.
 	 */
-	public function getDebug () {}
+	public function getDebug (): string {}
 
 	/**
 	 * Changes the specified servlet type to a new value
 	 * @link http://www.php.net/manual/en/solrclient.setservlet.php
-	 * @param int $type <p>One of the following :</p>
-	 * <p>
-	 * <pre>
-	 * - SolrClient::SEARCH_SERVLET_TYPE
-	 * - SolrClient::UPDATE_SERVLET_TYPE
-	 * - SolrClient::THREADS_SERVLET_TYPE
-	 * - SolrClient::PING_SERVLET_TYPE
-	 * - SolrClient::TERMS_SERVLET_TYPE
-	 * </pre>
-	 * </p>
-	 * @param string $value The new value for the servlet
-	 * @return bool true on success or false on failure
+	 * @param int $type 
+	 * @param string $value 
+	 * @return bool Returns true on success or false on failure.
 	 */
-	public function setServlet (int $type, string $value) {}
+	public function setServlet (int $type, string $value): bool {}
 
 	/**
 	 * Sends a query to the server
 	 * @link http://www.php.net/manual/en/solrclient.query.php
-	 * @param SolrParams $query A SolrParams object. It is recommended to use SolrQuery for advanced queries.
-	 * @return SolrQueryResponse a SolrQueryResponse object on success and throws an exception on failure.
+	 * @param SolrParams $query 
+	 * @return SolrQueryResponse Returns a SolrQueryResponse object on success and throws an exception on failure.
 	 */
-	public function query (SolrParams $query) {}
+	public function query (SolrParams $query): SolrQueryResponse {}
 
 	/**
 	 * Adds a document to the index
 	 * @link http://www.php.net/manual/en/solrclient.adddocument.php
-	 * @param SolrInputDocument $doc The SolrInputDocument instance.
-	 * @param bool $overwrite [optional] <p>
-	 * Whether to overwrite existing document or not. If false there will be duplicates (several documents with the same ID).
-	 * </p>
-	 * <p>
-	 * PECL Solr &lt; 2.0 $allowDups was used instead of $overwrite, which does the same functionality with exact opposite bool flag.
-	 * </p>
-	 * <p>
-	 * $allowDups = false is the same as $overwrite = true
-	 * </p>
-	 * @param int $commitWithin [optional] <p>
-	 * Number of milliseconds within which to auto commit this document. Available since Solr 1.4 . Default (0) means disabled.
-	 * </p>
-	 * <p>
-	 * When this value specified, it leaves the control of when to do the commit
-	 * to Solr itself, optimizing number of commits to a minimum while still
-	 * fulfilling
-	 * the update latency requirements, and Solr will automatically do a commit
-	 * when the oldest add in the buffer is due.
-	 * </p>
-	 * @return SolrUpdateResponse a SolrUpdateResponse object or throws an Exception on failure.
+	 * @param SolrInputDocument $doc 
+	 * @param bool $overwrite [optional] 
+	 * @param int $commitWithin [optional] 
+	 * @return SolrUpdateResponse Returns a SolrUpdateResponse object or throws an Exception on failure.
 	 */
-	public function addDocument (SolrInputDocument $doc, bool $overwrite = null, int $commitWithin = null) {}
+	public function addDocument (SolrInputDocument $doc, bool $overwrite = true, int $commitWithin = null): SolrUpdateResponse {}
 
 	/**
 	 * Adds a collection of SolrInputDocument instances to the index
 	 * @link http://www.php.net/manual/en/solrclient.adddocuments.php
-	 * @param array $docs An array containing the collection of SolrInputDocument instances. This array must be an actual variable.
-	 * @param bool $overwrite [optional] <p>
-	 * Whether to overwrite existing documents or not. If false there will be duplicates (several documents with the same ID).
-	 * </p>
-	 * <p>
-	 * PECL Solr &lt; 2.0 $allowDups was used instead of $overwrite, which does the same functionality with exact opposite bool flag.
-	 * </p>
-	 * <p>
-	 * $allowDups = false is the same as $overwrite = true
-	 * </p>
-	 * @param int $commitWithin [optional] <p>
-	 * Number of milliseconds within which to auto commit this document. Available since Solr 1.4 . Default (0) means disabled.
-	 * </p>
-	 * <p>
-	 * When this value specified, it leaves the control of when to do the commit
-	 * to Solr itself, optimizing number of commits to a minimum while still
-	 * fulfilling
-	 * the update latency requirements, and Solr will automatically do a commit
-	 * when the oldest add in the buffer is due.
-	 * </p>
-	 * @return void a SolrUpdateResponse object or throws an exception on failure.
+	 * @param array $docs 
+	 * @param bool $overwrite [optional] 
+	 * @param int $commitWithin [optional] 
+	 * @return void Returns a SolrUpdateResponse object or throws an exception on failure.
 	 */
-	public function addDocuments (array $docs, bool $overwrite = null, int $commitWithin = null) {}
+	public function addDocuments (array $docs, bool $overwrite = true, int $commitWithin = null): void {}
 
 	/**
 	 * @param SolrExtractRequest $request
@@ -712,55 +698,50 @@ class SolrClient  {
 	/**
 	 * Sends a raw update request
 	 * @link http://www.php.net/manual/en/solrclient.request.php
-	 * @param string $raw_request An XML string with the raw request to the server.
-	 * @return SolrUpdateResponse a SolrUpdateResponse on success. Throws an exception on failure.
+	 * @param string $raw_request 
+	 * @return SolrUpdateResponse Returns a SolrUpdateResponse on success. Throws an exception on failure.
 	 */
-	public function request (string $raw_request) {}
+	public function request (string $raw_request): SolrUpdateResponse {}
 
 	/**
 	 * Sets the response writer used to prepare the response from Solr
 	 * @link http://www.php.net/manual/en/solrclient.setresponsewriter.php
-	 * @param string $responseWriter <p>One of the following:</p>
-	 * <p>
-	 * json
-	 * phps
-	 * xml
-	 * </p>
-	 * @return void 
+	 * @param string $responseWriter 
+	 * @return void No value is returned.
 	 */
-	public function setResponseWriter (string $responseWriter) {}
+	public function setResponseWriter (string $responseWriter): void {}
 
 	/**
 	 * Delete by Id
 	 * @link http://www.php.net/manual/en/solrclient.deletebyid.php
-	 * @param string $id The value of the uniqueKey field declared in the schema
-	 * @return SolrUpdateResponse a SolrUpdateResponse on success and throws an exception on failure.
+	 * @param string $id 
+	 * @return SolrUpdateResponse Returns a SolrUpdateResponse on success and throws an exception on failure.
 	 */
-	public function deleteById (string $id) {}
+	public function deleteById (string $id): SolrUpdateResponse {}
 
 	/**
 	 * Deletes by Ids
 	 * @link http://www.php.net/manual/en/solrclient.deletebyids.php
-	 * @param array $ids An array of IDs representing the uniqueKey field declared in the schema for each document to be deleted. This must be an actual php variable.
-	 * @return SolrUpdateResponse a SolrUpdateResponse on success and throws an exception on failure.
+	 * @param array $ids 
+	 * @return SolrUpdateResponse Returns a SolrUpdateResponse on success and throws an exception on failure.
 	 */
-	public function deleteByIds (array $ids) {}
+	public function deleteByIds (array $ids): SolrUpdateResponse {}
 
 	/**
 	 * Deletes all documents matching the given query
 	 * @link http://www.php.net/manual/en/solrclient.deletebyquery.php
-	 * @param string $query The query
-	 * @return SolrUpdateResponse a SolrUpdateResponse on success and throws an exception on failure.
+	 * @param string $query 
+	 * @return SolrUpdateResponse Returns a SolrUpdateResponse on success and throws an exception on failure.
 	 */
-	public function deleteByQuery (string $query) {}
+	public function deleteByQuery (string $query): SolrUpdateResponse {}
 
 	/**
 	 * Removes all documents matching any of the queries
 	 * @link http://www.php.net/manual/en/solrclient.deletebyqueries.php
-	 * @param array $queries The array of queries. This must be an actual php variable.
-	 * @return SolrUpdateResponse a SolrUpdateResponse on success and throws a SolrClientException on failure.
+	 * @param array $queries 
+	 * @return SolrUpdateResponse Returns a SolrUpdateResponse on success and throws a SolrClientException on failure.
 	 */
-	public function deleteByQueries (array $queries) {}
+	public function deleteByQueries (array $queries): SolrUpdateResponse {}
 
 	/**
 	 * Get Document By Id. Utilizes Solr Realtime Get (RTG)
@@ -768,7 +749,7 @@ class SolrClient  {
 	 * @param string $id Document ID
 	 * @return SolrQueryResponse SolrQueryResponse
 	 */
-	public function getById (string $id) {}
+	public function getById (string $id): SolrQueryResponse {}
 
 	/**
 	 * Get Documents by their Ids. Utilizes Solr Realtime Get (RTG)
@@ -776,62 +757,55 @@ class SolrClient  {
 	 * @param array $ids Document ids
 	 * @return SolrQueryResponse SolrQueryResponse
 	 */
-	public function getByIds (array $ids) {}
+	public function getByIds (array $ids): SolrQueryResponse {}
 
 	/**
 	 * Finalizes all add/deletes made to the index
 	 * @link http://www.php.net/manual/en/solrclient.commit.php
-	 * @param bool $softCommit [optional] <p>
-	 * This will refresh the 'view' of the index in a more performant manner, but without "on-disk" guarantees. (Solr4.0+)
-	 * </p>
-	 * <p>
-	 * A soft commit is much faster since it only makes index changes visible and does not fsync index files or write a new index descriptor. 
-	 * If the JVM crashes or there is a loss of power, changes that occurred after the last hard commit will be lost. 
-	 * Search collections that have near-real-time requirements (that want index changes to be quickly visible to searches) will want to soft commit often but hard commit less frequently. 
-	 * </p>
-	 * @param bool $waitSearcher [optional] block until a new searcher is opened and registered as the main query searcher, making the changes visible.
-	 * @param bool $expungeDeletes [optional] Merge segments with deletes away. (Solr1.4+)
-	 * @return SolrUpdateResponse a SolrUpdateResponse object on success or throws an exception on failure.
+	 * @param bool $softCommit [optional] 
+	 * @param bool $waitSearcher [optional] 
+	 * @param bool $expungeDeletes [optional] 
+	 * @return SolrUpdateResponse Returns a SolrUpdateResponse object on success or throws an exception on failure.
 	 */
-	public function commit (bool $softCommit = null, bool $waitSearcher = null, bool $expungeDeletes = null) {}
+	public function commit (bool $softCommit = false, bool $waitSearcher = true, bool $expungeDeletes = false): SolrUpdateResponse {}
 
 	/**
 	 * Defragments the index
 	 * @link http://www.php.net/manual/en/solrclient.optimize.php
-	 * @param int $maxSegments [optional] Optimizes down to at most this number of segments. Since Solr 1.3
-	 * @param bool $softCommit [optional] This will refresh the 'view' of the index in a more performant manner, but without "on-disk" guarantees. (Solr4.0+)
-	 * @param bool $waitSearcher [optional] Block until a new searcher is opened and registered as the main query searcher, making the changes visible.
-	 * @return SolrUpdateResponse a SolrUpdateResponse on success or throws an exception on failure.
+	 * @param int $maxSegments [optional] 
+	 * @param bool $softCommit [optional] 
+	 * @param bool $waitSearcher [optional] 
+	 * @return SolrUpdateResponse Returns a SolrUpdateResponse on success or throws an exception on failure.
 	 */
-	public function optimize (int $maxSegments = null, bool $softCommit = null, bool $waitSearcher = null) {}
+	public function optimize (int $maxSegments = 1, bool $softCommit = true, bool $waitSearcher = true): SolrUpdateResponse {}
 
 	/**
 	 * Rollbacks all add/deletes made to the index since the last commit
 	 * @link http://www.php.net/manual/en/solrclient.rollback.php
-	 * @return SolrUpdateResponse a SolrUpdateResponse on success or throws a SolrClientException on failure.
+	 * @return SolrUpdateResponse Returns a SolrUpdateResponse on success or throws a SolrClientException on failure.
 	 */
-	public function rollback () {}
+	public function rollback (): SolrUpdateResponse {}
 
 	/**
 	 * Checks if Solr server is still up
 	 * @link http://www.php.net/manual/en/solrclient.ping.php
-	 * @return SolrPingResponse a SolrPingResponse object on success and throws an exception on failure.
+	 * @return SolrPingResponse Returns a SolrPingResponse object on success and throws an exception on failure.
 	 */
-	public function ping () {}
+	public function ping (): SolrPingResponse {}
 
 	/**
 	 * Retrieve Solr Server information
 	 * @link http://www.php.net/manual/en/solrclient.system.php
-	 * @return void a SolrGenericResponse object on success.
+	 * @return void Returns a SolrGenericResponse object on success.
 	 */
-	public function system () {}
+	public function system (): void {}
 
 	/**
 	 * Checks the threads status
 	 * @link http://www.php.net/manual/en/solrclient.threads.php
-	 * @return void a SolrGenericResponse object.
+	 * @return void Returns a SolrGenericResponse object.
 	 */
-	public function threads () {}
+	public function threads (): void {}
 
 }
 
@@ -846,52 +820,52 @@ abstract class SolrParams implements Stringable, Serializable {
 	/**
 	 * Sets the parameter to the specified value
 	 * @link http://www.php.net/manual/en/solrparams.setparam.php
-	 * @param string $name Name of the parameter
-	 * @param string $value Value of the parameter
-	 * @return SolrParams a SolrParam object on success and false on value.
+	 * @param string $name 
+	 * @param string $value 
+	 * @return SolrParams Returns a SolrParam object on success and false on value.
 	 */
-	public function setParam (string $name, string $value) {}
+	public function setParam (string $name, string $value): SolrParams {}
 
 	/**
 	 * Adds a parameter to the object
 	 * @link http://www.php.net/manual/en/solrparams.addparam.php
-	 * @param string $name Name of parameter
-	 * @param string $value Value of parameter
-	 * @return SolrParams a SolrParam object on success and false on failure.
+	 * @param string $name 
+	 * @param string $value 
+	 * @return SolrParams Returns a SolrParam object on success and false on failure.
 	 */
-	public function addParam (string $name, string $value) {}
+	public function addParam (string $name, string $value): SolrParams {}
 
 	public function __toString (): string {}
 
 	/**
 	 * Returns all the name-value pair parameters in the object
 	 * @link http://www.php.net/manual/en/solrparams.tostring.php
-	 * @param bool $url_encode [optional] Whether to return URL-encoded values
-	 * @return string a string on success and false on failure.
+	 * @param bool $url_encode [optional] 
+	 * @return string Returns a string on success and false on failure.
 	 */
-	public function toString (bool $url_encode = null) {}
+	public function toString (bool $url_encode = false): string {}
 
 	/**
 	 * Returns an array of non URL-encoded parameters
 	 * @link http://www.php.net/manual/en/solrparams.getparams.php
-	 * @return array an array of non URL-encoded parameters
+	 * @return array Returns an array of non URL-encoded parameters
 	 */
-	public function getParams () {}
+	public function getParams (): array {}
 
 	/**
 	 * Returns a parameter value
 	 * @link http://www.php.net/manual/en/solrparams.getparam.php
-	 * @param string $param_name [optional] The name of the parameter
-	 * @return mixed a string or an array depending on the type of the parameter
+	 * @param string $param_name [optional] 
+	 * @return mixed Returns a string or an array depending on the type of the parameter
 	 */
-	public function getParam (string $param_name = null) {}
+	public function getParam (string $param_name = null): mixed {}
 
 	/**
 	 * Returns an array of URL-encoded parameters
 	 * @link http://www.php.net/manual/en/solrparams.getpreparedparams.php
-	 * @return array an array on URL-encoded parameters
+	 * @return array Returns an array on URL-encoded parameters
 	 */
-	public function getPreparedParams () {}
+	public function getPreparedParams (): array {}
 
 	public function __clone () {}
 
@@ -900,41 +874,41 @@ abstract class SolrParams implements Stringable, Serializable {
 	 * @link http://www.php.net/manual/en/solrparams.serialize.php
 	 * @return string Used for custom serialization
 	 */
-	public function serialize () {}
+	public function serialize (): string {}
 
 	/**
 	 * Used for custom serialization
 	 * @link http://www.php.net/manual/en/solrparams.unserialize.php
-	 * @param string $serialized The serialized representation of the object
+	 * @param string $serialized 
 	 * @return void None
 	 */
-	public function unserialize (string $serialized) {}
+	public function unserialize (string $serialized): void {}
 
 	/**
-	 * Alias: SolrParams::addParam
+	 * Alias of SolrParams::addParam
 	 * @link http://www.php.net/manual/en/solrparams.add.php
-	 * @param string $name The name of the parameter
-	 * @param string $value The value of the parameter
-	 * @return SolrParams a SolrParams instance on success
+	 * @param string $name 
+	 * @param string $value 
+	 * @return SolrParams Returns a SolrParams instance on success
 	 */
-	public function add (string $name, string $value) {}
+	public function add (string $name, string $value): SolrParams {}
 
 	/**
-	 * Alias: SolrParams::setParam
+	 * Alias of SolrParams::setParam
 	 * @link http://www.php.net/manual/en/solrparams.set.php
-	 * @param string $name Then name of the parameter
-	 * @param string $value The parameter value
-	 * @return void an instance of the SolrParams object on success
+	 * @param string $name 
+	 * @param string $value 
+	 * @return void Returns an instance of the SolrParams object on success
 	 */
-	public function set (string $name, string $value) {}
+	public function set (string $name, string $value): void {}
 
 	/**
-	 * Alias: SolrParams::getParam
+	 * Alias of SolrParams::getParam
 	 * @link http://www.php.net/manual/en/solrparams.get.php
-	 * @param string $param_name Then name of the parameter
-	 * @return mixed an array or string depending on the type of parameter
+	 * @param string $param_name 
+	 * @return mixed Returns an array or string depending on the type of parameter
 	 */
-	public function get (string $param_name) {}
+	public function get (string $param_name): mixed {}
 
 }
 
@@ -952,61 +926,57 @@ class SolrModifiableParams extends SolrParams implements Serializable, Stringabl
 	 */
 	public function __construct () {}
 
-	/**
-	 * Destructor
-	 * @link http://www.php.net/manual/en/solrmodifiableparams.destruct.php
-	 */
 	public function __destruct () {}
 
 	/**
 	 * Sets the parameter to the specified value
 	 * @link http://www.php.net/manual/en/solrparams.setparam.php
-	 * @param string $name Name of the parameter
-	 * @param string $value Value of the parameter
-	 * @return SolrParams a SolrParam object on success and false on value.
+	 * @param string $name 
+	 * @param string $value 
+	 * @return SolrParams Returns a SolrParam object on success and false on value.
 	 */
-	public function setParam (string $name, string $value) {}
+	public function setParam (string $name, string $value): SolrParams {}
 
 	/**
 	 * Adds a parameter to the object
 	 * @link http://www.php.net/manual/en/solrparams.addparam.php
-	 * @param string $name Name of parameter
-	 * @param string $value Value of parameter
-	 * @return SolrParams a SolrParam object on success and false on failure.
+	 * @param string $name 
+	 * @param string $value 
+	 * @return SolrParams Returns a SolrParam object on success and false on failure.
 	 */
-	public function addParam (string $name, string $value) {}
+	public function addParam (string $name, string $value): SolrParams {}
 
 	public function __toString (): string {}
 
 	/**
 	 * Returns all the name-value pair parameters in the object
 	 * @link http://www.php.net/manual/en/solrparams.tostring.php
-	 * @param bool $url_encode [optional] Whether to return URL-encoded values
-	 * @return string a string on success and false on failure.
+	 * @param bool $url_encode [optional] 
+	 * @return string Returns a string on success and false on failure.
 	 */
-	public function toString (bool $url_encode = null) {}
+	public function toString (bool $url_encode = false): string {}
 
 	/**
 	 * Returns an array of non URL-encoded parameters
 	 * @link http://www.php.net/manual/en/solrparams.getparams.php
-	 * @return array an array of non URL-encoded parameters
+	 * @return array Returns an array of non URL-encoded parameters
 	 */
-	public function getParams () {}
+	public function getParams (): array {}
 
 	/**
 	 * Returns a parameter value
 	 * @link http://www.php.net/manual/en/solrparams.getparam.php
-	 * @param string $param_name [optional] The name of the parameter
-	 * @return mixed a string or an array depending on the type of the parameter
+	 * @param string $param_name [optional] 
+	 * @return mixed Returns a string or an array depending on the type of the parameter
 	 */
-	public function getParam (string $param_name = null) {}
+	public function getParam (string $param_name = null): mixed {}
 
 	/**
 	 * Returns an array of URL-encoded parameters
 	 * @link http://www.php.net/manual/en/solrparams.getpreparedparams.php
-	 * @return array an array on URL-encoded parameters
+	 * @return array Returns an array on URL-encoded parameters
 	 */
-	public function getPreparedParams () {}
+	public function getPreparedParams (): array {}
 
 	public function __clone () {}
 
@@ -1015,41 +985,41 @@ class SolrModifiableParams extends SolrParams implements Serializable, Stringabl
 	 * @link http://www.php.net/manual/en/solrparams.serialize.php
 	 * @return string Used for custom serialization
 	 */
-	public function serialize () {}
+	public function serialize (): string {}
 
 	/**
 	 * Used for custom serialization
 	 * @link http://www.php.net/manual/en/solrparams.unserialize.php
-	 * @param string $serialized The serialized representation of the object
+	 * @param string $serialized 
 	 * @return void None
 	 */
-	public function unserialize (string $serialized) {}
+	public function unserialize (string $serialized): void {}
 
 	/**
-	 * Alias: SolrParams::addParam
+	 * Alias of SolrParams::addParam
 	 * @link http://www.php.net/manual/en/solrparams.add.php
-	 * @param string $name The name of the parameter
-	 * @param string $value The value of the parameter
-	 * @return SolrParams a SolrParams instance on success
+	 * @param string $name 
+	 * @param string $value 
+	 * @return SolrParams Returns a SolrParams instance on success
 	 */
-	public function add (string $name, string $value) {}
+	public function add (string $name, string $value): SolrParams {}
 
 	/**
-	 * Alias: SolrParams::setParam
+	 * Alias of SolrParams::setParam
 	 * @link http://www.php.net/manual/en/solrparams.set.php
-	 * @param string $name Then name of the parameter
-	 * @param string $value The parameter value
-	 * @return void an instance of the SolrParams object on success
+	 * @param string $name 
+	 * @param string $value 
+	 * @return void Returns an instance of the SolrParams object on success
 	 */
-	public function set (string $name, string $value) {}
+	public function set (string $name, string $value): void {}
 
 	/**
-	 * Alias: SolrParams::getParam
+	 * Alias of SolrParams::getParam
 	 * @link http://www.php.net/manual/en/solrparams.get.php
-	 * @param string $param_name Then name of the parameter
-	 * @return mixed an array or string depending on the type of parameter
+	 * @param string $param_name 
+	 * @return mixed Returns an array or string depending on the type of parameter
 	 */
-	public function get (string $param_name) {}
+	public function get (string $param_name): mixed {}
 
 }
 
@@ -1058,11 +1028,23 @@ class SolrModifiableParams extends SolrParams implements Serializable, Stringabl
  * @link http://www.php.net/manual/en/class.solrquery.php
  */
 class SolrQuery extends SolrModifiableParams implements Stringable, Serializable {
+	/**
+	 * Used to specify that the sorting should be in acending order
 	const ORDER_ASC = 0;
+	/**
+	 * Used to specify that the sorting should be in descending order
 	const ORDER_DESC = 1;
+	/**
+	 * Used to specify that the facet should sort by index
 	const FACET_SORT_INDEX = 0;
+	/**
+	 * Used to specify that the facet should sort by count
 	const FACET_SORT_COUNT = 1;
+	/**
+	 * Used in the TermsComponent
 	const TERMS_SORT_INDEX = 0;
+	/**
+	 * Used in the TermsComponent
 	const TERMS_SORT_COUNT = 1;
 
 	protected $_hashtable_index;
@@ -1071,491 +1053,488 @@ class SolrQuery extends SolrModifiableParams implements Stringable, Serializable
 	/**
 	 * Constructor
 	 * @link http://www.php.net/manual/en/solrquery.construct.php
-	 * @param mixed $q [optional]
+	 * @param string $q [optional] 
+	 * @return string None
 	 */
-	public function __construct ($q = null) {}
+	public function __construct (string $q = null): string {}
 
-	/**
-	 * Destructor
-	 * @link http://www.php.net/manual/en/solrquery.destruct.php
-	 */
 	public function __destruct () {}
 
 	/**
 	 * Sets the search query
 	 * @link http://www.php.net/manual/en/solrquery.setquery.php
-	 * @param string $query The search query
-	 * @return SolrQuery the current SolrQuery object
+	 * @param string $query 
+	 * @return SolrQuery Returns the current SolrQuery object
 	 */
-	public function setQuery (string $query) {}
+	public function setQuery (string $query): SolrQuery {}
 
 	/**
 	 * Returns the main query
 	 * @link http://www.php.net/manual/en/solrquery.getquery.php
-	 * @return string a string on success and null if not set.
+	 * @return string Returns a string on success and null if not set.
 	 */
-	public function getQuery () {}
+	public function getQuery (): string {}
 
 	/**
 	 * Specifies the number of rows to skip
 	 * @link http://www.php.net/manual/en/solrquery.setstart.php
-	 * @param int $start The number of rows to skip.
-	 * @return SolrQuery the current SolrQuery object.
+	 * @param int $start 
+	 * @return SolrQuery Returns the current SolrQuery object.
 	 */
-	public function setStart (int $start) {}
+	public function setStart (int $start): SolrQuery {}
 
 	/**
 	 * Returns the offset in the complete result set
 	 * @link http://www.php.net/manual/en/solrquery.getstart.php
-	 * @return int an integer on success and null if not set.
+	 * @return int Returns an integer on success and null if not set.
 	 */
-	public function getStart () {}
+	public function getStart (): int {}
 
 	/**
 	 * Specifies the maximum number of rows to return in the result
 	 * @link http://www.php.net/manual/en/solrquery.setrows.php
-	 * @param int $rows The maximum number of rows to return
-	 * @return SolrQuery the current SolrQuery object.
+	 * @param int $rows 
+	 * @return SolrQuery Returns the current SolrQuery object.
 	 */
-	public function setRows (int $rows) {}
+	public function setRows (int $rows): SolrQuery {}
 
 	/**
 	 * Returns the maximum number of documents
 	 * @link http://www.php.net/manual/en/solrquery.getrows.php
-	 * @return int an integer on success and null if not set.
+	 * @return int Returns an integer on success and null if not set.
 	 */
-	public function getRows () {}
+	public function getRows (): int {}
 
 	/**
 	 * Specifies which fields to return in the result
 	 * @link http://www.php.net/manual/en/solrquery.addfield.php
-	 * @param string $field The name of the field
-	 * @return SolrQuery the current SolrQuery object
+	 * @param string $field 
+	 * @return SolrQuery Returns the current SolrQuery object
 	 */
-	public function addField (string $field) {}
+	public function addField (string $field): SolrQuery {}
 
 	/**
 	 * Removes a field from the list of fields
 	 * @link http://www.php.net/manual/en/solrquery.removefield.php
-	 * @param string $field Name of the field.
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param string $field 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function removeField (string $field) {}
+	public function removeField (string $field): SolrQuery {}
 
 	/**
 	 * Returns the list of fields that will be returned in the response
 	 * @link http://www.php.net/manual/en/solrquery.getfields.php
-	 * @return array an array on success and null if not set.
+	 * @return array Returns an array on success and null if not set.
 	 */
-	public function getFields () {}
+	public function getFields (): array {}
 
 	/**
 	 * Used to control how the results should be sorted
 	 * @link http://www.php.net/manual/en/solrquery.addsortfield.php
-	 * @param string $field The name of the field
-	 * @param int $order [optional] The sort direction. This should be either SolrQuery::ORDER_ASC or SolrQuery::ORDER_DESC.
-	 * @return SolrQuery the current SolrQuery object.
+	 * @param string $field 
+	 * @param int $order [optional] 
+	 * @return SolrQuery Returns the current SolrQuery object.
 	 */
-	public function addSortField (string $field, int $order = null) {}
+	public function addSortField (string $field, int $order = SolrQuery::ORDER_DESC): SolrQuery {}
 
 	/**
 	 * Removes one of the sort fields
 	 * @link http://www.php.net/manual/en/solrquery.removesortfield.php
-	 * @param string $field The name of the field
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param string $field 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function removeSortField (string $field) {}
+	public function removeSortField (string $field): SolrQuery {}
 
 	/**
 	 * Returns all the sort fields
 	 * @link http://www.php.net/manual/en/solrquery.getsortfields.php
-	 * @return array an array on success and null if none of the parameters was set.
+	 * @return array Returns an array on success and null if none of the parameters was set.
 	 */
-	public function getSortFields () {}
+	public function getSortFields (): array {}
 
 	/**
 	 * Specifies a filter query
 	 * @link http://www.php.net/manual/en/solrquery.addfilterquery.php
-	 * @param string $fq The filter query
-	 * @return SolrQuery the current SolrQuery object.
+	 * @param string $fq 
+	 * @return SolrQuery Returns the current SolrQuery object.
 	 */
-	public function addFilterQuery (string $fq) {}
+	public function addFilterQuery (string $fq): SolrQuery {}
 
 	/**
 	 * Removes a filter query
 	 * @link http://www.php.net/manual/en/solrquery.removefilterquery.php
-	 * @param string $fq The filter query to remove
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param string $fq 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function removeFilterQuery (string $fq) {}
+	public function removeFilterQuery (string $fq): SolrQuery {}
 
 	/**
 	 * Returns an array of filter queries
 	 * @link http://www.php.net/manual/en/solrquery.getfilterqueries.php
-	 * @return array an array on success and null if not set.
+	 * @return array Returns an array on success and null if not set.
 	 */
-	public function getFilterQueries () {}
+	public function getFilterQueries (): array {}
 
 	/**
 	 * Flag to show debug information
 	 * @link http://www.php.net/manual/en/solrquery.setshowdebuginfo.php
-	 * @param bool $flag Whether to show debug info. true or false
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param bool $flag 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setShowDebugInfo (bool $flag) {}
+	public function setShowDebugInfo (bool $flag): SolrQuery {}
 
 	/**
 	 * Sets the explainOther common query parameter
 	 * @link http://www.php.net/manual/en/solrquery.setexplainother.php
-	 * @param string $query The Lucene query to identify a set of documents
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param string $query 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setExplainOther (string $query) {}
+	public function setExplainOther (string $query): SolrQuery {}
 
 	/**
 	 * The time allowed for search to finish
 	 * @link http://www.php.net/manual/en/solrquery.settimeallowed.php
-	 * @param int $timeAllowed The time allowed for a search to finish.
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param int $timeAllowed 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setTimeAllowed (int $timeAllowed) {}
+	public function setTimeAllowed (int $timeAllowed): SolrQuery {}
 
 	/**
 	 * Returns the time in milliseconds allowed for the query to finish
 	 * @link http://www.php.net/manual/en/solrquery.gettimeallowed.php
-	 * @return int and integer on success and null if it is not set.
+	 * @return int Returns and integer on success and null if it is not set.
 	 */
-	public function getTimeAllowed () {}
+	public function getTimeAllowed (): int {}
 
 	/**
 	 * Exclude the header from the returned results
 	 * @link http://www.php.net/manual/en/solrquery.setomitheader.php
-	 * @param bool $flag true excludes the header from the result.
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param bool $flag 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setOmitHeader (bool $flag) {}
+	public function setOmitHeader (bool $flag): SolrQuery {}
 
 	/**
 	 * Toggles the echoHandler parameter
 	 * @link http://www.php.net/manual/en/solrquery.setechohandler.php
-	 * @param bool $flag true or false
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param bool $flag 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setEchoHandler (bool $flag) {}
+	public function setEchoHandler (bool $flag): SolrQuery {}
 
 	/**
 	 * Determines what kind of parameters to include in the response
 	 * @link http://www.php.net/manual/en/solrquery.setechoparams.php
-	 * @param string $type The type of parameters to include
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param string $type 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setEchoParams (string $type) {}
+	public function setEchoParams (string $type): SolrQuery {}
 
 	/**
 	 * Maps to the facet parameter. Enables or disables facetting
 	 * @link http://www.php.net/manual/en/solrquery.setfacet.php
 	 * @param bool $flag 
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setFacet (bool $flag) {}
+	public function setFacet (bool $flag): SolrQuery {}
 
 	/**
 	 * Returns the value of the facet parameter
 	 * @link http://www.php.net/manual/en/solrquery.getfacet.php
-	 * @return bool a boolean on success and null if not set
+	 * @return bool Returns a boolean on success and null if not set
 	 */
-	public function getFacet () {}
+	public function getFacet (): bool {}
 
 	/**
 	 * Adds another field to the facet
 	 * @link http://www.php.net/manual/en/solrquery.addfacetfield.php
-	 * @param string $field The name of the field
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param string $field 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function addFacetField (string $field) {}
+	public function addFacetField (string $field): SolrQuery {}
 
 	/**
 	 * Removes one of the facet.date parameters
 	 * @link http://www.php.net/manual/en/solrquery.removefacetfield.php
-	 * @param string $field The name of the field
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param string $field 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function removeFacetField (string $field) {}
+	public function removeFacetField (string $field): SolrQuery {}
 
 	/**
 	 * Returns all the facet fields
 	 * @link http://www.php.net/manual/en/solrquery.getfacetfields.php
-	 * @return array an array of all the fields and null if none was set
+	 * @return array Returns an array of all the fields and null if none was set
 	 */
-	public function getFacetFields () {}
+	public function getFacetFields (): array {}
 
 	/**
 	 * Adds a facet query
 	 * @link http://www.php.net/manual/en/solrquery.addfacetquery.php
-	 * @param string $facetQuery The facet query
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param string $facetQuery 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function addFacetQuery (string $facetQuery) {}
+	public function addFacetQuery (string $facetQuery): SolrQuery {}
 
 	/**
 	 * Removes one of the facet.query parameters
 	 * @link http://www.php.net/manual/en/solrquery.removefacetquery.php
-	 * @param string $value The value
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param string $value 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function removeFacetQuery (string $value) {}
+	public function removeFacetQuery (string $value): SolrQuery {}
 
 	/**
 	 * Returns all the facet queries
 	 * @link http://www.php.net/manual/en/solrquery.getfacetqueries.php
-	 * @return array an array on success and null if not set.
+	 * @return array Returns an array on success and null if not set.
 	 */
-	public function getFacetQueries () {}
+	public function getFacetQueries (): array {}
 
 	/**
 	 * Specifies a string prefix with which to limits the terms on which to facet
 	 * @link http://www.php.net/manual/en/solrquery.setfacetprefix.php
-	 * @param string $prefix The prefix string
-	 * @param string $field_override [optional] The name of the field.
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param string $prefix 
+	 * @param string $field_override [optional] 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setFacetPrefix (string $prefix, string $field_override = null) {}
+	public function setFacetPrefix (string $prefix, string $field_override = null): SolrQuery {}
 
 	/**
 	 * Returns the facet prefix
 	 * @link http://www.php.net/manual/en/solrquery.getfacetprefix.php
-	 * @param string $field_override [optional] The name of the field
-	 * @return string a string on success and null if not set.
+	 * @param string $field_override [optional] 
+	 * @return string Returns a string on success and null if not set.
 	 */
-	public function getFacetPrefix (string $field_override = null) {}
+	public function getFacetPrefix (string $field_override = null): string {}
 
 	/**
 	 * Determines the ordering of the facet field constraints
 	 * @link http://www.php.net/manual/en/solrquery.setfacetsort.php
-	 * @param int $facetSort Use SolrQuery::FACET_SORT_INDEX for sorting by index order or SolrQuery::FACET_SORT_COUNT for sorting by count.
-	 * @param string $field_override [optional] The name of the field.
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param int $facetSort 
+	 * @param string $field_override [optional] 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setFacetSort (int $facetSort, string $field_override = null) {}
+	public function setFacetSort (int $facetSort, string $field_override = null): SolrQuery {}
 
 	/**
 	 * Returns the facet sort type
 	 * @link http://www.php.net/manual/en/solrquery.getfacetsort.php
-	 * @param string $field_override [optional] The name of the field
-	 * @return int an integer (SolrQuery::FACET_SORT_INDEX or SolrQuery::FACET_SORT_COUNT) on success or null if not set.
+	 * @param string $field_override [optional] 
+	 * @return int Returns an integer (SolrQuery::FACET_SORT_INDEX or SolrQuery::FACET_SORT_COUNT) on success or null if not set.
 	 */
-	public function getFacetSort (string $field_override = null) {}
+	public function getFacetSort (string $field_override = null): int {}
 
 	/**
 	 * Maps to facet.limit
 	 * @link http://www.php.net/manual/en/solrquery.setfacetlimit.php
-	 * @param int $limit The maximum number of constraint counts
-	 * @param string $field_override [optional] The name of the field.
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param int $limit 
+	 * @param string $field_override [optional] 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setFacetLimit (int $limit, string $field_override = null) {}
+	public function setFacetLimit (int $limit, string $field_override = null): SolrQuery {}
 
 	/**
 	 * Returns the maximum number of constraint counts that should be returned for the facet fields
 	 * @link http://www.php.net/manual/en/solrquery.getfacetlimit.php
-	 * @param string $field_override [optional] The name of the field to override for
-	 * @return int an integer on success and null if not set
+	 * @param string $field_override [optional] 
+	 * @return int Returns an integer on success and null if not set
 	 */
-	public function getFacetLimit (string $field_override = null) {}
+	public function getFacetLimit (string $field_override = null): int {}
 
 	/**
 	 * Sets the offset into the list of constraints to allow for pagination
 	 * @link http://www.php.net/manual/en/solrquery.setfacetoffset.php
-	 * @param int $offset The offset
-	 * @param string $field_override [optional] The name of the field.
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param int $offset 
+	 * @param string $field_override [optional] 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setFacetOffset (int $offset, string $field_override = null) {}
+	public function setFacetOffset (int $offset, string $field_override = null): SolrQuery {}
 
 	/**
 	 * Returns an offset into the list of constraints to be used for pagination
 	 * @link http://www.php.net/manual/en/solrquery.getfacetoffset.php
-	 * @param string $field_override [optional] The name of the field to override for.
-	 * @return int an integer on success and null if not set
+	 * @param string $field_override [optional] 
+	 * @return int Returns an integer on success and null if not set
 	 */
-	public function getFacetOffset (string $field_override = null) {}
+	public function getFacetOffset (string $field_override = null): int {}
 
 	/**
 	 * Maps to facet.mincount
 	 * @link http://www.php.net/manual/en/solrquery.setfacetmincount.php
-	 * @param int $mincount The minimum count
-	 * @param string $field_override [optional] The name of the field.
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param int $mincount 
+	 * @param string $field_override [optional] 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setFacetMinCount (int $mincount, string $field_override = null) {}
+	public function setFacetMinCount (int $mincount, string $field_override = null): SolrQuery {}
 
 	/**
 	 * Returns the minimum counts for facet fields should be included in the response
 	 * @link http://www.php.net/manual/en/solrquery.getfacetmincount.php
-	 * @param string $field_override [optional] The name of the field
-	 * @return int an integer on success and null if not set
+	 * @param string $field_override [optional] 
+	 * @return int Returns an integer on success and null if not set
 	 */
-	public function getFacetMinCount (string $field_override = null) {}
+	public function getFacetMinCount (string $field_override = null): int {}
 
 	/**
 	 * Maps to facet.missing
 	 * @link http://www.php.net/manual/en/solrquery.setfacetmissing.php
-	 * @param bool $flag true turns this feature on. false disables it.
-	 * @param string $field_override [optional] The name of the field.
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param bool $flag 
+	 * @param string $field_override [optional] 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setFacetMissing (bool $flag, string $field_override = null) {}
+	public function setFacetMissing (bool $flag, string $field_override = null): SolrQuery {}
 
 	/**
 	 * Returns the current state of the facet.missing parameter
 	 * @link http://www.php.net/manual/en/solrquery.getfacetmissing.php
-	 * @param string $field_override [optional] The name of the field
-	 * @return bool a boolean on success and null if not set
+	 * @param string $field_override [optional] 
+	 * @return bool Returns a boolean on success and null if not set
 	 */
-	public function getFacetMissing (string $field_override = null) {}
+	public function getFacetMissing (string $field_override = null): bool {}
 
 	/**
 	 * Specifies the type of algorithm to use when faceting a field
 	 * @link http://www.php.net/manual/en/solrquery.setfacetmethod.php
-	 * @param string $method The method to use.
-	 * @param string $field_override [optional] The name of the field.
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param string $method 
+	 * @param string $field_override [optional] 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setFacetMethod (string $method, string $field_override = null) {}
+	public function setFacetMethod (string $method, string $field_override = null): SolrQuery {}
 
 	/**
 	 * Returns the value of the facet.method parameter
 	 * @link http://www.php.net/manual/en/solrquery.getfacetmethod.php
-	 * @param string $field_override [optional] The name of the field
-	 * @return string a string on success and null if not set
+	 * @param string $field_override [optional] 
+	 * @return string Returns a string on success and null if not set
 	 */
-	public function getFacetMethod (string $field_override = null) {}
+	public function getFacetMethod (string $field_override = null): string {}
 
 	/**
 	 * Sets the minimum document frequency used for determining term count
 	 * @link http://www.php.net/manual/en/solrquery.setfacetenumcachemindefaultfrequency.php
 	 * @param int $frequency 
-	 * @param string $field_override [optional] The name of the field.
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param string $field_override [optional] 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setFacetEnumCacheMinDefaultFrequency (int $frequency, string $field_override = null) {}
+	public function setFacetEnumCacheMinDefaultFrequency (int $frequency, string $field_override = null): SolrQuery {}
 
 	/**
 	 * Maps to facet.date
 	 * @link http://www.php.net/manual/en/solrquery.addfacetdatefield.php
-	 * @param string $dateField The name of the date field.
-	 * @return SolrQuery a SolrQuery object.
+	 * @param string $dateField 
+	 * @return SolrQuery Returns a SolrQuery object.
 	 */
-	public function addFacetDateField (string $dateField) {}
+	public function addFacetDateField (string $dateField): SolrQuery {}
 
 	/**
 	 * Removes one of the facet date fields
 	 * @link http://www.php.net/manual/en/solrquery.removefacetdatefield.php
-	 * @param string $field The name of the date field to remove
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param string $field 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function removeFacetDateField (string $field) {}
+	public function removeFacetDateField (string $field): SolrQuery {}
 
 	/**
 	 * Returns all the facet.date fields
 	 * @link http://www.php.net/manual/en/solrquery.getfacetdatefields.php
-	 * @return array all the facet.date fields as an array or null if none was set
+	 * @return array Returns all the facet.date fields as an array or null if none was set
 	 */
-	public function getFacetDateFields () {}
+	public function getFacetDateFields (): array {}
 
 	/**
 	 * Maps to facet.date.start
 	 * @link http://www.php.net/manual/en/solrquery.setfacetdatestart.php
-	 * @param string $value See facet.date.start
-	 * @param string $field_override [optional] The name of the field.
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param string $value 
+	 * @param string $field_override [optional] 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setFacetDateStart (string $value, string $field_override = null) {}
+	public function setFacetDateStart (string $value, string $field_override = null): SolrQuery {}
 
 	/**
 	 * Returns the lower bound for the first date range for all date faceting on this field
 	 * @link http://www.php.net/manual/en/solrquery.getfacetdatestart.php
-	 * @param string $field_override [optional] The name of the field
-	 * @return string a string on success and null if not set
+	 * @param string $field_override [optional] 
+	 * @return string Returns a string on success and null if not set
 	 */
-	public function getFacetDateStart (string $field_override = null) {}
+	public function getFacetDateStart (string $field_override = null): string {}
 
 	/**
 	 * Maps to facet.date.end
 	 * @link http://www.php.net/manual/en/solrquery.setfacetdateend.php
-	 * @param string $value See facet.date.end
-	 * @param string $field_override [optional] Name of the field
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param string $value 
+	 * @param string $field_override [optional] 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setFacetDateEnd (string $value, string $field_override = null) {}
+	public function setFacetDateEnd (string $value, string $field_override = null): SolrQuery {}
 
 	/**
 	 * Returns the value for the facet.date.end parameter
 	 * @link http://www.php.net/manual/en/solrquery.getfacetdateend.php
-	 * @param string $field_override [optional] The name of the field
-	 * @return string a string on success and null if not set
+	 * @param string $field_override [optional] 
+	 * @return string Returns a string on success and null if not set
 	 */
-	public function getFacetDateEnd (string $field_override = null) {}
+	public function getFacetDateEnd (string $field_override = null): string {}
 
 	/**
 	 * Maps to facet.date.gap
 	 * @link http://www.php.net/manual/en/solrquery.setfacetdategap.php
-	 * @param string $value See facet.date.gap
-	 * @param string $field_override [optional] The name of the field
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param string $value 
+	 * @param string $field_override [optional] 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setFacetDateGap (string $value, string $field_override = null) {}
+	public function setFacetDateGap (string $value, string $field_override = null): SolrQuery {}
 
 	/**
 	 * Returns the value of the facet.date.gap parameter
 	 * @link http://www.php.net/manual/en/solrquery.getfacetdategap.php
-	 * @param string $field_override [optional] The name of the field
-	 * @return string a string on success and null if not set
+	 * @param string $field_override [optional] 
+	 * @return string Returns a string on success and null if not set
 	 */
-	public function getFacetDateGap (string $field_override = null) {}
+	public function getFacetDateGap (string $field_override = null): string {}
 
 	/**
 	 * Maps to facet.date.hardend
 	 * @link http://www.php.net/manual/en/solrquery.setfacetdatehardend.php
-	 * @param bool $value See facet.date.hardend
-	 * @param string $field_override [optional] The name of the field
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param bool $value 
+	 * @param string $field_override [optional] 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setFacetDateHardEnd (bool $value, string $field_override = null) {}
+	public function setFacetDateHardEnd (bool $value, string $field_override = null): SolrQuery {}
 
 	/**
 	 * Returns the value of the facet.date.hardend parameter
 	 * @link http://www.php.net/manual/en/solrquery.getfacetdatehardend.php
-	 * @param string $field_override [optional] The name of the field
-	 * @return string a string on success and null if not set
+	 * @param string $field_override [optional] 
+	 * @return string Returns a string on success and null if not set
 	 */
-	public function getFacetDateHardEnd (string $field_override = null) {}
+	public function getFacetDateHardEnd (string $field_override = null): string {}
 
 	/**
 	 * Adds another facet.date.other parameter
 	 * @link http://www.php.net/manual/en/solrquery.addfacetdateother.php
-	 * @param string $value The value to use.
-	 * @param string $field_override [optional] The field name for the override.
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param string $value 
+	 * @param string $field_override [optional] 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function addFacetDateOther (string $value, string $field_override = null) {}
+	public function addFacetDateOther (string $value, string $field_override = null): SolrQuery {}
 
 	/**
 	 * Removes one of the facet.date.other parameters
 	 * @link http://www.php.net/manual/en/solrquery.removefacetdateother.php
-	 * @param string $value The value
-	 * @param string $field_override [optional] The name of the field.
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param string $value 
+	 * @param string $field_override [optional] 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function removeFacetDateOther (string $value, string $field_override = null) {}
+	public function removeFacetDateOther (string $value, string $field_override = null): SolrQuery {}
 
 	/**
 	 * Returns the value for the facet.date.other parameter
 	 * @link http://www.php.net/manual/en/solrquery.getfacetdateother.php
-	 * @param string $field_override [optional] The name of the field
-	 * @return array an array on success and null if not set.
+	 * @param string $field_override [optional] 
+	 * @return array Returns an array on success and null if not set.
 	 */
-	public function getFacetDateOther (string $field_override = null) {}
+	public function getFacetDateOther (string $field_override = null): array {}
 
 	/**
 	 * Enable/Disable result grouping (group parameter)
@@ -1563,29 +1542,29 @@ class SolrQuery extends SolrModifiableParams implements Stringable, Serializable
 	 * @param bool $value 
 	 * @return SolrQuery 
 	 */
-	public function setGroup (bool $value) {}
+	public function setGroup (bool $value): SolrQuery {}
 
 	/**
 	 * Returns true if grouping is enabled
 	 * @link http://www.php.net/manual/en/solrquery.getgroup.php
 	 * @return bool 
 	 */
-	public function getGroup () {}
+	public function getGroup (): bool {}
 
 	/**
 	 * Add a field to be used to group results
 	 * @link http://www.php.net/manual/en/solrquery.addgroupfield.php
 	 * @param string $value The name of the field.
-	 * @return SolrQuery an instance of SolrQuery.
+	 * @return SolrQuery Returns an instance of SolrQuery.
 	 */
-	public function addGroupField (string $value) {}
+	public function addGroupField (string $value): SolrQuery {}
 
 	/**
 	 * Returns group fields (group.field parameter values)
 	 * @link http://www.php.net/manual/en/solrquery.getgroupfields.php
 	 * @return array 
 	 */
-	public function getGroupFields () {}
+	public function getGroupFields (): array {}
 
 	/**
 	 * Allows grouping results based on the unique values of a function query (group.func parameter)
@@ -1593,14 +1572,14 @@ class SolrQuery extends SolrModifiableParams implements Stringable, Serializable
 	 * @param string $value 
 	 * @return SolrQuery SolrQuery
 	 */
-	public function addGroupFunction (string $value) {}
+	public function addGroupFunction (string $value): SolrQuery {}
 
 	/**
 	 * Returns group functions (group.func parameter values)
 	 * @link http://www.php.net/manual/en/solrquery.getgroupfunctions.php
 	 * @return array 
 	 */
-	public function getGroupFunctions () {}
+	public function getGroupFunctions (): array {}
 
 	/**
 	 * Allows grouping of documents that match the given query
@@ -1608,14 +1587,14 @@ class SolrQuery extends SolrModifiableParams implements Stringable, Serializable
 	 * @param string $value 
 	 * @return SolrQuery SolrQuery
 	 */
-	public function addGroupQuery (string $value) {}
+	public function addGroupQuery (string $value): SolrQuery {}
 
 	/**
 	 * Returns all the group.query parameter values
 	 * @link http://www.php.net/manual/en/solrquery.getgroupqueries.php
 	 * @return array array
 	 */
-	public function getGroupQueries () {}
+	public function getGroupQueries (): array {}
 
 	/**
 	 * Specifies the number of results to return for each group. The server default value is 1
@@ -1623,14 +1602,14 @@ class SolrQuery extends SolrModifiableParams implements Stringable, Serializable
 	 * @param int $value 
 	 * @return SolrQuery 
 	 */
-	public function setGroupLimit (int $value) {}
+	public function setGroupLimit (int $value): SolrQuery {}
 
 	/**
 	 * Returns the group.limit value
 	 * @link http://www.php.net/manual/en/solrquery.getgrouplimit.php
 	 * @return int 
 	 */
-	public function getGroupLimit () {}
+	public function getGroupLimit (): int {}
 
 	/**
 	 * Sets the group.offset parameter
@@ -1638,14 +1617,14 @@ class SolrQuery extends SolrModifiableParams implements Stringable, Serializable
 	 * @param int $value 
 	 * @return SolrQuery 
 	 */
-	public function setGroupOffset (int $value) {}
+	public function setGroupOffset (int $value): SolrQuery {}
 
 	/**
 	 * Returns the group.offset value
 	 * @link http://www.php.net/manual/en/solrquery.getgroupoffset.php
 	 * @return int 
 	 */
-	public function getGroupOffset () {}
+	public function getGroupOffset (): int {}
 
 	/**
 	 * Add a group sort field (group.sort parameter)
@@ -1654,14 +1633,14 @@ class SolrQuery extends SolrModifiableParams implements Stringable, Serializable
 	 * @param int $order [optional] Order ASC/DESC, utilizes SolrQuery::ORDER_&#42; constants
 	 * @return SolrQuery 
 	 */
-	public function addGroupSortField (string $field, int $order = null) {}
+	public function addGroupSortField (string $field, int $order = null): SolrQuery {}
 
 	/**
 	 * Returns the group.sort value
 	 * @link http://www.php.net/manual/en/solrquery.getgroupsortfields.php
 	 * @return array 
 	 */
-	public function getGroupSortFields () {}
+	public function getGroupSortFields (): array {}
 
 	/**
 	 * Sets the group format, result structure (group.format parameter)
@@ -1669,29 +1648,29 @@ class SolrQuery extends SolrModifiableParams implements Stringable, Serializable
 	 * @param string $value 
 	 * @return SolrQuery 
 	 */
-	public function setGroupFormat (string $value) {}
+	public function setGroupFormat (string $value): SolrQuery {}
 
 	/**
 	 * Returns the group.format value
 	 * @link http://www.php.net/manual/en/solrquery.getgroupformat.php
 	 * @return string 
 	 */
-	public function getGroupFormat () {}
+	public function getGroupFormat (): string {}
 
 	/**
 	 * If true, the result of the first field grouping command is used as the main result list in the response, using group.format=simple
 	 * @link http://www.php.net/manual/en/solrquery.setgroupmain.php
 	 * @param string $value If true, the result of the first field grouping command is used as the main result list in the response.
-	 * @return SolrQuery an instance of SolrQuery.
+	 * @return SolrQuery Returns an instance of SolrQuery.
 	 */
-	public function setGroupMain (string $value) {}
+	public function setGroupMain (string $value): SolrQuery {}
 
 	/**
 	 * Returns the group.main value
 	 * @link http://www.php.net/manual/en/solrquery.getgroupmain.php
 	 * @return bool 
 	 */
-	public function getGroupMain () {}
+	public function getGroupMain (): bool {}
 
 	/**
 	 * If true, Solr includes the number of groups that have matched the query in the results
@@ -1699,14 +1678,14 @@ class SolrQuery extends SolrModifiableParams implements Stringable, Serializable
 	 * @param bool $value 
 	 * @return SolrQuery 
 	 */
-	public function setGroupNGroups (bool $value) {}
+	public function setGroupNGroups (bool $value): SolrQuery {}
 
 	/**
 	 * Returns the group.ngroups value
 	 * @link http://www.php.net/manual/en/solrquery.getgroupngroups.php
 	 * @return bool 
 	 */
-	public function getGroupNGroups () {}
+	public function getGroupNGroups (): bool {}
 
 	/**
 	 * If true, facet counts are based on the most relevant document of each group matching the query
@@ -1714,14 +1693,14 @@ class SolrQuery extends SolrModifiableParams implements Stringable, Serializable
 	 * @param bool $value 
 	 * @return SolrQuery 
 	 */
-	public function setGroupTruncate (bool $value) {}
+	public function setGroupTruncate (bool $value): SolrQuery {}
 
 	/**
 	 * Returns the group.truncate value
 	 * @link http://www.php.net/manual/en/solrquery.getgrouptruncate.php
 	 * @return bool 
 	 */
-	public function getGroupTruncate () {}
+	public function getGroupTruncate (): bool {}
 
 	/**
 	 * Sets group.facet parameter
@@ -1729,14 +1708,14 @@ class SolrQuery extends SolrModifiableParams implements Stringable, Serializable
 	 * @param bool $value 
 	 * @return SolrQuery 
 	 */
-	public function setGroupFacet (bool $value) {}
+	public function setGroupFacet (bool $value): SolrQuery {}
 
 	/**
 	 * Returns the group.facet parameter value
 	 * @link http://www.php.net/manual/en/solrquery.getgroupfacet.php
 	 * @return bool 
 	 */
-	public function getGroupFacet () {}
+	public function getGroupFacet (): bool {}
 
 	/**
 	 * Enables caching for result grouping
@@ -1744,22 +1723,22 @@ class SolrQuery extends SolrModifiableParams implements Stringable, Serializable
 	 * @param int $percent 
 	 * @return SolrQuery 
 	 */
-	public function setGroupCachePercent (int $percent) {}
+	public function setGroupCachePercent (int $percent): SolrQuery {}
 
 	/**
 	 * Returns group cache percent value
 	 * @link http://www.php.net/manual/en/solrquery.getgroupcachepercent.php
 	 * @return int 
 	 */
-	public function getGroupCachePercent () {}
+	public function getGroupCachePercent (): int {}
 
 	/**
 	 * Collapses the result set to a single document per group
 	 * @link http://www.php.net/manual/en/solrquery.collapse.php
 	 * @param SolrCollapseFunction $collapseFunction 
-	 * @return SolrQuery the current SolrQuery object
+	 * @return SolrQuery Returns the current SolrQuery object
 	 */
-	public function collapse (SolrCollapseFunction $collapseFunction) {}
+	public function collapse (SolrCollapseFunction $collapseFunction): SolrQuery {}
 
 	/**
 	 * Enables/Disables the Expand Component
@@ -1767,28 +1746,24 @@ class SolrQuery extends SolrModifiableParams implements Stringable, Serializable
 	 * @param bool $value Bool flag
 	 * @return SolrQuery SolrQuery
 	 */
-	public function setExpand (bool $value) {}
+	public function setExpand (bool $value): SolrQuery {}
 
 	/**
 	 * Returns true if group expanding is enabled
 	 * @link http://www.php.net/manual/en/solrquery.getexpand.php
-	 * @return bool whether group expanding is enabled.
+	 * @return bool Returns whether group expanding is enabled.
 	 */
-	public function getExpand () {}
+	public function getExpand (): bool {}
 
 	/**
 	 * Orders the documents within the expanded groups (expand.sort parameter)
 	 * @link http://www.php.net/manual/en/solrquery.addexpandsortfield.php
 	 * @param string $field field name
-	 * @param string $order [optional] <p>
-	 * Order ASC/DESC, utilizes SolrQuery::ORDER_&#42; constants.
-	 * </p>
-	 * <p>
-	 * Default: SolrQuery::ORDER_DESC
-	 * </p>
+	 * @param string $order [optional] Order ASC/DESC, utilizes SolrQuery::ORDER_&#42; constants.
+	 * <p>Default: SolrQuery::ORDER_DESC</p>
 	 * @return SolrQuery SolrQuery
 	 */
-	public function addExpandSortField (string $field, string $order = null) {}
+	public function addExpandSortField (string $field, string $order = null): SolrQuery {}
 
 	/**
 	 * Removes an expand sort field from the expand.sort parameter
@@ -1796,14 +1771,14 @@ class SolrQuery extends SolrModifiableParams implements Stringable, Serializable
 	 * @param string $field field name
 	 * @return SolrQuery SolrQuery
 	 */
-	public function removeExpandSortField (string $field) {}
+	public function removeExpandSortField (string $field): SolrQuery {}
 
 	/**
 	 * Returns an array of fields
 	 * @link http://www.php.net/manual/en/solrquery.getexpandsortfields.php
-	 * @return array an array of fields.
+	 * @return array Returns an array of fields.
 	 */
-	public function getExpandSortFields () {}
+	public function getExpandSortFields (): array {}
 
 	/**
 	 * Sets the number of rows to display in each group (expand.rows). Server Default 5
@@ -1811,14 +1786,14 @@ class SolrQuery extends SolrModifiableParams implements Stringable, Serializable
 	 * @param int $value 
 	 * @return SolrQuery SolrQuery
 	 */
-	public function setExpandRows (int $value) {}
+	public function setExpandRows (int $value): SolrQuery {}
 
 	/**
 	 * Returns The number of rows to display in each group (expand.rows)
 	 * @link http://www.php.net/manual/en/solrquery.getexpandrows.php
-	 * @return int the number of rows.
+	 * @return int Returns the number of rows.
 	 */
-	public function getExpandRows () {}
+	public function getExpandRows (): int {}
 
 	/**
 	 * Sets the expand.q parameter
@@ -1826,14 +1801,14 @@ class SolrQuery extends SolrModifiableParams implements Stringable, Serializable
 	 * @param string $q 
 	 * @return SolrQuery SolrQuery
 	 */
-	public function setExpandQuery (string $q) {}
+	public function setExpandQuery (string $q): SolrQuery {}
 
 	/**
 	 * Returns the expand query expand.q parameter
 	 * @link http://www.php.net/manual/en/solrquery.getexpandquery.php
-	 * @return array the expand query.
+	 * @return array Returns the expand query.
 	 */
-	public function getExpandQuery () {}
+	public function getExpandQuery (): array {}
 
 	/**
 	 * Overrides main filter query, determines which documents to include in the main group
@@ -1841,7 +1816,7 @@ class SolrQuery extends SolrModifiableParams implements Stringable, Serializable
 	 * @param string $fq 
 	 * @return SolrQuery SolrQuery
 	 */
-	public function addExpandFilterQuery (string $fq) {}
+	public function addExpandFilterQuery (string $fq): SolrQuery {}
 
 	/**
 	 * Removes an expand filter query
@@ -1849,786 +1824,783 @@ class SolrQuery extends SolrModifiableParams implements Stringable, Serializable
 	 * @param string $fq 
 	 * @return SolrQuery SolrQuery
 	 */
-	public function removeExpandFilterQuery (string $fq) {}
+	public function removeExpandFilterQuery (string $fq): SolrQuery {}
 
 	/**
 	 * Returns the expand filter queries
 	 * @link http://www.php.net/manual/en/solrquery.getexpandfilterqueries.php
-	 * @return array the expand filter queries.
+	 * @return array Returns the expand filter queries.
 	 */
-	public function getExpandFilterQueries () {}
+	public function getExpandFilterQueries (): array {}
 
 	/**
 	 * Enables or disables highlighting
 	 * @link http://www.php.net/manual/en/solrquery.sethighlight.php
-	 * @param bool $flag Enable or disable highlighting
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param bool $flag 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setHighlight (bool $flag) {}
+	public function setHighlight (bool $flag): SolrQuery {}
 
 	/**
 	 * Returns the state of the hl parameter
 	 * @link http://www.php.net/manual/en/solrquery.gethighlight.php
-	 * @return bool a boolean on success and null if not set.
+	 * @return bool Returns a boolean on success and null if not set.
 	 */
-	public function getHighlight () {}
+	public function getHighlight (): bool {}
 
 	/**
 	 * Maps to hl.fl
 	 * @link http://www.php.net/manual/en/solrquery.addhighlightfield.php
-	 * @param string $field Name of the field
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param string $field 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function addHighlightField (string $field) {}
+	public function addHighlightField (string $field): SolrQuery {}
 
 	/**
 	 * Removes one of the fields used for highlighting
 	 * @link http://www.php.net/manual/en/solrquery.removehighlightfield.php
-	 * @param string $field The name of the field
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param string $field 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function removeHighlightField (string $field) {}
+	public function removeHighlightField (string $field): SolrQuery {}
 
 	/**
 	 * Returns all the fields that Solr should generate highlighted snippets for
 	 * @link http://www.php.net/manual/en/solrquery.gethighlightfields.php
-	 * @return array an array on success and null if not set.
+	 * @return array Returns an array on success and null if not set.
 	 */
-	public function getHighlightFields () {}
+	public function getHighlightFields (): array {}
 
 	/**
 	 * Sets the maximum number of highlighted snippets to generate per field
 	 * @link http://www.php.net/manual/en/solrquery.sethighlightsnippets.php
-	 * @param int $value The maximum number of highlighted snippets to generate per field
-	 * @param string $field_override [optional] The name of the field.
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param int $value 
+	 * @param string $field_override [optional] 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setHighlightSnippets (int $value, string $field_override = null) {}
+	public function setHighlightSnippets (int $value, string $field_override = null): SolrQuery {}
 
 	/**
 	 * Returns the maximum number of highlighted snippets to generate per field
 	 * @link http://www.php.net/manual/en/solrquery.gethighlightsnippets.php
-	 * @param string $field_override [optional] The name of the field
-	 * @return int an integer on success and null if not set.
+	 * @param string $field_override [optional] 
+	 * @return int Returns an integer on success and null if not set.
 	 */
-	public function getHighlightSnippets (string $field_override = null) {}
+	public function getHighlightSnippets (string $field_override = null): int {}
 
 	/**
 	 * The size of fragments to consider for highlighting
 	 * @link http://www.php.net/manual/en/solrquery.sethighlightfragsize.php
-	 * @param int $size The size, in characters, of fragments to consider for highlighting
-	 * @param string $field_override [optional] The name of the field.
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param int $size 
+	 * @param string $field_override [optional] 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setHighlightFragsize (int $size, string $field_override = null) {}
+	public function setHighlightFragsize (int $size, string $field_override = null): SolrQuery {}
 
 	/**
 	 * Returns the number of characters of fragments to consider for highlighting
 	 * @link http://www.php.net/manual/en/solrquery.gethighlightfragsize.php
-	 * @param string $field_override [optional] The name of the field
-	 * @return int an integer on success or null if not set.
+	 * @param string $field_override [optional] 
+	 * @return int Returns an integer on success or null if not set.
 	 */
-	public function getHighlightFragsize (string $field_override = null) {}
+	public function getHighlightFragsize (string $field_override = null): int {}
 
 	/**
 	 * Whether or not to collapse contiguous fragments into a single fragment
 	 * @link http://www.php.net/manual/en/solrquery.sethighlightmergecontiguous.php
 	 * @param bool $flag 
-	 * @param string $field_override [optional] The name of the field.
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param string $field_override [optional] 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setHighlightMergeContiguous (bool $flag, string $field_override = null) {}
+	public function setHighlightMergeContiguous (bool $flag, string $field_override = null): SolrQuery {}
 
 	/**
 	 * Returns whether or not the collapse contiguous fragments into a single fragment
 	 * @link http://www.php.net/manual/en/solrquery.gethighlightmergecontiguous.php
-	 * @param string $field_override [optional] The name of the field
-	 * @return bool a boolean on success and null if not set.
+	 * @param string $field_override [optional] 
+	 * @return bool Returns a boolean on success and null if not set.
 	 */
-	public function getHighlightMergeContiguous (string $field_override = null) {}
+	public function getHighlightMergeContiguous (string $field_override = null): bool {}
 
 	/**
 	 * Require field matching during highlighting
 	 * @link http://www.php.net/manual/en/solrquery.sethighlightrequirefieldmatch.php
-	 * @param bool $flag true or false
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param bool $flag 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setHighlightRequireFieldMatch (bool $flag) {}
+	public function setHighlightRequireFieldMatch (bool $flag): SolrQuery {}
 
 	/**
 	 * Returns if a field will only be highlighted if the query matched in this particular field
 	 * @link http://www.php.net/manual/en/solrquery.gethighlightrequirefieldmatch.php
-	 * @return bool a boolean on success and null if not set.
+	 * @return bool Returns a boolean on success and null if not set.
 	 */
-	public function getHighlightRequireFieldMatch () {}
+	public function getHighlightRequireFieldMatch (): bool {}
 
 	/**
 	 * Specifies the number of characters into a document to look for suitable snippets
 	 * @link http://www.php.net/manual/en/solrquery.sethighlightmaxanalyzedchars.php
-	 * @param int $value The number of characters into a document to look for suitable snippets
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param int $value 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setHighlightMaxAnalyzedChars (int $value) {}
+	public function setHighlightMaxAnalyzedChars (int $value): SolrQuery {}
 
 	/**
 	 * Returns the maximum number of characters into a document to look for suitable snippets
 	 * @link http://www.php.net/manual/en/solrquery.gethighlightmaxanalyzedchars.php
-	 * @return int an integer on success and null if not set.
+	 * @return int Returns an integer on success and null if not set.
 	 */
-	public function getHighlightMaxAnalyzedChars () {}
+	public function getHighlightMaxAnalyzedChars (): int {}
 
 	/**
 	 * Specifies the backup field to use
 	 * @link http://www.php.net/manual/en/solrquery.sethighlightalternatefield.php
-	 * @param string $field The name of the backup field
-	 * @param string $field_override [optional] The name of the field we are overriding this setting for.
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param string $field 
+	 * @param string $field_override [optional] 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setHighlightAlternateField (string $field, string $field_override = null) {}
+	public function setHighlightAlternateField (string $field, string $field_override = null): SolrQuery {}
 
 	/**
 	 * Returns the highlight field to use as backup or default
 	 * @link http://www.php.net/manual/en/solrquery.gethighlightalternatefield.php
-	 * @param string $field_override [optional] The name of the field
-	 * @return string a string on success and null if not set.
+	 * @param string $field_override [optional] 
+	 * @return string Returns a string on success and null if not set.
 	 */
-	public function getHighlightAlternateField (string $field_override = null) {}
+	public function getHighlightAlternateField (string $field_override = null): string {}
 
 	/**
 	 * Sets the maximum number of characters of the field to return
 	 * @link http://www.php.net/manual/en/solrquery.sethighlightmaxalternatefieldlength.php
-	 * @param int $fieldLength The length of the field
-	 * @param string $field_override [optional] The name of the field.
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param int $fieldLength 
+	 * @param string $field_override [optional] 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setHighlightMaxAlternateFieldLength (int $fieldLength, string $field_override = null) {}
+	public function setHighlightMaxAlternateFieldLength (int $fieldLength, string $field_override = null): SolrQuery {}
 
 	/**
 	 * Returns the maximum number of characters of the field to return
 	 * @link http://www.php.net/manual/en/solrquery.gethighlightmaxalternatefieldlength.php
-	 * @param string $field_override [optional] The name of the field
-	 * @return int an integer on success and null if not set.
+	 * @param string $field_override [optional] 
+	 * @return int Returns an integer on success and null if not set.
 	 */
-	public function getHighlightMaxAlternateFieldLength (string $field_override = null) {}
+	public function getHighlightMaxAlternateFieldLength (string $field_override = null): int {}
 
 	/**
 	 * Specify a formatter for the highlight output
 	 * @link http://www.php.net/manual/en/solrquery.sethighlightformatter.php
-	 * @param string $formatter Currently the only legal value is "simple"
-	 * @param string $field_override [optional] The name of the field.
-	 * @return SolrQuery an instance of SolrQuery.
+	 * @param string $formatter 
+	 * @param string $field_override [optional] 
+	 * @return SolrQuery Returns an instance of SolrQuery.
 	 */
-	public function setHighlightFormatter (string $formatter, string $field_override = null) {}
+	public function setHighlightFormatter (string $formatter, string $field_override = null): SolrQuery {}
 
 	/**
 	 * Returns the formatter for the highlighted output
 	 * @link http://www.php.net/manual/en/solrquery.gethighlightformatter.php
-	 * @param string $field_override [optional] The name of the field
-	 * @return string a string on success and null if not set.
+	 * @param string $field_override [optional] 
+	 * @return string Returns a string on success and null if not set.
 	 */
-	public function getHighlightFormatter (string $field_override = null) {}
+	public function getHighlightFormatter (string $field_override = null): string {}
 
 	/**
 	 * Sets the text which appears before a highlighted term
 	 * @link http://www.php.net/manual/en/solrquery.sethighlightsimplepre.php
-	 * @param string $simplePre The text which appears before a highlighted term
-	 * @param string $field_override [optional] The name of the field.
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param string $simplePre 
+	 * @param string $field_override [optional] 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setHighlightSimplePre (string $simplePre, string $field_override = null) {}
+	public function setHighlightSimplePre (string $simplePre, string $field_override = null): SolrQuery {}
 
 	/**
 	 * Returns the text which appears before a highlighted term
 	 * @link http://www.php.net/manual/en/solrquery.gethighlightsimplepre.php
-	 * @param string $field_override [optional] The name of the field
-	 * @return string a string on success and null if not set.
+	 * @param string $field_override [optional] 
+	 * @return string Returns a string on success and null if not set.
 	 */
-	public function getHighlightSimplePre (string $field_override = null) {}
+	public function getHighlightSimplePre (string $field_override = null): string {}
 
 	/**
 	 * Sets the text which appears after a highlighted term
 	 * @link http://www.php.net/manual/en/solrquery.sethighlightsimplepost.php
-	 * @param string $simplePost <p>
-	 * Sets the text which appears after a highlighted term
-	 * </p>
-	 * <p><pre> The default is </pre></p>
-	 * @param string $field_override [optional] The name of the field.
-	 * @return SolrQuery an instance of SolrQuery.
+	 * @param string $simplePost 
+	 * @param string $field_override [optional] 
+	 * @return SolrQuery Returns an instance of SolrQuery.
 	 */
-	public function setHighlightSimplePost (string $simplePost, string $field_override = null) {}
+	public function setHighlightSimplePost (string $simplePost, string $field_override = null): SolrQuery {}
 
 	/**
 	 * Returns the text which appears after a highlighted term
 	 * @link http://www.php.net/manual/en/solrquery.gethighlightsimplepost.php
-	 * @param string $field_override [optional] The name of the field
-	 * @return string a string on success and null if not set.
+	 * @param string $field_override [optional] 
+	 * @return string Returns a string on success and null if not set.
 	 */
-	public function getHighlightSimplePost (string $field_override = null) {}
+	public function getHighlightSimplePost (string $field_override = null): string {}
 
 	/**
 	 * Sets a text snippet generator for highlighted text
 	 * @link http://www.php.net/manual/en/solrquery.sethighlightfragmenter.php
-	 * @param string $fragmenter The standard fragmenter is gap. Another option is regex, which tries to create fragments that resembles a certain regular expression
-	 * @param string $field_override [optional] The name of the field.
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param string $fragmenter 
+	 * @param string $field_override [optional] 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setHighlightFragmenter (string $fragmenter, string $field_override = null) {}
+	public function setHighlightFragmenter (string $fragmenter, string $field_override = null): SolrQuery {}
 
 	/**
 	 * Returns the text snippet generator for highlighted text
 	 * @link http://www.php.net/manual/en/solrquery.gethighlightfragmenter.php
-	 * @param string $field_override [optional] The name of the field
-	 * @return string a string on success and null if not set.
+	 * @param string $field_override [optional] 
+	 * @return string Returns a string on success and null if not set.
 	 */
-	public function getHighlightFragmenter (string $field_override = null) {}
+	public function getHighlightFragmenter (string $field_override = null): string {}
 
 	/**
 	 * Whether to highlight phrase terms only when they appear within the query phrase
 	 * @link http://www.php.net/manual/en/solrquery.sethighlightusephrasehighlighter.php
 	 * @param bool $flag 
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setHighlightUsePhraseHighlighter (bool $flag) {}
+	public function setHighlightUsePhraseHighlighter (bool $flag): SolrQuery {}
 
 	/**
 	 * Returns the state of the hl.usePhraseHighlighter parameter
 	 * @link http://www.php.net/manual/en/solrquery.gethighlightusephrasehighlighter.php
-	 * @return bool a boolean on success and null if not set.
+	 * @return bool Returns a boolean on success and null if not set.
 	 */
-	public function getHighlightUsePhraseHighlighter () {}
+	public function getHighlightUsePhraseHighlighter (): bool {}
 
 	/**
 	 * Use SpanScorer to highlight phrase terms
 	 * @link http://www.php.net/manual/en/solrquery.sethighlighthighlightmultiterm.php
-	 * @param bool $flag Whether or not to use SpanScorer to highlight phrase terms only when they appear within the query phrase in the document.
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param bool $flag 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setHighlightHighlightMultiTerm (bool $flag) {}
+	public function setHighlightHighlightMultiTerm (bool $flag): SolrQuery {}
 
 	/**
 	 * Returns whether or not to enable highlighting for range/wildcard/fuzzy/prefix queries
 	 * @link http://www.php.net/manual/en/solrquery.gethighlighthighlightmultiterm.php
-	 * @return bool a boolean on success and null if not set.
+	 * @return bool Returns a boolean on success and null if not set.
 	 */
-	public function getHighlightHighlightMultiTerm () {}
+	public function getHighlightHighlightMultiTerm (): bool {}
 
 	/**
 	 * Sets the factor by which the regex fragmenter can stray from the ideal fragment size
 	 * @link http://www.php.net/manual/en/solrquery.sethighlightregexslop.php
-	 * @param float $factor The factor by which the regex fragmenter can stray from the ideal fragment size
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param float $factor 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setHighlightRegexSlop (float $factor) {}
+	public function setHighlightRegexSlop (float $factor): SolrQuery {}
 
 	/**
 	 * Returns the deviation factor from the ideal fragment size
 	 * @link http://www.php.net/manual/en/solrquery.gethighlightregexslop.php
-	 * @return float a float on success and null if not set.
+	 * @return float Returns a float on success and null if not set.
 	 */
-	public function getHighlightRegexSlop () {}
+	public function getHighlightRegexSlop (): float {}
 
 	/**
 	 * Specify the regular expression for fragmenting
 	 * @link http://www.php.net/manual/en/solrquery.sethighlightregexpattern.php
-	 * @param string $value The regular expression for fragmenting. This could be used to extract sentences
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param string $value 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setHighlightRegexPattern (string $value) {}
+	public function setHighlightRegexPattern (string $value): SolrQuery {}
 
 	/**
 	 * Returns the regular expression for fragmenting
 	 * @link http://www.php.net/manual/en/solrquery.gethighlightregexpattern.php
-	 * @return string a string on success and null if not set.
+	 * @return string Returns a string on success and null if not set.
 	 */
-	public function getHighlightRegexPattern () {}
+	public function getHighlightRegexPattern (): string {}
 
 	/**
 	 * Specify the maximum number of characters to analyze
 	 * @link http://www.php.net/manual/en/solrquery.sethighlightregexmaxanalyzedchars.php
-	 * @param int $maxAnalyzedChars The maximum number of characters to analyze from a field when using the regex fragmenter
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param int $maxAnalyzedChars 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setHighlightRegexMaxAnalyzedChars (int $maxAnalyzedChars) {}
+	public function setHighlightRegexMaxAnalyzedChars (int $maxAnalyzedChars): SolrQuery {}
 
 	/**
 	 * Returns the maximum number of characters from a field when using the regex fragmenter
 	 * @link http://www.php.net/manual/en/solrquery.gethighlightregexmaxanalyzedchars.php
-	 * @return int an integer on success and null if not set.
+	 * @return int Returns an integer on success and null if not set.
 	 */
-	public function getHighlightRegexMaxAnalyzedChars () {}
+	public function getHighlightRegexMaxAnalyzedChars (): int {}
 
 	/**
 	 * Enables or disables the Stats component
 	 * @link http://www.php.net/manual/en/solrquery.setstats.php
-	 * @param bool $flag true turns on the stats component and false disables it.
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param bool $flag 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setStats (bool $flag) {}
+	public function setStats (bool $flag): SolrQuery {}
 
 	/**
 	 * Returns whether or not stats is enabled
 	 * @link http://www.php.net/manual/en/solrquery.getstats.php
-	 * @return bool a boolean on success and null if not set.
+	 * @return bool Returns a boolean on success and null if not set.
 	 */
-	public function getStats () {}
+	public function getStats (): bool {}
 
 	/**
 	 * Maps to stats.field parameter
 	 * @link http://www.php.net/manual/en/solrquery.addstatsfield.php
-	 * @param string $field The name of the field
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param string $field 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function addStatsField (string $field) {}
+	public function addStatsField (string $field): SolrQuery {}
 
 	/**
 	 * Removes one of the stats.field parameters
 	 * @link http://www.php.net/manual/en/solrquery.removestatsfield.php
-	 * @param string $field The name of the field.
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param string $field 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function removeStatsField (string $field) {}
+	public function removeStatsField (string $field): SolrQuery {}
 
 	/**
 	 * Returns all the statistics fields
 	 * @link http://www.php.net/manual/en/solrquery.getstatsfields.php
-	 * @return array an array on success and null if not set.
+	 * @return array Returns an array on success and null if not set.
 	 */
-	public function getStatsFields () {}
+	public function getStatsFields (): array {}
 
 	/**
 	 * Requests a return of sub results for values within the given facet
 	 * @link http://www.php.net/manual/en/solrquery.addstatsfacet.php
-	 * @param string $field The name of the field
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param string $field 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function addStatsFacet (string $field) {}
+	public function addStatsFacet (string $field): SolrQuery {}
 
 	/**
 	 * Removes one of the stats.facet parameters
 	 * @link http://www.php.net/manual/en/solrquery.removestatsfacet.php
-	 * @param string $value The value
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param string $value 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function removeStatsFacet (string $value) {}
+	public function removeStatsFacet (string $value): SolrQuery {}
 
 	/**
 	 * Returns all the stats facets that were set
 	 * @link http://www.php.net/manual/en/solrquery.getstatsfacets.php
-	 * @return array an array on success and null if not set.
+	 * @return array Returns an array on success and null if not set.
 	 */
-	public function getStatsFacets () {}
+	public function getStatsFacets (): array {}
 
 	/**
 	 * Enables or disables moreLikeThis
 	 * @link http://www.php.net/manual/en/solrquery.setmlt.php
-	 * @param bool $flag true enables it and false turns it off.
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param bool $flag 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setMlt (bool $flag) {}
+	public function setMlt (bool $flag): SolrQuery {}
 
 	/**
 	 * Returns whether or not MoreLikeThis results should be enabled
 	 * @link http://www.php.net/manual/en/solrquery.getmlt.php
-	 * @return bool a boolean on success and null if not set.
+	 * @return bool Returns a boolean on success and null if not set.
 	 */
-	public function getMlt () {}
+	public function getMlt (): bool {}
 
 	/**
 	 * Set the number of similar documents to return for each result
 	 * @link http://www.php.net/manual/en/solrquery.setmltcount.php
-	 * @param int $count The number of similar documents to return for each result
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param int $count 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setMltCount (int $count) {}
+	public function setMltCount (int $count): SolrQuery {}
 
 	/**
 	 * Returns the number of similar documents to return for each result
 	 * @link http://www.php.net/manual/en/solrquery.getmltcount.php
-	 * @return int an integer on success and null if not set.
+	 * @return int Returns an integer on success and null if not set.
 	 */
-	public function getMltCount () {}
+	public function getMltCount (): int {}
 
 	/**
 	 * Sets a field to use for similarity
 	 * @link http://www.php.net/manual/en/solrquery.addmltfield.php
-	 * @param string $field The name of the field
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param string $field 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function addMltField (string $field) {}
+	public function addMltField (string $field): SolrQuery {}
 
 	/**
 	 * Removes one of the moreLikeThis fields
 	 * @link http://www.php.net/manual/en/solrquery.removemltfield.php
-	 * @param string $field Name of the field
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param string $field 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function removeMltField (string $field) {}
+	public function removeMltField (string $field): SolrQuery {}
 
 	/**
 	 * Returns all the fields to use for similarity
 	 * @link http://www.php.net/manual/en/solrquery.getmltfields.php
-	 * @return array an array on success and null if not set.
+	 * @return array Returns an array on success and null if not set.
 	 */
-	public function getMltFields () {}
+	public function getMltFields (): array {}
 
 	/**
 	 * Maps to mlt.qf
 	 * @link http://www.php.net/manual/en/solrquery.addmltqueryfield.php
-	 * @param string $field The name of the field
-	 * @param float $boost Its boost value
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param string $field 
+	 * @param float $boost 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function addMltQueryField (string $field, float $boost) {}
+	public function addMltQueryField (string $field, float $boost): SolrQuery {}
 
 	/**
 	 * Removes one of the moreLikeThis query fields
 	 * @link http://www.php.net/manual/en/solrquery.removemltqueryfield.php
-	 * @param string $queryField The query field
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param string $queryField 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function removeMltQueryField (string $queryField) {}
+	public function removeMltQueryField (string $queryField): SolrQuery {}
 
 	/**
 	 * Returns the query fields and their boosts
 	 * @link http://www.php.net/manual/en/solrquery.getmltqueryfields.php
-	 * @return array an array on success and null if not set.
+	 * @return array Returns an array on success and null if not set.
 	 */
-	public function getMltQueryFields () {}
+	public function getMltQueryFields (): array {}
 
 	/**
 	 * Sets the frequency below which terms will be ignored in the source docs
 	 * @link http://www.php.net/manual/en/solrquery.setmltmintermfrequency.php
-	 * @param int $minTermFrequency The frequency below which terms will be ignored in the source docs
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param int $minTermFrequency 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setMltMinTermFrequency (int $minTermFrequency) {}
+	public function setMltMinTermFrequency (int $minTermFrequency): SolrQuery {}
 
 	/**
 	 * Returns the frequency below which terms will be ignored in the source document
 	 * @link http://www.php.net/manual/en/solrquery.getmltmintermfrequency.php
-	 * @return int an integer on success and null if not set.
+	 * @return int Returns an integer on success and null if not set.
 	 */
-	public function getMltMinTermFrequency () {}
+	public function getMltMinTermFrequency (): int {}
 
 	/**
 	 * Sets the mltMinDoc frequency
 	 * @link http://www.php.net/manual/en/solrquery.setmltmindocfrequency.php
-	 * @param int $minDocFrequency Sets the frequency at which words will be ignored which do not occur in at least this many docs.
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param int $minDocFrequency 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setMltMinDocFrequency (int $minDocFrequency) {}
+	public function setMltMinDocFrequency (int $minDocFrequency): SolrQuery {}
 
 	/**
 	 * Returns the treshold frequency at which words will be ignored which do not occur in at least this many docs
 	 * @link http://www.php.net/manual/en/solrquery.getmltmindocfrequency.php
-	 * @return int an integer on success and null if not set.
+	 * @return int Returns an integer on success and null if not set.
 	 */
-	public function getMltMinDocFrequency () {}
+	public function getMltMinDocFrequency (): int {}
 
 	/**
 	 * Sets the minimum word length
 	 * @link http://www.php.net/manual/en/solrquery.setmltminwordlength.php
-	 * @param int $minWordLength The minimum word length below which words will be ignored
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param int $minWordLength 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setMltMinWordLength (int $minWordLength) {}
+	public function setMltMinWordLength (int $minWordLength): SolrQuery {}
 
 	/**
 	 * Returns the minimum word length below which words will be ignored
 	 * @link http://www.php.net/manual/en/solrquery.getmltminwordlength.php
-	 * @return int an integer on success and null if not set.
+	 * @return int Returns an integer on success and null if not set.
 	 */
-	public function getMltMinWordLength () {}
+	public function getMltMinWordLength (): int {}
 
 	/**
 	 * Sets the maximum word length
 	 * @link http://www.php.net/manual/en/solrquery.setmltmaxwordlength.php
-	 * @param int $maxWordLength The maximum word length above which words will be ignored
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param int $maxWordLength 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setMltMaxWordLength (int $maxWordLength) {}
+	public function setMltMaxWordLength (int $maxWordLength): SolrQuery {}
 
 	/**
 	 * Returns the maximum word length above which words will be ignored
 	 * @link http://www.php.net/manual/en/solrquery.getmltmaxwordlength.php
-	 * @return int an integer on success and null if not set.
+	 * @return int Returns an integer on success and null if not set.
 	 */
-	public function getMltMaxWordLength () {}
+	public function getMltMaxWordLength (): int {}
 
 	/**
 	 * Specifies the maximum number of tokens to parse
 	 * @link http://www.php.net/manual/en/solrquery.setmltmaxnumtokens.php
-	 * @param int $value The maximum number of tokens to parse
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param int $value 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setMltMaxNumTokens (int $value) {}
+	public function setMltMaxNumTokens (int $value): SolrQuery {}
 
 	/**
 	 * Returns the maximum number of tokens to parse in each document field that is not stored with TermVector support
 	 * @link http://www.php.net/manual/en/solrquery.getmltmaxnumtokens.php
-	 * @return int an integer on success and null if not set.
+	 * @return int Returns an integer on success and null if not set.
 	 */
-	public function getMltMaxNumTokens () {}
+	public function getMltMaxNumTokens (): int {}
 
 	/**
 	 * Sets the maximum number of query terms included
 	 * @link http://www.php.net/manual/en/solrquery.setmltmaxnumqueryterms.php
-	 * @param int $value The maximum number of query terms that will be included in any generated query
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param int $value 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setMltMaxNumQueryTerms (int $value) {}
+	public function setMltMaxNumQueryTerms (int $value): SolrQuery {}
 
 	/**
 	 * Returns the maximum number of query terms that will be included in any generated query
 	 * @link http://www.php.net/manual/en/solrquery.getmltmaxnumqueryterms.php
-	 * @return int an integer on success and null if not set.
+	 * @return int Returns an integer on success and null if not set.
 	 */
-	public function getMltMaxNumQueryTerms () {}
+	public function getMltMaxNumQueryTerms (): int {}
 
 	/**
 	 * Set if the query will be boosted by the interesting term relevance
 	 * @link http://www.php.net/manual/en/solrquery.setmltboost.php
 	 * @param bool $flag 
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setMltBoost (bool $flag) {}
+	public function setMltBoost (bool $flag): SolrQuery {}
 
 	/**
 	 * Returns whether or not the query will be boosted by the interesting term relevance
 	 * @link http://www.php.net/manual/en/solrquery.getmltboost.php
-	 * @return bool a boolean on success and null if not set.
+	 * @return bool Returns a boolean on success and null if not set.
 	 */
-	public function getMltBoost () {}
+	public function getMltBoost (): bool {}
 
 	/**
 	 * Enables or disables the TermsComponent
 	 * @link http://www.php.net/manual/en/solrquery.setterms.php
-	 * @param bool $flag true enables it. false turns it off
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param bool $flag 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setTerms (bool $flag) {}
+	public function setTerms (bool $flag): SolrQuery {}
 
 	/**
 	 * Returns whether or not the TermsComponent is enabled
 	 * @link http://www.php.net/manual/en/solrquery.getterms.php
-	 * @return bool a boolean on success and null if not set.
+	 * @return bool Returns a boolean on success and null if not set.
 	 */
-	public function getTerms () {}
+	public function getTerms (): bool {}
 
 	/**
 	 * Sets the name of the field to get the Terms from
 	 * @link http://www.php.net/manual/en/solrquery.settermsfield.php
-	 * @param string $fieldname The field name
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param string $fieldname 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setTermsField (string $fieldname) {}
+	public function setTermsField (string $fieldname): SolrQuery {}
 
 	/**
 	 * Returns the field from which the terms are retrieved
 	 * @link http://www.php.net/manual/en/solrquery.gettermsfield.php
-	 * @return string a string on success and null if not set.
+	 * @return string Returns a string on success and null if not set.
 	 */
-	public function getTermsField () {}
+	public function getTermsField (): string {}
 
 	/**
 	 * Specifies the Term to start from
 	 * @link http://www.php.net/manual/en/solrquery.settermslowerbound.php
-	 * @param string $lowerBound The lower bound Term
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param string $lowerBound 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setTermsLowerBound (string $lowerBound) {}
+	public function setTermsLowerBound (string $lowerBound): SolrQuery {}
 
 	/**
 	 * Returns the term to start at
 	 * @link http://www.php.net/manual/en/solrquery.gettermslowerbound.php
-	 * @return string a string on success and null if not set.
+	 * @return string Returns a string on success and null if not set.
 	 */
-	public function getTermsLowerBound () {}
+	public function getTermsLowerBound (): string {}
 
 	/**
 	 * Sets the term to stop at
 	 * @link http://www.php.net/manual/en/solrquery.settermsupperbound.php
-	 * @param string $upperBound The term to stop at
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param string $upperBound 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setTermsUpperBound (string $upperBound) {}
+	public function setTermsUpperBound (string $upperBound): SolrQuery {}
 
 	/**
 	 * Returns the term to stop at
 	 * @link http://www.php.net/manual/en/solrquery.gettermsupperbound.php
-	 * @return string a string on success and null if not set.
+	 * @return string Returns a string on success and null if not set.
 	 */
-	public function getTermsUpperBound () {}
+	public function getTermsUpperBound (): string {}
 
 	/**
 	 * Include the lower bound term in the result set
 	 * @link http://www.php.net/manual/en/solrquery.settermsincludelowerbound.php
-	 * @param bool $flag Include the lower bound term in the result set
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param bool $flag 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setTermsIncludeLowerBound (bool $flag) {}
+	public function setTermsIncludeLowerBound (bool $flag): SolrQuery {}
 
 	/**
 	 * Returns whether or not to include the lower bound in the result set
 	 * @link http://www.php.net/manual/en/solrquery.gettermsincludelowerbound.php
-	 * @return bool a boolean on success and null if not set.
+	 * @return bool Returns a boolean on success and null if not set.
 	 */
-	public function getTermsIncludeLowerBound () {}
+	public function getTermsIncludeLowerBound (): bool {}
 
 	/**
 	 * Include the upper bound term in the result set
 	 * @link http://www.php.net/manual/en/solrquery.settermsincludeupperbound.php
-	 * @param bool $flag true or false
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param bool $flag 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setTermsIncludeUpperBound (bool $flag) {}
+	public function setTermsIncludeUpperBound (bool $flag): SolrQuery {}
 
 	/**
 	 * Returns whether or not to include the upper bound term in the result set
 	 * @link http://www.php.net/manual/en/solrquery.gettermsincludeupperbound.php
-	 * @return bool a boolean on success and null if not set.
+	 * @return bool Returns a boolean on success and null if not set.
 	 */
-	public function getTermsIncludeUpperBound () {}
+	public function getTermsIncludeUpperBound (): bool {}
 
 	/**
 	 * Sets the minimum document frequency
 	 * @link http://www.php.net/manual/en/solrquery.settermsmincount.php
-	 * @param int $frequency The minimum frequency
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param int $frequency 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setTermsMinCount (int $frequency) {}
+	public function setTermsMinCount (int $frequency): SolrQuery {}
 
 	/**
 	 * Returns the minimum document frequency to return in order to be included
 	 * @link http://www.php.net/manual/en/solrquery.gettermsmincount.php
-	 * @return int an integer on success and null if not set.
+	 * @return int Returns an integer on success and null if not set.
 	 */
-	public function getTermsMinCount () {}
+	public function getTermsMinCount (): int {}
 
 	/**
 	 * Sets the maximum document frequency
 	 * @link http://www.php.net/manual/en/solrquery.settermsmaxcount.php
-	 * @param int $frequency The maximum document frequency.
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param int $frequency 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setTermsMaxCount (int $frequency) {}
+	public function setTermsMaxCount (int $frequency): SolrQuery {}
 
 	/**
 	 * Returns the maximum document frequency
 	 * @link http://www.php.net/manual/en/solrquery.gettermsmaxcount.php
-	 * @return int an integer on success and null if not set.
+	 * @return int Returns an integer on success and null if not set.
 	 */
-	public function getTermsMaxCount () {}
+	public function getTermsMaxCount (): int {}
 
 	/**
 	 * Restrict matches to terms that start with the prefix
 	 * @link http://www.php.net/manual/en/solrquery.settermsprefix.php
-	 * @param string $prefix Restrict matches to terms that start with the prefix
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param string $prefix 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setTermsPrefix (string $prefix) {}
+	public function setTermsPrefix (string $prefix): SolrQuery {}
 
 	/**
 	 * Returns the term prefix
 	 * @link http://www.php.net/manual/en/solrquery.gettermsprefix.php
-	 * @return string a string on success and null if not set.
+	 * @return string Returns a string on success and null if not set.
 	 */
-	public function getTermsPrefix () {}
+	public function getTermsPrefix (): string {}
 
 	/**
 	 * Sets the maximum number of terms to return
 	 * @link http://www.php.net/manual/en/solrquery.settermslimit.php
-	 * @param int $limit The maximum number of terms to return. All the terms will be returned if the limit is negative.
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param int $limit 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setTermsLimit (int $limit) {}
+	public function setTermsLimit (int $limit): SolrQuery {}
 
 	/**
 	 * Returns the maximum number of terms Solr should return
 	 * @link http://www.php.net/manual/en/solrquery.gettermslimit.php
-	 * @return int an integer on success and null if not set.
+	 * @return int Returns an integer on success and null if not set.
 	 */
-	public function getTermsLimit () {}
+	public function getTermsLimit (): int {}
 
 	/**
 	 * Return the raw characters of the indexed term
 	 * @link http://www.php.net/manual/en/solrquery.settermsreturnraw.php
 	 * @param bool $flag 
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setTermsReturnRaw (bool $flag) {}
+	public function setTermsReturnRaw (bool $flag): SolrQuery {}
 
 	/**
 	 * Whether or not to return raw characters
 	 * @link http://www.php.net/manual/en/solrquery.gettermsreturnraw.php
-	 * @return bool a boolean on success and null if not set.
+	 * @return bool Returns a boolean on success and null if not set.
 	 */
-	public function getTermsReturnRaw () {}
+	public function getTermsReturnRaw (): bool {}
 
 	/**
 	 * Specifies how to sort the returned terms
 	 * @link http://www.php.net/manual/en/solrquery.settermssort.php
-	 * @param int $sortType SolrQuery::TERMS_SORT_INDEX or SolrQuery::TERMS_SORT_COUNT
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param int $sortType 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setTermsSort (int $sortType) {}
+	public function setTermsSort (int $sortType): SolrQuery {}
 
 	/**
 	 * Returns an integer indicating how terms are sorted
 	 * @link http://www.php.net/manual/en/solrquery.gettermssort.php
-	 * @return int an integer on success and null if not set.
+	 * @return int Returns an integer on success and null if not set.
 	 */
-	public function getTermsSort () {}
+	public function getTermsSort (): int {}
 
 	/**
 	 * Sets the parameter to the specified value
 	 * @link http://www.php.net/manual/en/solrparams.setparam.php
-	 * @param string $name Name of the parameter
-	 * @param string $value Value of the parameter
-	 * @return SolrParams a SolrParam object on success and false on value.
+	 * @param string $name 
+	 * @param string $value 
+	 * @return SolrParams Returns a SolrParam object on success and false on value.
 	 */
-	public function setParam (string $name, string $value) {}
+	public function setParam (string $name, string $value): SolrParams {}
 
 	/**
 	 * Adds a parameter to the object
 	 * @link http://www.php.net/manual/en/solrparams.addparam.php
-	 * @param string $name Name of parameter
-	 * @param string $value Value of parameter
-	 * @return SolrParams a SolrParam object on success and false on failure.
+	 * @param string $name 
+	 * @param string $value 
+	 * @return SolrParams Returns a SolrParam object on success and false on failure.
 	 */
-	public function addParam (string $name, string $value) {}
+	public function addParam (string $name, string $value): SolrParams {}
 
 	public function __toString (): string {}
 
 	/**
 	 * Returns all the name-value pair parameters in the object
 	 * @link http://www.php.net/manual/en/solrparams.tostring.php
-	 * @param bool $url_encode [optional] Whether to return URL-encoded values
-	 * @return string a string on success and false on failure.
+	 * @param bool $url_encode [optional] 
+	 * @return string Returns a string on success and false on failure.
 	 */
-	public function toString (bool $url_encode = null) {}
+	public function toString (bool $url_encode = false): string {}
 
 	/**
 	 * Returns an array of non URL-encoded parameters
 	 * @link http://www.php.net/manual/en/solrparams.getparams.php
-	 * @return array an array of non URL-encoded parameters
+	 * @return array Returns an array of non URL-encoded parameters
 	 */
-	public function getParams () {}
+	public function getParams (): array {}
 
 	/**
 	 * Returns a parameter value
 	 * @link http://www.php.net/manual/en/solrparams.getparam.php
-	 * @param string $param_name [optional] The name of the parameter
-	 * @return mixed a string or an array depending on the type of the parameter
+	 * @param string $param_name [optional] 
+	 * @return mixed Returns a string or an array depending on the type of the parameter
 	 */
-	public function getParam (string $param_name = null) {}
+	public function getParam (string $param_name = null): mixed {}
 
 	/**
 	 * Returns an array of URL-encoded parameters
 	 * @link http://www.php.net/manual/en/solrparams.getpreparedparams.php
-	 * @return array an array on URL-encoded parameters
+	 * @return array Returns an array on URL-encoded parameters
 	 */
-	public function getPreparedParams () {}
+	public function getPreparedParams (): array {}
 
 	public function __clone () {}
 
@@ -2637,41 +2609,41 @@ class SolrQuery extends SolrModifiableParams implements Stringable, Serializable
 	 * @link http://www.php.net/manual/en/solrparams.serialize.php
 	 * @return string Used for custom serialization
 	 */
-	public function serialize () {}
+	public function serialize (): string {}
 
 	/**
 	 * Used for custom serialization
 	 * @link http://www.php.net/manual/en/solrparams.unserialize.php
-	 * @param string $serialized The serialized representation of the object
+	 * @param string $serialized 
 	 * @return void None
 	 */
-	public function unserialize (string $serialized) {}
+	public function unserialize (string $serialized): void {}
 
 	/**
-	 * Alias: SolrParams::addParam
+	 * Alias of SolrParams::addParam
 	 * @link http://www.php.net/manual/en/solrparams.add.php
-	 * @param string $name The name of the parameter
-	 * @param string $value The value of the parameter
-	 * @return SolrParams a SolrParams instance on success
+	 * @param string $name 
+	 * @param string $value 
+	 * @return SolrParams Returns a SolrParams instance on success
 	 */
-	public function add (string $name, string $value) {}
+	public function add (string $name, string $value): SolrParams {}
 
 	/**
-	 * Alias: SolrParams::setParam
+	 * Alias of SolrParams::setParam
 	 * @link http://www.php.net/manual/en/solrparams.set.php
-	 * @param string $name Then name of the parameter
-	 * @param string $value The parameter value
-	 * @return void an instance of the SolrParams object on success
+	 * @param string $name 
+	 * @param string $value 
+	 * @return void Returns an instance of the SolrParams object on success
 	 */
-	public function set (string $name, string $value) {}
+	public function set (string $name, string $value): void {}
 
 	/**
-	 * Alias: SolrParams::getParam
+	 * Alias of SolrParams::getParam
 	 * @link http://www.php.net/manual/en/solrparams.get.php
-	 * @param string $param_name Then name of the parameter
-	 * @return mixed an array or string depending on the type of parameter
+	 * @param string $param_name 
+	 * @return mixed Returns an array or string depending on the type of parameter
 	 */
-	public function get (string $param_name) {}
+	public function get (string $param_name): mixed {}
 
 }
 
@@ -2685,9 +2657,10 @@ class SolrDisMaxQuery extends SolrQuery implements Serializable, Stringable {
 	/**
 	 * Class Constructor
 	 * @link http://www.php.net/manual/en/solrdismaxquery.construct.php
-	 * @param mixed $q [optional]
+	 * @param string $q [optional] Search Query (q parameter)
+	 * @return string 
 	 */
-	public function __construct ($q = null) {}
+	public function __construct (string $q = null): string {}
 
 	/**
 	 * Set Query Alternate (q.alt parameter)
@@ -2695,7 +2668,7 @@ class SolrDisMaxQuery extends SolrQuery implements Serializable, Stringable {
 	 * @param string $q Query String
 	 * @return SolrDisMaxQuery SolrDisMaxQuery
 	 */
-	public function setQueryAlt (string $q) {}
+	public function setQueryAlt (string $q): SolrDisMaxQuery {}
 
 	/**
 	 * Add a query field with optional boost (qf parameter)
@@ -2704,7 +2677,7 @@ class SolrDisMaxQuery extends SolrQuery implements Serializable, Stringable {
 	 * @param string $boost [optional] Boost value. Boosts documents with matching terms.
 	 * @return SolrDisMaxQuery SolrDisMaxQuery
 	 */
-	public function addQueryField (string $field, string $boost = null) {}
+	public function addQueryField (string $field, string $boost = null): SolrDisMaxQuery {}
 
 	/**
 	 * Removes a Query Field (qf parameter)
@@ -2712,7 +2685,7 @@ class SolrDisMaxQuery extends SolrQuery implements Serializable, Stringable {
 	 * @param string $field Field Name
 	 * @return SolrDisMaxQuery SolrDisMaxQuery
 	 */
-	public function removeQueryField (string $field) {}
+	public function removeQueryField (string $field): SolrDisMaxQuery {}
 
 	/**
 	 * Adds a Phrase Field (pf parameter)
@@ -2722,7 +2695,7 @@ class SolrDisMaxQuery extends SolrQuery implements Serializable, Stringable {
 	 * @param string $slop [optional] 
 	 * @return SolrDisMaxQuery SolrDisMaxQuery
 	 */
-	public function addPhraseField (string $field, string $boost, string $slop = null) {}
+	public function addPhraseField (string $field, string $boost, string $slop = null): SolrDisMaxQuery {}
 
 	/**
 	 * Removes a Phrase Field (pf parameter)
@@ -2730,7 +2703,7 @@ class SolrDisMaxQuery extends SolrQuery implements Serializable, Stringable {
 	 * @param string $field Field Name
 	 * @return SolrDisMaxQuery SolrDisMaxQuery
 	 */
-	public function removePhraseField (string $field) {}
+	public function removePhraseField (string $field): SolrDisMaxQuery {}
 
 	/**
 	 * Sets Phrase Fields and their boosts (and slops) using pf2 parameter
@@ -2738,7 +2711,7 @@ class SolrDisMaxQuery extends SolrQuery implements Serializable, Stringable {
 	 * @param string $fields Fields, boosts [, slops]
 	 * @return SolrDisMaxQuery SolrDisMaxQuery
 	 */
-	public function setPhraseFields (string $fields) {}
+	public function setPhraseFields (string $fields): SolrDisMaxQuery {}
 
 	/**
 	 * Sets the default slop on phrase queries (ps parameter)
@@ -2746,7 +2719,7 @@ class SolrDisMaxQuery extends SolrQuery implements Serializable, Stringable {
 	 * @param string $slop 
 	 * @return SolrDisMaxQuery SolrDisMaxQuery
 	 */
-	public function setPhraseSlop (string $slop) {}
+	public function setPhraseSlop (string $slop): SolrDisMaxQuery {}
 
 	/**
 	 * Specifies the amount of slop permitted on phrase queries explicitly included in the user's query string (qf parameter)
@@ -2754,7 +2727,7 @@ class SolrDisMaxQuery extends SolrQuery implements Serializable, Stringable {
 	 * @param string $slop Amount of slop
 	 * @return SolrDisMaxQuery SolrDisMaxQuery
 	 */
-	public function setQueryPhraseSlop (string $slop) {}
+	public function setQueryPhraseSlop (string $slop): SolrDisMaxQuery {}
 
 	/**
 	 * Directly Sets Boost Query Parameter (bq)
@@ -2762,7 +2735,7 @@ class SolrDisMaxQuery extends SolrQuery implements Serializable, Stringable {
 	 * @param string $q query
 	 * @return SolrDisMaxQuery SolrDisMaxQuery
 	 */
-	public function setBoostQuery (string $q) {}
+	public function setBoostQuery (string $q): SolrDisMaxQuery {}
 
 	/**
 	 * Adds a boost query field with value and optional boost (bq parameter)
@@ -2772,7 +2745,7 @@ class SolrDisMaxQuery extends SolrQuery implements Serializable, Stringable {
 	 * @param string $boost [optional] 
 	 * @return SolrDisMaxQuery SolrDisMaxQuery
 	 */
-	public function addBoostQuery (string $field, string $value, string $boost = null) {}
+	public function addBoostQuery (string $field, string $value, string $boost = null): SolrDisMaxQuery {}
 
 	/**
 	 * Removes a boost query partial by field name (bq)
@@ -2780,7 +2753,7 @@ class SolrDisMaxQuery extends SolrQuery implements Serializable, Stringable {
 	 * @param string $field Field Name
 	 * @return SolrDisMaxQuery SolrDisMaxQuery
 	 */
-	public function removeBoostQuery (string $field) {}
+	public function removeBoostQuery (string $field): SolrDisMaxQuery {}
 
 	/**
 	 * Sets a Boost Function (bf parameter)
@@ -2788,7 +2761,7 @@ class SolrDisMaxQuery extends SolrQuery implements Serializable, Stringable {
 	 * @param string $function 
 	 * @return SolrDisMaxQuery SolrDisMaxQuery
 	 */
-	public function setBoostFunction (string $function) {}
+	public function setBoostFunction (string $function): SolrDisMaxQuery {}
 
 	/**
 	 * Set Minimum "Should" Match (mm)
@@ -2796,7 +2769,7 @@ class SolrDisMaxQuery extends SolrQuery implements Serializable, Stringable {
 	 * @param string $value Minimum match value/expression
 	 * @return SolrDisMaxQuery SolrDisMaxQuery
 	 */
-	public function setMinimumMatch (string $value) {}
+	public function setMinimumMatch (string $value): SolrDisMaxQuery {}
 
 	/**
 	 * Sets Tie Breaker parameter (tie parameter)
@@ -2804,21 +2777,21 @@ class SolrDisMaxQuery extends SolrQuery implements Serializable, Stringable {
 	 * @param string $tieBreaker The tie parameter specifies a float value (which should be something much less than 1) to use as tiebreaker in DisMax queries.
 	 * @return SolrDisMaxQuery SolrDisMaxQuery
 	 */
-	public function setTieBreaker (string $tieBreaker) {}
+	public function setTieBreaker (string $tieBreaker): SolrDisMaxQuery {}
 
 	/**
 	 * Switch QueryParser to be DisMax Query Parser
 	 * @link http://www.php.net/manual/en/solrdismaxquery.usedismaxqueryparser.php
 	 * @return SolrDisMaxQuery SolrDisMaxQuery
 	 */
-	public function useDisMaxQueryParser () {}
+	public function useDisMaxQueryParser (): SolrDisMaxQuery {}
 
 	/**
 	 * Switch QueryParser to be EDisMax
 	 * @link http://www.php.net/manual/en/solrdismaxquery.useedismaxqueryparser.php
 	 * @return SolrDisMaxQuery SolrDisMaxQuery
 	 */
-	public function useEDisMaxQueryParser () {}
+	public function useEDisMaxQueryParser (): SolrDisMaxQuery {}
 
 	/**
 	 * Sets Bigram Phrase Fields and their boosts (and slops) using pf2 parameter
@@ -2826,7 +2799,7 @@ class SolrDisMaxQuery extends SolrQuery implements Serializable, Stringable {
 	 * @param string $fields Fields boosts (slops)
 	 * @return SolrDisMaxQuery SolrDisMaxQuery
 	 */
-	public function setBigramPhraseFields (string $fields) {}
+	public function setBigramPhraseFields (string $fields): SolrDisMaxQuery {}
 
 	/**
 	 * Adds a Phrase Bigram Field (pf2 parameter)
@@ -2836,7 +2809,7 @@ class SolrDisMaxQuery extends SolrQuery implements Serializable, Stringable {
 	 * @param string $slop [optional] 
 	 * @return SolrDisMaxQuery SolrDisMaxQuery
 	 */
-	public function addBigramPhraseField (string $field, string $boost, string $slop = null) {}
+	public function addBigramPhraseField (string $field, string $boost, string $slop = null): SolrDisMaxQuery {}
 
 	/**
 	 * Removes phrase bigram field (pf2 parameter)
@@ -2844,7 +2817,7 @@ class SolrDisMaxQuery extends SolrQuery implements Serializable, Stringable {
 	 * @param string $field The Field Name
 	 * @return SolrDisMaxQuery SolrDisMaxQuery
 	 */
-	public function removeBigramPhraseField (string $field) {}
+	public function removeBigramPhraseField (string $field): SolrDisMaxQuery {}
 
 	/**
 	 * Sets Bigram Phrase Slop (ps2 parameter)
@@ -2852,7 +2825,7 @@ class SolrDisMaxQuery extends SolrQuery implements Serializable, Stringable {
 	 * @param string $slop 
 	 * @return SolrDisMaxQuery SolrDisMaxQuery
 	 */
-	public function setBigramPhraseSlop (string $slop) {}
+	public function setBigramPhraseSlop (string $slop): SolrDisMaxQuery {}
 
 	/**
 	 * Directly Sets Trigram Phrase Fields (pf3 parameter)
@@ -2860,7 +2833,7 @@ class SolrDisMaxQuery extends SolrQuery implements Serializable, Stringable {
 	 * @param string $fields Trigram Phrase Fields
 	 * @return SolrDisMaxQuery SolrDisMaxQuery
 	 */
-	public function setTrigramPhraseFields (string $fields) {}
+	public function setTrigramPhraseFields (string $fields): SolrDisMaxQuery {}
 
 	/**
 	 * Adds a Trigram Phrase Field (pf3 parameter)
@@ -2870,7 +2843,7 @@ class SolrDisMaxQuery extends SolrQuery implements Serializable, Stringable {
 	 * @param string $slop [optional] Field Slop
 	 * @return SolrDisMaxQuery SolrDisMaxQuery
 	 */
-	public function addTrigramPhraseField (string $field, string $boost, string $slop = null) {}
+	public function addTrigramPhraseField (string $field, string $boost, string $slop = null): SolrDisMaxQuery {}
 
 	/**
 	 * Removes a Trigram Phrase Field (pf3 parameter)
@@ -2878,7 +2851,7 @@ class SolrDisMaxQuery extends SolrQuery implements Serializable, Stringable {
 	 * @param string $field Field Name
 	 * @return SolrDisMaxQuery SolrDisMaxQuery
 	 */
-	public function removeTrigramPhraseField (string $field) {}
+	public function removeTrigramPhraseField (string $field): SolrDisMaxQuery {}
 
 	/**
 	 * Sets Trigram Phrase Slop (ps3 parameter)
@@ -2886,7 +2859,7 @@ class SolrDisMaxQuery extends SolrQuery implements Serializable, Stringable {
 	 * @param string $slop Phrase slop
 	 * @return SolrDisMaxQuery SolrDisMaxQuery
 	 */
-	public function setTrigramPhraseSlop (string $slop) {}
+	public function setTrigramPhraseSlop (string $slop): SolrDisMaxQuery {}
 
 	/**
 	 * Adds a field to User Fields Parameter (uf)
@@ -2894,7 +2867,7 @@ class SolrDisMaxQuery extends SolrQuery implements Serializable, Stringable {
 	 * @param string $field Field Name
 	 * @return SolrDisMaxQuery SolrDisMaxQuery
 	 */
-	public function addUserField (string $field) {}
+	public function addUserField (string $field): SolrDisMaxQuery {}
 
 	/**
 	 * Removes a field from The User Fields Parameter (uf)
@@ -2902,502 +2875,494 @@ class SolrDisMaxQuery extends SolrQuery implements Serializable, Stringable {
 	 * @param string $field Field Name
 	 * @return SolrDisMaxQuery SolrDisMaxQuery
 	 */
-	public function removeUserField (string $field) {}
+	public function removeUserField (string $field): SolrDisMaxQuery {}
 
 	/**
 	 * Sets User Fields parameter (uf)
 	 * @link http://www.php.net/manual/en/solrdismaxquery.setuserfields.php
-	 * @param string $fields <p>
-	 * Fields names separated by space
-	 * </p>
-	 * <p>
-	 * This parameter supports wildcards. 
-	 * </p>
+	 * @param string $fields Fields names separated by space
+	 * <p>This parameter supports wildcards.</p>
 	 * @return SolrDisMaxQuery SolrDisMaxQuery
 	 */
-	public function setUserFields (string $fields) {}
+	public function setUserFields (string $fields): SolrDisMaxQuery {}
 
-	/**
-	 * Destructor
-	 * @link http://www.php.net/manual/en/solrquery.destruct.php
-	 */
 	public function __destruct () {}
 
 	/**
 	 * Sets the search query
 	 * @link http://www.php.net/manual/en/solrquery.setquery.php
-	 * @param string $query The search query
-	 * @return SolrQuery the current SolrQuery object
+	 * @param string $query 
+	 * @return SolrQuery Returns the current SolrQuery object
 	 */
-	public function setQuery (string $query) {}
+	public function setQuery (string $query): SolrQuery {}
 
 	/**
 	 * Returns the main query
 	 * @link http://www.php.net/manual/en/solrquery.getquery.php
-	 * @return string a string on success and null if not set.
+	 * @return string Returns a string on success and null if not set.
 	 */
-	public function getQuery () {}
+	public function getQuery (): string {}
 
 	/**
 	 * Specifies the number of rows to skip
 	 * @link http://www.php.net/manual/en/solrquery.setstart.php
-	 * @param int $start The number of rows to skip.
-	 * @return SolrQuery the current SolrQuery object.
+	 * @param int $start 
+	 * @return SolrQuery Returns the current SolrQuery object.
 	 */
-	public function setStart (int $start) {}
+	public function setStart (int $start): SolrQuery {}
 
 	/**
 	 * Returns the offset in the complete result set
 	 * @link http://www.php.net/manual/en/solrquery.getstart.php
-	 * @return int an integer on success and null if not set.
+	 * @return int Returns an integer on success and null if not set.
 	 */
-	public function getStart () {}
+	public function getStart (): int {}
 
 	/**
 	 * Specifies the maximum number of rows to return in the result
 	 * @link http://www.php.net/manual/en/solrquery.setrows.php
-	 * @param int $rows The maximum number of rows to return
-	 * @return SolrQuery the current SolrQuery object.
+	 * @param int $rows 
+	 * @return SolrQuery Returns the current SolrQuery object.
 	 */
-	public function setRows (int $rows) {}
+	public function setRows (int $rows): SolrQuery {}
 
 	/**
 	 * Returns the maximum number of documents
 	 * @link http://www.php.net/manual/en/solrquery.getrows.php
-	 * @return int an integer on success and null if not set.
+	 * @return int Returns an integer on success and null if not set.
 	 */
-	public function getRows () {}
+	public function getRows (): int {}
 
 	/**
 	 * Specifies which fields to return in the result
 	 * @link http://www.php.net/manual/en/solrquery.addfield.php
-	 * @param string $field The name of the field
-	 * @return SolrQuery the current SolrQuery object
+	 * @param string $field 
+	 * @return SolrQuery Returns the current SolrQuery object
 	 */
-	public function addField (string $field) {}
+	public function addField (string $field): SolrQuery {}
 
 	/**
 	 * Removes a field from the list of fields
 	 * @link http://www.php.net/manual/en/solrquery.removefield.php
-	 * @param string $field Name of the field.
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param string $field 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function removeField (string $field) {}
+	public function removeField (string $field): SolrQuery {}
 
 	/**
 	 * Returns the list of fields that will be returned in the response
 	 * @link http://www.php.net/manual/en/solrquery.getfields.php
-	 * @return array an array on success and null if not set.
+	 * @return array Returns an array on success and null if not set.
 	 */
-	public function getFields () {}
+	public function getFields (): array {}
 
 	/**
 	 * Used to control how the results should be sorted
 	 * @link http://www.php.net/manual/en/solrquery.addsortfield.php
-	 * @param string $field The name of the field
-	 * @param int $order [optional] The sort direction. This should be either SolrQuery::ORDER_ASC or SolrQuery::ORDER_DESC.
-	 * @return SolrQuery the current SolrQuery object.
+	 * @param string $field 
+	 * @param int $order [optional] 
+	 * @return SolrQuery Returns the current SolrQuery object.
 	 */
-	public function addSortField (string $field, int $order = null) {}
+	public function addSortField (string $field, int $order = SolrQuery::ORDER_DESC): SolrQuery {}
 
 	/**
 	 * Removes one of the sort fields
 	 * @link http://www.php.net/manual/en/solrquery.removesortfield.php
-	 * @param string $field The name of the field
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param string $field 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function removeSortField (string $field) {}
+	public function removeSortField (string $field): SolrQuery {}
 
 	/**
 	 * Returns all the sort fields
 	 * @link http://www.php.net/manual/en/solrquery.getsortfields.php
-	 * @return array an array on success and null if none of the parameters was set.
+	 * @return array Returns an array on success and null if none of the parameters was set.
 	 */
-	public function getSortFields () {}
+	public function getSortFields (): array {}
 
 	/**
 	 * Specifies a filter query
 	 * @link http://www.php.net/manual/en/solrquery.addfilterquery.php
-	 * @param string $fq The filter query
-	 * @return SolrQuery the current SolrQuery object.
+	 * @param string $fq 
+	 * @return SolrQuery Returns the current SolrQuery object.
 	 */
-	public function addFilterQuery (string $fq) {}
+	public function addFilterQuery (string $fq): SolrQuery {}
 
 	/**
 	 * Removes a filter query
 	 * @link http://www.php.net/manual/en/solrquery.removefilterquery.php
-	 * @param string $fq The filter query to remove
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param string $fq 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function removeFilterQuery (string $fq) {}
+	public function removeFilterQuery (string $fq): SolrQuery {}
 
 	/**
 	 * Returns an array of filter queries
 	 * @link http://www.php.net/manual/en/solrquery.getfilterqueries.php
-	 * @return array an array on success and null if not set.
+	 * @return array Returns an array on success and null if not set.
 	 */
-	public function getFilterQueries () {}
+	public function getFilterQueries (): array {}
 
 	/**
 	 * Flag to show debug information
 	 * @link http://www.php.net/manual/en/solrquery.setshowdebuginfo.php
-	 * @param bool $flag Whether to show debug info. true or false
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param bool $flag 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setShowDebugInfo (bool $flag) {}
+	public function setShowDebugInfo (bool $flag): SolrQuery {}
 
 	/**
 	 * Sets the explainOther common query parameter
 	 * @link http://www.php.net/manual/en/solrquery.setexplainother.php
-	 * @param string $query The Lucene query to identify a set of documents
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param string $query 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setExplainOther (string $query) {}
+	public function setExplainOther (string $query): SolrQuery {}
 
 	/**
 	 * The time allowed for search to finish
 	 * @link http://www.php.net/manual/en/solrquery.settimeallowed.php
-	 * @param int $timeAllowed The time allowed for a search to finish.
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param int $timeAllowed 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setTimeAllowed (int $timeAllowed) {}
+	public function setTimeAllowed (int $timeAllowed): SolrQuery {}
 
 	/**
 	 * Returns the time in milliseconds allowed for the query to finish
 	 * @link http://www.php.net/manual/en/solrquery.gettimeallowed.php
-	 * @return int and integer on success and null if it is not set.
+	 * @return int Returns and integer on success and null if it is not set.
 	 */
-	public function getTimeAllowed () {}
+	public function getTimeAllowed (): int {}
 
 	/**
 	 * Exclude the header from the returned results
 	 * @link http://www.php.net/manual/en/solrquery.setomitheader.php
-	 * @param bool $flag true excludes the header from the result.
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param bool $flag 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setOmitHeader (bool $flag) {}
+	public function setOmitHeader (bool $flag): SolrQuery {}
 
 	/**
 	 * Toggles the echoHandler parameter
 	 * @link http://www.php.net/manual/en/solrquery.setechohandler.php
-	 * @param bool $flag true or false
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param bool $flag 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setEchoHandler (bool $flag) {}
+	public function setEchoHandler (bool $flag): SolrQuery {}
 
 	/**
 	 * Determines what kind of parameters to include in the response
 	 * @link http://www.php.net/manual/en/solrquery.setechoparams.php
-	 * @param string $type The type of parameters to include
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param string $type 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setEchoParams (string $type) {}
+	public function setEchoParams (string $type): SolrQuery {}
 
 	/**
 	 * Maps to the facet parameter. Enables or disables facetting
 	 * @link http://www.php.net/manual/en/solrquery.setfacet.php
 	 * @param bool $flag 
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setFacet (bool $flag) {}
+	public function setFacet (bool $flag): SolrQuery {}
 
 	/**
 	 * Returns the value of the facet parameter
 	 * @link http://www.php.net/manual/en/solrquery.getfacet.php
-	 * @return bool a boolean on success and null if not set
+	 * @return bool Returns a boolean on success and null if not set
 	 */
-	public function getFacet () {}
+	public function getFacet (): bool {}
 
 	/**
 	 * Adds another field to the facet
 	 * @link http://www.php.net/manual/en/solrquery.addfacetfield.php
-	 * @param string $field The name of the field
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param string $field 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function addFacetField (string $field) {}
+	public function addFacetField (string $field): SolrQuery {}
 
 	/**
 	 * Removes one of the facet.date parameters
 	 * @link http://www.php.net/manual/en/solrquery.removefacetfield.php
-	 * @param string $field The name of the field
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param string $field 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function removeFacetField (string $field) {}
+	public function removeFacetField (string $field): SolrQuery {}
 
 	/**
 	 * Returns all the facet fields
 	 * @link http://www.php.net/manual/en/solrquery.getfacetfields.php
-	 * @return array an array of all the fields and null if none was set
+	 * @return array Returns an array of all the fields and null if none was set
 	 */
-	public function getFacetFields () {}
+	public function getFacetFields (): array {}
 
 	/**
 	 * Adds a facet query
 	 * @link http://www.php.net/manual/en/solrquery.addfacetquery.php
-	 * @param string $facetQuery The facet query
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param string $facetQuery 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function addFacetQuery (string $facetQuery) {}
+	public function addFacetQuery (string $facetQuery): SolrQuery {}
 
 	/**
 	 * Removes one of the facet.query parameters
 	 * @link http://www.php.net/manual/en/solrquery.removefacetquery.php
-	 * @param string $value The value
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param string $value 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function removeFacetQuery (string $value) {}
+	public function removeFacetQuery (string $value): SolrQuery {}
 
 	/**
 	 * Returns all the facet queries
 	 * @link http://www.php.net/manual/en/solrquery.getfacetqueries.php
-	 * @return array an array on success and null if not set.
+	 * @return array Returns an array on success and null if not set.
 	 */
-	public function getFacetQueries () {}
+	public function getFacetQueries (): array {}
 
 	/**
 	 * Specifies a string prefix with which to limits the terms on which to facet
 	 * @link http://www.php.net/manual/en/solrquery.setfacetprefix.php
-	 * @param string $prefix The prefix string
-	 * @param string $field_override [optional] The name of the field.
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param string $prefix 
+	 * @param string $field_override [optional] 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setFacetPrefix (string $prefix, string $field_override = null) {}
+	public function setFacetPrefix (string $prefix, string $field_override = null): SolrQuery {}
 
 	/**
 	 * Returns the facet prefix
 	 * @link http://www.php.net/manual/en/solrquery.getfacetprefix.php
-	 * @param string $field_override [optional] The name of the field
-	 * @return string a string on success and null if not set.
+	 * @param string $field_override [optional] 
+	 * @return string Returns a string on success and null if not set.
 	 */
-	public function getFacetPrefix (string $field_override = null) {}
+	public function getFacetPrefix (string $field_override = null): string {}
 
 	/**
 	 * Determines the ordering of the facet field constraints
 	 * @link http://www.php.net/manual/en/solrquery.setfacetsort.php
-	 * @param int $facetSort Use SolrQuery::FACET_SORT_INDEX for sorting by index order or SolrQuery::FACET_SORT_COUNT for sorting by count.
-	 * @param string $field_override [optional] The name of the field.
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param int $facetSort 
+	 * @param string $field_override [optional] 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setFacetSort (int $facetSort, string $field_override = null) {}
+	public function setFacetSort (int $facetSort, string $field_override = null): SolrQuery {}
 
 	/**
 	 * Returns the facet sort type
 	 * @link http://www.php.net/manual/en/solrquery.getfacetsort.php
-	 * @param string $field_override [optional] The name of the field
-	 * @return int an integer (SolrQuery::FACET_SORT_INDEX or SolrQuery::FACET_SORT_COUNT) on success or null if not set.
+	 * @param string $field_override [optional] 
+	 * @return int Returns an integer (SolrQuery::FACET_SORT_INDEX or SolrQuery::FACET_SORT_COUNT) on success or null if not set.
 	 */
-	public function getFacetSort (string $field_override = null) {}
+	public function getFacetSort (string $field_override = null): int {}
 
 	/**
 	 * Maps to facet.limit
 	 * @link http://www.php.net/manual/en/solrquery.setfacetlimit.php
-	 * @param int $limit The maximum number of constraint counts
-	 * @param string $field_override [optional] The name of the field.
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param int $limit 
+	 * @param string $field_override [optional] 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setFacetLimit (int $limit, string $field_override = null) {}
+	public function setFacetLimit (int $limit, string $field_override = null): SolrQuery {}
 
 	/**
 	 * Returns the maximum number of constraint counts that should be returned for the facet fields
 	 * @link http://www.php.net/manual/en/solrquery.getfacetlimit.php
-	 * @param string $field_override [optional] The name of the field to override for
-	 * @return int an integer on success and null if not set
+	 * @param string $field_override [optional] 
+	 * @return int Returns an integer on success and null if not set
 	 */
-	public function getFacetLimit (string $field_override = null) {}
+	public function getFacetLimit (string $field_override = null): int {}
 
 	/**
 	 * Sets the offset into the list of constraints to allow for pagination
 	 * @link http://www.php.net/manual/en/solrquery.setfacetoffset.php
-	 * @param int $offset The offset
-	 * @param string $field_override [optional] The name of the field.
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param int $offset 
+	 * @param string $field_override [optional] 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setFacetOffset (int $offset, string $field_override = null) {}
+	public function setFacetOffset (int $offset, string $field_override = null): SolrQuery {}
 
 	/**
 	 * Returns an offset into the list of constraints to be used for pagination
 	 * @link http://www.php.net/manual/en/solrquery.getfacetoffset.php
-	 * @param string $field_override [optional] The name of the field to override for.
-	 * @return int an integer on success and null if not set
+	 * @param string $field_override [optional] 
+	 * @return int Returns an integer on success and null if not set
 	 */
-	public function getFacetOffset (string $field_override = null) {}
+	public function getFacetOffset (string $field_override = null): int {}
 
 	/**
 	 * Maps to facet.mincount
 	 * @link http://www.php.net/manual/en/solrquery.setfacetmincount.php
-	 * @param int $mincount The minimum count
-	 * @param string $field_override [optional] The name of the field.
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param int $mincount 
+	 * @param string $field_override [optional] 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setFacetMinCount (int $mincount, string $field_override = null) {}
+	public function setFacetMinCount (int $mincount, string $field_override = null): SolrQuery {}
 
 	/**
 	 * Returns the minimum counts for facet fields should be included in the response
 	 * @link http://www.php.net/manual/en/solrquery.getfacetmincount.php
-	 * @param string $field_override [optional] The name of the field
-	 * @return int an integer on success and null if not set
+	 * @param string $field_override [optional] 
+	 * @return int Returns an integer on success and null if not set
 	 */
-	public function getFacetMinCount (string $field_override = null) {}
+	public function getFacetMinCount (string $field_override = null): int {}
 
 	/**
 	 * Maps to facet.missing
 	 * @link http://www.php.net/manual/en/solrquery.setfacetmissing.php
-	 * @param bool $flag true turns this feature on. false disables it.
-	 * @param string $field_override [optional] The name of the field.
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param bool $flag 
+	 * @param string $field_override [optional] 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setFacetMissing (bool $flag, string $field_override = null) {}
+	public function setFacetMissing (bool $flag, string $field_override = null): SolrQuery {}
 
 	/**
 	 * Returns the current state of the facet.missing parameter
 	 * @link http://www.php.net/manual/en/solrquery.getfacetmissing.php
-	 * @param string $field_override [optional] The name of the field
-	 * @return bool a boolean on success and null if not set
+	 * @param string $field_override [optional] 
+	 * @return bool Returns a boolean on success and null if not set
 	 */
-	public function getFacetMissing (string $field_override = null) {}
+	public function getFacetMissing (string $field_override = null): bool {}
 
 	/**
 	 * Specifies the type of algorithm to use when faceting a field
 	 * @link http://www.php.net/manual/en/solrquery.setfacetmethod.php
-	 * @param string $method The method to use.
-	 * @param string $field_override [optional] The name of the field.
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param string $method 
+	 * @param string $field_override [optional] 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setFacetMethod (string $method, string $field_override = null) {}
+	public function setFacetMethod (string $method, string $field_override = null): SolrQuery {}
 
 	/**
 	 * Returns the value of the facet.method parameter
 	 * @link http://www.php.net/manual/en/solrquery.getfacetmethod.php
-	 * @param string $field_override [optional] The name of the field
-	 * @return string a string on success and null if not set
+	 * @param string $field_override [optional] 
+	 * @return string Returns a string on success and null if not set
 	 */
-	public function getFacetMethod (string $field_override = null) {}
+	public function getFacetMethod (string $field_override = null): string {}
 
 	/**
 	 * Sets the minimum document frequency used for determining term count
 	 * @link http://www.php.net/manual/en/solrquery.setfacetenumcachemindefaultfrequency.php
 	 * @param int $frequency 
-	 * @param string $field_override [optional] The name of the field.
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param string $field_override [optional] 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setFacetEnumCacheMinDefaultFrequency (int $frequency, string $field_override = null) {}
+	public function setFacetEnumCacheMinDefaultFrequency (int $frequency, string $field_override = null): SolrQuery {}
 
 	/**
 	 * Maps to facet.date
 	 * @link http://www.php.net/manual/en/solrquery.addfacetdatefield.php
-	 * @param string $dateField The name of the date field.
-	 * @return SolrQuery a SolrQuery object.
+	 * @param string $dateField 
+	 * @return SolrQuery Returns a SolrQuery object.
 	 */
-	public function addFacetDateField (string $dateField) {}
+	public function addFacetDateField (string $dateField): SolrQuery {}
 
 	/**
 	 * Removes one of the facet date fields
 	 * @link http://www.php.net/manual/en/solrquery.removefacetdatefield.php
-	 * @param string $field The name of the date field to remove
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param string $field 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function removeFacetDateField (string $field) {}
+	public function removeFacetDateField (string $field): SolrQuery {}
 
 	/**
 	 * Returns all the facet.date fields
 	 * @link http://www.php.net/manual/en/solrquery.getfacetdatefields.php
-	 * @return array all the facet.date fields as an array or null if none was set
+	 * @return array Returns all the facet.date fields as an array or null if none was set
 	 */
-	public function getFacetDateFields () {}
+	public function getFacetDateFields (): array {}
 
 	/**
 	 * Maps to facet.date.start
 	 * @link http://www.php.net/manual/en/solrquery.setfacetdatestart.php
-	 * @param string $value See facet.date.start
-	 * @param string $field_override [optional] The name of the field.
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param string $value 
+	 * @param string $field_override [optional] 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setFacetDateStart (string $value, string $field_override = null) {}
+	public function setFacetDateStart (string $value, string $field_override = null): SolrQuery {}
 
 	/**
 	 * Returns the lower bound for the first date range for all date faceting on this field
 	 * @link http://www.php.net/manual/en/solrquery.getfacetdatestart.php
-	 * @param string $field_override [optional] The name of the field
-	 * @return string a string on success and null if not set
+	 * @param string $field_override [optional] 
+	 * @return string Returns a string on success and null if not set
 	 */
-	public function getFacetDateStart (string $field_override = null) {}
+	public function getFacetDateStart (string $field_override = null): string {}
 
 	/**
 	 * Maps to facet.date.end
 	 * @link http://www.php.net/manual/en/solrquery.setfacetdateend.php
-	 * @param string $value See facet.date.end
-	 * @param string $field_override [optional] Name of the field
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param string $value 
+	 * @param string $field_override [optional] 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setFacetDateEnd (string $value, string $field_override = null) {}
+	public function setFacetDateEnd (string $value, string $field_override = null): SolrQuery {}
 
 	/**
 	 * Returns the value for the facet.date.end parameter
 	 * @link http://www.php.net/manual/en/solrquery.getfacetdateend.php
-	 * @param string $field_override [optional] The name of the field
-	 * @return string a string on success and null if not set
+	 * @param string $field_override [optional] 
+	 * @return string Returns a string on success and null if not set
 	 */
-	public function getFacetDateEnd (string $field_override = null) {}
+	public function getFacetDateEnd (string $field_override = null): string {}
 
 	/**
 	 * Maps to facet.date.gap
 	 * @link http://www.php.net/manual/en/solrquery.setfacetdategap.php
-	 * @param string $value See facet.date.gap
-	 * @param string $field_override [optional] The name of the field
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param string $value 
+	 * @param string $field_override [optional] 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setFacetDateGap (string $value, string $field_override = null) {}
+	public function setFacetDateGap (string $value, string $field_override = null): SolrQuery {}
 
 	/**
 	 * Returns the value of the facet.date.gap parameter
 	 * @link http://www.php.net/manual/en/solrquery.getfacetdategap.php
-	 * @param string $field_override [optional] The name of the field
-	 * @return string a string on success and null if not set
+	 * @param string $field_override [optional] 
+	 * @return string Returns a string on success and null if not set
 	 */
-	public function getFacetDateGap (string $field_override = null) {}
+	public function getFacetDateGap (string $field_override = null): string {}
 
 	/**
 	 * Maps to facet.date.hardend
 	 * @link http://www.php.net/manual/en/solrquery.setfacetdatehardend.php
-	 * @param bool $value See facet.date.hardend
-	 * @param string $field_override [optional] The name of the field
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param bool $value 
+	 * @param string $field_override [optional] 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setFacetDateHardEnd (bool $value, string $field_override = null) {}
+	public function setFacetDateHardEnd (bool $value, string $field_override = null): SolrQuery {}
 
 	/**
 	 * Returns the value of the facet.date.hardend parameter
 	 * @link http://www.php.net/manual/en/solrquery.getfacetdatehardend.php
-	 * @param string $field_override [optional] The name of the field
-	 * @return string a string on success and null if not set
+	 * @param string $field_override [optional] 
+	 * @return string Returns a string on success and null if not set
 	 */
-	public function getFacetDateHardEnd (string $field_override = null) {}
+	public function getFacetDateHardEnd (string $field_override = null): string {}
 
 	/**
 	 * Adds another facet.date.other parameter
 	 * @link http://www.php.net/manual/en/solrquery.addfacetdateother.php
-	 * @param string $value The value to use.
-	 * @param string $field_override [optional] The field name for the override.
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param string $value 
+	 * @param string $field_override [optional] 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function addFacetDateOther (string $value, string $field_override = null) {}
+	public function addFacetDateOther (string $value, string $field_override = null): SolrQuery {}
 
 	/**
 	 * Removes one of the facet.date.other parameters
 	 * @link http://www.php.net/manual/en/solrquery.removefacetdateother.php
-	 * @param string $value The value
-	 * @param string $field_override [optional] The name of the field.
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param string $value 
+	 * @param string $field_override [optional] 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function removeFacetDateOther (string $value, string $field_override = null) {}
+	public function removeFacetDateOther (string $value, string $field_override = null): SolrQuery {}
 
 	/**
 	 * Returns the value for the facet.date.other parameter
 	 * @link http://www.php.net/manual/en/solrquery.getfacetdateother.php
-	 * @param string $field_override [optional] The name of the field
-	 * @return array an array on success and null if not set.
+	 * @param string $field_override [optional] 
+	 * @return array Returns an array on success and null if not set.
 	 */
-	public function getFacetDateOther (string $field_override = null) {}
+	public function getFacetDateOther (string $field_override = null): array {}
 
 	/**
 	 * Enable/Disable result grouping (group parameter)
@@ -3405,29 +3370,29 @@ class SolrDisMaxQuery extends SolrQuery implements Serializable, Stringable {
 	 * @param bool $value 
 	 * @return SolrQuery 
 	 */
-	public function setGroup (bool $value) {}
+	public function setGroup (bool $value): SolrQuery {}
 
 	/**
 	 * Returns true if grouping is enabled
 	 * @link http://www.php.net/manual/en/solrquery.getgroup.php
 	 * @return bool 
 	 */
-	public function getGroup () {}
+	public function getGroup (): bool {}
 
 	/**
 	 * Add a field to be used to group results
 	 * @link http://www.php.net/manual/en/solrquery.addgroupfield.php
 	 * @param string $value The name of the field.
-	 * @return SolrQuery an instance of SolrQuery.
+	 * @return SolrQuery Returns an instance of SolrQuery.
 	 */
-	public function addGroupField (string $value) {}
+	public function addGroupField (string $value): SolrQuery {}
 
 	/**
 	 * Returns group fields (group.field parameter values)
 	 * @link http://www.php.net/manual/en/solrquery.getgroupfields.php
 	 * @return array 
 	 */
-	public function getGroupFields () {}
+	public function getGroupFields (): array {}
 
 	/**
 	 * Allows grouping results based on the unique values of a function query (group.func parameter)
@@ -3435,14 +3400,14 @@ class SolrDisMaxQuery extends SolrQuery implements Serializable, Stringable {
 	 * @param string $value 
 	 * @return SolrQuery SolrQuery
 	 */
-	public function addGroupFunction (string $value) {}
+	public function addGroupFunction (string $value): SolrQuery {}
 
 	/**
 	 * Returns group functions (group.func parameter values)
 	 * @link http://www.php.net/manual/en/solrquery.getgroupfunctions.php
 	 * @return array 
 	 */
-	public function getGroupFunctions () {}
+	public function getGroupFunctions (): array {}
 
 	/**
 	 * Allows grouping of documents that match the given query
@@ -3450,14 +3415,14 @@ class SolrDisMaxQuery extends SolrQuery implements Serializable, Stringable {
 	 * @param string $value 
 	 * @return SolrQuery SolrQuery
 	 */
-	public function addGroupQuery (string $value) {}
+	public function addGroupQuery (string $value): SolrQuery {}
 
 	/**
 	 * Returns all the group.query parameter values
 	 * @link http://www.php.net/manual/en/solrquery.getgroupqueries.php
 	 * @return array array
 	 */
-	public function getGroupQueries () {}
+	public function getGroupQueries (): array {}
 
 	/**
 	 * Specifies the number of results to return for each group. The server default value is 1
@@ -3465,14 +3430,14 @@ class SolrDisMaxQuery extends SolrQuery implements Serializable, Stringable {
 	 * @param int $value 
 	 * @return SolrQuery 
 	 */
-	public function setGroupLimit (int $value) {}
+	public function setGroupLimit (int $value): SolrQuery {}
 
 	/**
 	 * Returns the group.limit value
 	 * @link http://www.php.net/manual/en/solrquery.getgrouplimit.php
 	 * @return int 
 	 */
-	public function getGroupLimit () {}
+	public function getGroupLimit (): int {}
 
 	/**
 	 * Sets the group.offset parameter
@@ -3480,14 +3445,14 @@ class SolrDisMaxQuery extends SolrQuery implements Serializable, Stringable {
 	 * @param int $value 
 	 * @return SolrQuery 
 	 */
-	public function setGroupOffset (int $value) {}
+	public function setGroupOffset (int $value): SolrQuery {}
 
 	/**
 	 * Returns the group.offset value
 	 * @link http://www.php.net/manual/en/solrquery.getgroupoffset.php
 	 * @return int 
 	 */
-	public function getGroupOffset () {}
+	public function getGroupOffset (): int {}
 
 	/**
 	 * Add a group sort field (group.sort parameter)
@@ -3496,14 +3461,14 @@ class SolrDisMaxQuery extends SolrQuery implements Serializable, Stringable {
 	 * @param int $order [optional] Order ASC/DESC, utilizes SolrQuery::ORDER_&#42; constants
 	 * @return SolrQuery 
 	 */
-	public function addGroupSortField (string $field, int $order = null) {}
+	public function addGroupSortField (string $field, int $order = null): SolrQuery {}
 
 	/**
 	 * Returns the group.sort value
 	 * @link http://www.php.net/manual/en/solrquery.getgroupsortfields.php
 	 * @return array 
 	 */
-	public function getGroupSortFields () {}
+	public function getGroupSortFields (): array {}
 
 	/**
 	 * Sets the group format, result structure (group.format parameter)
@@ -3511,29 +3476,29 @@ class SolrDisMaxQuery extends SolrQuery implements Serializable, Stringable {
 	 * @param string $value 
 	 * @return SolrQuery 
 	 */
-	public function setGroupFormat (string $value) {}
+	public function setGroupFormat (string $value): SolrQuery {}
 
 	/**
 	 * Returns the group.format value
 	 * @link http://www.php.net/manual/en/solrquery.getgroupformat.php
 	 * @return string 
 	 */
-	public function getGroupFormat () {}
+	public function getGroupFormat (): string {}
 
 	/**
 	 * If true, the result of the first field grouping command is used as the main result list in the response, using group.format=simple
 	 * @link http://www.php.net/manual/en/solrquery.setgroupmain.php
 	 * @param string $value If true, the result of the first field grouping command is used as the main result list in the response.
-	 * @return SolrQuery an instance of SolrQuery.
+	 * @return SolrQuery Returns an instance of SolrQuery.
 	 */
-	public function setGroupMain (string $value) {}
+	public function setGroupMain (string $value): SolrQuery {}
 
 	/**
 	 * Returns the group.main value
 	 * @link http://www.php.net/manual/en/solrquery.getgroupmain.php
 	 * @return bool 
 	 */
-	public function getGroupMain () {}
+	public function getGroupMain (): bool {}
 
 	/**
 	 * If true, Solr includes the number of groups that have matched the query in the results
@@ -3541,14 +3506,14 @@ class SolrDisMaxQuery extends SolrQuery implements Serializable, Stringable {
 	 * @param bool $value 
 	 * @return SolrQuery 
 	 */
-	public function setGroupNGroups (bool $value) {}
+	public function setGroupNGroups (bool $value): SolrQuery {}
 
 	/**
 	 * Returns the group.ngroups value
 	 * @link http://www.php.net/manual/en/solrquery.getgroupngroups.php
 	 * @return bool 
 	 */
-	public function getGroupNGroups () {}
+	public function getGroupNGroups (): bool {}
 
 	/**
 	 * If true, facet counts are based on the most relevant document of each group matching the query
@@ -3556,14 +3521,14 @@ class SolrDisMaxQuery extends SolrQuery implements Serializable, Stringable {
 	 * @param bool $value 
 	 * @return SolrQuery 
 	 */
-	public function setGroupTruncate (bool $value) {}
+	public function setGroupTruncate (bool $value): SolrQuery {}
 
 	/**
 	 * Returns the group.truncate value
 	 * @link http://www.php.net/manual/en/solrquery.getgrouptruncate.php
 	 * @return bool 
 	 */
-	public function getGroupTruncate () {}
+	public function getGroupTruncate (): bool {}
 
 	/**
 	 * Sets group.facet parameter
@@ -3571,14 +3536,14 @@ class SolrDisMaxQuery extends SolrQuery implements Serializable, Stringable {
 	 * @param bool $value 
 	 * @return SolrQuery 
 	 */
-	public function setGroupFacet (bool $value) {}
+	public function setGroupFacet (bool $value): SolrQuery {}
 
 	/**
 	 * Returns the group.facet parameter value
 	 * @link http://www.php.net/manual/en/solrquery.getgroupfacet.php
 	 * @return bool 
 	 */
-	public function getGroupFacet () {}
+	public function getGroupFacet (): bool {}
 
 	/**
 	 * Enables caching for result grouping
@@ -3586,22 +3551,22 @@ class SolrDisMaxQuery extends SolrQuery implements Serializable, Stringable {
 	 * @param int $percent 
 	 * @return SolrQuery 
 	 */
-	public function setGroupCachePercent (int $percent) {}
+	public function setGroupCachePercent (int $percent): SolrQuery {}
 
 	/**
 	 * Returns group cache percent value
 	 * @link http://www.php.net/manual/en/solrquery.getgroupcachepercent.php
 	 * @return int 
 	 */
-	public function getGroupCachePercent () {}
+	public function getGroupCachePercent (): int {}
 
 	/**
 	 * Collapses the result set to a single document per group
 	 * @link http://www.php.net/manual/en/solrquery.collapse.php
 	 * @param SolrCollapseFunction $collapseFunction 
-	 * @return SolrQuery the current SolrQuery object
+	 * @return SolrQuery Returns the current SolrQuery object
 	 */
-	public function collapse (SolrCollapseFunction $collapseFunction) {}
+	public function collapse (SolrCollapseFunction $collapseFunction): SolrQuery {}
 
 	/**
 	 * Enables/Disables the Expand Component
@@ -3609,28 +3574,24 @@ class SolrDisMaxQuery extends SolrQuery implements Serializable, Stringable {
 	 * @param bool $value Bool flag
 	 * @return SolrQuery SolrQuery
 	 */
-	public function setExpand (bool $value) {}
+	public function setExpand (bool $value): SolrQuery {}
 
 	/**
 	 * Returns true if group expanding is enabled
 	 * @link http://www.php.net/manual/en/solrquery.getexpand.php
-	 * @return bool whether group expanding is enabled.
+	 * @return bool Returns whether group expanding is enabled.
 	 */
-	public function getExpand () {}
+	public function getExpand (): bool {}
 
 	/**
 	 * Orders the documents within the expanded groups (expand.sort parameter)
 	 * @link http://www.php.net/manual/en/solrquery.addexpandsortfield.php
 	 * @param string $field field name
-	 * @param string $order [optional] <p>
-	 * Order ASC/DESC, utilizes SolrQuery::ORDER_&#42; constants.
-	 * </p>
-	 * <p>
-	 * Default: SolrQuery::ORDER_DESC
-	 * </p>
+	 * @param string $order [optional] Order ASC/DESC, utilizes SolrQuery::ORDER_&#42; constants.
+	 * <p>Default: SolrQuery::ORDER_DESC</p>
 	 * @return SolrQuery SolrQuery
 	 */
-	public function addExpandSortField (string $field, string $order = null) {}
+	public function addExpandSortField (string $field, string $order = null): SolrQuery {}
 
 	/**
 	 * Removes an expand sort field from the expand.sort parameter
@@ -3638,14 +3599,14 @@ class SolrDisMaxQuery extends SolrQuery implements Serializable, Stringable {
 	 * @param string $field field name
 	 * @return SolrQuery SolrQuery
 	 */
-	public function removeExpandSortField (string $field) {}
+	public function removeExpandSortField (string $field): SolrQuery {}
 
 	/**
 	 * Returns an array of fields
 	 * @link http://www.php.net/manual/en/solrquery.getexpandsortfields.php
-	 * @return array an array of fields.
+	 * @return array Returns an array of fields.
 	 */
-	public function getExpandSortFields () {}
+	public function getExpandSortFields (): array {}
 
 	/**
 	 * Sets the number of rows to display in each group (expand.rows). Server Default 5
@@ -3653,14 +3614,14 @@ class SolrDisMaxQuery extends SolrQuery implements Serializable, Stringable {
 	 * @param int $value 
 	 * @return SolrQuery SolrQuery
 	 */
-	public function setExpandRows (int $value) {}
+	public function setExpandRows (int $value): SolrQuery {}
 
 	/**
 	 * Returns The number of rows to display in each group (expand.rows)
 	 * @link http://www.php.net/manual/en/solrquery.getexpandrows.php
-	 * @return int the number of rows.
+	 * @return int Returns the number of rows.
 	 */
-	public function getExpandRows () {}
+	public function getExpandRows (): int {}
 
 	/**
 	 * Sets the expand.q parameter
@@ -3668,14 +3629,14 @@ class SolrDisMaxQuery extends SolrQuery implements Serializable, Stringable {
 	 * @param string $q 
 	 * @return SolrQuery SolrQuery
 	 */
-	public function setExpandQuery (string $q) {}
+	public function setExpandQuery (string $q): SolrQuery {}
 
 	/**
 	 * Returns the expand query expand.q parameter
 	 * @link http://www.php.net/manual/en/solrquery.getexpandquery.php
-	 * @return array the expand query.
+	 * @return array Returns the expand query.
 	 */
-	public function getExpandQuery () {}
+	public function getExpandQuery (): array {}
 
 	/**
 	 * Overrides main filter query, determines which documents to include in the main group
@@ -3683,7 +3644,7 @@ class SolrDisMaxQuery extends SolrQuery implements Serializable, Stringable {
 	 * @param string $fq 
 	 * @return SolrQuery SolrQuery
 	 */
-	public function addExpandFilterQuery (string $fq) {}
+	public function addExpandFilterQuery (string $fq): SolrQuery {}
 
 	/**
 	 * Removes an expand filter query
@@ -3691,786 +3652,783 @@ class SolrDisMaxQuery extends SolrQuery implements Serializable, Stringable {
 	 * @param string $fq 
 	 * @return SolrQuery SolrQuery
 	 */
-	public function removeExpandFilterQuery (string $fq) {}
+	public function removeExpandFilterQuery (string $fq): SolrQuery {}
 
 	/**
 	 * Returns the expand filter queries
 	 * @link http://www.php.net/manual/en/solrquery.getexpandfilterqueries.php
-	 * @return array the expand filter queries.
+	 * @return array Returns the expand filter queries.
 	 */
-	public function getExpandFilterQueries () {}
+	public function getExpandFilterQueries (): array {}
 
 	/**
 	 * Enables or disables highlighting
 	 * @link http://www.php.net/manual/en/solrquery.sethighlight.php
-	 * @param bool $flag Enable or disable highlighting
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param bool $flag 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setHighlight (bool $flag) {}
+	public function setHighlight (bool $flag): SolrQuery {}
 
 	/**
 	 * Returns the state of the hl parameter
 	 * @link http://www.php.net/manual/en/solrquery.gethighlight.php
-	 * @return bool a boolean on success and null if not set.
+	 * @return bool Returns a boolean on success and null if not set.
 	 */
-	public function getHighlight () {}
+	public function getHighlight (): bool {}
 
 	/**
 	 * Maps to hl.fl
 	 * @link http://www.php.net/manual/en/solrquery.addhighlightfield.php
-	 * @param string $field Name of the field
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param string $field 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function addHighlightField (string $field) {}
+	public function addHighlightField (string $field): SolrQuery {}
 
 	/**
 	 * Removes one of the fields used for highlighting
 	 * @link http://www.php.net/manual/en/solrquery.removehighlightfield.php
-	 * @param string $field The name of the field
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param string $field 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function removeHighlightField (string $field) {}
+	public function removeHighlightField (string $field): SolrQuery {}
 
 	/**
 	 * Returns all the fields that Solr should generate highlighted snippets for
 	 * @link http://www.php.net/manual/en/solrquery.gethighlightfields.php
-	 * @return array an array on success and null if not set.
+	 * @return array Returns an array on success and null if not set.
 	 */
-	public function getHighlightFields () {}
+	public function getHighlightFields (): array {}
 
 	/**
 	 * Sets the maximum number of highlighted snippets to generate per field
 	 * @link http://www.php.net/manual/en/solrquery.sethighlightsnippets.php
-	 * @param int $value The maximum number of highlighted snippets to generate per field
-	 * @param string $field_override [optional] The name of the field.
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param int $value 
+	 * @param string $field_override [optional] 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setHighlightSnippets (int $value, string $field_override = null) {}
+	public function setHighlightSnippets (int $value, string $field_override = null): SolrQuery {}
 
 	/**
 	 * Returns the maximum number of highlighted snippets to generate per field
 	 * @link http://www.php.net/manual/en/solrquery.gethighlightsnippets.php
-	 * @param string $field_override [optional] The name of the field
-	 * @return int an integer on success and null if not set.
+	 * @param string $field_override [optional] 
+	 * @return int Returns an integer on success and null if not set.
 	 */
-	public function getHighlightSnippets (string $field_override = null) {}
+	public function getHighlightSnippets (string $field_override = null): int {}
 
 	/**
 	 * The size of fragments to consider for highlighting
 	 * @link http://www.php.net/manual/en/solrquery.sethighlightfragsize.php
-	 * @param int $size The size, in characters, of fragments to consider for highlighting
-	 * @param string $field_override [optional] The name of the field.
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param int $size 
+	 * @param string $field_override [optional] 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setHighlightFragsize (int $size, string $field_override = null) {}
+	public function setHighlightFragsize (int $size, string $field_override = null): SolrQuery {}
 
 	/**
 	 * Returns the number of characters of fragments to consider for highlighting
 	 * @link http://www.php.net/manual/en/solrquery.gethighlightfragsize.php
-	 * @param string $field_override [optional] The name of the field
-	 * @return int an integer on success or null if not set.
+	 * @param string $field_override [optional] 
+	 * @return int Returns an integer on success or null if not set.
 	 */
-	public function getHighlightFragsize (string $field_override = null) {}
+	public function getHighlightFragsize (string $field_override = null): int {}
 
 	/**
 	 * Whether or not to collapse contiguous fragments into a single fragment
 	 * @link http://www.php.net/manual/en/solrquery.sethighlightmergecontiguous.php
 	 * @param bool $flag 
-	 * @param string $field_override [optional] The name of the field.
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param string $field_override [optional] 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setHighlightMergeContiguous (bool $flag, string $field_override = null) {}
+	public function setHighlightMergeContiguous (bool $flag, string $field_override = null): SolrQuery {}
 
 	/**
 	 * Returns whether or not the collapse contiguous fragments into a single fragment
 	 * @link http://www.php.net/manual/en/solrquery.gethighlightmergecontiguous.php
-	 * @param string $field_override [optional] The name of the field
-	 * @return bool a boolean on success and null if not set.
+	 * @param string $field_override [optional] 
+	 * @return bool Returns a boolean on success and null if not set.
 	 */
-	public function getHighlightMergeContiguous (string $field_override = null) {}
+	public function getHighlightMergeContiguous (string $field_override = null): bool {}
 
 	/**
 	 * Require field matching during highlighting
 	 * @link http://www.php.net/manual/en/solrquery.sethighlightrequirefieldmatch.php
-	 * @param bool $flag true or false
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param bool $flag 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setHighlightRequireFieldMatch (bool $flag) {}
+	public function setHighlightRequireFieldMatch (bool $flag): SolrQuery {}
 
 	/**
 	 * Returns if a field will only be highlighted if the query matched in this particular field
 	 * @link http://www.php.net/manual/en/solrquery.gethighlightrequirefieldmatch.php
-	 * @return bool a boolean on success and null if not set.
+	 * @return bool Returns a boolean on success and null if not set.
 	 */
-	public function getHighlightRequireFieldMatch () {}
+	public function getHighlightRequireFieldMatch (): bool {}
 
 	/**
 	 * Specifies the number of characters into a document to look for suitable snippets
 	 * @link http://www.php.net/manual/en/solrquery.sethighlightmaxanalyzedchars.php
-	 * @param int $value The number of characters into a document to look for suitable snippets
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param int $value 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setHighlightMaxAnalyzedChars (int $value) {}
+	public function setHighlightMaxAnalyzedChars (int $value): SolrQuery {}
 
 	/**
 	 * Returns the maximum number of characters into a document to look for suitable snippets
 	 * @link http://www.php.net/manual/en/solrquery.gethighlightmaxanalyzedchars.php
-	 * @return int an integer on success and null if not set.
+	 * @return int Returns an integer on success and null if not set.
 	 */
-	public function getHighlightMaxAnalyzedChars () {}
+	public function getHighlightMaxAnalyzedChars (): int {}
 
 	/**
 	 * Specifies the backup field to use
 	 * @link http://www.php.net/manual/en/solrquery.sethighlightalternatefield.php
-	 * @param string $field The name of the backup field
-	 * @param string $field_override [optional] The name of the field we are overriding this setting for.
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param string $field 
+	 * @param string $field_override [optional] 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setHighlightAlternateField (string $field, string $field_override = null) {}
+	public function setHighlightAlternateField (string $field, string $field_override = null): SolrQuery {}
 
 	/**
 	 * Returns the highlight field to use as backup or default
 	 * @link http://www.php.net/manual/en/solrquery.gethighlightalternatefield.php
-	 * @param string $field_override [optional] The name of the field
-	 * @return string a string on success and null if not set.
+	 * @param string $field_override [optional] 
+	 * @return string Returns a string on success and null if not set.
 	 */
-	public function getHighlightAlternateField (string $field_override = null) {}
+	public function getHighlightAlternateField (string $field_override = null): string {}
 
 	/**
 	 * Sets the maximum number of characters of the field to return
 	 * @link http://www.php.net/manual/en/solrquery.sethighlightmaxalternatefieldlength.php
-	 * @param int $fieldLength The length of the field
-	 * @param string $field_override [optional] The name of the field.
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param int $fieldLength 
+	 * @param string $field_override [optional] 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setHighlightMaxAlternateFieldLength (int $fieldLength, string $field_override = null) {}
+	public function setHighlightMaxAlternateFieldLength (int $fieldLength, string $field_override = null): SolrQuery {}
 
 	/**
 	 * Returns the maximum number of characters of the field to return
 	 * @link http://www.php.net/manual/en/solrquery.gethighlightmaxalternatefieldlength.php
-	 * @param string $field_override [optional] The name of the field
-	 * @return int an integer on success and null if not set.
+	 * @param string $field_override [optional] 
+	 * @return int Returns an integer on success and null if not set.
 	 */
-	public function getHighlightMaxAlternateFieldLength (string $field_override = null) {}
+	public function getHighlightMaxAlternateFieldLength (string $field_override = null): int {}
 
 	/**
 	 * Specify a formatter for the highlight output
 	 * @link http://www.php.net/manual/en/solrquery.sethighlightformatter.php
-	 * @param string $formatter Currently the only legal value is "simple"
-	 * @param string $field_override [optional] The name of the field.
-	 * @return SolrQuery an instance of SolrQuery.
+	 * @param string $formatter 
+	 * @param string $field_override [optional] 
+	 * @return SolrQuery Returns an instance of SolrQuery.
 	 */
-	public function setHighlightFormatter (string $formatter, string $field_override = null) {}
+	public function setHighlightFormatter (string $formatter, string $field_override = null): SolrQuery {}
 
 	/**
 	 * Returns the formatter for the highlighted output
 	 * @link http://www.php.net/manual/en/solrquery.gethighlightformatter.php
-	 * @param string $field_override [optional] The name of the field
-	 * @return string a string on success and null if not set.
+	 * @param string $field_override [optional] 
+	 * @return string Returns a string on success and null if not set.
 	 */
-	public function getHighlightFormatter (string $field_override = null) {}
+	public function getHighlightFormatter (string $field_override = null): string {}
 
 	/**
 	 * Sets the text which appears before a highlighted term
 	 * @link http://www.php.net/manual/en/solrquery.sethighlightsimplepre.php
-	 * @param string $simplePre The text which appears before a highlighted term
-	 * @param string $field_override [optional] The name of the field.
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param string $simplePre 
+	 * @param string $field_override [optional] 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setHighlightSimplePre (string $simplePre, string $field_override = null) {}
+	public function setHighlightSimplePre (string $simplePre, string $field_override = null): SolrQuery {}
 
 	/**
 	 * Returns the text which appears before a highlighted term
 	 * @link http://www.php.net/manual/en/solrquery.gethighlightsimplepre.php
-	 * @param string $field_override [optional] The name of the field
-	 * @return string a string on success and null if not set.
+	 * @param string $field_override [optional] 
+	 * @return string Returns a string on success and null if not set.
 	 */
-	public function getHighlightSimplePre (string $field_override = null) {}
+	public function getHighlightSimplePre (string $field_override = null): string {}
 
 	/**
 	 * Sets the text which appears after a highlighted term
 	 * @link http://www.php.net/manual/en/solrquery.sethighlightsimplepost.php
-	 * @param string $simplePost <p>
-	 * Sets the text which appears after a highlighted term
-	 * </p>
-	 * <p><pre> The default is </pre></p>
-	 * @param string $field_override [optional] The name of the field.
-	 * @return SolrQuery an instance of SolrQuery.
+	 * @param string $simplePost 
+	 * @param string $field_override [optional] 
+	 * @return SolrQuery Returns an instance of SolrQuery.
 	 */
-	public function setHighlightSimplePost (string $simplePost, string $field_override = null) {}
+	public function setHighlightSimplePost (string $simplePost, string $field_override = null): SolrQuery {}
 
 	/**
 	 * Returns the text which appears after a highlighted term
 	 * @link http://www.php.net/manual/en/solrquery.gethighlightsimplepost.php
-	 * @param string $field_override [optional] The name of the field
-	 * @return string a string on success and null if not set.
+	 * @param string $field_override [optional] 
+	 * @return string Returns a string on success and null if not set.
 	 */
-	public function getHighlightSimplePost (string $field_override = null) {}
+	public function getHighlightSimplePost (string $field_override = null): string {}
 
 	/**
 	 * Sets a text snippet generator for highlighted text
 	 * @link http://www.php.net/manual/en/solrquery.sethighlightfragmenter.php
-	 * @param string $fragmenter The standard fragmenter is gap. Another option is regex, which tries to create fragments that resembles a certain regular expression
-	 * @param string $field_override [optional] The name of the field.
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param string $fragmenter 
+	 * @param string $field_override [optional] 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setHighlightFragmenter (string $fragmenter, string $field_override = null) {}
+	public function setHighlightFragmenter (string $fragmenter, string $field_override = null): SolrQuery {}
 
 	/**
 	 * Returns the text snippet generator for highlighted text
 	 * @link http://www.php.net/manual/en/solrquery.gethighlightfragmenter.php
-	 * @param string $field_override [optional] The name of the field
-	 * @return string a string on success and null if not set.
+	 * @param string $field_override [optional] 
+	 * @return string Returns a string on success and null if not set.
 	 */
-	public function getHighlightFragmenter (string $field_override = null) {}
+	public function getHighlightFragmenter (string $field_override = null): string {}
 
 	/**
 	 * Whether to highlight phrase terms only when they appear within the query phrase
 	 * @link http://www.php.net/manual/en/solrquery.sethighlightusephrasehighlighter.php
 	 * @param bool $flag 
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setHighlightUsePhraseHighlighter (bool $flag) {}
+	public function setHighlightUsePhraseHighlighter (bool $flag): SolrQuery {}
 
 	/**
 	 * Returns the state of the hl.usePhraseHighlighter parameter
 	 * @link http://www.php.net/manual/en/solrquery.gethighlightusephrasehighlighter.php
-	 * @return bool a boolean on success and null if not set.
+	 * @return bool Returns a boolean on success and null if not set.
 	 */
-	public function getHighlightUsePhraseHighlighter () {}
+	public function getHighlightUsePhraseHighlighter (): bool {}
 
 	/**
 	 * Use SpanScorer to highlight phrase terms
 	 * @link http://www.php.net/manual/en/solrquery.sethighlighthighlightmultiterm.php
-	 * @param bool $flag Whether or not to use SpanScorer to highlight phrase terms only when they appear within the query phrase in the document.
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param bool $flag 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setHighlightHighlightMultiTerm (bool $flag) {}
+	public function setHighlightHighlightMultiTerm (bool $flag): SolrQuery {}
 
 	/**
 	 * Returns whether or not to enable highlighting for range/wildcard/fuzzy/prefix queries
 	 * @link http://www.php.net/manual/en/solrquery.gethighlighthighlightmultiterm.php
-	 * @return bool a boolean on success and null if not set.
+	 * @return bool Returns a boolean on success and null if not set.
 	 */
-	public function getHighlightHighlightMultiTerm () {}
+	public function getHighlightHighlightMultiTerm (): bool {}
 
 	/**
 	 * Sets the factor by which the regex fragmenter can stray from the ideal fragment size
 	 * @link http://www.php.net/manual/en/solrquery.sethighlightregexslop.php
-	 * @param float $factor The factor by which the regex fragmenter can stray from the ideal fragment size
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param float $factor 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setHighlightRegexSlop (float $factor) {}
+	public function setHighlightRegexSlop (float $factor): SolrQuery {}
 
 	/**
 	 * Returns the deviation factor from the ideal fragment size
 	 * @link http://www.php.net/manual/en/solrquery.gethighlightregexslop.php
-	 * @return float a float on success and null if not set.
+	 * @return float Returns a float on success and null if not set.
 	 */
-	public function getHighlightRegexSlop () {}
+	public function getHighlightRegexSlop (): float {}
 
 	/**
 	 * Specify the regular expression for fragmenting
 	 * @link http://www.php.net/manual/en/solrquery.sethighlightregexpattern.php
-	 * @param string $value The regular expression for fragmenting. This could be used to extract sentences
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param string $value 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setHighlightRegexPattern (string $value) {}
+	public function setHighlightRegexPattern (string $value): SolrQuery {}
 
 	/**
 	 * Returns the regular expression for fragmenting
 	 * @link http://www.php.net/manual/en/solrquery.gethighlightregexpattern.php
-	 * @return string a string on success and null if not set.
+	 * @return string Returns a string on success and null if not set.
 	 */
-	public function getHighlightRegexPattern () {}
+	public function getHighlightRegexPattern (): string {}
 
 	/**
 	 * Specify the maximum number of characters to analyze
 	 * @link http://www.php.net/manual/en/solrquery.sethighlightregexmaxanalyzedchars.php
-	 * @param int $maxAnalyzedChars The maximum number of characters to analyze from a field when using the regex fragmenter
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param int $maxAnalyzedChars 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setHighlightRegexMaxAnalyzedChars (int $maxAnalyzedChars) {}
+	public function setHighlightRegexMaxAnalyzedChars (int $maxAnalyzedChars): SolrQuery {}
 
 	/**
 	 * Returns the maximum number of characters from a field when using the regex fragmenter
 	 * @link http://www.php.net/manual/en/solrquery.gethighlightregexmaxanalyzedchars.php
-	 * @return int an integer on success and null if not set.
+	 * @return int Returns an integer on success and null if not set.
 	 */
-	public function getHighlightRegexMaxAnalyzedChars () {}
+	public function getHighlightRegexMaxAnalyzedChars (): int {}
 
 	/**
 	 * Enables or disables the Stats component
 	 * @link http://www.php.net/manual/en/solrquery.setstats.php
-	 * @param bool $flag true turns on the stats component and false disables it.
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param bool $flag 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setStats (bool $flag) {}
+	public function setStats (bool $flag): SolrQuery {}
 
 	/**
 	 * Returns whether or not stats is enabled
 	 * @link http://www.php.net/manual/en/solrquery.getstats.php
-	 * @return bool a boolean on success and null if not set.
+	 * @return bool Returns a boolean on success and null if not set.
 	 */
-	public function getStats () {}
+	public function getStats (): bool {}
 
 	/**
 	 * Maps to stats.field parameter
 	 * @link http://www.php.net/manual/en/solrquery.addstatsfield.php
-	 * @param string $field The name of the field
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param string $field 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function addStatsField (string $field) {}
+	public function addStatsField (string $field): SolrQuery {}
 
 	/**
 	 * Removes one of the stats.field parameters
 	 * @link http://www.php.net/manual/en/solrquery.removestatsfield.php
-	 * @param string $field The name of the field.
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param string $field 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function removeStatsField (string $field) {}
+	public function removeStatsField (string $field): SolrQuery {}
 
 	/**
 	 * Returns all the statistics fields
 	 * @link http://www.php.net/manual/en/solrquery.getstatsfields.php
-	 * @return array an array on success and null if not set.
+	 * @return array Returns an array on success and null if not set.
 	 */
-	public function getStatsFields () {}
+	public function getStatsFields (): array {}
 
 	/**
 	 * Requests a return of sub results for values within the given facet
 	 * @link http://www.php.net/manual/en/solrquery.addstatsfacet.php
-	 * @param string $field The name of the field
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param string $field 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function addStatsFacet (string $field) {}
+	public function addStatsFacet (string $field): SolrQuery {}
 
 	/**
 	 * Removes one of the stats.facet parameters
 	 * @link http://www.php.net/manual/en/solrquery.removestatsfacet.php
-	 * @param string $value The value
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param string $value 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function removeStatsFacet (string $value) {}
+	public function removeStatsFacet (string $value): SolrQuery {}
 
 	/**
 	 * Returns all the stats facets that were set
 	 * @link http://www.php.net/manual/en/solrquery.getstatsfacets.php
-	 * @return array an array on success and null if not set.
+	 * @return array Returns an array on success and null if not set.
 	 */
-	public function getStatsFacets () {}
+	public function getStatsFacets (): array {}
 
 	/**
 	 * Enables or disables moreLikeThis
 	 * @link http://www.php.net/manual/en/solrquery.setmlt.php
-	 * @param bool $flag true enables it and false turns it off.
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param bool $flag 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setMlt (bool $flag) {}
+	public function setMlt (bool $flag): SolrQuery {}
 
 	/**
 	 * Returns whether or not MoreLikeThis results should be enabled
 	 * @link http://www.php.net/manual/en/solrquery.getmlt.php
-	 * @return bool a boolean on success and null if not set.
+	 * @return bool Returns a boolean on success and null if not set.
 	 */
-	public function getMlt () {}
+	public function getMlt (): bool {}
 
 	/**
 	 * Set the number of similar documents to return for each result
 	 * @link http://www.php.net/manual/en/solrquery.setmltcount.php
-	 * @param int $count The number of similar documents to return for each result
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param int $count 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setMltCount (int $count) {}
+	public function setMltCount (int $count): SolrQuery {}
 
 	/**
 	 * Returns the number of similar documents to return for each result
 	 * @link http://www.php.net/manual/en/solrquery.getmltcount.php
-	 * @return int an integer on success and null if not set.
+	 * @return int Returns an integer on success and null if not set.
 	 */
-	public function getMltCount () {}
+	public function getMltCount (): int {}
 
 	/**
 	 * Sets a field to use for similarity
 	 * @link http://www.php.net/manual/en/solrquery.addmltfield.php
-	 * @param string $field The name of the field
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param string $field 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function addMltField (string $field) {}
+	public function addMltField (string $field): SolrQuery {}
 
 	/**
 	 * Removes one of the moreLikeThis fields
 	 * @link http://www.php.net/manual/en/solrquery.removemltfield.php
-	 * @param string $field Name of the field
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param string $field 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function removeMltField (string $field) {}
+	public function removeMltField (string $field): SolrQuery {}
 
 	/**
 	 * Returns all the fields to use for similarity
 	 * @link http://www.php.net/manual/en/solrquery.getmltfields.php
-	 * @return array an array on success and null if not set.
+	 * @return array Returns an array on success and null if not set.
 	 */
-	public function getMltFields () {}
+	public function getMltFields (): array {}
 
 	/**
 	 * Maps to mlt.qf
 	 * @link http://www.php.net/manual/en/solrquery.addmltqueryfield.php
-	 * @param string $field The name of the field
-	 * @param float $boost Its boost value
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param string $field 
+	 * @param float $boost 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function addMltQueryField (string $field, float $boost) {}
+	public function addMltQueryField (string $field, float $boost): SolrQuery {}
 
 	/**
 	 * Removes one of the moreLikeThis query fields
 	 * @link http://www.php.net/manual/en/solrquery.removemltqueryfield.php
-	 * @param string $queryField The query field
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param string $queryField 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function removeMltQueryField (string $queryField) {}
+	public function removeMltQueryField (string $queryField): SolrQuery {}
 
 	/**
 	 * Returns the query fields and their boosts
 	 * @link http://www.php.net/manual/en/solrquery.getmltqueryfields.php
-	 * @return array an array on success and null if not set.
+	 * @return array Returns an array on success and null if not set.
 	 */
-	public function getMltQueryFields () {}
+	public function getMltQueryFields (): array {}
 
 	/**
 	 * Sets the frequency below which terms will be ignored in the source docs
 	 * @link http://www.php.net/manual/en/solrquery.setmltmintermfrequency.php
-	 * @param int $minTermFrequency The frequency below which terms will be ignored in the source docs
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param int $minTermFrequency 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setMltMinTermFrequency (int $minTermFrequency) {}
+	public function setMltMinTermFrequency (int $minTermFrequency): SolrQuery {}
 
 	/**
 	 * Returns the frequency below which terms will be ignored in the source document
 	 * @link http://www.php.net/manual/en/solrquery.getmltmintermfrequency.php
-	 * @return int an integer on success and null if not set.
+	 * @return int Returns an integer on success and null if not set.
 	 */
-	public function getMltMinTermFrequency () {}
+	public function getMltMinTermFrequency (): int {}
 
 	/**
 	 * Sets the mltMinDoc frequency
 	 * @link http://www.php.net/manual/en/solrquery.setmltmindocfrequency.php
-	 * @param int $minDocFrequency Sets the frequency at which words will be ignored which do not occur in at least this many docs.
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param int $minDocFrequency 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setMltMinDocFrequency (int $minDocFrequency) {}
+	public function setMltMinDocFrequency (int $minDocFrequency): SolrQuery {}
 
 	/**
 	 * Returns the treshold frequency at which words will be ignored which do not occur in at least this many docs
 	 * @link http://www.php.net/manual/en/solrquery.getmltmindocfrequency.php
-	 * @return int an integer on success and null if not set.
+	 * @return int Returns an integer on success and null if not set.
 	 */
-	public function getMltMinDocFrequency () {}
+	public function getMltMinDocFrequency (): int {}
 
 	/**
 	 * Sets the minimum word length
 	 * @link http://www.php.net/manual/en/solrquery.setmltminwordlength.php
-	 * @param int $minWordLength The minimum word length below which words will be ignored
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param int $minWordLength 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setMltMinWordLength (int $minWordLength) {}
+	public function setMltMinWordLength (int $minWordLength): SolrQuery {}
 
 	/**
 	 * Returns the minimum word length below which words will be ignored
 	 * @link http://www.php.net/manual/en/solrquery.getmltminwordlength.php
-	 * @return int an integer on success and null if not set.
+	 * @return int Returns an integer on success and null if not set.
 	 */
-	public function getMltMinWordLength () {}
+	public function getMltMinWordLength (): int {}
 
 	/**
 	 * Sets the maximum word length
 	 * @link http://www.php.net/manual/en/solrquery.setmltmaxwordlength.php
-	 * @param int $maxWordLength The maximum word length above which words will be ignored
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param int $maxWordLength 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setMltMaxWordLength (int $maxWordLength) {}
+	public function setMltMaxWordLength (int $maxWordLength): SolrQuery {}
 
 	/**
 	 * Returns the maximum word length above which words will be ignored
 	 * @link http://www.php.net/manual/en/solrquery.getmltmaxwordlength.php
-	 * @return int an integer on success and null if not set.
+	 * @return int Returns an integer on success and null if not set.
 	 */
-	public function getMltMaxWordLength () {}
+	public function getMltMaxWordLength (): int {}
 
 	/**
 	 * Specifies the maximum number of tokens to parse
 	 * @link http://www.php.net/manual/en/solrquery.setmltmaxnumtokens.php
-	 * @param int $value The maximum number of tokens to parse
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param int $value 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setMltMaxNumTokens (int $value) {}
+	public function setMltMaxNumTokens (int $value): SolrQuery {}
 
 	/**
 	 * Returns the maximum number of tokens to parse in each document field that is not stored with TermVector support
 	 * @link http://www.php.net/manual/en/solrquery.getmltmaxnumtokens.php
-	 * @return int an integer on success and null if not set.
+	 * @return int Returns an integer on success and null if not set.
 	 */
-	public function getMltMaxNumTokens () {}
+	public function getMltMaxNumTokens (): int {}
 
 	/**
 	 * Sets the maximum number of query terms included
 	 * @link http://www.php.net/manual/en/solrquery.setmltmaxnumqueryterms.php
-	 * @param int $value The maximum number of query terms that will be included in any generated query
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param int $value 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setMltMaxNumQueryTerms (int $value) {}
+	public function setMltMaxNumQueryTerms (int $value): SolrQuery {}
 
 	/**
 	 * Returns the maximum number of query terms that will be included in any generated query
 	 * @link http://www.php.net/manual/en/solrquery.getmltmaxnumqueryterms.php
-	 * @return int an integer on success and null if not set.
+	 * @return int Returns an integer on success and null if not set.
 	 */
-	public function getMltMaxNumQueryTerms () {}
+	public function getMltMaxNumQueryTerms (): int {}
 
 	/**
 	 * Set if the query will be boosted by the interesting term relevance
 	 * @link http://www.php.net/manual/en/solrquery.setmltboost.php
 	 * @param bool $flag 
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setMltBoost (bool $flag) {}
+	public function setMltBoost (bool $flag): SolrQuery {}
 
 	/**
 	 * Returns whether or not the query will be boosted by the interesting term relevance
 	 * @link http://www.php.net/manual/en/solrquery.getmltboost.php
-	 * @return bool a boolean on success and null if not set.
+	 * @return bool Returns a boolean on success and null if not set.
 	 */
-	public function getMltBoost () {}
+	public function getMltBoost (): bool {}
 
 	/**
 	 * Enables or disables the TermsComponent
 	 * @link http://www.php.net/manual/en/solrquery.setterms.php
-	 * @param bool $flag true enables it. false turns it off
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param bool $flag 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setTerms (bool $flag) {}
+	public function setTerms (bool $flag): SolrQuery {}
 
 	/**
 	 * Returns whether or not the TermsComponent is enabled
 	 * @link http://www.php.net/manual/en/solrquery.getterms.php
-	 * @return bool a boolean on success and null if not set.
+	 * @return bool Returns a boolean on success and null if not set.
 	 */
-	public function getTerms () {}
+	public function getTerms (): bool {}
 
 	/**
 	 * Sets the name of the field to get the Terms from
 	 * @link http://www.php.net/manual/en/solrquery.settermsfield.php
-	 * @param string $fieldname The field name
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param string $fieldname 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setTermsField (string $fieldname) {}
+	public function setTermsField (string $fieldname): SolrQuery {}
 
 	/**
 	 * Returns the field from which the terms are retrieved
 	 * @link http://www.php.net/manual/en/solrquery.gettermsfield.php
-	 * @return string a string on success and null if not set.
+	 * @return string Returns a string on success and null if not set.
 	 */
-	public function getTermsField () {}
+	public function getTermsField (): string {}
 
 	/**
 	 * Specifies the Term to start from
 	 * @link http://www.php.net/manual/en/solrquery.settermslowerbound.php
-	 * @param string $lowerBound The lower bound Term
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param string $lowerBound 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setTermsLowerBound (string $lowerBound) {}
+	public function setTermsLowerBound (string $lowerBound): SolrQuery {}
 
 	/**
 	 * Returns the term to start at
 	 * @link http://www.php.net/manual/en/solrquery.gettermslowerbound.php
-	 * @return string a string on success and null if not set.
+	 * @return string Returns a string on success and null if not set.
 	 */
-	public function getTermsLowerBound () {}
+	public function getTermsLowerBound (): string {}
 
 	/**
 	 * Sets the term to stop at
 	 * @link http://www.php.net/manual/en/solrquery.settermsupperbound.php
-	 * @param string $upperBound The term to stop at
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param string $upperBound 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setTermsUpperBound (string $upperBound) {}
+	public function setTermsUpperBound (string $upperBound): SolrQuery {}
 
 	/**
 	 * Returns the term to stop at
 	 * @link http://www.php.net/manual/en/solrquery.gettermsupperbound.php
-	 * @return string a string on success and null if not set.
+	 * @return string Returns a string on success and null if not set.
 	 */
-	public function getTermsUpperBound () {}
+	public function getTermsUpperBound (): string {}
 
 	/**
 	 * Include the lower bound term in the result set
 	 * @link http://www.php.net/manual/en/solrquery.settermsincludelowerbound.php
-	 * @param bool $flag Include the lower bound term in the result set
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param bool $flag 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setTermsIncludeLowerBound (bool $flag) {}
+	public function setTermsIncludeLowerBound (bool $flag): SolrQuery {}
 
 	/**
 	 * Returns whether or not to include the lower bound in the result set
 	 * @link http://www.php.net/manual/en/solrquery.gettermsincludelowerbound.php
-	 * @return bool a boolean on success and null if not set.
+	 * @return bool Returns a boolean on success and null if not set.
 	 */
-	public function getTermsIncludeLowerBound () {}
+	public function getTermsIncludeLowerBound (): bool {}
 
 	/**
 	 * Include the upper bound term in the result set
 	 * @link http://www.php.net/manual/en/solrquery.settermsincludeupperbound.php
-	 * @param bool $flag true or false
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param bool $flag 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setTermsIncludeUpperBound (bool $flag) {}
+	public function setTermsIncludeUpperBound (bool $flag): SolrQuery {}
 
 	/**
 	 * Returns whether or not to include the upper bound term in the result set
 	 * @link http://www.php.net/manual/en/solrquery.gettermsincludeupperbound.php
-	 * @return bool a boolean on success and null if not set.
+	 * @return bool Returns a boolean on success and null if not set.
 	 */
-	public function getTermsIncludeUpperBound () {}
+	public function getTermsIncludeUpperBound (): bool {}
 
 	/**
 	 * Sets the minimum document frequency
 	 * @link http://www.php.net/manual/en/solrquery.settermsmincount.php
-	 * @param int $frequency The minimum frequency
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param int $frequency 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setTermsMinCount (int $frequency) {}
+	public function setTermsMinCount (int $frequency): SolrQuery {}
 
 	/**
 	 * Returns the minimum document frequency to return in order to be included
 	 * @link http://www.php.net/manual/en/solrquery.gettermsmincount.php
-	 * @return int an integer on success and null if not set.
+	 * @return int Returns an integer on success and null if not set.
 	 */
-	public function getTermsMinCount () {}
+	public function getTermsMinCount (): int {}
 
 	/**
 	 * Sets the maximum document frequency
 	 * @link http://www.php.net/manual/en/solrquery.settermsmaxcount.php
-	 * @param int $frequency The maximum document frequency.
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param int $frequency 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setTermsMaxCount (int $frequency) {}
+	public function setTermsMaxCount (int $frequency): SolrQuery {}
 
 	/**
 	 * Returns the maximum document frequency
 	 * @link http://www.php.net/manual/en/solrquery.gettermsmaxcount.php
-	 * @return int an integer on success and null if not set.
+	 * @return int Returns an integer on success and null if not set.
 	 */
-	public function getTermsMaxCount () {}
+	public function getTermsMaxCount (): int {}
 
 	/**
 	 * Restrict matches to terms that start with the prefix
 	 * @link http://www.php.net/manual/en/solrquery.settermsprefix.php
-	 * @param string $prefix Restrict matches to terms that start with the prefix
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param string $prefix 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setTermsPrefix (string $prefix) {}
+	public function setTermsPrefix (string $prefix): SolrQuery {}
 
 	/**
 	 * Returns the term prefix
 	 * @link http://www.php.net/manual/en/solrquery.gettermsprefix.php
-	 * @return string a string on success and null if not set.
+	 * @return string Returns a string on success and null if not set.
 	 */
-	public function getTermsPrefix () {}
+	public function getTermsPrefix (): string {}
 
 	/**
 	 * Sets the maximum number of terms to return
 	 * @link http://www.php.net/manual/en/solrquery.settermslimit.php
-	 * @param int $limit The maximum number of terms to return. All the terms will be returned if the limit is negative.
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param int $limit 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setTermsLimit (int $limit) {}
+	public function setTermsLimit (int $limit): SolrQuery {}
 
 	/**
 	 * Returns the maximum number of terms Solr should return
 	 * @link http://www.php.net/manual/en/solrquery.gettermslimit.php
-	 * @return int an integer on success and null if not set.
+	 * @return int Returns an integer on success and null if not set.
 	 */
-	public function getTermsLimit () {}
+	public function getTermsLimit (): int {}
 
 	/**
 	 * Return the raw characters of the indexed term
 	 * @link http://www.php.net/manual/en/solrquery.settermsreturnraw.php
 	 * @param bool $flag 
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setTermsReturnRaw (bool $flag) {}
+	public function setTermsReturnRaw (bool $flag): SolrQuery {}
 
 	/**
 	 * Whether or not to return raw characters
 	 * @link http://www.php.net/manual/en/solrquery.gettermsreturnraw.php
-	 * @return bool a boolean on success and null if not set.
+	 * @return bool Returns a boolean on success and null if not set.
 	 */
-	public function getTermsReturnRaw () {}
+	public function getTermsReturnRaw (): bool {}
 
 	/**
 	 * Specifies how to sort the returned terms
 	 * @link http://www.php.net/manual/en/solrquery.settermssort.php
-	 * @param int $sortType SolrQuery::TERMS_SORT_INDEX or SolrQuery::TERMS_SORT_COUNT
-	 * @return SolrQuery the current SolrQuery object, if the return value is used.
+	 * @param int $sortType 
+	 * @return SolrQuery Returns the current SolrQuery object, if the return value is used.
 	 */
-	public function setTermsSort (int $sortType) {}
+	public function setTermsSort (int $sortType): SolrQuery {}
 
 	/**
 	 * Returns an integer indicating how terms are sorted
 	 * @link http://www.php.net/manual/en/solrquery.gettermssort.php
-	 * @return int an integer on success and null if not set.
+	 * @return int Returns an integer on success and null if not set.
 	 */
-	public function getTermsSort () {}
+	public function getTermsSort (): int {}
 
 	/**
 	 * Sets the parameter to the specified value
 	 * @link http://www.php.net/manual/en/solrparams.setparam.php
-	 * @param string $name Name of the parameter
-	 * @param string $value Value of the parameter
-	 * @return SolrParams a SolrParam object on success and false on value.
+	 * @param string $name 
+	 * @param string $value 
+	 * @return SolrParams Returns a SolrParam object on success and false on value.
 	 */
-	public function setParam (string $name, string $value) {}
+	public function setParam (string $name, string $value): SolrParams {}
 
 	/**
 	 * Adds a parameter to the object
 	 * @link http://www.php.net/manual/en/solrparams.addparam.php
-	 * @param string $name Name of parameter
-	 * @param string $value Value of parameter
-	 * @return SolrParams a SolrParam object on success and false on failure.
+	 * @param string $name 
+	 * @param string $value 
+	 * @return SolrParams Returns a SolrParam object on success and false on failure.
 	 */
-	public function addParam (string $name, string $value) {}
+	public function addParam (string $name, string $value): SolrParams {}
 
 	public function __toString (): string {}
 
 	/**
 	 * Returns all the name-value pair parameters in the object
 	 * @link http://www.php.net/manual/en/solrparams.tostring.php
-	 * @param bool $url_encode [optional] Whether to return URL-encoded values
-	 * @return string a string on success and false on failure.
+	 * @param bool $url_encode [optional] 
+	 * @return string Returns a string on success and false on failure.
 	 */
-	public function toString (bool $url_encode = null) {}
+	public function toString (bool $url_encode = false): string {}
 
 	/**
 	 * Returns an array of non URL-encoded parameters
 	 * @link http://www.php.net/manual/en/solrparams.getparams.php
-	 * @return array an array of non URL-encoded parameters
+	 * @return array Returns an array of non URL-encoded parameters
 	 */
-	public function getParams () {}
+	public function getParams (): array {}
 
 	/**
 	 * Returns a parameter value
 	 * @link http://www.php.net/manual/en/solrparams.getparam.php
-	 * @param string $param_name [optional] The name of the parameter
-	 * @return mixed a string or an array depending on the type of the parameter
+	 * @param string $param_name [optional] 
+	 * @return mixed Returns a string or an array depending on the type of the parameter
 	 */
-	public function getParam (string $param_name = null) {}
+	public function getParam (string $param_name = null): mixed {}
 
 	/**
 	 * Returns an array of URL-encoded parameters
 	 * @link http://www.php.net/manual/en/solrparams.getpreparedparams.php
-	 * @return array an array on URL-encoded parameters
+	 * @return array Returns an array on URL-encoded parameters
 	 */
-	public function getPreparedParams () {}
+	public function getPreparedParams (): array {}
 
 	public function __clone () {}
 
@@ -4479,41 +4437,41 @@ class SolrDisMaxQuery extends SolrQuery implements Serializable, Stringable {
 	 * @link http://www.php.net/manual/en/solrparams.serialize.php
 	 * @return string Used for custom serialization
 	 */
-	public function serialize () {}
+	public function serialize (): string {}
 
 	/**
 	 * Used for custom serialization
 	 * @link http://www.php.net/manual/en/solrparams.unserialize.php
-	 * @param string $serialized The serialized representation of the object
+	 * @param string $serialized 
 	 * @return void None
 	 */
-	public function unserialize (string $serialized) {}
+	public function unserialize (string $serialized): void {}
 
 	/**
-	 * Alias: SolrParams::addParam
+	 * Alias of SolrParams::addParam
 	 * @link http://www.php.net/manual/en/solrparams.add.php
-	 * @param string $name The name of the parameter
-	 * @param string $value The value of the parameter
-	 * @return SolrParams a SolrParams instance on success
+	 * @param string $name 
+	 * @param string $value 
+	 * @return SolrParams Returns a SolrParams instance on success
 	 */
-	public function add (string $name, string $value) {}
+	public function add (string $name, string $value): SolrParams {}
 
 	/**
-	 * Alias: SolrParams::setParam
+	 * Alias of SolrParams::setParam
 	 * @link http://www.php.net/manual/en/solrparams.set.php
-	 * @param string $name Then name of the parameter
-	 * @param string $value The parameter value
-	 * @return void an instance of the SolrParams object on success
+	 * @param string $name 
+	 * @param string $value 
+	 * @return void Returns an instance of the SolrParams object on success
 	 */
-	public function set (string $name, string $value) {}
+	public function set (string $name, string $value): void {}
 
 	/**
-	 * Alias: SolrParams::getParam
+	 * Alias of SolrParams::getParam
 	 * @link http://www.php.net/manual/en/solrparams.get.php
-	 * @param string $param_name Then name of the parameter
-	 * @return mixed an array or string depending on the type of parameter
+	 * @param string $param_name 
+	 * @return mixed Returns an array or string depending on the type of parameter
 	 */
-	public function get (string $param_name) {}
+	public function get (string $param_name): mixed {}
 
 }
 
@@ -4581,9 +4539,11 @@ class SolrCollapseFunction implements Stringable {
 	/**
 	 * Constructor
 	 * @link http://www.php.net/manual/en/solrcollapsefunction.construct.php
-	 * @param mixed $field [optional]
+	 * @param string $field [optional] The field name to collapse on.
+	 * <p>In order to collapse a result. The field type must be a single valued String, Int or Float.</p>
+	 * @return string 
 	 */
-	public function __construct ($field = null) {}
+	public function __construct (string $field = null): string {}
 
 	public function __destruct () {}
 
@@ -4593,14 +4553,14 @@ class SolrCollapseFunction implements Stringable {
 	 * @param string $fieldName 
 	 * @return SolrCollapseFunction SolrCollapseFunction
 	 */
-	public function setField (string $fieldName) {}
+	public function setField (string $fieldName): SolrCollapseFunction {}
 
 	/**
 	 * Returns the field that is being collapsed on
 	 * @link http://www.php.net/manual/en/solrcollapsefunction.getfield.php
 	 * @return string 
 	 */
-	public function getField () {}
+	public function getField (): string {}
 
 	/**
 	 * Selects the group heads by the max value of a numeric field or function query
@@ -4608,14 +4568,14 @@ class SolrCollapseFunction implements Stringable {
 	 * @param string $max 
 	 * @return SolrCollapseFunction SolrCollapseFunction
 	 */
-	public function setMax (string $max) {}
+	public function setMax (string $max): SolrCollapseFunction {}
 
 	/**
 	 * Returns max parameter
 	 * @link http://www.php.net/manual/en/solrcollapsefunction.getmax.php
 	 * @return string 
 	 */
-	public function getMax () {}
+	public function getMax (): string {}
 
 	/**
 	 * Sets the initial size of the collapse data structures when collapsing on a numeric field only
@@ -4623,14 +4583,14 @@ class SolrCollapseFunction implements Stringable {
 	 * @param string $min 
 	 * @return SolrCollapseFunction SolrCollapseFunction
 	 */
-	public function setMin (string $min) {}
+	public function setMin (string $min): SolrCollapseFunction {}
 
 	/**
 	 * Returns min parameter
 	 * @link http://www.php.net/manual/en/solrcollapsefunction.getmin.php
 	 * @return string 
 	 */
-	public function getMin () {}
+	public function getMin (): string {}
 
 	/**
 	 * Sets the initial size of the collapse data structures when collapsing on a numeric field only
@@ -4638,14 +4598,14 @@ class SolrCollapseFunction implements Stringable {
 	 * @param int $size 
 	 * @return SolrCollapseFunction SolrCollapseFunction
 	 */
-	public function setSize (int $size) {}
+	public function setSize (int $size): SolrCollapseFunction {}
 
 	/**
 	 * Returns size parameter
 	 * @link http://www.php.net/manual/en/solrcollapsefunction.getsize.php
 	 * @return int 
 	 */
-	public function getSize () {}
+	public function getSize (): int {}
 
 	/**
 	 * Sets collapse hint
@@ -4653,14 +4613,14 @@ class SolrCollapseFunction implements Stringable {
 	 * @param string $hint Currently there is only one hint available "top_fc", which stands for top level FieldCache
 	 * @return SolrCollapseFunction SolrCollapseFunction
 	 */
-	public function setHint (string $hint) {}
+	public function setHint (string $hint): SolrCollapseFunction {}
 
 	/**
 	 * Returns collapse hint
 	 * @link http://www.php.net/manual/en/solrcollapsefunction.gethint.php
 	 * @return string 
 	 */
-	public function getHint () {}
+	public function getHint (): string {}
 
 	/**
 	 * Sets the NULL Policy
@@ -4668,14 +4628,14 @@ class SolrCollapseFunction implements Stringable {
 	 * @param string $nullPolicy 
 	 * @return SolrCollapseFunction SolrCollapseFunction
 	 */
-	public function setNullPolicy (string $nullPolicy) {}
+	public function setNullPolicy (string $nullPolicy): SolrCollapseFunction {}
 
 	/**
 	 * Returns null policy
 	 * @link http://www.php.net/manual/en/solrcollapsefunction.getnullpolicy.php
 	 * @return string 
 	 */
-	public function getNullPolicy () {}
+	public function getNullPolicy (): string {}
 
 	/**
 	 * Returns a string representing the constructed collapse function
@@ -4695,7 +4655,11 @@ class SolrCollapseFunction implements Stringable {
  * @link http://www.php.net/manual/en/class.solrresponse.php
  */
 abstract class SolrResponse  {
+	/**
+	 * Documents should be parsed as SolrObject instances
 	const PARSE_SOLR_OBJ = 0;
+	/**
+	 * Documents should be parsed as SolrDocument instances.
 	const PARSE_SOLR_DOC = 1;
 
 	protected $http_status;
@@ -4714,80 +4678,80 @@ abstract class SolrResponse  {
 	/**
 	 * Returns the HTTP status of the response
 	 * @link http://www.php.net/manual/en/solrresponse.gethttpstatus.php
-	 * @return int the HTTP status of the response.
+	 * @return int Returns the HTTP status of the response.
 	 */
-	public function getHttpStatus () {}
+	public function getHttpStatus (): int {}
 
 	/**
 	 * Returns more details on the HTTP status
 	 * @link http://www.php.net/manual/en/solrresponse.gethttpstatusmessage.php
-	 * @return string more details on the HTTP status
+	 * @return string Returns more details on the HTTP status
 	 */
-	public function getHttpStatusMessage () {}
+	public function getHttpStatusMessage (): string {}
 
 	/**
 	 * Was the request a success
 	 * @link http://www.php.net/manual/en/solrresponse.success.php
-	 * @return bool true if it was successful and false if it was not.
+	 * @return bool Returns true if it was successful and false if it was not.
 	 */
-	public function success () {}
+	public function success (): bool {}
 
 	/**
 	 * Returns the full URL the request was sent to
 	 * @link http://www.php.net/manual/en/solrresponse.getrequesturl.php
-	 * @return string the full URL the request was sent to
+	 * @return string Returns the full URL the request was sent to
 	 */
-	public function getRequestUrl () {}
+	public function getRequestUrl (): string {}
 
 	/**
 	 * Returns the raw request headers sent to the Solr server
 	 * @link http://www.php.net/manual/en/solrresponse.getrawrequestheaders.php
-	 * @return string the raw request headers sent to the Solr server
+	 * @return string Returns the raw request headers sent to the Solr server
 	 */
-	public function getRawRequestHeaders () {}
+	public function getRawRequestHeaders (): string {}
 
 	/**
 	 * Returns the raw request sent to the Solr server
 	 * @link http://www.php.net/manual/en/solrresponse.getrawrequest.php
-	 * @return string the raw request sent to the Solr server
+	 * @return string Returns the raw request sent to the Solr server
 	 */
-	public function getRawRequest () {}
+	public function getRawRequest (): string {}
 
 	/**
 	 * Returns the raw response headers from the server
 	 * @link http://www.php.net/manual/en/solrresponse.getrawresponseheaders.php
-	 * @return string the raw response headers from the server.
+	 * @return string Returns the raw response headers from the server.
 	 */
-	public function getRawResponseHeaders () {}
+	public function getRawResponseHeaders (): string {}
 
 	/**
 	 * Returns the raw response from the server
 	 * @link http://www.php.net/manual/en/solrresponse.getrawresponse.php
-	 * @return string the raw response from the server.
+	 * @return string Returns the raw response from the server.
 	 */
-	public function getRawResponse () {}
+	public function getRawResponse (): string {}
 
 	/**
 	 * Returns the XML response as serialized PHP data
 	 * @link http://www.php.net/manual/en/solrresponse.getdigestedresponse.php
-	 * @return string the XML response as serialized PHP data
+	 * @return string Returns the XML response as serialized PHP data
 	 */
-	public function getDigestedResponse () {}
+	public function getDigestedResponse (): string {}
 
 	/**
 	 * Sets the parse mode
 	 * @link http://www.php.net/manual/en/solrresponse.setparsemode.php
-	 * @param int $parser_mode [optional] SolrResponse::PARSE_SOLR_DOC parses documents in SolrDocument instances. SolrResponse::PARSE_SOLR_OBJ parses document into SolrObjects.
-	 * @return bool true on success or false on failure
+	 * @param int $parser_mode [optional] 
+	 * @return bool Returns true on success or false on failure.
 	 */
-	public function setParseMode (int $parser_mode = null) {}
+	public function setParseMode (int $parser_mode = null): bool {}
 
 	/**
 	 * Returns a SolrObject representing the XML response from the server
 	 * @link http://www.php.net/manual/en/solrresponse.getresponse.php
-	 * @return SolrObject a SolrObject representing the XML response from the server
+	 * @return SolrObject Returns a SolrObject representing the XML response from the server
 	 */
-	public function getResponse () {}
+	public function getResponse (): SolrObject {}
 
 	public function getArrayResponse () {}
 
@@ -4798,7 +4762,11 @@ abstract class SolrResponse  {
  * @link http://www.php.net/manual/en/class.solrqueryresponse.php
  */
 final class SolrQueryResponse extends SolrResponse  {
+	/**
+	 * Documents should be parsed as SolrObject instances
 	const PARSE_SOLR_OBJ = 0;
+	/**
+	 * Documents should be parsed as SolrDocument instances.
 	const PARSE_SOLR_DOC = 1;
 
 	protected $http_status;
@@ -4820,89 +4788,85 @@ final class SolrQueryResponse extends SolrResponse  {
 	 */
 	public function __construct () {}
 
-	/**
-	 * Destructor
-	 * @link http://www.php.net/manual/en/solrqueryresponse.destruct.php
-	 */
 	public function __destruct () {}
 
 	/**
 	 * Returns the HTTP status of the response
 	 * @link http://www.php.net/manual/en/solrresponse.gethttpstatus.php
-	 * @return int the HTTP status of the response.
+	 * @return int Returns the HTTP status of the response.
 	 */
-	public function getHttpStatus () {}
+	public function getHttpStatus (): int {}
 
 	/**
 	 * Returns more details on the HTTP status
 	 * @link http://www.php.net/manual/en/solrresponse.gethttpstatusmessage.php
-	 * @return string more details on the HTTP status
+	 * @return string Returns more details on the HTTP status
 	 */
-	public function getHttpStatusMessage () {}
+	public function getHttpStatusMessage (): string {}
 
 	/**
 	 * Was the request a success
 	 * @link http://www.php.net/manual/en/solrresponse.success.php
-	 * @return bool true if it was successful and false if it was not.
+	 * @return bool Returns true if it was successful and false if it was not.
 	 */
-	public function success () {}
+	public function success (): bool {}
 
 	/**
 	 * Returns the full URL the request was sent to
 	 * @link http://www.php.net/manual/en/solrresponse.getrequesturl.php
-	 * @return string the full URL the request was sent to
+	 * @return string Returns the full URL the request was sent to
 	 */
-	public function getRequestUrl () {}
+	public function getRequestUrl (): string {}
 
 	/**
 	 * Returns the raw request headers sent to the Solr server
 	 * @link http://www.php.net/manual/en/solrresponse.getrawrequestheaders.php
-	 * @return string the raw request headers sent to the Solr server
+	 * @return string Returns the raw request headers sent to the Solr server
 	 */
-	public function getRawRequestHeaders () {}
+	public function getRawRequestHeaders (): string {}
 
 	/**
 	 * Returns the raw request sent to the Solr server
 	 * @link http://www.php.net/manual/en/solrresponse.getrawrequest.php
-	 * @return string the raw request sent to the Solr server
+	 * @return string Returns the raw request sent to the Solr server
 	 */
-	public function getRawRequest () {}
+	public function getRawRequest (): string {}
 
 	/**
 	 * Returns the raw response headers from the server
 	 * @link http://www.php.net/manual/en/solrresponse.getrawresponseheaders.php
-	 * @return string the raw response headers from the server.
+	 * @return string Returns the raw response headers from the server.
 	 */
-	public function getRawResponseHeaders () {}
+	public function getRawResponseHeaders (): string {}
 
 	/**
 	 * Returns the raw response from the server
 	 * @link http://www.php.net/manual/en/solrresponse.getrawresponse.php
-	 * @return string the raw response from the server.
+	 * @return string Returns the raw response from the server.
 	 */
-	public function getRawResponse () {}
+	public function getRawResponse (): string {}
 
 	/**
 	 * Returns the XML response as serialized PHP data
 	 * @link http://www.php.net/manual/en/solrresponse.getdigestedresponse.php
-	 * @return string the XML response as serialized PHP data
+	 * @return string Returns the XML response as serialized PHP data
 	 */
-	public function getDigestedResponse () {}
+	public function getDigestedResponse (): string {}
 
 	/**
 	 * Sets the parse mode
 	 * @link http://www.php.net/manual/en/solrresponse.setparsemode.php
-	 * @param int $parser_mode [optional] SolrResponse::PARSE_SOLR_DOC parses documents in SolrDocument instances. SolrResponse::PARSE_SOLR_OBJ parses document into SolrObjects.
-	 * @return bool true on success or false on failure
+	 * @param int $parser_mode [optional] 
+	 * @return bool Returns true on success or false on failure.
 	 */
-	public function setParseMode (int $parser_mode = null) {}
+	public function setParseMode (int $parser_mode = null): bool {}
 
 	/**
 	 * Returns a SolrObject representing the XML response from the server
 	 * @link http://www.php.net/manual/en/solrresponse.getresponse.php
-	 * @return SolrObject a SolrObject representing the XML response from the server
+	 * @return SolrObject Returns a SolrObject representing the XML response from the server
 	 */
-	public function getResponse () {}
+	public function getResponse (): SolrObject {}
 
 	public function getArrayResponse () {}
 
@@ -4913,7 +4877,11 @@ final class SolrQueryResponse extends SolrResponse  {
  * @link http://www.php.net/manual/en/class.solrupdateresponse.php
  */
 final class SolrUpdateResponse extends SolrResponse  {
+	/**
+	 * Documents should be parsed as SolrObject instances
 	const PARSE_SOLR_OBJ = 0;
+	/**
+	 * Documents should be parsed as SolrDocument instances.
 	const PARSE_SOLR_DOC = 1;
 
 	protected $http_status;
@@ -4935,89 +4903,85 @@ final class SolrUpdateResponse extends SolrResponse  {
 	 */
 	public function __construct () {}
 
-	/**
-	 * Destructor
-	 * @link http://www.php.net/manual/en/solrupdateresponse.destruct.php
-	 */
 	public function __destruct () {}
 
 	/**
 	 * Returns the HTTP status of the response
 	 * @link http://www.php.net/manual/en/solrresponse.gethttpstatus.php
-	 * @return int the HTTP status of the response.
+	 * @return int Returns the HTTP status of the response.
 	 */
-	public function getHttpStatus () {}
+	public function getHttpStatus (): int {}
 
 	/**
 	 * Returns more details on the HTTP status
 	 * @link http://www.php.net/manual/en/solrresponse.gethttpstatusmessage.php
-	 * @return string more details on the HTTP status
+	 * @return string Returns more details on the HTTP status
 	 */
-	public function getHttpStatusMessage () {}
+	public function getHttpStatusMessage (): string {}
 
 	/**
 	 * Was the request a success
 	 * @link http://www.php.net/manual/en/solrresponse.success.php
-	 * @return bool true if it was successful and false if it was not.
+	 * @return bool Returns true if it was successful and false if it was not.
 	 */
-	public function success () {}
+	public function success (): bool {}
 
 	/**
 	 * Returns the full URL the request was sent to
 	 * @link http://www.php.net/manual/en/solrresponse.getrequesturl.php
-	 * @return string the full URL the request was sent to
+	 * @return string Returns the full URL the request was sent to
 	 */
-	public function getRequestUrl () {}
+	public function getRequestUrl (): string {}
 
 	/**
 	 * Returns the raw request headers sent to the Solr server
 	 * @link http://www.php.net/manual/en/solrresponse.getrawrequestheaders.php
-	 * @return string the raw request headers sent to the Solr server
+	 * @return string Returns the raw request headers sent to the Solr server
 	 */
-	public function getRawRequestHeaders () {}
+	public function getRawRequestHeaders (): string {}
 
 	/**
 	 * Returns the raw request sent to the Solr server
 	 * @link http://www.php.net/manual/en/solrresponse.getrawrequest.php
-	 * @return string the raw request sent to the Solr server
+	 * @return string Returns the raw request sent to the Solr server
 	 */
-	public function getRawRequest () {}
+	public function getRawRequest (): string {}
 
 	/**
 	 * Returns the raw response headers from the server
 	 * @link http://www.php.net/manual/en/solrresponse.getrawresponseheaders.php
-	 * @return string the raw response headers from the server.
+	 * @return string Returns the raw response headers from the server.
 	 */
-	public function getRawResponseHeaders () {}
+	public function getRawResponseHeaders (): string {}
 
 	/**
 	 * Returns the raw response from the server
 	 * @link http://www.php.net/manual/en/solrresponse.getrawresponse.php
-	 * @return string the raw response from the server.
+	 * @return string Returns the raw response from the server.
 	 */
-	public function getRawResponse () {}
+	public function getRawResponse (): string {}
 
 	/**
 	 * Returns the XML response as serialized PHP data
 	 * @link http://www.php.net/manual/en/solrresponse.getdigestedresponse.php
-	 * @return string the XML response as serialized PHP data
+	 * @return string Returns the XML response as serialized PHP data
 	 */
-	public function getDigestedResponse () {}
+	public function getDigestedResponse (): string {}
 
 	/**
 	 * Sets the parse mode
 	 * @link http://www.php.net/manual/en/solrresponse.setparsemode.php
-	 * @param int $parser_mode [optional] SolrResponse::PARSE_SOLR_DOC parses documents in SolrDocument instances. SolrResponse::PARSE_SOLR_OBJ parses document into SolrObjects.
-	 * @return bool true on success or false on failure
+	 * @param int $parser_mode [optional] 
+	 * @return bool Returns true on success or false on failure.
 	 */
-	public function setParseMode (int $parser_mode = null) {}
+	public function setParseMode (int $parser_mode = null): bool {}
 
 	/**
 	 * Returns a SolrObject representing the XML response from the server
 	 * @link http://www.php.net/manual/en/solrresponse.getresponse.php
-	 * @return SolrObject a SolrObject representing the XML response from the server
+	 * @return SolrObject Returns a SolrObject representing the XML response from the server
 	 */
-	public function getResponse () {}
+	public function getResponse (): SolrObject {}
 
 	public function getArrayResponse () {}
 
@@ -5028,7 +4992,11 @@ final class SolrUpdateResponse extends SolrResponse  {
  * @link http://www.php.net/manual/en/class.solrpingresponse.php
  */
 final class SolrPingResponse extends SolrResponse  {
+	/**
+	 * Documents should be parsed as SolrObject instances
 	const PARSE_SOLR_OBJ = 0;
+	/**
+	 * Documents should be parsed as SolrDocument instances.
 	const PARSE_SOLR_DOC = 1;
 
 	protected $http_status;
@@ -5050,89 +5018,85 @@ final class SolrPingResponse extends SolrResponse  {
 	 */
 	public function __construct () {}
 
-	/**
-	 * Destructor
-	 * @link http://www.php.net/manual/en/solrpingresponse.destruct.php
-	 */
 	public function __destruct () {}
 
 	/**
 	 * Returns the response from the server
 	 * @link http://www.php.net/manual/en/solrpingresponse.getresponse.php
-	 * @return string an empty string.
+	 * @return string Returns an empty string.
 	 */
-	public function getResponse () {}
+	public function getResponse (): string {}
 
 	/**
 	 * Returns the HTTP status of the response
 	 * @link http://www.php.net/manual/en/solrresponse.gethttpstatus.php
-	 * @return int the HTTP status of the response.
+	 * @return int Returns the HTTP status of the response.
 	 */
-	public function getHttpStatus () {}
+	public function getHttpStatus (): int {}
 
 	/**
 	 * Returns more details on the HTTP status
 	 * @link http://www.php.net/manual/en/solrresponse.gethttpstatusmessage.php
-	 * @return string more details on the HTTP status
+	 * @return string Returns more details on the HTTP status
 	 */
-	public function getHttpStatusMessage () {}
+	public function getHttpStatusMessage (): string {}
 
 	/**
 	 * Was the request a success
 	 * @link http://www.php.net/manual/en/solrresponse.success.php
-	 * @return bool true if it was successful and false if it was not.
+	 * @return bool Returns true if it was successful and false if it was not.
 	 */
-	public function success () {}
+	public function success (): bool {}
 
 	/**
 	 * Returns the full URL the request was sent to
 	 * @link http://www.php.net/manual/en/solrresponse.getrequesturl.php
-	 * @return string the full URL the request was sent to
+	 * @return string Returns the full URL the request was sent to
 	 */
-	public function getRequestUrl () {}
+	public function getRequestUrl (): string {}
 
 	/**
 	 * Returns the raw request headers sent to the Solr server
 	 * @link http://www.php.net/manual/en/solrresponse.getrawrequestheaders.php
-	 * @return string the raw request headers sent to the Solr server
+	 * @return string Returns the raw request headers sent to the Solr server
 	 */
-	public function getRawRequestHeaders () {}
+	public function getRawRequestHeaders (): string {}
 
 	/**
 	 * Returns the raw request sent to the Solr server
 	 * @link http://www.php.net/manual/en/solrresponse.getrawrequest.php
-	 * @return string the raw request sent to the Solr server
+	 * @return string Returns the raw request sent to the Solr server
 	 */
-	public function getRawRequest () {}
+	public function getRawRequest (): string {}
 
 	/**
 	 * Returns the raw response headers from the server
 	 * @link http://www.php.net/manual/en/solrresponse.getrawresponseheaders.php
-	 * @return string the raw response headers from the server.
+	 * @return string Returns the raw response headers from the server.
 	 */
-	public function getRawResponseHeaders () {}
+	public function getRawResponseHeaders (): string {}
 
 	/**
 	 * Returns the raw response from the server
 	 * @link http://www.php.net/manual/en/solrresponse.getrawresponse.php
-	 * @return string the raw response from the server.
+	 * @return string Returns the raw response from the server.
 	 */
-	public function getRawResponse () {}
+	public function getRawResponse (): string {}
 
 	/**
 	 * Returns the XML response as serialized PHP data
 	 * @link http://www.php.net/manual/en/solrresponse.getdigestedresponse.php
-	 * @return string the XML response as serialized PHP data
+	 * @return string Returns the XML response as serialized PHP data
 	 */
-	public function getDigestedResponse () {}
+	public function getDigestedResponse (): string {}
 
 	/**
 	 * Sets the parse mode
 	 * @link http://www.php.net/manual/en/solrresponse.setparsemode.php
-	 * @param int $parser_mode [optional] SolrResponse::PARSE_SOLR_DOC parses documents in SolrDocument instances. SolrResponse::PARSE_SOLR_OBJ parses document into SolrObjects.
-	 * @return bool true on success or false on failure
+	 * @param int $parser_mode [optional] 
+	 * @return bool Returns true on success or false on failure.
 	 */
-	public function setParseMode (int $parser_mode = null) {}
+	public function setParseMode (int $parser_mode = null): bool {}
 
 	public function getArrayResponse () {}
 
@@ -5143,7 +5107,11 @@ final class SolrPingResponse extends SolrResponse  {
  * @link http://www.php.net/manual/en/class.solrgenericresponse.php
  */
 final class SolrGenericResponse extends SolrResponse  {
+	/**
+	 * Documents should be parsed as SolrObject instances
 	const PARSE_SOLR_OBJ = 0;
+	/**
+	 * Documents should be parsed as SolrDocument instances.
 	const PARSE_SOLR_DOC = 1;
 
 	protected $http_status;
@@ -5165,89 +5133,85 @@ final class SolrGenericResponse extends SolrResponse  {
 	 */
 	public function __construct () {}
 
-	/**
-	 * Destructor
-	 * @link http://www.php.net/manual/en/solrgenericresponse.destruct.php
-	 */
 	public function __destruct () {}
 
 	/**
 	 * Returns the HTTP status of the response
 	 * @link http://www.php.net/manual/en/solrresponse.gethttpstatus.php
-	 * @return int the HTTP status of the response.
+	 * @return int Returns the HTTP status of the response.
 	 */
-	public function getHttpStatus () {}
+	public function getHttpStatus (): int {}
 
 	/**
 	 * Returns more details on the HTTP status
 	 * @link http://www.php.net/manual/en/solrresponse.gethttpstatusmessage.php
-	 * @return string more details on the HTTP status
+	 * @return string Returns more details on the HTTP status
 	 */
-	public function getHttpStatusMessage () {}
+	public function getHttpStatusMessage (): string {}
 
 	/**
 	 * Was the request a success
 	 * @link http://www.php.net/manual/en/solrresponse.success.php
-	 * @return bool true if it was successful and false if it was not.
+	 * @return bool Returns true if it was successful and false if it was not.
 	 */
-	public function success () {}
+	public function success (): bool {}
 
 	/**
 	 * Returns the full URL the request was sent to
 	 * @link http://www.php.net/manual/en/solrresponse.getrequesturl.php
-	 * @return string the full URL the request was sent to
+	 * @return string Returns the full URL the request was sent to
 	 */
-	public function getRequestUrl () {}
+	public function getRequestUrl (): string {}
 
 	/**
 	 * Returns the raw request headers sent to the Solr server
 	 * @link http://www.php.net/manual/en/solrresponse.getrawrequestheaders.php
-	 * @return string the raw request headers sent to the Solr server
+	 * @return string Returns the raw request headers sent to the Solr server
 	 */
-	public function getRawRequestHeaders () {}
+	public function getRawRequestHeaders (): string {}
 
 	/**
 	 * Returns the raw request sent to the Solr server
 	 * @link http://www.php.net/manual/en/solrresponse.getrawrequest.php
-	 * @return string the raw request sent to the Solr server
+	 * @return string Returns the raw request sent to the Solr server
 	 */
-	public function getRawRequest () {}
+	public function getRawRequest (): string {}
 
 	/**
 	 * Returns the raw response headers from the server
 	 * @link http://www.php.net/manual/en/solrresponse.getrawresponseheaders.php
-	 * @return string the raw response headers from the server.
+	 * @return string Returns the raw response headers from the server.
 	 */
-	public function getRawResponseHeaders () {}
+	public function getRawResponseHeaders (): string {}
 
 	/**
 	 * Returns the raw response from the server
 	 * @link http://www.php.net/manual/en/solrresponse.getrawresponse.php
-	 * @return string the raw response from the server.
+	 * @return string Returns the raw response from the server.
 	 */
-	public function getRawResponse () {}
+	public function getRawResponse (): string {}
 
 	/**
 	 * Returns the XML response as serialized PHP data
 	 * @link http://www.php.net/manual/en/solrresponse.getdigestedresponse.php
-	 * @return string the XML response as serialized PHP data
+	 * @return string Returns the XML response as serialized PHP data
 	 */
-	public function getDigestedResponse () {}
+	public function getDigestedResponse (): string {}
 
 	/**
 	 * Sets the parse mode
 	 * @link http://www.php.net/manual/en/solrresponse.setparsemode.php
-	 * @param int $parser_mode [optional] SolrResponse::PARSE_SOLR_DOC parses documents in SolrDocument instances. SolrResponse::PARSE_SOLR_OBJ parses document into SolrObjects.
-	 * @return bool true on success or false on failure
+	 * @param int $parser_mode [optional] 
+	 * @return bool Returns true on success or false on failure.
 	 */
-	public function setParseMode (int $parser_mode = null) {}
+	public function setParseMode (int $parser_mode = null): bool {}
 
 	/**
 	 * Returns a SolrObject representing the XML response from the server
 	 * @link http://www.php.net/manual/en/solrresponse.getresponse.php
-	 * @return SolrObject a SolrObject representing the XML response from the server
+	 * @return SolrObject Returns a SolrObject representing the XML response from the server
 	 */
-	public function getResponse () {}
+	public function getResponse (): SolrObject {}
 
 	public function getArrayResponse () {}
 
@@ -5263,29 +5227,29 @@ abstract class SolrUtils  {
 	/**
 	 * Escapes a lucene query string
 	 * @link http://www.php.net/manual/en/solrutils.escapequerychars.php
-	 * @param string $str This is the query string to be escaped.
-	 * @return mixed the escaped string or false on failure.
+	 * @param string $str 
+	 * @return string|bool Returns the escaped string or false on failure.
 	 */
-	public static function escapeQueryChars (string $str) {}
+	public static function escapeQueryChars (string $str): string|bool {}
 
 	/**
 	 * Prepares a phrase from an unescaped lucene string
 	 * @link http://www.php.net/manual/en/solrutils.queryphrase.php
-	 * @param string $str The lucene phrase.
-	 * @return string the phrase contained in double quotes.
+	 * @param string $str 
+	 * @return string Returns the phrase contained in double quotes.
 	 */
-	public static function queryPhrase (string $str) {}
+	public static function queryPhrase (string $str): string {}
 
 	/**
 	 * Parses an response XML string into a SolrObject
 	 * @link http://www.php.net/manual/en/solrutils.digestxmlresponse.php
-	 * @param string $xmlresponse The XML response string from the Solr server.
-	 * @param int $parse_mode [optional] Use SolrResponse::PARSE_SOLR_OBJ or SolrResponse::PARSE_SOLR_DOC
-	 * @return SolrObject the SolrObject representing the XML response.
+	 * @param string $xmlresponse 
+	 * @param int $parse_mode [optional] 
+	 * @return SolrObject Returns the SolrObject representing the XML response.
 	 * <p>If the parse_mode parameter is set to SolrResponse::PARSE_SOLR_OBJ Solr documents will be parses as SolrObject instances.</p>
 	 * <p>If it is set to SolrResponse::PARSE_SOLR_DOC, they will be parsed as SolrDocument instances.</p>
 	 */
-	public static function digestXmlResponse (string $xmlresponse, int $parse_mode = null) {}
+	public static function digestXmlResponse (string $xmlresponse, int $parse_mode = null): SolrObject {}
 
 	/**
 	 * @param mixed $jsonResponse
@@ -5297,7 +5261,7 @@ abstract class SolrUtils  {
 	 * @link http://www.php.net/manual/en/solrutils.getsolrversion.php
 	 * @return string The current version of the Apache Solr extension.
 	 */
-	public static function getSolrVersion () {}
+	public static function getSolrVersion (): string {}
 
 	public static function getSolrStats () {}
 
@@ -5320,33 +5284,80 @@ class SolrException extends Exception implements Throwable, Stringable {
 	/**
 	 * Returns internal information where the Exception was thrown
 	 * @link http://www.php.net/manual/en/solrexception.getinternalinfo.php
-	 * @return array an array containing internal information where the error was thrown. Used only for debugging by extension developers.
+	 * @return array Returns an array containing internal information where the error was thrown. Used only for debugging by extension developers.
 	 */
-	public function getInternalInfo () {}
+	public function getInternalInfo (): array {}
 
 	/**
-	 * @param string $message [optional]
-	 * @param int $code [optional]
-	 * @param Throwable|null $previous [optional]
+	 * Construct the exception
+	 * @link http://www.php.net/manual/en/exception.construct.php
+	 * @param string $message [optional] 
+	 * @param int $code [optional] 
+	 * @param Throwable|null $previous [optional] 
+	 * @return string 
 	 */
-	public function __construct (string $message = '', int $code = 0, Throwable|null $previous = null) {}
+	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
 
 	public function __wakeup () {}
 
+	/**
+	 * Gets the Exception message
+	 * @link http://www.php.net/manual/en/exception.getmessage.php
+	 * @return string Returns the Exception message as a string.
+	 */
 	final public function getMessage (): string {}
 
-	final public function getCode () {}
+	/**
+	 * Gets the Exception code
+	 * @link http://www.php.net/manual/en/exception.getcode.php
+	 * @return int Returns the exception code as int in
+	 * Exception but possibly as other type in
+	 * Exception descendants (for example as
+	 * string in PDOException).
+	 */
+	final public function getCode (): int {}
 
+	/**
+	 * Gets the file in which the exception was created
+	 * @link http://www.php.net/manual/en/exception.getfile.php
+	 * @return string Returns the filename in which the exception was created.
+	 */
 	final public function getFile (): string {}
 
+	/**
+	 * Gets the line in which the exception was created
+	 * @link http://www.php.net/manual/en/exception.getline.php
+	 * @return int Returns the line number where the exception was created.
+	 */
 	final public function getLine (): int {}
 
+	/**
+	 * Gets the stack trace
+	 * @link http://www.php.net/manual/en/exception.gettrace.php
+	 * @return array Returns the Exception stack trace as an array.
+	 */
 	final public function getTrace (): array {}
 
+	/**
+	 * Returns previous Throwable
+	 * @link http://www.php.net/manual/en/exception.getprevious.php
+	 * @return Throwable|null Returns the previous Throwable if available 
+	 * or null otherwise.
+	 */
 	final public function getPrevious (): ?Throwable {}
 
+	/**
+	 * Gets the stack trace as a string
+	 * @link http://www.php.net/manual/en/exception.gettraceasstring.php
+	 * @return string Returns the Exception stack trace as a string.
+	 */
 	final public function getTraceAsString (): string {}
 
+	/**
+	 * String representation of the exception
+	 * @link http://www.php.net/manual/en/exception.tostring.php
+	 * @return string Returns the string representation of the exception.
+	 */
 	public function __toString (): string {}
 
 }
@@ -5368,33 +5379,80 @@ class SolrIllegalOperationException extends SolrException implements Stringable,
 	/**
 	 * Returns internal information where the Exception was thrown
 	 * @link http://www.php.net/manual/en/solrillegaloperationexception.getinternalinfo.php
-	 * @return array an array containing internal information where the error was thrown. Used only for debugging by extension developers.
+	 * @return array Returns an array containing internal information where the error was thrown. Used only for debugging by extension developers.
 	 */
-	public function getInternalInfo () {}
+	public function getInternalInfo (): array {}
 
 	/**
-	 * @param string $message [optional]
-	 * @param int $code [optional]
-	 * @param Throwable|null $previous [optional]
+	 * Construct the exception
+	 * @link http://www.php.net/manual/en/exception.construct.php
+	 * @param string $message [optional] 
+	 * @param int $code [optional] 
+	 * @param Throwable|null $previous [optional] 
+	 * @return string 
 	 */
-	public function __construct (string $message = '', int $code = 0, Throwable|null $previous = null) {}
+	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
 
 	public function __wakeup () {}
 
+	/**
+	 * Gets the Exception message
+	 * @link http://www.php.net/manual/en/exception.getmessage.php
+	 * @return string Returns the Exception message as a string.
+	 */
 	final public function getMessage (): string {}
 
-	final public function getCode () {}
+	/**
+	 * Gets the Exception code
+	 * @link http://www.php.net/manual/en/exception.getcode.php
+	 * @return int Returns the exception code as int in
+	 * Exception but possibly as other type in
+	 * Exception descendants (for example as
+	 * string in PDOException).
+	 */
+	final public function getCode (): int {}
 
+	/**
+	 * Gets the file in which the exception was created
+	 * @link http://www.php.net/manual/en/exception.getfile.php
+	 * @return string Returns the filename in which the exception was created.
+	 */
 	final public function getFile (): string {}
 
+	/**
+	 * Gets the line in which the exception was created
+	 * @link http://www.php.net/manual/en/exception.getline.php
+	 * @return int Returns the line number where the exception was created.
+	 */
 	final public function getLine (): int {}
 
+	/**
+	 * Gets the stack trace
+	 * @link http://www.php.net/manual/en/exception.gettrace.php
+	 * @return array Returns the Exception stack trace as an array.
+	 */
 	final public function getTrace (): array {}
 
+	/**
+	 * Returns previous Throwable
+	 * @link http://www.php.net/manual/en/exception.getprevious.php
+	 * @return Throwable|null Returns the previous Throwable if available 
+	 * or null otherwise.
+	 */
 	final public function getPrevious (): ?Throwable {}
 
+	/**
+	 * Gets the stack trace as a string
+	 * @link http://www.php.net/manual/en/exception.gettraceasstring.php
+	 * @return string Returns the Exception stack trace as a string.
+	 */
 	final public function getTraceAsString (): string {}
 
+	/**
+	 * String representation of the exception
+	 * @link http://www.php.net/manual/en/exception.tostring.php
+	 * @return string Returns the string representation of the exception.
+	 */
 	public function __toString (): string {}
 
 }
@@ -5416,33 +5474,80 @@ class SolrIllegalArgumentException extends SolrException implements Stringable, 
 	/**
 	 * Returns internal information where the Exception was thrown
 	 * @link http://www.php.net/manual/en/solrillegalargumentexception.getinternalinfo.php
-	 * @return array an array containing internal information where the error was thrown. Used only for debugging by extension developers.
+	 * @return array Returns an array containing internal information where the error was thrown. Used only for debugging by extension developers.
 	 */
-	public function getInternalInfo () {}
+	public function getInternalInfo (): array {}
 
 	/**
-	 * @param string $message [optional]
-	 * @param int $code [optional]
-	 * @param Throwable|null $previous [optional]
+	 * Construct the exception
+	 * @link http://www.php.net/manual/en/exception.construct.php
+	 * @param string $message [optional] 
+	 * @param int $code [optional] 
+	 * @param Throwable|null $previous [optional] 
+	 * @return string 
 	 */
-	public function __construct (string $message = '', int $code = 0, Throwable|null $previous = null) {}
+	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
 
 	public function __wakeup () {}
 
+	/**
+	 * Gets the Exception message
+	 * @link http://www.php.net/manual/en/exception.getmessage.php
+	 * @return string Returns the Exception message as a string.
+	 */
 	final public function getMessage (): string {}
 
-	final public function getCode () {}
+	/**
+	 * Gets the Exception code
+	 * @link http://www.php.net/manual/en/exception.getcode.php
+	 * @return int Returns the exception code as int in
+	 * Exception but possibly as other type in
+	 * Exception descendants (for example as
+	 * string in PDOException).
+	 */
+	final public function getCode (): int {}
 
+	/**
+	 * Gets the file in which the exception was created
+	 * @link http://www.php.net/manual/en/exception.getfile.php
+	 * @return string Returns the filename in which the exception was created.
+	 */
 	final public function getFile (): string {}
 
+	/**
+	 * Gets the line in which the exception was created
+	 * @link http://www.php.net/manual/en/exception.getline.php
+	 * @return int Returns the line number where the exception was created.
+	 */
 	final public function getLine (): int {}
 
+	/**
+	 * Gets the stack trace
+	 * @link http://www.php.net/manual/en/exception.gettrace.php
+	 * @return array Returns the Exception stack trace as an array.
+	 */
 	final public function getTrace (): array {}
 
+	/**
+	 * Returns previous Throwable
+	 * @link http://www.php.net/manual/en/exception.getprevious.php
+	 * @return Throwable|null Returns the previous Throwable if available 
+	 * or null otherwise.
+	 */
 	final public function getPrevious (): ?Throwable {}
 
+	/**
+	 * Gets the stack trace as a string
+	 * @link http://www.php.net/manual/en/exception.gettraceasstring.php
+	 * @return string Returns the Exception stack trace as a string.
+	 */
 	final public function getTraceAsString (): string {}
 
+	/**
+	 * String representation of the exception
+	 * @link http://www.php.net/manual/en/exception.tostring.php
+	 * @return string Returns the string representation of the exception.
+	 */
 	public function __toString (): string {}
 
 }
@@ -5464,33 +5569,80 @@ class SolrClientException extends SolrException implements Stringable, Throwable
 	/**
 	 * Returns internal information where the Exception was thrown
 	 * @link http://www.php.net/manual/en/solrclientexception.getinternalinfo.php
-	 * @return array an array containing internal information where the error was thrown. Used only for debugging by extension developers.
+	 * @return array Returns an array containing internal information where the error was thrown. Used only for debugging by extension developers.
 	 */
-	public function getInternalInfo () {}
+	public function getInternalInfo (): array {}
 
 	/**
-	 * @param string $message [optional]
-	 * @param int $code [optional]
-	 * @param Throwable|null $previous [optional]
+	 * Construct the exception
+	 * @link http://www.php.net/manual/en/exception.construct.php
+	 * @param string $message [optional] 
+	 * @param int $code [optional] 
+	 * @param Throwable|null $previous [optional] 
+	 * @return string 
 	 */
-	public function __construct (string $message = '', int $code = 0, Throwable|null $previous = null) {}
+	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
 
 	public function __wakeup () {}
 
+	/**
+	 * Gets the Exception message
+	 * @link http://www.php.net/manual/en/exception.getmessage.php
+	 * @return string Returns the Exception message as a string.
+	 */
 	final public function getMessage (): string {}
 
-	final public function getCode () {}
+	/**
+	 * Gets the Exception code
+	 * @link http://www.php.net/manual/en/exception.getcode.php
+	 * @return int Returns the exception code as int in
+	 * Exception but possibly as other type in
+	 * Exception descendants (for example as
+	 * string in PDOException).
+	 */
+	final public function getCode (): int {}
 
+	/**
+	 * Gets the file in which the exception was created
+	 * @link http://www.php.net/manual/en/exception.getfile.php
+	 * @return string Returns the filename in which the exception was created.
+	 */
 	final public function getFile (): string {}
 
+	/**
+	 * Gets the line in which the exception was created
+	 * @link http://www.php.net/manual/en/exception.getline.php
+	 * @return int Returns the line number where the exception was created.
+	 */
 	final public function getLine (): int {}
 
+	/**
+	 * Gets the stack trace
+	 * @link http://www.php.net/manual/en/exception.gettrace.php
+	 * @return array Returns the Exception stack trace as an array.
+	 */
 	final public function getTrace (): array {}
 
+	/**
+	 * Returns previous Throwable
+	 * @link http://www.php.net/manual/en/exception.getprevious.php
+	 * @return Throwable|null Returns the previous Throwable if available 
+	 * or null otherwise.
+	 */
 	final public function getPrevious (): ?Throwable {}
 
+	/**
+	 * Gets the stack trace as a string
+	 * @link http://www.php.net/manual/en/exception.gettraceasstring.php
+	 * @return string Returns the Exception stack trace as a string.
+	 */
 	final public function getTraceAsString (): string {}
 
+	/**
+	 * String representation of the exception
+	 * @link http://www.php.net/manual/en/exception.tostring.php
+	 * @return string Returns the string representation of the exception.
+	 */
 	public function __toString (): string {}
 
 }
@@ -5512,33 +5664,80 @@ class SolrServerException extends SolrException implements Stringable, Throwable
 	/**
 	 * Returns internal information where the Exception was thrown
 	 * @link http://www.php.net/manual/en/solrserverexception.getinternalinfo.php
-	 * @return array an array containing internal information where the error was thrown. Used only for debugging by extension developers.
+	 * @return array Returns an array containing internal information where the error was thrown. Used only for debugging by extension developers.
 	 */
-	public function getInternalInfo () {}
+	public function getInternalInfo (): array {}
 
 	/**
-	 * @param string $message [optional]
-	 * @param int $code [optional]
-	 * @param Throwable|null $previous [optional]
+	 * Construct the exception
+	 * @link http://www.php.net/manual/en/exception.construct.php
+	 * @param string $message [optional] 
+	 * @param int $code [optional] 
+	 * @param Throwable|null $previous [optional] 
+	 * @return string 
 	 */
-	public function __construct (string $message = '', int $code = 0, Throwable|null $previous = null) {}
+	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
 
 	public function __wakeup () {}
 
+	/**
+	 * Gets the Exception message
+	 * @link http://www.php.net/manual/en/exception.getmessage.php
+	 * @return string Returns the Exception message as a string.
+	 */
 	final public function getMessage (): string {}
 
-	final public function getCode () {}
+	/**
+	 * Gets the Exception code
+	 * @link http://www.php.net/manual/en/exception.getcode.php
+	 * @return int Returns the exception code as int in
+	 * Exception but possibly as other type in
+	 * Exception descendants (for example as
+	 * string in PDOException).
+	 */
+	final public function getCode (): int {}
 
+	/**
+	 * Gets the file in which the exception was created
+	 * @link http://www.php.net/manual/en/exception.getfile.php
+	 * @return string Returns the filename in which the exception was created.
+	 */
 	final public function getFile (): string {}
 
+	/**
+	 * Gets the line in which the exception was created
+	 * @link http://www.php.net/manual/en/exception.getline.php
+	 * @return int Returns the line number where the exception was created.
+	 */
 	final public function getLine (): int {}
 
+	/**
+	 * Gets the stack trace
+	 * @link http://www.php.net/manual/en/exception.gettrace.php
+	 * @return array Returns the Exception stack trace as an array.
+	 */
 	final public function getTrace (): array {}
 
+	/**
+	 * Returns previous Throwable
+	 * @link http://www.php.net/manual/en/exception.getprevious.php
+	 * @return Throwable|null Returns the previous Throwable if available 
+	 * or null otherwise.
+	 */
 	final public function getPrevious (): ?Throwable {}
 
+	/**
+	 * Gets the stack trace as a string
+	 * @link http://www.php.net/manual/en/exception.gettraceasstring.php
+	 * @return string Returns the Exception stack trace as a string.
+	 */
 	final public function getTraceAsString (): string {}
 
+	/**
+	 * String representation of the exception
+	 * @link http://www.php.net/manual/en/exception.tostring.php
+	 * @return string Returns the string representation of the exception.
+	 */
 	public function __toString (): string {}
 
 }
@@ -5559,33 +5758,80 @@ class SolrMissingMandatoryParameterException extends SolrException implements St
 	/**
 	 * Returns internal information where the Exception was thrown
 	 * @link http://www.php.net/manual/en/solrexception.getinternalinfo.php
-	 * @return array an array containing internal information where the error was thrown. Used only for debugging by extension developers.
+	 * @return array Returns an array containing internal information where the error was thrown. Used only for debugging by extension developers.
 	 */
-	public function getInternalInfo () {}
+	public function getInternalInfo (): array {}
 
 	/**
-	 * @param string $message [optional]
-	 * @param int $code [optional]
-	 * @param Throwable|null $previous [optional]
+	 * Construct the exception
+	 * @link http://www.php.net/manual/en/exception.construct.php
+	 * @param string $message [optional] 
+	 * @param int $code [optional] 
+	 * @param Throwable|null $previous [optional] 
+	 * @return string 
 	 */
-	public function __construct (string $message = '', int $code = 0, Throwable|null $previous = null) {}
+	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
 
 	public function __wakeup () {}
 
+	/**
+	 * Gets the Exception message
+	 * @link http://www.php.net/manual/en/exception.getmessage.php
+	 * @return string Returns the Exception message as a string.
+	 */
 	final public function getMessage (): string {}
 
-	final public function getCode () {}
+	/**
+	 * Gets the Exception code
+	 * @link http://www.php.net/manual/en/exception.getcode.php
+	 * @return int Returns the exception code as int in
+	 * Exception but possibly as other type in
+	 * Exception descendants (for example as
+	 * string in PDOException).
+	 */
+	final public function getCode (): int {}
 
+	/**
+	 * Gets the file in which the exception was created
+	 * @link http://www.php.net/manual/en/exception.getfile.php
+	 * @return string Returns the filename in which the exception was created.
+	 */
 	final public function getFile (): string {}
 
+	/**
+	 * Gets the line in which the exception was created
+	 * @link http://www.php.net/manual/en/exception.getline.php
+	 * @return int Returns the line number where the exception was created.
+	 */
 	final public function getLine (): int {}
 
+	/**
+	 * Gets the stack trace
+	 * @link http://www.php.net/manual/en/exception.gettrace.php
+	 * @return array Returns the Exception stack trace as an array.
+	 */
 	final public function getTrace (): array {}
 
+	/**
+	 * Returns previous Throwable
+	 * @link http://www.php.net/manual/en/exception.getprevious.php
+	 * @return Throwable|null Returns the previous Throwable if available 
+	 * or null otherwise.
+	 */
 	final public function getPrevious (): ?Throwable {}
 
+	/**
+	 * Gets the stack trace as a string
+	 * @link http://www.php.net/manual/en/exception.gettraceasstring.php
+	 * @return string Returns the Exception stack trace as a string.
+	 */
 	final public function getTraceAsString (): string {}
 
+	/**
+	 * String representation of the exception
+	 * @link http://www.php.net/manual/en/exception.tostring.php
+	 * @return string Returns the string representation of the exception.
+	 */
 	public function __toString (): string {}
 
 }
@@ -5595,30 +5841,34 @@ class SolrMissingMandatoryParameterException extends SolrException implements St
  * @link http://www.php.net/manual/en/function.solr-get-version.php
  * @return string It returns a string on success and false on failure.
  */
-function solr_get_version () {}
+function solr_get_version (): string {}
 
 
 /**
  * 
  * @link http://www.php.net/manual/en/solr.constants.php
+ * @var int
  */
 define ('SOLR_MAJOR_VERSION', 2);
 
 /**
  * 
  * @link http://www.php.net/manual/en/solr.constants.php
+ * @var int
  */
 define ('SOLR_MINOR_VERSION', 6);
 
 /**
  * 
  * @link http://www.php.net/manual/en/solr.constants.php
+ * @var int
  */
 define ('SOLR_PATCH_VERSION', 0);
 
 /**
  * 
  * @link http://www.php.net/manual/en/solr.constants.php
+ * @var string
  */
 define ('SOLR_EXTENSION_VERSION', "2.6.0");
 

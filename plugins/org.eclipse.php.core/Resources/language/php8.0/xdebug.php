@@ -45,7 +45,7 @@ function xdebug_get_code_coverage (): array {}
 /**
  * @param bool $emptyList [optional]
  */
-function xdebug_get_collected_errors (bool $emptyList = '') {}
+function xdebug_get_collected_errors (bool $emptyList = false) {}
 
 function xdebug_get_function_count (): int {}
 
@@ -70,7 +70,7 @@ function xdebug_get_tracefile_name () {}
 /**
  * @param string $category [optional]
  */
-function xdebug_info (string $category = '') {}
+function xdebug_info (string $category = NULL) {}
 
 function xdebug_is_debugger_active (): bool {}
 
@@ -92,7 +92,7 @@ function xdebug_print_function_stack (string $message = 'user triggered', int $o
 /**
  * @param int $group
  * @param int $listType
- * @param array[] $configuration
+ * @param array $configuration
  */
 function xdebug_set_filter (int $group, int $listType, array $configuration) {}
 
@@ -104,25 +104,25 @@ function xdebug_start_code_coverage (int $options = 0) {}
 function xdebug_start_error_collection () {}
 
 /**
- * @param array[] $listOfFunctionsToMonitor
+ * @param array $listOfFunctionsToMonitor
  */
 function xdebug_start_function_monitor (array $listOfFunctionsToMonitor) {}
 
 /**
- * @param string|null $gcstatsFile [optional]
+ * @param ?string $gcstatsFile [optional]
  */
-function xdebug_start_gcstats (string|null $gcstatsFile = null) {}
+function xdebug_start_gcstats (?string $gcstatsFile = null) {}
 
 /**
- * @param string|null $traceFile [optional]
+ * @param ?string $traceFile [optional]
  * @param int $options [optional]
  */
-function xdebug_start_trace (string|null $traceFile = null, int $options = 0): ?string {}
+function xdebug_start_trace (?string $traceFile = null, int $options = 0): ?string {}
 
 /**
  * @param bool $cleanUp [optional]
  */
-function xdebug_stop_code_coverage (bool $cleanUp = 1) {}
+function xdebug_stop_code_coverage (bool $cleanUp = true) {}
 
 function xdebug_stop_error_collection () {}
 

@@ -4,37 +4,37 @@
 
 /**
  * @param string $filename
- * @param array|null[] $options [optional]
+ * @param ?array $options [optional]
  */
-function vips_image_new_from_file (string $filename, array $options = null): array|int {}
+function vips_image_new_from_file (string $filename, ?array $options = null): array|int {}
 
 /**
  * @param string $buffer
- * @param string|null $option_string [optional]
- * @param array|null[] $options [optional]
+ * @param ?string $option_string [optional]
+ * @param ?array $options [optional]
  */
-function vips_image_new_from_buffer (string $buffer, string|null $option_string = null, array $options = null): array|int {}
+function vips_image_new_from_buffer (string $buffer, ?string $option_string = null, ?array $options = null): array|int {}
 
 /**
- * @param array[] $array
- * @param float|null $scale [optional]
- * @param float|null $offset [optional]
+ * @param array $array
+ * @param ?float $scale [optional]
+ * @param ?float $offset [optional]
  */
-function vips_image_new_from_array (array $array, float|null $scale = null, float|null $offset = null) {}
+function vips_image_new_from_array (array $array, ?float $scale = null, ?float $offset = null) {}
 
 /**
  * @param mixed $image
  * @param string $filename
- * @param array|null[] $options [optional]
+ * @param ?array $options [optional]
  */
-function vips_image_write_to_file ($image = null, string $filename, array $options = null): array|int {}
+function vips_image_write_to_file ($image = null, string $filename, ?array $options = null): array|int {}
 
 /**
  * @param mixed $image
  * @param string $suffix
- * @param array|null[] $options [optional]
+ * @param ?array $options [optional]
  */
-function vips_image_write_to_buffer ($image = null, string $suffix, array $options = null): array|int {}
+function vips_image_write_to_buffer ($image = null, string $suffix, ?array $options = null): array|int {}
 
 /**
  * @param mixed $image

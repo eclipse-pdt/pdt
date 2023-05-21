@@ -12,12 +12,12 @@ class Node  {
 
 
 	/**
-	 * @param int|null $kind [optional]
-	 * @param int|null $flags [optional]
-	 * @param array|null[] $children [optional]
-	 * @param int|null $lineno [optional]
+	 * @param ?int $kind [optional]
+	 * @param ?int $flags [optional]
+	 * @param ?array $children [optional]
+	 * @param ?int $lineno [optional]
 	 */
-	public function __construct (int|null $kind = null, int|null $flags = null, array $children = null, int|null $lineno = null) {}
+	public function __construct (?int $kind = null, ?int $flags = null, ?array $children = null, ?int $lineno = null) {}
 
 }
 
@@ -57,7 +57,7 @@ function get_metadata (): array {}
 /**
  * @param bool $exclude_deprecated [optional]
  */
-function get_supported_versions (bool $exclude_deprecated = ''): array {}
+function get_supported_versions (bool $exclude_deprecated = false): array {}
 
 
 }

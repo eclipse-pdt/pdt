@@ -316,9 +316,9 @@ class Redis  {
 	 * @param mixed $lan
 	 * @param mixed $radius
 	 * @param mixed $unit
-	 * @param array[] $opts [optional]
+	 * @param array $opts [optional]
 	 */
-	public function georadius ($key = null, $lng = null, $lan = null, $radius = null, $unit = null, array $opts = null) {}
+	public function georadius ($key = null, $lng = null, $lan = null, $radius = null, $unit = null, array $opts = 'null') {}
 
 	/**
 	 * @param mixed $key
@@ -326,27 +326,27 @@ class Redis  {
 	 * @param mixed $lan
 	 * @param mixed $radius
 	 * @param mixed $unit
-	 * @param array[] $opts [optional]
+	 * @param array $opts [optional]
 	 */
-	public function georadius_ro ($key = null, $lng = null, $lan = null, $radius = null, $unit = null, array $opts = null) {}
+	public function georadius_ro ($key = null, $lng = null, $lan = null, $radius = null, $unit = null, array $opts = 'null') {}
 
 	/**
 	 * @param mixed $key
 	 * @param mixed $member
 	 * @param mixed $radius
 	 * @param mixed $unit
-	 * @param array[] $opts [optional]
+	 * @param array $opts [optional]
 	 */
-	public function georadiusbymember ($key = null, $member = null, $radius = null, $unit = null, array $opts = null) {}
+	public function georadiusbymember ($key = null, $member = null, $radius = null, $unit = null, array $opts = 'null') {}
 
 	/**
 	 * @param mixed $key
 	 * @param mixed $member
 	 * @param mixed $radius
 	 * @param mixed $unit
-	 * @param array[] $opts [optional]
+	 * @param array $opts [optional]
 	 */
-	public function georadiusbymember_ro ($key = null, $member = null, $radius = null, $unit = null, array $opts = null) {}
+	public function georadiusbymember_ro ($key = null, $member = null, $radius = null, $unit = null, array $opts = 'null') {}
 
 	/**
 	 * @param mixed $key
@@ -445,13 +445,13 @@ class Redis  {
 
 	/**
 	 * @param mixed $key
-	 * @param array[] $keys
+	 * @param array $keys
 	 */
 	public function hMget ($key = null, array $keys) {}
 
 	/**
 	 * @param mixed $key
-	 * @param array[] $pairs
+	 * @param array $pairs
 	 */
 	public function hMset ($key = null, array $pairs) {}
 
@@ -584,7 +584,7 @@ class Redis  {
 	public function ltrim ($key = null, $start = null, $stop = null) {}
 
 	/**
-	 * @param array[] $keys
+	 * @param array $keys
 	 */
 	public function mget (array $keys) {}
 
@@ -606,12 +606,12 @@ class Redis  {
 	public function move ($key = null, $dbindex = null) {}
 
 	/**
-	 * @param array[] $pairs
+	 * @param array $pairs
 	 */
 	public function mset (array $pairs) {}
 
 	/**
-	 * @param array[] $pairs
+	 * @param array $pairs
 	 */
 	public function msetnx (array $pairs) {}
 
@@ -652,7 +652,7 @@ class Redis  {
 
 	/**
 	 * @param mixed $key
-	 * @param array[] $elements
+	 * @param array $elements
 	 */
 	public function pfadd ($key = null, array $elements) {}
 
@@ -663,7 +663,7 @@ class Redis  {
 
 	/**
 	 * @param mixed $dstkey
-	 * @param array[] $keys
+	 * @param array $keys
 	 */
 	public function pfmerge ($dstkey = null, array $keys) {}
 
@@ -679,7 +679,7 @@ class Redis  {
 	public function psetex ($key = null, $expire = null, $value = null) {}
 
 	/**
-	 * @param array[] $patterns
+	 * @param array $patterns
 	 * @param mixed $callback
 	 */
 	public function psubscribe (array $patterns, $callback = null) {}
@@ -767,7 +767,7 @@ class Redis  {
 
 	/**
 	 * @param mixed $key
-	 * @param array[] $options
+	 * @param array $options
 	 */
 	public function sAddArray ($key = null, array $options) {}
 
@@ -925,9 +925,9 @@ class Redis  {
 
 	/**
 	 * @param mixed $key
-	 * @param array[] $options [optional]
+	 * @param array $options [optional]
 	 */
-	public function sort ($key = null, array $options = null) {}
+	public function sort ($key = null, array $options = 'null') {}
 
 	/**
 	 * @param mixed $key
@@ -994,7 +994,7 @@ class Redis  {
 	public function strlen ($key = null) {}
 
 	/**
-	 * @param array[] $channels
+	 * @param array $channels
 	 * @param mixed $callback
 	 */
 	public function subscribe (array $channels, $callback = null) {}
@@ -1046,14 +1046,14 @@ class Redis  {
 	/**
 	 * @param mixed $str_key
 	 * @param mixed $str_group
-	 * @param array[] $arr_ids
+	 * @param array $arr_ids
 	 */
 	public function xack ($str_key = null, $str_group = null, array $arr_ids) {}
 
 	/**
 	 * @param mixed $str_key
 	 * @param mixed $str_id
-	 * @param array[] $arr_fields
+	 * @param array $arr_fields
 	 * @param mixed $i_maxlen [optional]
 	 * @param mixed $boo_approximate [optional]
 	 */
@@ -1064,14 +1064,14 @@ class Redis  {
 	 * @param mixed $str_group
 	 * @param mixed $str_consumer
 	 * @param mixed $i_min_idle
-	 * @param array[] $arr_ids
-	 * @param array[] $arr_opts [optional]
+	 * @param array $arr_ids
+	 * @param array $arr_opts [optional]
 	 */
-	public function xclaim ($str_key = null, $str_group = null, $str_consumer = null, $i_min_idle = null, array $arr_ids, array $arr_opts = null) {}
+	public function xclaim ($str_key = null, $str_group = null, $str_consumer = null, $i_min_idle = null, array $arr_ids, array $arr_opts = 'null') {}
 
 	/**
 	 * @param mixed $str_key
-	 * @param array[] $arr_ids
+	 * @param array $arr_ids
 	 */
 	public function xdel ($str_key = null, array $arr_ids) {}
 
@@ -1115,7 +1115,7 @@ class Redis  {
 	public function xrange ($str_key = null, $str_start = null, $str_end = null, $i_count = null) {}
 
 	/**
-	 * @param array[] $arr_streams
+	 * @param array $arr_streams
 	 * @param mixed $i_count [optional]
 	 * @param mixed $i_block [optional]
 	 */
@@ -1124,7 +1124,7 @@ class Redis  {
 	/**
 	 * @param mixed $str_group
 	 * @param mixed $str_consumer
-	 * @param array[] $arr_streams
+	 * @param array $arr_streams
 	 * @param mixed $i_count [optional]
 	 * @param mixed $i_block [optional]
 	 */
@@ -1210,9 +1210,9 @@ class Redis  {
 	 * @param mixed $key
 	 * @param mixed $start
 	 * @param mixed $end
-	 * @param array[] $options [optional]
+	 * @param array $options [optional]
 	 */
-	public function zRangeByScore ($key = null, $start = null, $end = null, array $options = null) {}
+	public function zRangeByScore ($key = null, $start = null, $end = null, array $options = 'null') {}
 
 	/**
 	 * @param mixed $key
@@ -1269,9 +1269,9 @@ class Redis  {
 	 * @param mixed $key
 	 * @param mixed $start
 	 * @param mixed $end
-	 * @param array[] $options [optional]
+	 * @param array $options [optional]
 	 */
-	public function zRevRangeByScore ($key = null, $start = null, $end = null, array $options = null) {}
+	public function zRevRangeByScore ($key = null, $start = null, $end = null, array $options = 'null') {}
 
 	/**
 	 * @param mixed $key
@@ -1287,11 +1287,11 @@ class Redis  {
 
 	/**
 	 * @param mixed $key
-	 * @param array[] $keys
-	 * @param array|null[] $weights [optional]
+	 * @param array $keys
+	 * @param ?array $weights [optional]
 	 * @param mixed $aggregate [optional]
 	 */
-	public function zinterstore ($key = null, array $keys, array $weights = null, $aggregate = null) {}
+	public function zinterstore ($key = null, array $keys, ?array $weights = null, $aggregate = null) {}
 
 	/**
 	 * @param mixed $str_key
@@ -1303,11 +1303,11 @@ class Redis  {
 
 	/**
 	 * @param mixed $key
-	 * @param array[] $keys
-	 * @param array|null[] $weights [optional]
+	 * @param array $keys
+	 * @param ?array $weights [optional]
 	 * @param mixed $aggregate [optional]
 	 */
-	public function zunionstore ($key = null, array $keys, array $weights = null, $aggregate = null) {}
+	public function zunionstore ($key = null, array $keys, ?array $weights = null, $aggregate = null) {}
 
 	/**
 	 * @param mixed $key
@@ -1339,7 +1339,7 @@ class Redis  {
 	public function getKeys ($pattern = null) {}
 
 	/**
-	 * @param array[] $keys
+	 * @param array $keys
 	 * @deprecated 
 	 */
 	public function getMultiple (array $keys) {}
@@ -1479,12 +1479,12 @@ class Redis  {
 
 	/**
 	 * @param mixed $key
-	 * @param array[] $keys
-	 * @param array|null[] $weights [optional]
+	 * @param array $keys
+	 * @param ?array $weights [optional]
 	 * @param mixed $aggregate [optional]
 	 * @deprecated 
 	 */
-	public function zInter ($key = null, array $keys, array $weights = null, $aggregate = null) {}
+	public function zInter ($key = null, array $keys, ?array $weights = null, $aggregate = null) {}
 
 	/**
 	 * @param mixed $key
@@ -1519,12 +1519,12 @@ class Redis  {
 
 	/**
 	 * @param mixed $key
-	 * @param array[] $keys
-	 * @param array|null[] $weights [optional]
+	 * @param array $keys
+	 * @param ?array $weights [optional]
 	 * @param mixed $aggregate [optional]
 	 * @deprecated 
 	 */
-	public function zUnion ($key = null, array $keys, array $weights = null, $aggregate = null) {}
+	public function zUnion ($key = null, array $keys, ?array $weights = null, $aggregate = null) {}
 
 }
 
@@ -1538,9 +1538,9 @@ class RedisArray  {
 
 	/**
 	 * @param mixed $name_or_hosts
-	 * @param array[] $options [optional]
+	 * @param array $options [optional]
 	 */
-	public function __construct ($name_or_hosts = null, array $options = null) {}
+	public function __construct ($name_or_hosts = null, array $options = 'null') {}
 
 	public function _continuum () {}
 
@@ -1734,13 +1734,13 @@ class RedisCluster  {
 
 	/**
 	 * @param mixed $name
-	 * @param array[] $seeds [optional]
+	 * @param array $seeds [optional]
 	 * @param mixed $timeout [optional]
 	 * @param mixed $read_timeout [optional]
 	 * @param mixed $persistent [optional]
 	 * @param mixed $auth [optional]
 	 */
-	public function __construct ($name = null, array $seeds = null, $timeout = null, $read_timeout = null, $persistent = null, $auth = null) {}
+	public function __construct ($name = null, array $seeds = 'null', $timeout = null, $read_timeout = null, $persistent = null, $auth = null) {}
 
 	public function _masters () {}
 
@@ -2006,9 +2006,9 @@ class RedisCluster  {
 	 * @param mixed $lan
 	 * @param mixed $radius
 	 * @param mixed $unit
-	 * @param array[] $opts [optional]
+	 * @param array $opts [optional]
 	 */
-	public function georadius ($key = null, $lng = null, $lan = null, $radius = null, $unit = null, array $opts = null) {}
+	public function georadius ($key = null, $lng = null, $lan = null, $radius = null, $unit = null, array $opts = 'null') {}
 
 	/**
 	 * @param mixed $key
@@ -2016,27 +2016,27 @@ class RedisCluster  {
 	 * @param mixed $lan
 	 * @param mixed $radius
 	 * @param mixed $unit
-	 * @param array[] $opts [optional]
+	 * @param array $opts [optional]
 	 */
-	public function georadius_ro ($key = null, $lng = null, $lan = null, $radius = null, $unit = null, array $opts = null) {}
+	public function georadius_ro ($key = null, $lng = null, $lan = null, $radius = null, $unit = null, array $opts = 'null') {}
 
 	/**
 	 * @param mixed $key
 	 * @param mixed $member
 	 * @param mixed $radius
 	 * @param mixed $unit
-	 * @param array[] $opts [optional]
+	 * @param array $opts [optional]
 	 */
-	public function georadiusbymember ($key = null, $member = null, $radius = null, $unit = null, array $opts = null) {}
+	public function georadiusbymember ($key = null, $member = null, $radius = null, $unit = null, array $opts = 'null') {}
 
 	/**
 	 * @param mixed $key
 	 * @param mixed $member
 	 * @param mixed $radius
 	 * @param mixed $unit
-	 * @param array[] $opts [optional]
+	 * @param array $opts [optional]
 	 */
-	public function georadiusbymember_ro ($key = null, $member = null, $radius = null, $unit = null, array $opts = null) {}
+	public function georadiusbymember_ro ($key = null, $member = null, $radius = null, $unit = null, array $opts = 'null') {}
 
 	/**
 	 * @param mixed $key
@@ -2121,13 +2121,13 @@ class RedisCluster  {
 
 	/**
 	 * @param mixed $key
-	 * @param array[] $keys
+	 * @param array $keys
 	 */
 	public function hmget ($key = null, array $keys) {}
 
 	/**
 	 * @param mixed $key
-	 * @param array[] $pairs
+	 * @param array $pairs
 	 */
 	public function hmset ($key = null, array $pairs) {}
 
@@ -2267,17 +2267,17 @@ class RedisCluster  {
 	public function ltrim ($key = null, $start = null, $stop = null) {}
 
 	/**
-	 * @param array[] $keys
+	 * @param array $keys
 	 */
 	public function mget (array $keys) {}
 
 	/**
-	 * @param array[] $pairs
+	 * @param array $pairs
 	 */
 	public function mset (array $pairs) {}
 
 	/**
-	 * @param array[] $pairs
+	 * @param array $pairs
 	 */
 	public function msetnx (array $pairs) {}
 
@@ -2308,7 +2308,7 @@ class RedisCluster  {
 
 	/**
 	 * @param mixed $key
-	 * @param array[] $elements
+	 * @param array $elements
 	 */
 	public function pfadd ($key = null, array $elements) {}
 
@@ -2319,7 +2319,7 @@ class RedisCluster  {
 
 	/**
 	 * @param mixed $dstkey
-	 * @param array[] $keys
+	 * @param array $keys
 	 */
 	public function pfmerge ($dstkey = null, array $keys) {}
 
@@ -2336,7 +2336,7 @@ class RedisCluster  {
 	public function psetex ($key = null, $expire = null, $value = null) {}
 
 	/**
-	 * @param array[] $patterns
+	 * @param array $patterns
 	 * @param mixed $callback
 	 */
 	public function psubscribe (array $patterns, $callback = null) {}
@@ -2428,7 +2428,7 @@ class RedisCluster  {
 
 	/**
 	 * @param mixed $key
-	 * @param array[] $options
+	 * @param array $options
 	 */
 	public function saddarray ($key = null, array $options) {}
 
@@ -2550,9 +2550,9 @@ class RedisCluster  {
 
 	/**
 	 * @param mixed $key
-	 * @param array[] $options [optional]
+	 * @param array $options [optional]
 	 */
-	public function sort ($key = null, array $options = null) {}
+	public function sort ($key = null, array $options = 'null') {}
 
 	/**
 	 * @param mixed $key
@@ -2585,7 +2585,7 @@ class RedisCluster  {
 	public function strlen ($key = null) {}
 
 	/**
-	 * @param array[] $channels
+	 * @param array $channels
 	 * @param mixed $callback
 	 */
 	public function subscribe (array $channels, $callback = null) {}
@@ -2638,14 +2638,14 @@ class RedisCluster  {
 	/**
 	 * @param mixed $str_key
 	 * @param mixed $str_group
-	 * @param array[] $arr_ids
+	 * @param array $arr_ids
 	 */
 	public function xack ($str_key = null, $str_group = null, array $arr_ids) {}
 
 	/**
 	 * @param mixed $str_key
 	 * @param mixed $str_id
-	 * @param array[] $arr_fields
+	 * @param array $arr_fields
 	 * @param mixed $i_maxlen [optional]
 	 * @param mixed $boo_approximate [optional]
 	 */
@@ -2656,14 +2656,14 @@ class RedisCluster  {
 	 * @param mixed $str_group
 	 * @param mixed $str_consumer
 	 * @param mixed $i_min_idle
-	 * @param array[] $arr_ids
-	 * @param array[] $arr_opts [optional]
+	 * @param array $arr_ids
+	 * @param array $arr_opts [optional]
 	 */
-	public function xclaim ($str_key = null, $str_group = null, $str_consumer = null, $i_min_idle = null, array $arr_ids, array $arr_opts = null) {}
+	public function xclaim ($str_key = null, $str_group = null, $str_consumer = null, $i_min_idle = null, array $arr_ids, array $arr_opts = 'null') {}
 
 	/**
 	 * @param mixed $str_key
-	 * @param array[] $arr_ids
+	 * @param array $arr_ids
 	 */
 	public function xdel ($str_key = null, array $arr_ids) {}
 
@@ -2707,7 +2707,7 @@ class RedisCluster  {
 	public function xrange ($str_key = null, $str_start = null, $str_end = null, $i_count = null) {}
 
 	/**
-	 * @param array[] $arr_streams
+	 * @param array $arr_streams
 	 * @param mixed $i_count [optional]
 	 * @param mixed $i_block [optional]
 	 */
@@ -2716,7 +2716,7 @@ class RedisCluster  {
 	/**
 	 * @param mixed $str_group
 	 * @param mixed $str_consumer
-	 * @param array[] $arr_streams
+	 * @param array $arr_streams
 	 * @param mixed $i_count [optional]
 	 * @param mixed $i_block [optional]
 	 */
@@ -2766,11 +2766,11 @@ class RedisCluster  {
 
 	/**
 	 * @param mixed $key
-	 * @param array[] $keys
-	 * @param array|null[] $weights [optional]
+	 * @param array $keys
+	 * @param ?array $weights [optional]
 	 * @param mixed $aggregate [optional]
 	 */
-	public function zinterstore ($key = null, array $keys, array $weights = null, $aggregate = null) {}
+	public function zinterstore ($key = null, array $keys, ?array $weights = null, $aggregate = null) {}
 
 	/**
 	 * @param mixed $key
@@ -2810,9 +2810,9 @@ class RedisCluster  {
 	 * @param mixed $key
 	 * @param mixed $start
 	 * @param mixed $end
-	 * @param array[] $options [optional]
+	 * @param array $options [optional]
 	 */
-	public function zrangebyscore ($key = null, $start = null, $end = null, array $options = null) {}
+	public function zrangebyscore ($key = null, $start = null, $end = null, array $options = 'null') {}
 
 	/**
 	 * @param mixed $key
@@ -2869,9 +2869,9 @@ class RedisCluster  {
 	 * @param mixed $key
 	 * @param mixed $start
 	 * @param mixed $end
-	 * @param array[] $options [optional]
+	 * @param array $options [optional]
 	 */
-	public function zrevrangebyscore ($key = null, $start = null, $end = null, array $options = null) {}
+	public function zrevrangebyscore ($key = null, $start = null, $end = null, array $options = 'null') {}
 
 	/**
 	 * @param mixed $key
@@ -2895,11 +2895,11 @@ class RedisCluster  {
 
 	/**
 	 * @param mixed $key
-	 * @param array[] $keys
-	 * @param array|null[] $weights [optional]
+	 * @param array $keys
+	 * @param ?array $weights [optional]
 	 * @param mixed $aggregate [optional]
 	 */
-	public function zunionstore ($key = null, array $keys, array $weights = null, $aggregate = null) {}
+	public function zunionstore ($key = null, array $keys, ?array $weights = null, $aggregate = null) {}
 
 }
 
@@ -2966,28 +2966,75 @@ class RedisException extends Exception implements Throwable, Stringable {
 
 
 	/**
-	 * @param string $message [optional]
-	 * @param int $code [optional]
-	 * @param Throwable|null $previous [optional]
+	 * Construct the exception
+	 * @link http://www.php.net/manual/en/exception.construct.php
+	 * @param string $message [optional] 
+	 * @param int $code [optional] 
+	 * @param Throwable|null $previous [optional] 
+	 * @return string 
 	 */
-	public function __construct (string $message = '', int $code = 0, Throwable|null $previous = null) {}
+	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
 
 	public function __wakeup () {}
 
+	/**
+	 * Gets the Exception message
+	 * @link http://www.php.net/manual/en/exception.getmessage.php
+	 * @return string Returns the Exception message as a string.
+	 */
 	final public function getMessage (): string {}
 
-	final public function getCode () {}
+	/**
+	 * Gets the Exception code
+	 * @link http://www.php.net/manual/en/exception.getcode.php
+	 * @return int Returns the exception code as int in
+	 * Exception but possibly as other type in
+	 * Exception descendants (for example as
+	 * string in PDOException).
+	 */
+	final public function getCode (): int {}
 
+	/**
+	 * Gets the file in which the exception was created
+	 * @link http://www.php.net/manual/en/exception.getfile.php
+	 * @return string Returns the filename in which the exception was created.
+	 */
 	final public function getFile (): string {}
 
+	/**
+	 * Gets the line in which the exception was created
+	 * @link http://www.php.net/manual/en/exception.getline.php
+	 * @return int Returns the line number where the exception was created.
+	 */
 	final public function getLine (): int {}
 
+	/**
+	 * Gets the stack trace
+	 * @link http://www.php.net/manual/en/exception.gettrace.php
+	 * @return array Returns the Exception stack trace as an array.
+	 */
 	final public function getTrace (): array {}
 
+	/**
+	 * Returns previous Throwable
+	 * @link http://www.php.net/manual/en/exception.getprevious.php
+	 * @return Throwable|null Returns the previous Throwable if available 
+	 * or null otherwise.
+	 */
 	final public function getPrevious (): ?Throwable {}
 
+	/**
+	 * Gets the stack trace as a string
+	 * @link http://www.php.net/manual/en/exception.gettraceasstring.php
+	 * @return string Returns the Exception stack trace as a string.
+	 */
 	final public function getTraceAsString (): string {}
 
+	/**
+	 * String representation of the exception
+	 * @link http://www.php.net/manual/en/exception.tostring.php
+	 * @return string Returns the string representation of the exception.
+	 */
 	public function __toString (): string {}
 
 }
@@ -3000,28 +3047,75 @@ class RedisClusterException extends Exception implements Throwable, Stringable {
 
 
 	/**
-	 * @param string $message [optional]
-	 * @param int $code [optional]
-	 * @param Throwable|null $previous [optional]
+	 * Construct the exception
+	 * @link http://www.php.net/manual/en/exception.construct.php
+	 * @param string $message [optional] 
+	 * @param int $code [optional] 
+	 * @param Throwable|null $previous [optional] 
+	 * @return string 
 	 */
-	public function __construct (string $message = '', int $code = 0, Throwable|null $previous = null) {}
+	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
 
 	public function __wakeup () {}
 
+	/**
+	 * Gets the Exception message
+	 * @link http://www.php.net/manual/en/exception.getmessage.php
+	 * @return string Returns the Exception message as a string.
+	 */
 	final public function getMessage (): string {}
 
-	final public function getCode () {}
+	/**
+	 * Gets the Exception code
+	 * @link http://www.php.net/manual/en/exception.getcode.php
+	 * @return int Returns the exception code as int in
+	 * Exception but possibly as other type in
+	 * Exception descendants (for example as
+	 * string in PDOException).
+	 */
+	final public function getCode (): int {}
 
+	/**
+	 * Gets the file in which the exception was created
+	 * @link http://www.php.net/manual/en/exception.getfile.php
+	 * @return string Returns the filename in which the exception was created.
+	 */
 	final public function getFile (): string {}
 
+	/**
+	 * Gets the line in which the exception was created
+	 * @link http://www.php.net/manual/en/exception.getline.php
+	 * @return int Returns the line number where the exception was created.
+	 */
 	final public function getLine (): int {}
 
+	/**
+	 * Gets the stack trace
+	 * @link http://www.php.net/manual/en/exception.gettrace.php
+	 * @return array Returns the Exception stack trace as an array.
+	 */
 	final public function getTrace (): array {}
 
+	/**
+	 * Returns previous Throwable
+	 * @link http://www.php.net/manual/en/exception.getprevious.php
+	 * @return Throwable|null Returns the previous Throwable if available 
+	 * or null otherwise.
+	 */
 	final public function getPrevious (): ?Throwable {}
 
+	/**
+	 * Gets the stack trace as a string
+	 * @link http://www.php.net/manual/en/exception.gettraceasstring.php
+	 * @return string Returns the Exception stack trace as a string.
+	 */
 	final public function getTraceAsString (): string {}
 
+	/**
+	 * String representation of the exception
+	 * @link http://www.php.net/manual/en/exception.tostring.php
+	 * @return string Returns the string representation of the exception.
+	 */
 	public function __toString (): string {}
 
 }

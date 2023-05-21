@@ -5,9 +5,9 @@
 /**
  * Return the number of days in a month for a given year and calendar
  * @link http://www.php.net/manual/en/function.cal-days-in-month.php
- * @param int $calendar Calendar to use for calculation
- * @param int $month Month in the selected calendar
- * @param int $year Year in the selected calendar
+ * @param int $calendar 
+ * @param int $month 
+ * @param int $year 
  * @return int The length in days of the selected month in the given calendar
  */
 function cal_days_in_month (int $calendar, int $month, int $year): int {}
@@ -15,9 +15,9 @@ function cal_days_in_month (int $calendar, int $month, int $year): int {}
 /**
  * Converts from Julian Day Count to a supported calendar
  * @link http://www.php.net/manual/en/function.cal-from-jd.php
- * @param int $julian_day Julian day as integer
- * @param int $calendar Calendar to convert to
- * @return array an array containing calendar information like month, day, year,
+ * @param int $julian_day 
+ * @param int $calendar 
+ * @return array Returns an array containing calendar information like month, day, year,
  * day of week (dow), abbreviated and full names of weekday and month and the
  * date in string form "month/day/year".
  * The day of week ranges from 0 (Sunday) to
@@ -28,26 +28,18 @@ function cal_from_jd (int $julian_day, int $calendar): array {}
 /**
  * Returns information about a particular calendar
  * @link http://www.php.net/manual/en/function.cal-info.php
- * @param int $calendar [optional] Calendar to return information for. If no calendar is specified
- * information about all calendars is returned.
+ * @param int $calendar [optional] 
  * @return array 
  */
-function cal_info (int $calendar = null): array {}
+function cal_info (int $calendar = -1): array {}
 
 /**
  * Converts from a supported calendar to Julian Day Count
  * @link http://www.php.net/manual/en/function.cal-to-jd.php
- * @param int $calendar Calendar to convert from, one of 
- * CAL_GREGORIAN,
- * CAL_JULIAN,
- * CAL_JEWISH or
- * CAL_FRENCH.
- * @param int $month The month as a number, the valid range depends 
- * on the calendar
- * @param int $day The day as a number, the valid range depends 
- * on the calendar
- * @param int $year The year as a number, the valid range depends 
- * on the calendar
+ * @param int $calendar 
+ * @param int $month 
+ * @param int $day 
+ * @param int $year 
  * @return int A Julian Day number.
  */
 function cal_to_jd (int $calendar, int $month, int $day, int $year): int {}
@@ -55,34 +47,28 @@ function cal_to_jd (int $calendar, int $month, int $day, int $year): int {}
 /**
  * Get Unix timestamp for midnight on Easter of a given year
  * @link http://www.php.net/manual/en/function.easter-date.php
- * @param mixed $year [optional] The year as a number between 1970 an 2037. If omitted or null, defaults to the
- * current year according to the local time.
- * @param int $mode [optional] Allows Easter dates to be calculated based on the Julian calendar when set
- * to CAL_EASTER_ALWAYS_JULIAN. See also calendar constants.
+ * @param int|null $year [optional] 
+ * @param int $mode [optional] 
  * @return int The easter date as a unix timestamp.
  */
-function easter_date ($year = null, int $mode = null): int {}
+function easter_date (?int $year = null, int $mode = CAL_EASTER_DEFAULT): int {}
 
 /**
  * Get number of days after March 21 on which Easter falls for a given year
  * @link http://www.php.net/manual/en/function.easter-days.php
- * @param mixed $year [optional] The year as a positive number. If omitted or null, defaults to the
- * current year according to the local time.
- * @param int $mode [optional] Allows Easter dates to be calculated based
- * on the Gregorian calendar during the years 1582 - 1752 when set to
- * CAL_EASTER_ROMAN. See the calendar constants for more valid
- * constants.
+ * @param int|null $year [optional] 
+ * @param int $mode [optional] 
  * @return int The number of days after March 21st that the Easter Sunday
  * is in the given year.
  */
-function easter_days ($year = null, int $mode = null): int {}
+function easter_days (?int $year = null, int $mode = CAL_EASTER_DEFAULT): int {}
 
 /**
  * Converts a date from the French Republican Calendar to a Julian Day Count
  * @link http://www.php.net/manual/en/function.frenchtojd.php
- * @param int $month The month as a number from 1 (for Vendémiaire) to 13 (for the period of 5-6 days at the end of each year)
- * @param int $day The day as a number from 1 to 30
- * @param int $year The year as a number between 1 and 14
+ * @param int $month 
+ * @param int $day 
+ * @param int $year 
  * @return int The julian day for the given french revolution date as an integer.
  */
 function frenchtojd (int $month, int $day, int $year): int {}
@@ -90,14 +76,9 @@ function frenchtojd (int $month, int $day, int $year): int {}
 /**
  * Converts a Gregorian date to Julian Day Count
  * @link http://www.php.net/manual/en/function.gregoriantojd.php
- * @param int $month The month as a number from 1 (for January) to 12 (for December)
- * @param int $day The day as a number from 1 to 31.
- * If the month has less days then given, overflow occurs; see the example
- * below.
- * @param int $year The year as a number between -4714 and 9999.
- * Negative numbers mean years B.C., positive numbers mean years A.D.
- * Note that there is no year 0; December 31, 1 B.C. is
- * immediately followed by January 1, 1 A.D.
+ * @param int $month 
+ * @param int $day 
+ * @param int $year 
  * @return int The julian day for the given gregorian date as an integer.
  * Dates outside the valid range return 0.
  */
@@ -106,45 +87,17 @@ function gregoriantojd (int $month, int $day, int $year): int {}
 /**
  * Returns the day of the week
  * @link http://www.php.net/manual/en/function.jddayofweek.php
- * @param int $julian_day A julian day number as integer
- * @param int $mode [optional] <table>
- * Calendar week modes
- * <table>
- * <tr valign="top">
- * <td>Mode</td>
- * <td>Meaning</td>
- * </tr>
- * <tr valign="top">
- * <td>0 (Default)</td> 
- * <td>
- * Return the day number as an int (0=Sunday, 1=Monday, etc)
- * </td>
- * </tr>
- * <tr valign="top">
- * <td>1</td> 
- * <td>
- * Returns string containing the day of week
- * (English-Gregorian)
- * </td>
- * </tr>
- * <tr valign="top">
- * <td>2</td> 
- * <td>
- * Return a string containing the abbreviated day of week
- * (English-Gregorian)
- * </td>
- * </tr>
- * </table>
- * </table>
- * @return mixed The gregorian weekday as either an integer or string.
+ * @param int $julian_day 
+ * @param int $mode [optional] 
+ * @return int|string The gregorian weekday as either an integer or string.
  */
-function jddayofweek (int $julian_day, int $mode = null): string|int {}
+function jddayofweek (int $julian_day, int $mode = CAL_DOW_DAYNO): int|string {}
 
 /**
  * Returns a month name
  * @link http://www.php.net/manual/en/function.jdmonthname.php
  * @param int $julian_day 
- * @param int $mode The calendar mode (see table above).
+ * @param int $mode 
  * @return string The month name for the given Julian Day and mode.
  */
 function jdmonthname (int $julian_day, int $mode): string {}
@@ -152,7 +105,7 @@ function jdmonthname (int $julian_day, int $mode): string {}
 /**
  * Converts a Julian Day Count to the French Republican Calendar
  * @link http://www.php.net/manual/en/function.jdtofrench.php
- * @param int $julian_day A julian day number as integer
+ * @param int $julian_day 
  * @return string The french revolution date as a string in the form "month/day/year"
  */
 function jdtofrench (int $julian_day): string {}
@@ -160,7 +113,7 @@ function jdtofrench (int $julian_day): string {}
 /**
  * Converts Julian Day Count to Gregorian date
  * @link http://www.php.net/manual/en/function.jdtogregorian.php
- * @param int $julian_day A julian day number as integer
+ * @param int $julian_day 
  * @return string The gregorian date as a string in the form "month/day/year"
  */
 function jdtogregorian (int $julian_day): string {}
@@ -168,24 +121,19 @@ function jdtogregorian (int $julian_day): string {}
 /**
  * Converts a Julian day count to a Jewish calendar date
  * @link http://www.php.net/manual/en/function.jdtojewish.php
- * @param int $julian_day A julian day number as integer
- * @param bool $hebrew [optional] If the hebrew parameter is set to true, the
- * flags parameter is used for Hebrew, ISO-8859-8 encoded string based,
- * output format.
- * @param int $flags [optional] A bitmask which may consist of
- * CAL_JEWISH_ADD_ALAFIM_GERESH,
- * CAL_JEWISH_ADD_ALAFIM and
- * CAL_JEWISH_ADD_GERESHAYIM.
+ * @param int $julian_day 
+ * @param bool $hebrew [optional] 
+ * @param int $flags [optional] 
  * @return string The Jewish date as a string in the form "month/day/year", or an ISO-8859-8
  * encoded Hebrew date string, according to the hebrew
  * parameter.
  */
-function jdtojewish (int $julian_day, bool $hebrew = null, int $flags = null): string {}
+function jdtojewish (int $julian_day, bool $hebrew = false, int $flags = null): string {}
 
 /**
  * Converts a Julian Day Count to a Julian Calendar Date
  * @link http://www.php.net/manual/en/function.jdtojulian.php
- * @param int $julian_day A julian day number as integer
+ * @param int $julian_day 
  * @return string The julian date as a string in the form "month/day/year"
  */
 function jdtojulian (int $julian_day): string {}
@@ -193,8 +141,7 @@ function jdtojulian (int $julian_day): string {}
 /**
  * Convert Julian Day to Unix timestamp
  * @link http://www.php.net/manual/en/function.jdtounix.php
- * @param int $julian_day A julian day number between 2440588 and 106751993607888
- * on 64bit systems, or between 2440588 and 2465443 on 32bit systems.
+ * @param int $julian_day 
  * @return int The unix timestamp for the start (midnight, not noon) of the given Julian day
  */
 function jdtounix (int $julian_day): int {}
@@ -202,16 +149,9 @@ function jdtounix (int $julian_day): int {}
 /**
  * Converts a date in the Jewish Calendar to Julian Day Count
  * @link http://www.php.net/manual/en/function.jewishtojd.php
- * @param int $month The month as a number from 1 to 13,
- * where 1 means Tishri,
- * 13 means Elul, and
- * 6 and 7 mean
- * Adar in regular years, but Adar I
- * and Adar II, respectively, in leap years.
- * @param int $day The day as a number from 1 to 30.
- * If the month has only 29 days, the first day of the following month is
- * assumed.
- * @param int $year The year as a number between 1 and 9999
+ * @param int $month 
+ * @param int $day 
+ * @param int $year 
  * @return int The julian day for the given jewish date as an integer.
  */
 function jewishtojd (int $month, int $day, int $year): int {}
@@ -219,9 +159,9 @@ function jewishtojd (int $month, int $day, int $year): int {}
 /**
  * Converts a Julian Calendar date to Julian Day Count
  * @link http://www.php.net/manual/en/function.juliantojd.php
- * @param int $month The month as a number from 1 (for January) to 12 (for December)
- * @param int $day The day as a number from 1 to 31
- * @param int $year The year as a number between -4713 and 9999
+ * @param int $month 
+ * @param int $day 
+ * @param int $year 
  * @return int The julian day for the given julian date as an integer.
  */
 function juliantojd (int $month, int $day, int $year): int {}
@@ -229,10 +169,10 @@ function juliantojd (int $month, int $day, int $year): int {}
 /**
  * Convert Unix timestamp to Julian Day
  * @link http://www.php.net/manual/en/function.unixtojd.php
- * @param mixed $timestamp [optional] A unix timestamp to convert.
- * @return mixed A julian day number as integer, or false on failure.
+ * @param int|null $timestamp [optional] 
+ * @return int|false A julian day number as integer, or false on failure.
  */
-function unixtojd ($timestamp = null): int|false {}
+function unixtojd (?int $timestamp = null): int|false {}
 
 
 /**
@@ -240,6 +180,7 @@ function unixtojd ($timestamp = null): int|false {}
  * cal_from_jd, cal_info and
  * cal_to_jd: use the proleptic Gregorian calendar.
  * @link http://www.php.net/manual/en/calendar.constants.php
+ * @var int
  */
 define ('CAL_GREGORIAN', 0);
 
@@ -248,6 +189,7 @@ define ('CAL_GREGORIAN', 0);
  * cal_from_jd, cal_info and
  * cal_to_jd: use the Julian calendar.
  * @link http://www.php.net/manual/en/calendar.constants.php
+ * @var int
  */
 define ('CAL_JULIAN', 1);
 
@@ -256,6 +198,7 @@ define ('CAL_JULIAN', 1);
  * cal_from_jd, cal_info and
  * cal_to_jd: use the Jewish calendar.
  * @link http://www.php.net/manual/en/calendar.constants.php
+ * @var int
  */
 define ('CAL_JEWISH', 2);
 
@@ -264,12 +207,14 @@ define ('CAL_JEWISH', 2);
  * cal_from_jd, cal_info and
  * cal_to_jd: use the French Repuclican calendar.
  * @link http://www.php.net/manual/en/calendar.constants.php
+ * @var int
  */
 define ('CAL_FRENCH', 3);
 
 /**
  * The number of available calendars.
  * @link http://www.php.net/manual/en/calendar.constants.php
+ * @var int
  */
 define ('CAL_NUM_CALS', 4);
 
@@ -278,6 +223,7 @@ define ('CAL_NUM_CALS', 4);
  * int, where 0 means Sunday and
  * 6 means Saturday.
  * @link http://www.php.net/manual/en/calendar.constants.php
+ * @var int
  */
 define ('CAL_DOW_DAYNO', 0);
 
@@ -285,6 +231,7 @@ define ('CAL_DOW_DAYNO', 0);
  * For jddayofweek: the abbreviated English name of the
  * day of the week.
  * @link http://www.php.net/manual/en/calendar.constants.php
+ * @var int
  */
 define ('CAL_DOW_SHORT', 2);
 
@@ -292,42 +239,49 @@ define ('CAL_DOW_SHORT', 2);
  * For jddayofweek: the English name of the day of the
  * week.
  * @link http://www.php.net/manual/en/calendar.constants.php
+ * @var int
  */
 define ('CAL_DOW_LONG', 1);
 
 /**
  * For jdmonthname: the abbreviated Gregorian month name.
  * @link http://www.php.net/manual/en/calendar.constants.php
+ * @var int
  */
 define ('CAL_MONTH_GREGORIAN_SHORT', 0);
 
 /**
  * For jdmonthname: the Gregorian month name.
  * @link http://www.php.net/manual/en/calendar.constants.php
+ * @var int
  */
 define ('CAL_MONTH_GREGORIAN_LONG', 1);
 
 /**
  * For jdmonthname: the abbreviated Julian month name.
  * @link http://www.php.net/manual/en/calendar.constants.php
+ * @var int
  */
 define ('CAL_MONTH_JULIAN_SHORT', 2);
 
 /**
  * For jdmonthname: the Julian month name.
  * @link http://www.php.net/manual/en/calendar.constants.php
+ * @var int
  */
 define ('CAL_MONTH_JULIAN_LONG', 3);
 
 /**
  * For jdmonthname: the Jewish month name.
  * @link http://www.php.net/manual/en/calendar.constants.php
+ * @var int
  */
 define ('CAL_MONTH_JEWISH', 4);
 
 /**
  * For jdmonthname: the French Republican month name.
  * @link http://www.php.net/manual/en/calendar.constants.php
+ * @var int
  */
 define ('CAL_MONTH_FRENCH', 5);
 
@@ -336,6 +290,7 @@ define ('CAL_MONTH_FRENCH', 5);
  * 1753 according to the Julian calendar, and for later years according to the
  * Gregorian calendar.
  * @link http://www.php.net/manual/en/calendar.constants.php
+ * @var int
  */
 define ('CAL_EASTER_DEFAULT', 0);
 
@@ -344,6 +299,7 @@ define ('CAL_EASTER_DEFAULT', 0);
  * 1583 according to the Julian calendar, and for later years according to the
  * Gregorian calendar.
  * @link http://www.php.net/manual/en/calendar.constants.php
+ * @var int
  */
 define ('CAL_EASTER_ROMAN', 1);
 
@@ -351,6 +307,7 @@ define ('CAL_EASTER_ROMAN', 1);
  * For easter_days: calculate Easter according to the
  * proleptic Gregorian calendar.
  * @link http://www.php.net/manual/en/calendar.constants.php
+ * @var int
  */
 define ('CAL_EASTER_ALWAYS_GREGORIAN', 2);
 
@@ -358,6 +315,7 @@ define ('CAL_EASTER_ALWAYS_GREGORIAN', 2);
  * For easter_days: calculate Easter according to the
  * Julian calendar.
  * @link http://www.php.net/manual/en/calendar.constants.php
+ * @var int
  */
 define ('CAL_EASTER_ALWAYS_JULIAN', 3);
 
@@ -365,6 +323,7 @@ define ('CAL_EASTER_ALWAYS_JULIAN', 3);
  * For jdtojewish: adds a geresh symbol (which resembles
  * a single-quote mark) as thousands separator to the year number.
  * @link http://www.php.net/manual/en/calendar.constants.php
+ * @var int
  */
 define ('CAL_JEWISH_ADD_ALAFIM_GERESH', 2);
 
@@ -372,6 +331,7 @@ define ('CAL_JEWISH_ADD_ALAFIM_GERESH', 2);
  * For jdtojewish: adds the word alafim as thousands
  * separator to the year number.
  * @link http://www.php.net/manual/en/calendar.constants.php
+ * @var int
  */
 define ('CAL_JEWISH_ADD_ALAFIM', 4);
 
@@ -379,6 +339,7 @@ define ('CAL_JEWISH_ADD_ALAFIM', 4);
  * For jdtojewish: add a gershayim symbol (which
  * resembles a double-quote mark) before the final letter of the day and year numbers.
  * @link http://www.php.net/manual/en/calendar.constants.php
+ * @var int
  */
 define ('CAL_JEWISH_ADD_GERESHAYIM', 8);
 

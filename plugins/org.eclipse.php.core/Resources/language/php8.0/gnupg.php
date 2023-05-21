@@ -2,9 +2,6 @@
 
 // Start of gnupg v.1.5.1
 
-/**
- * @link http://www.php.net/manual/en/class.gnupg.php
- */
 class gnupg  {
 	const SIG_MODE_NORMAL = 0;
 	const SIG_MODE_DETACH = 1;
@@ -180,442 +177,423 @@ class gnupg_keylistiterator implements Iterator, Traversable {
 /**
  * Initialize a connection
  * @link http://www.php.net/manual/en/function.gnupg-init.php
- * @param mixed $options [optional] Must be an associative array. It is used to change the default configuration
- * of the crypto engine.
- * <table>
- * Configuration overrides
- * <table>
- * <tr valign="top">
- * <td>key</td>
- * <td>type</td>
- * <td>description</td>
- * </tr>
- * <tr valign="top">
- * <td>file_name</td>
- * <td>string</td>
- * <td>
- * It is the file name of the executable program implementing this protocol
- * which is usually path of the gpg executable.
- * </td>
- * </tr>
- * <tr valign="top">
- * <td>home_dir</td>
- * <td>string</td>
- * <td>
- * It is the directory name of the configuration directory. It also overrides
- * GNUPGHOME environment variable that is used for the same
- * purpose.
- * </td>
- * </tr>
- * </table>
- * </table>
+ * @param array|null $options [optional] 
  * @return resource A GnuPG resource connection used by other GnuPG functions.
  */
-function gnupg_init ($options = null) {}
+function gnupg_init (?array $options = null): resource {}
 
 /**
  * Returns an array with information about all keys that matches the given pattern
  * @link http://www.php.net/manual/en/function.gnupg-keyinfo.php
- * @param resource $identifier gnupg.identifier
- * @param string $pattern The pattern being checked against the keys.
- * @return array an array with information about all keys that matches the given
+ * @param resource $identifier 
+ * @param string $pattern 
+ * @return array Returns an array with information about all keys that matches the given
  * pattern or false, if an error has occurred.
  */
-function gnupg_keyinfo ($identifier, string $pattern) {}
+function gnupg_keyinfo (resource $identifier, string $pattern): array {}
 
 /**
  * Signs a given text
  * @link http://www.php.net/manual/en/function.gnupg-sign.php
- * @param resource $identifier gnupg.identifier
- * @param string $plaintext The plain text being signed.
+ * @param resource $identifier 
+ * @param string $plaintext 
  * @return string On success, this function returns the signed text or the signature.
  * On failure, this function returns false.
  */
-function gnupg_sign ($identifier, string $plaintext) {}
+function gnupg_sign (resource $identifier, string $plaintext): string {}
 
 /**
  * Verifies a signed text
  * @link http://www.php.net/manual/en/function.gnupg-verify.php
- * @param resource $identifier gnupg.identifier
- * @param string $signed_text The signed text.
- * @param string $signature The signature.
- * To verify a clearsigned text, set signature to false.
- * @param string $plaintext [optional] The plain text.
- * If this optional parameter is passed, it is
- * filled with the plain text.
+ * @param resource $identifier 
+ * @param string $signed_text 
+ * @param string $signature 
+ * @param string $plaintext [optional] 
  * @return array On success, this function returns information about the signature.
  * On failure, this function returns false.
  */
-function gnupg_verify ($identifier, string $signed_text, string $signature, string &$plaintext = null) {}
+function gnupg_verify (resource $identifier, string $signed_text, string $signature, string &$plaintext = null): array {}
 
 /**
  * Removes all keys which were set for signing before
  * @link http://www.php.net/manual/en/function.gnupg-clearsignkeys.php
- * @param resource $identifier gnupg.identifier
- * @return bool true on success or false on failure
+ * @param resource $identifier 
+ * @return bool Returns true on success or false on failure.
  */
-function gnupg_clearsignkeys ($identifier) {}
+function gnupg_clearsignkeys (resource $identifier): bool {}
 
 /**
  * Removes all keys which were set for encryption before
  * @link http://www.php.net/manual/en/function.gnupg-clearencryptkeys.php
- * @param resource $identifier gnupg.identifier
- * @return bool true on success or false on failure
+ * @param resource $identifier 
+ * @return bool Returns true on success or false on failure.
  */
-function gnupg_clearencryptkeys ($identifier) {}
+function gnupg_clearencryptkeys (resource $identifier): bool {}
 
 /**
  * Removes all keys which were set for decryption before
  * @link http://www.php.net/manual/en/function.gnupg-cleardecryptkeys.php
- * @param resource $identifier gnupg.identifier
- * @return bool true on success or false on failure
+ * @param resource $identifier 
+ * @return bool Returns true on success or false on failure.
  */
-function gnupg_cleardecryptkeys ($identifier) {}
+function gnupg_cleardecryptkeys (resource $identifier): bool {}
 
 /**
  * Toggle armored output
  * @link http://www.php.net/manual/en/function.gnupg-setarmor.php
- * @param resource $identifier gnupg.identifier
- * @param int $armor Pass a non-zero integer-value to this function to enable armored-output
- * (default).
- * Pass 0 to disable armored output.
- * @return bool true on success or false on failure
+ * @param resource $identifier 
+ * @param int $armor 
+ * @return bool Returns true on success or false on failure.
  */
-function gnupg_setarmor ($identifier, int $armor) {}
+function gnupg_setarmor (resource $identifier, int $armor): bool {}
 
 /**
  * Encrypts a given text
  * @link http://www.php.net/manual/en/function.gnupg-encrypt.php
- * @param resource $identifier gnupg.identifier
- * @param string $plaintext The text being encrypted.
+ * @param resource $identifier 
+ * @param string $plaintext 
  * @return string On success, this function returns the encrypted text.
  * On failure, this function returns false.
  */
-function gnupg_encrypt ($identifier, string $plaintext) {}
+function gnupg_encrypt (resource $identifier, string $plaintext): string {}
 
 /**
  * Decrypts a given text
  * @link http://www.php.net/manual/en/function.gnupg-decrypt.php
- * @param resource $identifier gnupg.identifier
- * @param string $text The text being decrypted.
+ * @param resource $identifier 
+ * @param string $text 
  * @return string On success, this function returns the decrypted text.
  * On failure, this function returns false.
  */
-function gnupg_decrypt ($identifier, string $text) {}
+function gnupg_decrypt (resource $identifier, string $text): string {}
 
 /**
  * Exports a key
  * @link http://www.php.net/manual/en/function.gnupg-export.php
- * @param resource $identifier gnupg.identifier
- * @param string $fingerprint The fingerprint key.
+ * @param resource $identifier 
+ * @param string $fingerprint 
  * @return string On success, this function returns the keydata.
  * On failure, this function returns false.
  */
-function gnupg_export ($identifier, string $fingerprint) {}
+function gnupg_export (resource $identifier, string $fingerprint): string {}
 
 /**
  * Imports a key
  * @link http://www.php.net/manual/en/function.gnupg-import.php
- * @param resource $identifier gnupg.identifier
- * @param string $keydata The data key that is being imported.
+ * @param resource $identifier 
+ * @param string $keydata 
  * @return array On success, this function returns and info-array about the importprocess.
  * On failure, this function returns false.
  */
-function gnupg_import ($identifier, string $keydata) {}
+function gnupg_import (resource $identifier, string $keydata): array {}
 
 /**
  * Returns the engine info
  * @link http://www.php.net/manual/en/function.gnupg-getengineinfo.php
- * @param resource $identifier gnupg.identifier
- * @return array an array with engine info consting of protocol,
+ * @param resource $identifier 
+ * @return array Returns an array with engine info consting of protocol,
  * file_name and home_dir.
  */
-function gnupg_getengineinfo ($identifier) {}
+function gnupg_getengineinfo (resource $identifier): array {}
 
 /**
  * Returns the currently active protocol for all operations
  * @link http://www.php.net/manual/en/function.gnupg-getprotocol.php
- * @param resource $identifier gnupg.identifier
- * @return int the currently active protocol, which can be one of
+ * @param resource $identifier 
+ * @return int Returns the currently active protocol, which can be one of
  * GNUPG_PROTOCOL_OpenPGP or
  * GNUPG_PROTOCOL_CMS.
  */
-function gnupg_getprotocol ($identifier) {}
+function gnupg_getprotocol (resource $identifier): int {}
 
 /**
  * Sets the mode for signing
  * @link http://www.php.net/manual/en/function.gnupg-setsignmode.php
- * @param resource $identifier gnupg.identifier
+ * @param resource $identifier 
  * @param int $signmode 
- * @return bool true on success or false on failure
+ * @return bool Returns true on success or false on failure.
  */
-function gnupg_setsignmode ($identifier, int $signmode) {}
+function gnupg_setsignmode (resource $identifier, int $signmode): bool {}
 
 /**
  * Encrypts and signs a given text
  * @link http://www.php.net/manual/en/function.gnupg-encryptsign.php
- * @param resource $identifier gnupg.identifier
- * @param string $plaintext The text being encrypted.
+ * @param resource $identifier 
+ * @param string $plaintext 
  * @return string On success, this function returns the encrypted and signed text.
  * On failure, this function returns false.
  */
-function gnupg_encryptsign ($identifier, string $plaintext) {}
+function gnupg_encryptsign (resource $identifier, string $plaintext): string {}
 
 /**
  * Decrypts and verifies a given text
  * @link http://www.php.net/manual/en/function.gnupg-decryptverify.php
- * @param resource $identifier gnupg.identifier
- * @param string $text The text being decrypted.
- * @param string $plaintext The parameter plaintext gets filled with the decrypted
- * text.
+ * @param resource $identifier 
+ * @param string $text 
+ * @param string $plaintext 
  * @return array On success, this function returns information about the signature and
  * fills the plaintext parameter with the decrypted text.
  * On failure, this function returns false.
  */
-function gnupg_decryptverify ($identifier, string $text, string &$plaintext) {}
+function gnupg_decryptverify (resource $identifier, string $text, string &$plaintext): array {}
 
 /**
  * Returns the errortext, if a function fails
  * @link http://www.php.net/manual/en/function.gnupg-geterror.php
- * @param resource $identifier gnupg.identifier
- * @return string an errortext, if an error has occurred, otherwise false.
+ * @param resource $identifier 
+ * @return string Returns an errortext, if an error has occurred, otherwise false.
  */
-function gnupg_geterror ($identifier) {}
+function gnupg_geterror (resource $identifier): string {}
 
 /**
  * Returns the error info
  * @link http://www.php.net/manual/en/function.gnupg-geterrorinfo.php
- * @param resource $identifier gnupg.identifier
- * @return array an array with error info.
+ * @param resource $identifier 
+ * @return array Returns an array with error info.
  */
-function gnupg_geterrorinfo ($identifier) {}
+function gnupg_geterrorinfo (resource $identifier): array {}
 
 /**
  * Add a key for signing
  * @link http://www.php.net/manual/en/function.gnupg-addsignkey.php
- * @param resource $identifier gnupg.identifier
- * @param string $fingerprint The fingerprint key.
- * @param string $passphrase [optional] The pass phrase.
- * @return bool true on success or false on failure
+ * @param resource $identifier 
+ * @param string $fingerprint 
+ * @param string $passphrase [optional] 
+ * @return bool Returns true on success or false on failure.
  */
-function gnupg_addsignkey ($identifier, string $fingerprint, string $passphrase = null) {}
+function gnupg_addsignkey (resource $identifier, string $fingerprint, string $passphrase = null): bool {}
 
 /**
  * Add a key for encryption
  * @link http://www.php.net/manual/en/function.gnupg-addencryptkey.php
- * @param resource $identifier gnupg.identifier
- * @param string $fingerprint The fingerprint key.
- * @return bool true on success or false on failure
+ * @param resource $identifier 
+ * @param string $fingerprint 
+ * @return bool Returns true on success or false on failure.
  */
-function gnupg_addencryptkey ($identifier, string $fingerprint) {}
+function gnupg_addencryptkey (resource $identifier, string $fingerprint): bool {}
 
 /**
  * Add a key for decryption
  * @link http://www.php.net/manual/en/function.gnupg-adddecryptkey.php
- * @param resource $identifier gnupg.identifier
- * @param string $fingerprint The fingerprint key.
- * @param string $passphrase The pass phrase.
- * @return bool true on success or false on failure
+ * @param resource $identifier 
+ * @param string $fingerprint 
+ * @param string $passphrase 
+ * @return bool Returns true on success or false on failure.
  */
-function gnupg_adddecryptkey ($identifier, string $fingerprint, string $passphrase) {}
+function gnupg_adddecryptkey (resource $identifier, string $fingerprint, string $passphrase): bool {}
 
 /**
  * Delete a key from the keyring
  * @link http://www.php.net/manual/en/function.gnupg-deletekey.php
- * @param resource $identifier gnupg.identifier
- * @param string $key The key to delete.
- * @param bool $allow_secret It specifies whether to delete secret keys as well.
- * @return bool true on success or false on failure
+ * @param resource $identifier 
+ * @param string $key 
+ * @param bool $allow_secret 
+ * @return bool Returns true on success or false on failure.
  */
-function gnupg_deletekey ($identifier, string $key, bool $allow_secret) {}
+function gnupg_deletekey (resource $identifier, string $key, bool $allow_secret): bool {}
 
 /**
  * Search the trust items
  * @link http://www.php.net/manual/en/function.gnupg-gettrustlist.php
- * @param resource $identifier gnupg.identifier
- * @param string $pattern Expression to limit the list of trust items to only the ones matching the pattern.
+ * @param resource $identifier 
+ * @param string $pattern 
  * @return array On success, this function returns an array of trust items.
  * On failure, this function returns null.
  */
-function gnupg_gettrustlist ($identifier, string $pattern) {}
+function gnupg_gettrustlist (resource $identifier, string $pattern): array {}
 
 /**
  * List key signatures
  * @link http://www.php.net/manual/en/function.gnupg-listsignatures.php
- * @param resource $identifier gnupg.identifier
- * @param string $keyid The key ID to list signatures for.
+ * @param resource $identifier 
+ * @param string $keyid 
  * @return array On success, this function returns an array of key signatures.
  * On failure, this function returns null.
  */
-function gnupg_listsignatures ($identifier, string $keyid) {}
+function gnupg_listsignatures (resource $identifier, string $keyid): array {}
 
 /**
  * Sets the mode for error_reporting
  * @link http://www.php.net/manual/en/function.gnupg-seterrormode.php
- * @param resource $identifier gnupg.identifier
- * @param int $errormode <p>
- * The error mode.
- * </p>
- * <p>
- * errormode takes a constant indicating what type of
- * error_reporting should be used. The possible values are
- * GNUPG_ERROR_WARNING,
- * GNUPG_ERROR_EXCEPTION and
- * GNUPG_ERROR_SILENT.
- * By default GNUPG_ERROR_SILENT is used.
- * </p>
- * @return void 
+ * @param resource $identifier 
+ * @param int $errormode 
+ * @return void No value is returned.
  */
-function gnupg_seterrormode ($identifier, int $errormode) {}
+function gnupg_seterrormode (resource $identifier, int $errormode): void {}
 
 
 /**
  * 
  * @link http://www.php.net/manual/en/gnupg.constants.php
+ * @var int
  */
 define ('GNUPG_SIG_MODE_NORMAL', 0);
 
 /**
  * 
  * @link http://www.php.net/manual/en/gnupg.constants.php
+ * @var int
  */
 define ('GNUPG_SIG_MODE_DETACH', 1);
 
 /**
  * 
  * @link http://www.php.net/manual/en/gnupg.constants.php
+ * @var int
  */
 define ('GNUPG_SIG_MODE_CLEAR', 2);
 
 /**
  * 
  * @link http://www.php.net/manual/en/gnupg.constants.php
+ * @var int
  */
 define ('GNUPG_VALIDITY_UNKNOWN', 0);
 
 /**
  * 
  * @link http://www.php.net/manual/en/gnupg.constants.php
+ * @var int
  */
 define ('GNUPG_VALIDITY_UNDEFINED', 1);
 
 /**
  * 
  * @link http://www.php.net/manual/en/gnupg.constants.php
+ * @var int
  */
 define ('GNUPG_VALIDITY_NEVER', 2);
 
 /**
  * 
  * @link http://www.php.net/manual/en/gnupg.constants.php
+ * @var int
  */
 define ('GNUPG_VALIDITY_MARGINAL', 3);
 
 /**
  * 
  * @link http://www.php.net/manual/en/gnupg.constants.php
+ * @var int
  */
 define ('GNUPG_VALIDITY_FULL', 4);
 
 /**
  * 
  * @link http://www.php.net/manual/en/gnupg.constants.php
+ * @var int
  */
 define ('GNUPG_VALIDITY_ULTIMATE', 5);
 
 /**
  * 
  * @link http://www.php.net/manual/en/gnupg.constants.php
+ * @var int
  */
 define ('GNUPG_PROTOCOL_OpenPGP', 0);
 
 /**
  * 
  * @link http://www.php.net/manual/en/gnupg.constants.php
+ * @var int
  */
 define ('GNUPG_PROTOCOL_CMS', 1);
 
 /**
  * 
  * @link http://www.php.net/manual/en/gnupg.constants.php
+ * @var int
  */
 define ('GNUPG_SIGSUM_VALID', 1);
 
 /**
  * 
  * @link http://www.php.net/manual/en/gnupg.constants.php
+ * @var int
  */
 define ('GNUPG_SIGSUM_GREEN', 2);
 
 /**
  * 
  * @link http://www.php.net/manual/en/gnupg.constants.php
+ * @var int
  */
 define ('GNUPG_SIGSUM_RED', 4);
 
 /**
  * 
  * @link http://www.php.net/manual/en/gnupg.constants.php
+ * @var int
  */
 define ('GNUPG_SIGSUM_KEY_REVOKED', 16);
 
 /**
  * 
  * @link http://www.php.net/manual/en/gnupg.constants.php
+ * @var int
  */
 define ('GNUPG_SIGSUM_KEY_EXPIRED', 32);
 
 /**
  * 
  * @link http://www.php.net/manual/en/gnupg.constants.php
+ * @var int
  */
 define ('GNUPG_SIGSUM_SIG_EXPIRED', 64);
 
 /**
  * 
  * @link http://www.php.net/manual/en/gnupg.constants.php
+ * @var int
  */
 define ('GNUPG_SIGSUM_KEY_MISSING', 128);
 
 /**
  * 
  * @link http://www.php.net/manual/en/gnupg.constants.php
+ * @var int
  */
 define ('GNUPG_SIGSUM_CRL_MISSING', 256);
 
 /**
  * 
  * @link http://www.php.net/manual/en/gnupg.constants.php
+ * @var int
  */
 define ('GNUPG_SIGSUM_CRL_TOO_OLD', 512);
 
 /**
  * 
  * @link http://www.php.net/manual/en/gnupg.constants.php
+ * @var int
  */
 define ('GNUPG_SIGSUM_BAD_POLICY', 1024);
 
 /**
  * 
  * @link http://www.php.net/manual/en/gnupg.constants.php
+ * @var int
  */
 define ('GNUPG_SIGSUM_SYS_ERROR', 2048);
 
 /**
  * 
  * @link http://www.php.net/manual/en/gnupg.constants.php
+ * @var int
  */
 define ('GNUPG_ERROR_WARNING', 1);
 
 /**
  * 
  * @link http://www.php.net/manual/en/gnupg.constants.php
+ * @var int
  */
 define ('GNUPG_ERROR_EXCEPTION', 2);
 
 /**
  * 
  * @link http://www.php.net/manual/en/gnupg.constants.php
+ * @var int
  */
 define ('GNUPG_ERROR_SILENT', 3);
 define ('GNUPG_PK_RSA', 1);

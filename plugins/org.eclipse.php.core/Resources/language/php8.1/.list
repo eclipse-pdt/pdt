@@ -76,7 +76,6 @@ pgsql.php
 phpdbg_webhelper.php
 phpiredis.php
 posix.php
-protobuf.php
 pspell.php
 pthreads.php
 raphf.php
@@ -95,7 +94,6 @@ sqlite3.php
 sqlsrv.php
 ssh2.php
 standard.php
-swoole.php
 sysvmsg.php
 sysvsem.php
 sysvshm.php

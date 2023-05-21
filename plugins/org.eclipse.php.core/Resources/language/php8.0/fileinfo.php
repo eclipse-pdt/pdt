@@ -10,164 +10,159 @@
 class finfo  {
 
 	/**
-	 * Alias: finfo_open
+	 * Alias of finfo_open
 	 * @link http://www.php.net/manual/en/finfo.construct.php
-	 * @param int $flags [optional]
-	 * @param string|null $magic_database [optional]
+	 * @param int $flags [optional] 
+	 * @param string|null $magic_database [optional] 
+	 * @return int 
 	 */
-	public function __construct (int $flags = 0, string|null $magic_database = null) {}
+	public function __construct (int $flags = FILEINFO_NONE, ?string $magic_database = null): int {}
 
 	/**
-	 * Alias: finfo_file()
+	 * Alias of finfo_file()
 	 * @link http://www.php.net/manual/en/finfo.file.php
 	 * @param string $filename 
 	 * @param int $flags [optional] 
-	 * @param mixed $context [optional] 
-	 * @return mixed 
+	 * @param resource|null $context [optional] 
+	 * @return string|bool 
 	 */
-	public function file (string $filename, int $flags = null, $context = null) {}
+	public function file (string $filename, int $flags = FILEINFO_NONE, ?resource $context = null): string|bool {}
 
 	/**
-	 * Alias: finfo_buffer()
+	 * Alias of finfo_buffer()
 	 * @link http://www.php.net/manual/en/finfo.buffer.php
 	 * @param string $string 
 	 * @param int $flags [optional] 
-	 * @param mixed $context [optional] 
-	 * @return mixed 
+	 * @param resource|null $context [optional] 
+	 * @return string|bool 
 	 */
-	public function buffer (string $string, int $flags = null, $context = null) {}
+	public function buffer (string $string, int $flags = FILEINFO_NONE, ?resource $context = null): string|bool {}
 
 	/**
-	 * Alias: finfo_set_flags()
+	 * Alias of finfo_set_flags()
 	 * @link http://www.php.net/manual/en/finfo.set-flags.php
 	 * @param int $flags 
 	 * @return bool 
 	 */
-	public function set_flags (int $flags) {}
+	public function set_flags (int $flags): bool {}
 
 }
 
 /**
  * Create a new finfo instance
  * @link http://www.php.net/manual/en/function.finfo-open.php
- * @param int $flags [optional] One or disjunction of more Fileinfo
- * constants.
- * @param mixed $magic_database [optional] <p>
- * Name of a magic database file, usually something like
- * /path/to/magic.mime. If not specified, the
- * MAGIC environment variable is used. If the
- * environment variable isn't set, then PHP's bundled magic database will
- * be used.
- * </p>
- * <p>
- * Passing null or an empty string will be equivalent to the default
- * value.
- * </p>
- * @return mixed (Procedural style only)
+ * @param int $flags [optional] 
+ * @param string|null $magic_database [optional] 
+ * @return finfo|bool (Procedural style only)
  * Returns an finfo instance on success, or false on failure.
  */
-function finfo_open (int $flags = null, $magic_database = null) {}
+function finfo_open (int $flags = FILEINFO_NONE, ?string $magic_database = null): finfo|bool {}
 
 /**
  * Close finfo instance
  * @link http://www.php.net/manual/en/function.finfo-close.php
- * @param finfo $finfo An finfo instance, returned by finfo_open.
- * @return bool true on success or false on failure
+ * @param finfo $finfo 
+ * @return bool Returns true on success or false on failure.
  */
 function finfo_close (finfo $finfo): bool {}
 
 /**
  * Set libmagic configuration options
  * @link http://www.php.net/manual/en/function.finfo-set-flags.php
- * @param finfo $finfo An finfo instance, returned by finfo_open.
- * @param int $flags One or disjunction of more Fileinfo
- * constants.
- * @return bool true on success or false on failure
+ * @param finfo $finfo 
+ * @param int $flags 
+ * @return bool Returns true on success or false on failure.
  */
 function finfo_set_flags (finfo $finfo, int $flags): bool {}
 
 /**
  * Return information about a file
  * @link http://www.php.net/manual/en/function.finfo-file.php
- * @param finfo $finfo An finfo instance, returned by finfo_open.
- * @param string $filename Name of a file to be checked.
- * @param int $flags [optional] One or disjunction of more Fileinfo
- * constants.
- * @param mixed $context [optional] For a description of contexts, refer to .
- * @return mixed a textual description of the contents of the
+ * @param finfo $finfo 
+ * @param string $filename 
+ * @param int $flags [optional] 
+ * @param resource|null $context [optional] 
+ * @return string|bool Returns a textual description of the contents of the
  * filename argument, or false if an error occurred.
  */
-function finfo_file (finfo $finfo, string $filename, int $flags = null, $context = null): string|false {}
+function finfo_file (finfo $finfo, string $filename, int $flags = FILEINFO_NONE, ?resource $context = null): string|bool {}
 
 /**
  * Return information about a string buffer
  * @link http://www.php.net/manual/en/function.finfo-buffer.php
- * @param finfo $finfo An finfo instance, returned by finfo_open.
- * @param string $string Content of a file to be checked.
- * @param int $flags [optional] One or disjunction of more Fileinfo
- * constants.
- * @param mixed $context [optional] 
- * @return mixed a textual description of the string
+ * @param finfo $finfo 
+ * @param string $string 
+ * @param int $flags [optional] 
+ * @param resource|null $context [optional] 
+ * @return string|bool Returns a textual description of the string
  * argument, or false if an error occurred.
  */
-function finfo_buffer (finfo $finfo, string $string, int $flags = null, $context = null): string|false {}
+function finfo_buffer (finfo $finfo, string $string, int $flags = FILEINFO_NONE, ?resource $context = null): string|bool {}
 
 /**
  * Detect MIME Content-type for a file
  * @link http://www.php.net/manual/en/function.mime-content-type.php
- * @param mixed $filename Path to the tested file.
- * @return mixed the content type in MIME format, like 
+ * @param resource|string $filename 
+ * @return string|bool Returns the content type in MIME format, like 
  * text/plain or application/octet-stream,
  * or false on failure.
  */
-function mime_content_type ($filename): string|false {}
+function mime_content_type (resource|string $filename): string|bool {}
 
 
 /**
  * No special handling.
  * @link http://www.php.net/manual/en/fileinfo.constants.php
+ * @var int
  */
 define ('FILEINFO_NONE', 0);
 
 /**
  * Follow symlinks.
  * @link http://www.php.net/manual/en/fileinfo.constants.php
+ * @var int
  */
 define ('FILEINFO_SYMLINK', 2);
 
 /**
  * Return the mime type and mime encoding as defined by RFC 2045.
  * @link http://www.php.net/manual/en/fileinfo.constants.php
+ * @var int
  */
 define ('FILEINFO_MIME', 1040);
 
 /**
  * Return the mime type.
  * @link http://www.php.net/manual/en/fileinfo.constants.php
+ * @var int
  */
 define ('FILEINFO_MIME_TYPE', 16);
 
 /**
  * Return the mime encoding of the file.
  * @link http://www.php.net/manual/en/fileinfo.constants.php
+ * @var int
  */
 define ('FILEINFO_MIME_ENCODING', 1024);
 
 /**
  * Look at the contents of blocks or character special devices.
  * @link http://www.php.net/manual/en/fileinfo.constants.php
+ * @var int
  */
 define ('FILEINFO_DEVICES', 8);
 
 /**
  * Return all matches, not just the first.
  * @link http://www.php.net/manual/en/fileinfo.constants.php
+ * @var int
  */
 define ('FILEINFO_CONTINUE', 32);
 
 /**
  * If possible preserve the original access time.
  * @link http://www.php.net/manual/en/fileinfo.constants.php
+ * @var int
  */
 define ('FILEINFO_PRESERVE_ATIME', 128);
 
@@ -175,6 +170,7 @@ define ('FILEINFO_PRESERVE_ATIME', 128);
  * Don't translate unprintable characters to a \ooo octal
  * representation.
  * @link http://www.php.net/manual/en/fileinfo.constants.php
+ * @var int
  */
 define ('FILEINFO_RAW', 256);
 
@@ -187,6 +183,7 @@ define ('FILEINFO_RAW', 256);
  * magic.mime database, then return value is "???".
  * Available since PHP 7.2.0.
  * @link http://www.php.net/manual/en/fileinfo.constants.php
+ * @var int
  */
 define ('FILEINFO_EXTENSION', 16777216);
 
