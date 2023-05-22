@@ -21,6 +21,7 @@ function textdomain (?string $domain): string {}
 function gettext (string $message): string {}
 
 /**
+ * {@inheritdoc}
  * @param string $message
  */
 function _ (string $message): string {}

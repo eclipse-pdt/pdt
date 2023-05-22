@@ -52,7 +52,7 @@ function openssl_x509_export (OpenSSLCertificate|string $certificate, string &$o
  * @return string|false Returns a string containing the calculated certificate fingerprint as lowercase hexits unless binary is set to true in which case the raw binary representation of the message digest is returned.
  * <p>Returns false on failure.</p>
  */
-function openssl_x509_fingerprint (OpenSSLCertificate|string $certificate, string $digest_algo = "sha1", bool $binary = false): string|false {}
+function openssl_x509_fingerprint (OpenSSLCertificate|string $certificate, string $digest_algo = '"sha1"', bool $binary = false): string|false {}
 
 /**
  * Checks if a private key corresponds to a certificate
@@ -94,7 +94,7 @@ function openssl_x509_parse (OpenSSLCertificate|string $certificate, bool $short
  * @return bool|int Returns true if the certificate can be used for the intended purpose,
  * false if it cannot, or -1 on error.
  */
-function openssl_x509_checkpurpose (OpenSSLCertificate|string $certificate, int $purpose, array $ca_info = [], ?string $untrusted_certificates_file = null): bool|int {}
+function openssl_x509_checkpurpose (OpenSSLCertificate|string $certificate, int $purpose, array $ca_info = '[]', ?string $untrusted_certificates_file = null): bool|int {}
 
 /**
  * Parse an X.509 certificate and return an object for
@@ -124,7 +124,7 @@ function openssl_x509_free (OpenSSLCertificate $certificate): void {}
  * @param array $options [optional] 
  * @return bool Returns true on success or false on failure.
  */
-function openssl_pkcs12_export_to_file (OpenSSLCertificate|string $certificate, string $output_filename, OpenSSLAsymmetricKey|OpenSSLCertificate|array|string $private_key, string $passphrase, array $options = []): bool {}
+function openssl_pkcs12_export_to_file (OpenSSLCertificate|string $certificate, string $output_filename, OpenSSLAsymmetricKey|OpenSSLCertificate|array|string $private_key, string $passphrase, array $options = '[]'): bool {}
 
 /**
  * Exports a PKCS#12 Compatible Certificate Store File to variable
@@ -136,7 +136,7 @@ function openssl_pkcs12_export_to_file (OpenSSLCertificate|string $certificate, 
  * @param array $options [optional] 
  * @return bool Returns true on success or false on failure.
  */
-function openssl_pkcs12_export (OpenSSLCertificate|string $certificate, string &$output, OpenSSLAsymmetricKey|OpenSSLCertificate|array|string $private_key, string $passphrase, array $options = []): bool {}
+function openssl_pkcs12_export (OpenSSLCertificate|string $certificate, string &$output, OpenSSLAsymmetricKey|OpenSSLCertificate|array|string $private_key, string $passphrase, array $options = '[]'): bool {}
 
 /**
  * Parse a PKCS#12 Certificate Store into an array
@@ -321,7 +321,7 @@ function openssl_pkey_get_details (OpenSSLAsymmetricKey $key): array|false {}
  * @param string $digest_algo [optional] Optional hash or digest algorithm from openssl_get_md_methods. Defaults to SHA-1.
  * @return string|false Returns raw binary string or false on failure.
  */
-function openssl_pbkdf2 (string $password, string $salt, int $key_length, int $iterations, string $digest_algo = "sha1"): string|false {}
+function openssl_pbkdf2 (string $password, string $salt, int $key_length, int $iterations, string $digest_algo = '"sha1"'): string|false {}
 
 /**
  * Verifies the signature of an S/MIME signed message
@@ -337,7 +337,7 @@ function openssl_pbkdf2 (string $password, string $salt, int $key_length, int $i
  * (the message has been tampered with, or the signing certificate is invalid),
  * or -1 on error.
  */
-function openssl_pkcs7_verify (string $input_filename, int $flags, ?string $signers_certificates_filename = null, array $ca_info = [], ?string $untrusted_certificates_filename = null, ?string $content = null, ?string $output_filename = null): bool|int {}
+function openssl_pkcs7_verify (string $input_filename, int $flags, ?string $signers_certificates_filename = null, array $ca_info = '[]', ?string $untrusted_certificates_filename = null, ?string $content = null, ?string $output_filename = null): bool|int {}
 
 /**
  * Encrypt an S/MIME message
@@ -401,7 +401,7 @@ function openssl_pkcs7_read (string $data, array &$certificates): bool {}
  * OPENSSL_ENCODING_DER or OPENSSL_ENCODING_PEM.
  * @return bool Returns true on success or false on failure.
  */
-function openssl_cms_verify (string $input_filename, int $flags = null, ?string $certificates = null, array $ca_info = [], ?string $untrusted_certificates_filename = null, ?string $content = null, ?string $pk7 = null, ?string $sigfile = null, int $encoding = OPENSSL_ENCODING_SMIME): bool {}
+function openssl_cms_verify (string $input_filename, int $flags = null, ?string $certificates = null, array $ca_info = '[]', ?string $untrusted_certificates_filename = null, ?string $content = null, ?string $pk7 = null, ?string $sigfile = null, int $encoding = OPENSSL_ENCODING_SMIME): bool {}
 
 /**
  * Encrypt a CMS message
@@ -611,7 +611,7 @@ function openssl_digest (string $data, string $digest_algo, bool $binary = false
  * @param int $tag_length [optional] 
  * @return string|false Returns the encrypted string on success or false on failure.
  */
-function openssl_encrypt (string $data, string $cipher_algo, string $passphrase, int $options = null, string $iv = "", string &$tag = null, string $aad = "", int $tag_length = 16): string|false {}
+function openssl_encrypt (string $data, string $cipher_algo, string $passphrase, int $options = null, string $iv = '""', string &$tag = null, string $aad = '""', int $tag_length = 16): string|false {}
 
 /**
  * Decrypts data
@@ -625,7 +625,7 @@ function openssl_encrypt (string $data, string $cipher_algo, string $passphrase,
  * @param string $aad [optional] 
  * @return string|false The decrypted string on success or false on failure.
  */
-function openssl_decrypt (string $data, string $cipher_algo, string $passphrase, int $options = null, string $iv = "", ?string $tag = null, string $aad = ""): string|false {}
+function openssl_decrypt (string $data, string $cipher_algo, string $passphrase, int $options = null, string $iv = '""', ?string $tag = null, string $aad = '""'): string|false {}
 
 /**
  * Gets the cipher iv length

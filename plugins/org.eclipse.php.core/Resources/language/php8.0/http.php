@@ -14,22 +14,20 @@ interface Exception  {
 namespace http\Exception {
 
 class RuntimeException extends \RuntimeException implements \Stringable, \Throwable, \http\Exception {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-
 
 	/**
 	 * Construct the exception
 	 * @link http://www.php.net/manual/en/exception.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -73,10 +71,10 @@ class RuntimeException extends \RuntimeException implements \Stringable, \Throwa
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -95,22 +93,20 @@ class RuntimeException extends \RuntimeException implements \Stringable, \Throwa
 }
 
 class UnexpectedValueException extends \UnexpectedValueException implements \Throwable, \Stringable, \http\Exception {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-
 
 	/**
 	 * Construct the exception
 	 * @link http://www.php.net/manual/en/exception.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -154,10 +150,10 @@ class UnexpectedValueException extends \UnexpectedValueException implements \Thr
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -176,22 +172,20 @@ class UnexpectedValueException extends \UnexpectedValueException implements \Thr
 }
 
 class BadMethodCallException extends \BadMethodCallException implements \Stringable, \Throwable, \http\Exception {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-
 
 	/**
 	 * Construct the exception
 	 * @link http://www.php.net/manual/en/exception.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -235,10 +229,10 @@ class BadMethodCallException extends \BadMethodCallException implements \Stringa
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -257,22 +251,20 @@ class BadMethodCallException extends \BadMethodCallException implements \Stringa
 }
 
 class InvalidArgumentException extends \InvalidArgumentException implements \Throwable, \Stringable, \http\Exception {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-
 
 	/**
 	 * Construct the exception
 	 * @link http://www.php.net/manual/en/exception.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -316,10 +308,10 @@ class InvalidArgumentException extends \InvalidArgumentException implements \Thr
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -338,22 +330,20 @@ class InvalidArgumentException extends \InvalidArgumentException implements \Thr
 }
 
 class BadHeaderException extends \DomainException implements \Throwable, \Stringable, \http\Exception {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-
 
 	/**
 	 * Construct the exception
 	 * @link http://www.php.net/manual/en/exception.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -397,10 +387,10 @@ class BadHeaderException extends \DomainException implements \Throwable, \String
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -419,22 +409,20 @@ class BadHeaderException extends \DomainException implements \Throwable, \String
 }
 
 class BadUrlException extends \DomainException implements \Throwable, \Stringable, \http\Exception {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-
 
 	/**
 	 * Construct the exception
 	 * @link http://www.php.net/manual/en/exception.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -478,10 +466,10 @@ class BadUrlException extends \DomainException implements \Throwable, \Stringabl
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -500,22 +488,20 @@ class BadUrlException extends \DomainException implements \Throwable, \Stringabl
 }
 
 class BadMessageException extends \DomainException implements \Throwable, \Stringable, \http\Exception {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-
 
 	/**
 	 * Construct the exception
 	 * @link http://www.php.net/manual/en/exception.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -559,10 +545,10 @@ class BadMessageException extends \DomainException implements \Throwable, \Strin
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -581,22 +567,20 @@ class BadMessageException extends \DomainException implements \Throwable, \Strin
 }
 
 class BadConversionException extends \DomainException implements \Throwable, \Stringable, \http\Exception {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-
 
 	/**
 	 * Construct the exception
 	 * @link http://www.php.net/manual/en/exception.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -640,10 +624,10 @@ class BadConversionException extends \DomainException implements \Throwable, \St
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -662,22 +646,20 @@ class BadConversionException extends \DomainException implements \Throwable, \St
 }
 
 class BadQueryStringException extends \DomainException implements \Throwable, \Stringable, \http\Exception {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-
 
 	/**
 	 * Construct the exception
 	 * @link http://www.php.net/manual/en/exception.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -721,10 +703,10 @@ class BadQueryStringException extends \DomainException implements \Throwable, \S
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -755,109 +737,155 @@ class Cookie implements \Stringable {
 
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $cookie_string [optional]
 	 * @param mixed $parser_flags [optional]
 	 * @param mixed $allowed_extras [optional]
 	 */
-	public function __construct ($cookie_string = null, $parser_flags = null, $allowed_extras = null) {}
+	public function __construct ($cookie_string = NULL, $parser_flags = NULL, $allowed_extras = NULL) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getCookies () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $cookies [optional]
 	 */
-	public function setCookies ($cookies = null) {}
+	public function setCookies ($cookies = NULL) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $cookies
 	 */
 	public function addCookies ($cookies = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $name
 	 */
 	public function getCookie ($name = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $cookie_name
 	 * @param mixed $cookie_value [optional]
 	 */
-	public function setCookie ($cookie_name = null, $cookie_value = null) {}
+	public function setCookie ($cookie_name = null, $cookie_value = NULL) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $cookie_name
 	 * @param mixed $cookie_value
 	 */
 	public function addCookie ($cookie_name = null, $cookie_value = null) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getExtras () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $extras [optional]
 	 */
-	public function setExtras ($extras = null) {}
+	public function setExtras ($extras = NULL) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $extras
 	 */
 	public function addExtras ($extras = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $name
 	 */
 	public function getExtra ($name = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $extra_name
 	 * @param mixed $extra_value [optional]
 	 */
-	public function setExtra ($extra_name = null, $extra_value = null) {}
+	public function setExtra ($extra_name = null, $extra_value = NULL) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $extra_name
 	 * @param mixed $extra_value
 	 */
 	public function addExtra ($extra_name = null, $extra_value = null) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getDomain () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $value [optional]
 	 */
-	public function setDomain ($value = null) {}
+	public function setDomain ($value = NULL) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getPath () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $value [optional]
 	 */
-	public function setPath ($value = null) {}
+	public function setPath ($value = NULL) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getExpires () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $value [optional]
 	 */
-	public function setExpires ($value = null) {}
+	public function setExpires ($value = NULL) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getMaxAge () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $value [optional]
 	 */
-	public function setMaxAge ($value = null) {}
+	public function setMaxAge ($value = NULL) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getFlags () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $value [optional]
 	 */
-	public function setFlags ($value = null) {}
+	public function setFlags ($value = NULL) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function toArray () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function toString () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __toString (): string {}
 
 }
@@ -875,19 +903,30 @@ abstract class Stream  {
 
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $flags [optional]
 	 */
-	public function __construct ($flags = null) {}
+	public function __construct ($flags = NULL) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $data
 	 */
 	public function update ($data = null) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function flush () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function done () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function finish () {}
 
 }
@@ -905,25 +944,37 @@ class Dechunk extends \http\Encoding\Stream  {
 
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $data
 	 * @param mixed $decoded_len [optional]
 	 */
-	public static function decode ($data = null, &$decoded_len = null) {}
+	public static function decode ($data = null, &$decoded_len = NULL) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $flags [optional]
 	 */
-	public function __construct ($flags = null) {}
+	public function __construct ($flags = NULL) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $data
 	 */
 	public function update ($data = null) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function flush () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function done () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function finish () {}
 
 }
@@ -946,25 +997,37 @@ class Deflate extends \http\Encoding\Stream  {
 
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $data
 	 * @param mixed $flags [optional]
 	 */
-	public static function encode ($data = null, $flags = null) {}
+	public static function encode ($data = null, $flags = NULL) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $flags [optional]
 	 */
-	public function __construct ($flags = null) {}
+	public function __construct ($flags = NULL) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $data
 	 */
 	public function update ($data = null) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function flush () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function done () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function finish () {}
 
 }
@@ -976,24 +1039,36 @@ class Inflate extends \http\Encoding\Stream  {
 
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $data
 	 */
 	public static function decode ($data = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $flags [optional]
 	 */
-	public function __construct ($flags = null) {}
+	public function __construct ($flags = NULL) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $data
 	 */
 	public function update ($data = null) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function flush () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function done () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function finish () {}
 
 }
@@ -1014,25 +1089,37 @@ class Enbrotli extends \http\Encoding\Stream  {
 
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $data
 	 * @param mixed $flags [optional]
 	 */
-	public static function encode ($data = null, $flags = null) {}
+	public static function encode ($data = null, $flags = NULL) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $flags [optional]
 	 */
-	public function __construct ($flags = null) {}
+	public function __construct ($flags = NULL) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $data
 	 */
 	public function update ($data = null) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function flush () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function done () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function finish () {}
 
 }
@@ -1044,24 +1131,36 @@ class Debrotli extends \http\Encoding\Stream  {
 
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $data
 	 */
 	public static function decode ($data = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $flags [optional]
 	 */
-	public function __construct ($flags = null) {}
+	public function __construct ($flags = NULL) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $data
 	 */
 	public function update ($data = null) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function flush () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function done () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function finish () {}
 
 }
@@ -1079,59 +1178,79 @@ class Header implements \Stringable, \Serializable {
 	const MATCH_FULL = 32;
 	const MATCH_STRICT = 33;
 
+
 	public $name;
+
 	public $value;
 
-
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $name [optional]
 	 * @param mixed $value [optional]
 	 */
-	public function __construct ($name = null, $value = null) {}
+	public function __construct ($name = NULL, $value = NULL) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array $data
 	 */
 	public function __unserialize (array $data): void {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __serialize (): array {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $serialized
 	 */
 	public function unserialize ($serialized = null) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function serialize () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function toString () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __toString (): string {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $value
 	 * @param mixed $flags [optional]
 	 */
-	public function match ($value = null, $flags = null) {}
+	public function match ($value = null, $flags = NULL) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $supported
 	 * @param mixed $result [optional]
 	 */
-	public function negotiate ($supported = null, &$result = null) {}
+	public function negotiate ($supported = null, &$result = NULL) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $param_sep [optional]
 	 * @param mixed $arg_sep [optional]
 	 * @param mixed $val_sep [optional]
 	 * @param mixed $flags [optional]
 	 */
-	public function getParams ($param_sep = null, $arg_sep = null, $val_sep = null, $flags = null) {}
+	public function getParams ($param_sep = NULL, $arg_sep = NULL, $val_sep = NULL, $flags = NULL) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $string
 	 * @param mixed $header_class [optional]
 	 */
-	public static function parse ($string = null, $header_class = null) {}
+	public static function parse ($string = null, $header_class = NULL) {}
 
 }
 
@@ -1152,19 +1271,24 @@ class Parser  {
 	const STATE_DONE = 5;
 
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getState () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $data
 	 * @param mixed $flags
-	 * @param ?array $headers
+	 * @param array|null $headers
 	 */
 	public function parse ($data = null, $flags = null, ?array &$headers = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $stream
 	 * @param mixed $flags
-	 * @param ?array $headers
+	 * @param array|null $headers
 	 */
 	public function stream ($stream = null, $flags = null, ?array &$headers = null) {}
 
@@ -1181,176 +1305,272 @@ class Message implements \Stringable, \Countable, \Serializable, \Iterator, \Tra
 	const TYPE_REQUEST = 1;
 	const TYPE_RESPONSE = 2;
 
+
 	protected $type;
+
 	protected $body;
+
 	protected $requestMethod;
+
 	protected $requestUrl;
+
 	protected $responseStatus;
+
 	protected $responseCode;
+
 	protected $httpVersion;
+
 	protected $headers;
+
 	protected $parentMessage;
 
-
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $message [optional]
 	 * @param mixed $greedy [optional]
 	 */
-	public function __construct ($message = null, $greedy = null) {}
+	public function __construct ($message = NULL, $greedy = NULL) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getBody () {}
 
 	/**
-	 * @param http\Message\Body $body
+	 * {@inheritdoc}
+	 * @param \http\Message\Body $body
 	 */
-	public function setBody (http\Message\Body $body) {}
+	public function setBody (\http\Message\Body $body) {}
 
 	/**
-	 * @param http\Message\Body $body
+	 * {@inheritdoc}
+	 * @param \http\Message\Body $body
 	 */
-	public function addBody (http\Message\Body $body) {}
+	public function addBody (\http\Message\Body $body) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $header
 	 * @param mixed $into_class [optional]
 	 */
-	public function getHeader ($header = null, $into_class = null) {}
+	public function getHeader ($header = null, $into_class = NULL) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $header
 	 * @param mixed $value [optional]
 	 */
-	public function setHeader ($header = null, $value = null) {}
+	public function setHeader ($header = null, $value = NULL) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $header
 	 * @param mixed $value
 	 */
 	public function addHeader ($header = null, $value = null) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getHeaders () {}
 
 	/**
-	 * @param ?array $headers
+	 * {@inheritdoc}
+	 * @param array|null $headers
 	 */
 	public function setHeaders (?array $headers = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array $headers
 	 * @param mixed $append [optional]
 	 */
-	public function addHeaders (array $headers, $append = null) {}
+	public function addHeaders (array $headers, $append = NULL) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getType () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $type
 	 */
 	public function setType ($type = null) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getInfo () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $http_info
 	 */
 	public function setInfo ($http_info = null) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getResponseCode () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $response_code
 	 * @param mixed $strict [optional]
 	 */
-	public function setResponseCode ($response_code = null, $strict = null) {}
+	public function setResponseCode ($response_code = null, $strict = NULL) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getResponseStatus () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $response_status
 	 */
 	public function setResponseStatus ($response_status = null) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getRequestMethod () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $request_method
 	 */
 	public function setRequestMethod ($request_method = null) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getRequestUrl () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $url
 	 */
 	public function setRequestUrl ($url = null) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getHttpVersion () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $http_version
 	 */
 	public function setHttpVersion ($http_version = null) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getParentMessage () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $include_parent [optional]
 	 */
-	public function toString ($include_parent = null) {}
+	public function toString ($include_parent = NULL) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $callback
 	 */
 	public function toCallback ($callback = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $stream
 	 */
 	public function toStream ($stream = null) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function count () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function serialize () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $serialized
 	 */
 	public function unserialize ($serialized = null) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __serialize (): array {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array $data
 	 */
 	public function __unserialize (array $data): void {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function rewind () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function valid () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function current () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function key () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function next () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __toString (): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function detach () {}
 
 	/**
-	 * @param http\Message $message
+	 * {@inheritdoc}
+	 * @param \http\Message $message
 	 * @param mixed $top [optional]
 	 */
-	public function prepend (http\Message $message, $top = null) {}
+	public function prepend (\http\Message $message, $top = NULL) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function reverse () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $boundary [optional]
 	 */
-	public function isMultipart (&$boundary = null) {}
+	public function isMultipart (&$boundary = NULL) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function splitMultipartBody () {}
 
 }
@@ -1379,9 +1599,13 @@ class Parser  {
 	const STATE_DONE = 9;
 
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getState () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $data
 	 * @param mixed $flags
 	 * @param mixed $message
@@ -1389,6 +1613,7 @@ class Parser  {
 	public function parse ($data = null, $flags = null, &$message = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $stream
 	 * @param mixed $flags
 	 * @param mixed $message
@@ -1400,68 +1625,98 @@ class Parser  {
 class Body implements \Stringable, \Serializable {
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $stream [optional]
 	 */
-	public function __construct ($stream = null) {}
+	public function __construct ($stream = NULL) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function serialize () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function toString () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __toString (): string {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $serialized
 	 */
 	public function unserialize ($serialized = null) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __serialize (): array {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array $data
 	 */
 	public function __unserialize (array $data): void {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $stream
 	 * @param mixed $offset [optional]
 	 * @param mixed $maxlen [optional]
 	 */
-	public function toStream ($stream = null, $offset = null, $maxlen = null) {}
+	public function toStream ($stream = null, $offset = NULL, $maxlen = NULL) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $callback
 	 * @param mixed $offset [optional]
 	 * @param mixed $maxlen [optional]
 	 */
-	public function toCallback ($callback = null, $offset = null, $maxlen = null) {}
+	public function toCallback ($callback = null, $offset = NULL, $maxlen = NULL) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getResource () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getBoundary () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $string
 	 */
 	public function append ($string = null) {}
 
 	/**
-	 * @param ?array $fields [optional]
-	 * @param ?array $files [optional]
+	 * {@inheritdoc}
+	 * @param array|null $fields [optional]
+	 * @param array|null $files [optional]
 	 */
-	public function addForm (?array $fields = null, ?array $files = null) {}
+	public function addForm (?array $fields = NULL, ?array $files = NULL) {}
 
 	/**
-	 * @param http\Message $message
+	 * {@inheritdoc}
+	 * @param \http\Message $message
 	 */
-	public function addPart (http\Message $message) {}
+	public function addPart (\http\Message $message) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function etag () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $field [optional]
 	 */
-	public function stat ($field = null) {}
+	public function stat ($field = NULL) {}
 
 }
 
@@ -1479,122 +1734,159 @@ class QueryString implements \Stringable, \Serializable, \ArrayAccess, \Iterator
 	const TYPE_ARRAY = 7;
 	const TYPE_OBJECT = 8;
 
-	private static $instance;
-	private $queryArray;
 
+	static $instance;
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $params [optional]
 	 */
-	final public function __construct ($params = null) {}
+	final public function __construct ($params = NULL) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function toArray () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function toString () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __toString (): string {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $name [optional]
 	 * @param mixed $type [optional]
 	 * @param mixed $defval [optional]
 	 * @param mixed $delete [optional]
 	 */
-	public function get ($name = null, $type = null, $defval = null, $delete = null) {}
+	public function get ($name = NULL, $type = NULL, $defval = NULL, $delete = NULL) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $params
 	 */
 	public function set ($params = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $params [optional]
 	 */
-	public function mod ($params = null) {}
+	public function mod ($params = NULL) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $name
 	 * @param mixed $defval [optional]
 	 * @param mixed $delete [optional]
 	 */
-	public function getBool ($name = null, $defval = null, $delete = null) {}
+	public function getBool ($name = null, $defval = NULL, $delete = NULL) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $name
 	 * @param mixed $defval [optional]
 	 * @param mixed $delete [optional]
 	 */
-	public function getInt ($name = null, $defval = null, $delete = null) {}
+	public function getInt ($name = null, $defval = NULL, $delete = NULL) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $name
 	 * @param mixed $defval [optional]
 	 * @param mixed $delete [optional]
 	 */
-	public function getFloat ($name = null, $defval = null, $delete = null) {}
+	public function getFloat ($name = null, $defval = NULL, $delete = NULL) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $name
 	 * @param mixed $defval [optional]
 	 * @param mixed $delete [optional]
 	 */
-	public function getString ($name = null, $defval = null, $delete = null) {}
+	public function getString ($name = null, $defval = NULL, $delete = NULL) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $name
 	 * @param mixed $defval [optional]
 	 * @param mixed $delete [optional]
 	 */
-	public function getArray ($name = null, $defval = null, $delete = null) {}
+	public function getArray ($name = null, $defval = NULL, $delete = NULL) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $name
 	 * @param mixed $defval [optional]
 	 * @param mixed $delete [optional]
 	 */
-	public function getObject ($name = null, $defval = null, $delete = null) {}
+	public function getObject ($name = null, $defval = NULL, $delete = NULL) {}
 
-	public function getIterator (): Traversable {}
+	/**
+	 * {@inheritdoc}
+	 */
+	public function getIterator (): \Traversable {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public static function getGlobalInstance () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $from_encoding
 	 * @param mixed $to_encoding
 	 */
 	public function xlate ($from_encoding = null, $to_encoding = null) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function serialize () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $serialized
 	 */
 	public function unserialize ($serialized = null) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __serialize (): array {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array $data
 	 */
 	public function __unserialize (array $data): void {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $name
 	 */
 	public function offsetGet ($name = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $name
 	 * @param mixed $value
 	 */
 	public function offsetSet ($name = null, $value = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $name
 	 */
 	public function offsetExists ($name = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $name
 	 */
 	public function offsetUnset ($name = null) {}
@@ -1609,138 +1901,195 @@ class Client implements \SplSubject, \Countable {
 	const DEBUG_BODY = 32;
 	const DEBUG_SSL = 64;
 
-	private $observers;
+
 	protected $options;
+
 	protected $history;
+
 	public $recordHistory;
 
-
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $driver [optional]
 	 * @param mixed $persistent_handle_id [optional]
 	 */
-	public function __construct ($driver = null, $persistent_handle_id = null) {}
+	public function __construct ($driver = NULL, $persistent_handle_id = NULL) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function reset () {}
 
 	/**
-	 * @param http\Client\Request $request
+	 * {@inheritdoc}
+	 * @param \http\Client\Request $request
 	 * @param mixed $callable [optional]
 	 */
-	public function enqueue (http\Client\Request $request, $callable = null) {}
+	public function enqueue (\http\Client\Request $request, $callable = NULL) {}
 
 	/**
-	 * @param http\Client\Request $request
+	 * {@inheritdoc}
+	 * @param \http\Client\Request $request
 	 */
-	public function dequeue (http\Client\Request $request) {}
+	public function dequeue (\http\Client\Request $request) {}
 
 	/**
-	 * @param http\Client\Request $request
+	 * {@inheritdoc}
+	 * @param \http\Client\Request $request
 	 * @param mixed $callable [optional]
 	 */
-	public function requeue (http\Client\Request $request, $callable = null) {}
+	public function requeue (\http\Client\Request $request, $callable = NULL) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function count () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function send () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function once () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $timeout [optional]
 	 */
-	public function wait ($timeout = null) {}
+	public function wait ($timeout = NULL) {}
 
 	/**
-	 * @param ?http\Client\Request $request [optional]
+	 * {@inheritdoc}
+	 * @param \http\Client\Request|null $request [optional]
 	 */
-	public function getResponse (?http\Client\Request $request = null) {}
+	public function getResponse (?\http\Client\Request $request = NULL) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getHistory () {}
 
 	/**
-	 * @param ?array $settings
+	 * {@inheritdoc}
+	 * @param array|null $settings
 	 */
 	public function configure (?array $settings = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $enable [optional]
 	 * @deprecated 
 	 */
-	public function enablePipelining ($enable = null) {}
+	public function enablePipelining ($enable = NULL) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $enable [optional]
 	 * @deprecated 
 	 */
-	public function enableEvents ($enable = null) {}
+	public function enableEvents ($enable = NULL) {}
 
 	/**
-	 * @param ?http\Client\Request $request [optional]
+	 * {@inheritdoc}
+	 * @param \http\Client\Request|null $request [optional]
 	 * @param mixed $progress [optional]
 	 */
-	public function notify (?http\Client\Request $request = null, $progress = null) {}
+	public function notify (?\http\Client\Request $request = NULL, $progress = NULL) {}
 
 	/**
-	 * @param SplObserver $observer
+	 * {@inheritdoc}
+	 * @param \SplObserver $observer
 	 */
-	public function attach (SplObserver $observer) {}
+	public function attach (\SplObserver $observer) {}
 
 	/**
-	 * @param SplObserver $observer
+	 * {@inheritdoc}
+	 * @param \SplObserver $observer
 	 */
-	public function detach (SplObserver $observer) {}
+	public function detach (\SplObserver $observer) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getObservers () {}
 
 	/**
-	 * @param http\Client\Request $request
+	 * {@inheritdoc}
+	 * @param \http\Client\Request $request
 	 */
-	public function getProgressInfo (http\Client\Request $request) {}
+	public function getProgressInfo (\http\Client\Request $request) {}
 
 	/**
-	 * @param http\Client\Request $request
+	 * {@inheritdoc}
+	 * @param \http\Client\Request $request
 	 */
-	public function getTransferInfo (http\Client\Request $request) {}
+	public function getTransferInfo (\http\Client\Request $request) {}
 
 	/**
-	 * @param ?array $options [optional]
+	 * {@inheritdoc}
+	 * @param array|null $options [optional]
 	 */
-	public function setOptions (?array $options = null) {}
+	public function setOptions (?array $options = NULL) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getOptions () {}
 
 	/**
-	 * @param ?array $ssl_option [optional]
+	 * {@inheritdoc}
+	 * @param array|null $ssl_option [optional]
 	 */
-	public function setSslOptions (?array $ssl_option = null) {}
+	public function setSslOptions (?array $ssl_option = NULL) {}
 
 	/**
-	 * @param ?array $ssl_options [optional]
+	 * {@inheritdoc}
+	 * @param array|null $ssl_options [optional]
 	 */
-	public function addSslOptions (?array $ssl_options = null) {}
+	public function addSslOptions (?array $ssl_options = NULL) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getSslOptions () {}
 
 	/**
-	 * @param ?array $cookies [optional]
+	 * {@inheritdoc}
+	 * @param array|null $cookies [optional]
 	 */
-	public function setCookies (?array $cookies = null) {}
+	public function setCookies (?array $cookies = NULL) {}
 
 	/**
-	 * @param ?array $cookies [optional]
+	 * {@inheritdoc}
+	 * @param array|null $cookies [optional]
 	 */
-	public function addCookies (?array $cookies = null) {}
+	public function addCookies (?array $cookies = NULL) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getCookies () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public static function getAvailableDrivers () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getAvailableOptions () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getAvailableConfiguration () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $callback
 	 */
 	public function setDebug ($callback = null) {}
@@ -1758,217 +2107,314 @@ class Request extends \http\Message implements \Traversable, \Iterator, \Seriali
 	const TYPE_REQUEST = 1;
 	const TYPE_RESPONSE = 2;
 
-	protected $type;
-	protected $body;
-	protected $requestMethod;
-	protected $requestUrl;
-	protected $responseStatus;
-	protected $responseCode;
-	protected $httpVersion;
-	protected $headers;
-	protected $parentMessage;
+
 	protected $options;
 
-
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $method [optional]
 	 * @param mixed $url [optional]
-	 * @param ?array $headers [optional]
-	 * @param ?http\Message\Body $body [optional]
+	 * @param array|null $headers [optional]
+	 * @param \http\Message\Body|null $body [optional]
 	 */
-	public function __construct ($method = null, $url = null, ?array $headers = null, ?http\Message\Body $body = null) {}
+	public function __construct ($method = NULL, $url = NULL, ?array $headers = NULL, ?\http\Message\Body $body = NULL) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $content_type
 	 */
 	public function setContentType ($content_type = null) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getContentType () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $query_data [optional]
 	 */
-	public function setQuery ($query_data = null) {}
+	public function setQuery ($query_data = NULL) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getQuery () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $query_data
 	 */
 	public function addQuery ($query_data = null) {}
 
 	/**
-	 * @param ?array $options [optional]
+	 * {@inheritdoc}
+	 * @param array|null $options [optional]
 	 */
-	public function setOptions (?array $options = null) {}
+	public function setOptions (?array $options = NULL) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getOptions () {}
 
 	/**
-	 * @param ?array $ssl_options [optional]
+	 * {@inheritdoc}
+	 * @param array|null $ssl_options [optional]
 	 */
-	public function setSslOptions (?array $ssl_options = null) {}
+	public function setSslOptions (?array $ssl_options = NULL) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getSslOptions () {}
 
 	/**
-	 * @param ?array $ssl_options [optional]
+	 * {@inheritdoc}
+	 * @param array|null $ssl_options [optional]
 	 */
-	public function addSslOptions (?array $ssl_options = null) {}
+	public function addSslOptions (?array $ssl_options = NULL) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getBody () {}
 
 	/**
-	 * @param http\Message\Body $body
+	 * {@inheritdoc}
+	 * @param \http\Message\Body $body
 	 */
-	public function setBody (http\Message\Body $body) {}
+	public function setBody (\http\Message\Body $body) {}
 
 	/**
-	 * @param http\Message\Body $body
+	 * {@inheritdoc}
+	 * @param \http\Message\Body $body
 	 */
-	public function addBody (http\Message\Body $body) {}
+	public function addBody (\http\Message\Body $body) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $header
 	 * @param mixed $into_class [optional]
 	 */
-	public function getHeader ($header = null, $into_class = null) {}
+	public function getHeader ($header = null, $into_class = NULL) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $header
 	 * @param mixed $value [optional]
 	 */
-	public function setHeader ($header = null, $value = null) {}
+	public function setHeader ($header = null, $value = NULL) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $header
 	 * @param mixed $value
 	 */
 	public function addHeader ($header = null, $value = null) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getHeaders () {}
 
 	/**
-	 * @param ?array $headers
+	 * {@inheritdoc}
+	 * @param array|null $headers
 	 */
 	public function setHeaders (?array $headers = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array $headers
 	 * @param mixed $append [optional]
 	 */
-	public function addHeaders (array $headers, $append = null) {}
+	public function addHeaders (array $headers, $append = NULL) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getType () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $type
 	 */
 	public function setType ($type = null) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getInfo () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $http_info
 	 */
 	public function setInfo ($http_info = null) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getResponseCode () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $response_code
 	 * @param mixed $strict [optional]
 	 */
-	public function setResponseCode ($response_code = null, $strict = null) {}
+	public function setResponseCode ($response_code = null, $strict = NULL) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getResponseStatus () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $response_status
 	 */
 	public function setResponseStatus ($response_status = null) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getRequestMethod () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $request_method
 	 */
 	public function setRequestMethod ($request_method = null) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getRequestUrl () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $url
 	 */
 	public function setRequestUrl ($url = null) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getHttpVersion () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $http_version
 	 */
 	public function setHttpVersion ($http_version = null) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getParentMessage () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $include_parent [optional]
 	 */
-	public function toString ($include_parent = null) {}
+	public function toString ($include_parent = NULL) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $callback
 	 */
 	public function toCallback ($callback = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $stream
 	 */
 	public function toStream ($stream = null) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function count () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function serialize () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $serialized
 	 */
 	public function unserialize ($serialized = null) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __serialize (): array {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array $data
 	 */
 	public function __unserialize (array $data): void {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function rewind () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function valid () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function current () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function key () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function next () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __toString (): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function detach () {}
 
 	/**
-	 * @param http\Message $message
+	 * {@inheritdoc}
+	 * @param \http\Message $message
 	 * @param mixed $top [optional]
 	 */
-	public function prepend (http\Message $message, $top = null) {}
+	public function prepend (\http\Message $message, $top = NULL) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function reverse () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $boundary [optional]
 	 */
-	public function isMultipart (&$boundary = null) {}
+	public function isMultipart (&$boundary = NULL) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function splitMultipartBody () {}
 
 }
@@ -1978,188 +2424,269 @@ class Response extends \http\Message implements \Traversable, \Iterator, \Serial
 	const TYPE_REQUEST = 1;
 	const TYPE_RESPONSE = 2;
 
-	protected $type;
-	protected $body;
-	protected $requestMethod;
-	protected $requestUrl;
-	protected $responseStatus;
-	protected $responseCode;
-	protected $httpVersion;
-	protected $headers;
-	protected $parentMessage;
+
 	protected $transferInfo;
 
-
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $flags [optional]
 	 * @param mixed $allowed_extras [optional]
 	 */
-	public function getCookies ($flags = null, $allowed_extras = null) {}
+	public function getCookies ($flags = NULL, $allowed_extras = NULL) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $element [optional]
 	 */
-	public function getTransferInfo ($element = null) {}
+	public function getTransferInfo ($element = NULL) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $message [optional]
 	 * @param mixed $greedy [optional]
 	 */
-	public function __construct ($message = null, $greedy = null) {}
+	public function __construct ($message = NULL, $greedy = NULL) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getBody () {}
 
 	/**
-	 * @param http\Message\Body $body
+	 * {@inheritdoc}
+	 * @param \http\Message\Body $body
 	 */
-	public function setBody (http\Message\Body $body) {}
+	public function setBody (\http\Message\Body $body) {}
 
 	/**
-	 * @param http\Message\Body $body
+	 * {@inheritdoc}
+	 * @param \http\Message\Body $body
 	 */
-	public function addBody (http\Message\Body $body) {}
+	public function addBody (\http\Message\Body $body) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $header
 	 * @param mixed $into_class [optional]
 	 */
-	public function getHeader ($header = null, $into_class = null) {}
+	public function getHeader ($header = null, $into_class = NULL) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $header
 	 * @param mixed $value [optional]
 	 */
-	public function setHeader ($header = null, $value = null) {}
+	public function setHeader ($header = null, $value = NULL) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $header
 	 * @param mixed $value
 	 */
 	public function addHeader ($header = null, $value = null) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getHeaders () {}
 
 	/**
-	 * @param ?array $headers
+	 * {@inheritdoc}
+	 * @param array|null $headers
 	 */
 	public function setHeaders (?array $headers = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array $headers
 	 * @param mixed $append [optional]
 	 */
-	public function addHeaders (array $headers, $append = null) {}
+	public function addHeaders (array $headers, $append = NULL) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getType () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $type
 	 */
 	public function setType ($type = null) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getInfo () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $http_info
 	 */
 	public function setInfo ($http_info = null) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getResponseCode () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $response_code
 	 * @param mixed $strict [optional]
 	 */
-	public function setResponseCode ($response_code = null, $strict = null) {}
+	public function setResponseCode ($response_code = null, $strict = NULL) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getResponseStatus () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $response_status
 	 */
 	public function setResponseStatus ($response_status = null) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getRequestMethod () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $request_method
 	 */
 	public function setRequestMethod ($request_method = null) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getRequestUrl () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $url
 	 */
 	public function setRequestUrl ($url = null) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getHttpVersion () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $http_version
 	 */
 	public function setHttpVersion ($http_version = null) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getParentMessage () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $include_parent [optional]
 	 */
-	public function toString ($include_parent = null) {}
+	public function toString ($include_parent = NULL) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $callback
 	 */
 	public function toCallback ($callback = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $stream
 	 */
 	public function toStream ($stream = null) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function count () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function serialize () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $serialized
 	 */
 	public function unserialize ($serialized = null) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __serialize (): array {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array $data
 	 */
 	public function __unserialize (array $data): void {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function rewind () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function valid () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function current () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function key () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function next () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __toString (): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function detach () {}
 
 	/**
-	 * @param http\Message $message
+	 * {@inheritdoc}
+	 * @param \http\Message $message
 	 * @param mixed $top [optional]
 	 */
-	public function prepend (http\Message $message, $top = null) {}
+	public function prepend (\http\Message $message, $top = NULL) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function reverse () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $boundary [optional]
 	 */
-	public function isMultipart (&$boundary = null) {}
+	public function isMultipart (&$boundary = NULL) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function splitMultipartBody () {}
 
 }
@@ -2179,29 +2706,39 @@ interface User  {
 
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $run
 	 */
-	abstract public function init ($run = null)
+	abstract public function init ($run = null);
 
 	/**
+	 * {@inheritdoc}
 	 * @param int $timeout_ms
 	 */
-	abstract public function timer (int $timeout_ms)
+	abstract public function timer (int $timeout_ms);
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $socket
 	 * @param int $action
 	 */
-	abstract public function socket ($socket = null, int $action)
-
-	abstract public function once ()
+	abstract public function socket ($socket = null, int $action);
 
 	/**
+	 * {@inheritdoc}
+	 */
+	abstract public function once ();
+
+	/**
+	 * {@inheritdoc}
 	 * @param int $timeout_ms [optional]
 	 */
-	abstract public function wait (int $timeout_ms = 'null')
+	abstract public function wait (int $timeout_ms = NULL);
 
-	abstract public function send ()
+	/**
+	 * {@inheritdoc}
+	 */
+	abstract public function send ();
 
 }
 
@@ -2235,33 +2772,51 @@ class Url implements \Stringable {
 	const SILENT_ERRORS = 536870912;
 	const STDFLAGS = 3350531;
 
+
 	public $scheme;
+
 	public $user;
+
 	public $pass;
+
 	public $host;
+
 	public $port;
+
 	public $path;
+
 	public $query;
+
 	public $fragment;
 
-
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $old_url [optional]
 	 * @param mixed $new_url [optional]
 	 * @param mixed $flags [optional]
 	 */
-	public function __construct ($old_url = null, $new_url = null, $flags = null) {}
+	public function __construct ($old_url = NULL, $new_url = NULL, $flags = NULL) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $more_url_parts
 	 * @param mixed $flags [optional]
 	 */
-	public function mod ($more_url_parts = null, $flags = null) {}
+	public function mod ($more_url_parts = null, $flags = NULL) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function toString () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __toString (): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function toArray () {}
 
 }
@@ -2296,33 +2851,35 @@ class Url extends \http\Url implements \Stringable {
 	const SILENT_ERRORS = 536870912;
 	const STDFLAGS = 3350531;
 
-	public $scheme;
-	public $user;
-	public $pass;
-	public $host;
-	public $port;
-	public $path;
-	public $query;
-	public $fragment;
-
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $old_url [optional]
 	 * @param mixed $new_url [optional]
 	 * @param mixed $flags [optional]
 	 */
-	public function __construct ($old_url = null, $new_url = null, $flags = null) {}
+	public function __construct ($old_url = NULL, $new_url = NULL, $flags = NULL) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $more_url_parts
 	 * @param mixed $flags [optional]
 	 */
-	public function mod ($more_url_parts = null, $flags = null) {}
+	public function mod ($more_url_parts = null, $flags = NULL) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function toString () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __toString (): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function toArray () {}
 
 }
@@ -2336,74 +2893,94 @@ namespace http {
 class Env  {
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $header_name [optional]
 	 */
-	public static function getRequestHeader ($header_name = null) {}
+	public static function getRequestHeader ($header_name = NULL) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $body_class_name [optional]
 	 */
-	public static function getRequestBody ($body_class_name = null) {}
+	public static function getRequestBody ($body_class_name = NULL) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $code
 	 */
 	public static function getResponseStatusForCode ($code = null) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public static function getResponseStatusForAllCodes () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $header_name [optional]
 	 */
-	public static function getResponseHeader ($header_name = null) {}
+	public static function getResponseHeader ($header_name = NULL) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public static function getResponseCode () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $header_name
 	 * @param mixed $header_value [optional]
 	 * @param mixed $response_code [optional]
 	 * @param mixed $replace_header [optional]
 	 */
-	public static function setResponseHeader ($header_name = null, $header_value = null, $response_code = null, $replace_header = null) {}
+	public static function setResponseHeader ($header_name = null, $header_value = NULL, $response_code = NULL, $replace_header = NULL) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $code
 	 */
 	public static function setResponseCode ($code = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $supported
 	 * @param mixed $result_array [optional]
 	 */
-	public static function negotiateLanguage ($supported = null, &$result_array = null) {}
+	public static function negotiateLanguage ($supported = null, &$result_array = NULL) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $supported
 	 * @param mixed $result_array [optional]
 	 */
-	public static function negotiateContentType ($supported = null, &$result_array = null) {}
+	public static function negotiateContentType ($supported = null, &$result_array = NULL) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $supported
 	 * @param mixed $result_array [optional]
 	 */
-	public static function negotiateEncoding ($supported = null, &$result_array = null) {}
+	public static function negotiateEncoding ($supported = null, &$result_array = NULL) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $supported
 	 * @param mixed $result_array [optional]
 	 */
-	public static function negotiateCharset ($supported = null, &$result_array = null) {}
+	public static function negotiateCharset ($supported = null, &$result_array = NULL) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $params
 	 * @param mixed $supported
 	 * @param mixed $primary_type_separator [optional]
 	 * @param mixed $result_array [optional]
 	 */
-	public static function negotiate ($params = null, $supported = null, $primary_type_separator = null, &$result_array = null) {}
+	public static function negotiate ($params = null, $supported = null, $primary_type_separator = NULL, &$result_array = NULL) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public static function reset () {}
 
 }
@@ -2419,202 +2996,292 @@ class Request extends \http\Message implements \Traversable, \Iterator, \Seriali
 	const TYPE_REQUEST = 1;
 	const TYPE_RESPONSE = 2;
 
-	protected $type;
-	protected $body;
-	protected $requestMethod;
-	protected $requestUrl;
-	protected $responseStatus;
-	protected $responseCode;
-	protected $httpVersion;
-	protected $headers;
-	protected $parentMessage;
+
 	protected $query;
+
 	protected $form;
+
 	protected $cookie;
+
 	protected $files;
 
-
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __construct () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $name [optional]
 	 * @param mixed $type [optional]
 	 * @param mixed $defval [optional]
 	 * @param mixed $delete [optional]
 	 */
-	public function getForm ($name = null, $type = null, $defval = null, $delete = null) {}
+	public function getForm ($name = NULL, $type = NULL, $defval = NULL, $delete = NULL) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $name [optional]
 	 * @param mixed $type [optional]
 	 * @param mixed $defval [optional]
 	 * @param mixed $delete [optional]
 	 */
-	public function getQuery ($name = null, $type = null, $defval = null, $delete = null) {}
+	public function getQuery ($name = NULL, $type = NULL, $defval = NULL, $delete = NULL) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $name [optional]
 	 * @param mixed $type [optional]
 	 * @param mixed $defval [optional]
 	 * @param mixed $delete [optional]
 	 */
-	public function getCookie ($name = null, $type = null, $defval = null, $delete = null) {}
+	public function getCookie ($name = NULL, $type = NULL, $defval = NULL, $delete = NULL) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getFiles () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getBody () {}
 
 	/**
-	 * @param http\Message\Body $body
+	 * {@inheritdoc}
+	 * @param \http\Message\Body $body
 	 */
-	public function setBody (http\Message\Body $body) {}
+	public function setBody (\http\Message\Body $body) {}
 
 	/**
-	 * @param http\Message\Body $body
+	 * {@inheritdoc}
+	 * @param \http\Message\Body $body
 	 */
-	public function addBody (http\Message\Body $body) {}
+	public function addBody (\http\Message\Body $body) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $header
 	 * @param mixed $into_class [optional]
 	 */
-	public function getHeader ($header = null, $into_class = null) {}
+	public function getHeader ($header = null, $into_class = NULL) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $header
 	 * @param mixed $value [optional]
 	 */
-	public function setHeader ($header = null, $value = null) {}
+	public function setHeader ($header = null, $value = NULL) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $header
 	 * @param mixed $value
 	 */
 	public function addHeader ($header = null, $value = null) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getHeaders () {}
 
 	/**
-	 * @param ?array $headers
+	 * {@inheritdoc}
+	 * @param array|null $headers
 	 */
 	public function setHeaders (?array $headers = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array $headers
 	 * @param mixed $append [optional]
 	 */
-	public function addHeaders (array $headers, $append = null) {}
+	public function addHeaders (array $headers, $append = NULL) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getType () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $type
 	 */
 	public function setType ($type = null) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getInfo () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $http_info
 	 */
 	public function setInfo ($http_info = null) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getResponseCode () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $response_code
 	 * @param mixed $strict [optional]
 	 */
-	public function setResponseCode ($response_code = null, $strict = null) {}
+	public function setResponseCode ($response_code = null, $strict = NULL) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getResponseStatus () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $response_status
 	 */
 	public function setResponseStatus ($response_status = null) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getRequestMethod () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $request_method
 	 */
 	public function setRequestMethod ($request_method = null) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getRequestUrl () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $url
 	 */
 	public function setRequestUrl ($url = null) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getHttpVersion () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $http_version
 	 */
 	public function setHttpVersion ($http_version = null) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getParentMessage () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $include_parent [optional]
 	 */
-	public function toString ($include_parent = null) {}
+	public function toString ($include_parent = NULL) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $callback
 	 */
 	public function toCallback ($callback = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $stream
 	 */
 	public function toStream ($stream = null) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function count () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function serialize () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $serialized
 	 */
 	public function unserialize ($serialized = null) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __serialize (): array {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array $data
 	 */
 	public function __unserialize (array $data): void {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function rewind () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function valid () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function current () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function key () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function next () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __toString (): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function detach () {}
 
 	/**
-	 * @param http\Message $message
+	 * {@inheritdoc}
+	 * @param \http\Message $message
 	 * @param mixed $top [optional]
 	 */
-	public function prepend (http\Message $message, $top = null) {}
+	public function prepend (\http\Message $message, $top = NULL) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function reverse () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $boundary [optional]
 	 */
-	public function isMultipart (&$boundary = null) {}
+	public function isMultipart (&$boundary = NULL) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function splitMultipartBody () {}
 
 }
@@ -2629,249 +3296,352 @@ class Response extends \http\Message implements \Traversable, \Iterator, \Serial
 	const CACHE_HIT = 1;
 	const CACHE_MISS = 2;
 
-	protected $type;
-	protected $body;
-	protected $requestMethod;
-	protected $requestUrl;
-	protected $responseStatus;
-	protected $responseCode;
-	protected $httpVersion;
-	protected $headers;
-	protected $parentMessage;
+
 	protected $request;
+
 	protected $cookies;
+
 	protected $contentType;
+
 	protected $contentDisposition;
+
 	protected $contentEncoding;
+
 	protected $cacheControl;
+
 	protected $etag;
+
 	protected $lastModified;
+
 	protected $throttleDelay;
+
 	protected $throttleChunk;
 
-
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __construct () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $ob_string
 	 * @param mixed $ob_flags [optional]
 	 */
-	public function __invoke ($ob_string = null, $ob_flags = null) {}
+	public function __invoke ($ob_string = null, $ob_flags = NULL) {}
 
 	/**
-	 * @param ?http\Message $env_request
+	 * {@inheritdoc}
+	 * @param \http\Message|null $env_request
 	 */
-	public function setEnvRequest (?http\Message $env_request = null) {}
+	public function setEnvRequest (?\http\Message $env_request = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $cookie
 	 */
 	public function setCookie ($cookie = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $content_type
 	 */
 	public function setContentType ($content_type = null) {}
 
 	/**
-	 * @param ?array $disposition_params
+	 * {@inheritdoc}
+	 * @param array|null $disposition_params
 	 */
 	public function setContentDisposition (?array $disposition_params = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $content_encoding
 	 */
 	public function setContentEncoding ($content_encoding = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $cache_control
 	 */
 	public function setCacheControl ($cache_control = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $last_modified
 	 */
 	public function setLastModified ($last_modified = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $header_name [optional]
 	 */
-	public function isCachedByLastModified ($header_name = null) {}
+	public function isCachedByLastModified ($header_name = NULL) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $etag
 	 */
 	public function setEtag ($etag = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $header_name [optional]
 	 */
-	public function isCachedByEtag ($header_name = null) {}
+	public function isCachedByEtag ($header_name = NULL) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $chunk_size
 	 * @param mixed $delay [optional]
 	 */
-	public function setThrottleRate ($chunk_size = null, $delay = null) {}
+	public function setThrottleRate ($chunk_size = null, $delay = NULL) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $stream [optional]
 	 */
-	public function send ($stream = null) {}
+	public function send ($stream = NULL) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getBody () {}
 
 	/**
-	 * @param http\Message\Body $body
+	 * {@inheritdoc}
+	 * @param \http\Message\Body $body
 	 */
-	public function setBody (http\Message\Body $body) {}
+	public function setBody (\http\Message\Body $body) {}
 
 	/**
-	 * @param http\Message\Body $body
+	 * {@inheritdoc}
+	 * @param \http\Message\Body $body
 	 */
-	public function addBody (http\Message\Body $body) {}
+	public function addBody (\http\Message\Body $body) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $header
 	 * @param mixed $into_class [optional]
 	 */
-	public function getHeader ($header = null, $into_class = null) {}
+	public function getHeader ($header = null, $into_class = NULL) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $header
 	 * @param mixed $value [optional]
 	 */
-	public function setHeader ($header = null, $value = null) {}
+	public function setHeader ($header = null, $value = NULL) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $header
 	 * @param mixed $value
 	 */
 	public function addHeader ($header = null, $value = null) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getHeaders () {}
 
 	/**
-	 * @param ?array $headers
+	 * {@inheritdoc}
+	 * @param array|null $headers
 	 */
 	public function setHeaders (?array $headers = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array $headers
 	 * @param mixed $append [optional]
 	 */
-	public function addHeaders (array $headers, $append = null) {}
+	public function addHeaders (array $headers, $append = NULL) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getType () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $type
 	 */
 	public function setType ($type = null) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getInfo () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $http_info
 	 */
 	public function setInfo ($http_info = null) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getResponseCode () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $response_code
 	 * @param mixed $strict [optional]
 	 */
-	public function setResponseCode ($response_code = null, $strict = null) {}
+	public function setResponseCode ($response_code = null, $strict = NULL) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getResponseStatus () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $response_status
 	 */
 	public function setResponseStatus ($response_status = null) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getRequestMethod () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $request_method
 	 */
 	public function setRequestMethod ($request_method = null) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getRequestUrl () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $url
 	 */
 	public function setRequestUrl ($url = null) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getHttpVersion () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $http_version
 	 */
 	public function setHttpVersion ($http_version = null) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getParentMessage () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $include_parent [optional]
 	 */
-	public function toString ($include_parent = null) {}
+	public function toString ($include_parent = NULL) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $callback
 	 */
 	public function toCallback ($callback = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $stream
 	 */
 	public function toStream ($stream = null) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function count () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function serialize () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $serialized
 	 */
 	public function unserialize ($serialized = null) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __serialize (): array {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array $data
 	 */
 	public function __unserialize (array $data): void {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function rewind () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function valid () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function current () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function key () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function next () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __toString (): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function detach () {}
 
 	/**
-	 * @param http\Message $message
+	 * {@inheritdoc}
+	 * @param \http\Message $message
 	 * @param mixed $top [optional]
 	 */
-	public function prepend (http\Message $message, $top = null) {}
+	public function prepend (\http\Message $message, $top = NULL) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function reverse () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $boundary [optional]
 	 */
-	public function isMultipart (&$boundary = null) {}
+	public function isMultipart (&$boundary = NULL) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function splitMultipartBody () {}
 
 }
@@ -2896,45 +3666,63 @@ class Params implements \Stringable, \ArrayAccess {
 	const PARSE_DEFAULT = 17;
 	const PARSE_QUERY = 12;
 
+
 	public $params;
+
 	public $param_sep;
+
 	public $arg_sep;
+
 	public $val_sep;
+
 	public $flags;
 
-
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $params [optional]
 	 * @param mixed $param_sep [optional]
 	 * @param mixed $arg_sep [optional]
 	 * @param mixed $val_sep [optional]
 	 * @param mixed $flags [optional]
 	 */
-	final public function __construct ($params = null, $param_sep = null, $arg_sep = null, $val_sep = null, $flags = null) {}
+	final public function __construct ($params = NULL, $param_sep = NULL, $arg_sep = NULL, $val_sep = NULL, $flags = NULL) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function toArray () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function toString () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __toString (): string {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $name
 	 */
 	public function offsetExists ($name = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $name
 	 */
 	public function offsetUnset ($name = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $name
 	 * @param mixed $value
 	 */
 	public function offsetSet ($name = null, $value = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $name
 	 */
 	public function offsetGet ($name = null) {}

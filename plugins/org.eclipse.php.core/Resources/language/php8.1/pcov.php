@@ -4,23 +4,37 @@
 
 namespace pcov {
 
+/**
+ * {@inheritdoc}
+ */
 function start () {}
 
+/**
+ * {@inheritdoc}
+ */
 function stop () {}
 
 /**
+ * {@inheritdoc}
  * @param int $type [optional]
  * @param array $filter [optional]
  */
-function collect (int $type = 'null', array $filter = 'null') {}
+function collect (int $type = NULL, array $filter = NULL) {}
 
 /**
+ * {@inheritdoc}
  * @param bool $files [optional]
  */
-function clear (bool $files = 'null') {}
+function clear (bool $files = NULL) {}
 
+/**
+ * {@inheritdoc}
+ */
 function waiting () {}
 
+/**
+ * {@inheritdoc}
+ */
 function memory () {}
 
 

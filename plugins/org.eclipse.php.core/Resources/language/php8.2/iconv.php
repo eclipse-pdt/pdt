@@ -64,7 +64,7 @@ function iconv_strrpos (string $haystack, string $needle, ?string $encoding = nu
  * @return string|false Returns an encoded MIME field on success,
  * or false if an error occurs during the encoding.
  */
-function iconv_mime_encode (string $field_name, string $field_value, array $options = []): string|false {}
+function iconv_mime_encode (string $field_name, string $field_value, array $options = '[]'): string|false {}
 
 /**
  * Decodes a MIME header field
@@ -125,7 +125,7 @@ function iconv_set_encoding (string $type, string $encoding): bool {}
  * iconv_get_encoding returns an array that
  * stores all these variables.</p>
  */
-function iconv_get_encoding (string $type = "all"): array|string|false {}
+function iconv_get_encoding (string $type = '"all"'): array|string|false {}
 
 define ('ICONV_IMPL', "unknown");
 define ('ICONV_VERSION', "unknown");

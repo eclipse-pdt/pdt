@@ -8,11 +8,6 @@
  * @link http://www.php.net/manual/en/class.pharexception.php
  */
 class PharException extends Exception implements Throwable, Stringable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-
 
 	/**
 	 * Construct the exception
@@ -22,8 +17,11 @@ class PharException extends Exception implements Throwable, Stringable {
 	 * @param Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -132,8 +130,11 @@ class Phar extends RecursiveDirectoryIterator implements RecursiveIterator, Iter
 	 * @param string|null $alias [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $filename, int $flags = FilesystemIterator::SKIP_DOTS | FilesystemIterator::UNIX_PATHS, ?string $alias = null): string {}
+	public function __construct (string $filename, int $flags = 'FilesystemIterator::SKIP_DOTS | FilesystemIterator::UNIX_PATHS', ?string $alias = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __destruct () {}
 
 	/**
@@ -171,7 +172,7 @@ class Phar extends RecursiveDirectoryIterator implements RecursiveIterator, Iter
 	 * mapping internal path of file to the full path of the file on the
 	 * filesystem.
 	 */
-	public function buildFromDirectory (string $directory, string $pattern = ""): array {}
+	public function buildFromDirectory (string $directory, string $pattern = '""'): array {}
 
 	/**
 	 * Construct a phar archive from an iterator
@@ -310,7 +311,7 @@ class Phar extends RecursiveDirectoryIterator implements RecursiveIterator, Iter
 	 * @return mixed Any PHP value that can be serialized and is stored as meta-data for the Phar archive,
 	 * or null if no meta-data is stored.
 	 */
-	public function getMetadata (array $unserializeOptions = []): mixed {}
+	public function getMetadata (array $unserializeOptions = '[]'): mixed {}
 
 	/**
 	 * Return whether phar was modified
@@ -413,7 +414,7 @@ class Phar extends RecursiveDirectoryIterator implements RecursiveIterator, Iter
 	 * @param resource|string $value 
 	 * @return void No return values.
 	 */
-	public function offsetSet (string $localName, resource|string $value): void {}
+	public function offsetSet (string $localName, $value): void {}
 
 	/**
 	 * Remove a file from a phar
@@ -608,7 +609,7 @@ class Phar extends RecursiveDirectoryIterator implements RecursiveIterator, Iter
 	 * @param callable|null $rewrite [optional] 
 	 * @return void No value is returned.
 	 */
-	final public static function webPhar (?string $alias = null, ?string $index = null, ?string $fileNotFoundScript = null, array $mimeTypes = [], ?callable $rewrite = null): void {}
+	final public static function webPhar (?string $alias = null, ?string $index = null, ?string $fileNotFoundScript = null, array $mimeTypes = '[]', ?callable $rewrite = null): void {}
 
 	/**
 	 * Returns whether current entry is a directory and not '.' or '..'
@@ -700,7 +701,7 @@ class Phar extends RecursiveDirectoryIterator implements RecursiveIterator, Iter
 	 * @param string $suffix [optional] 
 	 * @return string The base name of the current DirectoryIterator item.
 	 */
-	public function getBasename (string $suffix = ""): string {}
+	public function getBasename (string $suffix = '""'): string {}
 
 	/**
 	 * Determine if current DirectoryIterator item is '.' or '..'
@@ -885,7 +886,7 @@ class Phar extends RecursiveDirectoryIterator implements RecursiveIterator, Iter
 	 * @param resource|null $context [optional] 
 	 * @return SplFileObject The opened file as an SplFileObject object.
 	 */
-	public function openFile (string $mode = "r", bool $useIncludePath = false, ?resource $context = null): SplFileObject {}
+	public function openFile (string $mode = '"r"', bool $useIncludePath = false, $context = null): SplFileObject {}
 
 	/**
 	 * Sets the class used with SplFileInfo::openFile
@@ -893,7 +894,7 @@ class Phar extends RecursiveDirectoryIterator implements RecursiveIterator, Iter
 	 * @param string $class [optional] 
 	 * @return void No value is returned.
 	 */
-	public function setFileClass (string $class = SplFileObject::class): void {}
+	public function setFileClass (string $class = 'SplFileObject::class'): void {}
 
 	/**
 	 * Sets the class used with SplFileInfo::getFileInfo and SplFileInfo::getPathInfo
@@ -901,10 +902,17 @@ class Phar extends RecursiveDirectoryIterator implements RecursiveIterator, Iter
 	 * @param string $class [optional] 
 	 * @return void No value is returned.
 	 */
-	public function setInfoClass (string $class = SplFileInfo::class): void {}
+	public function setInfoClass (string $class = 'SplFileInfo::class'): void {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __debugInfo () {}
 
+	/**
+	 * {@inheritdoc}
+	 * @deprecated 
+	 */
 	final public function _bad_state_ex () {}
 
 }
@@ -941,8 +949,11 @@ class PharData extends RecursiveDirectoryIterator implements RecursiveIterator, 
 	 * @param int $format [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $filename, int $flags = FilesystemIterator::SKIP_DOTS | FilesystemIterator::UNIX_PATHS, ?string $alias = null, int $format = null): string {}
+	public function __construct (string $filename, int $flags = 'FilesystemIterator::SKIP_DOTS | FilesystemIterator::UNIX_PATHS', ?string $alias = null, int $format = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __destruct () {}
 
 	/**
@@ -980,7 +991,7 @@ class PharData extends RecursiveDirectoryIterator implements RecursiveIterator, 
 	 * mapping internal path of file to the full path of the file on the
 	 * filesystem, or false on failure.
 	 */
-	public function buildFromDirectory (string $directory, string $pattern = ""): array {}
+	public function buildFromDirectory (string $directory, string $pattern = '""'): array {}
 
 	/**
 	 * Construct a tar or zip archive from an iterator
@@ -1060,6 +1071,7 @@ class PharData extends RecursiveDirectoryIterator implements RecursiveIterator, 
 	public function copy (string $from, string $to): bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param int $mode [optional]
 	 */
 	public function count (int $mode = 0) {}
@@ -1092,31 +1104,60 @@ class PharData extends RecursiveDirectoryIterator implements RecursiveIterator, 
 	 */
 	public function extractTo (string $directory, array|string|null $files = null, bool $overwrite = false): bool {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getAlias () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getPath () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array $unserializeOptions [optional]
 	 */
 	public function getMetadata (array $unserializeOptions = array (
 )) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getModified () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getSignature () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getStub () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getVersion () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function hasMetadata () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function isBuffering () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function isCompressed () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param int $format
 	 */
 	public function isFileFormat (int $format) {}
@@ -1129,11 +1170,13 @@ class PharData extends RecursiveDirectoryIterator implements RecursiveIterator, 
 	public function isWritable (): bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $localName
 	 */
 	public function offsetExists ($localName = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $localName
 	 */
 	public function offsetGet ($localName = null) {}
@@ -1145,7 +1188,7 @@ class PharData extends RecursiveDirectoryIterator implements RecursiveIterator, 
 	 * @param resource|string $value 
 	 * @return void No return values.
 	 */
-	public function offsetSet (string $localName, resource|string $value): void {}
+	public function offsetSet (string $localName, $value): void {}
 
 	/**
 	 * Remove a file from a tar/zip archive
@@ -1198,79 +1241,110 @@ class PharData extends RecursiveDirectoryIterator implements RecursiveIterator, 
 	 */
 	public function setStub (string $stub, int $len = -1): bool {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function startBuffering () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function stopBuffering () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	final public static function apiVersion (): string {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param int $compression [optional]
 	 */
 	final public static function canCompress (int $compression = 0): bool {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	final public static function canWrite (): bool {}
 
 	/**
-	 * @param ?string $index [optional]
-	 * @param ?string $webIndex [optional]
+	 * {@inheritdoc}
+	 * @param string|null $index [optional]
+	 * @param string|null $webIndex [optional]
 	 */
-	final public static function createDefaultStub (?string $index = null, ?string $webIndex = null): string {}
+	final public static function createDefaultStub (?string $index = NULL, ?string $webIndex = NULL): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	final public static function getSupportedCompression (): array {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	final public static function getSupportedSignatures (): array {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	final public static function interceptFileFuncs (): void {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param string $filename
 	 * @param bool $executable [optional]
 	 */
 	final public static function isValidPharFilename (string $filename, bool $executable = true): bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param string $filename
-	 * @param ?string $alias [optional]
+	 * @param string|null $alias [optional]
 	 */
-	final public static function loadPhar (string $filename, ?string $alias = null): bool {}
+	final public static function loadPhar (string $filename, ?string $alias = NULL): bool {}
 
 	/**
-	 * @param ?string $alias [optional]
+	 * {@inheritdoc}
+	 * @param string|null $alias [optional]
 	 * @param int $offset [optional]
 	 */
-	final public static function mapPhar (?string $alias = null, int $offset = 0): bool {}
+	final public static function mapPhar (?string $alias = NULL, int $offset = 0): bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param bool $returnPhar [optional]
 	 */
 	final public static function running (bool $returnPhar = true): string {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param string $pharPath
 	 * @param string $externalPath
 	 */
 	final public static function mount (string $pharPath, string $externalPath): void {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array $variables
 	 */
 	final public static function mungServer (array $variables): void {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param string $filename
 	 */
 	final public static function unlinkArchive (string $filename): bool {}
 
 	/**
-	 * @param ?string $alias [optional]
-	 * @param ?string $index [optional]
-	 * @param ?string $fileNotFoundScript [optional]
+	 * {@inheritdoc}
+	 * @param string|null $alias [optional]
+	 * @param string|null $index [optional]
+	 * @param string|null $fileNotFoundScript [optional]
 	 * @param array $mimeTypes [optional]
-	 * @param ?callable $rewrite [optional]
+	 * @param callable|null $rewrite [optional]
 	 */
-	final public static function webPhar (?string $alias = null, ?string $index = null, ?string $fileNotFoundScript = null, array $mimeTypes = array (
-), ?callable $rewrite = null): void {}
+	final public static function webPhar (?string $alias = NULL, ?string $index = NULL, ?string $fileNotFoundScript = NULL, array $mimeTypes = array (
+), ?callable $rewrite = NULL): void {}
 
 	/**
 	 * Returns whether current entry is a directory and not '.' or '..'
@@ -1362,7 +1436,7 @@ class PharData extends RecursiveDirectoryIterator implements RecursiveIterator, 
 	 * @param string $suffix [optional] 
 	 * @return string The base name of the current DirectoryIterator item.
 	 */
-	public function getBasename (string $suffix = ""): string {}
+	public function getBasename (string $suffix = '""'): string {}
 
 	/**
 	 * Determine if current DirectoryIterator item is '.' or '..'
@@ -1547,7 +1621,7 @@ class PharData extends RecursiveDirectoryIterator implements RecursiveIterator, 
 	 * @param resource|null $context [optional] 
 	 * @return SplFileObject The opened file as an SplFileObject object.
 	 */
-	public function openFile (string $mode = "r", bool $useIncludePath = false, ?resource $context = null): SplFileObject {}
+	public function openFile (string $mode = '"r"', bool $useIncludePath = false, $context = null): SplFileObject {}
 
 	/**
 	 * Sets the class used with SplFileInfo::openFile
@@ -1555,7 +1629,7 @@ class PharData extends RecursiveDirectoryIterator implements RecursiveIterator, 
 	 * @param string $class [optional] 
 	 * @return void No value is returned.
 	 */
-	public function setFileClass (string $class = SplFileObject::class): void {}
+	public function setFileClass (string $class = 'SplFileObject::class'): void {}
 
 	/**
 	 * Sets the class used with SplFileInfo::getFileInfo and SplFileInfo::getPathInfo
@@ -1563,10 +1637,17 @@ class PharData extends RecursiveDirectoryIterator implements RecursiveIterator, 
 	 * @param string $class [optional] 
 	 * @return void No value is returned.
 	 */
-	public function setInfoClass (string $class = SplFileInfo::class): void {}
+	public function setInfoClass (string $class = 'SplFileInfo::class'): void {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __debugInfo () {}
 
+	/**
+	 * {@inheritdoc}
+	 * @deprecated 
+	 */
 	final public function _bad_state_ex () {}
 
 }
@@ -1586,6 +1667,9 @@ class PharFileInfo extends SplFileInfo implements Stringable {
 	 */
 	public function __construct (string $filename): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __destruct () {}
 
 	/**
@@ -1651,7 +1735,7 @@ class PharFileInfo extends SplFileInfo implements Stringable {
 	 * @return mixed any PHP variable that can be serialized and is stored as meta-data for the file,
 	 * or null if no meta-data is stored.
 	 */
-	public function getMetadata (array $unserializeOptions = []): mixed {}
+	public function getMetadata (array $unserializeOptions = '[]'): mixed {}
 
 	/**
 	 * Returns the Phar file entry flags
@@ -1718,7 +1802,7 @@ class PharFileInfo extends SplFileInfo implements Stringable {
 	 * @param string $suffix [optional] 
 	 * @return string Returns the base name without path information.
 	 */
-	public function getBasename (string $suffix = ""): string {}
+	public function getBasename (string $suffix = '""'): string {}
 
 	/**
 	 * Gets the path to the file
@@ -1873,7 +1957,7 @@ class PharFileInfo extends SplFileInfo implements Stringable {
 	 * @param resource|null $context [optional] 
 	 * @return SplFileObject The opened file as an SplFileObject object.
 	 */
-	public function openFile (string $mode = "r", bool $useIncludePath = false, ?resource $context = null): SplFileObject {}
+	public function openFile (string $mode = '"r"', bool $useIncludePath = false, $context = null): SplFileObject {}
 
 	/**
 	 * Sets the class used with SplFileInfo::openFile
@@ -1881,7 +1965,7 @@ class PharFileInfo extends SplFileInfo implements Stringable {
 	 * @param string $class [optional] 
 	 * @return void No value is returned.
 	 */
-	public function setFileClass (string $class = SplFileObject::class): void {}
+	public function setFileClass (string $class = 'SplFileObject::class'): void {}
 
 	/**
 	 * Sets the class used with SplFileInfo::getFileInfo and SplFileInfo::getPathInfo
@@ -1889,7 +1973,7 @@ class PharFileInfo extends SplFileInfo implements Stringable {
 	 * @param string $class [optional] 
 	 * @return void No value is returned.
 	 */
-	public function setInfoClass (string $class = SplFileInfo::class): void {}
+	public function setInfoClass (string $class = 'SplFileInfo::class'): void {}
 
 	/**
 	 * Returns the path to the file as a string
@@ -1898,8 +1982,15 @@ class PharFileInfo extends SplFileInfo implements Stringable {
 	 */
 	public function __toString (): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __debugInfo () {}
 
+	/**
+	 * {@inheritdoc}
+	 * @deprecated 
+	 */
 	final public function _bad_state_ex () {}
 
 }

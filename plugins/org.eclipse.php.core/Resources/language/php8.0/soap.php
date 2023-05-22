@@ -17,7 +17,7 @@ class SoapClient  {
 	 * @param array $options [optional] 
 	 * @return string|null 
 	 */
-	public function __construct (?string $wsdl, array $options = []): ?string {}
+	public function __construct (?string $wsdl, array $options = '[]'): ?string {}
 
 	/**
 	 * Calls a SOAP function (deprecated)
@@ -147,6 +147,18 @@ class SoapClient  {
  */
 class SoapVar  {
 
+	public int $enc_type;
+
+	public mixed $enc_value;
+
+	public ?string $enc_stype;
+
+	public ?string $enc_ns;
+
+	public ?string $enc_name;
+
+	public ?string $enc_namens;
+
 	/**
 	 * SoapVar constructor
 	 * @link http://www.php.net/manual/en/soapvar.construct.php
@@ -177,7 +189,7 @@ class SoapServer  {
 	 * @param array $options [optional] 
 	 * @return string|null 
 	 */
-	public function __construct (?string $wsdl, array $options = []): ?string {}
+	public function __construct (?string $wsdl, array $options = '[]'): ?string {}
 
 	/**
 	 * Issue SoapServer fault indicating an error
@@ -189,7 +201,7 @@ class SoapServer  {
 	 * @param string $name [optional] 
 	 * @return void No value is returned.
 	 */
-	public function fault (string $code, string $string, string $actor = "", mixed $details = null, string $name = ""): void {}
+	public function fault (string $code, string $string, string $actor = '""', mixed $details = null, string $name = '""'): void {}
 
 	/**
 	 * Add a SOAP header to the response
@@ -254,11 +266,20 @@ class SoapServer  {
  * @link http://www.php.net/manual/en/class.soapfault.php
  */
 class SoapFault extends Exception implements Stringable, Throwable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
 
+	public string $faultstring;
+
+	public ?string $faultcode;
+
+	public ?string $faultcodens;
+
+	public ?string $faultactor;
+
+	public mixed $detail;
+
+	public ?string $_name;
+
+	public mixed $headerfault;
 
 	/**
 	 * SoapFault constructor
@@ -280,6 +301,9 @@ class SoapFault extends Exception implements Stringable, Throwable {
 	 */
 	public function __toString (): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -343,6 +367,10 @@ class SoapFault extends Exception implements Stringable, Throwable {
  */
 class SoapParam  {
 
+	public string $param_name;
+
+	public mixed $param_data;
+
 	/**
 	 * SoapParam constructor
 	 * @link http://www.php.net/manual/en/soapparam.construct.php
@@ -359,6 +387,16 @@ class SoapParam  {
  * @link http://www.php.net/manual/en/class.soapheader.php
  */
 class SoapHeader  {
+
+	public string $namespace;
+
+	public string $name;
+
+	public mixed $data;
+
+	public bool $mustUnderstand;
+
+	public string|int|null $actor;
 
 	/**
 	 * SoapHeader constructor

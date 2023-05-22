@@ -7,11 +7,6 @@
  * @link http://www.php.net/manual/en/class.reflectionexception.php
  */
 class ReflectionException extends Exception implements Throwable, Stringable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-
 
 	/**
 	 * Construct the exception
@@ -21,8 +16,11 @@ class ReflectionException extends Exception implements Throwable, Stringable {
 	 * @param Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -115,7 +113,7 @@ interface Reflector extends Stringable {
 	 * @link http://www.php.net/manual/en/stringable.tostring.php
 	 * @return string Returns the string representation of the object.
 	 */
-	abstract public function __toString (): string
+	abstract public function __toString (): string;
 
 }
 
@@ -125,8 +123,14 @@ interface Reflector extends Stringable {
  * @link http://www.php.net/manual/en/class.reflectionfunctionabstract.php
  */
 abstract class ReflectionFunctionAbstract implements Reflector, Stringable {
-	public $name;
 
+	/**
+	 * Name of the function. Read-only, throws
+	 * ReflectionException in attempt to write.
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.reflectionfunctionabstract.php#reflectionfunctionabstract.props.name
+	 */
+	public string $name;
 
 	/**
 	 * Clones function
@@ -207,6 +211,9 @@ abstract class ReflectionFunctionAbstract implements Reflector, Stringable {
 	 */
 	public function getClosureScopeClass (): ?ReflectionClass {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getClosureCalledClass () {}
 
 	/**
@@ -219,16 +226,16 @@ abstract class ReflectionFunctionAbstract implements Reflector, Stringable {
 	/**
 	 * Gets doc comment
 	 * @link http://www.php.net/manual/en/reflectionfunctionabstract.getdoccomment.php
-	 * @return string|bool The doc comment if it exists, otherwise false
+	 * @return string|false The doc comment if it exists, otherwise false
 	 */
-	public function getDocComment (): string|bool {}
+	public function getDocComment (): string|int {}
 
 	/**
 	 * Gets end line number
 	 * @link http://www.php.net/manual/en/reflectionfunctionabstract.getendline.php
-	 * @return int|bool The ending line number of the user defined function, or false if unknown.
+	 * @return int|false The ending line number of the user defined function, or false if unknown.
 	 */
-	public function getEndLine (): int|bool {}
+	public function getEndLine (): int {}
 
 	/**
 	 * Gets extension info
@@ -241,19 +248,19 @@ abstract class ReflectionFunctionAbstract implements Reflector, Stringable {
 	/**
 	 * Gets extension name
 	 * @link http://www.php.net/manual/en/reflectionfunctionabstract.getextensionname.php
-	 * @return string|bool The name of the extension which defined the function,
+	 * @return string|false The name of the extension which defined the function,
 	 * or false for user-defined functions.
 	 */
-	public function getExtensionName (): string|bool {}
+	public function getExtensionName (): string|int {}
 
 	/**
 	 * Gets file name
 	 * @link http://www.php.net/manual/en/reflectionfunctionabstract.getfilename.php
-	 * @return string|bool Returns the filename of the file in which the function has been defined.
+	 * @return string|false Returns the filename of the file in which the function has been defined.
 	 * If the class is defined in the PHP core or in a PHP extension, false
 	 * is returned.
 	 */
-	public function getFileName (): string|bool {}
+	public function getFileName (): string|int {}
 
 	/**
 	 * Gets function name
@@ -300,9 +307,9 @@ abstract class ReflectionFunctionAbstract implements Reflector, Stringable {
 	/**
 	 * Gets starting line number
 	 * @link http://www.php.net/manual/en/reflectionfunctionabstract.getstartline.php
-	 * @return int|bool The starting line number, or false if unknown.
+	 * @return int|false The starting line number, or false if unknown.
 	 */
-	public function getStartLine (): int|bool {}
+	public function getStartLine (): int {}
 
 	/**
 	 * Gets static variables
@@ -368,7 +375,7 @@ abstract class ReflectionFunctionAbstract implements Reflector, Stringable {
 	 * @link http://www.php.net/manual/en/stringable.tostring.php
 	 * @return string Returns the string representation of the object.
 	 */
-	abstract public function __toString (): string
+	abstract public function __toString (): string;
 
 }
 
@@ -381,8 +388,6 @@ class ReflectionFunction extends ReflectionFunctionAbstract implements Stringabl
 	/**
 	 * Indicates deprecated functions.
 	const IS_DEPRECATED = 2048;
-
-	public $name;
 
 
 	/**
@@ -504,6 +509,9 @@ class ReflectionFunction extends ReflectionFunctionAbstract implements Stringabl
 	 */
 	public function getClosureScopeClass (): ?ReflectionClass {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getClosureCalledClass () {}
 
 	/**
@@ -516,16 +524,16 @@ class ReflectionFunction extends ReflectionFunctionAbstract implements Stringabl
 	/**
 	 * Gets doc comment
 	 * @link http://www.php.net/manual/en/reflectionfunctionabstract.getdoccomment.php
-	 * @return string|bool The doc comment if it exists, otherwise false
+	 * @return string|false The doc comment if it exists, otherwise false
 	 */
-	public function getDocComment (): string|bool {}
+	public function getDocComment (): string|int {}
 
 	/**
 	 * Gets end line number
 	 * @link http://www.php.net/manual/en/reflectionfunctionabstract.getendline.php
-	 * @return int|bool The ending line number of the user defined function, or false if unknown.
+	 * @return int|false The ending line number of the user defined function, or false if unknown.
 	 */
-	public function getEndLine (): int|bool {}
+	public function getEndLine (): int {}
 
 	/**
 	 * Gets extension info
@@ -538,19 +546,19 @@ class ReflectionFunction extends ReflectionFunctionAbstract implements Stringabl
 	/**
 	 * Gets extension name
 	 * @link http://www.php.net/manual/en/reflectionfunctionabstract.getextensionname.php
-	 * @return string|bool The name of the extension which defined the function,
+	 * @return string|false The name of the extension which defined the function,
 	 * or false for user-defined functions.
 	 */
-	public function getExtensionName (): string|bool {}
+	public function getExtensionName (): string|int {}
 
 	/**
 	 * Gets file name
 	 * @link http://www.php.net/manual/en/reflectionfunctionabstract.getfilename.php
-	 * @return string|bool Returns the filename of the file in which the function has been defined.
+	 * @return string|false Returns the filename of the file in which the function has been defined.
 	 * If the class is defined in the PHP core or in a PHP extension, false
 	 * is returned.
 	 */
-	public function getFileName (): string|bool {}
+	public function getFileName (): string|int {}
 
 	/**
 	 * Gets function name
@@ -597,9 +605,9 @@ class ReflectionFunction extends ReflectionFunctionAbstract implements Stringabl
 	/**
 	 * Gets starting line number
 	 * @link http://www.php.net/manual/en/reflectionfunctionabstract.getstartline.php
-	 * @return int|bool The starting line number, or false if unknown.
+	 * @return int|false The starting line number, or false if unknown.
 	 */
-	public function getStartLine (): int|bool {}
+	public function getStartLine (): int {}
 
 	/**
 	 * Gets static variables
@@ -736,8 +744,14 @@ final class ReflectionGenerator  {
  * @link http://www.php.net/manual/en/class.reflectionparameter.php
  */
 class ReflectionParameter implements Stringable, Reflector {
-	public $name;
 
+	/**
+	 * Name of the parameter. Read-only, throws
+	 * ReflectionException in attempt to write.
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.reflectionparameter.php#reflectionparameter.props.name
+	 */
+	public string $name;
 
 	/**
 	 * Clone
@@ -895,6 +909,9 @@ class ReflectionParameter implements Stringable, Reflector {
 	 */
 	public function isVariadic (): bool {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function isPromoted (): bool {}
 
 	/**
@@ -927,6 +944,9 @@ class ReflectionParameter implements Stringable, Reflector {
  */
 abstract class ReflectionType implements Stringable {
 
+	/**
+	 * {@inheritdoc}
+	 */
 	private function __clone (): void {}
 
 	/**
@@ -1071,9 +1091,13 @@ class ReflectionMethod extends ReflectionFunctionAbstract implements Stringable,
 	 * Prior to PHP 7.4.0, the value was 4.
 	const IS_FINAL = 32;
 
-	public $name;
-	public $class;
 
+	/**
+	 * Class name
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.reflectionmethod.php#reflectionmethod.props.class
+	 */
+	public string $class;
 
 	/**
 	 * Constructs a ReflectionMethod
@@ -1271,6 +1295,9 @@ class ReflectionMethod extends ReflectionFunctionAbstract implements Stringable,
 	 */
 	public function getClosureScopeClass (): ?ReflectionClass {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getClosureCalledClass () {}
 
 	/**
@@ -1283,16 +1310,16 @@ class ReflectionMethod extends ReflectionFunctionAbstract implements Stringable,
 	/**
 	 * Gets doc comment
 	 * @link http://www.php.net/manual/en/reflectionfunctionabstract.getdoccomment.php
-	 * @return string|bool The doc comment if it exists, otherwise false
+	 * @return string|false The doc comment if it exists, otherwise false
 	 */
-	public function getDocComment (): string|bool {}
+	public function getDocComment (): string|int {}
 
 	/**
 	 * Gets end line number
 	 * @link http://www.php.net/manual/en/reflectionfunctionabstract.getendline.php
-	 * @return int|bool The ending line number of the user defined function, or false if unknown.
+	 * @return int|false The ending line number of the user defined function, or false if unknown.
 	 */
-	public function getEndLine (): int|bool {}
+	public function getEndLine (): int {}
 
 	/**
 	 * Gets extension info
@@ -1305,19 +1332,19 @@ class ReflectionMethod extends ReflectionFunctionAbstract implements Stringable,
 	/**
 	 * Gets extension name
 	 * @link http://www.php.net/manual/en/reflectionfunctionabstract.getextensionname.php
-	 * @return string|bool The name of the extension which defined the function,
+	 * @return string|false The name of the extension which defined the function,
 	 * or false for user-defined functions.
 	 */
-	public function getExtensionName (): string|bool {}
+	public function getExtensionName (): string|int {}
 
 	/**
 	 * Gets file name
 	 * @link http://www.php.net/manual/en/reflectionfunctionabstract.getfilename.php
-	 * @return string|bool Returns the filename of the file in which the function has been defined.
+	 * @return string|false Returns the filename of the file in which the function has been defined.
 	 * If the class is defined in the PHP core or in a PHP extension, false
 	 * is returned.
 	 */
-	public function getFileName (): string|bool {}
+	public function getFileName (): string|int {}
 
 	/**
 	 * Gets function name
@@ -1364,9 +1391,9 @@ class ReflectionMethod extends ReflectionFunctionAbstract implements Stringable,
 	/**
 	 * Gets starting line number
 	 * @link http://www.php.net/manual/en/reflectionfunctionabstract.getstartline.php
-	 * @return int|bool The starting line number, or false if unknown.
+	 * @return int|false The starting line number, or false if unknown.
 	 */
-	public function getStartLine (): int|bool {}
+	public function getStartLine (): int {}
 
 	/**
 	 * Gets static variables
@@ -1447,9 +1474,18 @@ class ReflectionClass implements Stringable, Reflector {
 	 * Indicates the class is final.
 	const IS_FINAL = 32;
 
-	public $name;
 
+	/**
+	 * Name of the class. Read-only, throws
+	 * ReflectionException in attempt to write.
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.reflectionclass.php#reflectionclass.props.name
+	 */
+	public string $name;
 
+	/**
+	 * {@inheritdoc}
+	 */
 	private function __clone (): void {}
 
 	/**
@@ -1512,32 +1548,32 @@ class ReflectionClass implements Stringable, Reflector {
 	/**
 	 * Gets the filename of the file in which the class has been defined
 	 * @link http://www.php.net/manual/en/reflectionclass.getfilename.php
-	 * @return string|bool Returns the filename of the file in which the class has been defined.
+	 * @return string|false Returns the filename of the file in which the class has been defined.
 	 * If the class is defined in the PHP core or in a PHP extension, false
 	 * is returned.
 	 */
-	public function getFileName (): string|bool {}
+	public function getFileName (): string|int {}
 
 	/**
 	 * Gets starting line number
 	 * @link http://www.php.net/manual/en/reflectionclass.getstartline.php
-	 * @return int|bool The starting line number, as an int, or false if unknown.
+	 * @return int|false The starting line number, as an int, or false if unknown.
 	 */
-	public function getStartLine (): int|bool {}
+	public function getStartLine (): int {}
 
 	/**
 	 * Gets end line
 	 * @link http://www.php.net/manual/en/reflectionclass.getendline.php
-	 * @return int|bool The ending line number of the user defined class, or false if unknown.
+	 * @return int|false The ending line number of the user defined class, or false if unknown.
 	 */
-	public function getEndLine (): int|bool {}
+	public function getEndLine (): int {}
 
 	/**
 	 * Gets doc comments
 	 * @link http://www.php.net/manual/en/reflectionclass.getdoccomment.php
-	 * @return string|bool The doc comment if it exists, otherwise false.
+	 * @return string|false The doc comment if it exists, otherwise false.
 	 */
-	public function getDocComment (): string|bool {}
+	public function getDocComment (): string|int {}
 
 	/**
 	 * Gets the constructor of the class
@@ -1638,9 +1674,9 @@ class ReflectionClass implements Stringable, Reflector {
 	 * Gets a ReflectionClassConstant for a class's constant
 	 * @link http://www.php.net/manual/en/reflectionclass.getreflectionconstant.php
 	 * @param string $name 
-	 * @return ReflectionClassConstant|bool A ReflectionClassConstant, or false on failure.
+	 * @return ReflectionClassConstant|false A ReflectionClassConstant, or false on failure.
 	 */
-	public function getReflectionConstant (string $name): ReflectionClassConstant|bool {}
+	public function getReflectionConstant (string $name): ReflectionClassConstant|int {}
 
 	/**
 	 * Gets the interfaces
@@ -1754,14 +1790,14 @@ class ReflectionClass implements Stringable, Reflector {
 	 * @param array $args [optional] 
 	 * @return object|null Returns a new instance of the class, or null on failure.
 	 */
-	public function newInstanceArgs (array $args = []): ?object {}
+	public function newInstanceArgs (array $args = '[]'): ?object {}
 
 	/**
 	 * Gets parent class
 	 * @link http://www.php.net/manual/en/reflectionclass.getparentclass.php
-	 * @return ReflectionClass|bool A ReflectionClass or false if there's no parent.
+	 * @return ReflectionClass|false A ReflectionClass or false if there's no parent.
 	 */
-	public function getParentClass (): ReflectionClass|bool {}
+	public function getParentClass (): ReflectionClass|int {}
 
 	/**
 	 * Checks if a subclass
@@ -1814,6 +1850,9 @@ class ReflectionClass implements Stringable, Reflector {
 	 */
 	public function isIterable (): bool {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function isIterateable () {}
 
 	/**
@@ -1835,9 +1874,9 @@ class ReflectionClass implements Stringable, Reflector {
 	/**
 	 * Gets the name of the extension which defined the class
 	 * @link http://www.php.net/manual/en/reflectionclass.getextensionname.php
-	 * @return string|bool The name of the extension which defined the class, or false for user-defined classes.
+	 * @return string|false The name of the extension which defined the class, or false for user-defined classes.
 	 */
-	public function getExtensionName (): string|bool {}
+	public function getExtensionName (): string|int {}
 
 	/**
 	 * Checks if in namespace
@@ -1886,8 +1925,6 @@ class ReflectionObject extends ReflectionClass implements Reflector, Stringable 
 	const IS_IMPLICIT_ABSTRACT = 16;
 	const IS_EXPLICIT_ABSTRACT = 64;
 	const IS_FINAL = 32;
-
-	public $name;
 
 
 	/**
@@ -1950,32 +1987,32 @@ class ReflectionObject extends ReflectionClass implements Reflector, Stringable 
 	/**
 	 * Gets the filename of the file in which the class has been defined
 	 * @link http://www.php.net/manual/en/reflectionclass.getfilename.php
-	 * @return string|bool Returns the filename of the file in which the class has been defined.
+	 * @return string|false Returns the filename of the file in which the class has been defined.
 	 * If the class is defined in the PHP core or in a PHP extension, false
 	 * is returned.
 	 */
-	public function getFileName (): string|bool {}
+	public function getFileName (): string|int {}
 
 	/**
 	 * Gets starting line number
 	 * @link http://www.php.net/manual/en/reflectionclass.getstartline.php
-	 * @return int|bool The starting line number, as an int, or false if unknown.
+	 * @return int|false The starting line number, as an int, or false if unknown.
 	 */
-	public function getStartLine (): int|bool {}
+	public function getStartLine (): int {}
 
 	/**
 	 * Gets end line
 	 * @link http://www.php.net/manual/en/reflectionclass.getendline.php
-	 * @return int|bool The ending line number of the user defined class, or false if unknown.
+	 * @return int|false The ending line number of the user defined class, or false if unknown.
 	 */
-	public function getEndLine (): int|bool {}
+	public function getEndLine (): int {}
 
 	/**
 	 * Gets doc comments
 	 * @link http://www.php.net/manual/en/reflectionclass.getdoccomment.php
-	 * @return string|bool The doc comment if it exists, otherwise false.
+	 * @return string|false The doc comment if it exists, otherwise false.
 	 */
-	public function getDocComment (): string|bool {}
+	public function getDocComment (): string|int {}
 
 	/**
 	 * Gets the constructor of the class
@@ -2076,9 +2113,9 @@ class ReflectionObject extends ReflectionClass implements Reflector, Stringable 
 	 * Gets a ReflectionClassConstant for a class's constant
 	 * @link http://www.php.net/manual/en/reflectionclass.getreflectionconstant.php
 	 * @param string $name 
-	 * @return ReflectionClassConstant|bool A ReflectionClassConstant, or false on failure.
+	 * @return ReflectionClassConstant|false A ReflectionClassConstant, or false on failure.
 	 */
-	public function getReflectionConstant (string $name): ReflectionClassConstant|bool {}
+	public function getReflectionConstant (string $name): ReflectionClassConstant|int {}
 
 	/**
 	 * Gets the interfaces
@@ -2192,14 +2229,14 @@ class ReflectionObject extends ReflectionClass implements Reflector, Stringable 
 	 * @param array $args [optional] 
 	 * @return object|null Returns a new instance of the class, or null on failure.
 	 */
-	public function newInstanceArgs (array $args = []): ?object {}
+	public function newInstanceArgs (array $args = '[]'): ?object {}
 
 	/**
 	 * Gets parent class
 	 * @link http://www.php.net/manual/en/reflectionclass.getparentclass.php
-	 * @return ReflectionClass|bool A ReflectionClass or false if there's no parent.
+	 * @return ReflectionClass|false A ReflectionClass or false if there's no parent.
 	 */
-	public function getParentClass (): ReflectionClass|bool {}
+	public function getParentClass (): ReflectionClass|int {}
 
 	/**
 	 * Checks if a subclass
@@ -2252,6 +2289,9 @@ class ReflectionObject extends ReflectionClass implements Reflector, Stringable 
 	 */
 	public function isIterable (): bool {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function isIterateable () {}
 
 	/**
@@ -2273,9 +2313,9 @@ class ReflectionObject extends ReflectionClass implements Reflector, Stringable 
 	/**
 	 * Gets the name of the extension which defined the class
 	 * @link http://www.php.net/manual/en/reflectionclass.getextensionname.php
-	 * @return string|bool The name of the extension which defined the class, or false for user-defined classes.
+	 * @return string|false The name of the extension which defined the class, or false for user-defined classes.
 	 */
-	public function getExtensionName (): string|bool {}
+	public function getExtensionName (): string|int {}
 
 	/**
 	 * Checks if in namespace
@@ -2346,9 +2386,22 @@ class ReflectionProperty implements Stringable, Reflector {
 	 * Prior to PHP 7.4.0, the value was 1024.
 	const IS_PRIVATE = 4;
 
-	public $name;
-	public $class;
 
+	/**
+	 * Name of the property. Read-only, throws
+	 * ReflectionException in attempt to write.
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.reflectionproperty.php#reflectionproperty.props.name
+	 */
+	public string $name;
+
+	/**
+	 * Name of the class where the property is defined. Read-only, throws
+	 * ReflectionException in attempt to write.
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.reflectionproperty.php#reflectionproperty.props.class
+	 */
+	public string $class;
 
 	/**
 	 * Clone
@@ -2477,9 +2530,9 @@ class ReflectionProperty implements Stringable, Reflector {
 	/**
 	 * Gets the property doc comment
 	 * @link http://www.php.net/manual/en/reflectionproperty.getdoccomment.php
-	 * @return string|bool The doc comment if it exists, otherwise false.
+	 * @return string|false The doc comment if it exists, otherwise false.
 	 */
-	public function getDocComment (): string|bool {}
+	public function getDocComment (): string|int {}
 
 	/**
 	 * Set property accessibility
@@ -2565,10 +2618,26 @@ class ReflectionClassConstant implements Stringable, Reflector {
 	 * constants. Available as of PHP 8.1.0.
 	const IS_FINAL = 32;
 
-	public $name;
-	public $class;
 
+	/**
+	 * Name of the class constant. Read-only, throws
+	 * ReflectionException in attempt to write.
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.reflectionclassconstant.php#reflectionclassconstant.props.name
+	 */
+	public string $name;
 
+	/**
+	 * Name of the class where the class constant is defined. Read-only, throws
+	 * ReflectionException in attempt to write.
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.reflectionclassconstant.php#reflectionclassconstant.props.class
+	 */
+	public string $class;
+
+	/**
+	 * {@inheritdoc}
+	 */
 	private function __clone (): void {}
 
 	/**
@@ -2648,9 +2717,9 @@ class ReflectionClassConstant implements Stringable, Reflector {
 	/**
 	 * Gets doc comments
 	 * @link http://www.php.net/manual/en/reflectionclassconstant.getdoccomment.php
-	 * @return string|bool The doc comment if it exists, otherwise false
+	 * @return string|false The doc comment if it exists, otherwise false
 	 */
-	public function getDocComment (): string|bool {}
+	public function getDocComment (): string|int {}
 
 	/**
 	 * Gets Attributes
@@ -2682,8 +2751,15 @@ class ReflectionClassConstant implements Stringable, Reflector {
  * @link http://www.php.net/manual/en/class.reflectionextension.php
  */
 class ReflectionExtension implements Stringable, Reflector {
-	public $name;
 
+	/**
+	 * Name of the extension, same as calling the 
+	 * ReflectionExtension::getName 
+	 * method.
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.reflectionextension.php#reflectionextension.props.name
+	 */
+	public string $name;
 
 	/**
 	 * Clones
@@ -2801,8 +2877,14 @@ class ReflectionExtension implements Stringable, Reflector {
  * @link http://www.php.net/manual/en/class.reflectionzendextension.php
  */
 class ReflectionZendExtension implements Stringable, Reflector {
-	public $name;
 
+	/**
+	 * Name of the extension. Read-only, throws
+	 * ReflectionException in attempt to write.
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.reflectionzendextension.php#reflectionzendextension.props.name
+	 */
+	public string $name;
 
 	/**
 	 * Clone handler
@@ -2887,6 +2969,9 @@ final class ReflectionReference  {
 	 */
 	public function getId (): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	private function __clone (): void {}
 
 	/**
@@ -2944,8 +3029,14 @@ class ReflectionAttribute implements Stringable, Reflector {
 	 */
 	public function newInstance (): object {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __toString (): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	private function __clone (): void {}
 
 	/**
@@ -2965,8 +3056,6 @@ class ReflectionEnum extends ReflectionClass implements Reflector, Stringable {
 	const IS_IMPLICIT_ABSTRACT = 16;
 	const IS_EXPLICIT_ABSTRACT = 64;
 	const IS_FINAL = 32;
-
-	public $name;
 
 
 	/**
@@ -3070,32 +3159,32 @@ class ReflectionEnum extends ReflectionClass implements Reflector, Stringable {
 	/**
 	 * Gets the filename of the file in which the class has been defined
 	 * @link http://www.php.net/manual/en/reflectionclass.getfilename.php
-	 * @return string|bool Returns the filename of the file in which the class has been defined.
+	 * @return string|false Returns the filename of the file in which the class has been defined.
 	 * If the class is defined in the PHP core or in a PHP extension, false
 	 * is returned.
 	 */
-	public function getFileName (): string|bool {}
+	public function getFileName (): string|int {}
 
 	/**
 	 * Gets starting line number
 	 * @link http://www.php.net/manual/en/reflectionclass.getstartline.php
-	 * @return int|bool The starting line number, as an int, or false if unknown.
+	 * @return int|false The starting line number, as an int, or false if unknown.
 	 */
-	public function getStartLine (): int|bool {}
+	public function getStartLine (): int {}
 
 	/**
 	 * Gets end line
 	 * @link http://www.php.net/manual/en/reflectionclass.getendline.php
-	 * @return int|bool The ending line number of the user defined class, or false if unknown.
+	 * @return int|false The ending line number of the user defined class, or false if unknown.
 	 */
-	public function getEndLine (): int|bool {}
+	public function getEndLine (): int {}
 
 	/**
 	 * Gets doc comments
 	 * @link http://www.php.net/manual/en/reflectionclass.getdoccomment.php
-	 * @return string|bool The doc comment if it exists, otherwise false.
+	 * @return string|false The doc comment if it exists, otherwise false.
 	 */
-	public function getDocComment (): string|bool {}
+	public function getDocComment (): string|int {}
 
 	/**
 	 * Gets the constructor of the class
@@ -3196,9 +3285,9 @@ class ReflectionEnum extends ReflectionClass implements Reflector, Stringable {
 	 * Gets a ReflectionClassConstant for a class's constant
 	 * @link http://www.php.net/manual/en/reflectionclass.getreflectionconstant.php
 	 * @param string $name 
-	 * @return ReflectionClassConstant|bool A ReflectionClassConstant, or false on failure.
+	 * @return ReflectionClassConstant|false A ReflectionClassConstant, or false on failure.
 	 */
-	public function getReflectionConstant (string $name): ReflectionClassConstant|bool {}
+	public function getReflectionConstant (string $name): ReflectionClassConstant|int {}
 
 	/**
 	 * Gets the interfaces
@@ -3312,14 +3401,14 @@ class ReflectionEnum extends ReflectionClass implements Reflector, Stringable {
 	 * @param array $args [optional] 
 	 * @return object|null Returns a new instance of the class, or null on failure.
 	 */
-	public function newInstanceArgs (array $args = []): ?object {}
+	public function newInstanceArgs (array $args = '[]'): ?object {}
 
 	/**
 	 * Gets parent class
 	 * @link http://www.php.net/manual/en/reflectionclass.getparentclass.php
-	 * @return ReflectionClass|bool A ReflectionClass or false if there's no parent.
+	 * @return ReflectionClass|false A ReflectionClass or false if there's no parent.
 	 */
-	public function getParentClass (): ReflectionClass|bool {}
+	public function getParentClass (): ReflectionClass|int {}
 
 	/**
 	 * Checks if a subclass
@@ -3372,6 +3461,9 @@ class ReflectionEnum extends ReflectionClass implements Reflector, Stringable {
 	 */
 	public function isIterable (): bool {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function isIterateable () {}
 
 	/**
@@ -3393,9 +3485,9 @@ class ReflectionEnum extends ReflectionClass implements Reflector, Stringable {
 	/**
 	 * Gets the name of the extension which defined the class
 	 * @link http://www.php.net/manual/en/reflectionclass.getextensionname.php
-	 * @return string|bool The name of the extension which defined the class, or false for user-defined classes.
+	 * @return string|false The name of the extension which defined the class, or false for user-defined classes.
 	 */
-	public function getExtensionName (): string|bool {}
+	public function getExtensionName (): string|int {}
 
 	/**
 	 * Checks if in namespace
@@ -3445,9 +3537,6 @@ class ReflectionEnumUnitCase extends ReflectionClassConstant implements Reflecto
 	const IS_PROTECTED = 2;
 	const IS_PRIVATE = 4;
 	const IS_FINAL = 32;
-
-	public $name;
-	public $class;
 
 
 	/**
@@ -3535,9 +3624,9 @@ class ReflectionEnumUnitCase extends ReflectionClassConstant implements Reflecto
 	/**
 	 * Gets doc comments
 	 * @link http://www.php.net/manual/en/reflectionclassconstant.getdoccomment.php
-	 * @return string|bool The doc comment if it exists, otherwise false
+	 * @return string|false The doc comment if it exists, otherwise false
 	 */
-	public function getDocComment (): string|bool {}
+	public function getDocComment (): string|int {}
 
 	/**
 	 * Gets Attributes
@@ -3573,9 +3662,6 @@ class ReflectionEnumBackedCase extends ReflectionEnumUnitCase implements Stringa
 	const IS_PROTECTED = 2;
 	const IS_PRIVATE = 4;
 	const IS_FINAL = 32;
-
-	public $name;
-	public $class;
 
 
 	/**
@@ -3670,9 +3756,9 @@ class ReflectionEnumBackedCase extends ReflectionEnumUnitCase implements Stringa
 	/**
 	 * Gets doc comments
 	 * @link http://www.php.net/manual/en/reflectionclassconstant.getdoccomment.php
-	 * @return string|bool The doc comment if it exists, otherwise false
+	 * @return string|false The doc comment if it exists, otherwise false
 	 */
-	public function getDocComment (): string|bool {}
+	public function getDocComment (): string|int {}
 
 	/**
 	 * Gets Attributes

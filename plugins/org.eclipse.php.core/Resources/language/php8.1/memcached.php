@@ -402,10 +402,10 @@ class Memcached  {
 	 * @param string $server_key 
 	 * @param array $keys 
 	 * @param int $flags [optional] 
-	 * @return array|bool Returns the array of found items or false on failure.
+	 * @return array|false Returns the array of found items or false on failure.
 	 * Use Memcached::getResultCode if necessary.
 	 */
-	public function getMultiByKey (string $server_key, array $keys, int $flags = null): array|bool {}
+	public function getMultiByKey (string $server_key, array $keys, int $flags = null): array|int {}
 
 	/**
 	 * Request multiple items
@@ -442,10 +442,10 @@ class Memcached  {
 	/**
 	 * Fetch all the remaining results
 	 * @link http://www.php.net/manual/en/memcached.fetchall.php
-	 * @return array|bool Returns the results or false on failure.
+	 * @return array|false Returns the results or false on failure.
 	 * Use Memcached::getResultCode if necessary.
 	 */
-	public function fetchAll (): array|bool {}
+	public function fetchAll (): array|int {}
 
 	/**
 	 * Store an item
@@ -702,9 +702,9 @@ class Memcached  {
 	 * @param int $offset [optional] 
 	 * @param int $initial_value [optional] 
 	 * @param int $expiry [optional] 
-	 * @return int|bool Returns new item's value on success or false on failure.
+	 * @return int|false Returns new item's value on success or false on failure.
 	 */
-	public function increment (string $key, int $offset = 1, int $initial_value = null, int $expiry = null): int|bool {}
+	public function increment (string $key, int $offset = 1, int $initial_value = null, int $expiry = null): int {}
 
 	/**
 	 * Decrement numeric item's value
@@ -713,9 +713,9 @@ class Memcached  {
 	 * @param int $offset [optional] 
 	 * @param int $initial_value [optional] 
 	 * @param int $expiry [optional] 
-	 * @return int|bool Returns item's new value on success or false on failure.
+	 * @return int|false Returns item's new value on success or false on failure.
 	 */
-	public function decrement (string $key, int $offset = 1, int $initial_value = null, int $expiry = null): int|bool {}
+	public function decrement (string $key, int $offset = 1, int $initial_value = null, int $expiry = null): int {}
 
 	/**
 	 * Increment numeric item's value, stored on a specific server
@@ -725,9 +725,9 @@ class Memcached  {
 	 * @param int $offset [optional] 
 	 * @param int $initial_value [optional] 
 	 * @param int $expiry [optional] 
-	 * @return int|bool Returns new item's value on success or false on failure.
+	 * @return int|false Returns new item's value on success or false on failure.
 	 */
-	public function incrementByKey (string $server_key, string $key, int $offset = 1, int $initial_value = null, int $expiry = null): int|bool {}
+	public function incrementByKey (string $server_key, string $key, int $offset = 1, int $initial_value = null, int $expiry = null): int {}
 
 	/**
 	 * Decrement numeric item's value, stored on a specific server
@@ -737,9 +737,9 @@ class Memcached  {
 	 * @param int $offset [optional] 
 	 * @param int $initial_value [optional] 
 	 * @param int $expiry [optional] 
-	 * @return int|bool Returns item's new value on success or false on failure.
+	 * @return int|false Returns item's new value on success or false on failure.
 	 */
-	public function decrementByKey (string $server_key, string $key, int $offset = 1, int $initial_value = null, int $expiry = null): int|bool {}
+	public function decrementByKey (string $server_key, string $key, int $offset = 1, int $initial_value = null, int $expiry = null): int {}
 
 	/**
 	 * Add a server to the server pool
@@ -791,23 +791,38 @@ class Memcached  {
 	 */
 	public function quit (): bool {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function flushBuffers (): bool {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getLastErrorMessage (): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getLastErrorCode (): int {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getLastErrorErrno (): int {}
 
-	public function getLastDisconnectedServer (): array|false {}
+	/**
+	 * {@inheritdoc}
+	 */
+	public function getLastDisconnectedServer (): array|int {}
 
 	/**
 	 * Get server pool statistics
 	 * @link http://www.php.net/manual/en/memcached.getstats.php
-	 * @param ?string $type [optional]
-	 * @return array|bool Array of server statistics, one entry per server, or false on failure.
+	 * @param string|null $type [optional]
+	 * @return array|false Array of server statistics, one entry per server, or false on failure.
 	 */
-	public function getStats (?string $type = null): array|bool {}
+	public function getStats (?string $type = NULL): array|int {}
 
 	/**
 	 * Get server pool version info
@@ -819,9 +834,9 @@ class Memcached  {
 	/**
 	 * Gets the keys stored on all the servers
 	 * @link http://www.php.net/manual/en/memcached.getallkeys.php
-	 * @return array|bool Returns the keys stored on all the servers on success or false on failure.
+	 * @return array|false Returns the keys stored on all the servers on success or false on failure.
 	 */
-	public function getAllKeys (): array|bool {}
+	public function getAllKeys (): array|int {}
 
 	/**
 	 * Invalidate all items in the cache
@@ -860,13 +875,15 @@ class Memcached  {
 	public function setOptions (array $options): bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array $host_map
-	 * @param ?array $forward_map
+	 * @param array|null $forward_map
 	 * @param int $replicas
 	 */
 	public function setBucket (array $host_map, ?array $forward_map = null, int $replicas): bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param string $key
 	 */
 	public function setEncodingKey (string $key): bool {}
@@ -886,6 +903,7 @@ class Memcached  {
 	public function isPristine (): bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param string $key
 	 */
 	public function checkKey (string $key): bool {}
@@ -896,11 +914,6 @@ class Memcached  {
  * @link http://www.php.net/manual/en/class.memcachedexception.php
  */
 class MemcachedException extends RuntimeException implements Stringable, Throwable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-
 
 	/**
 	 * Construct the exception
@@ -910,8 +923,11 @@ class MemcachedException extends RuntimeException implements Stringable, Throwab
 	 * @param Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**

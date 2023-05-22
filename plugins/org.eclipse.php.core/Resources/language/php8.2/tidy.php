@@ -7,9 +7,20 @@
  * @link http://www.php.net/manual/en/class.tidy.php
  */
 class tidy  {
-	public $errorBuffer;
-	public $value;
 
+	/**
+	 * Return warnings and errors which occurred parsing the specified document
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.tidy.php#tidy.props.errorbuffer
+	 */
+	public string $errorBuffer;
+
+	/**
+	 * The HTML representation of the node, including the surrounding tags.
+	 * @var string|null
+	 * @link http://www.php.net/manual/en/class.tidy.php#tidy.props.value
+	 */
+	public ?string $value;
 
 	/**
 	 * Constructs a new tidy object
@@ -192,16 +203,71 @@ class tidy  {
  * @link http://www.php.net/manual/en/class.tidynode.php
  */
 final class tidyNode  {
-	public readonly $value;
-	public readonly $name;
-	public readonly $type;
-	public readonly $line;
-	public readonly $column;
-	public readonly $proprietary;
-	public readonly $id;
-	public readonly $attribute;
-	public readonly $child;
 
+	/**
+	 * The HTML representation of the node, including the surrounding tags.
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.tidynode.php#tidynode.props.value
+	 */
+	public readonly string $value;
+
+	/**
+	 * The name of the HTML node
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.tidynode.php#tidynode.props.name
+	 */
+	public readonly string $name;
+
+	/**
+	 * The type of the node (one of the nodetype constants, e.g. TIDY_NODETYPE_PHP)
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.tidynode.php#tidynode.props.type
+	 */
+	public readonly int $type;
+
+	/**
+	 * The line number at which the tags is located in the file
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.tidynode.php#tidynode.props.line
+	 */
+	public readonly int $line;
+
+	/**
+	 * The column number at which the tags is located in the file
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.tidynode.php#tidynode.props.column
+	 */
+	public readonly int $column;
+
+	/**
+	 * Indicates if the node is a proprietary tag
+	 * @var bool
+	 * @link http://www.php.net/manual/en/class.tidynode.php#tidynode.props.proprietary
+	 */
+	public readonly bool $proprietary;
+
+	/**
+	 * The ID of the node (one of the tag constants, e.g. TIDY_TAG_FRAME)
+	 * @var int|null
+	 * @link http://www.php.net/manual/en/class.tidynode.php#tidynode.props.id
+	 */
+	public readonly ?int $id;
+
+	/**
+	 * An array of string, representing
+	 * the attributes names (as keys) of the current node.
+	 * @var array|null
+	 * @link http://www.php.net/manual/en/class.tidynode.php#tidynode.props.attribute
+	 */
+	public readonly ?array $attribute;
+
+	/**
+	 * An array of tidyNode, representing
+	 * the children of the current node.
+	 * @var array|null
+	 * @link http://www.php.net/manual/en/class.tidynode.php#tidynode.props.child
+	 */
+	public readonly ?array $child;
 
 	/**
 	 * Private constructor to disallow direct instantiation

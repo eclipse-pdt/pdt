@@ -14,10 +14,10 @@ final class SysvMessageQueue  {
  * @link http://www.php.net/manual/en/function.msg-get-queue.php
  * @param int $key 
  * @param int $permissions [optional] 
- * @return SysvMessageQueue|bool Returns SysvMessageQueue instance that can be used to access the System V message queue,
+ * @return SysvMessageQueue|false Returns SysvMessageQueue instance that can be used to access the System V message queue,
  * or false on failure.
  */
-function msg_get_queue (int $key, int $permissions = 0666): SysvMessageQueue|bool {}
+function msg_get_queue (int $key, int $permissions = 0666): SysvMessageQueue|int {}
 
 /**
  * Send a message to a message queue
@@ -67,7 +67,7 @@ function msg_remove_queue (SysvMessageQueue $queue): bool {}
  * Returns information from the message queue data structure
  * @link http://www.php.net/manual/en/function.msg-stat-queue.php
  * @param SysvMessageQueue $queue 
- * @return array|bool On success, the return value is an array whose keys and values have the following
+ * @return array|false On success, the return value is an array whose keys and values have the following
  * meanings:
  * <table>
  * Array structure for msg_stat_queue
@@ -138,7 +138,7 @@ function msg_remove_queue (SysvMessageQueue $queue): bool {}
  * </table>
  * <p>Returns false on failure.</p>
  */
-function msg_stat_queue (SysvMessageQueue $queue): array|bool {}
+function msg_stat_queue (SysvMessageQueue $queue): array|int {}
 
 /**
  * Set information in the message queue data structure

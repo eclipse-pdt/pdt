@@ -7,11 +7,6 @@
  * @link http://www.php.net/manual/en/class.reflectionexception.php
  */
 class ReflectionException extends Exception implements Throwable, Stringable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-
 
 	/**
 	 * Construct the exception
@@ -21,8 +16,11 @@ class ReflectionException extends Exception implements Throwable, Stringable {
 	 * @param Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -115,7 +113,7 @@ interface Reflector extends Stringable {
 	 * @link http://www.php.net/manual/en/stringable.tostring.php
 	 * @return string Returns the string representation of the object.
 	 */
-	abstract public function __toString (): string
+	abstract public function __toString (): string;
 
 }
 
@@ -125,8 +123,14 @@ interface Reflector extends Stringable {
  * @link http://www.php.net/manual/en/class.reflectionfunctionabstract.php
  */
 abstract class ReflectionFunctionAbstract implements Reflector, Stringable {
-	public $name;
 
+	/**
+	 * Name of the function. Read-only, throws
+	 * ReflectionException in attempt to write.
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.reflectionfunctionabstract.php#reflectionfunctionabstract.props.name
+	 */
+	public string $name;
 
 	/**
 	 * Clones function
@@ -207,6 +211,9 @@ abstract class ReflectionFunctionAbstract implements Reflector, Stringable {
 	 */
 	public function getClosureScopeClass (): ?ReflectionClass {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getClosureCalledClass () {}
 
 	/**
@@ -368,7 +375,7 @@ abstract class ReflectionFunctionAbstract implements Reflector, Stringable {
 	 * @link http://www.php.net/manual/en/stringable.tostring.php
 	 * @return string Returns the string representation of the object.
 	 */
-	abstract public function __toString (): string
+	abstract public function __toString (): string;
 
 }
 
@@ -381,8 +388,6 @@ class ReflectionFunction extends ReflectionFunctionAbstract implements Stringabl
 	/**
 	 * Indicates deprecated functions.
 	const IS_DEPRECATED = 2048;
-
-	public $name;
 
 
 	/**
@@ -511,6 +516,9 @@ class ReflectionFunction extends ReflectionFunctionAbstract implements Stringabl
 	 */
 	public function getClosureScopeClass (): ?ReflectionClass {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getClosureCalledClass () {}
 
 	/**
@@ -743,8 +751,14 @@ final class ReflectionGenerator  {
  * @link http://www.php.net/manual/en/class.reflectionparameter.php
  */
 class ReflectionParameter implements Stringable, Reflector {
-	public $name;
 
+	/**
+	 * Name of the parameter. Read-only, throws
+	 * ReflectionException in attempt to write.
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.reflectionparameter.php#reflectionparameter.props.name
+	 */
+	public string $name;
 
 	/**
 	 * Clone
@@ -902,6 +916,9 @@ class ReflectionParameter implements Stringable, Reflector {
 	 */
 	public function isVariadic (): bool {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function isPromoted (): bool {}
 
 	/**
@@ -934,6 +951,9 @@ class ReflectionParameter implements Stringable, Reflector {
  */
 abstract class ReflectionType implements Stringable {
 
+	/**
+	 * {@inheritdoc}
+	 */
 	private function __clone (): void {}
 
 	/**
@@ -1078,9 +1098,13 @@ class ReflectionMethod extends ReflectionFunctionAbstract implements Stringable,
 	 * Prior to PHP 7.4.0, the value was 4.
 	const IS_FINAL = 32;
 
-	public $name;
-	public $class;
 
+	/**
+	 * Class name
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.reflectionmethod.php#reflectionmethod.props.class
+	 */
+	public string $class;
 
 	/**
 	 * Constructs a ReflectionMethod
@@ -1285,6 +1309,9 @@ class ReflectionMethod extends ReflectionFunctionAbstract implements Stringable,
 	 */
 	public function getClosureScopeClass (): ?ReflectionClass {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getClosureCalledClass () {}
 
 	/**
@@ -1464,9 +1491,18 @@ class ReflectionClass implements Stringable, Reflector {
 	 * Indicates the class is readonly.
 	const IS_READONLY = 65536;
 
-	public $name;
 
+	/**
+	 * Name of the class. Read-only, throws
+	 * ReflectionException in attempt to write.
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.reflectionclass.php#reflectionclass.props.name
+	 */
+	public string $name;
 
+	/**
+	 * {@inheritdoc}
+	 */
 	private function __clone (): void {}
 
 	/**
@@ -1778,7 +1814,7 @@ class ReflectionClass implements Stringable, Reflector {
 	 * @param array $args [optional] 
 	 * @return object|null Returns a new instance of the class, or null on failure.
 	 */
-	public function newInstanceArgs (array $args = []): ?object {}
+	public function newInstanceArgs (array $args = '[]'): ?object {}
 
 	/**
 	 * Gets parent class
@@ -1838,6 +1874,9 @@ class ReflectionClass implements Stringable, Reflector {
 	 */
 	public function isIterable (): bool {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function isIterateable () {}
 
 	/**
@@ -1911,8 +1950,6 @@ class ReflectionObject extends ReflectionClass implements Reflector, Stringable 
 	const IS_EXPLICIT_ABSTRACT = 64;
 	const IS_FINAL = 32;
 	const IS_READONLY = 65536;
-
-	public $name;
 
 
 	/**
@@ -2224,7 +2261,7 @@ class ReflectionObject extends ReflectionClass implements Reflector, Stringable 
 	 * @param array $args [optional] 
 	 * @return object|null Returns a new instance of the class, or null on failure.
 	 */
-	public function newInstanceArgs (array $args = []): ?object {}
+	public function newInstanceArgs (array $args = '[]'): ?object {}
 
 	/**
 	 * Gets parent class
@@ -2284,6 +2321,9 @@ class ReflectionObject extends ReflectionClass implements Reflector, Stringable 
 	 */
 	public function isIterable (): bool {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function isIterateable () {}
 
 	/**
@@ -2378,9 +2418,22 @@ class ReflectionProperty implements Stringable, Reflector {
 	 * Prior to PHP 7.4.0, the value was 1024.
 	const IS_PRIVATE = 4;
 
-	public $name;
-	public $class;
 
+	/**
+	 * Name of the property. Read-only, throws
+	 * ReflectionException in attempt to write.
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.reflectionproperty.php#reflectionproperty.props.name
+	 */
+	public string $name;
+
+	/**
+	 * Name of the class where the property is defined. Read-only, throws
+	 * ReflectionException in attempt to write.
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.reflectionproperty.php#reflectionproperty.props.class
+	 */
+	public string $class;
 
 	/**
 	 * Clone
@@ -2597,10 +2650,26 @@ class ReflectionClassConstant implements Stringable, Reflector {
 	 * constants. Available as of PHP 8.1.0.
 	const IS_FINAL = 32;
 
-	public $name;
-	public $class;
 
+	/**
+	 * Name of the class constant. Read-only, throws
+	 * ReflectionException in attempt to write.
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.reflectionclassconstant.php#reflectionclassconstant.props.name
+	 */
+	public string $name;
 
+	/**
+	 * Name of the class where the class constant is defined. Read-only, throws
+	 * ReflectionException in attempt to write.
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.reflectionclassconstant.php#reflectionclassconstant.props.class
+	 */
+	public string $class;
+
+	/**
+	 * {@inheritdoc}
+	 */
 	private function __clone (): void {}
 
 	/**
@@ -2714,8 +2783,15 @@ class ReflectionClassConstant implements Stringable, Reflector {
  * @link http://www.php.net/manual/en/class.reflectionextension.php
  */
 class ReflectionExtension implements Stringable, Reflector {
-	public $name;
 
+	/**
+	 * Name of the extension, same as calling the 
+	 * ReflectionExtension::getName 
+	 * method.
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.reflectionextension.php#reflectionextension.props.name
+	 */
+	public string $name;
 
 	/**
 	 * Clones
@@ -2833,8 +2909,14 @@ class ReflectionExtension implements Stringable, Reflector {
  * @link http://www.php.net/manual/en/class.reflectionzendextension.php
  */
 class ReflectionZendExtension implements Stringable, Reflector {
-	public $name;
 
+	/**
+	 * Name of the extension. Read-only, throws
+	 * ReflectionException in attempt to write.
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.reflectionzendextension.php#reflectionzendextension.props.name
+	 */
+	public string $name;
 
 	/**
 	 * Clone handler
@@ -2919,6 +3001,9 @@ final class ReflectionReference  {
 	 */
 	public function getId (): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	private function __clone (): void {}
 
 	/**
@@ -2976,8 +3061,14 @@ class ReflectionAttribute implements Stringable, Reflector {
 	 */
 	public function newInstance (): object {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __toString (): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	private function __clone (): void {}
 
 	/**
@@ -2998,8 +3089,6 @@ class ReflectionEnum extends ReflectionClass implements Reflector, Stringable {
 	const IS_EXPLICIT_ABSTRACT = 64;
 	const IS_FINAL = 32;
 	const IS_READONLY = 65536;
-
-	public $name;
 
 
 	/**
@@ -3352,7 +3441,7 @@ class ReflectionEnum extends ReflectionClass implements Reflector, Stringable {
 	 * @param array $args [optional] 
 	 * @return object|null Returns a new instance of the class, or null on failure.
 	 */
-	public function newInstanceArgs (array $args = []): ?object {}
+	public function newInstanceArgs (array $args = '[]'): ?object {}
 
 	/**
 	 * Gets parent class
@@ -3412,6 +3501,9 @@ class ReflectionEnum extends ReflectionClass implements Reflector, Stringable {
 	 */
 	public function isIterable (): bool {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function isIterateable () {}
 
 	/**
@@ -3485,9 +3577,6 @@ class ReflectionEnumUnitCase extends ReflectionClassConstant implements Reflecto
 	const IS_PROTECTED = 2;
 	const IS_PRIVATE = 4;
 	const IS_FINAL = 32;
-
-	public $name;
-	public $class;
 
 
 	/**
@@ -3613,9 +3702,6 @@ class ReflectionEnumBackedCase extends ReflectionEnumUnitCase implements Stringa
 	const IS_PROTECTED = 2;
 	const IS_PRIVATE = 4;
 	const IS_FINAL = 32;
-
-	public $name;
-	public $class;
 
 
 	/**

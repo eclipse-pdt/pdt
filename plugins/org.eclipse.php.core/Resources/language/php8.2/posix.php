@@ -204,7 +204,7 @@ function posix_ctermid (): string|false {}
  * @return string|false On success, returns a string of the absolute path of the
  * file_descriptor. On failure, returns false
  */
-function posix_ttyname (resource|int $file_descriptor): string|false {}
+function posix_ttyname ($file_descriptor): string|false {}
 
 /**
  * Determine if a file descriptor is an interactive terminal
@@ -213,7 +213,7 @@ function posix_ttyname (resource|int $file_descriptor): string|false {}
  * @return bool Returns true if file_descriptor is an open descriptor connected
  * to a terminal and false otherwise.
  */
-function posix_isatty (resource|int $file_descriptor): bool {}
+function posix_isatty ($file_descriptor): bool {}
 
 /**
  * Pathname of current directory

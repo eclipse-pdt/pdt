@@ -7,11 +7,6 @@
  * @link http://www.php.net/manual/en/class.sodiumexception.php
  */
 class SodiumException extends Exception implements Throwable, Stringable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-
 
 	/**
 	 * Construct the exception
@@ -21,8 +16,11 @@ class SodiumException extends Exception implements Throwable, Stringable {
 	 * @param Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -103,9 +101,9 @@ function sodium_crypto_aead_aes256gcm_is_available (): bool {}
  * appended to the ciphertext, but it is not encrypted or stored in the ciphertext.
  * @param string $nonce A number that must be only used once, per message. 8 bytes long.
  * @param string $key Encryption key (256-bit).
- * @return string|bool Returns the plaintext on success, or false on failure.
+ * @return string|false Returns the plaintext on success, or false on failure.
  */
-function sodium_crypto_aead_chacha20poly1305_decrypt (string $ciphertext, string $additional_data, string $nonce, string $key): string|bool {}
+function sodium_crypto_aead_chacha20poly1305_decrypt (string $ciphertext, string $additional_data, string $nonce, string $key): string|int {}
 
 /**
  * Encrypt then authenticate with ChaCha20-Poly1305
@@ -135,9 +133,9 @@ function sodium_crypto_aead_chacha20poly1305_keygen (): string {}
  * appended to the ciphertext, but it is not encrypted or stored in the ciphertext.
  * @param string $nonce A number that must be only used once, per message. 12 bytes long.
  * @param string $key Encryption key (256-bit).
- * @return string|bool Returns the plaintext on success, or false on failure.
+ * @return string|false Returns the plaintext on success, or false on failure.
  */
-function sodium_crypto_aead_chacha20poly1305_ietf_decrypt (string $ciphertext, string $additional_data, string $nonce, string $key): string|bool {}
+function sodium_crypto_aead_chacha20poly1305_ietf_decrypt (string $ciphertext, string $additional_data, string $nonce, string $key): string|int {}
 
 /**
  * Encrypt a message
@@ -168,9 +166,9 @@ function sodium_crypto_aead_chacha20poly1305_ietf_keygen (): string {}
  * @param string $nonce A number that must be only used once, per message. 24 bytes long.
  * This is a large enough bound to generate randomly (i.e. random_bytes).
  * @param string $key Encryption key (256-bit).
- * @return string|bool Returns the plaintext on success, or false on failure.
+ * @return string|false Returns the plaintext on success, or false on failure.
  */
-function sodium_crypto_aead_xchacha20poly1305_ietf_decrypt (string $ciphertext, string $additional_data, string $nonce, string $key): string|bool {}
+function sodium_crypto_aead_xchacha20poly1305_ietf_decrypt (string $ciphertext, string $additional_data, string $nonce, string $key): string|int {}
 
 /**
  * Generate a random XChaCha20-Poly1305 key.
@@ -264,9 +262,9 @@ function sodium_crypto_box_keypair_from_secretkey_and_publickey (string $secret_
  * This is a large enough bound to generate randomly (i.e. random_bytes).
  * @param string $key_pair See sodium_crypto_box_keypair_from_secretkey_and_publickey.
  * This should include the sender's public key and the recipient's secret key.
- * @return string|bool Returns the plaintext message on success, or false on failure.
+ * @return string|false Returns the plaintext message on success, or false on failure.
  */
-function sodium_crypto_box_open (string $ciphertext, string $nonce, string $key_pair): string|bool {}
+function sodium_crypto_box_open (string $ciphertext, string $nonce, string $key_pair): string|int {}
 
 /**
  * Extract the public key from a crypto_box keypair
@@ -299,9 +297,9 @@ function sodium_crypto_box_seal (string $message, string $public_key): string {}
  * @link http://www.php.net/manual/en/function.sodium-crypto-box-seal-open.php
  * @param string $ciphertext The encrypted message
  * @param string $key_pair The keypair of the recipient. Must include the secret key.
- * @return string|bool The plaintext on success, or false on failure.
+ * @return string|false The plaintext on success, or false on failure.
  */
-function sodium_crypto_box_seal_open (string $ciphertext, string $key_pair): string|bool {}
+function sodium_crypto_box_seal_open (string $ciphertext, string $key_pair): string|int {}
 
 /**
  * Extracts the secret key from a crypto_box keypair
@@ -482,7 +480,7 @@ function sodium_crypto_kx_server_session_keys (string $server_key_pair, string $
  * @return string The cryptographic hash as raw bytes. If a hex-encoded output is desired,
  * the result can be passed to sodium_bin2hex.
  */
-function sodium_crypto_generichash (string $message, string $key = "", int $length = SODIUM_CRYPTO_GENERICHASH_BYTES): string {}
+function sodium_crypto_generichash (string $message, string $key = '""', int $length = SODIUM_CRYPTO_GENERICHASH_BYTES): string {}
 
 /**
  * Generate a random generichash key
@@ -498,16 +496,16 @@ function sodium_crypto_generichash_keygen (): string {}
  * @param int $length [optional] The expected output length of the hash function.
  * @return string Returns a hash state, serialized as a raw binary string.
  */
-function sodium_crypto_generichash_init (string $key = "", int $length = SODIUM_CRYPTO_GENERICHASH_BYTES): string {}
+function sodium_crypto_generichash_init (string $key = '""', int $length = SODIUM_CRYPTO_GENERICHASH_BYTES): string {}
 
 /**
  * Add message to a hash
  * @link http://www.php.net/manual/en/function.sodium-crypto-generichash-update.php
  * @param string $state The return value of sodium_crypto_generichash_init.
  * @param string $message Data to append to the hashing state.
- * @return bool Always returns true.
+ * @return true Always returns true.
  */
-function sodium_crypto_generichash_update (string &$state, string $message): bool {}
+function sodium_crypto_generichash_update (string &$state, string $message): int {}
 
 /**
  * Complete the hash
@@ -666,9 +664,9 @@ function sodium_crypto_secretbox_keygen (): string {}
  * @param string $nonce A number that must be only used once, per message. 24 bytes long.
  * This is a large enough bound to generate randomly (i.e. random_bytes).
  * @param string $key Encryption key (256-bit).
- * @return string|bool The decrypted string on success or false on failure.
+ * @return string|false The decrypted string on success or false on failure.
  */
-function sodium_crypto_secretbox_open (string $ciphertext, string $nonce, string $key): string|bool {}
+function sodium_crypto_secretbox_open (string $ciphertext, string $nonce, string $key): string|int {}
 
 /**
  * Generate a random secretstream key.
@@ -696,7 +694,7 @@ function sodium_crypto_secretstream_xchacha20poly1305_init_push (string $key): a
  * (i.e. re-keying or indicating the final chunk in a stream).
  * @return string Returns the encrypted ciphertext.
  */
-function sodium_crypto_secretstream_xchacha20poly1305_push (string &$state, string $message, string $additional_data = "", int $tag = SODIUM_CRYPTO_SECRETSTREAM_XCHACHA20POLY1305_TAG_MESSAGE): string {}
+function sodium_crypto_secretstream_xchacha20poly1305_push (string &$state, string $message, string $additional_data = '""', int $tag = SODIUM_CRYPTO_SECRETSTREAM_XCHACHA20POLY1305_TAG_MESSAGE): string {}
 
 /**
  * Initialize a secretstream context for decryption
@@ -715,7 +713,7 @@ function sodium_crypto_secretstream_xchacha20poly1305_init_pull (string $header,
  * and sodium_crypto_secretstream_xchacha20poly1305_init_push
  * @param string $ciphertext The ciphertext chunk to decrypt.
  * @param string $additional_data [optional] Optional additional data to include in the authentication tag.
- * @return array|bool An array with two values:
+ * @return array|false An array with two values:
  * <p>
  * <br>
  * <p>
@@ -753,7 +751,7 @@ function sodium_crypto_secretstream_xchacha20poly1305_init_pull (string $header,
  * "forget" the key used to encrypt this message and the previous ones, and derive a new secret key.
  * </p></p>
  */
-function sodium_crypto_secretstream_xchacha20poly1305_pull (string &$state, string $ciphertext, string $additional_data = ""): array|bool {}
+function sodium_crypto_secretstream_xchacha20poly1305_pull (string &$state, string $ciphertext, string $additional_data = '""'): array|int {}
 
 /**
  * Explicitly rotate the key in the secretstream state
@@ -834,9 +832,9 @@ function sodium_crypto_sign_keypair_from_secretkey_and_publickey (string $secret
  * @link http://www.php.net/manual/en/function.sodium-crypto-sign-open.php
  * @param string $signed_message A message signed with sodium_crypto_sign
  * @param string $public_key An Ed25519 public key
- * @return string|bool Returns the original signed message on success, or false on failure.
+ * @return string|false Returns the original signed message on success, or false on failure.
  */
-function sodium_crypto_sign_open (string $signed_message, string $public_key): string|bool {}
+function sodium_crypto_sign_open (string $signed_message, string $public_key): string|int {}
 
 /**
  * Extract the Ed25519 public key from a keypair
@@ -1015,7 +1013,7 @@ function sodium_bin2hex (string $string): string {}
  * @param string $ignore [optional] Optional string argument for characters to ignore.
  * @return string Returns the binary representation of the given string data.
  */
-function sodium_hex2bin (string $string, string $ignore = ""): string {}
+function sodium_hex2bin (string $string, string $ignore = '""'): string {}
 
 /**
  * Encodes a raw binary string with base64.
@@ -1046,7 +1044,7 @@ function sodium_bin2base64 (string $string, int $id): string {}
  * @param string $ignore [optional] Characters to ignore when decoding (e.g. whitespace characters).
  * @return string Decoded string.
  */
-function sodium_base642bin (string $string, int $id, string $ignore = ""): string {}
+function sodium_base642bin (string $string, int $id, string $ignore = '""'): string {}
 
 /**
  * Alias of sodium_crypto_box_publickey_from_secretkey

@@ -21,6 +21,7 @@ function textdomain (?string $domain): string {}
 function gettext (string $message): string {}
 
 /**
+ * {@inheritdoc}
  * @param string $message
  */
 function _ (string $message): string {}
@@ -49,10 +50,10 @@ function dcgettext (string $domain, string $message, int $category): string {}
  * @link http://www.php.net/manual/en/function.bindtextdomain.php
  * @param string $domain 
  * @param string|null $directory 
- * @return string|bool The full pathname for the domain currently being set,
+ * @return string|false The full pathname for the domain currently being set,
  * or false on failure.
  */
-function bindtextdomain (string $domain, ?string $directory): string|bool {}
+function bindtextdomain (string $domain, ?string $directory): string|int {}
 
 /**
  * Plural version of gettext
@@ -94,8 +95,8 @@ function dcngettext (string $domain, string $singular, string $plural, int $coun
  * @link http://www.php.net/manual/en/function.bind-textdomain-codeset.php
  * @param string $domain 
  * @param string|null $codeset 
- * @return string|bool A string on success.
+ * @return string|false A string on success.
  */
-function bind_textdomain_codeset (string $domain, ?string $codeset): string|bool {}
+function bind_textdomain_codeset (string $domain, ?string $codeset): string|int {}
 
 // End of gettext v.8.0.28

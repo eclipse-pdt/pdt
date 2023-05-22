@@ -41,7 +41,7 @@ final class HashContext  {
  * unless binary is set to true in which case the raw
  * binary representation of the message digest is returned.
  */
-function hash (string $algo, string $data, bool $binary = false, array $options = []): string {}
+function hash (string $algo, string $data, bool $binary = false, array $options = '[]'): string {}
 
 /**
  * Generate a hash value using the contents of a given file
@@ -50,11 +50,11 @@ function hash (string $algo, string $data, bool $binary = false, array $options 
  * @param string $filename 
  * @param bool $binary [optional] 
  * @param array $options [optional] 
- * @return string|bool Returns a string containing the calculated message digest as lowercase hexits
+ * @return string|false Returns a string containing the calculated message digest as lowercase hexits
  * unless binary is set to true in which case the raw
  * binary representation of the message digest is returned.
  */
-function hash_file (string $algo, string $filename, bool $binary = false, array $options = []): string|bool {}
+function hash_file (string $algo, string $filename, bool $binary = false, array $options = '[]'): string|int {}
 
 /**
  * Generate a keyed hash value using the HMAC method
@@ -76,12 +76,12 @@ function hash_hmac (string $algo, string $data, string $key, bool $binary = fals
  * @param string $filename 
  * @param string $key 
  * @param bool $binary [optional] 
- * @return string|bool Returns a string containing the calculated message digest as lowercase hexits
+ * @return string|false Returns a string containing the calculated message digest as lowercase hexits
  * unless binary is set to true in which case the raw
  * binary representation of the message digest is returned.
  * Returns false if the file filename cannot be read.
  */
-function hash_hmac_file (string $algo, string $filename, string $key, bool $binary = false): string|bool {}
+function hash_hmac_file (string $algo, string $filename, string $key, bool $binary = false): string|int {}
 
 /**
  * Initialize an incremental hashing context
@@ -94,7 +94,7 @@ function hash_hmac_file (string $algo, string $filename, string $key, bool $bina
  * hash_update_stream, hash_update_file,
  * and hash_final.
  */
-function hash_init (string $algo, int $flags = null, string $key = "", array $options = []): HashContext {}
+function hash_init (string $algo, int $flags = null, string $key = '""', array $options = '[]'): HashContext {}
 
 /**
  * Pump data into an active hashing context
@@ -113,7 +113,7 @@ function hash_update (HashContext $context, string $data): bool {}
  * @param int $length [optional] 
  * @return int Actual number of bytes added to the hashing context from stream.
  */
-function hash_update_stream (HashContext $context, resource $stream, int $length = -1): int {}
+function hash_update_stream (HashContext $context, $stream, int $length = -1): int {}
 
 /**
  * Pump data into an active hashing context from a file
@@ -123,7 +123,7 @@ function hash_update_stream (HashContext $context, resource $stream, int $length
  * @param resource|null $stream_context [optional] 
  * @return bool Returns true on success or false on failure.
  */
-function hash_update_file (HashContext $context, string $filename, ?resource $stream_context = null): bool {}
+function hash_update_file (HashContext $context, string $filename, $stream_context = null): bool {}
 
 /**
  * Finalize an incremental hash and return resulting digest
@@ -195,26 +195,26 @@ function hash_equals (string $known_string, string $user_string): bool {}
  * @return string Returns a string containing a raw binary representation of the derived key
  * (also known as output keying material - OKM).
  */
-function hash_hkdf (string $algo, string $key, int $length = null, string $info = "", string $salt = ""): string {}
+function hash_hkdf (string $algo, string $key, int $length = null, string $info = '""', string $salt = '""'): string {}
 
 /**
  * Gets the block size of the specified hash
  * @link http://www.php.net/manual/en/function.mhash-get-block-size.php
  * @param int $algo 
- * @return int|bool Returns the size in bytes or false, if the algo
+ * @return int|false Returns the size in bytes or false, if the algo
  * does not exist.
  * @deprecated 1
  */
-function mhash_get_block_size (int $algo): int|bool {}
+function mhash_get_block_size (int $algo): int {}
 
 /**
  * Gets the name of the specified hash
  * @link http://www.php.net/manual/en/function.mhash-get-hash-name.php
  * @param int $algo 
- * @return string|bool Returns the name of the hash or false, if the hash does not exist.
+ * @return string|false Returns the name of the hash or false, if the hash does not exist.
  * @deprecated 1
  */
-function mhash_get_hash_name (int $algo): string|bool {}
+function mhash_get_hash_name (int $algo): string|int {}
 
 /**
  * Generates a key
@@ -223,10 +223,10 @@ function mhash_get_hash_name (int $algo): string|bool {}
  * @param string $password 
  * @param string $salt 
  * @param int $length 
- * @return string|bool Returns the generated key as a string, or false on error.
+ * @return string|false Returns the generated key as a string, or false on error.
  * @deprecated 1
  */
-function mhash_keygen_s2k (int $algo, string $password, string $salt, int $length): string|bool {}
+function mhash_keygen_s2k (int $algo, string $password, string $salt, int $length): string|int {}
 
 /**
  * Gets the highest available hash ID
@@ -243,11 +243,11 @@ function mhash_count (): int {}
  * @param int $algo 
  * @param string $data 
  * @param string|null $key [optional] 
- * @return string|bool Returns the resulting hash (also called digest) or HMAC as a string, or
+ * @return string|false Returns the resulting hash (also called digest) or HMAC as a string, or
  * false on error.
  * @deprecated 1
  */
-function mhash (int $algo, string $data, ?string $key = null): string|bool {}
+function mhash (int $algo, string $data, ?string $key = null): string|int {}
 
 
 /**

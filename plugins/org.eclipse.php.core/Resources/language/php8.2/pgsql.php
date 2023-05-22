@@ -89,10 +89,11 @@ function pg_dbname (?PgSql\Connection $connection = null): string {}
 function pg_last_error (?PgSql\Connection $connection = null): string {}
 
 /**
- * @param ?PgSql\Connection $connection [optional]
+ * {@inheritdoc}
+ * @param PgSql\Connection|null $connection [optional]
  * @deprecated 
  */
-function pg_errormessage (?PgSql\Connection $connection = null): string {}
+function pg_errormessage (?PgSql\Connection $connection = NULL): string {}
 
 /**
  * Get the options associated with the connection
@@ -167,10 +168,11 @@ function pg_ping (?PgSql\Connection $connection = null): bool {}
 function pg_query (PgSql\Connection $connection = null, string $query): PgSql\Result|false {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $connection
  * @param string $query [optional]
  */
-function pg_exec ($connection = null, string $query = 'null'): PgSql\Result|false {}
+function pg_exec ($connection = null, string $query = NULL): PgSql\Result|false {}
 
 /**
  * Submits a command to the server and waits for the result, with the ability to pass parameters separately from the SQL command text
@@ -212,6 +214,7 @@ function pg_execute (PgSql\Connection $connection = null, string $stmtname, arra
 function pg_num_rows (PgSql\Result $result): int {}
 
 /**
+ * {@inheritdoc}
  * @param PgSql\Result $result
  * @deprecated 
  */
@@ -226,6 +229,7 @@ function pg_numrows (PgSql\Result $result): int {}
 function pg_num_fields (PgSql\Result $result): int {}
 
 /**
+ * {@inheritdoc}
  * @param PgSql\Result $result
  * @deprecated 
  */
@@ -241,6 +245,7 @@ function pg_numfields (PgSql\Result $result): int {}
 function pg_affected_rows (PgSql\Result $result): int {}
 
 /**
+ * {@inheritdoc}
  * @param PgSql\Result $result
  * @deprecated 
  */
@@ -279,6 +284,7 @@ function pg_field_table (PgSql\Result $result, int $field, bool $oid_only = fals
 function pg_field_name (PgSql\Result $result, int $field): string {}
 
 /**
+ * {@inheritdoc}
  * @param PgSql\Result $result
  * @param int $field
  * @deprecated 
@@ -296,6 +302,7 @@ function pg_fieldname (PgSql\Result $result, int $field): string {}
 function pg_field_size (PgSql\Result $result, int $field): int {}
 
 /**
+ * {@inheritdoc}
  * @param PgSql\Result $result
  * @param int $field
  * @deprecated 
@@ -312,6 +319,7 @@ function pg_fieldsize (PgSql\Result $result, int $field): int {}
 function pg_field_type (PgSql\Result $result, int $field): string {}
 
 /**
+ * {@inheritdoc}
  * @param PgSql\Result $result
  * @param int $field
  * @deprecated 
@@ -337,6 +345,7 @@ function pg_field_type_oid (PgSql\Result $result, int $field): string|int {}
 function pg_field_num (PgSql\Result $result, string $field): int {}
 
 /**
+ * {@inheritdoc}
  * @param PgSql\Result $result
  * @param string $field
  * @deprecated 
@@ -360,12 +369,13 @@ function pg_fieldnum (PgSql\Result $result, string $field): int {}
 function pg_fetch_result (PgSql\Result $result, int $row, mixed $field): string|false|null {}
 
 /**
+ * {@inheritdoc}
  * @param PgSql\Result $result
  * @param mixed $row
  * @param string|int $field [optional]
  * @deprecated 
  */
-function pg_result (PgSql\Result $result, $row = null, string|int $field = 'null'): string|false|null {}
+function pg_result (PgSql\Result $result, $row = null, string|int $field = NULL): string|false|null {}
 
 /**
  * Get a row as an enumerated array
@@ -425,7 +435,7 @@ function pg_fetch_array (PgSql\Result $result, ?int $row = null, int $mode = PGS
  * <p>false is returned if row exceeds the number
  * of rows in the set, there are no more rows, or on any other error.</p>
  */
-function pg_fetch_object (PgSql\Result $result, ?int $row = null, string $class = "stdClass", array $constructor_args = []): object|false {}
+function pg_fetch_object (PgSql\Result $result, ?int $row = null, string $class = '"stdClass"', array $constructor_args = '[]'): object|false {}
 
 /**
  * Fetches all rows from a result as an array
@@ -466,12 +476,13 @@ function pg_result_seek (PgSql\Result $result, int $row): bool {}
 function pg_field_prtlen (PgSql\Result $result, int $row_number, mixed $field_name_or_number): int {}
 
 /**
+ * {@inheritdoc}
  * @param PgSql\Result $result
  * @param mixed $row
  * @param string|int $field [optional]
  * @deprecated 
  */
-function pg_fieldprtlen (PgSql\Result $result, $row = null, string|int $field = 'null'): int|false {}
+function pg_fieldprtlen (PgSql\Result $result, $row = null, string|int $field = NULL): int|false {}
 
 /**
  * Test if a field is SQL NULL
@@ -485,12 +496,13 @@ function pg_fieldprtlen (PgSql\Result $result, $row = null, string|int $field = 
 function pg_field_is_null (PgSql\Result $result, int $row, mixed $field): int {}
 
 /**
+ * {@inheritdoc}
  * @param PgSql\Result $result
  * @param mixed $row
  * @param string|int $field [optional]
  * @deprecated 
  */
-function pg_fieldisnull (PgSql\Result $result, $row = null, string|int $field = 'null'): int|false {}
+function pg_fieldisnull (PgSql\Result $result, $row = null, string|int $field = NULL): int|false {}
 
 /**
  * Free result memory
@@ -501,6 +513,7 @@ function pg_fieldisnull (PgSql\Result $result, $row = null, string|int $field = 
 function pg_free_result (PgSql\Result $result): bool {}
 
 /**
+ * {@inheritdoc}
  * @param PgSql\Result $result
  * @deprecated 
  */
@@ -517,6 +530,7 @@ function pg_freeresult (PgSql\Result $result): bool {}
 function pg_last_oid (PgSql\Result $result): string|int|false {}
 
 /**
+ * {@inheritdoc}
  * @param PgSql\Result $result
  * @deprecated 
  */
@@ -530,7 +544,7 @@ function pg_getlastoid (PgSql\Result $result): string|int|false {}
  * @param PgSql\Connection|null $connection [optional] 
  * @return bool Returns true on success or false on failure.
  */
-function pg_trace (string $filename, string $mode = "w", ?PgSql\Connection $connection = null): bool {}
+function pg_trace (string $filename, string $mode = '"w"', ?PgSql\Connection $connection = null): bool {}
 
 /**
  * Disable tracing of a PostgreSQL connection
@@ -550,11 +564,12 @@ function pg_untrace (?PgSql\Connection $connection = null): true {}
 function pg_lo_create (PgSql\Connection $connection = null, mixed $object_id = null): int {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $connection [optional]
  * @param mixed $oid [optional]
  * @deprecated 
  */
-function pg_locreate ($connection = null, $oid = null): string|int|false {}
+function pg_locreate ($connection = NULL, $oid = NULL): string|int|false {}
 
 /**
  * Delete a large object
@@ -566,11 +581,12 @@ function pg_locreate ($connection = null, $oid = null): string|int|false {}
 function pg_lo_unlink (PgSql\Connection $connection, int $oid): bool {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $connection
  * @param mixed $oid [optional]
  * @deprecated 
  */
-function pg_lounlink ($connection = null, $oid = null): bool {}
+function pg_lounlink ($connection = null, $oid = NULL): bool {}
 
 /**
  * Open a large object
@@ -583,12 +599,13 @@ function pg_lounlink ($connection = null, $oid = null): bool {}
 function pg_lo_open (PgSql\Connection $connection, int $oid, string $mode): PgSql\Lob|false {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $connection
  * @param mixed $oid [optional]
  * @param string $mode [optional]
  * @deprecated 
  */
-function pg_loopen ($connection = null, $oid = null, string $mode = 'null'): PgSql\Lob|false {}
+function pg_loopen ($connection = null, $oid = NULL, string $mode = NULL): PgSql\Lob|false {}
 
 /**
  * Close a large object
@@ -599,6 +616,7 @@ function pg_loopen ($connection = null, $oid = null, string $mode = 'null'): PgS
 function pg_lo_close (PgSql\Lob $lob): bool {}
 
 /**
+ * {@inheritdoc}
  * @param PgSql\Lob $lob
  * @deprecated 
  */
@@ -615,6 +633,7 @@ function pg_loclose (PgSql\Lob $lob): bool {}
 function pg_lo_read (PgSql\Lob $lob, int $length = 8192): string|false {}
 
 /**
+ * {@inheritdoc}
  * @param PgSql\Lob $lob
  * @param int $length [optional]
  * @deprecated 
@@ -632,12 +651,13 @@ function pg_loread (PgSql\Lob $lob, int $length = 8192): string|false {}
 function pg_lo_write (PgSql\Lob $lob, string $data, ?int $length = null): int|false {}
 
 /**
+ * {@inheritdoc}
  * @param PgSql\Lob $lob
  * @param string $data
- * @param ?int $length [optional]
+ * @param int|null $length [optional]
  * @deprecated 
  */
-function pg_lowrite (PgSql\Lob $lob, string $data, ?int $length = null): int|false {}
+function pg_lowrite (PgSql\Lob $lob, string $data, ?int $length = NULL): int|false {}
 
 /**
  * Reads an entire large object and send straight to browser
@@ -648,6 +668,7 @@ function pg_lowrite (PgSql\Lob $lob, string $data, ?int $length = null): int|fal
 function pg_lo_read_all (PgSql\Lob $lob): int {}
 
 /**
+ * {@inheritdoc}
  * @param PgSql\Lob $lob
  * @deprecated 
  */
@@ -664,12 +685,13 @@ function pg_loreadall (PgSql\Lob $lob): int {}
 function pg_lo_import (PgSql\Connection $connection = null, string $pathname, mixed $object_id = null): int {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $connection
  * @param mixed $filename [optional]
  * @param mixed $oid [optional]
  * @deprecated 
  */
-function pg_loimport ($connection = null, $filename = null, $oid = null): string|int|false {}
+function pg_loimport ($connection = null, $filename = NULL, $oid = NULL): string|int|false {}
 
 /**
  * Export a large object to file
@@ -682,12 +704,13 @@ function pg_loimport ($connection = null, $filename = null, $oid = null): string
 function pg_lo_export (PgSql\Connection $connection = null, int $oid, string $pathname): bool {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $connection
  * @param mixed $oid [optional]
  * @param mixed $filename [optional]
  * @deprecated 
  */
-function pg_loexport ($connection = null, $oid = null, $filename = null): bool {}
+function pg_loexport ($connection = null, $oid = NULL, $filename = NULL): bool {}
 
 /**
  * Seeks position within a large object
@@ -739,11 +762,12 @@ function pg_set_error_verbosity (PgSql\Connection $connection = null, int $verbo
 function pg_set_client_encoding (PgSql\Connection $connection = null, string $encoding): int {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $connection
  * @param string $encoding [optional]
  * @deprecated 
  */
-function pg_setclientencoding ($connection = null, string $encoding = 'null'): int {}
+function pg_setclientencoding ($connection = null, string $encoding = NULL): int {}
 
 /**
  * Gets the client encoding
@@ -754,10 +778,11 @@ function pg_setclientencoding ($connection = null, string $encoding = 'null'): i
 function pg_client_encoding (?PgSql\Connection $connection = null): string {}
 
 /**
- * @param ?PgSql\Connection $connection [optional]
+ * {@inheritdoc}
+ * @param PgSql\Connection|null $connection [optional]
  * @deprecated 
  */
-function pg_clientencoding (?PgSql\Connection $connection = null): string {}
+function pg_clientencoding (?PgSql\Connection $connection = NULL): string {}
 
 /**
  * Sync with PostgreSQL backend
@@ -785,7 +810,7 @@ function pg_put_line (PgSql\Connection $connection = null, string $data): bool {
  * @param string $null_as [optional] 
  * @return array|false An array with one element for each line of COPY data, or false on failure.
  */
-function pg_copy_to (PgSql\Connection $connection, string $table_name, string $separator = "\t", string $null_as = "\\\\N"): array|false {}
+function pg_copy_to (PgSql\Connection $connection, string $table_name, string $separator = '"\\t"', string $null_as = '"\\\\\\\\N"'): array|false {}
 
 /**
  * Insert records into a table from an array
@@ -797,7 +822,7 @@ function pg_copy_to (PgSql\Connection $connection, string $table_name, string $s
  * @param string $null_as [optional] 
  * @return bool Returns true on success or false on failure.
  */
-function pg_copy_from (PgSql\Connection $connection, string $table_name, array $rows, string $separator = "\t", string $null_as = "\\\\N"): bool {}
+function pg_copy_from (PgSql\Connection $connection, string $table_name, array $rows, string $separator = '"\\t"', string $null_as = '"\\\\\\\\N"'): bool {}
 
 /**
  * Escape a string for query
@@ -998,7 +1023,7 @@ function pg_get_pid (PgSql\Connection $connection): int {}
  * @param PgSql\Connection $connection >An PgSql\Connection instance.
  * @return resource|false A socket resource on success or false on failure.
  */
-function pg_socket (PgSql\Connection $connection): resource|false {}
+function pg_socket (PgSql\Connection $connection) {}
 
 /**
  * Reads input on the connection

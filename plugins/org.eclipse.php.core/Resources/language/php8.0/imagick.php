@@ -3,11 +3,6 @@
 // Start of imagick v.3.7.0
 
 class ImagickException extends Exception implements Throwable, Stringable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-
 
 	/**
 	 * Construct the exception
@@ -17,8 +12,11 @@ class ImagickException extends Exception implements Throwable, Stringable {
 	 * @param Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -84,11 +82,6 @@ class ImagickException extends Exception implements Throwable, Stringable {
 }
 
 class ImagickDrawException extends Exception implements Throwable, Stringable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-
 
 	/**
 	 * Construct the exception
@@ -98,8 +91,11 @@ class ImagickDrawException extends Exception implements Throwable, Stringable {
 	 * @param Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -165,11 +161,6 @@ class ImagickDrawException extends Exception implements Throwable, Stringable {
 }
 
 class ImagickPixelIteratorException extends Exception implements Throwable, Stringable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-
 
 	/**
 	 * Construct the exception
@@ -179,8 +170,11 @@ class ImagickPixelIteratorException extends Exception implements Throwable, Stri
 	 * @param Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -246,11 +240,6 @@ class ImagickPixelIteratorException extends Exception implements Throwable, Stri
 }
 
 class ImagickPixelException extends Exception implements Throwable, Stringable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-
 
 	/**
 	 * Construct the exception
@@ -260,8 +249,11 @@ class ImagickPixelException extends Exception implements Throwable, Stringable {
 	 * @param Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -327,11 +319,6 @@ class ImagickPixelException extends Exception implements Throwable, Stringable {
 }
 
 class ImagickKernelException extends Exception implements Throwable, Stringable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-
 
 	/**
 	 * Construct the exception
@@ -341,8 +328,11 @@ class ImagickKernelException extends Exception implements Throwable, Stringable 
 	 * @param Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -1072,7 +1062,7 @@ class Imagick implements Stringable, Iterator, Traversable, Countable {
 	 * @param string $fileName [optional] 
 	 * @return bool Returns true on success.
 	 */
-	public function pingImageFile (resource $filehandle, string $fileName = null): bool {}
+	public function pingImageFile ($filehandle, string $fileName = null): bool {}
 
 	/**
 	 * Creates a vertical mirror image
@@ -1106,6 +1096,7 @@ class Imagick implements Stringable, Iterator, Traversable, Countable {
 	public function waveImage (float $amplitude, float $length): bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param float $amplitude
 	 * @param float $length
 	 * @param int $interpolate_method
@@ -1194,7 +1185,7 @@ class Imagick implements Stringable, Iterator, Traversable, Countable {
 	 * @param int $channel [optional] 
 	 * @return bool Returns true on success.
 	 */
-	public function adaptiveBlurImage (float $radius, float $sigma, int $channel = Imagick::CHANNEL_DEFAULT): bool {}
+	public function adaptiveBlurImage (float $radius, float $sigma, int $channel = \Imagick::CHANNEL_DEFAULT): bool {}
 
 	/**
 	 * Enhances the contrast of a color image
@@ -1204,7 +1195,7 @@ class Imagick implements Stringable, Iterator, Traversable, Countable {
 	 * @param int $channel [optional] 
 	 * @return bool Returns true on success.
 	 */
-	public function contrastStretchImage (float $black_point, float $white_point, int $channel = Imagick::CHANNEL_DEFAULT): bool {}
+	public function contrastStretchImage (float $black_point, float $white_point, int $channel = \Imagick::CHANNEL_DEFAULT): bool {}
 
 	/**
 	 * Adaptively sharpen the image
@@ -1214,7 +1205,7 @@ class Imagick implements Stringable, Iterator, Traversable, Countable {
 	 * @param int $channel [optional] 
 	 * @return bool Returns true on success.
 	 */
-	public function adaptiveSharpenImage (float $radius, float $sigma, int $channel = Imagick::CHANNEL_DEFAULT): bool {}
+	public function adaptiveSharpenImage (float $radius, float $sigma, int $channel = \Imagick::CHANNEL_DEFAULT): bool {}
 
 	/**
 	 * Creates a high-contrast, two-color image
@@ -1224,9 +1215,10 @@ class Imagick implements Stringable, Iterator, Traversable, Countable {
 	 * @param int $channel [optional] 
 	 * @return bool Returns true on success.
 	 */
-	public function randomThresholdImage (float $low, float $high, int $channel = Imagick::CHANNEL_DEFAULT): bool {}
+	public function randomThresholdImage (float $low, float $high, int $channel = \Imagick::CHANNEL_DEFAULT): bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param float $x_rounding
 	 * @param float $y_rounding
 	 * @param float $stroke_width [optional]
@@ -1264,11 +1256,13 @@ class Imagick implements Stringable, Iterator, Traversable, Countable {
 	public function getIteratorIndex (): int {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param float $alpha
 	 */
 	public function setImageAlpha (float $alpha): bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param ImagickDraw $settings
 	 * @param float $angle
 	 * @param string $caption
@@ -1315,9 +1309,9 @@ class Imagick implements Stringable, Iterator, Traversable, Countable {
 	 * Formats a string with image details
 	 * @link http://www.php.net/manual/en/imagick.identifyformat.php
 	 * @param string $embedText A string containing formatting sequences e.g. "Trim box: %@ number of unique colors: %k".
-	 * @return string|bool Returns format or false on failure.
+	 * @return string|false Returns format or false on failure.
 	 */
-	public function identifyFormat (string $embedText): string|bool {}
+	public function identifyFormat (string $embedText): string|int {}
 
 	/**
 	 * Sets the image interpolate pixel method
@@ -1383,7 +1377,7 @@ class Imagick implements Stringable, Iterator, Traversable, Countable {
 	 * @param int $channel [optional] 
 	 * @return bool Returns true on success.
 	 */
-	public function clutImage (Imagick $lookup_table, int $channel = Imagick::CHANNEL_DEFAULT): bool {}
+	public function clutImage (Imagick $lookup_table, int $channel = \Imagick::CHANNEL_DEFAULT): bool {}
 
 	/**
 	 * Returns the image properties
@@ -1392,7 +1386,7 @@ class Imagick implements Stringable, Iterator, Traversable, Countable {
 	 * @param bool $include_values [optional] 
 	 * @return array Returns an array containing the image properties or property names.
 	 */
-	public function getImageProperties (string $pattern = "*", bool $include_values = true): array {}
+	public function getImageProperties (string $pattern = '"*"', bool $include_values = true): array {}
 
 	/**
 	 * Returns the image profiles
@@ -1401,7 +1395,7 @@ class Imagick implements Stringable, Iterator, Traversable, Countable {
 	 * @param bool $include_values [optional] 
 	 * @return array Returns an array containing the image profiles or profile names.
 	 */
-	public function getImageProfiles (string $pattern = "*", bool $include_values = true): array {}
+	public function getImageProfiles (string $pattern = '"*"', bool $include_values = true): array {}
 
 	/**
 	 * Distorts an image using various distortion methods
@@ -1420,7 +1414,7 @@ class Imagick implements Stringable, Iterator, Traversable, Countable {
 	 * @param string $format [optional] 
 	 * @return bool Returns true on success.
 	 */
-	public function writeImageFile (resource $filehandle, string $format = null): bool {}
+	public function writeImageFile ($filehandle, string $format = null): bool {}
 
 	/**
 	 * Writes frames to a filehandle
@@ -1429,7 +1423,7 @@ class Imagick implements Stringable, Iterator, Traversable, Countable {
 	 * @param string $format [optional] 
 	 * @return bool Returns true on success.
 	 */
-	public function writeImagesFile (resource $filehandle, string $format = null): bool {}
+	public function writeImagesFile ($filehandle, string $format = null): bool {}
 
 	/**
 	 * Reset image page
@@ -1505,7 +1499,7 @@ class Imagick implements Stringable, Iterator, Traversable, Countable {
 	 * @param int $channel [optional] 
 	 * @return bool Returns true on success.
 	 */
-	public function floodfillPaintImage (mixed $fill, float $fuzz, mixed $target, int $x, int $y, bool $invert, int $channel = Imagick::CHANNEL_DEFAULT): bool {}
+	public function floodfillPaintImage (mixed $fill, float $fuzz, mixed $target, int $x, int $y, bool $invert, int $channel = \Imagick::CHANNEL_DEFAULT): bool {}
 
 	/**
 	 * Changes the color value of any pixel that matches target
@@ -1517,7 +1511,7 @@ class Imagick implements Stringable, Iterator, Traversable, Countable {
 	 * @param int $channel [optional] 
 	 * @return bool Returns true on success.
 	 */
-	public function opaquePaintImage (mixed $target, mixed $fill, float $fuzz, bool $invert, int $channel = Imagick::CHANNEL_DEFAULT): bool {}
+	public function opaquePaintImage (mixed $target, mixed $fill, float $fuzz, bool $invert, int $channel = \Imagick::CHANNEL_DEFAULT): bool {}
 
 	/**
 	 * Paints pixels transparent
@@ -1598,7 +1592,7 @@ class Imagick implements Stringable, Iterator, Traversable, Countable {
 	 * @param int $channel [optional] 
 	 * @return float Returns a float describing the channel distortion.
 	 */
-	public function getImageChannelDistortions (Imagick $reference, int $metric, int $channel = Imagick::CHANNEL_DEFAULT): float {}
+	public function getImageChannelDistortions (Imagick $reference, int $metric, int $channel = \Imagick::CHANNEL_DEFAULT): float {}
 
 	/**
 	 * Sets the image gravity
@@ -1657,7 +1651,7 @@ class Imagick implements Stringable, Iterator, Traversable, Countable {
 	 * @param int $channel [optional] 
 	 * @return bool Returns true on success.
 	 */
-	public function sparseColorImage (int $SPARSE_METHOD, array $arguments, int $channel = Imagick::CHANNEL_DEFAULT): bool {}
+	public function sparseColorImage (int $SPARSE_METHOD, array $arguments, int $channel = \Imagick::CHANNEL_DEFAULT): bool {}
 
 	/**
 	 * Remaps image colors
@@ -1669,6 +1663,7 @@ class Imagick implements Stringable, Iterator, Traversable, Countable {
 	public function remapImage (Imagick $replacement, int $DITHER): bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param int $width
 	 * @param int $height
 	 * @param float $threshold
@@ -1695,7 +1690,7 @@ class Imagick implements Stringable, Iterator, Traversable, Countable {
 	 * @return array Returns an array with kurtosis and skewness
 	 * members.
 	 */
-	public function getImageChannelKurtosis (int $channel = Imagick::CHANNEL_DEFAULT): array {}
+	public function getImageChannelKurtosis (int $channel = \Imagick::CHANNEL_DEFAULT): array {}
 
 	/**
 	 * Applies a function on the image
@@ -1705,7 +1700,7 @@ class Imagick implements Stringable, Iterator, Traversable, Countable {
 	 * @param int $channel [optional] 
 	 * @return bool Returns true on success.
 	 */
-	public function functionImage (int $function, array $arguments, int $channel = Imagick::CHANNEL_DEFAULT): bool {}
+	public function functionImage (int $function, array $arguments, int $channel = \Imagick::CHANNEL_DEFAULT): bool {}
 
 	/**
 	 * Transforms an image to a new colorspace
@@ -1722,7 +1717,7 @@ class Imagick implements Stringable, Iterator, Traversable, Countable {
 	 * @param int $channel [optional] 
 	 * @return bool Returns true on success.
 	 */
-	public function haldClutImage (Imagick $clut, int $channel = Imagick::CHANNEL_DEFAULT): bool {}
+	public function haldClutImage (Imagick $clut, int $channel = \Imagick::CHANNEL_DEFAULT): bool {}
 
 	/**
 	 * Adjusts the levels of a particular image channel
@@ -1730,7 +1725,7 @@ class Imagick implements Stringable, Iterator, Traversable, Countable {
 	 * @param int $channel [optional] Which channel should the auto-levelling should be done on.
 	 * @return bool Returns true on success.
 	 */
-	public function autoLevelImage (int $channel = Imagick::CHANNEL_DEFAULT): bool {}
+	public function autoLevelImage (int $channel = \Imagick::CHANNEL_DEFAULT): bool {}
 
 	/**
 	 * Mutes the colors of the image
@@ -1786,7 +1781,7 @@ class Imagick implements Stringable, Iterator, Traversable, Countable {
 	 * @param int $channel [optional] 
 	 * @return bool Returns true on success or false on failure.
 	 */
-	public function clampImage (int $channel = Imagick::CHANNEL_DEFAULT): bool {}
+	public function clampImage (int $channel = \Imagick::CHANNEL_DEFAULT): bool {}
 
 	/**
 	 * Takes all images from the current image pointer to the end of the image list and smushs them
@@ -2026,6 +2021,9 @@ class Imagick implements Stringable, Iterator, Traversable, Countable {
 	 */
 	public function setLastIterator (): bool {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function resetIterator (): void {}
 
 	/**
@@ -2167,7 +2165,7 @@ class Imagick implements Stringable, Iterator, Traversable, Countable {
 	 * @param int $channel [optional] 
 	 * @return bool Returns true on success.
 	 */
-	public function compositeImage (Imagick $composite_object, int $composite, int $x, int $y, int $channel = Imagick::CHANNEL_DEFAULT): bool {}
+	public function compositeImage (Imagick $composite_object, int $composite, int $x, int $y, int $channel = \Imagick::CHANNEL_DEFAULT): bool {}
 
 	/**
 	 * Control the brightness, saturation, and hue
@@ -2214,7 +2212,7 @@ class Imagick implements Stringable, Iterator, Traversable, Countable {
 	 * @param int $channel [optional] 
 	 * @return bool Returns true on success.
 	 */
-	public function thresholdImage (float $threshold, int $channel = Imagick::CHANNEL_DEFAULT): bool {}
+	public function thresholdImage (float $threshold, int $channel = \Imagick::CHANNEL_DEFAULT): bool {}
 
 	/**
 	 * Selects a threshold for each pixel based on a range of intensity
@@ -2265,9 +2263,10 @@ class Imagick implements Stringable, Iterator, Traversable, Countable {
 	 * @param int $channel [optional] 
 	 * @return bool Returns true on success.
 	 */
-	public function normalizeImage (int $channel = Imagick::CHANNEL_DEFAULT): bool {}
+	public function normalizeImage (int $channel = \Imagick::CHANNEL_DEFAULT): bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param float $radius
 	 * @param float $sigma
 	 */
@@ -2381,6 +2380,7 @@ class Imagick implements Stringable, Iterator, Traversable, Countable {
 	public function setImageBackgroundColor (mixed $background): bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param int $channel
 	 */
 	public function setImageChannelMask (int $channel): int {}
@@ -2446,6 +2446,7 @@ class Imagick implements Stringable, Iterator, Traversable, Countable {
 	public function setImagePage (int $width, int $height, int $x, int $y): bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param string $filename
 	 */
 	public function setImageProgressMonitor (string $filename): bool {}
@@ -2508,7 +2509,7 @@ class Imagick implements Stringable, Iterator, Traversable, Countable {
 	 * @param int $channel [optional] 
 	 * @return bool Returns true on success.
 	 */
-	public function sharpenImage (float $radius, float $sigma, int $channel = Imagick::CHANNEL_DEFAULT): bool {}
+	public function sharpenImage (float $radius, float $sigma, int $channel = \Imagick::CHANNEL_DEFAULT): bool {}
 
 	/**
 	 * Shaves pixels from the image edges
@@ -2555,7 +2556,7 @@ class Imagick implements Stringable, Iterator, Traversable, Countable {
 	 * @param string $fileName [optional] 
 	 * @return bool Returns true on success.
 	 */
-	public function readImageFile (resource $filehandle, string $fileName = null): bool {}
+	public function readImageFile ($filehandle, string $fileName = null): bool {}
 
 	/**
 	 * Displays an image
@@ -2582,6 +2583,7 @@ class Imagick implements Stringable, Iterator, Traversable, Countable {
 	public function spreadImage (float $radius): bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param float $radius
 	 * @param int $interpolate_method
 	 */
@@ -2596,6 +2598,7 @@ class Imagick implements Stringable, Iterator, Traversable, Countable {
 	public function swirlImage (float $degrees): bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param float $degrees
 	 * @param int $interpolate_method
 	 */
@@ -2614,7 +2617,7 @@ class Imagick implements Stringable, Iterator, Traversable, Countable {
 	 * @param string $pattern [optional] 
 	 * @return array Returns an array containing the formats supported by Imagick.
 	 */
-	public static function queryFormats (string $pattern = "*"): array {}
+	public static function queryFormats (string $pattern = '"*"'): array {}
 
 	/**
 	 * Returns the configured fonts
@@ -2622,7 +2625,7 @@ class Imagick implements Stringable, Iterator, Traversable, Countable {
 	 * @param string $pattern [optional] 
 	 * @return array Returns an array containing the configured fonts.
 	 */
-	public static function queryFonts (string $pattern = "*"): array {}
+	public static function queryFonts (string $pattern = '"*"'): array {}
 
 	/**
 	 * Returns an array representing the font metrics
@@ -2650,9 +2653,10 @@ class Imagick implements Stringable, Iterator, Traversable, Countable {
 	 * @param int $channel [optional] 
 	 * @return bool Returns true on success.
 	 */
-	public function addNoiseImage (int $noise_type, int $channel = Imagick::CHANNEL_DEFAULT): bool {}
+	public function addNoiseImage (int $noise_type, int $channel = \Imagick::CHANNEL_DEFAULT): bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param int $noise
 	 * @param float $attenuate
 	 * @param int $channel [optional]
@@ -2668,7 +2672,7 @@ class Imagick implements Stringable, Iterator, Traversable, Countable {
 	 * @param int $channel [optional] 
 	 * @return bool Returns true on success.
 	 */
-	public function motionBlurImage (float $radius, float $sigma, float $angle, int $channel = Imagick::CHANNEL_DEFAULT): bool {}
+	public function motionBlurImage (float $radius, float $sigma, float $angle, int $channel = \Imagick::CHANNEL_DEFAULT): bool {}
 
 	/**
 	 * Method morphs a set of images
@@ -2714,6 +2718,7 @@ class Imagick implements Stringable, Iterator, Traversable, Countable {
 	public function borderImage (mixed $bordercolor, int $width, int $height): bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param ImagickPixel|string $border_color
 	 * @param int $width
 	 * @param int $height
@@ -2722,6 +2727,7 @@ class Imagick implements Stringable, Iterator, Traversable, Countable {
 	public function borderImageWithComposite (ImagickPixel|string $border_color, int $width, int $height, int $composite): bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param int $original_width
 	 * @param int $original_height
 	 * @param int $desired_width
@@ -2826,7 +2832,7 @@ class Imagick implements Stringable, Iterator, Traversable, Countable {
 	 * @param int $channel [optional] 
 	 * @return bool Returns true on success.
 	 */
-	public function convolveImage (array $kernel, int $channel = Imagick::CHANNEL_DEFAULT): bool {}
+	public function convolveImage (array $kernel, int $channel = \Imagick::CHANNEL_DEFAULT): bool {}
 
 	/**
 	 * Displaces an image's colormap
@@ -2889,9 +2895,10 @@ class Imagick implements Stringable, Iterator, Traversable, Countable {
 	 * @param int $channel [optional] 
 	 * @return bool Returns true on success.
 	 */
-	public function evaluateImage (int $op, float $constant, int $channel = Imagick::CHANNEL_DEFAULT): bool {}
+	public function evaluateImage (int $op, float $constant, int $channel = \Imagick::CHANNEL_DEFAULT): bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param int $evaluate
 	 */
 	public function evaluateImages (int $evaluate): bool {}
@@ -2939,6 +2946,7 @@ class Imagick implements Stringable, Iterator, Traversable, Countable {
 	public function frameImage (mixed $matte_color, int $width, int $height, int $inner_bevel, int $outer_bevel): bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param ImagickPixel|string $matte_color
 	 * @param int $width
 	 * @param int $height
@@ -2955,7 +2963,7 @@ class Imagick implements Stringable, Iterator, Traversable, Countable {
 	 * @param int $channel [optional] 
 	 * @return Imagick Returns true on success.
 	 */
-	public function fxImage (string $expression, int $channel = Imagick::CHANNEL_DEFAULT): Imagick {}
+	public function fxImage (string $expression, int $channel = \Imagick::CHANNEL_DEFAULT): Imagick {}
 
 	/**
 	 * Gamma-corrects an image
@@ -2964,7 +2972,7 @@ class Imagick implements Stringable, Iterator, Traversable, Countable {
 	 * @param int $channel [optional] 
 	 * @return bool Returns true on success.
 	 */
-	public function gammaImage (float $gamma, int $channel = Imagick::CHANNEL_DEFAULT): bool {}
+	public function gammaImage (float $gamma, int $channel = \Imagick::CHANNEL_DEFAULT): bool {}
 
 	/**
 	 * Blurs an image
@@ -2974,7 +2982,7 @@ class Imagick implements Stringable, Iterator, Traversable, Countable {
 	 * @param int $channel [optional] 
 	 * @return bool Returns true on success.
 	 */
-	public function gaussianBlurImage (float $radius, float $sigma, int $channel = Imagick::CHANNEL_DEFAULT): bool {}
+	public function gaussianBlurImage (float $radius, float $sigma, int $channel = \Imagick::CHANNEL_DEFAULT): bool {}
 
 	/**
 	 * Returns the image background color
@@ -3075,7 +3083,7 @@ class Imagick implements Stringable, Iterator, Traversable, Countable {
 	 * @return float Returns the distortion metric used on the image (or the best guess
 	 * thereof).
 	 */
-	public function getImageDistortion (MagickWand $reference, int $metric): float {}
+	public function getImageDistortion ($reference, int $metric): float {}
 
 	/**
 	 * Gets the image disposal method
@@ -3147,6 +3155,7 @@ class Imagick implements Stringable, Iterator, Traversable, Countable {
 	public function getImagePixelColor (int $x, int $y): ImagickPixel {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param int $x
 	 * @param int $y
 	 * @param ImagickPixel|string $color
@@ -3302,6 +3311,7 @@ class Imagick implements Stringable, Iterator, Traversable, Countable {
 	public function implodeImage (float $radius): bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param float $radius
 	 * @param int $pixel_interpolate_method
 	 */
@@ -3325,7 +3335,7 @@ class Imagick implements Stringable, Iterator, Traversable, Countable {
 	 * @param int $channel [optional] 
 	 * @return bool Returns true on success.
 	 */
-	public function levelImage (float $blackPoint, float $gamma, float $whitePoint, int $channel = Imagick::CHANNEL_DEFAULT): bool {}
+	public function levelImage (float $blackPoint, float $gamma, float $whitePoint, int $channel = \Imagick::CHANNEL_DEFAULT): bool {}
 
 	/**
 	 * Scales an image proportionally 2x
@@ -3341,7 +3351,7 @@ class Imagick implements Stringable, Iterator, Traversable, Countable {
 	 * @param int $channel [optional] 
 	 * @return bool Returns true on success.
 	 */
-	public function negateImage (bool $gray, int $channel = Imagick::CHANNEL_DEFAULT): bool {}
+	public function negateImage (bool $gray, int $channel = \Imagick::CHANNEL_DEFAULT): bool {}
 
 	/**
 	 * Quickly pin-point appropriate parameters for image processing
@@ -3537,7 +3547,7 @@ class Imagick implements Stringable, Iterator, Traversable, Countable {
 	 * @param int $channel [optional] 
 	 * @return bool Returns true on success.
 	 */
-	public function sigmoidalContrastImage (bool $sharpen, float $alpha, float $beta, int $channel = Imagick::CHANNEL_DEFAULT): bool {}
+	public function sigmoidalContrastImage (bool $sharpen, float $alpha, float $beta, int $channel = \Imagick::CHANNEL_DEFAULT): bool {}
 
 	/**
 	 * Composites two images
@@ -3575,7 +3585,7 @@ class Imagick implements Stringable, Iterator, Traversable, Countable {
 	 * @param int $channel [optional] 
 	 * @return bool Returns true on success.
 	 */
-	public function unsharpMaskImage (float $radius, float $sigma, float $amount, float $threshold, int $channel = Imagick::CHANNEL_DEFAULT): bool {}
+	public function unsharpMaskImage (float $radius, float $sigma, float $amount, float $threshold, int $channel = \Imagick::CHANNEL_DEFAULT): bool {}
 
 	/**
 	 * Returns a new Imagick object
@@ -3644,10 +3654,14 @@ class Imagick implements Stringable, Iterator, Traversable, Countable {
 	public static function getCopyright (): string {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param string $pattern [optional]
 	 */
 	public static function getConfigureOptions (string $pattern = '*'): array {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public static function getFeatures (): string {}
 
 	/**
@@ -3710,6 +3724,9 @@ class Imagick implements Stringable, Iterator, Traversable, Countable {
 	 */
 	public static function getQuantum (): int {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public static function getHdriEnabled (): bool {}
 
 	/**
@@ -3886,10 +3903,19 @@ class Imagick implements Stringable, Iterator, Traversable, Countable {
 	 */
 	public function setType (int $image_type): bool {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function key (): int {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function next () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function rewind () {}
 
 	/**
@@ -3914,7 +3940,7 @@ class Imagick implements Stringable, Iterator, Traversable, Countable {
 	 * @param int $channel [optional] 
 	 * @return bool Returns true on success.
 	 */
-	public function brightnessContrastImage (float $brightness, float $contrast, int $channel = Imagick::CHANNEL_DEFAULT): bool {}
+	public function brightnessContrastImage (float $brightness, float $contrast, int $channel = \Imagick::CHANNEL_DEFAULT): bool {}
 
 	/**
 	 * Apply color transformation to an image
@@ -3933,7 +3959,7 @@ class Imagick implements Stringable, Iterator, Traversable, Countable {
 	 * @param int $channel [optional] Provide any channel constant that is valid for your channel mode. To apply to more than one channel, combine <p>channel constants
 	 * @return bool Returns true on success.
 	 */
-	public function selectiveBlurImage (float $radius, float $sigma, float $threshold, int $channel = Imagick::CHANNEL_DEFAULT): bool {}
+	public function selectiveBlurImage (float $radius, float $sigma, float $threshold, int $channel = \Imagick::CHANNEL_DEFAULT): bool {}
 
 	/**
 	 * Rotational blurs an image
@@ -3942,7 +3968,7 @@ class Imagick implements Stringable, Iterator, Traversable, Countable {
 	 * @param int $channel [optional] Provide any channel constant that is valid for your channel mode. To apply to more than one channel, combine <p>channel constants
 	 * @return bool Returns true on success.
 	 */
-	public function rotationalBlurImage (float $angle, int $channel = Imagick::CHANNEL_DEFAULT): bool {}
+	public function rotationalBlurImage (float $angle, int $channel = \Imagick::CHANNEL_DEFAULT): bool {}
 
 	/**
 	 * Modifies image using a statistics function
@@ -3953,7 +3979,7 @@ class Imagick implements Stringable, Iterator, Traversable, Countable {
 	 * @param int $channel [optional] 
 	 * @return bool Returns true on success.
 	 */
-	public function statisticImage (int $type, int $width, int $height, int $channel = Imagick::CHANNEL_DEFAULT): bool {}
+	public function statisticImage (int $type, int $width, int $height, int $channel = \Imagick::CHANNEL_DEFAULT): bool {}
 
 	/**
 	 * Searches for a subimage in the current image and returns a similarity image
@@ -3966,13 +3992,14 @@ class Imagick implements Stringable, Iterator, Traversable, Countable {
 	public function subimageMatch (Imagick $Imagick, array &$offset = null, float &$similarity = null): Imagick {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param Imagick $image
-	 * @param ?array $offset [optional]
-	 * @param ?float $similarity [optional]
+	 * @param array|null $offset [optional]
+	 * @param float|null $similarity [optional]
 	 * @param float $threshold [optional]
 	 * @param int $metric [optional]
 	 */
-	public function similarityImage (Imagick $image, ?array &$offset = null, ?float &$similarity = null, float $threshold = 0.0, int $metric = 0): Imagick {}
+	public function similarityImage (Imagick $image, ?array &$offset = NULL, ?float &$similarity = NULL, float $threshold = 0.0, int $metric = 0): Imagick {}
 
 	/**
 	 * Sets the ImageMagick registry entry named key to value
@@ -4007,32 +4034,48 @@ class Imagick implements Stringable, Iterator, Traversable, Countable {
 	 * @param int $channel [optional] 
 	 * @return bool Returns true on success.
 	 */
-	public function morphology (int $morphologyMethod, int $iterations, ImagickKernel $ImagickKernel, int $channel = Imagick::CHANNEL_DEFAULT): bool {}
+	public function morphology (int $morphologyMethod, int $iterations, ImagickKernel $ImagickKernel, int $channel = \Imagick::CHANNEL_DEFAULT): bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param bool $antialias
 	 */
 	public function setAntialias (bool $antialias): void {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getAntialias (): bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param string $color_correction_collection
 	 */
 	public function colorDecisionListImage (string $color_correction_collection): bool {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function optimizeImageTransparency (): void {}
 
 	/**
-	 * @param ?int $channel [optional]
+	 * {@inheritdoc}
+	 * @param int|null $channel [optional]
 	 */
-	public function autoGammaImage (?int $channel = null): void {}
+	public function autoGammaImage (?int $channel = 134217727): void {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function autoOrient (): void {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function autoOrientate (): void {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param Imagick $image
 	 * @param int $composite_constant
 	 * @param int $gravity
@@ -4040,25 +4083,32 @@ class Imagick implements Stringable, Iterator, Traversable, Countable {
 	public function compositeImageGravity (Imagick $image, int $composite_constant, int $gravity): bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param float $radius
 	 * @param float $strength
 	 */
 	public function localContrastImage (float $radius, float $strength): void {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function identifyImageType (): int {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param int $pixelmask
 	 */
 	public function getImageMask (int $pixelmask): ?Imagick {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param Imagick $clip_mask
 	 * @param int $pixelmask
 	 */
 	public function setImageMask (Imagick $clip_mask, int $pixelmask): void {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param float $radius
 	 * @param float $sigma
 	 * @param float $lower_percent
@@ -4067,17 +4117,20 @@ class Imagick implements Stringable, Iterator, Traversable, Countable {
 	public function cannyEdgeImage (float $radius, float $sigma, float $lower_percent, float $upper_percent): bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param int $seed
 	 */
 	public static function setSeed (int $seed): void {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param float $threshold
 	 * @param float $softness
 	 */
 	public function waveletDenoiseImage (float $threshold, float $softness): bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param int $width
 	 * @param int $height
 	 * @param float $color_distance
@@ -4085,6 +4138,7 @@ class Imagick implements Stringable, Iterator, Traversable, Countable {
 	public function meanShiftImage (int $width, int $height, float $color_distance): bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param int $number_colors
 	 * @param int $max_iterations
 	 * @param float $tolerance
@@ -4092,6 +4146,7 @@ class Imagick implements Stringable, Iterator, Traversable, Countable {
 	public function kmeansImage (int $number_colors, int $max_iterations, float $tolerance): bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param float $low_black
 	 * @param float $low_white
 	 * @param float $high_white
@@ -4100,11 +4155,13 @@ class Imagick implements Stringable, Iterator, Traversable, Countable {
 	public function rangeThresholdImage (float $low_black, float $low_white, float $high_white, float $high_black): bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param int $auto_threshold_method
 	 */
 	public function autoThresholdImage (int $auto_threshold_method): bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param float $radius
 	 * @param float $sigma
 	 * @param float $intensity_sigma
@@ -4113,6 +4170,7 @@ class Imagick implements Stringable, Iterator, Traversable, Countable {
 	public function bilateralBlurImage (float $radius, float $sigma, float $intensity_sigma, float $spatial_sigma): bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param int $width
 	 * @param int $height
 	 * @param int $number_bins
@@ -4121,22 +4179,26 @@ class Imagick implements Stringable, Iterator, Traversable, Countable {
 	public function claheImage (int $width, int $height, int $number_bins, float $clip_limit): bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param string $expression
 	 */
 	public function channelFxImage (string $expression): Imagick {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param ImagickPixel|string $start_color
 	 * @param ImagickPixel|string $stop_color
 	 */
 	public function colorThresholdImage (ImagickPixel|string $start_color, ImagickPixel|string $stop_color): bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param int $complex_operator
 	 */
 	public function complexImages (int $complex_operator): Imagick {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param int $columns
 	 * @param int $rows
 	 * @param int $interpolate
@@ -4144,6 +4206,7 @@ class Imagick implements Stringable, Iterator, Traversable, Countable {
 	public function interpolativeResizeImage (int $columns, int $rows, int $interpolate): bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param ImagickPixel|string $black_color
 	 * @param ImagickPixel|string $white_color
 	 * @param bool $invert
@@ -4151,6 +4214,7 @@ class Imagick implements Stringable, Iterator, Traversable, Countable {
 	public function levelImageColors (ImagickPixel|string $black_color, ImagickPixel|string $white_color, bool $invert): bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param float $black_point
 	 * @param float $gamma
 	 * @param float $white_point
@@ -4158,64 +4222,100 @@ class Imagick implements Stringable, Iterator, Traversable, Countable {
 	public function levelizeImage (float $black_point, float $gamma, float $white_point): bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param string $dither_format
 	 */
 	public function orderedDitherImage (string $dither_format): bool {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function whiteBalanceImage (): bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param string $option
 	 */
 	public function deleteOption (string $option): bool {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getBackgroundColor (): ImagickPixel {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param string $pattern [optional]
 	 */
 	public function getImageArtifacts (string $pattern = '*'): array {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getImageKurtosis (): array {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getImageMean (): array {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getImageRange (): array {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getInterpolateMethod (): int {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param string $pattern [optional]
 	 */
 	public function getOptions (string $pattern = '*'): array {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getOrientation (): int {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getResolution (): array {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getType (): int {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array $terms
 	 */
 	public function polynomialImage (array $terms): bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param int $depth
 	 */
 	public function setDepth (int $depth): bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param string $geometry
 	 */
 	public function setExtract (string $geometry): bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param int $method
 	 */
 	public function setInterpolateMethod (int $method): bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param int $orientation
 	 */
 	public function setOrientation (int $orientation): bool {}
@@ -4550,6 +4650,7 @@ class ImagickDraw  {
 	public function arc (float $sx, float $sy, float $ex, float $ey, float $sd, float $ed): bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param float $x
 	 * @param float $y
 	 * @param int $paint
@@ -5267,38 +5368,58 @@ class ImagickDraw  {
 	 */
 	public function setStrokeDashArray (array $dashArray): bool {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getOpacity (): float {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param float $opacity
 	 */
 	public function setOpacity (float $opacity): bool {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getFontResolution (): array {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param float $x
 	 * @param float $y
 	 */
 	public function setFontResolution (float $x, float $y): bool {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getBorderColor (): ImagickPixel {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param ImagickPixel|string $color
 	 */
 	public function setBorderColor (ImagickPixel|string $color): bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param string $density
 	 */
 	public function setDensity (string $density): bool {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getDensity (): ?string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getTextDirection (): int {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param int $direction
 	 */
 	public function setTextDirection (int $direction): bool {}
@@ -5326,11 +5447,13 @@ class ImagickPixelIterator implements Iterator, Traversable {
 	public function clear (): bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param Imagick $imagick
 	 */
 	public static function getPixelIterator (Imagick $imagick): ImagickPixelIterator {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param Imagick $imagick
 	 * @param int $x
 	 * @param int $y
@@ -5377,12 +5500,24 @@ class ImagickPixelIterator implements Iterator, Traversable {
 	 */
 	public function getPreviousIteratorRow (): array {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function key (): int {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function next () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function rewind () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function current (): array {}
 
 	/**
@@ -5442,6 +5577,9 @@ class ImagickPixelIterator implements Iterator, Traversable {
 	 */
 	public function syncIterator (): bool {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function valid (): bool {}
 
 }
@@ -5617,6 +5755,7 @@ class ImagickPixel  {
 	public function setIndex (int $index): bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param ImagickPixel $pixel
 	 */
 	public function setColorFromPixel (ImagickPixel $pixel): bool {}

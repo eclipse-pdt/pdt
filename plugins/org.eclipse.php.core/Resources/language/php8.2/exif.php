@@ -23,7 +23,7 @@ function exif_tagname (int $index): string|false {}
  * those headers. If no data can be returned, 
  * exif_read_data will return false.
  */
-function exif_read_data (resource|string $file, ?string $required_sections = null, bool $as_arrays = false, bool $read_thumbnail = false): array|false {}
+function exif_read_data ($file, ?string $required_sections = null, bool $as_arrays = false, bool $read_thumbnail = false): array|false {}
 
 /**
  * Retrieve the embedded thumbnail of an image
@@ -35,7 +35,7 @@ function exif_read_data (resource|string $file, ?string $required_sections = nul
  * @return string|false Returns the embedded thumbnail, or false if the image contains no 
  * thumbnail.
  */
-function exif_thumbnail (resource|string $file, int &$width = null, int &$height = null, int &$image_type = null): string|false {}
+function exif_thumbnail ($file, int &$width = null, int &$height = null, int &$image_type = null): string|false {}
 
 /**
  * Determine the type of an image

@@ -42,15 +42,83 @@ class SNMP  {
 	 * will be faced.
 	const ERRNO_MULTIPLE_SET_QUERIES = 64;
 
-	public $info;
-	public $max_oids;
-	public $valueretrieval;
-	public $quick_print;
-	public $enum_print;
-	public $oid_output_format;
-	public $oid_increasing_check;
-	public $exceptions_enabled;
 
+	/**
+	 * Read-only property with remote agent configuration: hostname,
+	 * port, default timeout, default retries count
+	 * @var array
+	 * @link http://www.php.net/manual/en/class.snmp.php#snmp.props.info
+	 */
+	public readonly array $info;
+
+	/**
+	 * Maximum OID per GET/SET/GETBULK request
+	 * @var int|null
+	 * @link http://www.php.net/manual/en/class.snmp.php#snmp.props.max_oids
+	 */
+	public ?int $max_oids;
+
+	/**
+	 * Controls the method how the SNMP values will be returned
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.snmp.php#snmp.props.valueretrieval
+	 */
+	public int $valueretrieval;
+
+	/**
+	 * Value of quick_print within the NET-SNMP library
+	 * <p>Sets the value of quick_print within the NET-SNMP library. When this
+	 * is set (1), the SNMP library will return 'quick printed' values. This
+	 * means that just the value will be printed. When quick_print is not
+	 * enabled (default) the NET-SNMP library prints extra information
+	 * including the type of the value (i.e. IpAddress or OID). Additionally,
+	 * if quick_print is not enabled, the library prints additional hex values
+	 * for all strings of three characters or less.</p>
+	 * @var bool
+	 * @link http://www.php.net/manual/en/class.snmp.php#snmp.props.quick_print
+	 */
+	public bool $quick_print;
+
+	/**
+	 * Controls the way enum values are printed
+	 * <p>Parameter toggles if walk/get etc. should automatically lookup enum values
+	 * in the MIB and return them together with their human readable string.</p>
+	 * @var bool
+	 * @link http://www.php.net/manual/en/class.snmp.php#snmp.props.enum_print
+	 */
+	public bool $enum_print;
+
+	/**
+	 * Controls OID output format
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.snmp.php#snmp.props.oid_output_format
+	 */
+	public int $oid_output_format;
+
+	/**
+	 * Controls disabling check for increasing OID while walking OID tree
+	 * <p>Some SNMP agents are known for returning OIDs out
+	 * of order but can complete the walk anyway. Other agents return OIDs
+	 * that are out of order and can cause SNMP::walk
+	 * to loop indefinitely until memory limit will be reached.
+	 * PHP SNMP library by default performs OID increasing check and stops
+	 * walking on OID tree when it detects possible loop with issuing warning
+	 * about non-increasing OID faced.
+	 * Set oid_increasing_check to false to disable this
+	 * check.</p>
+	 * @var bool
+	 * @link http://www.php.net/manual/en/class.snmp.php#snmp.props.oid_increasing_check
+	 */
+	public bool $oid_increasing_check;
+
+	/**
+	 * Controls which failures will raise SNMPException instead of
+	 * warning. Use bitwise OR'ed SNMP::ERRNO_&#42; constants.
+	 * By default all SNMP exceptions are disabled.
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.snmp.php#snmp.props.exceptions_enabled
+	 */
+	public int $exceptions_enabled;
 
 	/**
 	 * Creates SNMP instance representing session to remote SNMP agent
@@ -104,7 +172,7 @@ class SNMP  {
 	 * @param string $contextEngineId [optional] the context EngineID
 	 * @return bool Returns true on success or false on failure.
 	 */
-	public function setSecurity (string $securityLevel, string $authProtocol = "", string $authPassphrase = "", string $privacyProtocol = "", string $privacyPassphrase = "", string $contextName = "", string $contextEngineId = ""): bool {}
+	public function setSecurity (string $securityLevel, string $authProtocol = '""', string $authPassphrase = '""', string $privacyProtocol = '""', string $privacyPassphrase = '""', string $contextName = '""', string $contextEngineId = '""'): bool {}
 
 	/**
 	 * Fetch an SNMP object
@@ -198,11 +266,6 @@ class SNMP  {
  * @link http://www.php.net/manual/en/class.snmpexception.php
  */
 class SNMPException extends RuntimeException implements Stringable, Throwable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-
 
 	/**
 	 * Construct the exception
@@ -212,8 +275,11 @@ class SNMPException extends RuntimeException implements Stringable, Throwable {
 	 * @param Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -391,6 +457,7 @@ function snmp_set_enum_print (bool $enable): true {}
 function snmp_set_oid_output_format (int $format): true {}
 
 /**
+ * {@inheritdoc}
  * @param int $format
  */
 function snmp_set_oid_numeric_print (int $format): bool {}

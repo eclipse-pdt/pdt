@@ -5,6 +5,7 @@
 class MemcachePool  {
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $host
 	 * @param mixed $tcp_port [optional]
 	 * @param mixed $udp_port [optional]
@@ -13,9 +14,10 @@ class MemcachePool  {
 	 * @param mixed $timeout [optional]
 	 * @param mixed $retry_interval [optional]
 	 */
-	public function connect ($host = null, $tcp_port = null, $udp_port = null, $persistent = null, $weight = null, $timeout = null, $retry_interval = null) {}
+	public function connect ($host = null, $tcp_port = NULL, $udp_port = NULL, $persistent = NULL, $weight = NULL, $timeout = NULL, $retry_interval = NULL) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $host
 	 * @param mixed $tcp_port [optional]
 	 * @param mixed $udp_port [optional]
@@ -25,9 +27,10 @@ class MemcachePool  {
 	 * @param mixed $retry_interval [optional]
 	 * @param mixed $status [optional]
 	 */
-	public function addserver ($host = null, $tcp_port = null, $udp_port = null, $persistent = null, $weight = null, $timeout = null, $retry_interval = null, $status = null): bool {}
+	public function addserver ($host = null, $tcp_port = NULL, $udp_port = NULL, $persistent = NULL, $weight = NULL, $timeout = NULL, $retry_interval = NULL, $status = NULL): bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param string $host
 	 * @param int $tcp_port [optional]
 	 * @param float $timeout [optional]
@@ -35,137 +38,161 @@ class MemcachePool  {
 	 * @param bool $status [optional]
 	 * @param mixed $failure_callback [optional]
 	 */
-	public function setserverparams (string $host, int $tcp_port = 'null', float $timeout = 'null', int $retry_interval = 'null', bool $status = 'null', $failure_callback = null): bool {}
+	public function setserverparams (string $host, int $tcp_port = NULL, float $timeout = NULL, int $retry_interval = NULL, bool $status = NULL, $failure_callback = NULL): bool {}
 
 	/**
-	 * @param ?callable $failure_callback
+	 * {@inheritdoc}
+	 * @param callable|null $failure_callback
 	 */
 	public function setfailurecallback (?callable $failure_callback = null): bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param string $host
 	 * @param int $tcp_port [optional]
 	 */
-	public function getserverstatus (string $host, int $tcp_port = 'null'): int|bool {}
+	public function getserverstatus (string $host, int $tcp_port = NULL): int|bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param string $key
 	 */
 	public function findserver (string $key): string|bool {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getversion (): string|bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array|string $key
 	 * @param mixed $value [optional]
 	 * @param int $flags [optional]
 	 * @param int $exptime [optional]
 	 * @param int $cas [optional]
 	 */
-	public function add (array|string $key, mixed $value = null, int $flags = 'null', int $exptime = 'null', int $cas = 'null'): bool {}
+	public function add (array|string $key, mixed $value = NULL, int $flags = NULL, int $exptime = NULL, int $cas = NULL): bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array|string $key
 	 * @param mixed $value [optional]
 	 * @param int $flags [optional]
 	 * @param int $exptime [optional]
 	 * @param int $cas [optional]
 	 */
-	public function set (array|string $key, mixed $value = null, int $flags = 'null', int $exptime = 'null', int $cas = 'null'): bool {}
+	public function set (array|string $key, mixed $value = NULL, int $flags = NULL, int $exptime = NULL, int $cas = NULL): bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array|string $key
 	 * @param mixed $value [optional]
 	 * @param int $flags [optional]
 	 * @param int $exptime [optional]
 	 * @param int $cas [optional]
 	 */
-	public function replace (array|string $key, mixed $value = null, int $flags = 'null', int $exptime = 'null', int $cas = 'null'): bool {}
+	public function replace (array|string $key, mixed $value = NULL, int $flags = NULL, int $exptime = NULL, int $cas = NULL): bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array|string $key
 	 * @param mixed $value [optional]
 	 * @param int $flags [optional]
 	 * @param int $exptime [optional]
 	 * @param int $cas [optional]
 	 */
-	public function cas (array|string $key, mixed $value = null, int $flags = 'null', int $exptime = 'null', int $cas = 'null'): bool {}
+	public function cas (array|string $key, mixed $value = NULL, int $flags = NULL, int $exptime = NULL, int $cas = NULL): bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array|string $key
 	 * @param mixed $value [optional]
 	 * @param int $flags [optional]
 	 * @param int $exptime [optional]
 	 * @param int $cas [optional]
 	 */
-	public function append (array|string $key, mixed $value = null, int $flags = 'null', int $exptime = 'null', int $cas = 'null'): bool {}
+	public function append (array|string $key, mixed $value = NULL, int $flags = NULL, int $exptime = NULL, int $cas = NULL): bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array|string $key
 	 * @param mixed $value [optional]
 	 * @param int $flags [optional]
 	 * @param int $exptime [optional]
 	 * @param int $cas [optional]
 	 */
-	public function prepend (array|string $key, mixed $value = null, int $flags = 'null', int $exptime = 'null', int $cas = 'null'): bool {}
+	public function prepend (array|string $key, mixed $value = NULL, int $flags = NULL, int $exptime = NULL, int $cas = NULL): bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array|string $key
 	 * @param mixed $flags [optional]
 	 * @param mixed $cas [optional]
 	 */
-	public function get (array|string $key, mixed &$flags = null, mixed &$cas = null): mixed {}
+	public function get (array|string $key, mixed &$flags = NULL, mixed &$cas = NULL): mixed {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array|string $key
 	 * @param int $exptime [optional]
 	 */
-	public function delete (array|string $key, int $exptime = 'null'): array|bool {}
+	public function delete (array|string $key, int $exptime = NULL): array|bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param string $type [optional]
 	 * @param int $slabid [optional]
 	 * @param int $limit [optional]
 	 */
-	public function getstats (string $type = 'null', int $slabid = 'null', int $limit = 'null'): array|bool {}
+	public function getstats (string $type = NULL, int $slabid = NULL, int $limit = NULL): array|bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param string $type [optional]
 	 * @param int $slabid [optional]
 	 * @param int $limit [optional]
 	 */
-	public function getextendedstats (string $type = 'null', int $slabid = 'null', int $limit = 'null'): array|bool {}
+	public function getextendedstats (string $type = NULL, int $slabid = NULL, int $limit = NULL): array|bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param int $threshold
 	 * @param float $min_savings [optional]
 	 */
-	public function setcompressthreshold (int $threshold, float $min_savings = 'null'): bool {}
+	public function setcompressthreshold (int $threshold, float $min_savings = NULL): bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array|string $key
 	 * @param int $value [optional]
 	 * @param int $defval [optional]
 	 * @param int $exptime [optional]
 	 */
-	public function increment (array|string $key, int $value = 'null', int $defval = 'null', int $exptime = 'null'): array|int|bool {}
+	public function increment (array|string $key, int $value = NULL, int $defval = NULL, int $exptime = NULL): array|int|bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array|string $key
 	 * @param int $value [optional]
 	 * @param int $defval [optional]
 	 * @param int $exptime [optional]
 	 */
-	public function decrement (array|string $key, int $value = 'null', int $defval = 'null', int $exptime = 'null'): array|int|bool {}
+	public function decrement (array|string $key, int $value = NULL, int $defval = NULL, int $exptime = NULL): array|int|bool {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function close (): bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param int $delay [optional]
 	 */
-	public function flush (int $delay = 'null'): bool {}
+	public function flush (int $delay = NULL): bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param string $username
 	 * @param string $password
 	 */
@@ -216,6 +243,7 @@ class Memcache extends MemcachePool  {
 	public function addserver (string $host, int $port = 11211, bool $persistent = null, int $weight = null, int $timeout = null, int $retry_interval = null, bool $status = null, callable $failure_callback = null, int $timeoutms = null): bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param string $host
 	 * @param int $tcp_port [optional]
 	 * @param float $timeout [optional]
@@ -223,137 +251,161 @@ class Memcache extends MemcachePool  {
 	 * @param bool $status [optional]
 	 * @param mixed $failure_callback [optional]
 	 */
-	public function setserverparams (string $host, int $tcp_port = 'null', float $timeout = 'null', int $retry_interval = 'null', bool $status = 'null', $failure_callback = null): bool {}
+	public function setserverparams (string $host, int $tcp_port = NULL, float $timeout = NULL, int $retry_interval = NULL, bool $status = NULL, $failure_callback = NULL): bool {}
 
 	/**
-	 * @param ?callable $failure_callback
+	 * {@inheritdoc}
+	 * @param callable|null $failure_callback
 	 */
 	public function setfailurecallback (?callable $failure_callback = null): bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param string $host
 	 * @param int $tcp_port [optional]
 	 */
-	public function getserverstatus (string $host, int $tcp_port = 'null'): int|bool {}
+	public function getserverstatus (string $host, int $tcp_port = NULL): int|bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param string $key
 	 */
 	public function findserver (string $key): string|bool {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getversion (): string|bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array|string $key
 	 * @param mixed $value [optional]
 	 * @param int $flags [optional]
 	 * @param int $exptime [optional]
 	 * @param int $cas [optional]
 	 */
-	public function add (array|string $key, mixed $value = null, int $flags = 'null', int $exptime = 'null', int $cas = 'null'): bool {}
+	public function add (array|string $key, mixed $value = NULL, int $flags = NULL, int $exptime = NULL, int $cas = NULL): bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array|string $key
 	 * @param mixed $value [optional]
 	 * @param int $flags [optional]
 	 * @param int $exptime [optional]
 	 * @param int $cas [optional]
 	 */
-	public function set (array|string $key, mixed $value = null, int $flags = 'null', int $exptime = 'null', int $cas = 'null'): bool {}
+	public function set (array|string $key, mixed $value = NULL, int $flags = NULL, int $exptime = NULL, int $cas = NULL): bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array|string $key
 	 * @param mixed $value [optional]
 	 * @param int $flags [optional]
 	 * @param int $exptime [optional]
 	 * @param int $cas [optional]
 	 */
-	public function replace (array|string $key, mixed $value = null, int $flags = 'null', int $exptime = 'null', int $cas = 'null'): bool {}
+	public function replace (array|string $key, mixed $value = NULL, int $flags = NULL, int $exptime = NULL, int $cas = NULL): bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array|string $key
 	 * @param mixed $value [optional]
 	 * @param int $flags [optional]
 	 * @param int $exptime [optional]
 	 * @param int $cas [optional]
 	 */
-	public function cas (array|string $key, mixed $value = null, int $flags = 'null', int $exptime = 'null', int $cas = 'null'): bool {}
+	public function cas (array|string $key, mixed $value = NULL, int $flags = NULL, int $exptime = NULL, int $cas = NULL): bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array|string $key
 	 * @param mixed $value [optional]
 	 * @param int $flags [optional]
 	 * @param int $exptime [optional]
 	 * @param int $cas [optional]
 	 */
-	public function append (array|string $key, mixed $value = null, int $flags = 'null', int $exptime = 'null', int $cas = 'null'): bool {}
+	public function append (array|string $key, mixed $value = NULL, int $flags = NULL, int $exptime = NULL, int $cas = NULL): bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array|string $key
 	 * @param mixed $value [optional]
 	 * @param int $flags [optional]
 	 * @param int $exptime [optional]
 	 * @param int $cas [optional]
 	 */
-	public function prepend (array|string $key, mixed $value = null, int $flags = 'null', int $exptime = 'null', int $cas = 'null'): bool {}
+	public function prepend (array|string $key, mixed $value = NULL, int $flags = NULL, int $exptime = NULL, int $cas = NULL): bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array|string $key
 	 * @param mixed $flags [optional]
 	 * @param mixed $cas [optional]
 	 */
-	public function get (array|string $key, mixed &$flags = null, mixed &$cas = null): mixed {}
+	public function get (array|string $key, mixed &$flags = NULL, mixed &$cas = NULL): mixed {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array|string $key
 	 * @param int $exptime [optional]
 	 */
-	public function delete (array|string $key, int $exptime = 'null'): array|bool {}
+	public function delete (array|string $key, int $exptime = NULL): array|bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param string $type [optional]
 	 * @param int $slabid [optional]
 	 * @param int $limit [optional]
 	 */
-	public function getstats (string $type = 'null', int $slabid = 'null', int $limit = 'null'): array|bool {}
+	public function getstats (string $type = NULL, int $slabid = NULL, int $limit = NULL): array|bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param string $type [optional]
 	 * @param int $slabid [optional]
 	 * @param int $limit [optional]
 	 */
-	public function getextendedstats (string $type = 'null', int $slabid = 'null', int $limit = 'null'): array|bool {}
+	public function getextendedstats (string $type = NULL, int $slabid = NULL, int $limit = NULL): array|bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param int $threshold
 	 * @param float $min_savings [optional]
 	 */
-	public function setcompressthreshold (int $threshold, float $min_savings = 'null'): bool {}
+	public function setcompressthreshold (int $threshold, float $min_savings = NULL): bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array|string $key
 	 * @param int $value [optional]
 	 * @param int $defval [optional]
 	 * @param int $exptime [optional]
 	 */
-	public function increment (array|string $key, int $value = 'null', int $defval = 'null', int $exptime = 'null'): array|int|bool {}
+	public function increment (array|string $key, int $value = NULL, int $defval = NULL, int $exptime = NULL): array|int|bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array|string $key
 	 * @param int $value [optional]
 	 * @param int $defval [optional]
 	 * @param int $exptime [optional]
 	 */
-	public function decrement (array|string $key, int $value = 'null', int $defval = 'null', int $exptime = 'null'): array|int|bool {}
+	public function decrement (array|string $key, int $value = NULL, int $defval = NULL, int $exptime = NULL): array|int|bool {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function close (): bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param int $delay [optional]
 	 */
-	public function flush (int $delay = 'null'): bool {}
+	public function flush (int $delay = NULL): bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param string $username
 	 * @param string $password
 	 */
@@ -362,6 +414,7 @@ class Memcache extends MemcachePool  {
 }
 
 /**
+ * {@inheritdoc}
  * @param mixed $host
  * @param mixed $port [optional]
  * @param mixed $timeout [optional]
@@ -371,9 +424,10 @@ class Memcache extends MemcachePool  {
  * @param mixed $unused7 [optional]
  * @param mixed $unugsed8 [optional]
  */
-function memcache_connect ($host = null, $port = null, $timeout = null, $unused4 = null, $unused5 = null, $unused6 = null, $unused7 = null, $unugsed8 = null) {}
+function memcache_connect ($host = null, $port = NULL, $timeout = NULL, $unused4 = NULL, $unused5 = NULL, $unused6 = NULL, $unused7 = NULL, $unugsed8 = NULL) {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $host
  * @param mixed $port [optional]
  * @param mixed $timeout [optional]
@@ -383,9 +437,10 @@ function memcache_connect ($host = null, $port = null, $timeout = null, $unused4
  * @param mixed $unused7 [optional]
  * @param mixed $unugsed8 [optional]
  */
-function memcache_pconnect ($host = null, $port = null, $timeout = null, $unused4 = null, $unused5 = null, $unused6 = null, $unused7 = null, $unugsed8 = null) {}
+function memcache_pconnect ($host = null, $port = NULL, $timeout = NULL, $unused4 = NULL, $unused5 = NULL, $unused6 = NULL, $unused7 = NULL, $unugsed8 = NULL) {}
 
 /**
+ * {@inheritdoc}
  * @param MemcachePool $memcache
  * @param mixed $host
  * @param mixed $port [optional]
@@ -397,9 +452,10 @@ function memcache_pconnect ($host = null, $port = null, $timeout = null, $unused
  * @param mixed $status [optional]
  * @param mixed $failure_callback [optional]
  */
-function memcache_add_server (MemcachePool $memcache, $host = null, $port = null, $tcp_port = null, $persistent = null, $weight = null, $timeout = null, $retry_interval = null, $status = null, $failure_callback = null): bool {}
+function memcache_add_server (MemcachePool $memcache, $host = null, $port = NULL, $tcp_port = NULL, $persistent = NULL, $weight = NULL, $timeout = NULL, $retry_interval = NULL, $status = NULL, $failure_callback = NULL): bool {}
 
 /**
+ * {@inheritdoc}
  * @param MemcachePool $memcache
  * @param string $host
  * @param int $tcp_port [optional]
@@ -408,27 +464,31 @@ function memcache_add_server (MemcachePool $memcache, $host = null, $port = null
  * @param bool $status [optional]
  * @param mixed $failure_callback [optional]
  */
-function memcache_set_server_params (MemcachePool $memcache, string $host, int $tcp_port = 'null', float $timeout = 'null', int $retry_interval = 'null', bool $status = 'null', $failure_callback = null): bool {}
+function memcache_set_server_params (MemcachePool $memcache, string $host, int $tcp_port = NULL, float $timeout = NULL, int $retry_interval = NULL, bool $status = NULL, $failure_callback = NULL): bool {}
 
 /**
+ * {@inheritdoc}
  * @param MemcachePool $memcache
- * @param ?callable $failure_callback
+ * @param callable|null $failure_callback
  */
 function memcache_set_failure_callback (MemcachePool $memcache, ?callable $failure_callback = null): bool {}
 
 /**
+ * {@inheritdoc}
  * @param MemcachePool $memcache
  * @param string $host
  * @param int $tcp_port [optional]
  */
-function memcache_get_server_status (MemcachePool $memcache, string $host, int $tcp_port = 'null'): int|bool {}
+function memcache_get_server_status (MemcachePool $memcache, string $host, int $tcp_port = NULL): int|bool {}
 
 /**
+ * {@inheritdoc}
  * @param MemcachePool $memcache
  */
 function memcache_get_version (MemcachePool $memcache): string|bool {}
 
 /**
+ * {@inheritdoc}
  * @param MemcachePool $memcache
  * @param array|string $key
  * @param mixed $value [optional]
@@ -436,9 +496,10 @@ function memcache_get_version (MemcachePool $memcache): string|bool {}
  * @param int $exptime [optional]
  * @param int $cas [optional]
  */
-function memcache_add (MemcachePool $memcache, array|string $key, mixed $value = null, int $flags = 'null', int $exptime = 'null', int $cas = 'null'): bool {}
+function memcache_add (MemcachePool $memcache, array|string $key, mixed $value = NULL, int $flags = NULL, int $exptime = NULL, int $cas = NULL): bool {}
 
 /**
+ * {@inheritdoc}
  * @param MemcachePool $memcache
  * @param array|string $key
  * @param mixed $value [optional]
@@ -446,9 +507,10 @@ function memcache_add (MemcachePool $memcache, array|string $key, mixed $value =
  * @param int $exptime [optional]
  * @param int $cas [optional]
  */
-function memcache_set (MemcachePool $memcache, array|string $key, mixed $value = null, int $flags = 'null', int $exptime = 'null', int $cas = 'null'): bool {}
+function memcache_set (MemcachePool $memcache, array|string $key, mixed $value = NULL, int $flags = NULL, int $exptime = NULL, int $cas = NULL): bool {}
 
 /**
+ * {@inheritdoc}
  * @param MemcachePool $memcache
  * @param array|string $key
  * @param mixed $value [optional]
@@ -456,9 +518,10 @@ function memcache_set (MemcachePool $memcache, array|string $key, mixed $value =
  * @param int $exptime [optional]
  * @param int $cas [optional]
  */
-function memcache_replace (MemcachePool $memcache, array|string $key, mixed $value = null, int $flags = 'null', int $exptime = 'null', int $cas = 'null'): bool {}
+function memcache_replace (MemcachePool $memcache, array|string $key, mixed $value = NULL, int $flags = NULL, int $exptime = NULL, int $cas = NULL): bool {}
 
 /**
+ * {@inheritdoc}
  * @param MemcachePool $memcache
  * @param array|string $key
  * @param mixed $value [optional]
@@ -466,9 +529,10 @@ function memcache_replace (MemcachePool $memcache, array|string $key, mixed $val
  * @param int $exptime [optional]
  * @param int $cas [optional]
  */
-function memcache_cas (MemcachePool $memcache, array|string $key, mixed $value = null, int $flags = 'null', int $exptime = 'null', int $cas = 'null'): bool {}
+function memcache_cas (MemcachePool $memcache, array|string $key, mixed $value = NULL, int $flags = NULL, int $exptime = NULL, int $cas = NULL): bool {}
 
 /**
+ * {@inheritdoc}
  * @param MemcachePool $memcache
  * @param array|string $key
  * @param mixed $value [optional]
@@ -476,9 +540,10 @@ function memcache_cas (MemcachePool $memcache, array|string $key, mixed $value =
  * @param int $exptime [optional]
  * @param int $cas [optional]
  */
-function memcache_append (MemcachePool $memcache, array|string $key, mixed $value = null, int $flags = 'null', int $exptime = 'null', int $cas = 'null'): bool {}
+function memcache_append (MemcachePool $memcache, array|string $key, mixed $value = NULL, int $flags = NULL, int $exptime = NULL, int $cas = NULL): bool {}
 
 /**
+ * {@inheritdoc}
  * @param MemcachePool $memcache
  * @param array|string $key
  * @param mixed $value [optional]
@@ -486,22 +551,24 @@ function memcache_append (MemcachePool $memcache, array|string $key, mixed $valu
  * @param int $exptime [optional]
  * @param int $cas [optional]
  */
-function memcache_prepend (MemcachePool $memcache, array|string $key, mixed $value = null, int $flags = 'null', int $exptime = 'null', int $cas = 'null'): bool {}
+function memcache_prepend (MemcachePool $memcache, array|string $key, mixed $value = NULL, int $flags = NULL, int $exptime = NULL, int $cas = NULL): bool {}
 
 /**
+ * {@inheritdoc}
  * @param MemcachePool $memcache
  * @param mixed $key
  * @param mixed $flags [optional]
  * @param mixed $cas [optional]
  */
-function memcache_get (MemcachePool $memcache, $key = null, &$flags = null, &$cas = null): mixed {}
+function memcache_get (MemcachePool $memcache, $key = null, &$flags = NULL, &$cas = NULL): mixed {}
 
 /**
+ * {@inheritdoc}
  * @param MemcachePool $memcache
  * @param mixed $key
  * @param mixed $exptime [optional]
  */
-function memcache_delete (MemcachePool $memcache, $key = null, $exptime = null): array|bool {}
+function memcache_delete (MemcachePool $memcache, $key = null, $exptime = NULL): array|bool {}
 
 /**
  * Turn debug output on/off
@@ -513,58 +580,66 @@ function memcache_delete (MemcachePool $memcache, $key = null, $exptime = null):
 function memcache_debug (bool $on_off): bool {}
 
 /**
+ * {@inheritdoc}
  * @param MemcachePool $memcache
  * @param string $type [optional]
  * @param int $slabid [optional]
  * @param int $limit [optional]
  */
-function memcache_get_stats (MemcachePool $memcache, string $type = 'null', int $slabid = 'null', int $limit = 'null'): array|bool {}
+function memcache_get_stats (MemcachePool $memcache, string $type = NULL, int $slabid = NULL, int $limit = NULL): array|bool {}
 
 /**
+ * {@inheritdoc}
  * @param MemcachePool $memcache
  * @param string $type [optional]
  * @param int $slabid [optional]
  * @param int $limit [optional]
  */
-function memcache_get_extended_stats (MemcachePool $memcache, string $type = 'null', int $slabid = 'null', int $limit = 'null'): array|bool {}
+function memcache_get_extended_stats (MemcachePool $memcache, string $type = NULL, int $slabid = NULL, int $limit = NULL): array|bool {}
 
 /**
+ * {@inheritdoc}
  * @param MemcachePool $memcache
  * @param int $threshold
  * @param float $min_savings [optional]
  */
-function memcache_set_compress_threshold (MemcachePool $memcache, int $threshold, float $min_savings = 'null'): bool {}
+function memcache_set_compress_threshold (MemcachePool $memcache, int $threshold, float $min_savings = NULL): bool {}
 
 /**
+ * {@inheritdoc}
  * @param MemcachePool $memcache
  * @param array|string $key
  * @param int $value [optional]
  * @param int $defval [optional]
  * @param int $exptime [optional]
  */
-function memcache_increment (MemcachePool $memcache, array|string $key, int $value = 'null', int $defval = 'null', int $exptime = 'null'): array|int|bool {}
+function memcache_increment (MemcachePool $memcache, array|string $key, int $value = NULL, int $defval = NULL, int $exptime = NULL): array|int|bool {}
 
 /**
+ * {@inheritdoc}
  * @param MemcachePool $memcache
  * @param array|string $key
  * @param int $value [optional]
  * @param int $defval [optional]
  * @param int $exptime [optional]
  */
-function memcache_decrement (MemcachePool $memcache, array|string $key, int $value = 'null', int $defval = 'null', int $exptime = 'null'): array|int|bool {}
+function memcache_decrement (MemcachePool $memcache, array|string $key, int $value = NULL, int $defval = NULL, int $exptime = NULL): array|int|bool {}
 
 /**
+ * {@inheritdoc}
  * @param MemcachePool $memcache
  */
 function memcache_close (MemcachePool $memcache): bool {}
 
 /**
+ * {@inheritdoc}
  * @param MemcachePool $memcache
  * @param int $delay [optional]
  */
-function memcache_flush (MemcachePool $memcache, int $delay = 'null'): bool {}
+function memcache_flush (MemcachePool $memcache, int $delay = NULL): bool {}
 
 /**
+ * {@inheritdoc}
  * @param MemcachePool $memcache
  * @param string $username
  * @param string $password

@@ -14,6 +14,9 @@ final class SolrObject implements ArrayAccess {
 	 */
 	public function __construct () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __destruct () {}
 
 	/**
@@ -82,8 +85,6 @@ final class SolrDocument implements ArrayAccess, Iterator, Traversable, Serializ
 	 * Sorts the fields by thier boost values.
 	const SORT_FIELD_BOOST_VALUE = 4;
 
-	private $_hashtable_index;
-
 
 	/**
 	 * Constructor
@@ -91,6 +92,9 @@ final class SolrDocument implements ArrayAccess, Iterator, Traversable, Serializ
 	 */
 	public function __construct () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __destruct () {}
 
 	/**
@@ -216,9 +220,13 @@ final class SolrDocument implements ArrayAccess, Iterator, Traversable, Serializ
 	 */
 	public function unserialize (string $serialized): void {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __serialize () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array $data
 	 */
 	public function __unserialize (array $data) {}
@@ -298,7 +306,7 @@ final class SolrDocument implements ArrayAccess, Iterator, Traversable, Serializ
 	 * @param int $sortDirection [optional] 
 	 * @return bool Returns true on success or false on failure.
 	 */
-	public function sort (int $sortOrderBy, int $sortDirection = SolrDocument::SORT_ASC): bool {}
+	public function sort (int $sortOrderBy, int $sortDirection = \SolrDocument::SORT_ASC): bool {}
 
 	/**
 	 * Merges source to the current SolrDocument
@@ -344,10 +352,27 @@ final class SolrDocument implements ArrayAccess, Iterator, Traversable, Serializ
  * @link http://www.php.net/manual/en/class.solrdocumentfield.php
  */
 final class SolrDocumentField  {
-	public $name;
-	public $boost;
-	public $values;
 
+	/**
+	 * The name of the field.
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.solrdocumentfield.php#solrdocumentfield.props.name
+	 */
+	public readonly string $name;
+
+	/**
+	 * The boost value for the field
+	 * @var float
+	 * @link http://www.php.net/manual/en/class.solrdocumentfield.php#solrdocumentfield.props.boost
+	 */
+	public readonly float $boost;
+
+	/**
+	 * An array of values for this field
+	 * @var array
+	 * @link http://www.php.net/manual/en/class.solrdocumentfield.php#solrdocumentfield.props.values
+	 */
+	public readonly array $values;
 
 	/**
 	 * Constructor
@@ -355,6 +380,9 @@ final class SolrDocumentField  {
 	 */
 	public function __construct () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __destruct () {}
 
 }
@@ -391,8 +419,6 @@ final class SolrInputDocument  {
 	const VERSION_ASSERT_EXISTS = 1;
 	const VERSION_ASSERT_NOT_EXISTS = -1;
 
-	private $_hashtable_index;
-
 
 	/**
 	 * Constructor
@@ -400,6 +426,9 @@ final class SolrInputDocument  {
 	 */
 	public function __construct () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __destruct () {}
 
 	/**
@@ -409,8 +438,14 @@ final class SolrInputDocument  {
 	 */
 	public function __clone (): void {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __sleep () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -453,6 +488,7 @@ final class SolrInputDocument  {
 	public function addField (string $fieldName, string $fieldValue, float $fieldBoostValue = 0.0): bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $fieldName
 	 * @param mixed $modifier
 	 * @param mixed $value
@@ -528,7 +564,7 @@ final class SolrInputDocument  {
 	 * @param int $sortDirection [optional] 
 	 * @return bool Returns true on success or false on failure.
 	 */
-	public function sort (int $sortOrderBy, int $sortDirection = SolrInputDocument::SORT_ASC): bool {}
+	public function sort (int $sortOrderBy, int $sortDirection = \SolrInputDocument::SORT_ASC): bool {}
 
 	/**
 	 * Merges one input document into another
@@ -577,10 +613,14 @@ final class SolrInputDocument  {
 	public function addChildDocuments (array &$docs): void {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $version
 	 */
 	public function setVersion ($version = null) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getVersion () {}
 
 }
@@ -627,8 +667,6 @@ class SolrClient  {
 	 * This is the initial value for the system servlet used to obtain Solr Server information
 	const DEFAULT_SYSTEM_SERVLET = "admin/system";
 
-	private $_hashtable_index;
-
 
 	/**
 	 * Constructor for the SolrClient object
@@ -638,12 +676,24 @@ class SolrClient  {
 	 */
 	public function __construct (array $clientOptions): array {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __destruct () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __sleep () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __clone () {}
 
 	/**
@@ -698,6 +748,7 @@ class SolrClient  {
 	public function addDocuments (array $docs, bool $overwrite = true, int $commitWithin = null): void {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param SolrExtractRequest $request
 	 */
 	public function sendUpdateStream (SolrExtractRequest &$request) {}
@@ -821,8 +872,8 @@ class SolrClient  {
  * @link http://www.php.net/manual/en/class.solrparams.php
  */
 abstract class SolrParams implements Stringable, Serializable {
-	protected $_hashtable_index;
 
+	protected $_hashtable_index;
 
 	/**
 	 * Sets the parameter to the specified value
@@ -842,6 +893,9 @@ abstract class SolrParams implements Stringable, Serializable {
 	 */
 	public function addParam (string $name, string $value): SolrParams {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __toString (): string {}
 
 	/**
@@ -874,6 +928,9 @@ abstract class SolrParams implements Stringable, Serializable {
 	 */
 	public function getPreparedParams (): array {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __clone () {}
 
 	/**
@@ -891,9 +948,13 @@ abstract class SolrParams implements Stringable, Serializable {
 	 */
 	public function unserialize (string $serialized): void {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __serialize () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array $data
 	 */
 	public function __unserialize (array $data) {}
@@ -931,8 +992,6 @@ abstract class SolrParams implements Stringable, Serializable {
  * @link http://www.php.net/manual/en/class.solrmodifiableparams.php
  */
 class SolrModifiableParams extends SolrParams implements Serializable, Stringable {
-	protected $_hashtable_index;
-
 
 	/**
 	 * Constructor
@@ -940,6 +999,9 @@ class SolrModifiableParams extends SolrParams implements Serializable, Stringabl
 	 */
 	public function __construct () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __destruct () {}
 
 	/**
@@ -960,6 +1022,9 @@ class SolrModifiableParams extends SolrParams implements Serializable, Stringabl
 	 */
 	public function addParam (string $name, string $value): SolrParams {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __toString (): string {}
 
 	/**
@@ -992,6 +1057,9 @@ class SolrModifiableParams extends SolrParams implements Serializable, Stringabl
 	 */
 	public function getPreparedParams (): array {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __clone () {}
 
 	/**
@@ -1009,9 +1077,13 @@ class SolrModifiableParams extends SolrParams implements Serializable, Stringabl
 	 */
 	public function unserialize (string $serialized): void {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __serialize () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array $data
 	 */
 	public function __unserialize (array $data) {}
@@ -1068,8 +1140,6 @@ class SolrQuery extends SolrModifiableParams implements Stringable, Serializable
 	 * Used in the TermsComponent
 	const TERMS_SORT_COUNT = 1;
 
-	protected $_hashtable_index;
-
 
 	/**
 	 * Constructor
@@ -1079,6 +1149,9 @@ class SolrQuery extends SolrModifiableParams implements Stringable, Serializable
 	 */
 	public function __construct (string $q = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __destruct () {}
 
 	/**
@@ -1156,7 +1229,7 @@ class SolrQuery extends SolrModifiableParams implements Stringable, Serializable
 	 * @param int $order [optional] 
 	 * @return SolrQuery Returns the current SolrQuery object.
 	 */
-	public function addSortField (string $field, int $order = SolrQuery::ORDER_DESC): SolrQuery {}
+	public function addSortField (string $field, int $order = \SolrQuery::ORDER_DESC): SolrQuery {}
 
 	/**
 	 * Removes one of the sort fields
@@ -2591,6 +2664,9 @@ class SolrQuery extends SolrModifiableParams implements Stringable, Serializable
 	 */
 	public function addParam (string $name, string $value): SolrParams {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __toString (): string {}
 
 	/**
@@ -2623,6 +2699,9 @@ class SolrQuery extends SolrModifiableParams implements Stringable, Serializable
 	 */
 	public function getPreparedParams (): array {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __clone () {}
 
 	/**
@@ -2640,9 +2719,13 @@ class SolrQuery extends SolrModifiableParams implements Stringable, Serializable
 	 */
 	public function unserialize (string $serialized): void {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __serialize () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array $data
 	 */
 	public function __unserialize (array $data) {}
@@ -2679,8 +2762,6 @@ class SolrQuery extends SolrModifiableParams implements Stringable, Serializable
  * @link http://www.php.net/manual/en/class.solrdismaxquery.php
  */
 class SolrDisMaxQuery extends SolrQuery implements Serializable, Stringable {
-	protected $_hashtable_index;
-
 
 	/**
 	 * Class Constructor
@@ -2914,6 +2995,9 @@ class SolrDisMaxQuery extends SolrQuery implements Serializable, Stringable {
 	 */
 	public function setUserFields (string $fields): SolrDisMaxQuery {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __destruct () {}
 
 	/**
@@ -2991,7 +3075,7 @@ class SolrDisMaxQuery extends SolrQuery implements Serializable, Stringable {
 	 * @param int $order [optional] 
 	 * @return SolrQuery Returns the current SolrQuery object.
 	 */
-	public function addSortField (string $field, int $order = SolrQuery::ORDER_DESC): SolrQuery {}
+	public function addSortField (string $field, int $order = \SolrQuery::ORDER_DESC): SolrQuery {}
 
 	/**
 	 * Removes one of the sort fields
@@ -4426,6 +4510,9 @@ class SolrDisMaxQuery extends SolrQuery implements Serializable, Stringable {
 	 */
 	public function addParam (string $name, string $value): SolrParams {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __toString (): string {}
 
 	/**
@@ -4458,6 +4545,9 @@ class SolrDisMaxQuery extends SolrQuery implements Serializable, Stringable {
 	 */
 	public function getPreparedParams (): array {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __clone () {}
 
 	/**
@@ -4475,9 +4565,13 @@ class SolrDisMaxQuery extends SolrQuery implements Serializable, Stringable {
 	 */
 	public function unserialize (string $serialized): void {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __serialize () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array $data
 	 */
 	public function __unserialize (array $data) {}
@@ -4532,30 +4626,45 @@ final class SolrExtractRequest  {
 	const FIELD_BOOST_PREFIX = "boost.";
 	const LITERALS_PREFIX = "literal.";
 
-	private $_hashtable_index;
 
-
+	/**
+	 * {@inheritdoc}
+	 */
 	private function __construct () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __destruct () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $filename
 	 * @param SolrModifiableParams $params
 	 */
 	public static function createFromFile ($filename = null, SolrModifiableParams &$params) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $content
 	 * @param mixed $mime_type
 	 * @param SolrModifiableParams $params
 	 */
 	public static function createFromStream ($content = null, $mime_type = null, SolrModifiableParams &$params) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __clone () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __sleep () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 }
@@ -4568,8 +4677,8 @@ class SolrCollapseFunction implements Stringable {
 	const NULLPOLICY_EXPAND = "expand";
 	const NULLPOLICY_COLLAPSE = "collapse";
 
-	protected $_hashtable_index;
 
+	protected $_hashtable_index;
 
 	/**
 	 * Constructor
@@ -4580,6 +4689,9 @@ class SolrCollapseFunction implements Stringable {
 	 */
 	public function __construct (string $field = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __destruct () {}
 
 	/**
@@ -4679,8 +4791,14 @@ class SolrCollapseFunction implements Stringable {
 	 */
 	public function __toString (): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __sleep () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 }
@@ -4697,18 +4815,78 @@ abstract class SolrResponse  {
 	 * Documents should be parsed as SolrDocument instances.
 	const PARSE_SOLR_DOC = 1;
 
-	protected $http_status;
-	protected $parser_mode;
-	protected $success;
-	protected $response_writer;
-	protected $http_status_message;
-	protected $http_request_url;
-	protected $http_raw_request_headers;
-	protected $http_raw_request;
-	protected $http_raw_response_headers;
-	protected $http_raw_response;
-	protected $http_digested_response;
 
+	/**
+	 * The http status of the response.
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.solrresponse.php#solrresponse.props.http_status
+	 */
+	protected int $http_status;
+
+	/**
+	 * Whether to parse the solr documents as SolrObject or SolrDocument instances.
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.solrresponse.php#solrresponse.props.parser_mode
+	 */
+	protected int $parser_mode;
+
+	/**
+	 * Was there an error during the request
+	 * @var bool
+	 * @link http://www.php.net/manual/en/class.solrresponse.php#solrresponse.props.success
+	 */
+	protected bool $success;
+
+	/**
+	 * Detailed message on http status
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.solrresponse.php#solrresponse.props.http_status_message
+	 */
+	protected string $http_status_message;
+
+	/**
+	 * The request URL
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.solrresponse.php#solrresponse.props.http_request_url
+	 */
+	protected string $http_request_url;
+
+	/**
+	 * A string of raw headers sent during the request.
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.solrresponse.php#solrresponse.props.http_raw_request_headers
+	 */
+	protected string $http_raw_request_headers;
+
+	/**
+	 * The raw request sent to the server
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.solrresponse.php#solrresponse.props.http_raw_request
+	 */
+	protected string $http_raw_request;
+
+	/**
+	 * Response headers from the Solr server.
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.solrresponse.php#solrresponse.props.http_raw_response_headers
+	 */
+	protected string $http_raw_response_headers;
+
+	/**
+	 * The response message from the server.
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.solrresponse.php#solrresponse.props.http_raw_response
+	 */
+	protected string $http_raw_response;
+
+	/**
+	 * The response in PHP serialized format.
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.solrresponse.php#solrresponse.props.http_digested_response
+	 */
+	protected string $http_digested_response;
+
+	protected $response_writer;
 
 	/**
 	 * Returns the HTTP status of the response
@@ -4788,6 +4966,9 @@ abstract class SolrResponse  {
 	 */
 	public function getResponse (): SolrObject {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getArrayResponse () {}
 
 }
@@ -4804,18 +4985,6 @@ final class SolrQueryResponse extends SolrResponse  {
 	 * Documents should be parsed as SolrDocument instances.
 	const PARSE_SOLR_DOC = 1;
 
-	protected $http_status;
-	protected $parser_mode;
-	protected $success;
-	protected $response_writer;
-	protected $http_status_message;
-	protected $http_request_url;
-	protected $http_raw_request_headers;
-	protected $http_raw_request;
-	protected $http_raw_response_headers;
-	protected $http_raw_response;
-	protected $http_digested_response;
-
 
 	/**
 	 * Constructor
@@ -4823,6 +4992,9 @@ final class SolrQueryResponse extends SolrResponse  {
 	 */
 	public function __construct () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __destruct () {}
 
 	/**
@@ -4903,6 +5075,9 @@ final class SolrQueryResponse extends SolrResponse  {
 	 */
 	public function getResponse (): SolrObject {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getArrayResponse () {}
 
 }
@@ -4919,18 +5094,6 @@ final class SolrUpdateResponse extends SolrResponse  {
 	 * Documents should be parsed as SolrDocument instances.
 	const PARSE_SOLR_DOC = 1;
 
-	protected $http_status;
-	protected $parser_mode;
-	protected $success;
-	protected $response_writer;
-	protected $http_status_message;
-	protected $http_request_url;
-	protected $http_raw_request_headers;
-	protected $http_raw_request;
-	protected $http_raw_response_headers;
-	protected $http_raw_response;
-	protected $http_digested_response;
-
 
 	/**
 	 * Constructor
@@ -4938,6 +5101,9 @@ final class SolrUpdateResponse extends SolrResponse  {
 	 */
 	public function __construct () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __destruct () {}
 
 	/**
@@ -5018,6 +5184,9 @@ final class SolrUpdateResponse extends SolrResponse  {
 	 */
 	public function getResponse (): SolrObject {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getArrayResponse () {}
 
 }
@@ -5034,18 +5203,6 @@ final class SolrPingResponse extends SolrResponse  {
 	 * Documents should be parsed as SolrDocument instances.
 	const PARSE_SOLR_DOC = 1;
 
-	protected $http_status;
-	protected $parser_mode;
-	protected $success;
-	protected $response_writer;
-	protected $http_status_message;
-	protected $http_request_url;
-	protected $http_raw_request_headers;
-	protected $http_raw_request;
-	protected $http_raw_response_headers;
-	protected $http_raw_response;
-	protected $http_digested_response;
-
 
 	/**
 	 * Constructor
@@ -5053,6 +5210,9 @@ final class SolrPingResponse extends SolrResponse  {
 	 */
 	public function __construct () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __destruct () {}
 
 	/**
@@ -5133,6 +5293,9 @@ final class SolrPingResponse extends SolrResponse  {
 	 */
 	public function setParseMode (int $parser_mode = null): bool {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getArrayResponse () {}
 
 }
@@ -5149,18 +5312,6 @@ final class SolrGenericResponse extends SolrResponse  {
 	 * Documents should be parsed as SolrDocument instances.
 	const PARSE_SOLR_DOC = 1;
 
-	protected $http_status;
-	protected $parser_mode;
-	protected $success;
-	protected $response_writer;
-	protected $http_status_message;
-	protected $http_request_url;
-	protected $http_raw_request_headers;
-	protected $http_raw_request;
-	protected $http_raw_response_headers;
-	protected $http_raw_response;
-	protected $http_digested_response;
-
 
 	/**
 	 * Constructor
@@ -5168,6 +5319,9 @@ final class SolrGenericResponse extends SolrResponse  {
 	 */
 	public function __construct () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __destruct () {}
 
 	/**
@@ -5248,6 +5402,9 @@ final class SolrGenericResponse extends SolrResponse  {
 	 */
 	public function getResponse (): SolrObject {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getArrayResponse () {}
 
 }
@@ -5287,6 +5444,7 @@ abstract class SolrUtils  {
 	public static function digestXmlResponse (string $xmlresponse, int $parse_mode = null): SolrObject {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $jsonResponse
 	 */
 	public static function digestJsonResponse ($jsonResponse = null) {}
@@ -5298,6 +5456,9 @@ abstract class SolrUtils  {
 	 */
 	public static function getSolrVersion (): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public static function getSolrStats () {}
 
 }
@@ -5307,14 +5468,27 @@ abstract class SolrUtils  {
  * @link http://www.php.net/manual/en/class.solrexception.php
  */
 class SolrException extends Exception implements Throwable, Stringable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-	protected $sourceline;
-	protected $sourcefile;
-	protected $zif_name;
 
+	/**
+	 * The line in c-space source file where exception was generated
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.solrexception.php#solrexception.props.sourceline
+	 */
+	protected int $sourceline;
+
+	/**
+	 * The c-space source file where exception was generated
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.solrexception.php#solrexception.props.sourcefile
+	 */
+	protected string $sourcefile;
+
+	/**
+	 * The c-space function where exception was generated
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.solrexception.php#solrexception.props.zif_name
+	 */
+	protected string $zif_name;
 
 	/**
 	 * Returns internal information where the Exception was thrown
@@ -5331,8 +5505,11 @@ class SolrException extends Exception implements Throwable, Stringable {
 	 * @param Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -5402,14 +5579,6 @@ class SolrException extends Exception implements Throwable, Stringable {
  * @link http://www.php.net/manual/en/class.solrillegaloperationexception.php
  */
 class SolrIllegalOperationException extends SolrException implements Stringable, Throwable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-	protected $sourceline;
-	protected $sourcefile;
-	protected $zif_name;
-
 
 	/**
 	 * Returns internal information where the Exception was thrown
@@ -5426,8 +5595,11 @@ class SolrIllegalOperationException extends SolrException implements Stringable,
 	 * @param Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -5497,14 +5669,6 @@ class SolrIllegalOperationException extends SolrException implements Stringable,
  * @link http://www.php.net/manual/en/class.solrillegalargumentexception.php
  */
 class SolrIllegalArgumentException extends SolrException implements Stringable, Throwable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-	protected $sourceline;
-	protected $sourcefile;
-	protected $zif_name;
-
 
 	/**
 	 * Returns internal information where the Exception was thrown
@@ -5521,8 +5685,11 @@ class SolrIllegalArgumentException extends SolrException implements Stringable, 
 	 * @param Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -5592,14 +5759,6 @@ class SolrIllegalArgumentException extends SolrException implements Stringable, 
  * @link http://www.php.net/manual/en/class.solrclientexception.php
  */
 class SolrClientException extends SolrException implements Stringable, Throwable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-	protected $sourceline;
-	protected $sourcefile;
-	protected $zif_name;
-
 
 	/**
 	 * Returns internal information where the Exception was thrown
@@ -5616,8 +5775,11 @@ class SolrClientException extends SolrException implements Stringable, Throwable
 	 * @param Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -5687,14 +5849,6 @@ class SolrClientException extends SolrException implements Stringable, Throwable
  * @link http://www.php.net/manual/en/class.solrserverexception.php
  */
 class SolrServerException extends SolrException implements Stringable, Throwable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-	protected $sourceline;
-	protected $sourcefile;
-	protected $zif_name;
-
 
 	/**
 	 * Returns internal information where the Exception was thrown
@@ -5711,8 +5865,11 @@ class SolrServerException extends SolrException implements Stringable, Throwable
 	 * @param Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -5781,14 +5938,6 @@ class SolrServerException extends SolrException implements Stringable, Throwable
  * @link http://www.php.net/manual/en/class.solrmissingmandatoryparameterexception.php
  */
 class SolrMissingMandatoryParameterException extends SolrException implements Stringable, Throwable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-	protected $sourceline;
-	protected $sourcefile;
-	protected $zif_name;
-
 
 	/**
 	 * Returns internal information where the Exception was thrown
@@ -5805,8 +5954,11 @@ class SolrMissingMandatoryParameterException extends SolrException implements St
 	 * @param Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**

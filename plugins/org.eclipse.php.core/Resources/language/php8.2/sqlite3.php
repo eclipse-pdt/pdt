@@ -54,7 +54,7 @@ class SQLite3  {
 	 * @param string $encryptionKey [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $filename, int $flags = SQLITE3_OPEN_READWRITE | SQLITE3_OPEN_CREATE, string $encryptionKey = ""): string {}
+	public function __construct (string $filename, int $flags = 'SQLITE3_OPEN_READWRITE | SQLITE3_OPEN_CREATE', string $encryptionKey = '""'): string {}
 
 	/**
 	 * Opens an SQLite database
@@ -64,7 +64,7 @@ class SQLite3  {
 	 * @param string $encryptionKey [optional] 
 	 * @return void No value is returned.
 	 */
-	public function open (string $filename, int $flags = SQLITE3_OPEN_READWRITE | SQLITE3_OPEN_CREATE, string $encryptionKey = ""): void {}
+	public function open (string $filename, int $flags = 'SQLITE3_OPEN_READWRITE | SQLITE3_OPEN_CREATE', string $encryptionKey = '""'): void {}
 
 	/**
 	 * Closes the database connection
@@ -98,6 +98,9 @@ class SQLite3  {
 	 */
 	public function lastErrorCode (): int {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function lastExtendedErrorCode () {}
 
 	/**
@@ -145,7 +148,7 @@ class SQLite3  {
 	 * but for the destination.
 	 * @return bool Returns true on success or false on failure.
 	 */
-	public function backup (SQLite3 $destination, string $sourceDatabase = "main", string $destinationDatabase = "main"): bool {}
+	public function backup (SQLite3 $destination, string $sourceDatabase = '"main"', string $destinationDatabase = '"main"'): bool {}
 
 	/**
 	 * Returns a string that has been properly escaped
@@ -243,7 +246,7 @@ class SQLite3  {
 	 * @param int $flags [optional] 
 	 * @return resource|false Returns a stream resource, or false on failure.
 	 */
-	public function openBlob (string $table, string $column, int $rowid, string $database = "main", int $flags = SQLITE3_OPEN_READONLY): resource|false {}
+	public function openBlob (string $table, string $column, int $rowid, string $database = '"main"', int $flags = SQLITE3_OPEN_READONLY) {}
 
 	/**
 	 * Enable throwing exceptions
@@ -262,6 +265,7 @@ class SQLite3  {
 	public function enableExceptions (bool $enable = false): bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param bool $enable [optional]
 	 */
 	public function enableExtendedResultCodes (bool $enable = true) {}

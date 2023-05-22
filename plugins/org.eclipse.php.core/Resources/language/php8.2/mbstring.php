@@ -281,7 +281,7 @@ function mb_strwidth (string $string, ?string $encoding = null): int {}
  * @return string The truncated string. If trim_marker is set,
  * trim_marker replaces the last chars to match the width.
  */
-function mb_strimwidth (string $string, int $start, int $width, string $trim_marker = "", ?string $encoding = null): string {}
+function mb_strimwidth (string $string, int $start, int $width, string $trim_marker = '""', ?string $encoding = null): string {}
 
 /**
  * Convert a string from one character encoding to another
@@ -358,7 +358,7 @@ function mb_encoding_aliases (string $encoding): array {}
  * @param int $indent [optional] 
  * @return string A converted version of the string represented in ASCII.
  */
-function mb_encode_mimeheader (string $string, ?string $charset = null, ?string $transfer_encoding = null, string $newline = "\r\n", int $indent = null): string {}
+function mb_encode_mimeheader (string $string, ?string $charset = null, ?string $transfer_encoding = null, string $newline = '"\\r\\n"', int $indent = null): string {}
 
 /**
  * Decode string in MIME header field
@@ -376,7 +376,7 @@ function mb_decode_mimeheader (string $string): string {}
  * @param string|null $encoding [optional] 
  * @return string The converted string.
  */
-function mb_convert_kana (string $string, string $mode = "KV", ?string $encoding = null): string {}
+function mb_convert_kana (string $string, string $mode = '"KV"', ?string $encoding = null): string {}
 
 /**
  * Convert character code in variable(s)
@@ -421,7 +421,7 @@ function mb_decode_numericentity (string $string, array $map, ?string $encoding 
  * @param string|null $additional_params [optional] 
  * @return bool Returns true on success or false on failure.
  */
-function mb_send_mail (string $to, string $subject, string $message, array|string $additional_headers = [], ?string $additional_params = null): bool {}
+function mb_send_mail (string $to, string $subject, string $message, array|string $additional_headers = '[]', ?string $additional_params = null): bool {}
 
 /**
  * Get internal settings of mbstring
@@ -431,7 +431,7 @@ function mb_send_mail (string $to, string $subject, string $message, array|strin
  * is not specified, otherwise a specific type,
  * or false on failure.
  */
-function mb_get_info (string $type = "all"): array|string|int|false {}
+function mb_get_info (string $type = '"all"'): array|string|int|false {}
 
 /**
  * Check if strings are valid for the specified encoding

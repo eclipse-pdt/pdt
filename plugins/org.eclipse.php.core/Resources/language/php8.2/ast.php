@@ -4,58 +4,73 @@
 
 namespace ast {
 
-#[AllowDynamicProperties]
+#[\AllowDynamicProperties]
 class Node  {
+
 	public $kind;
+
 	public $flags;
+
 	public $lineno;
+
 	public $children;
 
-
 	/**
-	 * @param ?int $kind [optional]
-	 * @param ?int $flags [optional]
-	 * @param ?array $children [optional]
-	 * @param ?int $lineno [optional]
+	 * {@inheritdoc}
+	 * @param int|null $kind [optional]
+	 * @param int|null $flags [optional]
+	 * @param array|null $children [optional]
+	 * @param int|null $lineno [optional]
 	 */
-	public function __construct (?int $kind = null, ?int $flags = null, ?array $children = null, ?int $lineno = null) {}
+	public function __construct (?int $kind = NULL, ?int $flags = NULL, ?array $children = NULL, ?int $lineno = NULL) {}
 
 }
 
 class Metadata  {
-	public $kind;
-	public $name;
-	public $flags;
-	public $flagsCombinable;
 
+	public $kind;
+
+	public $name;
+
+	public $flags;
+
+	public $flagsCombinable;
 }
 
 /**
+ * {@inheritdoc}
  * @param string $code
  * @param int $version
  * @param string $filename [optional]
  */
-function parse_code (string $code, int $version, string $filename = 'string code'): ast\Node {}
+function parse_code (string $code, int $version, string $filename = 'string code'): \ast\Node {}
 
 /**
+ * {@inheritdoc}
  * @param string $filename
  * @param int $version
  */
-function parse_file (string $filename, int $version): ast\Node {}
+function parse_file (string $filename, int $version): \ast\Node {}
 
 /**
+ * {@inheritdoc}
  * @param int $kind
  */
 function get_kind_name (int $kind): string {}
 
 /**
+ * {@inheritdoc}
  * @param int $kind
  */
 function kind_uses_flags (int $kind): bool {}
 
+/**
+ * {@inheritdoc}
+ */
 function get_metadata (): array {}
 
 /**
+ * {@inheritdoc}
  * @param bool $exclude_deprecated [optional]
  */
 function get_supported_versions (bool $exclude_deprecated = false): array {}

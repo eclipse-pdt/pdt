@@ -16,7 +16,7 @@ function odbc_close_all (): void {}
  * @param int $mode 
  * @return bool Returns true on success or false on failure.
  */
-function odbc_binmode (resource $statement, int $mode): bool {}
+function odbc_binmode ($statement, int $mode): bool {}
 
 /**
  * Handling of LONG columns
@@ -25,7 +25,7 @@ function odbc_binmode (resource $statement, int $mode): bool {}
  * @param int $length 
  * @return bool Returns true on success or false on failure.
  */
-function odbc_longreadlen (resource $statement, int $length): bool {}
+function odbc_longreadlen ($statement, int $length): bool {}
 
 /**
  * Prepares a statement for execution
@@ -35,7 +35,7 @@ function odbc_longreadlen (resource $statement, int $length): bool {}
  * @return resource|false Returns an ODBC result identifier if the SQL command was prepared
  * successfully. Returns false on error.
  */
-function odbc_prepare (resource $odbc, string $query): resource|false {}
+function odbc_prepare ($odbc, string $query) {}
 
 /**
  * Execute a prepared statement
@@ -44,7 +44,7 @@ function odbc_prepare (resource $odbc, string $query): resource|false {}
  * @param array $params [optional] 
  * @return bool Returns true on success or false on failure.
  */
-function odbc_execute (resource $statement, array $params = []): bool {}
+function odbc_execute ($statement, array $params = '[]'): bool {}
 
 /**
  * Get cursorname
@@ -52,7 +52,7 @@ function odbc_execute (resource $statement, array $params = []): bool {}
  * @param resource $statement 
  * @return string|false Returns the cursor name, as a string, or false on failure.
  */
-function odbc_cursor (resource $statement): string|false {}
+function odbc_cursor ($statement): string|false {}
 
 /**
  * Returns information about available DSNs
@@ -62,7 +62,7 @@ function odbc_cursor (resource $statement): string|false {}
  * @return array|false Returns false on error, an array upon success, and null after fetching
  * the last available DSN.
  */
-function odbc_data_source (resource $odbc, int $fetch_type): array|false {}
+function odbc_data_source ($odbc, int $fetch_type): array|false {}
 
 /**
  * Directly execute an SQL statement
@@ -72,9 +72,10 @@ function odbc_data_source (resource $odbc, int $fetch_type): array|false {}
  * @return resource|false Returns an ODBC result identifier if the SQL command was executed
  * successfully, or false on error.
  */
-function odbc_exec (resource $odbc, string $query): resource|false {}
+function odbc_exec ($odbc, string $query) {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $odbc
  * @param string $query
  */
@@ -88,7 +89,7 @@ function odbc_do ($odbc = null, string $query) {}
  * @return stdClass|false Returns an object that corresponds to the fetched row, or false if there 
  * are no more rows.
  */
-function odbc_fetch_object (resource $statement, int $row = -1): stdClass|false {}
+function odbc_fetch_object ($statement, int $row = -1): stdClass|false {}
 
 /**
  * Fetch a result row as an associative array
@@ -98,7 +99,7 @@ function odbc_fetch_object (resource $statement, int $row = -1): stdClass|false 
  * @return array|false Returns an array that corresponds to the fetched row, or false if there 
  * are no more rows.
  */
-function odbc_fetch_array (resource $statement, int $row = -1): array|false {}
+function odbc_fetch_array ($statement, int $row = -1): array|false {}
 
 /**
  * Fetch one result row into array
@@ -109,7 +110,7 @@ function odbc_fetch_array (resource $statement, int $row = -1): array|false {}
  * @return int|false Returns the number of columns in the result;
  * false on error.
  */
-function odbc_fetch_into (resource $statement, array &$array, int $row = null): int|false {}
+function odbc_fetch_into ($statement, array &$array, int $row = null): int|false {}
 
 /**
  * Fetch a row
@@ -118,7 +119,7 @@ function odbc_fetch_into (resource $statement, array &$array, int $row = null): 
  * @param int|null $row [optional] 
  * @return bool Returns true if there was a row, false otherwise.
  */
-function odbc_fetch_row (resource $statement, ?int $row = null): bool {}
+function odbc_fetch_row ($statement, ?int $row = null): bool {}
 
 /**
  * Get result data
@@ -128,7 +129,7 @@ function odbc_fetch_row (resource $statement, ?int $row = null): bool {}
  * @return string|bool|null Returns the string contents of the field, false on error, null for
  * NULL data, or true for binary data.
  */
-function odbc_result (resource $statement, string|int $field): string|bool|null {}
+function odbc_result ($statement, string|int $field): string|bool|null {}
 
 /**
  * Print result as HTML table
@@ -138,7 +139,7 @@ function odbc_result (resource $statement, string|int $field): string|bool|null 
  * @return int|false Returns the number of rows in the result or false on error.
  * @deprecated 1
  */
-function odbc_result_all (resource $statement, string $format = ""): int|false {}
+function odbc_result_all ($statement, string $format = '""'): int|false {}
 
 /**
  * Free resources associated with a result
@@ -146,7 +147,7 @@ function odbc_result_all (resource $statement, string $format = ""): int|false {
  * @param resource $statement 
  * @return bool Always returns true.
  */
-function odbc_free_result (resource $statement): bool {}
+function odbc_free_result ($statement): bool {}
 
 /**
  * Connect to a datasource
@@ -157,7 +158,7 @@ function odbc_free_result (resource $statement): bool {}
  * @param int $cursor_option [optional] 
  * @return resource|false Returns an ODBC connection, or false on failure.
  */
-function odbc_connect (string $dsn, string $user, string $password, int $cursor_option = SQL_CUR_USE_DRIVER): resource|false {}
+function odbc_connect (string $dsn, string $user, string $password, int $cursor_option = SQL_CUR_USE_DRIVER) {}
 
 /**
  * Open a persistent database connection
@@ -169,7 +170,7 @@ function odbc_connect (string $dsn, string $user, string $password, int $cursor_
  * @return resource|false Returns an ODBC connection, or false on failure.
  * error.
  */
-function odbc_pconnect (string $dsn, string $user, string $password, int $cursor_option = SQL_CUR_USE_DRIVER): resource|false {}
+function odbc_pconnect (string $dsn, string $user, string $password, int $cursor_option = SQL_CUR_USE_DRIVER) {}
 
 /**
  * Close an ODBC connection
@@ -177,7 +178,7 @@ function odbc_pconnect (string $dsn, string $user, string $password, int $cursor
  * @param resource $odbc 
  * @return void No value is returned.
  */
-function odbc_close (resource $odbc): void {}
+function odbc_close ($odbc): void {}
 
 /**
  * Number of rows in a result
@@ -186,7 +187,7 @@ function odbc_close (resource $odbc): void {}
  * @return int Returns the number of rows in an ODBC result.
  * This function will return -1 on error.
  */
-function odbc_num_rows (resource $statement): int {}
+function odbc_num_rows ($statement): int {}
 
 /**
  * Checks if multiple results are available
@@ -194,7 +195,7 @@ function odbc_num_rows (resource $statement): int {}
  * @param resource $statement 
  * @return bool Returns true if there are more result sets, false otherwise.
  */
-function odbc_next_result (resource $statement): bool {}
+function odbc_next_result ($statement): bool {}
 
 /**
  * Number of columns in a result
@@ -202,7 +203,7 @@ function odbc_next_result (resource $statement): bool {}
  * @param resource $statement 
  * @return int Returns the number of fields, or -1 on error.
  */
-function odbc_num_fields (resource $statement): int {}
+function odbc_num_fields ($statement): int {}
 
 /**
  * Get the columnname
@@ -211,7 +212,7 @@ function odbc_num_fields (resource $statement): int {}
  * @param int $field 
  * @return string|false Returns the field name as a string, or false on error.
  */
-function odbc_field_name (resource $statement, int $field): string|false {}
+function odbc_field_name ($statement, int $field): string|false {}
 
 /**
  * Datatype of a field
@@ -220,7 +221,7 @@ function odbc_field_name (resource $statement, int $field): string|false {}
  * @param int $field 
  * @return string|false Returns the field type as a string, or false on error.
  */
-function odbc_field_type (resource $statement, int $field): string|false {}
+function odbc_field_type ($statement, int $field): string|false {}
 
 /**
  * Get the length (precision) of a field
@@ -229,9 +230,10 @@ function odbc_field_type (resource $statement, int $field): string|false {}
  * @param int $field 
  * @return int|false Returns the field length, or false on error.
  */
-function odbc_field_len (resource $statement, int $field): int|false {}
+function odbc_field_len ($statement, int $field): int|false {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $statement
  * @param int $field
  */
@@ -244,7 +246,7 @@ function odbc_field_precision ($statement = null, int $field): int|false {}
  * @param int $field 
  * @return int|false Returns the field scale as a integer, or false on error.
  */
-function odbc_field_scale (resource $statement, int $field): int|false {}
+function odbc_field_scale ($statement, int $field): int|false {}
 
 /**
  * Return column number
@@ -254,7 +256,7 @@ function odbc_field_scale (resource $statement, int $field): int|false {}
  * @return int|false Returns the field number as a integer, or false on error.
  * Field numbering starts at 1.
  */
-function odbc_field_num (resource $statement, string $field): int|false {}
+function odbc_field_num ($statement, string $field): int|false {}
 
 /**
  * Toggle autocommit behaviour
@@ -268,7 +270,7 @@ function odbc_field_num (resource $statement, string $field): int|false {}
  * <p>If enable is set, this function returns true on
  * success and false on failure.</p>
  */
-function odbc_autocommit (resource $odbc, bool $enable = false): int|bool {}
+function odbc_autocommit ($odbc, bool $enable = false): int|bool {}
 
 /**
  * Commit an ODBC transaction
@@ -276,7 +278,7 @@ function odbc_autocommit (resource $odbc, bool $enable = false): int|bool {}
  * @param resource $odbc 
  * @return bool Returns true on success or false on failure.
  */
-function odbc_commit (resource $odbc): bool {}
+function odbc_commit ($odbc): bool {}
 
 /**
  * Rollback a transaction
@@ -284,7 +286,7 @@ function odbc_commit (resource $odbc): bool {}
  * @param resource $odbc 
  * @return bool Returns true on success or false on failure.
  */
-function odbc_rollback (resource $odbc): bool {}
+function odbc_rollback ($odbc): bool {}
 
 /**
  * Get the last error code
@@ -296,7 +298,7 @@ function odbc_rollback (resource $odbc): bool {}
  * <p>This function returns meaningful value only if last odbc query failed
  * (i.e. odbc_exec returned false).</p>
  */
-function odbc_error (?resource $odbc = null): string {}
+function odbc_error ($odbc = null): string {}
 
 /**
  * Get the last error message
@@ -308,7 +310,7 @@ function odbc_error (?resource $odbc = null): string {}
  * <p>This function returns meaningful value only if last odbc query failed
  * (i.e. odbc_exec returned false).</p>
  */
-function odbc_errormsg (?resource $odbc = null): string {}
+function odbc_errormsg ($odbc = null): string {}
 
 /**
  * Adjust ODBC settings
@@ -319,7 +321,7 @@ function odbc_errormsg (?resource $odbc = null): string {}
  * @param int $value 
  * @return bool Returns true on success or false on failure.
  */
-function odbc_setoption (resource $odbc, int $which, int $option, int $value): bool {}
+function odbc_setoption ($odbc, int $which, int $option, int $value): bool {}
 
 /**
  * Get the list of table names stored in a specific data source
@@ -341,7 +343,7 @@ function odbc_setoption (resource $odbc, int $which, int $option, int $value): b
  * </p>
  * Drivers can report additional columns.</p>
  */
-function odbc_tables (resource $odbc, ?string $catalog = null, ?string $schema = null, ?string $table = null, ?string $types = null): resource|false {}
+function odbc_tables ($odbc, ?string $catalog = null, ?string $schema = null, ?string $table = null, ?string $types = null) {}
 
 /**
  * Lists the column names in specified tables
@@ -375,7 +377,7 @@ function odbc_tables (resource $odbc, ?string $catalog = null, ?string $schema =
  * </p>
  * Drivers can report additional columns.</p>
  */
-function odbc_columns (resource $odbc, ?string $catalog = null, ?string $schema = null, ?string $table = null, ?string $column = null): resource|false {}
+function odbc_columns ($odbc, ?string $catalog = null, ?string $schema = null, ?string $table = null, ?string $column = null) {}
 
 /**
  * Retrieves information about data types supported by the data source
@@ -404,7 +406,7 @@ function odbc_columns (resource $odbc, ?string $catalog = null, ?string $schema 
  * </p></p>
  * <p>The result set is ordered by DATA_TYPE and TYPE_NAME.</p>
  */
-function odbc_gettypeinfo (resource $odbc, int $data_type = null): resource|false {}
+function odbc_gettypeinfo ($odbc, int $data_type = null) {}
 
 /**
  * Gets the primary keys for a table
@@ -425,7 +427,7 @@ function odbc_gettypeinfo (resource $odbc, int $data_type = null): resource|fals
  * </p>
  * Drivers can report additional columns.</p>
  */
-function odbc_primarykeys (resource $odbc, ?string $catalog, string $schema, string $table): resource|false {}
+function odbc_primarykeys ($odbc, ?string $catalog, string $schema, string $table) {}
 
 /**
  * Retrieve information about parameters to procedures
@@ -462,7 +464,7 @@ function odbc_primarykeys (resource $odbc, ?string $catalog, string $schema, str
  * </p>
  * Drivers can report additional columns.</p>
  */
-function odbc_procedurecolumns (resource $odbc, ?string $catalog = null, ?string $schema = null, ?string $procedure = null, ?string $column = null): resource|false {}
+function odbc_procedurecolumns ($odbc, ?string $catalog = null, ?string $schema = null, ?string $procedure = null, ?string $column = null) {}
 
 /**
  * Get the list of procedures stored in a specific data source
@@ -486,7 +488,7 @@ function odbc_procedurecolumns (resource $odbc, ?string $catalog = null, ?string
  * </p>
  * Drivers can report additional columns.</p>
  */
-function odbc_procedures (resource $odbc, ?string $catalog = null, ?string $schema = null, ?string $procedure = null): resource|false {}
+function odbc_procedures ($odbc, ?string $catalog = null, ?string $schema = null, ?string $procedure = null) {}
 
 /**
  * Retrieves a list of foreign keys
@@ -518,7 +520,7 @@ function odbc_procedures (resource $odbc, ?string $catalog = null, ?string $sche
  * </p>
  * Drivers can report additional columns.</p>
  */
-function odbc_foreignkeys (resource $odbc, ?string $pk_catalog, string $pk_schema, string $pk_table, string $fk_catalog, string $fk_schema, string $fk_table): resource|false {}
+function odbc_foreignkeys ($odbc, ?string $pk_catalog, string $pk_schema, string $pk_table, string $fk_catalog, string $fk_schema, string $fk_table) {}
 
 /**
  * Retrieves special columns
@@ -545,7 +547,7 @@ function odbc_foreignkeys (resource $odbc, ?string $pk_catalog, string $pk_schem
  * </p>
  * Drivers can report additional columns.</p>
  */
-function odbc_specialcolumns (resource $odbc, int $type, ?string $catalog, string $schema, string $table, int $scope, int $nullable): resource|false {}
+function odbc_specialcolumns ($odbc, int $type, ?string $catalog, string $schema, string $table, int $scope, int $nullable) {}
 
 /**
  * Retrieve statistics about a table
@@ -575,7 +577,7 @@ function odbc_specialcolumns (resource $odbc, int $type, ?string $catalog, strin
  * </p>
  * Drivers can report additional columns.</p>
  */
-function odbc_statistics (resource $odbc, ?string $catalog, string $schema, string $table, int $unique, int $accuracy): resource|false {}
+function odbc_statistics ($odbc, ?string $catalog, string $schema, string $table, int $unique, int $accuracy) {}
 
 /**
  * Lists tables and the privileges associated with each table
@@ -597,7 +599,7 @@ function odbc_statistics (resource $odbc, ?string $catalog, string $schema, stri
  * </p>
  * Drivers can report additional columns.</p>
  */
-function odbc_tableprivileges (resource $odbc, ?string $catalog, string $schema, string $table): resource|false {}
+function odbc_tableprivileges ($odbc, ?string $catalog, string $schema, string $table) {}
 
 /**
  * Lists columns and associated privileges for the given table
@@ -623,7 +625,7 @@ function odbc_tableprivileges (resource $odbc, ?string $catalog, string $schema,
  * </p>
  * Drivers can report additional columns.</p>
  */
-function odbc_columnprivileges (resource $odbc, ?string $catalog, string $schema, string $table, string $column): resource|false {}
+function odbc_columnprivileges ($odbc, ?string $catalog, string $schema, string $table, string $column) {}
 
 /**
  * Determines if an ODBC connection string value is quoted

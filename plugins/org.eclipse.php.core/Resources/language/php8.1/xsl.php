@@ -20,9 +20,9 @@ class XSLTProcessor  {
 	 * @link http://www.php.net/manual/en/xsltprocessor.transformtodoc.php
 	 * @param object $document 
 	 * @param string|null $returnClass [optional] 
-	 * @return DOMDocument|bool The resulting DOMDocument or false on error.
+	 * @return DOMDocument|false The resulting DOMDocument or false on error.
 	 */
-	public function transformToDoc (object $document, ?string $returnClass = null): DOMDocument|bool {}
+	public function transformToDoc (object $document, ?string $returnClass = null): DOMDocument|int {}
 
 	/**
 	 * Transform to URI
@@ -37,9 +37,9 @@ class XSLTProcessor  {
 	 * Transform to XML
 	 * @link http://www.php.net/manual/en/xsltprocessor.transformtoxml.php
 	 * @param object $document 
-	 * @return string|null|bool The result of the transformation as a string or false on error.
+	 * @return string|null|false The result of the transformation as a string or false on error.
 	 */
-	public function transformToXml (object $document): string|null|bool {}
+	public function transformToXml (object $document): string|null|int {}
 
 	/**
 	 * Set value for a parameter
@@ -56,9 +56,9 @@ class XSLTProcessor  {
 	 * @link http://www.php.net/manual/en/xsltprocessor.getparameter.php
 	 * @param string $namespace 
 	 * @param string $name 
-	 * @return string|bool The value of the parameter (as a string), or false if it's not set.
+	 * @return string|false The value of the parameter (as a string), or false if it's not set.
 	 */
-	public function getParameter (string $namespace, string $name): string|bool {}
+	public function getParameter (string $namespace, string $name): string|int {}
 
 	/**
 	 * Remove parameter

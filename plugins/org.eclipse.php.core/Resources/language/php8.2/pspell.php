@@ -34,7 +34,7 @@ namespace {
  * @param int $mode [optional] 
  * @return PSpell\Dictionary|false Returns an PSpell\Dictionary instance on success, or false on failure.
  */
-function pspell_new (string $language, string $spelling = "", string $jargon = "", string $encoding = "", int $mode = null): PSpell\Dictionary|false {}
+function pspell_new (string $language, string $spelling = '""', string $jargon = '""', string $encoding = '""', int $mode = null): PSpell\Dictionary|false {}
 
 /**
  * Load a new dictionary with personal wordlist
@@ -47,7 +47,7 @@ function pspell_new (string $language, string $spelling = "", string $jargon = "
  * @param int $mode [optional] 
  * @return PSpell\Dictionary|false Returns an PSpell\Dictionary instance on success, or false on failure.
  */
-function pspell_new_personal (string $filename, string $language, string $spelling = "", string $jargon = "", string $encoding = "", int $mode = null): PSpell\Dictionary|false {}
+function pspell_new_personal (string $filename, string $language, string $spelling = '""', string $jargon = '""', string $encoding = '""', int $mode = null): PSpell\Dictionary|false {}
 
 /**
  * Load a new dictionary with settings based on a given config
@@ -128,7 +128,7 @@ function pspell_save_wordlist (PSpell\Dictionary $dictionary): bool {}
  * @param string $encoding [optional] 
  * @return PSpell\Config Returns an PSpell\Config instance.
  */
-function pspell_config_create (string $language, string $spelling = "", string $jargon = "", string $encoding = ""): PSpell\Config {}
+function pspell_config_create (string $language, string $spelling = '""', string $jargon = '""', string $encoding = '""'): PSpell\Config {}
 
 /**
  * Consider run-together words as valid compounds

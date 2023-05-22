@@ -232,7 +232,7 @@ class Collator  {
 	 * @link http://www.php.net/manual/en/collator.compare.php
 	 * @param string $string1 
 	 * @param string $string2 
-	 * @return int|bool Return comparison result:
+	 * @return int|false Return comparison result:
 	 * <p><p>
 	 * <br>
 	 * <p>
@@ -258,7 +258,7 @@ class Collator  {
 	 * <p>-1 if string1 is less than 
 	 * string2 .</p>
 	 */
-	public function compare (string $string1, string $string2): int|bool {}
+	public function compare (string $string1, string $string2): int {}
 
 	/**
 	 * Sort array using specified collator
@@ -267,7 +267,7 @@ class Collator  {
 	 * @param int $flags [optional] 
 	 * @return bool Returns true on success or false on failure.
 	 */
-	public function sort (array &$array, int $flags = Collator::SORT_REGULAR): bool {}
+	public function sort (array &$array, int $flags = \Collator::SORT_REGULAR): bool {}
 
 	/**
 	 * Sort array using specified collator and sort keys
@@ -284,15 +284,15 @@ class Collator  {
 	 * @param int $flags [optional] 
 	 * @return bool Returns true on success or false on failure.
 	 */
-	public function asort (array &$array, int $flags = Collator::SORT_REGULAR): bool {}
+	public function asort (array &$array, int $flags = \Collator::SORT_REGULAR): bool {}
 
 	/**
 	 * Get collation attribute value
 	 * @link http://www.php.net/manual/en/collator.getattribute.php
 	 * @param int $attribute 
-	 * @return int|bool Attribute value, or false on failure.
+	 * @return int|false Attribute value, or false on failure.
 	 */
-	public function getAttribute (int $attribute): int|bool {}
+	public function getAttribute (int $attribute): int {}
 
 	/**
 	 * Set collation attribute
@@ -322,34 +322,34 @@ class Collator  {
 	 * Get the locale name of the collator
 	 * @link http://www.php.net/manual/en/collator.getlocale.php
 	 * @param int $type 
-	 * @return string|bool Real locale name from which the collation data comes. If the collator was
+	 * @return string|false Real locale name from which the collation data comes. If the collator was
 	 * instantiated from rules or an error occurred, returns false.
 	 */
-	public function getLocale (int $type): string|bool {}
+	public function getLocale (int $type): string|int {}
 
 	/**
 	 * Get collator's last error code
 	 * @link http://www.php.net/manual/en/collator.geterrorcode.php
-	 * @return int|bool Error code returned by the last Collator API function call,
+	 * @return int|false Error code returned by the last Collator API function call,
 	 * or false on failure.
 	 */
-	public function getErrorCode (): int|bool {}
+	public function getErrorCode (): int {}
 
 	/**
 	 * Get text for collator's last error code
 	 * @link http://www.php.net/manual/en/collator.geterrormessage.php
-	 * @return string|bool Description of an error occurred in the last Collator API function call,
+	 * @return string|false Description of an error occurred in the last Collator API function call,
 	 * or false on failure.
 	 */
-	public function getErrorMessage (): string|bool {}
+	public function getErrorMessage (): string|int {}
 
 	/**
 	 * Get sorting key for a string
 	 * @link http://www.php.net/manual/en/collator.getsortkey.php
 	 * @param string $string 
-	 * @return string|bool Returns the collation key for the string, or false on failure.
+	 * @return string|false Returns the collation key for the string, or false on failure.
 	 */
-	public function getSortKey (string $string): string|bool {}
+	public function getSortKey (string $string): string|int {}
 
 }
 
@@ -627,9 +627,9 @@ class NumberFormatter  {
 	 * @link http://www.php.net/manual/en/numberformatter.format.php
 	 * @param int|float $num 
 	 * @param int $type [optional] 
-	 * @return string|bool Returns the string containing formatted value, or false on error.
+	 * @return string|false Returns the string containing formatted value, or false on error.
 	 */
-	public function format (int|float $num, int $type = NumberFormatter::TYPE_DEFAULT): string|bool {}
+	public function format (int|float $num, int $type = \NumberFormatter::TYPE_DEFAULT): string|int {}
 
 	/**
 	 * Parse a number
@@ -637,18 +637,18 @@ class NumberFormatter  {
 	 * @param string $string 
 	 * @param int $type [optional] 
 	 * @param int $offset [optional] 
-	 * @return int|float|bool The value of the parsed number or false on error.
+	 * @return int|float|false The value of the parsed number or false on error.
 	 */
-	public function parse (string $string, int $type = NumberFormatter::TYPE_DOUBLE, int &$offset = null): int|float|bool {}
+	public function parse (string $string, int $type = \NumberFormatter::TYPE_DOUBLE, int &$offset = null): int|float {}
 
 	/**
 	 * Format a currency value
 	 * @link http://www.php.net/manual/en/numberformatter.formatcurrency.php
 	 * @param float $amount 
 	 * @param string $currency 
-	 * @return string|bool String representing the formatted currency value, or false on failure.
+	 * @return string|false String representing the formatted currency value, or false on failure.
 	 */
-	public function formatCurrency (float $amount, string $currency): string|bool {}
+	public function formatCurrency (float $amount, string $currency): string|int {}
 
 	/**
 	 * Parse a currency number
@@ -656,9 +656,9 @@ class NumberFormatter  {
 	 * @param string $string 
 	 * @param string $currency 
 	 * @param int $offset [optional] 
-	 * @return float|bool The parsed numeric value or false on error.
+	 * @return float|false The parsed numeric value or false on error.
 	 */
-	public function parseCurrency (string $string, string &$currency, int &$offset = null): float|bool {}
+	public function parseCurrency (string $string, string &$currency, int &$offset = null): float|int {}
 
 	/**
 	 * Set an attribute
@@ -673,9 +673,9 @@ class NumberFormatter  {
 	 * Get an attribute
 	 * @link http://www.php.net/manual/en/numberformatter.getattribute.php
 	 * @param int $attribute 
-	 * @return int|float|bool Return attribute value on success, or false on error.
+	 * @return int|float|false Return attribute value on success, or false on error.
 	 */
-	public function getAttribute (int $attribute): int|float|bool {}
+	public function getAttribute (int $attribute): int|float {}
 
 	/**
 	 * Set a text attribute
@@ -690,9 +690,9 @@ class NumberFormatter  {
 	 * Get a text attribute
 	 * @link http://www.php.net/manual/en/numberformatter.gettextattribute.php
 	 * @param int $attribute 
-	 * @return string|bool Return attribute value on success, or false on error.
+	 * @return string|false Return attribute value on success, or false on error.
 	 */
-	public function getTextAttribute (int $attribute): string|bool {}
+	public function getTextAttribute (int $attribute): string|int {}
 
 	/**
 	 * Set a symbol value
@@ -707,9 +707,9 @@ class NumberFormatter  {
 	 * Get a symbol value
 	 * @link http://www.php.net/manual/en/numberformatter.getsymbol.php
 	 * @param int $symbol 
-	 * @return string|bool The symbol string or false on error.
+	 * @return string|false The symbol string or false on error.
 	 */
-	public function getSymbol (int $symbol): string|bool {}
+	public function getSymbol (int $symbol): string|int {}
 
 	/**
 	 * Set formatter pattern
@@ -722,17 +722,17 @@ class NumberFormatter  {
 	/**
 	 * Get formatter pattern
 	 * @link http://www.php.net/manual/en/numberformatter.getpattern.php
-	 * @return string|bool Pattern string that is used by the formatter, or false if an error happens.
+	 * @return string|false Pattern string that is used by the formatter, or false if an error happens.
 	 */
-	public function getPattern (): string|bool {}
+	public function getPattern (): string|int {}
 
 	/**
 	 * Get formatter locale
 	 * @link http://www.php.net/manual/en/numberformatter.getlocale.php
 	 * @param int $type [optional] 
-	 * @return string|bool The locale name used to create the formatter, or false on failure.
+	 * @return string|false The locale name used to create the formatter, or false on failure.
 	 */
-	public function getLocale (int $type = ULOC_ACTUAL_LOCALE): string|bool {}
+	public function getLocale (int $type = ULOC_ACTUAL_LOCALE): string|int {}
 
 	/**
 	 * Get formatter's last error code
@@ -794,9 +794,9 @@ class Normalizer  {
 	 * @link http://www.php.net/manual/en/normalizer.normalize.php
 	 * @param string $string 
 	 * @param int $form [optional] 
-	 * @return string|bool The normalized string or false if an error occurred.
+	 * @return string|false The normalized string or false if an error occurred.
 	 */
-	public static function normalize (string $string, int $form = Normalizer::FORM_C): string|bool {}
+	public static function normalize (string $string, int $form = \Normalizer::FORM_C): string|int {}
 
 	/**
 	 * Checks if the provided string is already in the specified normalization
@@ -806,7 +806,7 @@ class Normalizer  {
 	 * @param int $form [optional] 
 	 * @return bool true if normalized, false otherwise or if there an error
 	 */
-	public static function isNormalized (string $string, int $form = Normalizer::FORM_C): bool {}
+	public static function isNormalized (string $string, int $form = \Normalizer::FORM_C): bool {}
 
 	/**
 	 * Gets the Decomposition_Mapping property for the given UTF-8 encoded code point
@@ -816,7 +816,7 @@ class Normalizer  {
 	 * @return string|null Returns a string containing the Decomposition_Mapping property, if present in the UCD.
 	 * <p>Returns null if there is no Decomposition_Mapping property for the character.</p>
 	 */
-	public static function getRawDecomposition (string $string, int $form = Normalizer::FORM_C): ?string {}
+	public static function getRawDecomposition (string $string, int $form = \Normalizer::FORM_C): ?string {}
 
 }
 
@@ -909,67 +909,67 @@ class Locale  {
 	 * Gets the keywords for the input locale
 	 * @link http://www.php.net/manual/en/locale.getkeywords.php
 	 * @param string $locale 
-	 * @return array|bool|null Associative array containing the keyword-value pairs for this locale
+	 * @return array|false|null Associative array containing the keyword-value pairs for this locale
 	 * <p>>Returns null when the length of locale exceeds INTL_MAX_LOCALE_LEN.</p>
 	 */
-	public static function getKeywords (string $locale): array|bool|null {}
+	public static function getKeywords (string $locale): array|int|null {}
 
 	/**
 	 * Returns an appropriately localized display name for script of the input locale
 	 * @link http://www.php.net/manual/en/locale.getdisplayscript.php
 	 * @param string $locale 
 	 * @param string|null $displayLocale [optional] 
-	 * @return string|bool Display name of the script for the locale in the format appropriate for
+	 * @return string|false Display name of the script for the locale in the format appropriate for
 	 * displayLocale, or false on failure.
 	 */
-	public static function getDisplayScript (string $locale, ?string $displayLocale = null): string|bool {}
+	public static function getDisplayScript (string $locale, ?string $displayLocale = null): string|int {}
 
 	/**
 	 * Returns an appropriately localized display name for region of the input locale
 	 * @link http://www.php.net/manual/en/locale.getdisplayregion.php
 	 * @param string $locale 
 	 * @param string|null $displayLocale [optional] 
-	 * @return string|bool Display name of the region for the locale in the format appropriate for
+	 * @return string|false Display name of the region for the locale in the format appropriate for
 	 * displayLocale, or false on failure.
 	 */
-	public static function getDisplayRegion (string $locale, ?string $displayLocale = null): string|bool {}
+	public static function getDisplayRegion (string $locale, ?string $displayLocale = null): string|int {}
 
 	/**
 	 * Returns an appropriately localized display name for the input locale
 	 * @link http://www.php.net/manual/en/locale.getdisplayname.php
 	 * @param string $locale 
 	 * @param string|null $displayLocale [optional] 
-	 * @return string|bool Display name of the locale in the format appropriate for displayLocale, or false on failure.
+	 * @return string|false Display name of the locale in the format appropriate for displayLocale, or false on failure.
 	 */
-	public static function getDisplayName (string $locale, ?string $displayLocale = null): string|bool {}
+	public static function getDisplayName (string $locale, ?string $displayLocale = null): string|int {}
 
 	/**
 	 * Returns an appropriately localized display name for language of the inputlocale
 	 * @link http://www.php.net/manual/en/locale.getdisplaylanguage.php
 	 * @param string $locale 
 	 * @param string|null $displayLocale [optional] 
-	 * @return string|bool Display name of the language for the locale in the format appropriate for
+	 * @return string|false Display name of the language for the locale in the format appropriate for
 	 * displayLocale, or false on failure.
 	 */
-	public static function getDisplayLanguage (string $locale, ?string $displayLocale = null): string|bool {}
+	public static function getDisplayLanguage (string $locale, ?string $displayLocale = null): string|int {}
 
 	/**
 	 * Returns an appropriately localized display name for variants of the input locale
 	 * @link http://www.php.net/manual/en/locale.getdisplayvariant.php
 	 * @param string $locale 
 	 * @param string|null $displayLocale [optional] 
-	 * @return string|bool Display name of the variant for the locale in the format appropriate for
+	 * @return string|false Display name of the variant for the locale in the format appropriate for
 	 * displayLocale, or false on failure.
 	 */
-	public static function getDisplayVariant (string $locale, ?string $displayLocale = null): string|bool {}
+	public static function getDisplayVariant (string $locale, ?string $displayLocale = null): string|int {}
 
 	/**
 	 * Returns a correctly ordered and delimited locale ID
 	 * @link http://www.php.net/manual/en/locale.composelocale.php
 	 * @param array $subtags 
-	 * @return string|bool The corresponding locale identifier, or false when subtags is empty.
+	 * @return string|false The corresponding locale identifier, or false when subtags is empty.
 	 */
-	public static function composeLocale (array $subtags): string|bool {}
+	public static function composeLocale (array $subtags): string|int {}
 
 	/**
 	 * Returns a key-value array of locale ID subtag elements
@@ -1031,11 +1031,11 @@ class Locale  {
 	 * Tries to find out best available locale based on HTTP "Accept-Language" header
 	 * @link http://www.php.net/manual/en/locale.acceptfromhttp.php
 	 * @param string $header 
-	 * @return string|bool The corresponding locale identifier.
+	 * @return string|false The corresponding locale identifier.
 	 * <p>Returns false when the length of header exceeds
 	 * INTL_MAX_LOCALE_LEN.</p>
 	 */
-	public static function acceptFromHttp (string $header): string|bool {}
+	public static function acceptFromHttp (string $header): string|int {}
 
 }
 
@@ -1066,9 +1066,9 @@ class MessageFormatter  {
 	 * Format the message
 	 * @link http://www.php.net/manual/en/messageformatter.format.php
 	 * @param array $values 
-	 * @return string|bool The formatted string, or false if an error occurred
+	 * @return string|false The formatted string, or false if an error occurred
 	 */
-	public function format (array $values): string|bool {}
+	public function format (array $values): string|int {}
 
 	/**
 	 * Quick format message
@@ -1076,17 +1076,17 @@ class MessageFormatter  {
 	 * @param string $locale 
 	 * @param string $pattern 
 	 * @param array $values 
-	 * @return string|bool The formatted pattern string or false if an error occurred
+	 * @return string|false The formatted pattern string or false if an error occurred
 	 */
-	public static function formatMessage (string $locale, string $pattern, array $values): string|bool {}
+	public static function formatMessage (string $locale, string $pattern, array $values): string|int {}
 
 	/**
 	 * Parse input string according to pattern
 	 * @link http://www.php.net/manual/en/messageformatter.parse.php
 	 * @param string $string 
-	 * @return array|bool An array containing the items extracted, or false on error
+	 * @return array|false An array containing the items extracted, or false on error
 	 */
-	public function parse (string $string): array|bool {}
+	public function parse (string $string): array|int {}
 
 	/**
 	 * Quick parse input string
@@ -1094,9 +1094,9 @@ class MessageFormatter  {
 	 * @param string $locale 
 	 * @param string $pattern 
 	 * @param string $message 
-	 * @return array|bool An array containing items extracted, or false on error
+	 * @return array|false An array containing items extracted, or false on error
 	 */
-	public static function parseMessage (string $locale, string $pattern, string $message): array|bool {}
+	public static function parseMessage (string $locale, string $pattern, string $message): array|int {}
 
 	/**
 	 * Set the pattern used by the formatter
@@ -1109,9 +1109,9 @@ class MessageFormatter  {
 	/**
 	 * Get the pattern used by the formatter
 	 * @link http://www.php.net/manual/en/messageformatter.getpattern.php
-	 * @return string|bool The pattern string for this message formatter, or false on failure.
+	 * @return string|false The pattern string for this message formatter, or false on failure.
 	 */
-	public function getPattern (): string|bool {}
+	public function getPattern (): string|int {}
 
 	/**
 	 * Get the locale for which the formatter was created
@@ -1195,7 +1195,7 @@ class IntlDateFormatter  {
 	 * @return IntlDateFormatter|null The created IntlDateFormatter or null in case of
 	 * failure.
 	 */
-	public function __construct (?string $locale, int $dateType = IntlDateFormatter::FULL, int $timeType = IntlDateFormatter::FULL, IntlTimeZone|DateTimeZone|string|null $timezone = null, IntlCalendar|int|null $calendar = null, ?string $pattern = null): ?IntlDateFormatter {}
+	public function __construct (?string $locale, int $dateType = \IntlDateFormatter::FULL, int $timeType = \IntlDateFormatter::FULL, IntlTimeZone|DateTimeZone|string|null $timezone = null, IntlCalendar|int|null $calendar = null, ?string $pattern = null): ?IntlDateFormatter {}
 
 	/**
 	 * Create a date formatter
@@ -1209,34 +1209,34 @@ class IntlDateFormatter  {
 	 * @return IntlDateFormatter|null The created IntlDateFormatter or null in case of
 	 * failure.
 	 */
-	public static function create (?string $locale, int $dateType = IntlDateFormatter::FULL, int $timeType = IntlDateFormatter::FULL, IntlTimeZone|DateTimeZone|string|null $timezone = null, IntlCalendar|int|null $calendar = null, ?string $pattern = null): ?IntlDateFormatter {}
+	public static function create (?string $locale, int $dateType = \IntlDateFormatter::FULL, int $timeType = \IntlDateFormatter::FULL, IntlTimeZone|DateTimeZone|string|null $timezone = null, IntlCalendar|int|null $calendar = null, ?string $pattern = null): ?IntlDateFormatter {}
 
 	/**
 	 * Get the datetype used for the IntlDateFormatter
 	 * @link http://www.php.net/manual/en/intldateformatter.getdatetype.php
-	 * @return int|bool The current date type value of the formatter,
+	 * @return int|false The current date type value of the formatter,
 	 * or false on failure.
 	 */
-	public function getDateType (): int|bool {}
+	public function getDateType (): int {}
 
 	/**
 	 * Get the timetype used for the IntlDateFormatter
 	 * @link http://www.php.net/manual/en/intldateformatter.gettimetype.php
-	 * @return int|bool The current date type value of the formatter,
+	 * @return int|false The current date type value of the formatter,
 	 * or false on failure.
 	 */
-	public function getTimeType (): int|bool {}
+	public function getTimeType (): int {}
 
 	/**
 	 * Get the calendar type used for the IntlDateFormatter
 	 * @link http://www.php.net/manual/en/intldateformatter.getcalendar.php
-	 * @return int|bool The calendar
+	 * @return int|false The calendar
 	 * type being used by the formatter. Either
 	 * IntlDateFormatter::TRADITIONAL or
 	 * IntlDateFormatter::GREGORIAN.
 	 * Returns false on failure.
 	 */
-	public function getCalendar (): int|bool {}
+	public function getCalendar (): int {}
 
 	/**
 	 * Sets the calendar type used by the formatter
@@ -1249,25 +1249,25 @@ class IntlDateFormatter  {
 	/**
 	 * Get the timezone-id used for the IntlDateFormatter
 	 * @link http://www.php.net/manual/en/intldateformatter.gettimezoneid.php
-	 * @return string|bool ID string for the time zone used by this formatter, or false on failure.
+	 * @return string|false ID string for the time zone used by this formatter, or false on failure.
 	 */
-	public function getTimeZoneId (): string|bool {}
+	public function getTimeZoneId (): string|int {}
 
 	/**
 	 * Get copy of formatterʼs calendar object
 	 * @link http://www.php.net/manual/en/intldateformatter.getcalendarobject.php
-	 * @return IntlCalendar|bool|null A copy of the internal calendar object used by this formatter,
+	 * @return IntlCalendar|false|null A copy of the internal calendar object used by this formatter,
 	 * or null if none has been set, or false on failure.
 	 */
-	public function getCalendarObject (): IntlCalendar|bool|null {}
+	public function getCalendarObject (): IntlCalendar|int|null {}
 
 	/**
 	 * Get formatterʼs timezone
 	 * @link http://www.php.net/manual/en/intldateformatter.gettimezone.php
-	 * @return IntlTimeZone|bool The associated IntlTimeZone
+	 * @return IntlTimeZone|false The associated IntlTimeZone
 	 * object or false on failure.
 	 */
-	public function getTimeZone (): IntlTimeZone|bool {}
+	public function getTimeZone (): IntlTimeZone|int {}
 
 	/**
 	 * Sets formatterʼs timezone
@@ -1301,17 +1301,17 @@ class IntlDateFormatter  {
 	/**
 	 * Get the pattern used for the IntlDateFormatter
 	 * @link http://www.php.net/manual/en/intldateformatter.getpattern.php
-	 * @return string|bool The pattern string being used to format/parse, or false on failure.
+	 * @return string|false The pattern string being used to format/parse, or false on failure.
 	 */
-	public function getPattern (): string|bool {}
+	public function getPattern (): string|int {}
 
 	/**
 	 * Get the locale used by formatter
 	 * @link http://www.php.net/manual/en/intldateformatter.getlocale.php
 	 * @param int $type [optional] 
-	 * @return string|bool The locale of this formatter, or false on failure.
+	 * @return string|false The locale of this formatter, or false on failure.
 	 */
-	public function getLocale (int $type = ULOC_ACTUAL_LOCALE): string|bool {}
+	public function getLocale (int $type = ULOC_ACTUAL_LOCALE): string|int {}
 
 	/**
 	 * Set the leniency of the parser
@@ -1332,9 +1332,9 @@ class IntlDateFormatter  {
 	 * Format the date/time value as a string
 	 * @link http://www.php.net/manual/en/intldateformatter.format.php
 	 * @param IntlCalendar|DateTimeInterface|array|string|int|float $datetime 
-	 * @return string|bool The formatted string or, if an error occurred, false.
+	 * @return string|false The formatted string or, if an error occurred, false.
 	 */
-	public function format (IntlCalendar|DateTimeInterface|array|string|int|float $datetime): string|bool {}
+	public function format (IntlCalendar|DateTimeInterface|array|string|int|float $datetime): string|int {}
 
 	/**
 	 * Formats an object
@@ -1354,28 +1354,28 @@ class IntlDateFormatter  {
 	 * described in the ICU
 	 * documentation. If null, the default style will be used.
 	 * @param string|null $locale [optional] The locale to use, or null to use the default one.
-	 * @return string|bool A string with result or false on failure.
+	 * @return string|false A string with result or false on failure.
 	 */
-	public static function formatObject (IntlCalendar|DateTimeInterface $datetime, array|int|string|null $format = null, ?string $locale = null): string|bool {}
+	public static function formatObject (IntlCalendar|DateTimeInterface $datetime, array|int|string|null $format = null, ?string $locale = null): string|int {}
 
 	/**
 	 * Parse string to a timestamp value
 	 * @link http://www.php.net/manual/en/intldateformatter.parse.php
 	 * @param string $string 
 	 * @param int $offset [optional] 
-	 * @return int|float|bool Timestamp of parsed value, or false if value cannot be parsed.
+	 * @return int|float|false Timestamp of parsed value, or false if value cannot be parsed.
 	 */
-	public function parse (string $string, int &$offset = null): int|float|bool {}
+	public function parse (string $string, int &$offset = null): int|float {}
 
 	/**
 	 * Parse string to a field-based time value
 	 * @link http://www.php.net/manual/en/intldateformatter.localtime.php
 	 * @param string $string 
 	 * @param int $offset [optional] 
-	 * @return array|bool Localtime compatible array of integers : contains 24 hour clock value in tm_hour field,
+	 * @return array|false Localtime compatible array of integers : contains 24 hour clock value in tm_hour field,
 	 * or false on failure.
 	 */
-	public function localtime (string $string, int &$offset = null): array|bool {}
+	public function localtime (string $string, int &$offset = null): array|int {}
 
 	/**
 	 * Get the error code from last operation
@@ -1440,9 +1440,9 @@ class ResourceBundle implements IteratorAggregate, Traversable, Countable {
 	 * Get supported locales
 	 * @link http://www.php.net/manual/en/resourcebundle.locales.php
 	 * @param string $bundle 
-	 * @return array|bool Returns the list of locales supported by the bundle, or false on failure.
+	 * @return array|false Returns the list of locales supported by the bundle, or false on failure.
 	 */
-	public static function getLocales (string $bundle): array|bool {}
+	public static function getLocales (string $bundle): array|int {}
 
 	/**
 	 * Get bundle's last error code
@@ -1458,6 +1458,9 @@ class ResourceBundle implements IteratorAggregate, Traversable, Countable {
 	 */
 	public function getErrorMessage (): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getIterator (): Iterator {}
 
 }
@@ -1469,8 +1472,8 @@ class Transliterator  {
 	const FORWARD = 0;
 	const REVERSE = 1;
 
-	public $id;
 
+	public string $id;
 
 	/**
 	 * Private constructor to deny instantiation
@@ -1490,7 +1493,7 @@ class Transliterator  {
 	 * @return Transliterator|null Returns a Transliterator object on success,
 	 * or null on failure.
 	 */
-	public static function create (string $id, int $direction = Transliterator::FORWARD): ?Transliterator {}
+	public static function create (string $id, int $direction = \Transliterator::FORWARD): ?Transliterator {}
 
 	/**
 	 * Create transliterator from rules
@@ -1503,7 +1506,7 @@ class Transliterator  {
 	 * @return Transliterator|null Returns a Transliterator object on success,
 	 * or null on failure.
 	 */
-	public static function createFromRules (string $rules, int $direction = Transliterator::FORWARD): ?Transliterator {}
+	public static function createFromRules (string $rules, int $direction = \Transliterator::FORWARD): ?Transliterator {}
 
 	/**
 	 * Create an inverse transliterator
@@ -1516,10 +1519,10 @@ class Transliterator  {
 	/**
 	 * Get transliterator IDs
 	 * @link http://www.php.net/manual/en/transliterator.listids.php
-	 * @return array|bool An array of registered transliterator IDs on success,
+	 * @return array|false An array of registered transliterator IDs on success,
 	 * or false on failure.
 	 */
-	public static function listIDs (): array|bool {}
+	public static function listIDs (): array|int {}
 
 	/**
 	 * Transliterate a string
@@ -1531,25 +1534,25 @@ class Transliterator  {
 	 * @param int $end [optional] The end index (in UTF-16 code units) until which the string will be
 	 * transformed, exclusive. Indexing starts at 0. The text after will be
 	 * left as is.
-	 * @return string|bool The transformed string on success, or false on failure.
+	 * @return string|false The transformed string on success, or false on failure.
 	 */
-	public function transliterate (string $string, int $start = null, int $end = -1): string|bool {}
+	public function transliterate (string $string, int $start = null, int $end = -1): string|int {}
 
 	/**
 	 * Get last error code
 	 * @link http://www.php.net/manual/en/transliterator.geterrorcode.php
-	 * @return int|bool The error code on success,
+	 * @return int|false The error code on success,
 	 * or false if none exists, or on failure.
 	 */
-	public function getErrorCode (): int|bool {}
+	public function getErrorCode (): int {}
 
 	/**
 	 * Get last error message
 	 * @link http://www.php.net/manual/en/transliterator.geterrormessage.php
-	 * @return string|bool The error message on success,
+	 * @return string|false The error message on success,
 	 * or false if none exists, or on failure.
 	 */
-	public function getErrorMessage (): string|bool {}
+	public function getErrorMessage (): string|int {}
 
 }
 
@@ -1580,9 +1583,9 @@ class IntlTimeZone  {
 	 * Get the number of IDs in the equivalency group that includes the given ID
 	 * @link http://www.php.net/manual/en/intltimezone.countequivalentids.php
 	 * @param string $timezoneId 
-	 * @return int|bool 
+	 * @return int|false 
 	 */
-	public static function countEquivalentIDs (string $timezoneId): int|bool {}
+	public static function countEquivalentIDs (string $timezoneId): int {}
 
 	/**
 	 * Create a new copy of the default timezone for this host
@@ -1596,9 +1599,9 @@ class IntlTimeZone  {
 	 * given country or offset
 	 * @link http://www.php.net/manual/en/intltimezone.createenumeration.php
 	 * @param IntlTimeZone|string|int|float|null $countryOrRawOffset [optional] 
-	 * @return IntlIterator|bool 
+	 * @return IntlIterator|false 
 	 */
-	public static function createEnumeration (IntlTimeZone|string|int|float|null $countryOrRawOffset = null): IntlIterator|bool {}
+	public static function createEnumeration (IntlTimeZone|string|int|float|null $countryOrRawOffset = null): IntlIterator|int {}
 
 	/**
 	 * Create a timezone object for the given ID
@@ -1614,9 +1617,9 @@ class IntlTimeZone  {
 	 * @param int $type 
 	 * @param string|null $region [optional] 
 	 * @param int|null $rawOffset [optional] 
-	 * @return IntlIterator|bool Returns IntlIterator or false on failure.
+	 * @return IntlIterator|false Returns IntlIterator or false on failure.
 	 */
-	public static function createTimeZoneIDEnumeration (int $type, ?string $region = null, ?int $rawOffset = null): IntlIterator|bool {}
+	public static function createTimeZoneIDEnumeration (int $type, ?string $region = null, ?int $rawOffset = null): IntlIterator|int {}
 
 	/**
 	 * Create a timezone object from DateTimeZone
@@ -1631,9 +1634,9 @@ class IntlTimeZone  {
 	 * @link http://www.php.net/manual/en/intltimezone.getcanonicalid.php
 	 * @param string $timezoneId 
 	 * @param bool $isSystemId [optional] 
-	 * @return string|bool 
+	 * @return string|false 
 	 */
-	public static function getCanonicalID (string $timezoneId, bool &$isSystemId = null): string|bool {}
+	public static function getCanonicalID (string $timezoneId, bool &$isSystemId = null): string|int {}
 
 	/**
 	 * Get a name of this time zone suitable for presentation to the user
@@ -1641,9 +1644,9 @@ class IntlTimeZone  {
 	 * @param bool $dst [optional] 
 	 * @param int $style [optional] 
 	 * @param string|null $locale [optional] 
-	 * @return string|bool 
+	 * @return string|false 
 	 */
-	public function getDisplayName (bool $dst = false, int $style = IntlTimeZone::DISPLAY_LONG, ?string $locale = null): string|bool {}
+	public function getDisplayName (bool $dst = false, int $style = \IntlTimeZone::DISPLAY_LONG, ?string $locale = null): string|int {}
 
 	/**
 	 * Get the amount of time to be added to local standard time to get local wall clock time
@@ -1657,23 +1660,23 @@ class IntlTimeZone  {
 	 * @link http://www.php.net/manual/en/intltimezone.getequivalentid.php
 	 * @param string $timezoneId 
 	 * @param int $offset 
-	 * @return string|bool 
+	 * @return string|false 
 	 */
-	public static function getEquivalentID (string $timezoneId, int $offset): string|bool {}
+	public static function getEquivalentID (string $timezoneId, int $offset): string|int {}
 
 	/**
 	 * Get last error code on the object
 	 * @link http://www.php.net/manual/en/intltimezone.geterrorcode.php
-	 * @return int|bool 
+	 * @return int|false 
 	 */
-	public function getErrorCode (): int|bool {}
+	public function getErrorCode (): int {}
 
 	/**
 	 * Get last error message on the object
 	 * @link http://www.php.net/manual/en/intltimezone.geterrormessage.php
-	 * @return string|bool 
+	 * @return string|false 
 	 */
-	public function getErrorMessage (): string|bool {}
+	public function getErrorMessage (): string|int {}
 
 	/**
 	 * Create GMT (UTC) timezone
@@ -1685,9 +1688,9 @@ class IntlTimeZone  {
 	/**
 	 * Get timezone ID
 	 * @link http://www.php.net/manual/en/intltimezone.getid.php
-	 * @return string|bool 
+	 * @return string|false 
 	 */
-	public function getID (): string|bool {}
+	public function getID (): string|int {}
 
 	/**
 	 * Get the time zone raw and GMT offset for the given moment in time
@@ -1711,16 +1714,16 @@ class IntlTimeZone  {
 	 * Get the region code associated with the given system time zone ID
 	 * @link http://www.php.net/manual/en/intltimezone.getregion.php
 	 * @param string $timezoneId 
-	 * @return string|bool Return region or false on failure.
+	 * @return string|false Return region or false on failure.
 	 */
-	public static function getRegion (string $timezoneId): string|bool {}
+	public static function getRegion (string $timezoneId): string|int {}
 
 	/**
 	 * Get the timezone data version currently used by ICU
 	 * @link http://www.php.net/manual/en/intltimezone.gettzdataversion.php
-	 * @return string|bool 
+	 * @return string|false 
 	 */
-	public static function getTZDataVersion (): string|bool {}
+	public static function getTZDataVersion (): string|int {}
 
 	/**
 	 * Get the "unknown" time zone
@@ -1733,18 +1736,18 @@ class IntlTimeZone  {
 	 * Translate a system timezone into a Windows timezone
 	 * @link http://www.php.net/manual/en/intltimezone.getwindowsid.php
 	 * @param string $timezoneId 
-	 * @return string|bool Returns the Windows timezone or false on failure.
+	 * @return string|false Returns the Windows timezone or false on failure.
 	 */
-	public static function getWindowsID (string $timezoneId): string|bool {}
+	public static function getWindowsID (string $timezoneId): string|int {}
 
 	/**
 	 * Translate a Windows timezone into a system timezone
 	 * @link http://www.php.net/manual/en/intltimezone.getidforwindowsid.php
 	 * @param string $timezoneId 
 	 * @param string|null $region [optional] 
-	 * @return string|bool Returns the system timezone or false on failure.
+	 * @return string|false Returns the system timezone or false on failure.
 	 */
-	public static function getIDForWindowsID (string $timezoneId, ?string $region = null): string|bool {}
+	public static function getIDForWindowsID (string $timezoneId, ?string $region = null): string|int {}
 
 	/**
 	 * Check if this zone has the same rules and offset as another zone
@@ -1757,9 +1760,9 @@ class IntlTimeZone  {
 	/**
 	 * Convert to DateTimeZone object
 	 * @link http://www.php.net/manual/en/intltimezone.todatetimezone.php
-	 * @return DateTimeZone|bool 
+	 * @return DateTimeZone|false 
 	 */
-	public function toDateTimeZone (): DateTimeZone|bool {}
+	public function toDateTimeZone (): DateTimeZone|int {}
 
 	/**
 	 * Check if this time zone uses daylight savings time
@@ -2030,10 +2033,10 @@ class IntlCalendar  {
 	 * One of the IntlCalendar date/time field constants. These are integer
 	 * values between 0 and
 	 * IntlCalendar::FIELD_COUNT.</p>
-	 * @return int|bool Returns a (signed) difference of time in the unit associated with the
+	 * @return int|false Returns a (signed) difference of time in the unit associated with the
 	 * specified field or false on failure.
 	 */
-	public function fieldDifference (float $timestamp, int $field): int|bool {}
+	public function fieldDifference (float $timestamp, int $field): int {}
 
 	/**
 	 * Add a (signed) amount of time to a field
@@ -2077,9 +2080,9 @@ class IntlCalendar  {
 	 * One of the IntlCalendar date/time field constants. These are integer
 	 * values between 0 and
 	 * IntlCalendar::FIELD_COUNT.
-	 * @return bool Always returns true.
+	 * @return true Always returns true.
 	 */
-	public function clear (?int $field = null): bool {}
+	public function clear (?int $field = null): int {}
 
 	/**
 	 * Create an IntlCalendar from a DateTime object or string
@@ -2100,9 +2103,9 @@ class IntlCalendar  {
 	 * One of the IntlCalendar date/time field constants. These are integer
 	 * values between 0 and
 	 * IntlCalendar::FIELD_COUNT.
-	 * @return int|bool An integer with the value of the time field.
+	 * @return int|false An integer with the value of the time field.
 	 */
-	public function get (int $field): int|bool {}
+	public function get (int $field): int {}
 
 	/**
 	 * The maximum value for a field, considering the objectʼs current time
@@ -2111,10 +2114,10 @@ class IntlCalendar  {
 	 * One of the IntlCalendar date/time field constants. These are integer
 	 * values between 0 and
 	 * IntlCalendar::FIELD_COUNT.
-	 * @return int|bool An int representing the maximum value in the units associated
+	 * @return int|false An int representing the maximum value in the units associated
 	 * with the given field or false on failure.
 	 */
-	public function getActualMaximum (int $field): int|bool {}
+	public function getActualMaximum (int $field): int {}
 
 	/**
 	 * The minimum value for a field, considering the objectʼs current time
@@ -2123,10 +2126,10 @@ class IntlCalendar  {
 	 * One of the IntlCalendar date/time field constants. These are integer
 	 * values between 0 and
 	 * IntlCalendar::FIELD_COUNT.
-	 * @return int|bool An int representing the minimum value in the fieldʼs
+	 * @return int|false An int representing the minimum value in the fieldʼs
 	 * unit or false on failure.
 	 */
-	public function getActualMinimum (int $field): int|bool {}
+	public function getActualMinimum (int $field): int {}
 
 	/**
 	 * Get array of locales for which there is data
@@ -2141,39 +2144,39 @@ class IntlCalendar  {
 	 * @param int $dayOfWeek One of the constants IntlCalendar::DOW_SUNDAY,
 	 * IntlCalendar::DOW_MONDAY, …,
 	 * IntlCalendar::DOW_SATURDAY.
-	 * @return int|bool Returns one of the constants 
+	 * @return int|false Returns one of the constants 
 	 * IntlCalendar::DOW_TYPE_WEEKDAY,
 	 * IntlCalendar::DOW_TYPE_WEEKEND,
 	 * IntlCalendar::DOW_TYPE_WEEKEND_OFFSET or
 	 * IntlCalendar::DOW_TYPE_WEEKEND_CEASE or false on failure.
 	 */
-	public function getDayOfWeekType (int $dayOfWeek): int|bool {}
+	public function getDayOfWeekType (int $dayOfWeek): int {}
 
 	/**
 	 * Get last error code on the object
 	 * @link http://www.php.net/manual/en/intlcalendar.geterrorcode.php
-	 * @return int|bool An ICU error code indicating either success, failure or a warning.
+	 * @return int|false An ICU error code indicating either success, failure or a warning.
 	 * Returns false on failure.
 	 */
-	public function getErrorCode (): int|bool {}
+	public function getErrorCode (): int {}
 
 	/**
 	 * Get last error message on the object
 	 * @link http://www.php.net/manual/en/intlcalendar.geterrormessage.php
-	 * @return string|bool The error message associated with last error that occurred in a function call
+	 * @return string|false The error message associated with last error that occurred in a function call
 	 * on this object, or a string indicating the non-existence of an error.
 	 * Returns false on failure.
 	 */
-	public function getErrorMessage (): string|bool {}
+	public function getErrorMessage (): string|int {}
 
 	/**
 	 * Get the first day of the week for the calendarʼs locale
 	 * @link http://www.php.net/manual/en/intlcalendar.getfirstdayofweek.php
-	 * @return int|bool One of the constants IntlCalendar::DOW_SUNDAY,
+	 * @return int|false One of the constants IntlCalendar::DOW_SUNDAY,
 	 * IntlCalendar::DOW_MONDAY, …,
 	 * IntlCalendar::DOW_SATURDAY or false on failure.
 	 */
-	public function getFirstDayOfWeek (): int|bool {}
+	public function getFirstDayOfWeek (): int {}
 
 	/**
 	 * Get the largest local minimum value for a field
@@ -2182,10 +2185,10 @@ class IntlCalendar  {
 	 * One of the IntlCalendar date/time field constants. These are integer
 	 * values between 0 and
 	 * IntlCalendar::FIELD_COUNT.
-	 * @return int|bool An int representing a field value, in the fieldʼs
+	 * @return int|false An int representing a field value, in the fieldʼs
 	 * unit, or false on failure.
 	 */
-	public function getGreatestMinimum (int $field): int|bool {}
+	public function getGreatestMinimum (int $field): int {}
 
 	/**
 	 * Get set of locale keyword values
@@ -2194,10 +2197,10 @@ class IntlCalendar  {
 	 * 'calendar' is supported.
 	 * @param string $locale The locale onto which the keyword/value pair are to be appended.
 	 * @param bool $onlyCommon Whether to show only the values commonly used for the specified locale.
-	 * @return IntlIterator|bool An iterator that yields strings with the locale keyword
+	 * @return IntlIterator|false An iterator that yields strings with the locale keyword
 	 * values or false on failure.
 	 */
-	public static function getKeywordValuesForLocale (string $keyword, string $locale, bool $onlyCommon): IntlIterator|bool {}
+	public static function getKeywordValuesForLocale (string $keyword, string $locale, bool $onlyCommon): IntlIterator|int {}
 
 	/**
 	 * Get the smallest local maximum for a field
@@ -2206,10 +2209,10 @@ class IntlCalendar  {
 	 * One of the IntlCalendar date/time field constants. These are integer
 	 * values between 0 and
 	 * IntlCalendar::FIELD_COUNT.
-	 * @return int|bool An int representing a field value in the fieldʼs
+	 * @return int|false An int representing a field value in the fieldʼs
 	 * unit or false on failure.
 	 */
-	public function getLeastMaximum (int $field): int|bool {}
+	public function getLeastMaximum (int $field): int {}
 
 	/**
 	 * Get the locale associated with the object
@@ -2220,9 +2223,9 @@ class IntlCalendar  {
 	 * to the requested locale – see Locale::VALID_LOCALE.
 	 * From the most general to the most specific, the locales are ordered in
 	 * this fashion – actual locale, valid locale, requested locale.
-	 * @return string|bool A locale string or false on failure.
+	 * @return string|false A locale string or false on failure.
 	 */
-	public function getLocale (int $type): string|bool {}
+	public function getLocale (int $type): string|int {}
 
 	/**
 	 * Get the global maximum value for a field
@@ -2231,17 +2234,17 @@ class IntlCalendar  {
 	 * One of the IntlCalendar date/time field constants. These are integer
 	 * values between 0 and
 	 * IntlCalendar::FIELD_COUNT.
-	 * @return int|bool An int representing a field value in the fieldʼs
+	 * @return int|false An int representing a field value in the fieldʼs
 	 * unit or false on failure.
 	 */
-	public function getMaximum (int $field): int|bool {}
+	public function getMaximum (int $field): int {}
 
 	/**
 	 * Get minimal number of days the first week in a year or month can have
 	 * @link http://www.php.net/manual/en/intlcalendar.getminimaldaysinfirstweek.php
-	 * @return int|bool An int representing a number of days or false on failure.
+	 * @return int|false An int representing a number of days or false on failure.
 	 */
-	public function getMinimalDaysInFirstWeek (): int|bool {}
+	public function getMinimalDaysInFirstWeek (): int {}
 
 	/**
 	 * Set minimal number of days the first week in a year or month can have
@@ -2258,10 +2261,10 @@ class IntlCalendar  {
 	 * One of the IntlCalendar date/time field constants. These are integer
 	 * values between 0 and
 	 * IntlCalendar::FIELD_COUNT.
-	 * @return int|bool An int representing a value for the given
+	 * @return int|false An int representing a value for the given
 	 * field in the fieldʼs unit or false on failure.
 	 */
-	public function getMinimum (int $field): int|bool {}
+	public function getMinimum (int $field): int {}
 
 	/**
 	 * Get number representing the current time
@@ -2291,18 +2294,18 @@ class IntlCalendar  {
 	/**
 	 * Get time currently represented by the object
 	 * @link http://www.php.net/manual/en/intlcalendar.gettime.php
-	 * @return float|bool A float representing the number of milliseconds elapsed since the
+	 * @return float|false A float representing the number of milliseconds elapsed since the
 	 * reference time (1 Jan 1970 00:00:00 UTC), or false on failure
 	 */
-	public function getTime (): float|bool {}
+	public function getTime (): float|int {}
 
 	/**
 	 * Get the objectʼs timezone
 	 * @link http://www.php.net/manual/en/intlcalendar.gettimezone.php
-	 * @return IntlTimeZone|bool An IntlTimeZone object corresponding to the one used
+	 * @return IntlTimeZone|false An IntlTimeZone object corresponding to the one used
 	 * internally in this object. Returns false on failure.
 	 */
-	public function getTimeZone (): IntlTimeZone|bool {}
+	public function getTimeZone (): IntlTimeZone|int {}
 
 	/**
 	 * Get the calendar type
@@ -2318,10 +2321,10 @@ class IntlCalendar  {
 	 * @param int $dayOfWeek One of the constants IntlCalendar::DOW_SUNDAY,
 	 * IntlCalendar::DOW_MONDAY, …,
 	 * IntlCalendar::DOW_SATURDAY.
-	 * @return int|bool The number of milliseconds into the day at which the weekend begins or
+	 * @return int|false The number of milliseconds into the day at which the weekend begins or
 	 * ends or false on failure.
 	 */
-	public function getWeekendTransition (int $dayOfWeek): int|bool {}
+	public function getWeekendTransition (int $dayOfWeek): int {}
 
 	/**
 	 * Whether the objectʼs time is in Daylight Savings Time
@@ -2392,9 +2395,9 @@ class IntlCalendar  {
 	 * values between 0 and
 	 * IntlCalendar::FIELD_COUNT.
 	 * @param int $value The new value of the given field.
-	 * @return bool Always returns true.
+	 * @return true Always returns true.
 	 */
-	public function set (int $field, int $value): bool {}
+	public function set (int $field, int $value): int {}
 
 	/**
 	 * Set the day on which the week is deemed to start
@@ -2402,26 +2405,26 @@ class IntlCalendar  {
 	 * @param int $dayOfWeek One of the constants IntlCalendar::DOW_SUNDAY,
 	 * IntlCalendar::DOW_MONDAY, …,
 	 * IntlCalendar::DOW_SATURDAY.
-	 * @return bool Always returns true.
+	 * @return true Always returns true.
 	 */
-	public function setFirstDayOfWeek (int $dayOfWeek): bool {}
+	public function setFirstDayOfWeek (int $dayOfWeek): int {}
 
 	/**
 	 * Set whether date/time interpretation is to be lenient
 	 * @link http://www.php.net/manual/en/intlcalendar.setlenient.php
 	 * @param bool $lenient Use true to activate the lenient mode; false otherwise.
-	 * @return bool Always returns true.
+	 * @return true Always returns true.
 	 */
-	public function setLenient (bool $lenient): bool {}
+	public function setLenient (bool $lenient): int {}
 
 	/**
 	 * Set behavior for handling repeating wall times at negative timezone offset transitions
 	 * @link http://www.php.net/manual/en/intlcalendar.setrepeatedwalltimeoption.php
 	 * @param int $option One of the constants IntlCalendar::WALLTIME_FIRST or
 	 * IntlCalendar::WALLTIME_LAST.
-	 * @return bool Always returns true.
+	 * @return true Always returns true.
 	 */
-	public function setRepeatedWallTimeOption (int $option): bool {}
+	public function setRepeatedWallTimeOption (int $option): int {}
 
 	/**
 	 * Set behavior for handling skipped wall times at positive timezone offset transitions
@@ -2429,9 +2432,9 @@ class IntlCalendar  {
 	 * @param int $option One of the constants IntlCalendar::WALLTIME_FIRST,
 	 * IntlCalendar::WALLTIME_LAST or
 	 * IntlCalendar::WALLTIME_NEXT_VALID.
-	 * @return bool Always returns true.
+	 * @return true Always returns true.
 	 */
-	public function setSkippedWallTimeOption (int $option): bool {}
+	public function setSkippedWallTimeOption (int $option): int {}
 
 	/**
 	 * Set the calendar time in milliseconds since the epoch
@@ -2490,12 +2493,12 @@ class IntlCalendar  {
 	/**
 	 * Convert an IntlCalendar into a DateTime object
 	 * @link http://www.php.net/manual/en/intlcalendar.todatetime.php
-	 * @return DateTime|bool A DateTime object with the same timezone as this
+	 * @return DateTime|false A DateTime object with the same timezone as this
 	 * object (though using PHPʼs database instead of ICUʼs) and the same time,
 	 * except for the smaller precision (second precision instead of millisecond).
 	 * Returns false on failure.
 	 */
-	public function toDateTime (): DateTime|bool {}
+	public function toDateTime (): DateTime|int {}
 
 }
 
@@ -2620,10 +2623,10 @@ class IntlGregorianCalendar extends IntlCalendar  {
 	 * One of the IntlCalendar date/time field constants. These are integer
 	 * values between 0 and
 	 * IntlCalendar::FIELD_COUNT.</p>
-	 * @return int|bool Returns a (signed) difference of time in the unit associated with the
+	 * @return int|false Returns a (signed) difference of time in the unit associated with the
 	 * specified field or false on failure.
 	 */
-	public function fieldDifference (float $timestamp, int $field): int|bool {}
+	public function fieldDifference (float $timestamp, int $field): int {}
 
 	/**
 	 * Add a (signed) amount of time to a field
@@ -2667,9 +2670,9 @@ class IntlGregorianCalendar extends IntlCalendar  {
 	 * One of the IntlCalendar date/time field constants. These are integer
 	 * values between 0 and
 	 * IntlCalendar::FIELD_COUNT.
-	 * @return bool Always returns true.
+	 * @return true Always returns true.
 	 */
-	public function clear (?int $field = null): bool {}
+	public function clear (?int $field = null): int {}
 
 	/**
 	 * Create an IntlCalendar from a DateTime object or string
@@ -2690,9 +2693,9 @@ class IntlGregorianCalendar extends IntlCalendar  {
 	 * One of the IntlCalendar date/time field constants. These are integer
 	 * values between 0 and
 	 * IntlCalendar::FIELD_COUNT.
-	 * @return int|bool An integer with the value of the time field.
+	 * @return int|false An integer with the value of the time field.
 	 */
-	public function get (int $field): int|bool {}
+	public function get (int $field): int {}
 
 	/**
 	 * The maximum value for a field, considering the objectʼs current time
@@ -2701,10 +2704,10 @@ class IntlGregorianCalendar extends IntlCalendar  {
 	 * One of the IntlCalendar date/time field constants. These are integer
 	 * values between 0 and
 	 * IntlCalendar::FIELD_COUNT.
-	 * @return int|bool An int representing the maximum value in the units associated
+	 * @return int|false An int representing the maximum value in the units associated
 	 * with the given field or false on failure.
 	 */
-	public function getActualMaximum (int $field): int|bool {}
+	public function getActualMaximum (int $field): int {}
 
 	/**
 	 * The minimum value for a field, considering the objectʼs current time
@@ -2713,10 +2716,10 @@ class IntlGregorianCalendar extends IntlCalendar  {
 	 * One of the IntlCalendar date/time field constants. These are integer
 	 * values between 0 and
 	 * IntlCalendar::FIELD_COUNT.
-	 * @return int|bool An int representing the minimum value in the fieldʼs
+	 * @return int|false An int representing the minimum value in the fieldʼs
 	 * unit or false on failure.
 	 */
-	public function getActualMinimum (int $field): int|bool {}
+	public function getActualMinimum (int $field): int {}
 
 	/**
 	 * Get array of locales for which there is data
@@ -2731,39 +2734,39 @@ class IntlGregorianCalendar extends IntlCalendar  {
 	 * @param int $dayOfWeek One of the constants IntlCalendar::DOW_SUNDAY,
 	 * IntlCalendar::DOW_MONDAY, …,
 	 * IntlCalendar::DOW_SATURDAY.
-	 * @return int|bool Returns one of the constants 
+	 * @return int|false Returns one of the constants 
 	 * IntlCalendar::DOW_TYPE_WEEKDAY,
 	 * IntlCalendar::DOW_TYPE_WEEKEND,
 	 * IntlCalendar::DOW_TYPE_WEEKEND_OFFSET or
 	 * IntlCalendar::DOW_TYPE_WEEKEND_CEASE or false on failure.
 	 */
-	public function getDayOfWeekType (int $dayOfWeek): int|bool {}
+	public function getDayOfWeekType (int $dayOfWeek): int {}
 
 	/**
 	 * Get last error code on the object
 	 * @link http://www.php.net/manual/en/intlcalendar.geterrorcode.php
-	 * @return int|bool An ICU error code indicating either success, failure or a warning.
+	 * @return int|false An ICU error code indicating either success, failure or a warning.
 	 * Returns false on failure.
 	 */
-	public function getErrorCode (): int|bool {}
+	public function getErrorCode (): int {}
 
 	/**
 	 * Get last error message on the object
 	 * @link http://www.php.net/manual/en/intlcalendar.geterrormessage.php
-	 * @return string|bool The error message associated with last error that occurred in a function call
+	 * @return string|false The error message associated with last error that occurred in a function call
 	 * on this object, or a string indicating the non-existence of an error.
 	 * Returns false on failure.
 	 */
-	public function getErrorMessage (): string|bool {}
+	public function getErrorMessage (): string|int {}
 
 	/**
 	 * Get the first day of the week for the calendarʼs locale
 	 * @link http://www.php.net/manual/en/intlcalendar.getfirstdayofweek.php
-	 * @return int|bool One of the constants IntlCalendar::DOW_SUNDAY,
+	 * @return int|false One of the constants IntlCalendar::DOW_SUNDAY,
 	 * IntlCalendar::DOW_MONDAY, …,
 	 * IntlCalendar::DOW_SATURDAY or false on failure.
 	 */
-	public function getFirstDayOfWeek (): int|bool {}
+	public function getFirstDayOfWeek (): int {}
 
 	/**
 	 * Get the largest local minimum value for a field
@@ -2772,10 +2775,10 @@ class IntlGregorianCalendar extends IntlCalendar  {
 	 * One of the IntlCalendar date/time field constants. These are integer
 	 * values between 0 and
 	 * IntlCalendar::FIELD_COUNT.
-	 * @return int|bool An int representing a field value, in the fieldʼs
+	 * @return int|false An int representing a field value, in the fieldʼs
 	 * unit, or false on failure.
 	 */
-	public function getGreatestMinimum (int $field): int|bool {}
+	public function getGreatestMinimum (int $field): int {}
 
 	/**
 	 * Get set of locale keyword values
@@ -2784,10 +2787,10 @@ class IntlGregorianCalendar extends IntlCalendar  {
 	 * 'calendar' is supported.
 	 * @param string $locale The locale onto which the keyword/value pair are to be appended.
 	 * @param bool $onlyCommon Whether to show only the values commonly used for the specified locale.
-	 * @return IntlIterator|bool An iterator that yields strings with the locale keyword
+	 * @return IntlIterator|false An iterator that yields strings with the locale keyword
 	 * values or false on failure.
 	 */
-	public static function getKeywordValuesForLocale (string $keyword, string $locale, bool $onlyCommon): IntlIterator|bool {}
+	public static function getKeywordValuesForLocale (string $keyword, string $locale, bool $onlyCommon): IntlIterator|int {}
 
 	/**
 	 * Get the smallest local maximum for a field
@@ -2796,10 +2799,10 @@ class IntlGregorianCalendar extends IntlCalendar  {
 	 * One of the IntlCalendar date/time field constants. These are integer
 	 * values between 0 and
 	 * IntlCalendar::FIELD_COUNT.
-	 * @return int|bool An int representing a field value in the fieldʼs
+	 * @return int|false An int representing a field value in the fieldʼs
 	 * unit or false on failure.
 	 */
-	public function getLeastMaximum (int $field): int|bool {}
+	public function getLeastMaximum (int $field): int {}
 
 	/**
 	 * Get the locale associated with the object
@@ -2810,9 +2813,9 @@ class IntlGregorianCalendar extends IntlCalendar  {
 	 * to the requested locale – see Locale::VALID_LOCALE.
 	 * From the most general to the most specific, the locales are ordered in
 	 * this fashion – actual locale, valid locale, requested locale.
-	 * @return string|bool A locale string or false on failure.
+	 * @return string|false A locale string or false on failure.
 	 */
-	public function getLocale (int $type): string|bool {}
+	public function getLocale (int $type): string|int {}
 
 	/**
 	 * Get the global maximum value for a field
@@ -2821,17 +2824,17 @@ class IntlGregorianCalendar extends IntlCalendar  {
 	 * One of the IntlCalendar date/time field constants. These are integer
 	 * values between 0 and
 	 * IntlCalendar::FIELD_COUNT.
-	 * @return int|bool An int representing a field value in the fieldʼs
+	 * @return int|false An int representing a field value in the fieldʼs
 	 * unit or false on failure.
 	 */
-	public function getMaximum (int $field): int|bool {}
+	public function getMaximum (int $field): int {}
 
 	/**
 	 * Get minimal number of days the first week in a year or month can have
 	 * @link http://www.php.net/manual/en/intlcalendar.getminimaldaysinfirstweek.php
-	 * @return int|bool An int representing a number of days or false on failure.
+	 * @return int|false An int representing a number of days or false on failure.
 	 */
-	public function getMinimalDaysInFirstWeek (): int|bool {}
+	public function getMinimalDaysInFirstWeek (): int {}
 
 	/**
 	 * Set minimal number of days the first week in a year or month can have
@@ -2848,10 +2851,10 @@ class IntlGregorianCalendar extends IntlCalendar  {
 	 * One of the IntlCalendar date/time field constants. These are integer
 	 * values between 0 and
 	 * IntlCalendar::FIELD_COUNT.
-	 * @return int|bool An int representing a value for the given
+	 * @return int|false An int representing a value for the given
 	 * field in the fieldʼs unit or false on failure.
 	 */
-	public function getMinimum (int $field): int|bool {}
+	public function getMinimum (int $field): int {}
 
 	/**
 	 * Get number representing the current time
@@ -2881,18 +2884,18 @@ class IntlGregorianCalendar extends IntlCalendar  {
 	/**
 	 * Get time currently represented by the object
 	 * @link http://www.php.net/manual/en/intlcalendar.gettime.php
-	 * @return float|bool A float representing the number of milliseconds elapsed since the
+	 * @return float|false A float representing the number of milliseconds elapsed since the
 	 * reference time (1 Jan 1970 00:00:00 UTC), or false on failure
 	 */
-	public function getTime (): float|bool {}
+	public function getTime (): float|int {}
 
 	/**
 	 * Get the objectʼs timezone
 	 * @link http://www.php.net/manual/en/intlcalendar.gettimezone.php
-	 * @return IntlTimeZone|bool An IntlTimeZone object corresponding to the one used
+	 * @return IntlTimeZone|false An IntlTimeZone object corresponding to the one used
 	 * internally in this object. Returns false on failure.
 	 */
-	public function getTimeZone (): IntlTimeZone|bool {}
+	public function getTimeZone (): IntlTimeZone|int {}
 
 	/**
 	 * Get the calendar type
@@ -2908,10 +2911,10 @@ class IntlGregorianCalendar extends IntlCalendar  {
 	 * @param int $dayOfWeek One of the constants IntlCalendar::DOW_SUNDAY,
 	 * IntlCalendar::DOW_MONDAY, …,
 	 * IntlCalendar::DOW_SATURDAY.
-	 * @return int|bool The number of milliseconds into the day at which the weekend begins or
+	 * @return int|false The number of milliseconds into the day at which the weekend begins or
 	 * ends or false on failure.
 	 */
-	public function getWeekendTransition (int $dayOfWeek): int|bool {}
+	public function getWeekendTransition (int $dayOfWeek): int {}
 
 	/**
 	 * Whether the objectʼs time is in Daylight Savings Time
@@ -2982,9 +2985,9 @@ class IntlGregorianCalendar extends IntlCalendar  {
 	 * values between 0 and
 	 * IntlCalendar::FIELD_COUNT.
 	 * @param int $value The new value of the given field.
-	 * @return bool Always returns true.
+	 * @return true Always returns true.
 	 */
-	public function set (int $field, int $value): bool {}
+	public function set (int $field, int $value): int {}
 
 	/**
 	 * Set the day on which the week is deemed to start
@@ -2992,26 +2995,26 @@ class IntlGregorianCalendar extends IntlCalendar  {
 	 * @param int $dayOfWeek One of the constants IntlCalendar::DOW_SUNDAY,
 	 * IntlCalendar::DOW_MONDAY, …,
 	 * IntlCalendar::DOW_SATURDAY.
-	 * @return bool Always returns true.
+	 * @return true Always returns true.
 	 */
-	public function setFirstDayOfWeek (int $dayOfWeek): bool {}
+	public function setFirstDayOfWeek (int $dayOfWeek): int {}
 
 	/**
 	 * Set whether date/time interpretation is to be lenient
 	 * @link http://www.php.net/manual/en/intlcalendar.setlenient.php
 	 * @param bool $lenient Use true to activate the lenient mode; false otherwise.
-	 * @return bool Always returns true.
+	 * @return true Always returns true.
 	 */
-	public function setLenient (bool $lenient): bool {}
+	public function setLenient (bool $lenient): int {}
 
 	/**
 	 * Set behavior for handling repeating wall times at negative timezone offset transitions
 	 * @link http://www.php.net/manual/en/intlcalendar.setrepeatedwalltimeoption.php
 	 * @param int $option One of the constants IntlCalendar::WALLTIME_FIRST or
 	 * IntlCalendar::WALLTIME_LAST.
-	 * @return bool Always returns true.
+	 * @return true Always returns true.
 	 */
-	public function setRepeatedWallTimeOption (int $option): bool {}
+	public function setRepeatedWallTimeOption (int $option): int {}
 
 	/**
 	 * Set behavior for handling skipped wall times at positive timezone offset transitions
@@ -3019,9 +3022,9 @@ class IntlGregorianCalendar extends IntlCalendar  {
 	 * @param int $option One of the constants IntlCalendar::WALLTIME_FIRST,
 	 * IntlCalendar::WALLTIME_LAST or
 	 * IntlCalendar::WALLTIME_NEXT_VALID.
-	 * @return bool Always returns true.
+	 * @return true Always returns true.
 	 */
-	public function setSkippedWallTimeOption (int $option): bool {}
+	public function setSkippedWallTimeOption (int $option): int {}
 
 	/**
 	 * Set the calendar time in milliseconds since the epoch
@@ -3080,12 +3083,12 @@ class IntlGregorianCalendar extends IntlCalendar  {
 	/**
 	 * Convert an IntlCalendar into a DateTime object
 	 * @link http://www.php.net/manual/en/intlcalendar.todatetime.php
-	 * @return DateTime|bool A DateTime object with the same timezone as this
+	 * @return DateTime|false A DateTime object with the same timezone as this
 	 * object (though using PHPʼs database instead of ICUʼs) and the same time,
 	 * except for the smaller precision (second precision instead of millisecond).
 	 * Returns false on failure.
 	 */
-	public function toDateTime (): DateTime|bool {}
+	public function toDateTime (): DateTime|int {}
 
 }
 
@@ -3169,6 +3172,7 @@ class Spoofchecker  {
 	public function setChecks (int $checks): void {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param int $level
 	 */
 	public function setRestrictionLevel (int $level) {}
@@ -3181,11 +3185,6 @@ class Spoofchecker  {
  * @link http://www.php.net/manual/en/class.intlexception.php
  */
 class IntlException extends Exception implements Throwable, Stringable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-
 
 	/**
 	 * Construct the exception
@@ -3195,8 +3194,11 @@ class IntlException extends Exception implements Throwable, Stringable {
 	 * @param Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -3449,9 +3451,9 @@ class IntlBreakIterator implements IteratorAggregate, Traversable {
 	 * Get the locale associated with the object
 	 * @link http://www.php.net/manual/en/intlbreakiterator.getlocale.php
 	 * @param int $type 
-	 * @return string|bool 
+	 * @return string|false 
 	 */
-	public function getLocale (int $type): string|bool {}
+	public function getLocale (int $type): string|int {}
 
 	/**
 	 * Create iterator for navigating fragments between boundaries
@@ -3467,7 +3469,7 @@ class IntlBreakIterator implements IteratorAggregate, Traversable {
 	 * </p>
 	 * @return IntlPartsIterator 
 	 */
-	public function getPartsIterator (string $type = IntlPartsIterator::KEY_SEQUENTIAL): IntlPartsIterator {}
+	public function getPartsIterator (string $type = \IntlPartsIterator::KEY_SEQUENTIAL): IntlPartsIterator {}
 
 	/**
 	 * Get the text being scanned
@@ -3522,6 +3524,9 @@ class IntlBreakIterator implements IteratorAggregate, Traversable {
 	 */
 	public function setText (string $text): ?bool {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getIterator (): Iterator {}
 
 }
@@ -3568,16 +3573,16 @@ class IntlRuleBasedBreakIterator extends IntlBreakIterator implements Traversabl
 	/**
 	 * Get the binary form of compiled rules
 	 * @link http://www.php.net/manual/en/intlrulebasedbreakiterator.getbinaryrules.php
-	 * @return string|bool 
+	 * @return string|false 
 	 */
-	public function getBinaryRules (): string|bool {}
+	public function getBinaryRules (): string|int {}
 
 	/**
 	 * Get the rule set used to create this object
 	 * @link http://www.php.net/manual/en/intlrulebasedbreakiterator.getrules.php
-	 * @return string|bool 
+	 * @return string|false 
 	 */
-	public function getRules (): string|bool {}
+	public function getRules (): string|int {}
 
 	/**
 	 * Get the largest status value from the break rules that determined the current break position
@@ -3589,9 +3594,9 @@ class IntlRuleBasedBreakIterator extends IntlBreakIterator implements Traversabl
 	/**
 	 * Get the status values from the break rules that determined the current break position
 	 * @link http://www.php.net/manual/en/intlrulebasedbreakiterator.getrulestatusvec.php
-	 * @return array|bool 
+	 * @return array|false 
 	 */
-	public function getRuleStatusVec (): array|bool {}
+	public function getRuleStatusVec (): array|int {}
 
 	/**
 	 * Create break iterator for boundaries of combining character sequences
@@ -3680,9 +3685,9 @@ class IntlRuleBasedBreakIterator extends IntlBreakIterator implements Traversabl
 	 * Get the locale associated with the object
 	 * @link http://www.php.net/manual/en/intlbreakiterator.getlocale.php
 	 * @param int $type 
-	 * @return string|bool 
+	 * @return string|false 
 	 */
-	public function getLocale (int $type): string|bool {}
+	public function getLocale (int $type): string|int {}
 
 	/**
 	 * Create iterator for navigating fragments between boundaries
@@ -3698,7 +3703,7 @@ class IntlRuleBasedBreakIterator extends IntlBreakIterator implements Traversabl
 	 * </p>
 	 * @return IntlPartsIterator 
 	 */
-	public function getPartsIterator (string $type = IntlPartsIterator::KEY_SEQUENTIAL): IntlPartsIterator {}
+	public function getPartsIterator (string $type = \IntlPartsIterator::KEY_SEQUENTIAL): IntlPartsIterator {}
 
 	/**
 	 * Get the text being scanned
@@ -3753,6 +3758,9 @@ class IntlRuleBasedBreakIterator extends IntlBreakIterator implements Traversabl
 	 */
 	public function setText (string $text): ?bool {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getIterator (): Iterator {}
 
 }
@@ -3878,9 +3886,9 @@ class IntlCodePointBreakIterator extends IntlBreakIterator implements Traversabl
 	 * Get the locale associated with the object
 	 * @link http://www.php.net/manual/en/intlbreakiterator.getlocale.php
 	 * @param int $type 
-	 * @return string|bool 
+	 * @return string|false 
 	 */
-	public function getLocale (int $type): string|bool {}
+	public function getLocale (int $type): string|int {}
 
 	/**
 	 * Create iterator for navigating fragments between boundaries
@@ -3896,7 +3904,7 @@ class IntlCodePointBreakIterator extends IntlBreakIterator implements Traversabl
 	 * </p>
 	 * @return IntlPartsIterator 
 	 */
-	public function getPartsIterator (string $type = IntlPartsIterator::KEY_SEQUENTIAL): IntlPartsIterator {}
+	public function getPartsIterator (string $type = \IntlPartsIterator::KEY_SEQUENTIAL): IntlPartsIterator {}
 
 	/**
 	 * Get the text being scanned
@@ -3951,6 +3959,9 @@ class IntlCodePointBreakIterator extends IntlBreakIterator implements Traversabl
 	 */
 	public function setText (string $text): ?bool {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getIterator (): Iterator {}
 
 }
@@ -4078,9 +4089,9 @@ class UConverter  {
 	 * @link http://www.php.net/manual/en/uconverter.convert.php
 	 * @param string $str 
 	 * @param bool $reverse [optional] 
-	 * @return string|bool 
+	 * @return string|false 
 	 */
-	public function convert (string $str, bool $reverse = false): string|bool {}
+	public function convert (string $str, bool $reverse = false): string|int {}
 
 	/**
 	 * Default "from" callback function
@@ -4097,9 +4108,9 @@ class UConverter  {
 	 * Get the aliases of the given name
 	 * @link http://www.php.net/manual/en/uconverter.getaliases.php
 	 * @param string $name 
-	 * @return array|bool|null 
+	 * @return array|false|null 
 	 */
-	public static function getAliases (string $name): array|bool|null {}
+	public static function getAliases (string $name): array|int|null {}
 
 	/**
 	 * Get the available canonical converter names
@@ -4111,16 +4122,16 @@ class UConverter  {
 	/**
 	 * Get the destination encoding
 	 * @link http://www.php.net/manual/en/uconverter.getdestinationencoding.php
-	 * @return string|bool|null 
+	 * @return string|false|null 
 	 */
-	public function getDestinationEncoding (): string|bool|null {}
+	public function getDestinationEncoding (): string|int|null {}
 
 	/**
 	 * Get the destination converter type
 	 * @link http://www.php.net/manual/en/uconverter.getdestinationtype.php
-	 * @return int|bool|null 
+	 * @return int|false|null 
 	 */
-	public function getDestinationType (): int|bool|null {}
+	public function getDestinationType (): int|null {}
 
 	/**
 	 * Get last error code on the object
@@ -4139,16 +4150,16 @@ class UConverter  {
 	/**
 	 * Get the source encoding
 	 * @link http://www.php.net/manual/en/uconverter.getsourceencoding.php
-	 * @return string|bool|null 
+	 * @return string|false|null 
 	 */
-	public function getSourceEncoding (): string|bool|null {}
+	public function getSourceEncoding (): string|int|null {}
 
 	/**
 	 * Get the source converter type
 	 * @link http://www.php.net/manual/en/uconverter.getsourcetype.php
-	 * @return int|bool|null 
+	 * @return int|false|null 
 	 */
-	public function getSourceType (): int|bool|null {}
+	public function getSourceType (): int|null {}
 
 	/**
 	 * Get standards associated to converter names
@@ -4160,9 +4171,9 @@ class UConverter  {
 	/**
 	 * Get substitution chars
 	 * @link http://www.php.net/manual/en/uconverter.getsubstchars.php
-	 * @return string|bool|null 
+	 * @return string|false|null 
 	 */
-	public function getSubstChars (): string|bool|null {}
+	public function getSubstChars (): string|int|null {}
 
 	/**
 	 * Get string representation of the callback reason
@@ -4220,9 +4231,9 @@ class UConverter  {
 	 * be encoded in toEncoding. If specified, it must
 	 * represent a single character in the target encoding.
 	 * </p>
-	 * @return string|bool Returns the converted string or false on failure.
+	 * @return string|false Returns the converted string or false on failure.
 	 */
-	public static function transcode (string $str, string $toEncoding, string $fromEncoding, ?array $options = null): string|bool {}
+	public static function transcode (string $str, string $toEncoding, string $fromEncoding, ?array $options = null): string|int {}
 
 }
 
@@ -4981,7 +4992,7 @@ class IntlChar  {
 	 * </p>
 	 * @return int|null The Unicode value of the code point with the given name (as an int), or null if there is no such code point.
 	 */
-	public static function charFromName (string $name, int $type = IntlChar::UNICODE_CHAR_NAME): ?int {}
+	public static function charFromName (string $name, int $type = \IntlChar::UNICODE_CHAR_NAME): ?int {}
 
 	/**
 	 * Get the "mirror-image" character for a code point
@@ -5009,7 +5020,7 @@ class IntlChar  {
 	 * @return string|null The corresponding name, or an empty string if there is no name for this character,
 	 * or null if there is no such code point.
 	 */
-	public static function charName (int|string $codepoint, int $type = IntlChar::UNICODE_CHAR_NAME): ?string {}
+	public static function charName (int|string $codepoint, int $type = \IntlChar::UNICODE_CHAR_NAME): ?string {}
 
 	/**
 	 * Get the general category value for a code point
@@ -5066,10 +5077,10 @@ class IntlChar  {
 	 * @link http://www.php.net/manual/en/intlchar.digit.php
 	 * @param int|string $codepoint >The int codepoint value (e.g. 0x2603 for U+2603 SNOWMAN), or the character encoded as a UTF-8 string (e.g. "\u{2603}")
 	 * @param int $base [optional] The radix (defaults to 10).
-	 * @return int|bool|null Returns the numeric value represented by the character in the specified radix,
+	 * @return int|false|null Returns the numeric value represented by the character in the specified radix,
 	 * or false if there is no value or if the value exceeds the radix. Returns null on failure.
 	 */
-	public static function digit (int|string $codepoint, int $base = 10): int|bool|null {}
+	public static function digit (int|string $codepoint, int $base = 10): int|null {}
 
 	/**
 	 * Enumerate all assigned Unicode characters within a range
@@ -5092,7 +5103,7 @@ class IntlChar  {
 	 * </p>
 	 * @return bool|null Returns null on success or false on failure.
 	 */
-	public static function enumCharNames (int|string $start, int|string $end, callable $callback, int $type = IntlChar::UNICODE_CHAR_NAME): ?bool {}
+	public static function enumCharNames (int|string $start, int|string $end, callable $callback, int $type = \IntlChar::UNICODE_CHAR_NAME): ?bool {}
 
 	/**
 	 * Enumerate all code points with their Unicode general categories
@@ -5117,7 +5128,7 @@ class IntlChar  {
 	 * @return int|string|null Returns the Simple_Case_Folding of the code point, if any; otherwise the code point itself on success,
 	 * or null on failure.
 	 */
-	public static function foldCase (int|string $codepoint, int $options = IntlChar::FOLD_CASE_DEFAULT): int|string|null {}
+	public static function foldCase (int|string $codepoint, int $options = \IntlChar::FOLD_CASE_DEFAULT): int|string|null {}
 
 	/**
 	 * Get character representation for a given digit and radix
@@ -5159,10 +5170,10 @@ class IntlChar  {
 	 * Get the FC_NFKC_Closure property for a code point
 	 * @link http://www.php.net/manual/en/intlchar.getfc-nfkc-closure.php
 	 * @param int|string $codepoint >The int codepoint value (e.g. 0x2603 for U+2603 SNOWMAN), or the character encoded as a UTF-8 string (e.g. "\u{2603}")
-	 * @return string|bool|null Returns the FC_NFKC_Closure property string for the codepoint, or an empty string if there is none.
+	 * @return string|false|null Returns the FC_NFKC_Closure property string for the codepoint, or an empty string if there is none.
 	 * Returns null or false on failure.
 	 */
-	public static function getFC_NFKC_Closure (int|string $codepoint): string|bool|null {}
+	public static function getFC_NFKC_Closure (int|string $codepoint): string|int|null {}
 
 	/**
 	 * Get the max value for a Unicode property
@@ -5225,14 +5236,14 @@ class IntlChar  {
 	 * @param int $type [optional] Selector for which name to get. If out of range, false is returned.
 	 * <p>All properties have a long name. Most have a short name, but some do not. Unicode allows for additional names;
 	 * if present these will be returned by adding 1, 2, etc. to IntlChar::LONG_PROPERTY_NAME.</p>
-	 * @return string|bool Returns the name, or false if either the property or the type
+	 * @return string|false Returns the name, or false if either the property or the type
 	 * is out of range.
 	 * <p>If a given type returns false, then all larger values of
 	 * type will return false, with one exception: if false is returned for
 	 * IntlChar::SHORT_PROPERTY_NAME, then IntlChar::LONG_PROPERTY_NAME
 	 * (and higher) may still return a non-false value.</p>
 	 */
-	public static function getPropertyName (int $property, int $type = IntlChar::LONG_PROPERTY_NAME): string|bool {}
+	public static function getPropertyName (int $property, int $type = \IntlChar::LONG_PROPERTY_NAME): string|int {}
 
 	/**
 	 * Get the property value for a given value name
@@ -5260,13 +5271,13 @@ class IntlChar  {
 	 * @param int $type [optional] Selector for which name to get. If out of range, false is returned.
 	 * <p>All values have a long name. Most have a short name, but some do not. Unicode allows for additional names;
 	 * if present these will be returned by adding 1, 2, etc. to IntlChar::LONG_PROPERTY_NAME.</p>
-	 * @return string|bool Returns the name, or false if either the property or the type
+	 * @return string|false Returns the name, or false if either the property or the type
 	 * is out of range. Returns null on failure.
 	 * <p>If a given type returns false, then all larger values of type
 	 * will return false, with one exception: if false is returned for IntlChar::SHORT_PROPERTY_NAME,
 	 * then IntlChar::LONG_PROPERTY_NAME (and higher) may still return a non-false value.</p>
 	 */
-	public static function getPropertyValueName (int $property, int $value, int $type = IntlChar::LONG_PROPERTY_NAME): string|bool {}
+	public static function getPropertyValueName (int $property, int $value, int $type = \IntlChar::LONG_PROPERTY_NAME): string|int {}
 
 	/**
 	 * Get the Unicode version
@@ -5568,40 +5579,52 @@ class IntlChar  {
 }
 
 /**
+ * {@inheritdoc}
  * @param mixed $timezone [optional]
- * @param ?string $locale [optional]
+ * @param string|null $locale [optional]
  */
-function intlcal_create_instance ($timezone = null, ?string $locale = null): ?IntlCalendar {}
+function intlcal_create_instance ($timezone = NULL, ?string $locale = NULL): ?IntlCalendar {}
 
 /**
+ * {@inheritdoc}
  * @param string $keyword
  * @param string $locale
  * @param bool $onlyCommon
  */
-function intlcal_get_keyword_values_for_locale (string $keyword, string $locale, bool $onlyCommon): IntlIterator|false {}
+function intlcal_get_keyword_values_for_locale (string $keyword, string $locale, bool $onlyCommon): IntlIterator|int {}
 
+/**
+ * {@inheritdoc}
+ */
 function intlcal_get_now (): float {}
 
+/**
+ * {@inheritdoc}
+ */
 function intlcal_get_available_locales (): array {}
 
 /**
+ * {@inheritdoc}
  * @param IntlCalendar $calendar
  * @param int $field
  */
-function intlcal_get (IntlCalendar $calendar, int $field): int|false {}
+function intlcal_get (IntlCalendar $calendar, int $field): int {}
 
 /**
+ * {@inheritdoc}
  * @param IntlCalendar $calendar
  */
-function intlcal_get_time (IntlCalendar $calendar): float|false {}
+function intlcal_get_time (IntlCalendar $calendar): float|int {}
 
 /**
+ * {@inheritdoc}
  * @param IntlCalendar $calendar
  * @param float $timestamp
  */
 function intlcal_set_time (IntlCalendar $calendar, float $timestamp): bool {}
 
 /**
+ * {@inheritdoc}
  * @param IntlCalendar $calendar
  * @param int $field
  * @param int $value
@@ -5609,24 +5632,28 @@ function intlcal_set_time (IntlCalendar $calendar, float $timestamp): bool {}
 function intlcal_add (IntlCalendar $calendar, int $field, int $value): bool {}
 
 /**
+ * {@inheritdoc}
  * @param IntlCalendar $calendar
  * @param mixed $timezone
  */
 function intlcal_set_time_zone (IntlCalendar $calendar, $timezone = null): bool {}
 
 /**
+ * {@inheritdoc}
  * @param IntlCalendar $calendar
  * @param IntlCalendar $other
  */
 function intlcal_after (IntlCalendar $calendar, IntlCalendar $other): bool {}
 
 /**
+ * {@inheritdoc}
  * @param IntlCalendar $calendar
  * @param IntlCalendar $other
  */
 function intlcal_before (IntlCalendar $calendar, IntlCalendar $other): bool {}
 
 /**
+ * {@inheritdoc}
  * @param IntlCalendar $calendar
  * @param int $year
  * @param int $month
@@ -5635,9 +5662,10 @@ function intlcal_before (IntlCalendar $calendar, IntlCalendar $other): bool {}
  * @param int $minute [optional]
  * @param int $second [optional]
  */
-function intlcal_set (IntlCalendar $calendar, int $year, int $month, int $dayOfMonth = 'null', int $hour = 'null', int $minute = 'null', int $second = 'null'): bool {}
+function intlcal_set (IntlCalendar $calendar, int $year, int $month, int $dayOfMonth = NULL, int $hour = NULL, int $minute = NULL, int $second = NULL): bool {}
 
 /**
+ * {@inheritdoc}
  * @param IntlCalendar $calendar
  * @param int $field
  * @param mixed $value
@@ -5645,197 +5673,228 @@ function intlcal_set (IntlCalendar $calendar, int $year, int $month, int $dayOfM
 function intlcal_roll (IntlCalendar $calendar, int $field, $value = null): bool {}
 
 /**
+ * {@inheritdoc}
  * @param IntlCalendar $calendar
- * @param ?int $field [optional]
+ * @param int|null $field [optional]
  */
-function intlcal_clear (IntlCalendar $calendar, ?int $field = null): bool {}
+function intlcal_clear (IntlCalendar $calendar, ?int $field = NULL): bool {}
 
 /**
+ * {@inheritdoc}
  * @param IntlCalendar $calendar
  * @param float $timestamp
  * @param int $field
  */
-function intlcal_field_difference (IntlCalendar $calendar, float $timestamp, int $field): int|false {}
+function intlcal_field_difference (IntlCalendar $calendar, float $timestamp, int $field): int {}
 
 /**
+ * {@inheritdoc}
  * @param IntlCalendar $calendar
  * @param int $field
  */
-function intlcal_get_actual_maximum (IntlCalendar $calendar, int $field): int|false {}
+function intlcal_get_actual_maximum (IntlCalendar $calendar, int $field): int {}
 
 /**
+ * {@inheritdoc}
  * @param IntlCalendar $calendar
  * @param int $field
  */
-function intlcal_get_actual_minimum (IntlCalendar $calendar, int $field): int|false {}
+function intlcal_get_actual_minimum (IntlCalendar $calendar, int $field): int {}
 
 /**
+ * {@inheritdoc}
  * @param IntlCalendar $calendar
  * @param int $dayOfWeek
  */
-function intlcal_get_day_of_week_type (IntlCalendar $calendar, int $dayOfWeek): int|false {}
+function intlcal_get_day_of_week_type (IntlCalendar $calendar, int $dayOfWeek): int {}
 
 /**
+ * {@inheritdoc}
  * @param IntlCalendar $calendar
  */
-function intlcal_get_first_day_of_week (IntlCalendar $calendar): int|false {}
+function intlcal_get_first_day_of_week (IntlCalendar $calendar): int {}
 
 /**
- * @param IntlCalendar $calendar
- * @param int $field
- */
-function intlcal_get_least_maximum (IntlCalendar $calendar, int $field): int|false {}
-
-/**
+ * {@inheritdoc}
  * @param IntlCalendar $calendar
  * @param int $field
  */
-function intlcal_get_greatest_minimum (IntlCalendar $calendar, int $field): int|false {}
+function intlcal_get_least_maximum (IntlCalendar $calendar, int $field): int {}
 
 /**
+ * {@inheritdoc}
+ * @param IntlCalendar $calendar
+ * @param int $field
+ */
+function intlcal_get_greatest_minimum (IntlCalendar $calendar, int $field): int {}
+
+/**
+ * {@inheritdoc}
  * @param IntlCalendar $calendar
  * @param int $type
  */
-function intlcal_get_locale (IntlCalendar $calendar, int $type): string|false {}
+function intlcal_get_locale (IntlCalendar $calendar, int $type): string|int {}
 
 /**
+ * {@inheritdoc}
  * @param IntlCalendar $calendar
  * @param int $field
  */
-function intlcal_get_maximum (IntlCalendar $calendar, int $field): int|false {}
+function intlcal_get_maximum (IntlCalendar $calendar, int $field): int {}
 
 /**
+ * {@inheritdoc}
  * @param IntlCalendar $calendar
  */
-function intlcal_get_minimal_days_in_first_week (IntlCalendar $calendar): int|false {}
+function intlcal_get_minimal_days_in_first_week (IntlCalendar $calendar): int {}
 
 /**
+ * {@inheritdoc}
  * @param IntlCalendar $calendar
  * @param int $days
  */
 function intlcal_set_minimal_days_in_first_week (IntlCalendar $calendar, int $days): bool {}
 
 /**
+ * {@inheritdoc}
  * @param IntlCalendar $calendar
  * @param int $field
  */
-function intlcal_get_minimum (IntlCalendar $calendar, int $field): int|false {}
+function intlcal_get_minimum (IntlCalendar $calendar, int $field): int {}
 
 /**
+ * {@inheritdoc}
  * @param IntlCalendar $calendar
  */
-function intlcal_get_time_zone (IntlCalendar $calendar): IntlTimeZone|false {}
+function intlcal_get_time_zone (IntlCalendar $calendar): IntlTimeZone|int {}
 
 /**
+ * {@inheritdoc}
  * @param IntlCalendar $calendar
  */
 function intlcal_get_type (IntlCalendar $calendar): string {}
 
 /**
+ * {@inheritdoc}
  * @param IntlCalendar $calendar
  * @param int $dayOfWeek
  */
-function intlcal_get_weekend_transition (IntlCalendar $calendar, int $dayOfWeek): int|false {}
+function intlcal_get_weekend_transition (IntlCalendar $calendar, int $dayOfWeek): int {}
 
 /**
+ * {@inheritdoc}
  * @param IntlCalendar $calendar
  */
 function intlcal_in_daylight_time (IntlCalendar $calendar): bool {}
 
 /**
+ * {@inheritdoc}
  * @param IntlCalendar $calendar
  */
 function intlcal_is_lenient (IntlCalendar $calendar): bool {}
 
 /**
+ * {@inheritdoc}
  * @param IntlCalendar $calendar
  * @param int $field
  */
 function intlcal_is_set (IntlCalendar $calendar, int $field): bool {}
 
 /**
+ * {@inheritdoc}
  * @param IntlCalendar $calendar
  * @param IntlCalendar $other
  */
 function intlcal_is_equivalent_to (IntlCalendar $calendar, IntlCalendar $other): bool {}
 
 /**
+ * {@inheritdoc}
  * @param IntlCalendar $calendar
- * @param ?float $timestamp [optional]
+ * @param float|null $timestamp [optional]
  */
-function intlcal_is_weekend (IntlCalendar $calendar, ?float $timestamp = null): bool {}
+function intlcal_is_weekend (IntlCalendar $calendar, ?float $timestamp = NULL): bool {}
 
 /**
+ * {@inheritdoc}
  * @param IntlCalendar $calendar
  * @param int $dayOfWeek
  */
 function intlcal_set_first_day_of_week (IntlCalendar $calendar, int $dayOfWeek): bool {}
 
 /**
+ * {@inheritdoc}
  * @param IntlCalendar $calendar
  * @param bool $lenient
  */
 function intlcal_set_lenient (IntlCalendar $calendar, bool $lenient): bool {}
 
 /**
+ * {@inheritdoc}
  * @param IntlCalendar $calendar
  */
 function intlcal_get_repeated_wall_time_option (IntlCalendar $calendar): int {}
 
 /**
+ * {@inheritdoc}
  * @param IntlCalendar $calendar
  * @param IntlCalendar $other
  */
 function intlcal_equals (IntlCalendar $calendar, IntlCalendar $other): bool {}
 
 /**
+ * {@inheritdoc}
  * @param IntlCalendar $calendar
  */
 function intlcal_get_skipped_wall_time_option (IntlCalendar $calendar): int {}
 
 /**
+ * {@inheritdoc}
  * @param IntlCalendar $calendar
  * @param int $option
  */
 function intlcal_set_repeated_wall_time_option (IntlCalendar $calendar, int $option): bool {}
 
 /**
+ * {@inheritdoc}
  * @param IntlCalendar $calendar
  * @param int $option
  */
 function intlcal_set_skipped_wall_time_option (IntlCalendar $calendar, int $option): bool {}
 
 /**
+ * {@inheritdoc}
  * @param DateTime|string $datetime
- * @param ?string $locale [optional]
+ * @param string|null $locale [optional]
  */
-function intlcal_from_date_time (DateTime|string $datetime, ?string $locale = null): ?IntlCalendar {}
+function intlcal_from_date_time (DateTime|string $datetime, ?string $locale = NULL): ?IntlCalendar {}
 
 /**
+ * {@inheritdoc}
  * @param IntlCalendar $calendar
  */
-function intlcal_to_date_time (IntlCalendar $calendar): DateTime|false {}
+function intlcal_to_date_time (IntlCalendar $calendar): DateTime|int {}
 
 /**
  * Get last error code on the object
  * @link http://www.php.net/manual/en/intlcalendar.geterrorcode.php
  * @param IntlCalendar $calendar The calendar object, on the procedural style interface.
- * @return int|bool An ICU error code indicating either success, failure or a warning.
+ * @return int|false An ICU error code indicating either success, failure or a warning.
  * Returns false on failure.
  */
-function intlcal_get_error_code (IntlCalendar $calendar): int|bool {}
+function intlcal_get_error_code (IntlCalendar $calendar): int {}
 
 /**
  * Get last error message on the object
  * @link http://www.php.net/manual/en/intlcalendar.geterrormessage.php
  * @param IntlCalendar $calendar The calendar object, on the procedural style interface.
- * @return string|bool The error message associated with last error that occurred in a function call
+ * @return string|false The error message associated with last error that occurred in a function call
  * on this object, or a string indicating the non-existence of an error.
  * Returns false on failure.
  */
-function intlcal_get_error_message (IntlCalendar $calendar): string|bool {}
+function intlcal_get_error_message (IntlCalendar $calendar): string|int {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $timezoneOrYear [optional]
  * @param mixed $localeOrMonth [optional]
  * @param mixed $day [optional]
@@ -5843,20 +5902,23 @@ function intlcal_get_error_message (IntlCalendar $calendar): string|bool {}
  * @param mixed $minute [optional]
  * @param mixed $second [optional]
  */
-function intlgregcal_create_instance ($timezoneOrYear = null, $localeOrMonth = null, $day = null, $hour = null, $minute = null, $second = null): ?IntlGregorianCalendar {}
+function intlgregcal_create_instance ($timezoneOrYear = NULL, $localeOrMonth = NULL, $day = NULL, $hour = NULL, $minute = NULL, $second = NULL): ?IntlGregorianCalendar {}
 
 /**
+ * {@inheritdoc}
  * @param IntlGregorianCalendar $calendar
  * @param float $timestamp
  */
 function intlgregcal_set_gregorian_change (IntlGregorianCalendar $calendar, float $timestamp): bool {}
 
 /**
+ * {@inheritdoc}
  * @param IntlGregorianCalendar $calendar
  */
 function intlgregcal_get_gregorian_change (IntlGregorianCalendar $calendar): float {}
 
 /**
+ * {@inheritdoc}
  * @param IntlGregorianCalendar $calendar
  * @param int $year
  */
@@ -5877,7 +5939,7 @@ function collator_create (string $locale): ?Collator {}
  * @param Collator $object 
  * @param string $string1 
  * @param string $string2 
- * @return int|bool Return comparison result:
+ * @return int|false Return comparison result:
  * <p><p>
  * <br>
  * <p>
@@ -5903,16 +5965,16 @@ function collator_create (string $locale): ?Collator {}
  * <p>-1 if string1 is less than 
  * string2 .</p>
  */
-function collator_compare (Collator $object, string $string1, string $string2): int|bool {}
+function collator_compare (Collator $object, string $string1, string $string2): int {}
 
 /**
  * Get collation attribute value
  * @link http://www.php.net/manual/en/collator.getattribute.php
  * @param Collator $object 
  * @param int $attribute 
- * @return int|bool Attribute value, or false on failure.
+ * @return int|false Attribute value, or false on failure.
  */
-function collator_get_attribute (Collator $object, int $attribute): int|bool {}
+function collator_get_attribute (Collator $object, int $attribute): int {}
 
 /**
  * Set collation attribute
@@ -5949,7 +6011,7 @@ function collator_set_strength (Collator $object, int $strength): bool {}
  * @param int $flags [optional] 
  * @return bool Returns true on success or false on failure.
  */
-function collator_sort (Collator $object, array &$array, int $flags = Collator::SORT_REGULAR): bool {}
+function collator_sort (Collator $object, array &$array, int $flags = \Collator::SORT_REGULAR): bool {}
 
 /**
  * Sort array using specified collator and sort keys
@@ -5968,44 +6030,44 @@ function collator_sort_with_sort_keys (Collator $object, array &$array): bool {}
  * @param int $flags [optional] 
  * @return bool Returns true on success or false on failure.
  */
-function collator_asort (Collator $object, array &$array, int $flags = Collator::SORT_REGULAR): bool {}
+function collator_asort (Collator $object, array &$array, int $flags = \Collator::SORT_REGULAR): bool {}
 
 /**
  * Get the locale name of the collator
  * @link http://www.php.net/manual/en/collator.getlocale.php
  * @param Collator $object 
  * @param int $type 
- * @return string|bool Real locale name from which the collation data comes. If the collator was
+ * @return string|false Real locale name from which the collation data comes. If the collator was
  * instantiated from rules or an error occurred, returns false.
  */
-function collator_get_locale (Collator $object, int $type): string|bool {}
+function collator_get_locale (Collator $object, int $type): string|int {}
 
 /**
  * Get collator's last error code
  * @link http://www.php.net/manual/en/collator.geterrorcode.php
  * @param Collator $object 
- * @return int|bool Error code returned by the last Collator API function call,
+ * @return int|false Error code returned by the last Collator API function call,
  * or false on failure.
  */
-function collator_get_error_code (Collator $object): int|bool {}
+function collator_get_error_code (Collator $object): int {}
 
 /**
  * Get text for collator's last error code
  * @link http://www.php.net/manual/en/collator.geterrormessage.php
  * @param Collator $object 
- * @return string|bool Description of an error occurred in the last Collator API function call,
+ * @return string|false Description of an error occurred in the last Collator API function call,
  * or false on failure.
  */
-function collator_get_error_message (Collator $object): string|bool {}
+function collator_get_error_message (Collator $object): string|int {}
 
 /**
  * Get sorting key for a string
  * @link http://www.php.net/manual/en/collator.getsortkey.php
  * @param Collator $object 
  * @param string $string 
- * @return string|bool Returns the collation key for the string, or false on failure.
+ * @return string|false Returns the collation key for the string, or false on failure.
  */
-function collator_get_sort_key (Collator $object, string $string): string|bool {}
+function collator_get_sort_key (Collator $object, string $string): string|int {}
 
 /**
  * Get the last error code
@@ -6051,37 +6113,37 @@ function intl_error_name (int $errorCode): string {}
  * @return IntlDateFormatter|null The created IntlDateFormatter or null in case of
  * failure.
  */
-function datefmt_create (?string $locale, int $dateType = IntlDateFormatter::FULL, int $timeType = IntlDateFormatter::FULL, IntlTimeZone|DateTimeZone|string|null $timezone = null, IntlCalendar|int|null $calendar = null, ?string $pattern = null): ?IntlDateFormatter {}
+function datefmt_create (?string $locale, int $dateType = \IntlDateFormatter::FULL, int $timeType = \IntlDateFormatter::FULL, IntlTimeZone|DateTimeZone|string|null $timezone = null, IntlCalendar|int|null $calendar = null, ?string $pattern = null): ?IntlDateFormatter {}
 
 /**
  * Get the datetype used for the IntlDateFormatter
  * @link http://www.php.net/manual/en/intldateformatter.getdatetype.php
  * @param IntlDateFormatter $formatter 
- * @return int|bool The current date type value of the formatter,
+ * @return int|false The current date type value of the formatter,
  * or false on failure.
  */
-function datefmt_get_datetype (IntlDateFormatter $formatter): int|bool {}
+function datefmt_get_datetype (IntlDateFormatter $formatter): int {}
 
 /**
  * Get the timetype used for the IntlDateFormatter
  * @link http://www.php.net/manual/en/intldateformatter.gettimetype.php
  * @param IntlDateFormatter $formatter 
- * @return int|bool The current date type value of the formatter,
+ * @return int|false The current date type value of the formatter,
  * or false on failure.
  */
-function datefmt_get_timetype (IntlDateFormatter $formatter): int|bool {}
+function datefmt_get_timetype (IntlDateFormatter $formatter): int {}
 
 /**
  * Get the calendar type used for the IntlDateFormatter
  * @link http://www.php.net/manual/en/intldateformatter.getcalendar.php
  * @param IntlDateFormatter $formatter 
- * @return int|bool The calendar
+ * @return int|false The calendar
  * type being used by the formatter. Either
  * IntlDateFormatter::TRADITIONAL or
  * IntlDateFormatter::GREGORIAN.
  * Returns false on failure.
  */
-function datefmt_get_calendar (IntlDateFormatter $formatter): int|bool {}
+function datefmt_get_calendar (IntlDateFormatter $formatter): int {}
 
 /**
  * Sets the calendar type used by the formatter
@@ -6096,27 +6158,27 @@ function datefmt_set_calendar (IntlDateFormatter $formatter, IntlCalendar|int|nu
  * Get the timezone-id used for the IntlDateFormatter
  * @link http://www.php.net/manual/en/intldateformatter.gettimezoneid.php
  * @param IntlDateFormatter $formatter 
- * @return string|bool ID string for the time zone used by this formatter, or false on failure.
+ * @return string|false ID string for the time zone used by this formatter, or false on failure.
  */
-function datefmt_get_timezone_id (IntlDateFormatter $formatter): string|bool {}
+function datefmt_get_timezone_id (IntlDateFormatter $formatter): string|int {}
 
 /**
  * Get copy of formatterʼs calendar object
  * @link http://www.php.net/manual/en/intldateformatter.getcalendarobject.php
  * @param IntlDateFormatter $formatter 
- * @return IntlCalendar|bool|null A copy of the internal calendar object used by this formatter,
+ * @return IntlCalendar|false|null A copy of the internal calendar object used by this formatter,
  * or null if none has been set, or false on failure.
  */
-function datefmt_get_calendar_object (IntlDateFormatter $formatter): IntlCalendar|bool|null {}
+function datefmt_get_calendar_object (IntlDateFormatter $formatter): IntlCalendar|int|null {}
 
 /**
  * Get formatterʼs timezone
  * @link http://www.php.net/manual/en/intldateformatter.gettimezone.php
  * @param IntlDateFormatter $formatter 
- * @return IntlTimeZone|bool The associated IntlTimeZone
+ * @return IntlTimeZone|false The associated IntlTimeZone
  * object or false on failure.
  */
-function datefmt_get_timezone (IntlDateFormatter $formatter): IntlTimeZone|bool {}
+function datefmt_get_timezone (IntlDateFormatter $formatter): IntlTimeZone|int {}
 
 /**
  * Sets formatterʼs timezone
@@ -6153,18 +6215,18 @@ function datefmt_set_pattern (IntlDateFormatter $formatter, string $pattern): bo
  * Get the pattern used for the IntlDateFormatter
  * @link http://www.php.net/manual/en/intldateformatter.getpattern.php
  * @param IntlDateFormatter $formatter 
- * @return string|bool The pattern string being used to format/parse, or false on failure.
+ * @return string|false The pattern string being used to format/parse, or false on failure.
  */
-function datefmt_get_pattern (IntlDateFormatter $formatter): string|bool {}
+function datefmt_get_pattern (IntlDateFormatter $formatter): string|int {}
 
 /**
  * Get the locale used by formatter
  * @link http://www.php.net/manual/en/intldateformatter.getlocale.php
  * @param IntlDateFormatter $formatter 
  * @param int $type [optional] 
- * @return string|bool The locale of this formatter, or false on failure.
+ * @return string|false The locale of this formatter, or false on failure.
  */
-function datefmt_get_locale (IntlDateFormatter $formatter, int $type = ULOC_ACTUAL_LOCALE): string|bool {}
+function datefmt_get_locale (IntlDateFormatter $formatter, int $type = ULOC_ACTUAL_LOCALE): string|int {}
 
 /**
  * Set the leniency of the parser
@@ -6188,9 +6250,9 @@ function datefmt_is_lenient (IntlDateFormatter $formatter): bool {}
  * @link http://www.php.net/manual/en/intldateformatter.format.php
  * @param IntlDateFormatter $formatter 
  * @param IntlCalendar|DateTimeInterface|array|string|int|float $datetime 
- * @return string|bool The formatted string or, if an error occurred, false.
+ * @return string|false The formatted string or, if an error occurred, false.
  */
-function datefmt_format (IntlDateFormatter $formatter, IntlCalendar|DateTimeInterface|array|string|int|float $datetime): string|bool {}
+function datefmt_format (IntlDateFormatter $formatter, IntlCalendar|DateTimeInterface|array|string|int|float $datetime): string|int {}
 
 /**
  * Formats an object
@@ -6210,9 +6272,9 @@ function datefmt_format (IntlDateFormatter $formatter, IntlCalendar|DateTimeInte
  * described in the ICU
  * documentation. If null, the default style will be used.
  * @param string|null $locale [optional] The locale to use, or null to use the default one.
- * @return string|bool A string with result or false on failure.
+ * @return string|false A string with result or false on failure.
  */
-function datefmt_format_object (IntlCalendar|DateTimeInterface $datetime, array|int|string|null $format = null, ?string $locale = null): string|bool {}
+function datefmt_format_object (IntlCalendar|DateTimeInterface $datetime, array|int|string|null $format = null, ?string $locale = null): string|int {}
 
 /**
  * Parse string to a timestamp value
@@ -6220,9 +6282,9 @@ function datefmt_format_object (IntlCalendar|DateTimeInterface $datetime, array|
  * @param IntlDateFormatter $formatter 
  * @param string $string 
  * @param int $offset [optional] 
- * @return int|float|bool Timestamp of parsed value, or false if value cannot be parsed.
+ * @return int|float|false Timestamp of parsed value, or false if value cannot be parsed.
  */
-function datefmt_parse (IntlDateFormatter $formatter, string $string, int &$offset = null): int|float|bool {}
+function datefmt_parse (IntlDateFormatter $formatter, string $string, int &$offset = null): int|float {}
 
 /**
  * Parse string to a field-based time value
@@ -6230,10 +6292,10 @@ function datefmt_parse (IntlDateFormatter $formatter, string $string, int &$offs
  * @param IntlDateFormatter $formatter 
  * @param string $string 
  * @param int $offset [optional] 
- * @return array|bool Localtime compatible array of integers : contains 24 hour clock value in tm_hour field,
+ * @return array|false Localtime compatible array of integers : contains 24 hour clock value in tm_hour field,
  * or false on failure.
  */
-function datefmt_localtime (IntlDateFormatter $formatter, string $string, int &$offset = null): array|bool {}
+function datefmt_localtime (IntlDateFormatter $formatter, string $string, int &$offset = null): array|int {}
 
 /**
  * Get the error code from last operation
@@ -6267,9 +6329,9 @@ function numfmt_create (string $locale, int $style, ?string $pattern = null): ?N
  * @param NumberFormatter $formatter 
  * @param int|float $num 
  * @param int $type [optional] 
- * @return string|bool Returns the string containing formatted value, or false on error.
+ * @return string|false Returns the string containing formatted value, or false on error.
  */
-function numfmt_format (NumberFormatter $formatter, int|float $num, int $type = NumberFormatter::TYPE_DEFAULT): string|bool {}
+function numfmt_format (NumberFormatter $formatter, int|float $num, int $type = \NumberFormatter::TYPE_DEFAULT): string|int {}
 
 /**
  * Parse a number
@@ -6278,9 +6340,9 @@ function numfmt_format (NumberFormatter $formatter, int|float $num, int $type = 
  * @param string $string 
  * @param int $type [optional] 
  * @param int $offset [optional] 
- * @return int|float|bool The value of the parsed number or false on error.
+ * @return int|float|false The value of the parsed number or false on error.
  */
-function numfmt_parse (NumberFormatter $formatter, string $string, int $type = NumberFormatter::TYPE_DOUBLE, int &$offset = null): int|float|bool {}
+function numfmt_parse (NumberFormatter $formatter, string $string, int $type = \NumberFormatter::TYPE_DOUBLE, int &$offset = null): int|float {}
 
 /**
  * Format a currency value
@@ -6288,9 +6350,9 @@ function numfmt_parse (NumberFormatter $formatter, string $string, int $type = N
  * @param NumberFormatter $formatter 
  * @param float $amount 
  * @param string $currency 
- * @return string|bool String representing the formatted currency value, or false on failure.
+ * @return string|false String representing the formatted currency value, or false on failure.
  */
-function numfmt_format_currency (NumberFormatter $formatter, float $amount, string $currency): string|bool {}
+function numfmt_format_currency (NumberFormatter $formatter, float $amount, string $currency): string|int {}
 
 /**
  * Parse a currency number
@@ -6299,9 +6361,9 @@ function numfmt_format_currency (NumberFormatter $formatter, float $amount, stri
  * @param string $string 
  * @param string $currency 
  * @param int $offset [optional] 
- * @return float|bool The parsed numeric value or false on error.
+ * @return float|false The parsed numeric value or false on error.
  */
-function numfmt_parse_currency (NumberFormatter $formatter, string $string, string &$currency, int &$offset = null): float|bool {}
+function numfmt_parse_currency (NumberFormatter $formatter, string $string, string &$currency, int &$offset = null): float|int {}
 
 /**
  * Set an attribute
@@ -6318,9 +6380,9 @@ function numfmt_set_attribute (NumberFormatter $formatter, int $attribute, int|f
  * @link http://www.php.net/manual/en/numberformatter.getattribute.php
  * @param NumberFormatter $formatter 
  * @param int $attribute 
- * @return int|float|bool Return attribute value on success, or false on error.
+ * @return int|float|false Return attribute value on success, or false on error.
  */
-function numfmt_get_attribute (NumberFormatter $formatter, int $attribute): int|float|bool {}
+function numfmt_get_attribute (NumberFormatter $formatter, int $attribute): int|float {}
 
 /**
  * Set a text attribute
@@ -6337,9 +6399,9 @@ function numfmt_set_text_attribute (NumberFormatter $formatter, int $attribute, 
  * @link http://www.php.net/manual/en/numberformatter.gettextattribute.php
  * @param NumberFormatter $formatter 
  * @param int $attribute 
- * @return string|bool Return attribute value on success, or false on error.
+ * @return string|false Return attribute value on success, or false on error.
  */
-function numfmt_get_text_attribute (NumberFormatter $formatter, int $attribute): string|bool {}
+function numfmt_get_text_attribute (NumberFormatter $formatter, int $attribute): string|int {}
 
 /**
  * Set a symbol value
@@ -6356,9 +6418,9 @@ function numfmt_set_symbol (NumberFormatter $formatter, int $symbol, string $val
  * @link http://www.php.net/manual/en/numberformatter.getsymbol.php
  * @param NumberFormatter $formatter 
  * @param int $symbol 
- * @return string|bool The symbol string or false on error.
+ * @return string|false The symbol string or false on error.
  */
-function numfmt_get_symbol (NumberFormatter $formatter, int $symbol): string|bool {}
+function numfmt_get_symbol (NumberFormatter $formatter, int $symbol): string|int {}
 
 /**
  * Set formatter pattern
@@ -6373,18 +6435,18 @@ function numfmt_set_pattern (NumberFormatter $formatter, string $pattern): bool 
  * Get formatter pattern
  * @link http://www.php.net/manual/en/numberformatter.getpattern.php
  * @param NumberFormatter $formatter 
- * @return string|bool Pattern string that is used by the formatter, or false if an error happens.
+ * @return string|false Pattern string that is used by the formatter, or false if an error happens.
  */
-function numfmt_get_pattern (NumberFormatter $formatter): string|bool {}
+function numfmt_get_pattern (NumberFormatter $formatter): string|int {}
 
 /**
  * Get formatter locale
  * @link http://www.php.net/manual/en/numberformatter.getlocale.php
  * @param NumberFormatter $formatter 
  * @param int $type [optional] 
- * @return string|bool The locale name used to create the formatter, or false on failure.
+ * @return string|false The locale name used to create the formatter, or false on failure.
  */
-function numfmt_get_locale (NumberFormatter $formatter, int $type = ULOC_ACTUAL_LOCALE): string|bool {}
+function numfmt_get_locale (NumberFormatter $formatter, int $type = ULOC_ACTUAL_LOCALE): string|int {}
 
 /**
  * Get formatter's last error code
@@ -6406,9 +6468,9 @@ function numfmt_get_error_message (NumberFormatter $formatter): string {}
  * Get string length in grapheme units
  * @link http://www.php.net/manual/en/function.grapheme-strlen.php
  * @param string $string 
- * @return int|bool|null The length of the string on success, or false on failure.
+ * @return int|false|null The length of the string on success, or false on failure.
  */
-function grapheme_strlen (string $string): int|bool|null {}
+function grapheme_strlen (string $string): int|null {}
 
 /**
  * Find position (in grapheme units) of first occurrence of a string
@@ -6416,9 +6478,9 @@ function grapheme_strlen (string $string): int|bool|null {}
  * @param string $haystack 
  * @param string $needle 
  * @param int $offset [optional] 
- * @return int|bool Returns the position as an integer. If needle is not found, grapheme_strpos will return false.
+ * @return int|false Returns the position as an integer. If needle is not found, grapheme_strpos will return false.
  */
-function grapheme_strpos (string $haystack, string $needle, int $offset = null): int|bool {}
+function grapheme_strpos (string $haystack, string $needle, int $offset = null): int {}
 
 /**
  * Find position (in grapheme units) of first occurrence of a case-insensitive string
@@ -6426,9 +6488,9 @@ function grapheme_strpos (string $haystack, string $needle, int $offset = null):
  * @param string $haystack 
  * @param string $needle 
  * @param int $offset [optional] 
- * @return int|bool Returns the position as an integer. If needle is not found, grapheme_stripos will return false.
+ * @return int|false Returns the position as an integer. If needle is not found, grapheme_stripos will return false.
  */
-function grapheme_stripos (string $haystack, string $needle, int $offset = null): int|bool {}
+function grapheme_stripos (string $haystack, string $needle, int $offset = null): int {}
 
 /**
  * Find position (in grapheme units) of last occurrence of a string
@@ -6436,9 +6498,9 @@ function grapheme_stripos (string $haystack, string $needle, int $offset = null)
  * @param string $haystack 
  * @param string $needle 
  * @param int $offset [optional] 
- * @return int|bool Returns the position as an integer. If needle is not found, grapheme_strrpos will return false.
+ * @return int|false Returns the position as an integer. If needle is not found, grapheme_strrpos will return false.
  */
-function grapheme_strrpos (string $haystack, string $needle, int $offset = null): int|bool {}
+function grapheme_strrpos (string $haystack, string $needle, int $offset = null): int {}
 
 /**
  * Find position (in grapheme units) of last occurrence of a case-insensitive string
@@ -6446,9 +6508,9 @@ function grapheme_strrpos (string $haystack, string $needle, int $offset = null)
  * @param string $haystack 
  * @param string $needle 
  * @param int $offset [optional] 
- * @return int|bool Returns the position as an integer. If needle is not found, grapheme_strripos will return false.
+ * @return int|false Returns the position as an integer. If needle is not found, grapheme_strripos will return false.
  */
-function grapheme_strripos (string $haystack, string $needle, int $offset = null): int|bool {}
+function grapheme_strripos (string $haystack, string $needle, int $offset = null): int {}
 
 /**
  * Return part of a string
@@ -6456,9 +6518,9 @@ function grapheme_strripos (string $haystack, string $needle, int $offset = null
  * @param string $string 
  * @param int $offset 
  * @param int|null $length [optional] 
- * @return string|bool Returns the extracted part of string, or false on failure.
+ * @return string|false Returns the extracted part of string, or false on failure.
  */
-function grapheme_substr (string $string, int $offset, ?int $length = null): string|bool {}
+function grapheme_substr (string $string, int $offset, ?int $length = null): string|int {}
 
 /**
  * Returns part of haystack string from the first occurrence of needle to the end of haystack
@@ -6466,9 +6528,9 @@ function grapheme_substr (string $string, int $offset, ?int $length = null): str
  * @param string $haystack 
  * @param string $needle 
  * @param bool $beforeNeedle [optional] 
- * @return string|bool Returns the portion of haystack, or false if needle is not found.
+ * @return string|false Returns the portion of haystack, or false if needle is not found.
  */
-function grapheme_strstr (string $haystack, string $needle, bool $beforeNeedle = false): string|bool {}
+function grapheme_strstr (string $haystack, string $needle, bool $beforeNeedle = false): string|int {}
 
 /**
  * Returns part of haystack string from the first occurrence of case-insensitive needle to the end of haystack
@@ -6476,9 +6538,9 @@ function grapheme_strstr (string $haystack, string $needle, bool $beforeNeedle =
  * @param string $haystack 
  * @param string $needle 
  * @param bool $beforeNeedle [optional] 
- * @return string|bool Returns the portion of haystack, or false if needle is not found.
+ * @return string|false Returns the portion of haystack, or false if needle is not found.
  */
-function grapheme_stristr (string $haystack, string $needle, bool $beforeNeedle = false): string|bool {}
+function grapheme_stristr (string $haystack, string $needle, bool $beforeNeedle = false): string|int {}
 
 /**
  * Function to extract a sequence of default grapheme clusters from a text buffer, which must be encoded in UTF-8
@@ -6488,11 +6550,11 @@ function grapheme_stristr (string $haystack, string $needle, bool $beforeNeedle 
  * @param int $type [optional] 
  * @param int $offset [optional] 
  * @param int $next [optional] 
- * @return string|bool A string starting at offset offset and ending on a default grapheme cluster
+ * @return string|false A string starting at offset offset and ending on a default grapheme cluster
  * boundary that conforms to the size and type specified,
  * or false on failure.
  */
-function grapheme_extract (string $haystack, int $size, int $type = GRAPHEME_EXTR_COUNT, int $offset = null, int &$next = null): string|bool {}
+function grapheme_extract (string $haystack, int $size, int $type = GRAPHEME_EXTR_COUNT, int $offset = null, int &$next = null): string|int {}
 
 /**
  * Convert domain name to IDNA ASCII form
@@ -6501,9 +6563,9 @@ function grapheme_extract (string $haystack, int $size, int $type = GRAPHEME_EXT
  * @param int $flags [optional] 
  * @param int $variant [optional] 
  * @param array $idna_info [optional] 
- * @return string|bool The domain name encoded in ASCII-compatible form, or false on failure
+ * @return string|false The domain name encoded in ASCII-compatible form, or false on failure
  */
-function idn_to_ascii (string $domain, int $flags = IDNA_DEFAULT, int $variant = INTL_IDNA_VARIANT_UTS46, array &$idna_info = null): string|bool {}
+function idn_to_ascii (string $domain, int $flags = IDNA_DEFAULT, int $variant = INTL_IDNA_VARIANT_UTS46, array &$idna_info = null): string|int {}
 
 /**
  * Convert domain name from IDNA ASCII to Unicode
@@ -6512,9 +6574,9 @@ function idn_to_ascii (string $domain, int $flags = IDNA_DEFAULT, int $variant =
  * @param int $flags [optional] 
  * @param int $variant [optional] 
  * @param array $idna_info [optional] 
- * @return string|bool The domain name in Unicode, encoded in UTF-8, or false on failure
+ * @return string|false The domain name in Unicode, encoded in UTF-8, or false on failure
  */
-function idn_to_utf8 (string $domain, int $flags = IDNA_DEFAULT, int $variant = INTL_IDNA_VARIANT_UTS46, array &$idna_info = null): string|bool {}
+function idn_to_utf8 (string $domain, int $flags = IDNA_DEFAULT, int $variant = INTL_IDNA_VARIANT_UTS46, array &$idna_info = null): string|int {}
 
 /**
  * Gets the default locale value from the INTL global 'default_locale'
@@ -6561,67 +6623,67 @@ function locale_get_region (string $locale): ?string {}
  * Gets the keywords for the input locale
  * @link http://www.php.net/manual/en/locale.getkeywords.php
  * @param string $locale 
- * @return array|bool|null Associative array containing the keyword-value pairs for this locale
+ * @return array|false|null Associative array containing the keyword-value pairs for this locale
  * <p>>Returns null when the length of locale exceeds INTL_MAX_LOCALE_LEN.</p>
  */
-function locale_get_keywords (string $locale): array|bool|null {}
+function locale_get_keywords (string $locale): array|int|null {}
 
 /**
  * Returns an appropriately localized display name for script of the input locale
  * @link http://www.php.net/manual/en/locale.getdisplayscript.php
  * @param string $locale 
  * @param string|null $displayLocale [optional] 
- * @return string|bool Display name of the script for the locale in the format appropriate for
+ * @return string|false Display name of the script for the locale in the format appropriate for
  * displayLocale, or false on failure.
  */
-function locale_get_display_script (string $locale, ?string $displayLocale = null): string|bool {}
+function locale_get_display_script (string $locale, ?string $displayLocale = null): string|int {}
 
 /**
  * Returns an appropriately localized display name for region of the input locale
  * @link http://www.php.net/manual/en/locale.getdisplayregion.php
  * @param string $locale 
  * @param string|null $displayLocale [optional] 
- * @return string|bool Display name of the region for the locale in the format appropriate for
+ * @return string|false Display name of the region for the locale in the format appropriate for
  * displayLocale, or false on failure.
  */
-function locale_get_display_region (string $locale, ?string $displayLocale = null): string|bool {}
+function locale_get_display_region (string $locale, ?string $displayLocale = null): string|int {}
 
 /**
  * Returns an appropriately localized display name for the input locale
  * @link http://www.php.net/manual/en/locale.getdisplayname.php
  * @param string $locale 
  * @param string|null $displayLocale [optional] 
- * @return string|bool Display name of the locale in the format appropriate for displayLocale, or false on failure.
+ * @return string|false Display name of the locale in the format appropriate for displayLocale, or false on failure.
  */
-function locale_get_display_name (string $locale, ?string $displayLocale = null): string|bool {}
+function locale_get_display_name (string $locale, ?string $displayLocale = null): string|int {}
 
 /**
  * Returns an appropriately localized display name for language of the inputlocale
  * @link http://www.php.net/manual/en/locale.getdisplaylanguage.php
  * @param string $locale 
  * @param string|null $displayLocale [optional] 
- * @return string|bool Display name of the language for the locale in the format appropriate for
+ * @return string|false Display name of the language for the locale in the format appropriate for
  * displayLocale, or false on failure.
  */
-function locale_get_display_language (string $locale, ?string $displayLocale = null): string|bool {}
+function locale_get_display_language (string $locale, ?string $displayLocale = null): string|int {}
 
 /**
  * Returns an appropriately localized display name for variants of the input locale
  * @link http://www.php.net/manual/en/locale.getdisplayvariant.php
  * @param string $locale 
  * @param string|null $displayLocale [optional] 
- * @return string|bool Display name of the variant for the locale in the format appropriate for
+ * @return string|false Display name of the variant for the locale in the format appropriate for
  * displayLocale, or false on failure.
  */
-function locale_get_display_variant (string $locale, ?string $displayLocale = null): string|bool {}
+function locale_get_display_variant (string $locale, ?string $displayLocale = null): string|int {}
 
 /**
  * Returns a correctly ordered and delimited locale ID
  * @link http://www.php.net/manual/en/locale.composelocale.php
  * @param array $subtags 
- * @return string|bool The corresponding locale identifier, or false when subtags is empty.
+ * @return string|false The corresponding locale identifier, or false when subtags is empty.
  */
-function locale_compose (array $subtags): string|bool {}
+function locale_compose (array $subtags): string|int {}
 
 /**
  * Returns a key-value array of locale ID subtag elements
@@ -6683,11 +6745,11 @@ function locale_lookup (array $languageTag, string $locale, bool $canonicalize =
  * Tries to find out best available locale based on HTTP "Accept-Language" header
  * @link http://www.php.net/manual/en/locale.acceptfromhttp.php
  * @param string $header 
- * @return string|bool The corresponding locale identifier.
+ * @return string|false The corresponding locale identifier.
  * <p>Returns false when the length of header exceeds
  * INTL_MAX_LOCALE_LEN.</p>
  */
-function locale_accept_from_http (string $header): string|bool {}
+function locale_accept_from_http (string $header): string|int {}
 
 /**
  * Constructs a new Message Formatter
@@ -6703,9 +6765,9 @@ function msgfmt_create (string $locale, string $pattern): ?MessageFormatter {}
  * @link http://www.php.net/manual/en/messageformatter.format.php
  * @param MessageFormatter $formatter 
  * @param array $values 
- * @return string|bool The formatted string, or false if an error occurred
+ * @return string|false The formatted string, or false if an error occurred
  */
-function msgfmt_format (MessageFormatter $formatter, array $values): string|bool {}
+function msgfmt_format (MessageFormatter $formatter, array $values): string|int {}
 
 /**
  * Quick format message
@@ -6713,18 +6775,18 @@ function msgfmt_format (MessageFormatter $formatter, array $values): string|bool
  * @param string $locale 
  * @param string $pattern 
  * @param array $values 
- * @return string|bool The formatted pattern string or false if an error occurred
+ * @return string|false The formatted pattern string or false if an error occurred
  */
-function msgfmt_format_message (string $locale, string $pattern, array $values): string|bool {}
+function msgfmt_format_message (string $locale, string $pattern, array $values): string|int {}
 
 /**
  * Parse input string according to pattern
  * @link http://www.php.net/manual/en/messageformatter.parse.php
  * @param MessageFormatter $formatter 
  * @param string $string 
- * @return array|bool An array containing the items extracted, or false on error
+ * @return array|false An array containing the items extracted, or false on error
  */
-function msgfmt_parse (MessageFormatter $formatter, string $string): array|bool {}
+function msgfmt_parse (MessageFormatter $formatter, string $string): array|int {}
 
 /**
  * Quick parse input string
@@ -6732,9 +6794,9 @@ function msgfmt_parse (MessageFormatter $formatter, string $string): array|bool 
  * @param string $locale 
  * @param string $pattern 
  * @param string $message 
- * @return array|bool An array containing items extracted, or false on error
+ * @return array|false An array containing items extracted, or false on error
  */
-function msgfmt_parse_message (string $locale, string $pattern, string $message): array|bool {}
+function msgfmt_parse_message (string $locale, string $pattern, string $message): array|int {}
 
 /**
  * Set the pattern used by the formatter
@@ -6749,9 +6811,9 @@ function msgfmt_set_pattern (MessageFormatter $formatter, string $pattern): bool
  * Get the pattern used by the formatter
  * @link http://www.php.net/manual/en/messageformatter.getpattern.php
  * @param MessageFormatter $formatter 
- * @return string|bool The pattern string for this message formatter, or false on failure.
+ * @return string|false The pattern string for this message formatter, or false on failure.
  */
-function msgfmt_get_pattern (MessageFormatter $formatter): string|bool {}
+function msgfmt_get_pattern (MessageFormatter $formatter): string|int {}
 
 /**
  * Get the locale for which the formatter was created
@@ -6782,9 +6844,9 @@ function msgfmt_get_error_message (MessageFormatter $formatter): string {}
  * @link http://www.php.net/manual/en/normalizer.normalize.php
  * @param string $string 
  * @param int $form [optional] 
- * @return string|bool The normalized string or false if an error occurred.
+ * @return string|false The normalized string or false if an error occurred.
  */
-function normalizer_normalize (string $string, int $form = Normalizer::FORM_C): string|bool {}
+function normalizer_normalize (string $string, int $form = \Normalizer::FORM_C): string|int {}
 
 /**
  * Checks if the provided string is already in the specified normalization
@@ -6794,7 +6856,7 @@ function normalizer_normalize (string $string, int $form = Normalizer::FORM_C): 
  * @param int $form [optional] 
  * @return bool true if normalized, false otherwise or if there an error
  */
-function normalizer_is_normalized (string $string, int $form = Normalizer::FORM_C): bool {}
+function normalizer_is_normalized (string $string, int $form = \Normalizer::FORM_C): bool {}
 
 /**
  * Gets the Decomposition_Mapping property for the given UTF-8 encoded code point
@@ -6804,7 +6866,7 @@ function normalizer_is_normalized (string $string, int $form = Normalizer::FORM_
  * @return string|null Returns a string containing the Decomposition_Mapping property, if present in the UCD.
  * <p>Returns null if there is no Decomposition_Mapping property for the character.</p>
  */
-function normalizer_get_raw_decomposition (string $string, int $form = Normalizer::FORM_C): ?string {}
+function normalizer_get_raw_decomposition (string $string, int $form = \Normalizer::FORM_C): ?string {}
 
 /**
  * Create a resource bundle
@@ -6840,9 +6902,9 @@ function resourcebundle_count (ResourceBundle $bundle): int {}
  * Get supported locales
  * @link http://www.php.net/manual/en/resourcebundle.locales.php
  * @param string $bundle 
- * @return array|bool Returns the list of locales supported by the bundle, or false on failure.
+ * @return array|false Returns the list of locales supported by the bundle, or false on failure.
  */
-function resourcebundle_locales (string $bundle): array|bool {}
+function resourcebundle_locales (string $bundle): array|int {}
 
 /**
  * Get bundle's last error code
@@ -6864,9 +6926,9 @@ function resourcebundle_get_error_message (ResourceBundle $bundle): string {}
  * Get the number of IDs in the equivalency group that includes the given ID
  * @link http://www.php.net/manual/en/intltimezone.countequivalentids.php
  * @param string $timezoneId 
- * @return int|bool 
+ * @return int|false 
  */
-function intltz_count_equivalent_ids (string $timezoneId): int|bool {}
+function intltz_count_equivalent_ids (string $timezoneId): int {}
 
 /**
  * Create a new copy of the default timezone for this host
@@ -6880,9 +6942,9 @@ function intltz_create_default (): IntlTimeZone {}
  * given country or offset
  * @link http://www.php.net/manual/en/intltimezone.createenumeration.php
  * @param IntlTimeZone|string|int|float|null $countryOrRawOffset [optional] 
- * @return IntlIterator|bool 
+ * @return IntlIterator|false 
  */
-function intltz_create_enumeration (IntlTimeZone|string|int|float|null $countryOrRawOffset = null): IntlIterator|bool {}
+function intltz_create_enumeration (IntlTimeZone|string|int|float|null $countryOrRawOffset = null): IntlIterator|int {}
 
 /**
  * Create a timezone object for the given ID
@@ -6898,9 +6960,9 @@ function intltz_create_time_zone (string $timezoneId): ?IntlTimeZone {}
  * @param int $type 
  * @param string|null $region [optional] 
  * @param int|null $rawOffset [optional] 
- * @return IntlIterator|bool Returns IntlIterator or false on failure.
+ * @return IntlIterator|false Returns IntlIterator or false on failure.
  */
-function intltz_create_time_zone_id_enumeration (int $type, ?string $region = null, ?int $rawOffset = null): IntlIterator|bool {}
+function intltz_create_time_zone_id_enumeration (int $type, ?string $region = null, ?int $rawOffset = null): IntlIterator|int {}
 
 /**
  * Create a timezone object from DateTimeZone
@@ -6915,9 +6977,9 @@ function intltz_from_date_time_zone (DateTimeZone $timezone): ?IntlTimeZone {}
  * @link http://www.php.net/manual/en/intltimezone.getcanonicalid.php
  * @param string $timezoneId 
  * @param bool $isSystemId [optional] 
- * @return string|bool 
+ * @return string|false 
  */
-function intltz_get_canonical_id (string $timezoneId, bool &$isSystemId = null): string|bool {}
+function intltz_get_canonical_id (string $timezoneId, bool &$isSystemId = null): string|int {}
 
 /**
  * Get a name of this time zone suitable for presentation to the user
@@ -6926,9 +6988,9 @@ function intltz_get_canonical_id (string $timezoneId, bool &$isSystemId = null):
  * @param bool $dst [optional] 
  * @param int $style [optional] 
  * @param string|null $locale [optional] 
- * @return string|bool 
+ * @return string|false 
  */
-function intltz_get_display_name (IntlTimeZone $timezone, bool $dst = false, int $style = IntlTimeZone::DISPLAY_LONG, ?string $locale = null): string|bool {}
+function intltz_get_display_name (IntlTimeZone $timezone, bool $dst = false, int $style = \IntlTimeZone::DISPLAY_LONG, ?string $locale = null): string|int {}
 
 /**
  * Get the amount of time to be added to local standard time to get local wall clock time
@@ -6943,25 +7005,25 @@ function intltz_get_dst_savings (IntlTimeZone $timezone): int {}
  * @link http://www.php.net/manual/en/intltimezone.getequivalentid.php
  * @param string $timezoneId 
  * @param int $offset 
- * @return string|bool 
+ * @return string|false 
  */
-function intltz_get_equivalent_id (string $timezoneId, int $offset): string|bool {}
+function intltz_get_equivalent_id (string $timezoneId, int $offset): string|int {}
 
 /**
  * Get last error code on the object
  * @link http://www.php.net/manual/en/intltimezone.geterrorcode.php
  * @param IntlTimeZone $timezone 
- * @return int|bool 
+ * @return int|false 
  */
-function intltz_get_error_code (IntlTimeZone $timezone): int|bool {}
+function intltz_get_error_code (IntlTimeZone $timezone): int {}
 
 /**
  * Get last error message on the object
  * @link http://www.php.net/manual/en/intltimezone.geterrormessage.php
  * @param IntlTimeZone $timezone 
- * @return string|bool 
+ * @return string|false 
  */
-function intltz_get_error_message (IntlTimeZone $timezone): string|bool {}
+function intltz_get_error_message (IntlTimeZone $timezone): string|int {}
 
 /**
  * Create GMT (UTC) timezone
@@ -6974,9 +7036,9 @@ function intltz_get_gmt (): IntlTimeZone {}
  * Get timezone ID
  * @link http://www.php.net/manual/en/intltimezone.getid.php
  * @param IntlTimeZone $timezone 
- * @return string|bool 
+ * @return string|false 
  */
-function intltz_get_id (IntlTimeZone $timezone): string|bool {}
+function intltz_get_id (IntlTimeZone $timezone): string|int {}
 
 /**
  * Get the time zone raw and GMT offset for the given moment in time
@@ -7002,16 +7064,16 @@ function intltz_get_raw_offset (IntlTimeZone $timezone): int {}
  * Get the region code associated with the given system time zone ID
  * @link http://www.php.net/manual/en/intltimezone.getregion.php
  * @param string $timezoneId 
- * @return string|bool Return region or false on failure.
+ * @return string|false Return region or false on failure.
  */
-function intltz_get_region (string $timezoneId): string|bool {}
+function intltz_get_region (string $timezoneId): string|int {}
 
 /**
  * Get the timezone data version currently used by ICU
  * @link http://www.php.net/manual/en/intltimezone.gettzdataversion.php
- * @return string|bool 
+ * @return string|false 
  */
-function intltz_get_tz_data_version (): string|bool {}
+function intltz_get_tz_data_version (): string|int {}
 
 /**
  * Get the "unknown" time zone
@@ -7024,18 +7086,18 @@ function intltz_get_unknown (): IntlTimeZone {}
  * Translate a system timezone into a Windows timezone
  * @link http://www.php.net/manual/en/intltimezone.getwindowsid.php
  * @param string $timezoneId 
- * @return string|bool Returns the Windows timezone or false on failure.
+ * @return string|false Returns the Windows timezone or false on failure.
  */
-function intltz_get_windows_id (string $timezoneId): string|bool {}
+function intltz_get_windows_id (string $timezoneId): string|int {}
 
 /**
  * Translate a Windows timezone into a system timezone
  * @link http://www.php.net/manual/en/intltimezone.getidforwindowsid.php
  * @param string $timezoneId 
  * @param string|null $region [optional] 
- * @return string|bool Returns the system timezone or false on failure.
+ * @return string|false Returns the system timezone or false on failure.
  */
-function intltz_get_id_for_windows_id (string $timezoneId, ?string $region = null): string|bool {}
+function intltz_get_id_for_windows_id (string $timezoneId, ?string $region = null): string|int {}
 
 /**
  * Check if this zone has the same rules and offset as another zone
@@ -7050,9 +7112,9 @@ function intltz_has_same_rules (IntlTimeZone $timezone, IntlTimeZone $other): bo
  * Convert to DateTimeZone object
  * @link http://www.php.net/manual/en/intltimezone.todatetimezone.php
  * @param IntlTimeZone $timezone 
- * @return DateTimeZone|bool 
+ * @return DateTimeZone|false 
  */
-function intltz_to_date_time_zone (IntlTimeZone $timezone): DateTimeZone|bool {}
+function intltz_to_date_time_zone (IntlTimeZone $timezone): DateTimeZone|int {}
 
 /**
  * Check if this time zone uses daylight savings time
@@ -7074,7 +7136,7 @@ function intltz_use_daylight_time (IntlTimeZone $timezone): bool {}
  * @return Transliterator|null Returns a Transliterator object on success,
  * or null on failure.
  */
-function transliterator_create (string $id, int $direction = Transliterator::FORWARD): ?Transliterator {}
+function transliterator_create (string $id, int $direction = \Transliterator::FORWARD): ?Transliterator {}
 
 /**
  * Create transliterator from rules
@@ -7087,15 +7149,15 @@ function transliterator_create (string $id, int $direction = Transliterator::FOR
  * @return Transliterator|null Returns a Transliterator object on success,
  * or null on failure.
  */
-function transliterator_create_from_rules (string $rules, int $direction = Transliterator::FORWARD): ?Transliterator {}
+function transliterator_create_from_rules (string $rules, int $direction = \Transliterator::FORWARD): ?Transliterator {}
 
 /**
  * Get transliterator IDs
  * @link http://www.php.net/manual/en/transliterator.listids.php
- * @return array|bool An array of registered transliterator IDs on success,
+ * @return array|false An array of registered transliterator IDs on success,
  * or false on failure.
  */
-function transliterator_list_ids (): array|bool {}
+function transliterator_list_ids (): array|int {}
 
 /**
  * Create an inverse transliterator
@@ -7119,27 +7181,27 @@ function transliterator_create_inverse (Transliterator $transliterator): ?Transl
  * @param int $end [optional] The end index (in UTF-16 code units) until which the string will be
  * transformed, exclusive. Indexing starts at 0. The text after will be
  * left as is.
- * @return string|bool The transformed string on success, or false on failure.
+ * @return string|false The transformed string on success, or false on failure.
  */
-function transliterator_transliterate (Transliterator|string $transliterator, string $string, int $start = null, int $end = -1): string|bool {}
+function transliterator_transliterate (Transliterator|string $transliterator, string $string, int $start = null, int $end = -1): string|int {}
 
 /**
  * Get last error code
  * @link http://www.php.net/manual/en/transliterator.geterrorcode.php
  * @param Transliterator $transliterator 
- * @return int|bool The error code on success,
+ * @return int|false The error code on success,
  * or false if none exists, or on failure.
  */
-function transliterator_get_error_code (Transliterator $transliterator): int|bool {}
+function transliterator_get_error_code (Transliterator $transliterator): int {}
 
 /**
  * Get last error message
  * @link http://www.php.net/manual/en/transliterator.geterrormessage.php
  * @param Transliterator $transliterator 
- * @return string|bool The error message on success,
+ * @return string|false The error message on success,
  * or false if none exists, or on failure.
  */
-function transliterator_get_error_message (Transliterator $transliterator): string|bool {}
+function transliterator_get_error_message (Transliterator $transliterator): string|int {}
 
 
 /**

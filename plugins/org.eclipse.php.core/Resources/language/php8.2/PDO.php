@@ -10,12 +10,21 @@
  * @link http://www.php.net/manual/en/class.pdoexception.php
  */
 class PDOException extends RuntimeException implements Stringable, Throwable {
-	protected $message;
-	protected $file;
-	protected $line;
-	protected $code;
-	public $errorInfo;
 
+	/**
+	 * The exception code
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.pdoexception.php#pdoexception.props.code
+	 */
+	protected int $code;
+
+	/**
+	 * Corresponds to PDO::errorInfo or
+	 * PDOStatement::errorInfo
+	 * @var array|null
+	 * @link http://www.php.net/manual/en/class.pdoexception.php#pdoexception.props.errorinfo
+	 */
+	public ?array $errorInfo;
 
 	/**
 	 * Construct the exception
@@ -25,8 +34,11 @@ class PDOException extends RuntimeException implements Stringable, Throwable {
 	 * @param Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -877,7 +889,7 @@ class PDO  {
 	 * <p>Emulated prepared statements does not communicate with the database server
 	 * so PDO::prepare does not check the statement.</p>
 	 */
-	public function prepare (string $query, array $options = []): PDOStatement|false {}
+	public function prepare (string $query, array $options = '[]'): PDOStatement|false {}
 
 	/**
 	 * Prepares and executes an SQL statement without placeholders
@@ -897,7 +909,7 @@ class PDO  {
 	 * SQL statement. Returns false if the driver does not support quoting in
 	 * this way.
 	 */
-	public function quote (string $string, int $type = PDO::PARAM_STR): string|false {}
+	public function quote (string $string, int $type = \PDO::PARAM_STR): string|false {}
 
 	/**
 	 * Rolls back a transaction
@@ -923,8 +935,13 @@ class PDO  {
  * @link http://www.php.net/manual/en/class.pdostatement.php
  */
 class PDOStatement implements IteratorAggregate, Traversable {
-	public $queryString;
 
+	/**
+	 * Used query string.
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.pdostatement.php#pdostatement.props.querystring
+	 */
+	public string $queryString;
 
 	/**
 	 * Bind a column to a PHP variable
@@ -936,7 +953,7 @@ class PDOStatement implements IteratorAggregate, Traversable {
 	 * @param mixed $driverOptions [optional] 
 	 * @return bool Returns true on success or false on failure.
 	 */
-	public function bindColumn (string|int $column, mixed &$var, int $type = PDO::PARAM_STR, int $maxLength = null, mixed $driverOptions = null): bool {}
+	public function bindColumn (string|int $column, mixed &$var, int $type = \PDO::PARAM_STR, int $maxLength = null, mixed $driverOptions = null): bool {}
 
 	/**
 	 * Binds a parameter to the specified variable name
@@ -948,7 +965,7 @@ class PDOStatement implements IteratorAggregate, Traversable {
 	 * @param mixed $driverOptions [optional] 
 	 * @return bool Returns true on success or false on failure.
 	 */
-	public function bindParam (string|int $param, mixed &$var, int $type = PDO::PARAM_STR, int $maxLength = null, mixed $driverOptions = null): bool {}
+	public function bindParam (string|int $param, mixed &$var, int $type = \PDO::PARAM_STR, int $maxLength = null, mixed $driverOptions = null): bool {}
 
 	/**
 	 * Binds a value to a parameter
@@ -958,7 +975,7 @@ class PDOStatement implements IteratorAggregate, Traversable {
 	 * @param int $type [optional] 
 	 * @return bool Returns true on success or false on failure.
 	 */
-	public function bindValue (string|int $param, mixed $value, int $type = PDO::PARAM_STR): bool {}
+	public function bindValue (string|int $param, mixed $value, int $type = \PDO::PARAM_STR): bool {}
 
 	/**
 	 * Closes the cursor, enabling the statement to be executed again
@@ -1037,7 +1054,7 @@ class PDOStatement implements IteratorAggregate, Traversable {
 	 * @return mixed The return value of this function on success depends on the fetch type. In
 	 * all cases, false is returned on failure or if there are no more rows.
 	 */
-	public function fetch (int $mode = PDO::FETCH_DEFAULT, int $cursorOrientation = PDO::FETCH_ORI_NEXT, int $cursorOffset = null): mixed {}
+	public function fetch (int $mode = \PDO::FETCH_DEFAULT, int $cursorOrientation = \PDO::FETCH_ORI_NEXT, int $cursorOffset = null): mixed {}
 
 	/**
 	 * Fetches the remaining rows from a result set
@@ -1055,7 +1072,7 @@ class PDOStatement implements IteratorAggregate, Traversable {
 	 * ORDER BY clauses in SQL to restrict results before retrieving and
 	 * processing them with PHP.</p>
 	 */
-	public function fetchAll (int $mode = PDO::FETCH_DEFAULT): array {}
+	public function fetchAll (int $mode = \PDO::FETCH_DEFAULT): array {}
 
 	/**
 	 * Returns a single column from the next row of a result set
@@ -1076,7 +1093,7 @@ class PDOStatement implements IteratorAggregate, Traversable {
 	 * @return object|false Returns an instance of the required class with property names that
 	 * correspond to the column names or false on failure.
 	 */
-	public function fetchObject (?string $class = "stdClass", array $constructorArgs = []): object|false {}
+	public function fetchObject (?string $class = '"stdClass"', array $constructorArgs = '[]'): object|false {}
 
 	/**
 	 * Retrieve a statement attribute
@@ -1138,8 +1155,8 @@ class PDOStatement implements IteratorAggregate, Traversable {
 }
 
 final class PDORow  {
-	public $queryString;
 
+	public string $queryString;
 }
 
 /**

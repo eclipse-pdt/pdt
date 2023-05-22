@@ -14,10 +14,10 @@ function opcache_reset (): bool {}
  * Get status information about the cache
  * @link http://www.php.net/manual/en/function.opcache-get-status.php
  * @param bool $include_scripts [optional] Include script specific state information
- * @return array|bool Returns an array of information, optionally containing script specific state information,
+ * @return array|false Returns an array of information, optionally containing script specific state information,
  * or false on failure.
  */
-function opcache_get_status (bool $include_scripts = true): array|bool {}
+function opcache_get_status (bool $include_scripts = true): array|int {}
 
 /**
  * Compiles and caches a PHP script without executing it
@@ -43,9 +43,9 @@ function opcache_invalidate (string $filename, bool $force = false): bool {}
 /**
  * Get configuration information about the cache
  * @link http://www.php.net/manual/en/function.opcache-get-configuration.php
- * @return array|bool Returns an array of information, including ini, blacklist and version
+ * @return array|false Returns an array of information, including ini, blacklist and version
  */
-function opcache_get_configuration (): array|bool {}
+function opcache_get_configuration (): array|int {}
 
 /**
  * Tells whether a script is cached in OPCache

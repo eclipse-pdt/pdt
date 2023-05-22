@@ -54,7 +54,7 @@ class SQLite3  {
 	 * @param string $encryptionKey [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $filename, int $flags = SQLITE3_OPEN_READWRITE | SQLITE3_OPEN_CREATE, string $encryptionKey = ""): string {}
+	public function __construct (string $filename, int $flags = 'SQLITE3_OPEN_READWRITE | SQLITE3_OPEN_CREATE', string $encryptionKey = '""'): string {}
 
 	/**
 	 * Opens an SQLite database
@@ -64,7 +64,7 @@ class SQLite3  {
 	 * @param string $encryptionKey [optional] 
 	 * @return void No value is returned.
 	 */
-	public function open (string $filename, int $flags = SQLITE3_OPEN_READWRITE | SQLITE3_OPEN_CREATE, string $encryptionKey = ""): void {}
+	public function open (string $filename, int $flags = 'SQLITE3_OPEN_READWRITE | SQLITE3_OPEN_CREATE', string $encryptionKey = '""'): void {}
 
 	/**
 	 * Closes the database connection
@@ -98,6 +98,9 @@ class SQLite3  {
 	 */
 	public function lastErrorCode (): int {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function lastExtendedErrorCode () {}
 
 	/**
@@ -145,7 +148,7 @@ class SQLite3  {
 	 * but for the destination.
 	 * @return bool Returns true on success or false on failure.
 	 */
-	public function backup (SQLite3 $destination, string $sourceDatabase = "main", string $destinationDatabase = "main"): bool {}
+	public function backup (SQLite3 $destination, string $sourceDatabase = '"main"', string $destinationDatabase = '"main"'): bool {}
 
 	/**
 	 * Returns a string that has been properly escaped
@@ -160,9 +163,9 @@ class SQLite3  {
 	 * Prepares an SQL statement for execution
 	 * @link http://www.php.net/manual/en/sqlite3.prepare.php
 	 * @param string $query 
-	 * @return SQLite3Stmt|bool Returns an SQLite3Stmt object on success or false on failure.
+	 * @return SQLite3Stmt|false Returns an SQLite3Stmt object on success or false on failure.
 	 */
-	public function prepare (string $query): SQLite3Stmt|bool {}
+	public function prepare (string $query): SQLite3Stmt|int {}
 
 	/**
 	 * Executes a result-less query against a given database
@@ -176,9 +179,9 @@ class SQLite3  {
 	 * Executes an SQL query
 	 * @link http://www.php.net/manual/en/sqlite3.query.php
 	 * @param string $query 
-	 * @return SQLite3Result|bool Returns an SQLite3Result object, or false on failure.
+	 * @return SQLite3Result|false Returns an SQLite3Result object, or false on failure.
 	 */
-	public function query (string $query): SQLite3Result|bool {}
+	public function query (string $query): SQLite3Result|int {}
 
 	/**
 	 * Executes a query and returns a single result
@@ -241,9 +244,9 @@ class SQLite3  {
 	 * @param int $rowid 
 	 * @param string $database [optional] 
 	 * @param int $flags [optional] 
-	 * @return resource|bool Returns a stream resource, or false on failure.
+	 * @return resource|false Returns a stream resource, or false on failure.
 	 */
-	public function openBlob (string $table, string $column, int $rowid, string $database = "main", int $flags = SQLITE3_OPEN_READONLY): resource|bool {}
+	public function openBlob (string $table, string $column, int $rowid, string $database = '"main"', int $flags = SQLITE3_OPEN_READONLY) {}
 
 	/**
 	 * Enable throwing exceptions
@@ -262,6 +265,7 @@ class SQLite3  {
 	public function enableExceptions (bool $enable = false): bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param bool $enable [optional]
 	 */
 	public function enableExtendedResultCodes (bool $enable = true) {}
@@ -331,19 +335,19 @@ class SQLite3Stmt  {
 	/**
 	 * Executes a prepared statement and returns a result set object
 	 * @link http://www.php.net/manual/en/sqlite3stmt.execute.php
-	 * @return SQLite3Result|bool Returns an SQLite3Result object on successful execution of the prepared
+	 * @return SQLite3Result|false Returns an SQLite3Result object on successful execution of the prepared
 	 * statement, false on failure.
 	 */
-	public function execute (): SQLite3Result|bool {}
+	public function execute (): SQLite3Result|int {}
 
 	/**
 	 * Get the SQL of the statement
 	 * @link http://www.php.net/manual/en/sqlite3stmt.getsql.php
 	 * @param bool $expand [optional] Whether to retrieve the expanded SQL. Passing true is only supported as
 	 * of libsqlite 3.14.
-	 * @return string|bool Returns the SQL of the prepared statement, or false on failure.
+	 * @return string|false Returns the SQL of the prepared statement, or false on failure.
 	 */
-	public function getSQL (bool $expand = false): string|bool {}
+	public function getSQL (bool $expand = false): string|int {}
 
 	/**
 	 * Returns the number of parameters within the prepared statement
@@ -391,28 +395,28 @@ class SQLite3Result  {
 	 * Returns the name of the nth column
 	 * @link http://www.php.net/manual/en/sqlite3result.columnname.php
 	 * @param int $column 
-	 * @return string|bool Returns the string name of the column identified by
+	 * @return string|false Returns the string name of the column identified by
 	 * column, or false if the column does not exist.
 	 */
-	public function columnName (int $column): string|bool {}
+	public function columnName (int $column): string|int {}
 
 	/**
 	 * Returns the type of the nth column
 	 * @link http://www.php.net/manual/en/sqlite3result.columntype.php
 	 * @param int $column 
-	 * @return int|bool Returns the data type index of the column identified by
+	 * @return int|false Returns the data type index of the column identified by
 	 * column (one of
 	 * SQLITE3_INTEGER, SQLITE3_FLOAT,
 	 * SQLITE3_TEXT, SQLITE3_BLOB, or
 	 * SQLITE3_NULL), or false if the column does not exist.
 	 */
-	public function columnType (int $column): int|bool {}
+	public function columnType (int $column): int {}
 
 	/**
 	 * Fetches a result row as an associative or numerically indexed array or both
 	 * @link http://www.php.net/manual/en/sqlite3result.fetcharray.php
 	 * @param int $mode [optional] 
-	 * @return array|bool Returns a result row as an associatively or numerically indexed array or
+	 * @return array|false Returns a result row as an associatively or numerically indexed array or
 	 * both. Alternately will return false if there are no more rows.
 	 * <p>The types of the values of the returned array are mapped from SQLite3 types
 	 * as follows: integers are mapped to int if they fit into the
@@ -421,7 +425,7 @@ class SQLite3Result  {
 	 * NULL values are mapped to null, and strings
 	 * and blobs are mapped to string.</p>
 	 */
-	public function fetchArray (int $mode = SQLITE3_BOTH): array|bool {}
+	public function fetchArray (int $mode = SQLITE3_BOTH): array|int {}
 
 	/**
 	 * Resets the result set back to the first row

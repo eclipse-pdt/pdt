@@ -8,22 +8,20 @@ namespace FFI {
  * @link http://www.php.net/manual/en/class.ffi-exception.php
  */
 class Exception extends \Error implements \Throwable, \Stringable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-
 
 	/**
 	 * Construct the error object
 	 * @link http://www.php.net/manual/en/error.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -64,10 +62,10 @@ class Exception extends \Error implements \Throwable, \Stringable {
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/error.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -89,22 +87,20 @@ class Exception extends \Error implements \Throwable, \Stringable {
  * @link http://www.php.net/manual/en/class.ffi-parserexception.php
  */
 final class ParserException extends \FFI\Exception implements \Stringable, \Throwable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-
 
 	/**
 	 * Construct the error object
 	 * @link http://www.php.net/manual/en/error.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -145,10 +141,10 @@ final class ParserException extends \FFI\Exception implements \Stringable, \Thro
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/error.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -209,7 +205,7 @@ final class FFI  {
 	 * scope. Other systems will fail to resolve these symbols.</p>
 	 * @return FFI Returns the freshly created FFI object.
 	 */
-	public static function cdef (string $code = "", ?string $lib = null): FFI {}
+	public static function cdef (string $code = '""', ?string $lib = null): FFI {}
 
 	/**
 	 * Loads C declarations from a C header file
@@ -521,7 +517,7 @@ final class CType  {
 	 * @link http://www.php.net/manual/en/ffi-ctype.getarrayelementtype.php
 	 * @return \FFI\CType 
 	 */
-	public function getArrayElementType (): FFI\CType {}
+	public function getArrayElementType (): \FFI\CType {}
 
 	/**
 	 * Description
@@ -535,7 +531,7 @@ final class CType  {
 	 * @link http://www.php.net/manual/en/ffi-ctype.getpointertype.php
 	 * @return \FFI\CType 
 	 */
-	public function getPointerType (): FFI\CType {}
+	public function getPointerType (): \FFI\CType {}
 
 	/**
 	 * Description
@@ -558,7 +554,7 @@ final class CType  {
 	 * @param string $name 
 	 * @return \FFI\CType 
 	 */
-	public function getStructFieldType (string $name): FFI\CType {}
+	public function getStructFieldType (string $name): \FFI\CType {}
 
 	/**
 	 * Description
@@ -572,7 +568,7 @@ final class CType  {
 	 * @link http://www.php.net/manual/en/ffi-ctype.getfuncreturntype.php
 	 * @return \FFI\CType 
 	 */
-	public function getFuncReturnType (): FFI\CType {}
+	public function getFuncReturnType (): \FFI\CType {}
 
 	/**
 	 * Description
@@ -587,7 +583,7 @@ final class CType  {
 	 * @param int $index 
 	 * @return \FFI\CType 
 	 */
-	public function getFuncParameterType (int $index): FFI\CType {}
+	public function getFuncParameterType (int $index): \FFI\CType {}
 
 }
 

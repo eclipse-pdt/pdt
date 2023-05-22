@@ -7,12 +7,13 @@
  * @link http://www.php.net/manual/en/class.mysqli_sql_exception.php
  */
 final class mysqli_sql_exception extends RuntimeException implements Stringable, Throwable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-	protected $sqlstate;
 
+	/**
+	 * The sql state with the error.
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.mysqli_sql_exception.php#mysqli_sql_exception.props.sqlstate
+	 */
+	protected string $sqlstate;
 
 	/**
 	 * Returns the SQLSTATE error code
@@ -29,8 +30,11 @@ final class mysqli_sql_exception extends RuntimeException implements Stringable,
 	 * @param Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -102,12 +106,36 @@ final class mysqli_sql_exception extends RuntimeException implements Stringable,
  * @link http://www.php.net/manual/en/class.mysqli_driver.php
  */
 final class mysqli_driver  {
-	public $client_info;
-	public $client_version;
-	public $driver_version;
-	public $reconnect;
-	public $report_mode;
 
+	/**
+	 * The Client API header version
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.mysqli_driver.php#mysqli_driver.props.client_info
+	 */
+	public readonly string $client_info;
+
+	/**
+	 * The Client version
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.mysqli_driver.php#mysqli_driver.props.client_version
+	 */
+	public readonly int $client_version;
+
+	/**
+	 * The MySQLi Driver version
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.mysqli_driver.php#mysqli_driver.props.driver_version
+	 */
+	public readonly int $driver_version;
+
+	/**
+	 * Sets mysqli error reporting mode
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.mysqli_driver.php#mysqli_driver.props.report_mode
+	 */
+	public int $report_mode;
+
+	public bool $reconnect;
 }
 
 /**
@@ -115,25 +143,132 @@ final class mysqli_driver  {
  * @link http://www.php.net/manual/en/class.mysqli.php
  */
 class mysqli  {
-	public $affected_rows;
-	public $client_info;
-	public $client_version;
-	public $connect_errno;
-	public $connect_error;
-	public $errno;
-	public $error;
-	public $error_list;
-	public $field_count;
-	public $host_info;
-	public $info;
-	public $insert_id;
-	public $server_info;
-	public $server_version;
-	public $sqlstate;
-	public $protocol_version;
-	public $thread_id;
-	public $warning_count;
 
+	/**
+	 * Gets the number of affected rows in a previous MySQL operation
+	 * @var int|string
+	 * @link http://www.php.net/manual/en/class.mysqli.php#mysqli.props.affected_rows
+	 */
+	public int|string $affected_rows;
+
+	/**
+	 * Get MySQL client info
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.mysqli.php#mysqli.props.client_info
+	 */
+	public string $client_info;
+
+	/**
+	 * Returns the MySQL client version as an integer
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.mysqli.php#mysqli.props.client_version
+	 */
+	public int $client_version;
+
+	/**
+	 * Returns the error code from last connect call
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.mysqli.php#mysqli.props.connect_errno
+	 */
+	public int $connect_errno;
+
+	/**
+	 * Returns a description of the last connection error
+	 * @var string|null
+	 * @link http://www.php.net/manual/en/class.mysqli.php#mysqli.props.connect_error
+	 */
+	public ?string $connect_error;
+
+	/**
+	 * Returns the error code for the most recent function call
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.mysqli.php#mysqli.props.errno
+	 */
+	public int $errno;
+
+	/**
+	 * Returns a string description of the last error
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.mysqli.php#mysqli.props.error
+	 */
+	public string $error;
+
+	/**
+	 * Returns a list of errors from the last command executed
+	 * @var array
+	 * @link http://www.php.net/manual/en/class.mysqli.php#mysqli.props.error_list
+	 */
+	public array $error_list;
+
+	/**
+	 * Returns the number of columns for the most recent query
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.mysqli.php#mysqli.props.field_count
+	 */
+	public int $field_count;
+
+	/**
+	 * Returns a string representing the type of connection used
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.mysqli.php#mysqli.props.host_info
+	 */
+	public string $host_info;
+
+	/**
+	 * Retrieves information about the most recently executed query
+	 * @var string|null
+	 * @link http://www.php.net/manual/en/class.mysqli.php#mysqli.props.info
+	 */
+	public ?string $info;
+
+	/**
+	 * Returns the value generated for an AUTO_INCREMENT column by the last query
+	 * @var int|string
+	 * @link http://www.php.net/manual/en/class.mysqli.php#mysqli.props.insert_id
+	 */
+	public int|string $insert_id;
+
+	/**
+	 * Returns the version of the MySQL server
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.mysqli.php#mysqli.props.server_info
+	 */
+	public string $server_info;
+
+	/**
+	 * Returns the version of the MySQL server as an integer
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.mysqli.php#mysqli.props.server_version
+	 */
+	public int $server_version;
+
+	/**
+	 * Returns the SQLSTATE error from previous MySQL operation
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.mysqli.php#mysqli.props.sqlstate
+	 */
+	public string $sqlstate;
+
+	/**
+	 * Returns the version of the MySQL protocol used
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.mysqli.php#mysqli.props.protocol_version
+	 */
+	public int $protocol_version;
+
+	/**
+	 * Returns the thread ID for the current connection
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.mysqli.php#mysqli.props.thread_id
+	 */
+	public int $thread_id;
+
+	/**
+	 * Returns the number of warnings from the last query for the given link
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.mysqli.php#mysqli.props.warning_count
+	 */
+	public int $warning_count;
 
 	/**
 	 * Open a new connection to the MySQL server
@@ -189,9 +324,9 @@ class mysqli  {
 	/**
 	 * Closes a previously opened database connection
 	 * @link http://www.php.net/manual/en/mysqli.close.php
-	 * @return bool Always returns true.
+	 * @return true Always returns true.
 	 */
-	public function close (): bool {}
+	public function close (): int {}
 
 	/**
 	 * Commits the current transaction
@@ -230,9 +365,9 @@ class mysqli  {
 	 * Performs debugging operations
 	 * @link http://www.php.net/manual/en/mysqli.debug.php
 	 * @param string $options 
-	 * @return bool Always returns true.
+	 * @return true Always returns true.
 	 */
-	public function debug (string $options): bool {}
+	public function debug (string $options): int {}
 
 	/**
 	 * Returns a character set object
@@ -289,9 +424,9 @@ class mysqli  {
 	/**
 	 * Get result of SHOW WARNINGS
 	 * @link http://www.php.net/manual/en/mysqli.get-warnings.php
-	 * @return mysqli_warning|bool 
+	 * @return mysqli_warning|false 
 	 */
-	public function get_warnings (): mysqli_warning|bool {}
+	public function get_warnings (): mysqli_warning|int {}
 
 	/**
 	 * Initializes MySQLi and returns an object for use with mysqli_real_connect()
@@ -350,17 +485,17 @@ class mysqli  {
 	 * @param array $reject 
 	 * @param int $seconds 
 	 * @param int $microseconds [optional] 
-	 * @return int|bool Returns number of ready connections upon success, false otherwise.
+	 * @return int|false Returns number of ready connections upon success, false otherwise.
 	 */
-	public static function poll (?array &$read, ?array &$error, array &$reject, int $seconds, int $microseconds = null): int|bool {}
+	public static function poll (?array &$read, ?array &$error, array &$reject, int $seconds, int $microseconds = null): int {}
 
 	/**
 	 * Prepares an SQL statement for execution
 	 * @link http://www.php.net/manual/en/mysqli.prepare.php
 	 * @param string $query 
-	 * @return mysqli_stmt|bool mysqli_prepare returns a statement object or false if an error occurred.
+	 * @return mysqli_stmt|false mysqli_prepare returns a statement object or false if an error occurred.
 	 */
-	public function prepare (string $query): mysqli_stmt|bool {}
+	public function prepare (string $query): mysqli_stmt|int {}
 
 	/**
 	 * Performs a query on the database
@@ -409,6 +544,7 @@ class mysqli  {
 	public function reap_async_query (): mysqli_result|bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param string $string
 	 */
 	public function escape_string (string $string) {}
@@ -472,6 +608,7 @@ class mysqli  {
 	public function options (int $option, string|int $value): bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param int $option
 	 * @param mixed $value
 	 */
@@ -485,31 +622,31 @@ class mysqli  {
 	 * @param string|null $ca_certificate 
 	 * @param string|null $ca_path 
 	 * @param string|null $cipher_algos 
-	 * @return bool Always returns true. If SSL setup is
+	 * @return true Always returns true. If SSL setup is
 	 * incorrect mysqli_real_connect will return an error
 	 * when you attempt to connect.
 	 */
-	public function ssl_set (?string $key, ?string $certificate, ?string $ca_certificate, ?string $ca_path, ?string $cipher_algos): bool {}
+	public function ssl_set (?string $key, ?string $certificate, ?string $ca_certificate, ?string $ca_path, ?string $cipher_algos): int {}
 
 	/**
 	 * Gets the current system status
 	 * @link http://www.php.net/manual/en/mysqli.stat.php
-	 * @return string|bool A string describing the server status. false if an error occurred.
+	 * @return string|false A string describing the server status. false if an error occurred.
 	 */
-	public function stat (): string|bool {}
+	public function stat (): string|int {}
 
 	/**
 	 * Initializes a statement and returns an object for use with mysqli_stmt_prepare
 	 * @link http://www.php.net/manual/en/mysqli.stmt-init.php
-	 * @return mysqli_stmt|bool Returns an object.
+	 * @return mysqli_stmt|false Returns an object.
 	 */
-	public function stmt_init (): mysqli_stmt|bool {}
+	public function stmt_init (): mysqli_stmt|int {}
 
 	/**
 	 * Transfers a result set from the last query
 	 * @link http://www.php.net/manual/en/mysqli.store-result.php
 	 * @param int $mode [optional] 
-	 * @return mysqli_result|bool Returns a buffered result object or false if an error occurred.
+	 * @return mysqli_result|false Returns a buffered result object or false if an error occurred.
 	 * <p>mysqli_store_result returns false in case the query
 	 * didn't return a result set (if the query was, for example an INSERT
 	 * statement). This function also returns false if the reading of the
@@ -523,7 +660,7 @@ class mysqli  {
 	 * mysqli_field_count returns a non-zero value, the
 	 * statement should have produced a non-empty result set.</p>
 	 */
-	public function store_result (int $mode = null): mysqli_result|bool {}
+	public function store_result (int $mode = null): mysqli_result|int {}
 
 	/**
 	 * Returns whether thread safety is given or not
@@ -535,9 +672,9 @@ class mysqli  {
 	/**
 	 * Initiate a result set retrieval
 	 * @link http://www.php.net/manual/en/mysqli.use-result.php
-	 * @return mysqli_result|bool Returns an unbuffered result object or false if an error occurred.
+	 * @return mysqli_result|false Returns an unbuffered result object or false if an error occurred.
 	 */
-	public function use_result (): mysqli_result|bool {}
+	public function use_result (): mysqli_result|int {}
 
 	/**
 	 * Refreshes
@@ -554,10 +691,27 @@ class mysqli  {
  * @link http://www.php.net/manual/en/class.mysqli_warning.php
  */
 final class mysqli_warning  {
-	public $message;
-	public $sqlstate;
-	public $errno;
 
+	/**
+	 * Message string
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.mysqli_warning.php#mysqli_warning.props.message
+	 */
+	public string $message;
+
+	/**
+	 * SQL state
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.mysqli_warning.php#mysqli_warning.props.sqlstate
+	 */
+	public string $sqlstate;
+
+	/**
+	 * Error number
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.mysqli_warning.php#mysqli_warning.props.errno
+	 */
+	public int $errno;
 
 	/**
 	 * Private constructor to disallow direct instantiation
@@ -580,12 +734,43 @@ final class mysqli_warning  {
  * @link http://www.php.net/manual/en/class.mysqli_result.php
  */
 class mysqli_result implements IteratorAggregate, Traversable {
-	public $current_field;
-	public $field_count;
-	public $lengths;
-	public $num_rows;
-	public $type;
 
+	/**
+	 * Get current field offset of a result pointer
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.mysqli_result.php#mysqli_result.props.current_field
+	 */
+	public int $current_field;
+
+	/**
+	 * Gets the number of fields in the result set
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.mysqli_result.php#mysqli_result.props.field_count
+	 */
+	public int $field_count;
+
+	/**
+	 * Returns the lengths of the columns of the current row in the result set
+	 * @var array|null
+	 * @link http://www.php.net/manual/en/class.mysqli_result.php#mysqli_result.props.lengths
+	 */
+	public ?array $lengths;
+
+	/**
+	 * Gets the number of rows in the result set
+	 * @var int|string
+	 * @link http://www.php.net/manual/en/class.mysqli_result.php#mysqli_result.props.num_rows
+	 */
+	public int|string $num_rows;
+
+	/**
+	 * Stores whether the result is buffered or unbuffered as an int
+	 * (MYSQLI_STORE_RESULT or
+	 * MYSQLI_USE_RESULT, respectively).
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.mysqli_result.php#mysqli_result.props.type
+	 */
+	public int $type;
 
 	/**
 	 * Constructs a mysqli_result object
@@ -633,7 +818,7 @@ class mysqli_result implements IteratorAggregate, Traversable {
 	/**
 	 * Returns the next field in the result set
 	 * @link http://www.php.net/manual/en/mysqli-result.fetch-field.php
-	 * @return object|bool Returns an object which contains field definition information or false
+	 * @return object|false Returns an object which contains field definition information or false
 	 * if no field information is available.
 	 * <p><table>
 	 * Object properties
@@ -697,7 +882,7 @@ class mysqli_result implements IteratorAggregate, Traversable {
 	 * </table>
 	 * </table></p>
 	 */
-	public function fetch_field (): object|bool {}
+	public function fetch_field (): object|int {}
 
 	/**
 	 * Returns an array of objects representing the fields in a result set
@@ -764,7 +949,7 @@ class mysqli_result implements IteratorAggregate, Traversable {
 	 * Fetch meta-data for a single field
 	 * @link http://www.php.net/manual/en/mysqli-result.fetch-field-direct.php
 	 * @param int $index 
-	 * @return object|bool Returns an object which contains field definition information or false
+	 * @return object|false Returns an object which contains field definition information or false
 	 * if no field information for specified fieldnr is 
 	 * available.
 	 * <p><table>
@@ -821,7 +1006,7 @@ class mysqli_result implements IteratorAggregate, Traversable {
 	 * </table>
 	 * </table></p>
 	 */
-	public function fetch_field_direct (int $index): object|bool {}
+	public function fetch_field_direct (int $index): object|int {}
 
 	/**
 	 * Fetch all result rows as an associative array, a numeric array, or both
@@ -835,50 +1020,50 @@ class mysqli_result implements IteratorAggregate, Traversable {
 	 * Fetch the next row of a result set as an associative, a numeric array, or both
 	 * @link http://www.php.net/manual/en/mysqli-result.fetch-array.php
 	 * @param int $mode [optional] 
-	 * @return array|null|bool Returns an array representing the fetched row, null if there
+	 * @return array|null|false Returns an array representing the fetched row, null if there
 	 * are no more rows in the result set, or false on failure.
 	 */
-	public function fetch_array (int $mode = MYSQLI_BOTH): array|null|bool {}
+	public function fetch_array (int $mode = MYSQLI_BOTH): array|null|int {}
 
 	/**
 	 * Fetch the next row of a result set as an associative array
 	 * @link http://www.php.net/manual/en/mysqli-result.fetch-assoc.php
-	 * @return array|null|bool Returns an associative array representing the fetched row,
+	 * @return array|null|false Returns an associative array representing the fetched row,
 	 * where each key in the array represents the name of one of the result
 	 * set's columns, null if there
 	 * are no more rows in the result set, or false on failure.
 	 */
-	public function fetch_assoc (): array|null|bool {}
+	public function fetch_assoc (): array|null|int {}
 
 	/**
 	 * Fetch the next row of a result set as an object
 	 * @link http://www.php.net/manual/en/mysqli-result.fetch-object.php
 	 * @param string $class [optional] 
 	 * @param array $constructor_args [optional] 
-	 * @return object|null|bool Returns an object representing the fetched row, where each property
+	 * @return object|null|false Returns an object representing the fetched row, where each property
 	 * represents the name of the result set's column, null if there
 	 * are no more rows in the result set, or false on failure.
 	 */
-	public function fetch_object (string $class = "stdClass", array $constructor_args = []): object|null|bool {}
+	public function fetch_object (string $class = '"stdClass"', array $constructor_args = '[]'): object|null|int {}
 
 	/**
 	 * Fetch the next row of a result set as an enumerated array
 	 * @link http://www.php.net/manual/en/mysqli-result.fetch-row.php
-	 * @return array|null|bool Returns an enumerated array representing the fetched row, null if there
+	 * @return array|null|false Returns an enumerated array representing the fetched row, null if there
 	 * are no more rows in the result set, or false on failure.
 	 */
-	public function fetch_row (): array|null|bool {}
+	public function fetch_row (): array|null|int {}
 
 	/**
 	 * Fetch a single column from the next row of a result set
 	 * @link http://www.php.net/manual/en/mysqli-result.fetch-column.php
 	 * @param int $column [optional] 
-	 * @return null|int|float|string|bool Returns a single column
+	 * @return null|int|float|string|false Returns a single column
 	 * from the next row of a result set or false if there are no more rows.
 	 * <p>There is no way to return another column from the same row if you
 	 * use this function to retrieve data.</p>
 	 */
-	public function fetch_column (int $column = null): null|int|float|string|bool {}
+	public function fetch_column (int $column = null): null|int|float|string {}
 
 	/**
 	 * Set result pointer to a specified field offset
@@ -909,17 +1094,78 @@ class mysqli_result implements IteratorAggregate, Traversable {
  * @link http://www.php.net/manual/en/class.mysqli_stmt.php
  */
 class mysqli_stmt  {
-	public $affected_rows;
-	public $insert_id;
-	public $num_rows;
-	public $param_count;
-	public $field_count;
-	public $errno;
-	public $error;
-	public $error_list;
-	public $sqlstate;
-	public $id;
 
+	/**
+	 * Returns the total number of rows changed, deleted, inserted, or
+	 * matched by the last statement executed
+	 * 
+	 * @var int|string
+	 * @link http://www.php.net/manual/en/class.mysqli_stmt.php#mysqli_stmt.props.affected_rows
+	 */
+	public int|string $affected_rows;
+
+	/**
+	 * Get the ID generated from the previous INSERT operation
+	 * @var int|string
+	 * @link http://www.php.net/manual/en/class.mysqli_stmt.php#mysqli_stmt.props.insert_id
+	 */
+	public int|string $insert_id;
+
+	/**
+	 * Returns the number of rows fetched from the server
+	 * @var int|string
+	 * @link http://www.php.net/manual/en/class.mysqli_stmt.php#mysqli_stmt.props.num_rows
+	 */
+	public int|string $num_rows;
+
+	/**
+	 * Returns the number of parameters for the given statement
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.mysqli_stmt.php#mysqli_stmt.props.param_count
+	 */
+	public int $param_count;
+
+	/**
+	 * Returns the number of columns in the given statement
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.mysqli_stmt.php#mysqli_stmt.props.field_count
+	 */
+	public int $field_count;
+
+	/**
+	 * Returns the error code for the most recent statement call
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.mysqli_stmt.php#mysqli_stmt.props.errno
+	 */
+	public int $errno;
+
+	/**
+	 * Returns a string description for last statement error
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.mysqli_stmt.php#mysqli_stmt.props.error
+	 */
+	public string $error;
+
+	/**
+	 * Returns a list of errors from the last statement executed
+	 * @var array
+	 * @link http://www.php.net/manual/en/class.mysqli_stmt.php#mysqli_stmt.props.error_list
+	 */
+	public array $error_list;
+
+	/**
+	 * Returns SQLSTATE error from previous statement operation
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.mysqli_stmt.php#mysqli_stmt.props.sqlstate
+	 */
+	public string $sqlstate;
+
+	/**
+	 * Stores the statement ID.
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.mysqli_stmt.php#mysqli_stmt.props.id
+	 */
+	public int $id;
 
 	/**
 	 * Constructs a new mysqli_stmt object
@@ -969,9 +1215,9 @@ class mysqli_stmt  {
 	/**
 	 * Closes a prepared statement
 	 * @link http://www.php.net/manual/en/mysqli-stmt.close.php
-	 * @return bool Always returns true.
+	 * @return true Always returns true.
 	 */
-	public function close (): bool {}
+	public function close (): int {}
 
 	/**
 	 * Adjusts the result pointer to an arbitrary row in the buffered result
@@ -999,16 +1245,16 @@ class mysqli_stmt  {
 	/**
 	 * Get result of SHOW WARNINGS
 	 * @link http://www.php.net/manual/en/mysqli-stmt.get-warnings.php
-	 * @return mysqli_warning|bool 
+	 * @return mysqli_warning|false 
 	 */
-	public function get_warnings (): mysqli_warning|bool {}
+	public function get_warnings (): mysqli_warning|int {}
 
 	/**
 	 * Returns result set metadata from a prepared statement
 	 * @link http://www.php.net/manual/en/mysqli-stmt.result-metadata.php
-	 * @return mysqli_result|bool Returns a result object or false if an error occurred.
+	 * @return mysqli_result|false Returns a result object or false if an error occurred.
 	 */
-	public function result_metadata (): mysqli_result|bool {}
+	public function result_metadata (): mysqli_result|int {}
 
 	/**
 	 * Check if there are more query results from a multiple query
@@ -1076,14 +1322,14 @@ class mysqli_stmt  {
 	/**
 	 * Gets a result set from a prepared statement as a mysqli_result object
 	 * @link http://www.php.net/manual/en/mysqli-stmt.get-result.php
-	 * @return mysqli_result|bool Returns false on failure. For successful queries which produce a result set, such as SELECT, SHOW, DESCRIBE or
+	 * @return mysqli_result|false Returns false on failure. For successful queries which produce a result set, such as SELECT, SHOW, DESCRIBE or
 	 * EXPLAIN, mysqli_stmt_get_result will return
 	 * a mysqli_result object. For other successful queries, mysqli_stmt_get_result will
 	 * return false. The mysqli_stmt_errno function can be
 	 * used to distinguish between the two reasons for false; due to a bug, prior to PHP 7.4.13,
 	 * mysqli_errno had to be used for this purpose.
 	 */
-	public function get_result (): mysqli_result|bool {}
+	public function get_result (): mysqli_result|int {}
 
 }
 
@@ -1146,9 +1392,9 @@ function mysqli_character_set_name (mysqli $mysql): string {}
  * Closes a previously opened database connection
  * @link http://www.php.net/manual/en/mysqli.close.php
  * @param mysqli $mysql 
- * @return bool Always returns true.
+ * @return true Always returns true.
  */
-function mysqli_close (mysqli $mysql): bool {}
+function mysqli_close (mysqli $mysql): int {}
 
 /**
  * Commits the current transaction
@@ -1169,13 +1415,13 @@ function mysqli_commit (mysqli $mysql, int $flags = null, ?string $name = null):
  * @param string|null $database [optional] 
  * @param int|null $port [optional] 
  * @param string|null $socket [optional] 
- * @return mysqli|bool mysqli::__construct always returns an object which represents the connection to a MySQL Server, 
+ * @return mysqli|false mysqli::__construct always returns an object which represents the connection to a MySQL Server, 
  * regardless of it being successful or not.
  * <p>mysqli_connect returns an object which represents the connection to a MySQL Server,
  * or false on failure.</p>
  * <p>mysqli::connect returns null on success or false on failure.</p>
  */
-function mysqli_connect (?string $hostname = null, ?string $username = null, ?string $password = null, ?string $database = null, ?int $port = null, ?string $socket = null): mysqli|bool {}
+function mysqli_connect (?string $hostname = null, ?string $username = null, ?string $password = null, ?string $database = null, ?int $port = null, ?string $socket = null): mysqli|int {}
 
 /**
  * Returns the error code from last connect call
@@ -1213,9 +1459,9 @@ function mysqli_dump_debug_info (mysqli $mysql): bool {}
  * Performs debugging operations
  * @link http://www.php.net/manual/en/mysqli.debug.php
  * @param string $options 
- * @return bool Always returns true.
+ * @return true Always returns true.
  */
-function mysqli_debug (string $options): bool {}
+function mysqli_debug (string $options): int {}
 
 /**
  * Returns the error code for the most recent function call
@@ -1253,16 +1499,17 @@ function mysqli_error_list (mysqli $mysql): array {}
 function mysqli_stmt_execute (mysqli_stmt $statement, ?array $params = null): bool {}
 
 /**
+ * {@inheritdoc}
  * @param mysqli_stmt $statement
- * @param ?array $params [optional]
+ * @param array|null $params [optional]
  */
-function mysqli_execute (mysqli_stmt $statement, ?array $params = null): bool {}
+function mysqli_execute (mysqli_stmt $statement, ?array $params = NULL): bool {}
 
 /**
  * Returns the next field in the result set
  * @link http://www.php.net/manual/en/mysqli-result.fetch-field.php
  * @param mysqli_result $result 
- * @return object|bool Returns an object which contains field definition information or false
+ * @return object|false Returns an object which contains field definition information or false
  * if no field information is available.
  * <p><table>
  * Object properties
@@ -1326,7 +1573,7 @@ function mysqli_execute (mysqli_stmt $statement, ?array $params = null): bool {}
  * </table>
  * </table></p>
  */
-function mysqli_fetch_field (mysqli_result $result): object|bool {}
+function mysqli_fetch_field (mysqli_result $result): object|int {}
 
 /**
  * Returns an array of objects representing the fields in a result set
@@ -1395,7 +1642,7 @@ function mysqli_fetch_fields (mysqli_result $result): array {}
  * @link http://www.php.net/manual/en/mysqli-result.fetch-field-direct.php
  * @param mysqli_result $result 
  * @param int $index 
- * @return object|bool Returns an object which contains field definition information or false
+ * @return object|false Returns an object which contains field definition information or false
  * if no field information for specified fieldnr is 
  * available.
  * <p><table>
@@ -1452,19 +1699,19 @@ function mysqli_fetch_fields (mysqli_result $result): array {}
  * </table>
  * </table></p>
  */
-function mysqli_fetch_field_direct (mysqli_result $result, int $index): object|bool {}
+function mysqli_fetch_field_direct (mysqli_result $result, int $index): object|int {}
 
 /**
  * Returns the lengths of the columns of the current row in the result set
  * @link http://www.php.net/manual/en/mysqli-result.lengths.php
  * @param mysqli_result $result 
- * @return array|bool An array of integers representing the size of each column (not including
+ * @return array|false An array of integers representing the size of each column (not including
  * any terminating null characters). false if an error occurred.
  * <p>mysqli_fetch_lengths is valid only for the current
  * row of the result set. It returns false if you call it before calling
  * mysqli_fetch_row/array/object or after retrieving all rows in the result.</p>
  */
-function mysqli_fetch_lengths (mysqli_result $result): array|bool {}
+function mysqli_fetch_lengths (mysqli_result $result): array|int {}
 
 /**
  * Fetch all result rows as an associative array, a numeric array, or both
@@ -1480,21 +1727,21 @@ function mysqli_fetch_all (mysqli_result $result, int $mode = MYSQLI_NUM): array
  * @link http://www.php.net/manual/en/mysqli-result.fetch-array.php
  * @param mysqli_result $result 
  * @param int $mode [optional] 
- * @return array|null|bool Returns an array representing the fetched row, null if there
+ * @return array|null|false Returns an array representing the fetched row, null if there
  * are no more rows in the result set, or false on failure.
  */
-function mysqli_fetch_array (mysqli_result $result, int $mode = MYSQLI_BOTH): array|null|bool {}
+function mysqli_fetch_array (mysqli_result $result, int $mode = MYSQLI_BOTH): array|null|int {}
 
 /**
  * Fetch the next row of a result set as an associative array
  * @link http://www.php.net/manual/en/mysqli-result.fetch-assoc.php
  * @param mysqli_result $result 
- * @return array|null|bool Returns an associative array representing the fetched row,
+ * @return array|null|false Returns an associative array representing the fetched row,
  * where each key in the array represents the name of one of the result
  * set's columns, null if there
  * are no more rows in the result set, or false on failure.
  */
-function mysqli_fetch_assoc (mysqli_result $result): array|null|bool {}
+function mysqli_fetch_assoc (mysqli_result $result): array|null|int {}
 
 /**
  * Fetch the next row of a result set as an object
@@ -1502,32 +1749,32 @@ function mysqli_fetch_assoc (mysqli_result $result): array|null|bool {}
  * @param mysqli_result $result 
  * @param string $class [optional] 
  * @param array $constructor_args [optional] 
- * @return object|null|bool Returns an object representing the fetched row, where each property
+ * @return object|null|false Returns an object representing the fetched row, where each property
  * represents the name of the result set's column, null if there
  * are no more rows in the result set, or false on failure.
  */
-function mysqli_fetch_object (mysqli_result $result, string $class = "stdClass", array $constructor_args = []): object|null|bool {}
+function mysqli_fetch_object (mysqli_result $result, string $class = '"stdClass"', array $constructor_args = '[]'): object|null|int {}
 
 /**
  * Fetch the next row of a result set as an enumerated array
  * @link http://www.php.net/manual/en/mysqli-result.fetch-row.php
  * @param mysqli_result $result 
- * @return array|null|bool Returns an enumerated array representing the fetched row, null if there
+ * @return array|null|false Returns an enumerated array representing the fetched row, null if there
  * are no more rows in the result set, or false on failure.
  */
-function mysqli_fetch_row (mysqli_result $result): array|null|bool {}
+function mysqli_fetch_row (mysqli_result $result): array|null|int {}
 
 /**
  * Fetch a single column from the next row of a result set
  * @link http://www.php.net/manual/en/mysqli-result.fetch-column.php
  * @param mysqli_result $result 
  * @param int $column [optional] 
- * @return null|int|float|string|bool Returns a single column
+ * @return null|int|float|string|false Returns a single column
  * from the next row of a result set or false if there are no more rows.
  * <p>There is no way to return another column from the same row if you
  * use this function to retrieve data.</p>
  */
-function mysqli_fetch_column (mysqli_result $result, int $column = null): null|int|float|string|bool {}
+function mysqli_fetch_column (mysqli_result $result, int $column = null): null|int|float|string {}
 
 /**
  * Returns the number of columns for the most recent query
@@ -1701,17 +1948,17 @@ function mysqli_get_server_version (mysqli $mysql): int {}
  * Get result of SHOW WARNINGS
  * @link http://www.php.net/manual/en/mysqli.get-warnings.php
  * @param mysqli $mysql 
- * @return mysqli_warning|bool 
+ * @return mysqli_warning|false 
  */
-function mysqli_get_warnings (mysqli $mysql): mysqli_warning|bool {}
+function mysqli_get_warnings (mysqli $mysql): mysqli_warning|int {}
 
 /**
  * Initializes MySQLi and returns an object for use with mysqli_real_connect()
  * @link http://www.php.net/manual/en/mysqli.init.php
- * @return mysqli|bool mysqli::init returns null on success, or false on failure.
+ * @return mysqli|false mysqli::init returns null on success, or false on failure.
  * mysqli_init returns an object on success, or false on failure.
  */
-function mysqli_init (): mysqli|bool {}
+function mysqli_init (): mysqli|int {}
 
 /**
  * Retrieves information about the most recently executed query
@@ -1804,6 +2051,7 @@ function mysqli_num_rows (mysqli_result $result): int|string {}
 function mysqli_options (mysqli $mysql, int $option, string|int $value): bool {}
 
 /**
+ * {@inheritdoc}
  * @param mysqli $mysql
  * @param int $option
  * @param mixed $value
@@ -1826,18 +2074,18 @@ function mysqli_ping (mysqli $mysql): bool {}
  * @param array $reject 
  * @param int $seconds 
  * @param int $microseconds [optional] 
- * @return int|bool Returns number of ready connections upon success, false otherwise.
+ * @return int|false Returns number of ready connections upon success, false otherwise.
  */
-function mysqli_poll (?array &$read, ?array &$error, array &$reject, int $seconds, int $microseconds = null): int|bool {}
+function mysqli_poll (?array &$read, ?array &$error, array &$reject, int $seconds, int $microseconds = null): int {}
 
 /**
  * Prepares an SQL statement for execution
  * @link http://www.php.net/manual/en/mysqli.prepare.php
  * @param mysqli $mysql 
  * @param string $query 
- * @return mysqli_stmt|bool mysqli_prepare returns a statement object or false if an error occurred.
+ * @return mysqli_stmt|false mysqli_prepare returns a statement object or false if an error occurred.
  */
-function mysqli_prepare (mysqli $mysql, string $query): mysqli_stmt|bool {}
+function mysqli_prepare (mysqli $mysql, string $query): mysqli_stmt|int {}
 
 /**
  * Sets mysqli error reporting mode
@@ -1887,6 +2135,7 @@ function mysqli_real_connect (mysqli $mysql, ?string $hostname = null, ?string $
 function mysqli_real_escape_string (mysqli $mysql, string $string): string {}
 
 /**
+ * {@inheritdoc}
  * @param mysqli $mysql
  * @param string $string
  */
@@ -2020,9 +2269,9 @@ function mysqli_stmt_bind_result (mysqli_stmt $statement, mixed &$var, mixed &..
  * Closes a prepared statement
  * @link http://www.php.net/manual/en/mysqli-stmt.close.php
  * @param mysqli_stmt $statement 
- * @return bool Always returns true.
+ * @return true Always returns true.
  */
-function mysqli_stmt_close (mysqli_stmt $statement): bool {}
+function mysqli_stmt_close (mysqli_stmt $statement): int {}
 
 /**
  * Adjusts the result pointer to an arbitrary row in the buffered result
@@ -2086,30 +2335,30 @@ function mysqli_stmt_free_result (mysqli_stmt $statement): void {}
  * Gets a result set from a prepared statement as a mysqli_result object
  * @link http://www.php.net/manual/en/mysqli-stmt.get-result.php
  * @param mysqli_stmt $statement 
- * @return mysqli_result|bool Returns false on failure. For successful queries which produce a result set, such as SELECT, SHOW, DESCRIBE or
+ * @return mysqli_result|false Returns false on failure. For successful queries which produce a result set, such as SELECT, SHOW, DESCRIBE or
  * EXPLAIN, mysqli_stmt_get_result will return
  * a mysqli_result object. For other successful queries, mysqli_stmt_get_result will
  * return false. The mysqli_stmt_errno function can be
  * used to distinguish between the two reasons for false; due to a bug, prior to PHP 7.4.13,
  * mysqli_errno had to be used for this purpose.
  */
-function mysqli_stmt_get_result (mysqli_stmt $statement): mysqli_result|bool {}
+function mysqli_stmt_get_result (mysqli_stmt $statement): mysqli_result|int {}
 
 /**
  * Get result of SHOW WARNINGS
  * @link http://www.php.net/manual/en/mysqli-stmt.get-warnings.php
  * @param mysqli_stmt $statement 
- * @return mysqli_warning|bool 
+ * @return mysqli_warning|false 
  */
-function mysqli_stmt_get_warnings (mysqli_stmt $statement): mysqli_warning|bool {}
+function mysqli_stmt_get_warnings (mysqli_stmt $statement): mysqli_warning|int {}
 
 /**
  * Initializes a statement and returns an object for use with mysqli_stmt_prepare
  * @link http://www.php.net/manual/en/mysqli.stmt-init.php
  * @param mysqli $mysql 
- * @return mysqli_stmt|bool Returns an object.
+ * @return mysqli_stmt|false Returns an object.
  */
-function mysqli_stmt_init (mysqli $mysql): mysqli_stmt|bool {}
+function mysqli_stmt_init (mysqli $mysql): mysqli_stmt|int {}
 
 /**
  * Get the ID generated from the previous INSERT operation
@@ -2176,9 +2425,9 @@ function mysqli_stmt_reset (mysqli_stmt $statement): bool {}
  * Returns result set metadata from a prepared statement
  * @link http://www.php.net/manual/en/mysqli-stmt.result-metadata.php
  * @param mysqli_stmt $statement 
- * @return mysqli_result|bool Returns a result object or false if an error occurred.
+ * @return mysqli_result|false Returns a result object or false if an error occurred.
  */
-function mysqli_stmt_result_metadata (mysqli_stmt $statement): mysqli_result|bool {}
+function mysqli_stmt_result_metadata (mysqli_stmt $statement): mysqli_result|int {}
 
 /**
  * Send data in blocks
@@ -2225,26 +2474,26 @@ function mysqli_sqlstate (mysqli $mysql): string {}
  * @param string|null $ca_certificate 
  * @param string|null $ca_path 
  * @param string|null $cipher_algos 
- * @return bool Always returns true. If SSL setup is
+ * @return true Always returns true. If SSL setup is
  * incorrect mysqli_real_connect will return an error
  * when you attempt to connect.
  */
-function mysqli_ssl_set (mysqli $mysql, ?string $key, ?string $certificate, ?string $ca_certificate, ?string $ca_path, ?string $cipher_algos): bool {}
+function mysqli_ssl_set (mysqli $mysql, ?string $key, ?string $certificate, ?string $ca_certificate, ?string $ca_path, ?string $cipher_algos): int {}
 
 /**
  * Gets the current system status
  * @link http://www.php.net/manual/en/mysqli.stat.php
  * @param mysqli $mysql 
- * @return string|bool A string describing the server status. false if an error occurred.
+ * @return string|false A string describing the server status. false if an error occurred.
  */
-function mysqli_stat (mysqli $mysql): string|bool {}
+function mysqli_stat (mysqli $mysql): string|int {}
 
 /**
  * Transfers a result set from the last query
  * @link http://www.php.net/manual/en/mysqli.store-result.php
  * @param mysqli $mysql 
  * @param int $mode [optional] 
- * @return mysqli_result|bool Returns a buffered result object or false if an error occurred.
+ * @return mysqli_result|false Returns a buffered result object or false if an error occurred.
  * <p>mysqli_store_result returns false in case the query
  * didn't return a result set (if the query was, for example an INSERT
  * statement). This function also returns false if the reading of the
@@ -2258,7 +2507,7 @@ function mysqli_stat (mysqli $mysql): string|bool {}
  * mysqli_field_count returns a non-zero value, the
  * statement should have produced a non-empty result set.</p>
  */
-function mysqli_store_result (mysqli $mysql, int $mode = null): mysqli_result|bool {}
+function mysqli_store_result (mysqli $mysql, int $mode = null): mysqli_result|int {}
 
 /**
  * Returns the thread ID for the current connection
@@ -2279,9 +2528,9 @@ function mysqli_thread_safe (): bool {}
  * Initiate a result set retrieval
  * @link http://www.php.net/manual/en/mysqli.use-result.php
  * @param mysqli $mysql 
- * @return mysqli_result|bool Returns an unbuffered result object or false if an error occurred.
+ * @return mysqli_result|false Returns an unbuffered result object or false if an error occurred.
  */
-function mysqli_use_result (mysqli $mysql): mysqli_result|bool {}
+function mysqli_use_result (mysqli $mysql): mysqli_result|int {}
 
 /**
  * Returns the number of warnings from the last query for the given link

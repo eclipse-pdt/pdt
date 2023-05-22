@@ -4,13 +4,17 @@
 
 namespace raphf {
 
+/**
+ * {@inheritdoc}
+ */
 function stat_persistent_handles () {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $name [optional]
  * @param mixed $ident [optional]
  */
-function clean_persistent_handles ($name = null, $ident = null) {}
+function clean_persistent_handles ($name = NULL, $ident = NULL) {}
 
 
 }

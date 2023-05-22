@@ -26,7 +26,7 @@ class finfo  {
 	 * @param resource|null $context [optional] 
 	 * @return string|false 
 	 */
-	public function file (string $filename, int $flags = FILEINFO_NONE, ?resource $context = null): string|false {}
+	public function file (string $filename, int $flags = FILEINFO_NONE, $context = null): string|false {}
 
 	/**
 	 * Alias of finfo_buffer()
@@ -36,7 +36,7 @@ class finfo  {
 	 * @param resource|null $context [optional] 
 	 * @return string|false 
 	 */
-	public function buffer (string $string, int $flags = FILEINFO_NONE, ?resource $context = null): string|false {}
+	public function buffer (string $string, int $flags = FILEINFO_NONE, $context = null): string|false {}
 
 	/**
 	 * Alias of finfo_set_flags()
@@ -85,7 +85,7 @@ function finfo_set_flags (finfo $finfo, int $flags): bool {}
  * @return string|false Returns a textual description of the contents of the
  * filename argument, or false if an error occurred.
  */
-function finfo_file (finfo $finfo, string $filename, int $flags = FILEINFO_NONE, ?resource $context = null): string|false {}
+function finfo_file (finfo $finfo, string $filename, int $flags = FILEINFO_NONE, $context = null): string|false {}
 
 /**
  * Return information about a string buffer
@@ -97,7 +97,7 @@ function finfo_file (finfo $finfo, string $filename, int $flags = FILEINFO_NONE,
  * @return string|false Returns a textual description of the string
  * argument, or false if an error occurred.
  */
-function finfo_buffer (finfo $finfo, string $string, int $flags = FILEINFO_NONE, ?resource $context = null): string|false {}
+function finfo_buffer (finfo $finfo, string $string, int $flags = FILEINFO_NONE, $context = null): string|false {}
 
 /**
  * Detect MIME Content-type for a file
@@ -107,7 +107,7 @@ function finfo_buffer (finfo $finfo, string $string, int $flags = FILEINFO_NONE,
  * text/plain or application/octet-stream,
  * or false on failure.
  */
-function mime_content_type (resource|string $filename): string|false {}
+function mime_content_type ($filename): string|false {}
 
 
 /**

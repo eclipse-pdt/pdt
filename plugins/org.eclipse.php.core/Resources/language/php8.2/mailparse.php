@@ -3,47 +3,67 @@
 // Start of mailparse v.3.1.4
 
 class mimemessage  {
+
 	public $data;
 
-
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $mode
 	 * @param mixed $source
 	 */
 	public function __construct ($mode = null, $source = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $item_to_find
 	 */
 	public function get_child ($item_to_find = null) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function get_child_count () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function get_parent () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $mode [optional]
 	 * @param mixed $arg [optional]
 	 */
-	public function extract_headers ($mode = null, $arg = null) {}
+	public function extract_headers ($mode = NULL, $arg = NULL) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $mode [optional]
 	 * @param mixed $arg [optional]
 	 */
-	public function extract_body ($mode = null, $arg = null) {}
+	public function extract_body ($mode = NULL, $arg = NULL) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function enum_uue () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $index
 	 * @param mixed $mode [optional]
 	 * @param mixed $arg [optional]
 	 */
-	public function extract_uue ($index = null, $mode = null, $arg = null) {}
+	public function extract_uue ($index = null, $mode = NULL, $arg = NULL) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function remove () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function add_child () {}
 
 }
@@ -55,7 +75,7 @@ class mimemessage  {
  * @return resource Returns a MIME resource representing the structure, or
  * false on error.
  */
-function mailparse_msg_parse_file (string $filename): resource {}
+function mailparse_msg_parse_file (string $filename) {}
 
 /**
  * Returns a handle on a given section in a mimemessage
@@ -64,7 +84,7 @@ function mailparse_msg_parse_file (string $filename): resource {}
  * @param string $mimesection 
  * @return resource 
  */
-function mailparse_msg_get_part (resource $mimemail, string $mimesection): resource {}
+function mailparse_msg_get_part ($mimemail, string $mimesection) {}
 
 /**
  * Returns an array of mime section names in the supplied message
@@ -72,7 +92,7 @@ function mailparse_msg_get_part (resource $mimemail, string $mimesection): resou
  * @param resource $mimemail 
  * @return array 
  */
-function mailparse_msg_get_structure (resource $mimemail): array {}
+function mailparse_msg_get_structure ($mimemail): array {}
 
 /**
  * Returns an associative array of info about the message
@@ -80,7 +100,7 @@ function mailparse_msg_get_structure (resource $mimemail): array {}
  * @param resource $mimemail 
  * @return array 
  */
-function mailparse_msg_get_part_data (resource $mimemail): array {}
+function mailparse_msg_get_part_data ($mimemail): array {}
 
 /**
  * Extracts/decodes a message section
@@ -90,7 +110,7 @@ function mailparse_msg_get_part_data (resource $mimemail): array {}
  * @param callable $callbackfunc [optional] 
  * @return void No value is returned.
  */
-function mailparse_msg_extract_part (resource $mimemail, string $msgbody, callable $callbackfunc = null): void {}
+function mailparse_msg_extract_part ($mimemail, string $msgbody, callable $callbackfunc = null): void {}
 
 /**
  * Extracts/decodes a message section
@@ -104,7 +124,7 @@ function mailparse_msg_extract_part (resource $mimemail, string $msgbody, callab
  * extracted section as a string.</p>
  * <p>Returns false on error.</p>
  */
-function mailparse_msg_extract_part_file (resource $mimemail, mixed $filename, callable $callbackfunc = null): string {}
+function mailparse_msg_extract_part_file ($mimemail, mixed $filename, callable $callbackfunc = null): string {}
 
 /**
  * Extracts a message section including headers without decoding the transfer encoding
@@ -114,14 +134,14 @@ function mailparse_msg_extract_part_file (resource $mimemail, mixed $filename, c
  * @param callable $callbackfunc [optional] 
  * @return string 
  */
-function mailparse_msg_extract_whole_part_file (resource $mimemail, string $filename, callable $callbackfunc = null): string {}
+function mailparse_msg_extract_whole_part_file ($mimemail, string $filename, callable $callbackfunc = null): string {}
 
 /**
  * Create a mime mail resource
  * @link http://www.php.net/manual/en/function.mailparse-msg-create.php
  * @return resource Returns a handle that can be used to parse a message.
  */
-function mailparse_msg_create (): resource {}
+function mailparse_msg_create () {}
 
 /**
  * Frees a MIME resource
@@ -129,7 +149,7 @@ function mailparse_msg_create (): resource {}
  * @param resource $mimemail 
  * @return bool Returns true on success or false on failure.
  */
-function mailparse_msg_free (resource $mimemail): bool {}
+function mailparse_msg_free ($mimemail): bool {}
 
 /**
  * Incrementally parse data into buffer
@@ -138,7 +158,7 @@ function mailparse_msg_free (resource $mimemail): bool {}
  * @param string $data 
  * @return bool Returns true on success or false on failure.
  */
-function mailparse_msg_parse (resource $mimemail, string $data): bool {}
+function mailparse_msg_parse ($mimemail, string $data): bool {}
 
 /**
  * Parse RFC 822 compliant addresses
@@ -174,7 +194,7 @@ function mailparse_rfc822_parse_addresses (string $addresses): array {}
  * @return string Returns one of the character encodings supported by the
  * mbstring module.
  */
-function mailparse_determine_best_xfer_encoding (resource $fp): string {}
+function mailparse_determine_best_xfer_encoding ($fp): string {}
 
 /**
  * Streams data from source file pointer, apply encoding and write to destfp
@@ -184,7 +204,7 @@ function mailparse_determine_best_xfer_encoding (resource $fp): string {}
  * @param string $encoding 
  * @return bool Returns true on success or false on failure.
  */
-function mailparse_stream_encode (resource $sourcefp, resource $destfp, string $encoding): bool {}
+function mailparse_stream_encode ($sourcefp, $destfp, string $encoding): bool {}
 
 /**
  * Scans the data from fp and extract each embedded uuencoded file
@@ -204,9 +224,10 @@ function mailparse_stream_encode (resource $sourcefp, resource $destfp, string $
  * The first filename entry is the message body. The next entries are the
  * decoded uuencoded files.
  */
-function mailparse_uudecode_all (resource $fp): array {}
+function mailparse_uudecode_all ($fp): array {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $header
  */
 function mailparse_test ($header = null) {}

@@ -363,29 +363,29 @@ interface DateTimeInterface  {
 	 * created with date_create.</p>
 	 * @return string Returns the formatted date string on success.
 	 */
-	abstract public function format (string $format): string
+	abstract public function format (string $format): string;
 
 	/**
 	 * Return time zone relative to given DateTime
 	 * @link http://www.php.net/manual/en/datetime.gettimezone.php
-	 * @return DateTimeZone|bool Returns a DateTimeZone object on success
+	 * @return DateTimeZone|false Returns a DateTimeZone object on success
 	 * or false on failure.
 	 */
-	abstract public function getTimezone (): DateTimeZone|bool
+	abstract public function getTimezone (): DateTimeZone|int;
 
 	/**
 	 * Returns the timezone offset
 	 * @link http://www.php.net/manual/en/datetime.getoffset.php
 	 * @return int Returns the timezone offset in seconds from UTC on success.
 	 */
-	abstract public function getOffset (): int
+	abstract public function getOffset (): int;
 
 	/**
 	 * Gets the Unix timestamp
 	 * @link http://www.php.net/manual/en/datetime.gettimestamp.php
 	 * @return int Returns the Unix timestamp representing the date.
 	 */
-	abstract public function getTimestamp (): int
+	abstract public function getTimestamp (): int;
 
 	/**
 	 * Returns the difference between two DateTime objects
@@ -405,14 +405,14 @@ interface DateTimeInterface  {
 	 * $this/$baseObject, and
 	 * $targetObject to UTC first.</p>
 	 */
-	abstract public function diff (DateTimeInterface $targetObject, bool $absolute = false): DateInterval
+	abstract public function diff (DateTimeInterface $targetObject, bool $absolute = false): DateInterval;
 
 	/**
 	 * The __wakeup handler
 	 * @link http://www.php.net/manual/en/datetime.wakeup.php
 	 * @return void Initializes a DateTime object.
 	 */
-	abstract public function __wakeup (): void
+	abstract public function __wakeup (): void;
 
 }
 
@@ -464,7 +464,7 @@ class DateTime implements DateTimeInterface {
 	 * @return string Returns a new DateTime instance.
 	 * Procedural style returns false on failure.
 	 */
-	public function __construct (string $datetime = "now", ?DateTimeZone $timezone = null): string {}
+	public function __construct (string $datetime = '"now"', ?DateTimeZone $timezone = null): string {}
 
 	/**
 	 * The __wakeup handler
@@ -503,10 +503,13 @@ class DateTime implements DateTimeInterface {
 	 * @param string $format 
 	 * @param string $datetime 
 	 * @param DateTimeZone|null $timezone [optional] 
-	 * @return DateTime|bool Returns a new DateTime instance or false on failure.
+	 * @return DateTime|false Returns a new DateTime instance or false on failure.
 	 */
-	public static function createFromFormat (string $format, string $datetime, ?DateTimeZone $timezone = null): DateTime|bool {}
+	public static function createFromFormat (string $format, string $datetime, ?DateTimeZone $timezone = null): DateTime|int {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public static function getLastErrors () {}
 
 	/**
@@ -815,9 +818,9 @@ class DateTime implements DateTimeInterface {
 	 * Alters the timestamp
 	 * @link http://www.php.net/manual/en/datetime.modify.php
 	 * @param string $modifier A date/time string. Valid formats are explained in Date and Time Formats.
-	 * @return DateTime|bool Returns the modified DateTime object for method chaining or false on failure.
+	 * @return DateTime|false Returns the modified DateTime object for method chaining or false on failure.
 	 */
-	public function modify (string $modifier): DateTime|bool {}
+	public function modify (string $modifier): DateTime|int {}
 
 	/**
 	 * Modifies a DateTime object, with added amount of days, months, years, hours, minutes and seconds
@@ -839,10 +842,10 @@ class DateTime implements DateTimeInterface {
 	/**
 	 * Return time zone relative to given DateTime
 	 * @link http://www.php.net/manual/en/datetime.gettimezone.php
-	 * @return DateTimeZone|bool Returns a DateTimeZone object on success
+	 * @return DateTimeZone|false Returns a DateTimeZone object on success
 	 * or false on failure.
 	 */
-	public function getTimezone (): DateTimeZone|bool {}
+	public function getTimezone (): DateTimeZone|int {}
 
 	/**
 	 * Sets the time zone for the DateTime object
@@ -971,10 +974,10 @@ class DateTimeImmutable implements DateTimeInterface {
 	 * or specifies a timezone
 	 * (e.g. 2010-01-28T15:00:00+02:00, or
 	 * 2010-07-05T06:00:00Z).</p>
-	 * @return DateTimeImmutable|bool Returns a new DateTimeImmutable instance.
+	 * @return DateTimeImmutable|false Returns a new DateTimeImmutable instance.
 	 * Procedural style returns false on failure.
 	 */
-	public function __construct (string $datetime = "now", ?DateTimeZone $timezone = null): DateTimeImmutable|bool {}
+	public function __construct (string $datetime = '"now"', ?DateTimeZone $timezone = null): DateTimeImmutable|int {}
 
 	/**
 	 * The __wakeup handler
@@ -1336,17 +1339,17 @@ class DateTimeImmutable implements DateTimeInterface {
 	 * contains a UNIX timestamp (e.g. 946684800)
 	 * or specifies a timezone
 	 * (e.g. 2010-01-28T15:00:00+02:00).</p>
-	 * @return DateTimeImmutable|bool Returns a new DateTimeImmutable instance or false on failure.
+	 * @return DateTimeImmutable|false Returns a new DateTimeImmutable instance or false on failure.
 	 */
-	public static function createFromFormat (string $format, string $datetime, ?DateTimeZone $timezone = null): DateTimeImmutable|bool {}
+	public static function createFromFormat (string $format, string $datetime, ?DateTimeZone $timezone = null): DateTimeImmutable|int {}
 
 	/**
 	 * Returns the warnings and errors
 	 * @link http://www.php.net/manual/en/datetimeimmutable.getlasterrors.php
-	 * @return array|bool Returns array containing info about warnings and errors, or false if there
+	 * @return array|false Returns array containing info about warnings and errors, or false if there
 	 * are neither warnings nor errors.
 	 */
-	public static function getLastErrors (): array|bool {}
+	public static function getLastErrors (): array|int {}
 
 	/**
 	 * Returns date formatted according to given format
@@ -1653,10 +1656,10 @@ class DateTimeImmutable implements DateTimeInterface {
 	/**
 	 * Return time zone relative to given DateTime
 	 * @link http://www.php.net/manual/en/datetime.gettimezone.php
-	 * @return DateTimeZone|bool Returns a DateTimeZone object on success
+	 * @return DateTimeZone|false Returns a DateTimeZone object on success
 	 * or false on failure.
 	 */
-	public function getTimezone (): DateTimeZone|bool {}
+	public function getTimezone (): DateTimeZone|int {}
 
 	/**
 	 * Returns the timezone offset
@@ -1696,9 +1699,9 @@ class DateTimeImmutable implements DateTimeInterface {
 	 * Creates a new object with modified timestamp
 	 * @link http://www.php.net/manual/en/datetimeimmutable.modify.php
 	 * @param string $modifier A date/time string. Valid formats are explained in Date and Time Formats.
-	 * @return DateTimeImmutable|bool Returns a new modified DateTimeImmutable object or false on failure.
+	 * @return DateTimeImmutable|false Returns a new modified DateTimeImmutable object or false on failure.
 	 */
-	public function modify (string $modifier): DateTimeImmutable|bool {}
+	public function modify (string $modifier): DateTimeImmutable|int {}
 
 	/**
 	 * Returns a new object, with added amount of days, months, years, hours, minutes and seconds
@@ -1839,10 +1842,10 @@ class DateTimeZone  {
 	 * Creates new DateTimeZone object
 	 * @link http://www.php.net/manual/en/datetimezone.construct.php
 	 * @param string $timezone 
-	 * @return DateTimeZone|bool Returns DateTimeZone on success.
+	 * @return DateTimeZone|false Returns DateTimeZone on success.
 	 * Procedural style returns false on failure.
 	 */
-	public function __construct (string $timezone): DateTimeZone|bool {}
+	public function __construct (string $timezone): DateTimeZone|int {}
 
 	/**
 	 * Returns the name of the timezone
@@ -1869,7 +1872,7 @@ class DateTimeZone  {
 	 * @link http://www.php.net/manual/en/datetimezone.gettransitions.php
 	 * @param int $timestampBegin [optional] 
 	 * @param int $timestampEnd [optional] 
-	 * @return array|bool Returns a numerically indexed array of
+	 * @return array|false Returns a numerically indexed array of
 	 * transition arrays on success, or false on failure. DateTimeZone
 	 * objects wrapping type 1 (UTC offsets) and type 2 (abbreviations) do not
 	 * contain any transitions, and calling this method on them will return
@@ -1915,14 +1918,14 @@ class DateTimeZone  {
 	 * </table>
 	 * </table></p>
 	 */
-	public function getTransitions (int $timestampBegin = PHP_INT_MIN, int $timestampEnd = PHP_INT_MAX): array|bool {}
+	public function getTransitions (int $timestampBegin = PHP_INT_MIN, int $timestampEnd = PHP_INT_MAX): array|int {}
 
 	/**
 	 * Returns location information for a timezone
 	 * @link http://www.php.net/manual/en/datetimezone.getlocation.php
-	 * @return array|bool Array containing location information about timezone or false on failure.
+	 * @return array|false Array containing location information about timezone or false on failure.
 	 */
-	public function getLocation (): array|bool {}
+	public function getLocation (): array|int {}
 
 	/**
 	 * Returns associative array containing dst, offset and the timezone name
@@ -1941,11 +1944,15 @@ class DateTimeZone  {
 	 * DateTimeZone::ALL_WITH_BC as value for
 	 * timezoneGroup.
 	 */
-	public static function listIdentifiers (int $timezoneGroup = DateTimeZone::ALL, ?string $countryCode = null): array {}
+	public static function listIdentifiers (int $timezoneGroup = \DateTimeZone::ALL, ?string $countryCode = null): array {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array $array
 	 */
 	public static function __set_state (array $array) {}
@@ -1972,6 +1979,97 @@ class DateTimeZone  {
 class DateInterval  {
 
 	/**
+	 * Number of years.
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.dateinterval.php#dateinterval.props.y
+	 */
+	public int $y;
+
+	/**
+	 * Number of months.
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.dateinterval.php#dateinterval.props.m
+	 */
+	public int $m;
+
+	/**
+	 * Number of days.
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.dateinterval.php#dateinterval.props.d
+	 */
+	public int $d;
+
+	/**
+	 * Number of hours.
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.dateinterval.php#dateinterval.props.h
+	 */
+	public int $h;
+
+	/**
+	 * Number of minutes.
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.dateinterval.php#dateinterval.props.i
+	 */
+	public int $i;
+
+	/**
+	 * Number of seconds.
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.dateinterval.php#dateinterval.props.s
+	 */
+	public int $s;
+
+	/**
+	 * Number of microseconds, as a fraction of a second.
+	 * @var float
+	 * @link http://www.php.net/manual/en/class.dateinterval.php#dateinterval.props.f
+	 */
+	public float $f;
+
+	/**
+	 * Is 1 if the interval
+	 * represents a negative time period and
+	 * 0 otherwise.
+	 * See DateInterval::format.
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.dateinterval.php#dateinterval.props.invert
+	 */
+	public int $invert;
+
+	/**
+	 * If the DateInterval object was created by
+	 * DateTimeImmutable::diff or
+	 * DateTime::diff, then this is the
+	 * total number of full days between the start and end dates. Otherwise,
+	 * days will be false.
+	 * @var mixed
+	 * @link http://www.php.net/manual/en/class.dateinterval.php#dateinterval.props.days
+	 */
+	public mixed $days;
+
+	/**
+	 * If the DateInterval object was created by
+	 * DateInterval::createFromDateString, then
+	 * this property's value will be true, and the
+	 * date_string property will be populated. Otherwise,
+	 * the value will be false, and the y to
+	 * f, invert, and
+	 * days properties will be populated.
+	 * @var bool
+	 * @link http://www.php.net/manual/en/class.dateinterval.php#dateinterval.props.from_string
+	 */
+	public bool $from_string;
+
+	/**
+	 * The string used as argument to
+	 * DateInterval::createFromDateString.
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.dateinterval.php#dateinterval.props.date_string
+	 */
+	public string $date_string;
+
+	/**
 	 * Creates a new DateInterval object
 	 * @link http://www.php.net/manual/en/dateinterval.construct.php
 	 * @param string $duration 
@@ -1983,9 +2081,9 @@ class DateInterval  {
 	 * Sets up a DateInterval from the relative parts of the string
 	 * @link http://www.php.net/manual/en/dateinterval.createfromdatestring.php
 	 * @param string $datetime 
-	 * @return DateInterval|bool Returns a new DateInterval instance on success, or false on failure.
+	 * @return DateInterval|false Returns a new DateInterval instance on success, or false on failure.
 	 */
-	public static function createFromDateString (string $datetime): DateInterval|bool {}
+	public static function createFromDateString (string $datetime): DateInterval|int {}
 
 	/**
 	 * Formats the interval
@@ -1995,9 +2093,13 @@ class DateInterval  {
 	 */
 	public function format (string $format): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array $array
 	 */
 	public static function __set_state (array $array) {}
@@ -2015,6 +2117,94 @@ class DatePeriod implements IteratorAggregate, Traversable {
 	 * Exclude start date, used in DatePeriod::__construct.
 	const EXCLUDE_START_DATE = 1;
 
+
+	/**
+	 * The start date of the period.
+	 * @var DateTimeInterface|null
+	 * @link http://www.php.net/manual/en/class.dateperiod.php#dateperiod.props.start
+	 */
+	public readonly ?DateTimeInterface $start;
+
+	/**
+	 * During iteration this will contain the current date within the period.
+	 * @var DateTimeInterface|null
+	 * @link http://www.php.net/manual/en/class.dateperiod.php#dateperiod.props.current
+	 */
+	public readonly ?DateTimeInterface $current;
+
+	/**
+	 * The end date of the period.
+	 * @var DateTimeInterface|null
+	 * @link http://www.php.net/manual/en/class.dateperiod.php#dateperiod.props.end
+	 */
+	public readonly ?DateTimeInterface $end;
+
+	/**
+	 * An ISO 8601 repeating interval specification.
+	 * @var DateInterval|null
+	 * @link http://www.php.net/manual/en/class.dateperiod.php#dateperiod.props.interval
+	 */
+	public readonly ?DateInterval $interval;
+
+	/**
+	 * The minimum amount of instances as retured by the iterator.
+	 * <p>If the number of recurrences has been explicitly passed through the
+	 * recurrences parameter in the constructor of the
+	 * DatePeriod instance, then this property contains
+	 * this value, plus one if the start date has not been disabled
+	 * through DatePeriod::EXCLUDE_START_DATE,
+	 * plus one if the end date has been enabled through
+	 * DatePeriod::INCLUDE_END_DATE.</p>
+	 * <p>If the number of recurrences has not been explicitly passed, then this
+	 * property contains the minimum number of returned instances. This would
+	 * be 0, plus one if the start date
+	 * has not been disabled through
+	 * DatePeriod::EXCLUDE_START_DATE,
+	 * plus one if the end date has been enabled through
+	 * DatePeriod::INCLUDE_END_DATE.</p>
+	 * <p><pre><code>&lt;?php
+	 * $start = new DateTime(&&#35;039;2018-12-31 00:00:00&&#35;039;);
+	 * $end = new DateTime(&&#35;039;2021-12-31 00:00:00&&#35;039;);
+	 * $interval = new DateInterval(&&#35;039;P1M&&#35;039;);
+	 * $recurrences = 5;
+	 * &#47;&#47; recurrences explicitly set through the constructor
+	 * $period = new DatePeriod($start, $interval, $recurrences, DatePeriod::EXCLUDE_START_DATE);
+	 * echo $period-&gt;recurrences, &quot;\n&quot;;
+	 * $period = new DatePeriod($start, $interval, $recurrences);
+	 * echo $period-&gt;recurrences, &quot;\n&quot;;
+	 * $period = new DatePeriod($start, $interval, $recurrences, DatePeriod::INCLUDE_END_DATE);
+	 * echo $period-&gt;recurrences, &quot;\n&quot;;
+	 * &#47;&#47; recurrences not set in the constructor
+	 * $period = new DatePeriod($start, $interval, $end);
+	 * echo $period-&gt;recurrences, &quot;\n&quot;;
+	 * $period = new DatePeriod($start, $interval, $end, DatePeriod::EXCLUDE_START_DATE);
+	 * echo $period-&gt;recurrences, &quot;\n&quot;;
+	 * ?&gt;</code></pre>
+	 * <p>The above example will output:</p>
+	 * 5
+	 * 6
+	 * 7
+	 * 1
+	 * 0</p>
+	 * <p>See also DatePeriod::getRecurrences.</p>
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.dateperiod.php#dateperiod.props.recurrences
+	 */
+	public readonly int $recurrences;
+
+	/**
+	 * Whether to include the start date in the set of recurring dates or not.
+	 * @var bool
+	 * @link http://www.php.net/manual/en/class.dateperiod.php#dateperiod.props.include_start_date
+	 */
+	public readonly bool $include_start_date;
+
+	/**
+	 * Whether to include the end date in the set of recurring dates or not.
+	 * @var bool
+	 * @link http://www.php.net/manual/en/class.dateperiod.php#dateperiod.props.include_end_date
+	 */
+	public readonly bool $include_end_date;
 
 	/**
 	 * Creates a new DatePeriod object
@@ -2072,13 +2262,20 @@ class DatePeriod implements IteratorAggregate, Traversable {
 	 */
 	public function getRecurrences (): ?int {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array $array
 	 */
 	public static function __set_state (array $array) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getIterator (): Iterator {}
 
 }
@@ -2088,9 +2285,9 @@ class DatePeriod implements IteratorAggregate, Traversable {
  * @link http://www.php.net/manual/en/function.strtotime.php
  * @param string $datetime 
  * @param int|null $baseTimestamp [optional] 
- * @return int|bool Returns a timestamp on success, false otherwise.
+ * @return int|false Returns a timestamp on success, false otherwise.
  */
-function strtotime (string $datetime, ?int $baseTimestamp = null): int|bool {}
+function strtotime (string $datetime, ?int $baseTimestamp = null): int {}
 
 /**
  * Format a Unix timestamp
@@ -2109,12 +2306,12 @@ function date (string $format, ?int $timestamp = null): string {}
  * @link http://www.php.net/manual/en/function.idate.php
  * @param string $format 
  * @param int|null $timestamp [optional] 
- * @return int|bool Returns an int on success, or false on failure.
+ * @return int|false Returns an int on success, or false on failure.
  * <p>As idate always returns an int and
  * as they can't start with a "0", idate may return
  * fewer digits than you would expect. See the example below.</p>
  */
-function idate (string $format, ?int $timestamp = null): int|bool {}
+function idate (string $format, ?int $timestamp = null): int {}
 
 /**
  * Format a GMT/UTC date/time
@@ -2134,10 +2331,10 @@ function gmdate (string $format, ?int $timestamp = null): string {}
  * @param int|null $month [optional] 
  * @param int|null $day [optional] 
  * @param int|null $year [optional] 
- * @return int|bool mktime returns the Unix timestamp of the arguments
+ * @return int|false mktime returns the Unix timestamp of the arguments
  * given.
  */
-function mktime (int $hour, ?int $minute = null, ?int $second = null, ?int $month = null, ?int $day = null, ?int $year = null): int|bool {}
+function mktime (int $hour, ?int $minute = null, ?int $second = null, ?int $month = null, ?int $day = null, ?int $year = null): int {}
 
 /**
  * Get Unix timestamp for a GMT date
@@ -2148,9 +2345,9 @@ function mktime (int $hour, ?int $minute = null, ?int $second = null, ?int $mont
  * @param int|null $month [optional] 
  * @param int|null $day [optional] 
  * @param int|null $year [optional] 
- * @return int|bool Returns a int Unix timestamp on success, or false on failure.
+ * @return int|false Returns a int Unix timestamp on success, or false on failure.
  */
-function gmmktime (int $hour, ?int $minute = null, ?int $second = null, ?int $month = null, ?int $day = null, ?int $year = null): int|bool {}
+function gmmktime (int $hour, ?int $minute = null, ?int $second = null, ?int $month = null, ?int $day = null, ?int $year = null): int {}
 
 /**
  * Validate a Gregorian date
@@ -2167,7 +2364,7 @@ function checkdate (int $month, int $day, int $year): bool {}
  * @link http://www.php.net/manual/en/function.strftime.php
  * @param string $format 
  * @param int|null $timestamp [optional] 
- * @return string|bool Returns a string formatted according format
+ * @return string|false Returns a string formatted according format
  * using the given timestamp or the current
  * local time if no timestamp is given. Month and weekday names and
  * other language-dependent strings respect the current locale set
@@ -2177,14 +2374,14 @@ function checkdate (int $month, int $day, int $year): bool {}
  * 4095.
  * @deprecated 1
  */
-function strftime (string $format, ?int $timestamp = null): string|bool {}
+function strftime (string $format, ?int $timestamp = null): string|int {}
 
 /**
  * Format a GMT/UTC time/date according to locale settings
  * @link http://www.php.net/manual/en/function.gmstrftime.php
  * @param string $format 
  * @param int|null $timestamp [optional] 
- * @return string|bool Returns a string formatted according to the given format string
+ * @return string|false Returns a string formatted according to the given format string
  * using the given timestamp or the current
  * local time if no timestamp is given. Month and weekday names and
  * other language dependent strings respect the current locale set
@@ -2192,7 +2389,7 @@ function strftime (string $format, ?int $timestamp = null): string|bool {}
  * On failure, false is returned.
  * @deprecated 1
  */
-function gmstrftime (string $format, ?int $timestamp = null): string|bool {}
+function gmstrftime (string $format, ?int $timestamp = null): string|int {}
 
 /**
  * Return current Unix timestamp
@@ -2321,20 +2518,20 @@ function getdate (?int $timestamp = null): array {}
  * @link http://www.php.net/manual/en/function.date-create.php
  * @param string $datetime [optional] 
  * @param DateTimeZone|null $timezone [optional] 
- * @return DateTime|bool Returns a new DateTime instance.
+ * @return DateTime|false Returns a new DateTime instance.
  * Procedural style returns false on failure.
  */
-function date_create (string $datetime = "now", ?DateTimeZone $timezone = null): DateTime|bool {}
+function date_create (string $datetime = '"now"', ?DateTimeZone $timezone = null): DateTime|int {}
 
 /**
  * create a new DateTimeImmutable object
  * @link http://www.php.net/manual/en/function.date-create-immutable.php
  * @param string $datetime [optional] 
  * @param DateTimeZone|null $timezone [optional] 
- * @return DateTimeImmutable|bool Returns a new DateTimeImmutable instance.
+ * @return DateTimeImmutable|false Returns a new DateTimeImmutable instance.
  * Procedural style returns false on failure.
  */
-function date_create_immutable (string $datetime = "now", ?DateTimeZone $timezone = null): DateTimeImmutable|bool {}
+function date_create_immutable (string $datetime = '"now"', ?DateTimeZone $timezone = null): DateTimeImmutable|int {}
 
 /**
  * Parses a time string according to a specified format
@@ -2342,9 +2539,9 @@ function date_create_immutable (string $datetime = "now", ?DateTimeZone $timezon
  * @param string $format 
  * @param string $datetime 
  * @param DateTimeZone|null $timezone [optional] 
- * @return DateTime|bool Returns a new DateTime instance or false on failure.
+ * @return DateTime|false Returns a new DateTime instance or false on failure.
  */
-function date_create_from_format (string $format, string $datetime, ?DateTimeZone $timezone = null): DateTime|bool {}
+function date_create_from_format (string $format, string $datetime, ?DateTimeZone $timezone = null): DateTime|int {}
 
 /**
  * Parses a time string according to a specified format
@@ -2691,9 +2888,9 @@ function date_create_from_format (string $format, string $datetime, ?DateTimeZon
  * contains a UNIX timestamp (e.g. 946684800)
  * or specifies a timezone
  * (e.g. 2010-01-28T15:00:00+02:00).</p>
- * @return DateTimeImmutable|bool Returns a new DateTimeImmutable instance or false on failure.
+ * @return DateTimeImmutable|false Returns a new DateTimeImmutable instance or false on failure.
  */
-function date_create_immutable_from_format (string $format, string $datetime, ?DateTimeZone $timezone = null): DateTimeImmutable|bool {}
+function date_create_immutable_from_format (string $format, string $datetime, ?DateTimeZone $timezone = null): DateTimeImmutable|int {}
 
 /**
  * Returns associative array with detailed info about given date/time
@@ -2778,7 +2975,10 @@ function date_parse (string $datetime): array {}
  */
 function date_parse_from_format (string $format, string $datetime): array {}
 
-function date_get_last_errors (): array|false {}
+/**
+ * {@inheritdoc}
+ */
+function date_get_last_errors (): array|int {}
 
 /**
  * Returns date formatted according to given format
@@ -3091,9 +3291,9 @@ function date_format (DateTimeInterface $object, string $format): string {}
  * returned by date_create.
  * The function modifies this object.
  * @param string $modifier A date/time string. Valid formats are explained in Date and Time Formats.
- * @return DateTime|bool Returns the modified DateTime object for method chaining or false on failure.
+ * @return DateTime|false Returns the modified DateTime object for method chaining or false on failure.
  */
-function date_modify (DateTime $object, string $modifier): DateTime|bool {}
+function date_modify (DateTime $object, string $modifier): DateTime|int {}
 
 /**
  * Modifies a DateTime object, with added amount of days, months, years, hours, minutes and seconds
@@ -3123,10 +3323,10 @@ function date_sub (DateTime $object, DateInterval $interval): DateTime {}
  * @link http://www.php.net/manual/en/datetime.gettimezone.php
  * @param DateTimeInterface $object Procedural style only: A DateTime object
  * returned by date_create
- * @return DateTimeZone|bool Returns a DateTimeZone object on success
+ * @return DateTimeZone|false Returns a DateTimeZone object on success
  * or false on failure.
  */
-function date_timezone_get (DateTimeInterface $object): DateTimeZone|bool {}
+function date_timezone_get (DateTimeInterface $object): DateTimeZone|int {}
 
 /**
  * Sets the time zone for the DateTime object
@@ -3236,10 +3436,10 @@ function date_timestamp_get (DateTimeInterface $object): int {}
  * Creates new DateTimeZone object
  * @link http://www.php.net/manual/en/datetimezone.construct.php
  * @param string $timezone 
- * @return DateTimeZone|bool Returns DateTimeZone on success.
+ * @return DateTimeZone|false Returns DateTimeZone on success.
  * Procedural style returns false on failure.
  */
-function timezone_open (string $timezone): DateTimeZone|bool {}
+function timezone_open (string $timezone): DateTimeZone|int {}
 
 /**
  * Returns the name of the timezone
@@ -3260,9 +3460,9 @@ function timezone_name_get (DateTimeZone $object): string {}
  * @param string $abbr 
  * @param int $utcOffset [optional] 
  * @param int $isDST [optional] 
- * @return string|bool Returns time zone name on success or false on failure.
+ * @return string|false Returns time zone name on success or false on failure.
  */
-function timezone_name_from_abbr (string $abbr, int $utcOffset = -1, int $isDST = -1): string|bool {}
+function timezone_name_from_abbr (string $abbr, int $utcOffset = -1, int $isDST = -1): string|int {}
 
 /**
  * Returns the timezone offset from GMT
@@ -3279,7 +3479,7 @@ function timezone_offset_get (DateTimeZone $object, DateTimeInterface $datetime)
  * @param DateTimeZone $object 
  * @param int $timestampBegin [optional] 
  * @param int $timestampEnd [optional] 
- * @return array|bool Returns a numerically indexed array of
+ * @return array|false Returns a numerically indexed array of
  * transition arrays on success, or false on failure. DateTimeZone
  * objects wrapping type 1 (UTC offsets) and type 2 (abbreviations) do not
  * contain any transitions, and calling this method on them will return
@@ -3325,15 +3525,15 @@ function timezone_offset_get (DateTimeZone $object, DateTimeInterface $datetime)
  * </table>
  * </table></p>
  */
-function timezone_transitions_get (DateTimeZone $object, int $timestampBegin = PHP_INT_MIN, int $timestampEnd = PHP_INT_MAX): array|bool {}
+function timezone_transitions_get (DateTimeZone $object, int $timestampBegin = PHP_INT_MIN, int $timestampEnd = PHP_INT_MAX): array|int {}
 
 /**
  * Returns location information for a timezone
  * @link http://www.php.net/manual/en/datetimezone.getlocation.php
  * @param DateTimeZone $object 
- * @return array|bool Array containing location information about timezone or false on failure.
+ * @return array|false Array containing location information about timezone or false on failure.
  */
-function timezone_location_get (DateTimeZone $object): array|bool {}
+function timezone_location_get (DateTimeZone $object): array|int {}
 
 /**
  * Returns a numerically indexed array containing all defined timezone identifiers
@@ -3345,7 +3545,7 @@ function timezone_location_get (DateTimeZone $object): array|bool {}
  * DateTimeZone::ALL_WITH_BC as value for
  * timezoneGroup.
  */
-function timezone_identifiers_list (int $timezoneGroup = DateTimeZone::ALL, ?string $countryCode = null): array {}
+function timezone_identifiers_list (int $timezoneGroup = \DateTimeZone::ALL, ?string $countryCode = null): array {}
 
 /**
  * Returns associative array containing dst, offset and the timezone name
@@ -3371,11 +3571,13 @@ function timezone_abbreviations_list (): array {}
 function timezone_version_get (): string {}
 
 /**
+ * {@inheritdoc}
  * @param string $datetime
  */
-function date_interval_create_from_date_string (string $datetime): DateInterval|false {}
+function date_interval_create_from_date_string (string $datetime): DateInterval|int {}
 
 /**
+ * {@inheritdoc}
  * @param DateInterval $object
  * @param string $format
  */
@@ -3407,13 +3609,13 @@ function date_default_timezone_get (): string {}
  * @param float|null $longitude [optional] 
  * @param float|null $zenith [optional] 
  * @param float|null $utcOffset [optional] 
- * @return string|int|float|bool Returns the sunrise time in a specified returnFormat on
+ * @return string|int|float|false Returns the sunrise time in a specified returnFormat on
  * success or false on failure. One potential reason for failure is that the
  * sun does not rise at all, which happens inside the polar circles for part of
  * the year.
  * @deprecated 1
  */
-function date_sunrise (int $timestamp, int $returnFormat = SUNFUNCS_RET_STRING, ?float $latitude = null, ?float $longitude = null, ?float $zenith = null, ?float $utcOffset = null): string|int|float|bool {}
+function date_sunrise (int $timestamp, int $returnFormat = SUNFUNCS_RET_STRING, ?float $latitude = null, ?float $longitude = null, ?float $zenith = null, ?float $utcOffset = null): string|int|float {}
 
 /**
  * Returns time of sunset for a given day and location
@@ -3424,13 +3626,13 @@ function date_sunrise (int $timestamp, int $returnFormat = SUNFUNCS_RET_STRING, 
  * @param float|null $longitude [optional] 
  * @param float|null $zenith [optional] 
  * @param float|null $utcOffset [optional] 
- * @return string|int|float|bool Returns the sunset time in a specified returnFormat on
+ * @return string|int|float|false Returns the sunset time in a specified returnFormat on
  * success or false on failure. One potential reason for failure is that the
  * sun does not set at all, which happens inside the polar circles for part of
  * the year.
  * @deprecated 1
  */
-function date_sunset (int $timestamp, int $returnFormat = SUNFUNCS_RET_STRING, ?float $latitude = null, ?float $longitude = null, ?float $zenith = null, ?float $utcOffset = null): string|int|float|bool {}
+function date_sunset (int $timestamp, int $returnFormat = SUNFUNCS_RET_STRING, ?float $latitude = null, ?float $longitude = null, ?float $zenith = null, ?float $utcOffset = null): string|int|float {}
 
 /**
  * Returns an array with information about sunset/sunrise and twilight begin/end

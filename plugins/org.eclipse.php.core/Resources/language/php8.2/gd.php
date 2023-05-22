@@ -474,7 +474,7 @@ function imagexbm (GdImage $image, ?string $filename, ?int $foreground_color = n
  * @param int $speed [optional] 
  * @return bool Returns true on success or false on failure.
  */
-function imageavif (GdImage $image, resource|string|null $file = null, int $quality = -1, int $speed = -1): bool {}
+function imageavif (GdImage $image, $file = null, int $quality = -1, int $speed = -1): bool {}
 
 /**
  * Output image to browser or file
@@ -483,7 +483,7 @@ function imageavif (GdImage $image, resource|string|null $file = null, int $qual
  * @param resource|string|null $file [optional] 
  * @return bool Returns true on success or false on failure.
  */
-function imagegif (GdImage $image, resource|string|null $file = null): bool {}
+function imagegif (GdImage $image, $file = null): bool {}
 
 /**
  * Output a PNG image to either the browser or a file
@@ -494,7 +494,7 @@ function imagegif (GdImage $image, resource|string|null $file = null): bool {}
  * @param int $filters [optional] 
  * @return bool Returns true on success or false on failure.
  */
-function imagepng (GdImage $image, resource|string|null $file = null, int $quality = -1, int $filters = -1): bool {}
+function imagepng (GdImage $image, $file = null, int $quality = -1, int $filters = -1): bool {}
 
 /**
  * Output a WebP image to browser or file
@@ -504,7 +504,7 @@ function imagepng (GdImage $image, resource|string|null $file = null, int $quali
  * @param int $quality [optional] 
  * @return bool Returns true on success or false on failure.
  */
-function imagewebp (GdImage $image, resource|string|null $file = null, int $quality = -1): bool {}
+function imagewebp (GdImage $image, $file = null, int $quality = -1): bool {}
 
 /**
  * Output image to browser or file
@@ -514,7 +514,7 @@ function imagewebp (GdImage $image, resource|string|null $file = null, int $qual
  * @param int $quality [optional] 
  * @return bool Returns true on success or false on failure.
  */
-function imagejpeg (GdImage $image, resource|string|null $file = null, int $quality = -1): bool {}
+function imagejpeg (GdImage $image, $file = null, int $quality = -1): bool {}
 
 /**
  * Output image to browser or file
@@ -524,7 +524,7 @@ function imagejpeg (GdImage $image, resource|string|null $file = null, int $qual
  * @param int|null $foreground_color [optional] 
  * @return bool Returns true on success or false on failure.
  */
-function imagewbmp (GdImage $image, resource|string|null $file = null, ?int $foreground_color = null): bool {}
+function imagewbmp (GdImage $image, $file = null, ?int $foreground_color = null): bool {}
 
 /**
  * Output GD image to browser or file
@@ -554,7 +554,7 @@ function imagegd2 (GdImage $image, ?string $file = null, int $chunk_size = 128, 
  * @param bool $compressed [optional] 
  * @return bool Returns true on success or false on failure.
  */
-function imagebmp (GdImage $image, resource|string|null $file = null, bool $compressed = true): bool {}
+function imagebmp (GdImage $image, $file = null, bool $compressed = true): bool {}
 
 /**
  * Destroy an image
@@ -1088,7 +1088,7 @@ function imagegetclip (GdImage $image): array {}
  * corner seeing the text horizontally.</p>
  * <p>On failure, false is returned.</p>
  */
-function imageftbbox (float $size, float $angle, string $font_filename, string $string, array $options = []): array|false {}
+function imageftbbox (float $size, float $angle, string $font_filename, string $string, array $options = '[]'): array|false {}
 
 /**
  * Write text to the image using fonts using FreeType 2
@@ -1139,7 +1139,7 @@ function imageftbbox (float $size, float $angle, string $font_filename, string $
  * </table>
  * <p>On failure, false is returned.</p>
  */
-function imagefttext (GdImage $image, float $size, float $angle, int $x, int $y, int $color, string $font_filename, string $text, array $options = []): array|false {}
+function imagefttext (GdImage $image, float $size, float $angle, int $x, int $y, int $color, string $font_filename, string $text, array $options = '[]'): array|false {}
 
 /**
  * Give the bounding box of a text using TrueType fonts
@@ -1194,7 +1194,7 @@ function imagefttext (GdImage $image, float $size, float $angle, int $x, int $y,
  * angle, so "upper left" means in the top left-hand 
  * corner seeing the text horizontally.</p>
  */
-function imagettfbbox (float $size, float $angle, string $font_filename, string $string, array $options = []): array|false {}
+function imagettfbbox (float $size, float $angle, string $font_filename, string $string, array $options = '[]'): array|false {}
 
 /**
  * Write text to the image using TrueType fonts
@@ -1215,7 +1215,7 @@ function imagettfbbox (float $size, float $angle, string $font_filename, string 
  * corner when you see the text horizontally.
  * Returns false on error.
  */
-function imagettftext (GdImage $image, float $size, float $angle, int $x, int $y, int $color, string $font_filename, string $text, array $options = []): array|false {}
+function imagettftext (GdImage $image, float $size, float $angle, int $x, int $y, int $color, string $font_filename, string $text, array $options = '[]'): array|false {}
 
 /**
  * Applies a filter to an image

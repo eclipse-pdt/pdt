@@ -5,22 +5,20 @@
 namespace Vtiful\Kernel {
 
 class Exception extends \Exception implements \Throwable, \Stringable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-
 
 	/**
 	 * Construct the exception
 	 * @link http://www.php.net/manual/en/exception.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -64,10 +62,10 @@ class Exception extends \Exception implements \Throwable, \Stringable {
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -144,10 +142,6 @@ class Excel  {
 	const TYPE_STRING = 1;
 	const TYPE_TIMESTAMP = 8;
 
-	private $config;
-	private $fileName;
-	private $read_row_type;
-
 
 	/**
 	 * Vtiful\Kernel\Excel constructor
@@ -157,6 +151,9 @@ class Excel  {
 	 */
 	public function __construct (array $config): array {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function close () {}
 
 	/**
@@ -177,16 +174,19 @@ class Excel  {
 	public function addSheet (string $sheetName): string {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $sheet_name
 	 */
 	public function existSheet ($sheet_name = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $sheet_name
 	 */
 	public function checkoutSheet ($sheet_name = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $sheet_name
 	 */
 	public function activateSheet ($sheet_name = null) {}
@@ -250,23 +250,26 @@ class Excel  {
 	public function insertText (int $row, int $column, int|float|string $data, string $format = null): int {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $row
 	 * @param mixed $column
 	 * @param mixed $rich_strings
 	 * @param mixed $format_handle [optional]
 	 */
-	public function insertRichText ($row = null, $column = null, $rich_strings = null, $format_handle = null) {}
+	public function insertRichText ($row = null, $column = null, $rich_strings = null, $format_handle = NULL) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $row
 	 * @param mixed $column
 	 * @param mixed $timestamp
 	 * @param mixed $format [optional]
 	 * @param mixed $format_handle [optional]
 	 */
-	public function insertDate ($row = null, $column = null, $timestamp = null, $format = null, $format_handle = null) {}
+	public function insertDate ($row = null, $column = null, $timestamp = null, $format = NULL, $format_handle = NULL) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $row
 	 * @param mixed $column
 	 * @param mixed $chart_resource
@@ -274,6 +277,7 @@ class Excel  {
 	public function insertChart ($row = null, $column = null, $chart_resource = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $row
 	 * @param mixed $column
 	 * @param mixed $url
@@ -281,7 +285,7 @@ class Excel  {
 	 * @param mixed $tool_tip [optional]
 	 * @param mixed $format [optional]
 	 */
-	public function insertUrl ($row = null, $column = null, $url = null, $text = null, $tool_tip = null, $format = null) {}
+	public function insertUrl ($row = null, $column = null, $url = null, $text = NULL, $tool_tip = NULL, $format = NULL) {}
 
 	/**
 	 * Vtiful\Kernel\Excel insertImage
@@ -304,12 +308,16 @@ class Excel  {
 	public function insertFormula (int $row, int $column, string $formula): int {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $row
 	 * @param mixed $column
 	 * @param mixed $comment
 	 */
 	public function insertComment ($row = null, $column = null, $comment = null) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function showComment () {}
 
 	/**
@@ -329,7 +337,7 @@ class Excel  {
 	 * @param resource $format [optional] cell format resource
 	 * @return string Vtiful\Kernel\Excel instance
 	 */
-	public function setColumn (string $range, float $width, resource $format = null): string {}
+	public function setColumn (string $range, float $width, $format = null): string {}
 
 	/**
 	 * Vtiful\Kernel\Excel setRow
@@ -339,53 +347,65 @@ class Excel  {
 	 * @param resource $format [optional] cell format resource
 	 * @return string Vtiful\Kernel\Excel instance
 	 */
-	public function setRow (string $range, float $height, resource $format = null): string {}
+	public function setRow (string $range, float $height, $format = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getCurrentLine () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $row
 	 */
 	public function setCurrentLine ($row = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $format_handle
 	 */
 	public function defaultFormat ($format_handle = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $row
 	 * @param mixed $column
 	 */
 	public function freezePanes ($row = null, $column = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $password [optional]
 	 */
-	public function protection ($password = null) {}
+	public function protection ($password = NULL) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $range
 	 * @param mixed $validation_resource
 	 */
 	public function validation ($range = null, $validation_resource = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $scale
 	 */
 	public function zoom ($scale = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $option
 	 */
 	public function gridline ($option = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $paper
 	 */
 	public function setPaper ($paper = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $left
 	 * @param mixed $right
 	 * @param mixed $top
@@ -393,91 +413,122 @@ class Excel  {
 	 */
 	public function setMargins ($left = null, $right = null, $top = null, $bottom = null) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function setPortrait () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function setLandscape () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $scale [optional]
 	 */
-	public function setPrintScale ($scale = null) {}
+	public function setPrintScale ($scale = NULL) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function setCurrentSheetHide () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function setCurrentSheetIsFirst () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $index
 	 */
 	public static function columnIndexFromString ($index = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $index
 	 */
 	public static function stringFromColumnIndex ($index = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $index
 	 */
 	public static function timestampFromDateDouble ($index = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $zs_file_name
 	 */
 	public function openFile ($zs_file_name = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $zs_sheet_name [optional]
 	 * @param mixed $zl_flag [optional]
 	 */
-	public function openSheet ($zs_sheet_name = null, $zl_flag = null) {}
+	public function openSheet ($zs_sheet_name = NULL, $zl_flag = NULL) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $fp
 	 * @param mixed $delimiter_str [optional]
 	 * @param mixed $enclosure_str [optional]
 	 * @param mixed $escape_str [optional]
 	 */
-	public function putCSV ($fp = null, $delimiter_str = null, $enclosure_str = null, $escape_str = null) {}
+	public function putCSV ($fp = null, $delimiter_str = NULL, $enclosure_str = NULL, $escape_str = NULL) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $callback
 	 * @param mixed $fp
 	 * @param mixed $delimiter_str [optional]
 	 * @param mixed $enclosure_str [optional]
 	 * @param mixed $escape_str [optional]
 	 */
-	public function putCSVCallback ($callback = null, $fp = null, $delimiter_str = null, $enclosure_str = null, $escape_str = null) {}
+	public function putCSVCallback ($callback = null, $fp = null, $delimiter_str = NULL, $enclosure_str = NULL, $escape_str = NULL) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function sheetList () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $zv_type_t
 	 */
 	public function setType ($zv_type_t = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $zv_type_t
 	 */
 	public function setGlobalType ($zv_type_t = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $zv_skip_t
 	 */
 	public function setSkipRows ($zv_skip_t = null) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getSheetData () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $zv_type_t [optional]
 	 */
-	public function nextRow ($zv_type_t = null) {}
+	public function nextRow ($zv_type_t = NULL) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $fci
 	 * @param mixed $sheet_name [optional]
 	 */
-	public function nextCellCallback ($fci = null, $sheet_name = null) {}
+	public function nextCellCallback ($fci = null, $sheet_name = NULL) {}
 
 }
 
@@ -554,10 +605,14 @@ class Format  {
 
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $handle
 	 */
 	public function __construct ($handle = null) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function wrap () {}
 
 	/**
@@ -566,7 +621,7 @@ class Format  {
 	 * @param resource $handle xlsx file handle
 	 * @return resource Resource
 	 */
-	public function bold (resource $handle): resource {}
+	public function bold ($handle) {}
 
 	/**
 	 * Vtiful\Kernel\Format italic
@@ -574,14 +629,16 @@ class Format  {
 	 * @param resource $handle xlsx file handle
 	 * @return resource Resource
 	 */
-	public function italic (resource $handle): resource {}
+	public function italic ($handle) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $style
 	 */
 	public function border ($style = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $top
 	 * @param mixed $right
 	 * @param mixed $bottom
@@ -590,11 +647,13 @@ class Format  {
 	public function borderOfTheFourSides ($top = null, $right = null, $bottom = null, $left = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $color
 	 */
 	public function borderColor ($color = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $top_color
 	 * @param mixed $right_color
 	 * @param mixed $bottom_color
@@ -609,28 +668,35 @@ class Format  {
 	 * @param int $style Vtiful\Kernel\Format constant
 	 * @return resource Resource
 	 */
-	public function align (resource $handle, int $style): resource {}
+	public function align ($handle, int $style) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $format
 	 */
 	public function number ($format = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $color
 	 */
 	public function fontColor ($color = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $font
 	 */
 	public function font ($font = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $size
 	 */
 	public function fontSize ($size = null) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function strikeout () {}
 
 	/**
@@ -640,13 +706,20 @@ class Format  {
 	 * @param int $style Vtiful\Kernel\Format constant
 	 * @return resource Resource
 	 */
-	public function underline (resource $handle, int $style): resource {}
+	public function underline ($handle, int $style) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function unlocked () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function toResource () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $pattern
 	 * @param mixed $color
 	 */
@@ -687,47 +760,58 @@ class Chart  {
 
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $handle
 	 * @param mixed $type
 	 */
 	public function __construct ($handle = null, $type = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $value
 	 * @param mixed $categories [optional]
 	 */
-	public function series ($value = null, $categories = null) {}
+	public function series ($value = null, $categories = NULL) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $value
 	 */
 	public function seriesName ($value = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $style
 	 */
 	public function style ($style = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $name
 	 */
 	public function axisNameY ($name = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $name
 	 */
 	public function axisNameX ($name = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $title
 	 */
 	public function title ($title = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $type
 	 */
 	public function legendSetPosition ($type = null) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function toResource () {}
 
 }
@@ -762,113 +846,140 @@ class Validation  {
 	const ERROR_TYPE_INFORMATION = 2;
 
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __construct () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $type
 	 */
 	public function validationType ($type = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $type
 	 */
 	public function criteriaType ($type = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $ignore_blank
 	 */
 	public function ignoreBlank ($ignore_blank = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $show_input
 	 */
 	public function showInput ($show_input = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $show_error
 	 */
 	public function showError ($show_error = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $error_type
 	 */
 	public function errorType ($error_type = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $dropdown
 	 */
 	public function dropdown ($dropdown = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $value_number
 	 */
 	public function valueNumber ($value_number = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $value_formula
 	 */
 	public function valueFormula ($value_formula = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $value_list
 	 */
 	public function valueList ($value_list = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $timestamp
 	 */
 	public function valueDatetime ($timestamp = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $minimum_number
 	 */
 	public function minimumNumber ($minimum_number = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $minimum_formula
 	 */
 	public function minimumFormula ($minimum_formula = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $timestamp
 	 */
 	public function minimumDatetime ($timestamp = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $maximum_number
 	 */
 	public function maximumNumber ($maximum_number = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $maximum_formula
 	 */
 	public function maximumFormula ($maximum_formula = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $maximum_datetime
 	 */
 	public function maximumDatetime ($maximum_datetime = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $input_title
 	 */
 	public function inputTitle ($input_title = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $input_message
 	 */
 	public function inputMessage ($input_message = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $error_titile
 	 */
 	public function errorTitle ($error_titile = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $error_message
 	 */
 	public function errorMessage ($error_message = null) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function toResource () {}
 
 }
@@ -876,10 +987,11 @@ class Validation  {
 class RichString  {
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $text
 	 * @param mixed $format_handle [optional]
 	 */
-	public function __construct ($text = null, $format_handle = null) {}
+	public function __construct ($text = null, $format_handle = NULL) {}
 
 }
 
@@ -889,8 +1001,14 @@ class RichString  {
 
 namespace {
 
+/**
+ * {@inheritdoc}
+ */
 function xlswriter_get_version () {}
 
+/**
+ * {@inheritdoc}
+ */
 function xlswriter_get_author () {}
 
 

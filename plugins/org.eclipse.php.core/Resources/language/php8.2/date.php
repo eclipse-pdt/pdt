@@ -370,7 +370,7 @@ interface DateTimeInterface  {
 	 * created with date_create.</p>
 	 * @return string Returns the formatted date string on success.
 	 */
-	abstract public function format (string $format): string
+	abstract public function format (string $format): string;
 
 	/**
 	 * Return time zone relative to given DateTime
@@ -378,21 +378,21 @@ interface DateTimeInterface  {
 	 * @return DateTimeZone|false Returns a DateTimeZone object on success
 	 * or false on failure.
 	 */
-	abstract public function getTimezone (): DateTimeZone|false
+	abstract public function getTimezone (): DateTimeZone|false;
 
 	/**
 	 * Returns the timezone offset
 	 * @link http://www.php.net/manual/en/datetime.getoffset.php
 	 * @return int Returns the timezone offset in seconds from UTC on success.
 	 */
-	abstract public function getOffset (): int
+	abstract public function getOffset (): int;
 
 	/**
 	 * Gets the Unix timestamp
 	 * @link http://www.php.net/manual/en/datetime.gettimestamp.php
 	 * @return int Returns the Unix timestamp representing the date.
 	 */
-	abstract public function getTimestamp (): int
+	abstract public function getTimestamp (): int;
 
 	/**
 	 * Returns the difference between two DateTime objects
@@ -412,21 +412,25 @@ interface DateTimeInterface  {
 	 * $this/$baseObject, and
 	 * $targetObject to UTC first.</p>
 	 */
-	abstract public function diff (DateTimeInterface $targetObject, bool $absolute = false): DateInterval
+	abstract public function diff (DateTimeInterface $targetObject, bool $absolute = false): DateInterval;
 
 	/**
 	 * The __wakeup handler
 	 * @link http://www.php.net/manual/en/datetime.wakeup.php
 	 * @return void Initializes a DateTime object.
 	 */
-	abstract public function __wakeup (): void
-
-	abstract public function __serialize (): array
+	abstract public function __wakeup (): void;
 
 	/**
+	 * {@inheritdoc}
+	 */
+	abstract public function __serialize (): array;
+
+	/**
+	 * {@inheritdoc}
 	 * @param array $data
 	 */
-	abstract public function __unserialize (array $data): void
+	abstract public function __unserialize (array $data): void;
 
 }
 
@@ -479,11 +483,15 @@ class DateTime implements DateTimeInterface {
 	 * @return string Returns a new DateTime instance.
 	 * Procedural style returns false on failure.
 	 */
-	public function __construct (string $datetime = "now", ?DateTimeZone $timezone = null): string {}
+	public function __construct (string $datetime = '"now"', ?DateTimeZone $timezone = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __serialize (): array {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array $data
 	 */
 	public function __unserialize (array $data): void {}
@@ -529,6 +537,9 @@ class DateTime implements DateTimeInterface {
 	 */
 	public static function createFromFormat (string $format, string $datetime, ?DateTimeZone $timezone = null): DateTime|false {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public static function getLastErrors () {}
 
 	/**
@@ -997,11 +1008,15 @@ class DateTimeImmutable implements DateTimeInterface {
 	 * @return DateTimeImmutable|false Returns a new DateTimeImmutable instance.
 	 * Procedural style returns false on failure.
 	 */
-	public function __construct (string $datetime = "now", ?DateTimeZone $timezone = null): DateTimeImmutable|false {}
+	public function __construct (string $datetime = '"now"', ?DateTimeZone $timezone = null): DateTimeImmutable|false {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __serialize (): array {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array $data
 	 */
 	public function __unserialize (array $data): void {}
@@ -1971,18 +1986,26 @@ class DateTimeZone  {
 	 * DateTimeZone::ALL_WITH_BC as value for
 	 * timezoneGroup.
 	 */
-	public static function listIdentifiers (int $timezoneGroup = DateTimeZone::ALL, ?string $countryCode = null): array {}
+	public static function listIdentifiers (int $timezoneGroup = \DateTimeZone::ALL, ?string $countryCode = null): array {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __serialize (): array {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array $data
 	 */
 	public function __unserialize (array $data): void {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array $array
 	 */
 	public static function __set_state (array $array) {}
@@ -2009,6 +2032,97 @@ class DateTimeZone  {
 class DateInterval  {
 
 	/**
+	 * Number of years.
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.dateinterval.php#dateinterval.props.y
+	 */
+	public int $y;
+
+	/**
+	 * Number of months.
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.dateinterval.php#dateinterval.props.m
+	 */
+	public int $m;
+
+	/**
+	 * Number of days.
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.dateinterval.php#dateinterval.props.d
+	 */
+	public int $d;
+
+	/**
+	 * Number of hours.
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.dateinterval.php#dateinterval.props.h
+	 */
+	public int $h;
+
+	/**
+	 * Number of minutes.
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.dateinterval.php#dateinterval.props.i
+	 */
+	public int $i;
+
+	/**
+	 * Number of seconds.
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.dateinterval.php#dateinterval.props.s
+	 */
+	public int $s;
+
+	/**
+	 * Number of microseconds, as a fraction of a second.
+	 * @var float
+	 * @link http://www.php.net/manual/en/class.dateinterval.php#dateinterval.props.f
+	 */
+	public float $f;
+
+	/**
+	 * Is 1 if the interval
+	 * represents a negative time period and
+	 * 0 otherwise.
+	 * See DateInterval::format.
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.dateinterval.php#dateinterval.props.invert
+	 */
+	public int $invert;
+
+	/**
+	 * If the DateInterval object was created by
+	 * DateTimeImmutable::diff or
+	 * DateTime::diff, then this is the
+	 * total number of full days between the start and end dates. Otherwise,
+	 * days will be false.
+	 * @var mixed
+	 * @link http://www.php.net/manual/en/class.dateinterval.php#dateinterval.props.days
+	 */
+	public mixed $days;
+
+	/**
+	 * If the DateInterval object was created by
+	 * DateInterval::createFromDateString, then
+	 * this property's value will be true, and the
+	 * date_string property will be populated. Otherwise,
+	 * the value will be false, and the y to
+	 * f, invert, and
+	 * days properties will be populated.
+	 * @var bool
+	 * @link http://www.php.net/manual/en/class.dateinterval.php#dateinterval.props.from_string
+	 */
+	public bool $from_string;
+
+	/**
+	 * The string used as argument to
+	 * DateInterval::createFromDateString.
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.dateinterval.php#dateinterval.props.date_string
+	 */
+	public string $date_string;
+
+	/**
 	 * Creates a new DateInterval object
 	 * @link http://www.php.net/manual/en/dateinterval.construct.php
 	 * @param string $duration 
@@ -2032,16 +2146,24 @@ class DateInterval  {
 	 */
 	public function format (string $format): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __serialize (): array {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array $data
 	 */
 	public function __unserialize (array $data): void {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array $array
 	 */
 	public static function __set_state (array $array) {}
@@ -2062,14 +2184,94 @@ class DatePeriod implements IteratorAggregate, Traversable {
 	 * Include end date, used in DatePeriod::__construct.
 	const INCLUDE_END_DATE = 2;
 
-	public $start;
-	public $current;
-	public $end;
-	public $interval;
-	public $recurrences;
-	public $include_start_date;
-	public $include_end_date;
 
+	/**
+	 * The start date of the period.
+	 * @var DateTimeInterface|null
+	 * @link http://www.php.net/manual/en/class.dateperiod.php#dateperiod.props.start
+	 */
+	public readonly ?DateTimeInterface $start;
+
+	/**
+	 * During iteration this will contain the current date within the period.
+	 * @var DateTimeInterface|null
+	 * @link http://www.php.net/manual/en/class.dateperiod.php#dateperiod.props.current
+	 */
+	public readonly ?DateTimeInterface $current;
+
+	/**
+	 * The end date of the period.
+	 * @var DateTimeInterface|null
+	 * @link http://www.php.net/manual/en/class.dateperiod.php#dateperiod.props.end
+	 */
+	public readonly ?DateTimeInterface $end;
+
+	/**
+	 * An ISO 8601 repeating interval specification.
+	 * @var DateInterval|null
+	 * @link http://www.php.net/manual/en/class.dateperiod.php#dateperiod.props.interval
+	 */
+	public readonly ?DateInterval $interval;
+
+	/**
+	 * The minimum amount of instances as retured by the iterator.
+	 * <p>If the number of recurrences has been explicitly passed through the
+	 * recurrences parameter in the constructor of the
+	 * DatePeriod instance, then this property contains
+	 * this value, plus one if the start date has not been disabled
+	 * through DatePeriod::EXCLUDE_START_DATE,
+	 * plus one if the end date has been enabled through
+	 * DatePeriod::INCLUDE_END_DATE.</p>
+	 * <p>If the number of recurrences has not been explicitly passed, then this
+	 * property contains the minimum number of returned instances. This would
+	 * be 0, plus one if the start date
+	 * has not been disabled through
+	 * DatePeriod::EXCLUDE_START_DATE,
+	 * plus one if the end date has been enabled through
+	 * DatePeriod::INCLUDE_END_DATE.</p>
+	 * <p><pre><code>&lt;?php
+	 * $start = new DateTime(&&#35;039;2018-12-31 00:00:00&&#35;039;);
+	 * $end = new DateTime(&&#35;039;2021-12-31 00:00:00&&#35;039;);
+	 * $interval = new DateInterval(&&#35;039;P1M&&#35;039;);
+	 * $recurrences = 5;
+	 * &#47;&#47; recurrences explicitly set through the constructor
+	 * $period = new DatePeriod($start, $interval, $recurrences, DatePeriod::EXCLUDE_START_DATE);
+	 * echo $period-&gt;recurrences, &quot;\n&quot;;
+	 * $period = new DatePeriod($start, $interval, $recurrences);
+	 * echo $period-&gt;recurrences, &quot;\n&quot;;
+	 * $period = new DatePeriod($start, $interval, $recurrences, DatePeriod::INCLUDE_END_DATE);
+	 * echo $period-&gt;recurrences, &quot;\n&quot;;
+	 * &#47;&#47; recurrences not set in the constructor
+	 * $period = new DatePeriod($start, $interval, $end);
+	 * echo $period-&gt;recurrences, &quot;\n&quot;;
+	 * $period = new DatePeriod($start, $interval, $end, DatePeriod::EXCLUDE_START_DATE);
+	 * echo $period-&gt;recurrences, &quot;\n&quot;;
+	 * ?&gt;</code></pre>
+	 * <p>The above example will output:</p>
+	 * 5
+	 * 6
+	 * 7
+	 * 1
+	 * 0</p>
+	 * <p>See also DatePeriod::getRecurrences.</p>
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.dateperiod.php#dateperiod.props.recurrences
+	 */
+	public readonly int $recurrences;
+
+	/**
+	 * Whether to include the start date in the set of recurring dates or not.
+	 * @var bool
+	 * @link http://www.php.net/manual/en/class.dateperiod.php#dateperiod.props.include_start_date
+	 */
+	public readonly bool $include_start_date;
+
+	/**
+	 * Whether to include the end date in the set of recurring dates or not.
+	 * @var bool
+	 * @link http://www.php.net/manual/en/class.dateperiod.php#dateperiod.props.include_end_date
+	 */
+	public readonly bool $include_end_date;
 
 	/**
 	 * Creates a new DatePeriod object
@@ -2127,20 +2329,31 @@ class DatePeriod implements IteratorAggregate, Traversable {
 	 */
 	public function getRecurrences (): ?int {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __serialize (): array {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array $data
 	 */
 	public function __unserialize (array $data): void {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array $array
 	 */
 	public static function __set_state (array $array) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getIterator (): Iterator {}
 
 }
@@ -2386,7 +2599,7 @@ function getdate (?int $timestamp = null): array {}
  * @return DateTime|false Returns a new DateTime instance.
  * Procedural style returns false on failure.
  */
-function date_create (string $datetime = "now", ?DateTimeZone $timezone = null): DateTime|false {}
+function date_create (string $datetime = '"now"', ?DateTimeZone $timezone = null): DateTime|false {}
 
 /**
  * create a new DateTimeImmutable object
@@ -2396,7 +2609,7 @@ function date_create (string $datetime = "now", ?DateTimeZone $timezone = null):
  * @return DateTimeImmutable|false Returns a new DateTimeImmutable instance.
  * Procedural style returns false on failure.
  */
-function date_create_immutable (string $datetime = "now", ?DateTimeZone $timezone = null): DateTimeImmutable|false {}
+function date_create_immutable (string $datetime = '"now"', ?DateTimeZone $timezone = null): DateTimeImmutable|false {}
 
 /**
  * Parses a time string according to a specified format
@@ -2840,6 +3053,9 @@ function date_parse (string $datetime): array {}
  */
 function date_parse_from_format (string $format, string $datetime): array {}
 
+/**
+ * {@inheritdoc}
+ */
 function date_get_last_errors (): array|false {}
 
 /**
@@ -3407,7 +3623,7 @@ function timezone_location_get (DateTimeZone $object): array|false {}
  * DateTimeZone::ALL_WITH_BC as value for
  * timezoneGroup.
  */
-function timezone_identifiers_list (int $timezoneGroup = DateTimeZone::ALL, ?string $countryCode = null): array {}
+function timezone_identifiers_list (int $timezoneGroup = \DateTimeZone::ALL, ?string $countryCode = null): array {}
 
 /**
  * Returns associative array containing dst, offset and the timezone name
@@ -3433,11 +3649,13 @@ function timezone_abbreviations_list (): array {}
 function timezone_version_get (): string {}
 
 /**
+ * {@inheritdoc}
  * @param string $datetime
  */
 function date_interval_create_from_date_string (string $datetime): DateInterval|false {}
 
 /**
+ * {@inheritdoc}
  * @param DateInterval $object
  * @param string $format
  */

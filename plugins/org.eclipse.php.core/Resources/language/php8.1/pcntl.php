@@ -24,7 +24,7 @@ function pcntl_fork (): int {}
  * child which exited, -1 on error or zero if WNOHANG was used and no
  * child was available
  */
-function pcntl_waitpid (int $process_id, int &$status, int $flags = null, array &$resource_usage = []): int {}
+function pcntl_waitpid (int $process_id, int &$status, int $flags = null, array &$resource_usage = '[]'): int {}
 
 /**
  * Waits on or returns the status of a forked child
@@ -36,7 +36,7 @@ function pcntl_waitpid (int $process_id, int &$status, int $flags = null, array 
  * child which exited, -1 on error or zero if WNOHANG was provided as an
  * option (on wait3-available systems) and no child was available.
  */
-function pcntl_wait (int &$status, int $flags = null, array &$resource_usage = []): int {}
+function pcntl_wait (int &$status, int $flags = null, array &$resource_usage = '[]'): int {}
 
 /**
  * Installs a signal handler
@@ -93,6 +93,7 @@ function pcntl_wifexited (int $status): bool {}
 function pcntl_wifstopped (int $status): bool {}
 
 /**
+ * {@inheritdoc}
  * @param int $status
  */
 function pcntl_wifcontinued (int $status): bool {}
@@ -110,28 +111,28 @@ function pcntl_wifsignaled (int $status): bool {}
  * Returns the return code of a terminated child
  * @link http://www.php.net/manual/en/function.pcntl-wexitstatus.php
  * @param int $status 
- * @return int|bool Returns the return code.
+ * @return int|false Returns the return code.
  * If the functionality is not supported by the OS, false is returned.
  */
-function pcntl_wexitstatus (int $status): int|bool {}
+function pcntl_wexitstatus (int $status): int {}
 
 /**
  * Returns the signal which caused the child to terminate
  * @link http://www.php.net/manual/en/function.pcntl-wtermsig.php
  * @param int $status 
- * @return int|bool Returns the signal number.
+ * @return int|false Returns the signal number.
  * If the functionality is not supported by the OS, false is returned.
  */
-function pcntl_wtermsig (int $status): int|bool {}
+function pcntl_wtermsig (int $status): int {}
 
 /**
  * Returns the signal which caused the child to stop
  * @link http://www.php.net/manual/en/function.pcntl-wstopsig.php
  * @param int $status 
- * @return int|bool Returns the signal number.
+ * @return int|false Returns the signal number.
  * If the functionality is not supported by the OS, false is returned.
  */
-function pcntl_wstopsig (int $status): int|bool {}
+function pcntl_wstopsig (int $status): int {}
 
 /**
  * Executes specified program in current process space
@@ -141,7 +142,7 @@ function pcntl_wstopsig (int $status): int|bool {}
  * @param array $env_vars [optional] 
  * @return bool Returns false.
  */
-function pcntl_exec (string $path, array $args = [], array $env_vars = []): bool {}
+function pcntl_exec (string $path, array $args = '[]', array $env_vars = '[]'): bool {}
 
 /**
  * Set an alarm clock for delivery of a signal
@@ -172,11 +173,11 @@ function pcntl_errno (): int {}
  * @link http://www.php.net/manual/en/function.pcntl-getpriority.php
  * @param int|null $process_id [optional] 
  * @param int $mode [optional] 
- * @return int|bool pcntl_getpriority returns the priority of the process
+ * @return int|false pcntl_getpriority returns the priority of the process
  * or false on error. A lower numerical value causes more favorable
  * scheduling.
  */
-function pcntl_getpriority (?int $process_id = null, int $mode = PRIO_PROCESS): int|bool {}
+function pcntl_getpriority (?int $process_id = null, int $mode = PRIO_PROCESS): int {}
 
 /**
  * Change the priority of any process

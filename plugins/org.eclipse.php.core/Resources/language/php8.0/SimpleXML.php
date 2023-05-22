@@ -12,10 +12,10 @@ class SimpleXMLElement implements Stringable, Countable, RecursiveIterator, Trav
 	 * Runs XPath query on XML data
 	 * @link http://www.php.net/manual/en/simplexmlelement.xpath.php
 	 * @param string $expression 
-	 * @return array|null|bool Returns an array of SimpleXMLElement objects on success; or null or false in
+	 * @return array|null|false Returns an array of SimpleXMLElement objects on success; or null or false in
 	 * case of an error.
 	 */
-	public function xpath (string $expression): array|null|bool {}
+	public function xpath (string $expression): array|null|int {}
 
 	/**
 	 * Creates a prefix/ns context for the next XPath query
@@ -38,9 +38,10 @@ class SimpleXMLElement implements Stringable, Countable, RecursiveIterator, Trav
 	public function asXML (?string $filename = null): string|bool {}
 
 	/**
-	 * @param ?string $filename [optional]
+	 * {@inheritdoc}
+	 * @param string|null $filename [optional]
 	 */
-	public function saveXML (?string $filename = null) {}
+	public function saveXML (?string $filename = NULL) {}
 
 	/**
 	 * Returns namespaces used in document
@@ -56,10 +57,10 @@ class SimpleXMLElement implements Stringable, Countable, RecursiveIterator, Trav
 	 * @link http://www.php.net/manual/en/simplexmlelement.getdocnamespaces.php
 	 * @param bool $recursive [optional] 
 	 * @param bool $fromRoot [optional] 
-	 * @return array|bool The getDocNamespaces method returns an array 
+	 * @return array|false The getDocNamespaces method returns an array 
 	 * of namespace names with their associated URIs.
 	 */
-	public function getDocNamespaces (bool $recursive = false, bool $fromRoot = true): array|bool {}
+	public function getDocNamespaces (bool $recursive = false, bool $fromRoot = true): array|int {}
 
 	/**
 	 * Finds children of given node
@@ -94,7 +95,7 @@ class SimpleXMLElement implements Stringable, Countable, RecursiveIterator, Trav
 	 * @param bool $isPrefix [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $data, int $options = null, bool $dataIsURL = false, string $namespaceOrPrefix = "", bool $isPrefix = false): string {}
+	public function __construct (string $data, int $options = null, bool $dataIsURL = false, string $namespaceOrPrefix = '""', bool $isPrefix = false): string {}
 
 	/**
 	 * Adds a child element to the XML node
@@ -201,10 +202,10 @@ class SimpleXMLIterator extends SimpleXMLElement implements Iterator, Traversabl
 	 * Runs XPath query on XML data
 	 * @link http://www.php.net/manual/en/simplexmlelement.xpath.php
 	 * @param string $expression 
-	 * @return array|null|bool Returns an array of SimpleXMLElement objects on success; or null or false in
+	 * @return array|null|false Returns an array of SimpleXMLElement objects on success; or null or false in
 	 * case of an error.
 	 */
-	public function xpath (string $expression): array|null|bool {}
+	public function xpath (string $expression): array|null|int {}
 
 	/**
 	 * Creates a prefix/ns context for the next XPath query
@@ -227,9 +228,10 @@ class SimpleXMLIterator extends SimpleXMLElement implements Iterator, Traversabl
 	public function asXML (?string $filename = null): string|bool {}
 
 	/**
-	 * @param ?string $filename [optional]
+	 * {@inheritdoc}
+	 * @param string|null $filename [optional]
 	 */
-	public function saveXML (?string $filename = null) {}
+	public function saveXML (?string $filename = NULL) {}
 
 	/**
 	 * Returns namespaces used in document
@@ -245,10 +247,10 @@ class SimpleXMLIterator extends SimpleXMLElement implements Iterator, Traversabl
 	 * @link http://www.php.net/manual/en/simplexmlelement.getdocnamespaces.php
 	 * @param bool $recursive [optional] 
 	 * @param bool $fromRoot [optional] 
-	 * @return array|bool The getDocNamespaces method returns an array 
+	 * @return array|false The getDocNamespaces method returns an array 
 	 * of namespace names with their associated URIs.
 	 */
-	public function getDocNamespaces (bool $recursive = false, bool $fromRoot = true): array|bool {}
+	public function getDocNamespaces (bool $recursive = false, bool $fromRoot = true): array|int {}
 
 	/**
 	 * Finds children of given node
@@ -283,7 +285,7 @@ class SimpleXMLIterator extends SimpleXMLElement implements Iterator, Traversabl
 	 * @param bool $isPrefix [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $data, int $options = null, bool $dataIsURL = false, string $namespaceOrPrefix = "", bool $isPrefix = false): string {}
+	public function __construct (string $data, int $options = null, bool $dataIsURL = false, string $namespaceOrPrefix = '""', bool $isPrefix = false): string {}
 
 	/**
 	 * Adds a child element to the XML node
@@ -388,10 +390,10 @@ class SimpleXMLIterator extends SimpleXMLElement implements Iterator, Traversabl
  * @param int $options [optional] 
  * @param string $namespace_or_prefix [optional] 
  * @param bool $is_prefix [optional] 
- * @return SimpleXMLElement|bool Returns an object of class SimpleXMLElement with
+ * @return SimpleXMLElement|false Returns an object of class SimpleXMLElement with
  * properties containing the data held within the XML document, or false on failure.
  */
-function simplexml_load_file (string $filename, ?string $class_name = SimpleXMLElement::class, int $options = null, string $namespace_or_prefix = "", bool $is_prefix = false): SimpleXMLElement|bool {}
+function simplexml_load_file (string $filename, ?string $class_name = 'SimpleXMLElement::class', int $options = null, string $namespace_or_prefix = '""', bool $is_prefix = false): SimpleXMLElement|int {}
 
 /**
  * Interprets a string of XML into an object
@@ -401,10 +403,10 @@ function simplexml_load_file (string $filename, ?string $class_name = SimpleXMLE
  * @param int $options [optional] 
  * @param string $namespace_or_prefix [optional] 
  * @param bool $is_prefix [optional] 
- * @return SimpleXMLElement|bool Returns an object of class SimpleXMLElement with
+ * @return SimpleXMLElement|false Returns an object of class SimpleXMLElement with
  * properties containing the data held within the xml document, or false on failure.
  */
-function simplexml_load_string (string $data, ?string $class_name = SimpleXMLElement::class, int $options = null, string $namespace_or_prefix = "", bool $is_prefix = false): SimpleXMLElement|bool {}
+function simplexml_load_string (string $data, ?string $class_name = 'SimpleXMLElement::class', int $options = null, string $namespace_or_prefix = '""', bool $is_prefix = false): SimpleXMLElement|int {}
 
 /**
  * Get a SimpleXMLElement object from a DOM node
@@ -413,6 +415,6 @@ function simplexml_load_string (string $data, ?string $class_name = SimpleXMLEle
  * @param string|null $class_name [optional] 
  * @return SimpleXMLElement|null Returns a SimpleXMLElement or null on failure.
  */
-function simplexml_import_dom (SimpleXMLElement|DOMNode $node, ?string $class_name = SimpleXMLElement::class): ?SimpleXMLElement {}
+function simplexml_import_dom (SimpleXMLElement|DOMNode $node, ?string $class_name = 'SimpleXMLElement::class'): ?SimpleXMLElement {}
 
 // End of SimpleXML v.8.0.28

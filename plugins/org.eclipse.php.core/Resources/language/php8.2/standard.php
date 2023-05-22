@@ -12,11 +12,6 @@ final class __PHP_Incomplete_Class  {
  * @link http://www.php.net/manual/en/class.assertionerror.php
  */
 class AssertionError extends Error implements Throwable, Stringable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-
 
 	/**
 	 * Construct the error object
@@ -26,8 +21,11 @@ class AssertionError extends Error implements Throwable, Stringable {
 	 * @param Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -98,10 +96,18 @@ class AssertionError extends Error implements Throwable, Stringable {
  * @link http://www.php.net/manual/en/class.php_user_filter.php
  */
 class php_user_filter  {
-	public $filtername;
-	public $params;
-	public $stream;
 
+	/**
+	 * Name of the filter registered by
+	 * stream_filter_append.
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.php_user_filter.php#php_user_filter.props.filtername
+	 */
+	public string $filtername;
+
+	public mixed $params;
+
+	public  $stream;
 
 	/**
 	 * Called when applying the filter
@@ -147,7 +153,7 @@ class php_user_filter  {
 	 * </tr>
 	 * </table>
 	 */
-	public function filter (resource $in, resource $out, int &$consumed, bool $closing): int {}
+	public function filter ($in, $out, int &$consumed, bool $closing): int {}
 
 	/**
 	 * Called when creating the filter
@@ -172,9 +178,22 @@ class php_user_filter  {
  * @link http://www.php.net/manual/en/class.directory.php
  */
 class Directory  {
-	public readonly $path;
-	public readonly $handle;
 
+	/**
+	 * The directory that was opened.
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.directory.php#directory.props.path
+	 */
+	public readonly string $path;
+
+	/**
+	 * Can be used with other directory functions such as
+	 * readdir, rewinddir and
+	 * closedir.
+	 * @var resource
+	 * @link http://www.php.net/manual/en/class.directory.php#directory.props.handle
+	 */
+	public readonly  $handle;
 
 	/**
 	 * Close directory handle
@@ -413,6 +432,7 @@ function output_add_rewrite_var (string $name, string $value): bool {}
 function stream_wrapper_register (string $protocol, string $class, int $flags = null): bool {}
 
 /**
+ * {@inheritdoc}
  * @param string $protocol
  * @param string $class
  * @param int $flags [optional]
@@ -718,7 +738,7 @@ function array_search (mixed $needle, array $haystack, bool $strict = false): in
  * @return int Returns the number of variables successfully imported into the symbol
  * table.
  */
-function extract (array &$array, int $flags = EXTR_OVERWRITE, string $prefix = ""): int {}
+function extract (array &$array, int $flags = EXTR_OVERWRITE, string $prefix = '""'): int {}
 
 /**
  * Create array containing variables and their values
@@ -804,7 +824,7 @@ function array_unshift (array &$array, mixed ...$values): int {}
  * @param mixed $replacement [optional] 
  * @return array Returns an array consisting of the extracted elements.
  */
-function array_splice (array &$array, int $offset, ?int $length = null, mixed $replacement = []): array {}
+function array_splice (array &$array, int $offset, ?int $length = null, mixed $replacement = '[]'): array {}
 
 /**
  * Extract a slice of the array
@@ -979,7 +999,7 @@ function array_intersect_key (array $array, array ...$arrays): array {}
  * @return array Returns the values of array whose keys exist
  * in all the arguments.
  */
-function array_intersect_ukey (array $array, array ...$arrays, callable $key_compare_func): array {}
+function array_intersect_ukey (array $array, array $arrays, callable $key_compare_func): array {}
 
 /**
  * Computes the intersection of arrays
@@ -1000,7 +1020,7 @@ function array_intersect (array $array, array ...$arrays): array {}
  * @return array Returns an array containing all the values of array
  * that are present in all the arguments.
  */
-function array_uintersect (array $array, array ...$arrays, callable $value_compare_func): array {}
+function array_uintersect (array $array, array $arrays, callable $value_compare_func): array {}
 
 /**
  * Computes the intersection of arrays with additional index check
@@ -1021,7 +1041,7 @@ function array_intersect_assoc (array $array, array ...$arrays): array {}
  * @return array Returns an array containing all the values of
  * array that are present in all the arguments.
  */
-function array_uintersect_assoc (array $array, array ...$arrays, callable $value_compare_func): array {}
+function array_uintersect_assoc (array $array, array $arrays, callable $value_compare_func): array {}
 
 /**
  * Computes the intersection of arrays with additional index check, compares indexes by a callback function
@@ -1032,7 +1052,7 @@ function array_uintersect_assoc (array $array, array ...$arrays, callable $value
  * @return array Returns the values of array whose values exist
  * in all of the arguments.
  */
-function array_intersect_uassoc (array $array, array ...$arrays, callable $key_compare_func): array {}
+function array_intersect_uassoc (array $array, array $arrays, callable $key_compare_func): array {}
 
 /**
  * Computes the intersection of arrays with additional index check, compares data and indexes by separate callback functions
@@ -1044,7 +1064,7 @@ function array_intersect_uassoc (array $array, array ...$arrays, callable $key_c
  * @return array Returns an array containing all the values of
  * array1 that are present in all the arguments.
  */
-function array_uintersect_uassoc (array $array1, array ...$arrays, callable $value_compare_func, callable $key_compare_func): array {}
+function array_uintersect_uassoc (array $array1, array $arrays, callable $value_compare_func, callable $key_compare_func): array {}
 
 /**
  * Computes the difference of arrays using keys for comparison
@@ -1066,7 +1086,7 @@ function array_diff_key (array $array, array ...$arrays): array {}
  * @return array Returns an array containing all the entries from
  * array that are not present in any of the other arrays.
  */
-function array_diff_ukey (array $array, array ...$arrays, callable $key_compare_func): array {}
+function array_diff_ukey (array $array, array $arrays, callable $key_compare_func): array {}
 
 /**
  * Computes the difference of arrays
@@ -1088,7 +1108,7 @@ function array_diff (array $array, array ...$arrays): array {}
  * @return array Returns an array containing all the values of array
  * that are not present in any of the other arguments.
  */
-function array_udiff (array $array, array ...$arrays, callable $value_compare_func): array {}
+function array_udiff (array $array, array $arrays, callable $value_compare_func): array {}
 
 /**
  * Computes the difference of arrays with additional index check
@@ -1109,7 +1129,7 @@ function array_diff_assoc (array $array, array ...$arrays): array {}
  * @return array Returns an array containing all the entries from
  * array that are not present in any of the other arrays.
  */
-function array_diff_uassoc (array $array, array ...$arrays, callable $key_compare_func): array {}
+function array_diff_uassoc (array $array, array $arrays, callable $key_compare_func): array {}
 
 /**
  * Computes the difference of arrays with additional index check, compares data by a callback function
@@ -1127,7 +1147,7 @@ function array_diff_uassoc (array $array, array ...$arrays, callable $key_compar
  * array_diff_assoc which uses internal function for
  * comparison.
  */
-function array_udiff_assoc (array $array, array ...$arrays, callable $value_compare_func): array {}
+function array_udiff_assoc (array $array, array $arrays, callable $value_compare_func): array {}
 
 /**
  * Computes the difference of arrays with additional index check, compares data and indexes by a callback function
@@ -1140,7 +1160,7 @@ function array_udiff_assoc (array $array, array ...$arrays, callable $value_comp
  * array that are not present in any of the other
  * arguments.
  */
-function array_udiff_uassoc (array $array, array ...$arrays, callable $value_compare_func, callable $key_compare_func): array {}
+function array_udiff_uassoc (array $array, array $arrays, callable $value_compare_func, callable $key_compare_func): array {}
 
 /**
  * Sort multiple or multi-dimensional arrays
@@ -1349,7 +1369,7 @@ function putenv (string $assignment): bool {}
  * <p>The parsing of options will end at the first non-option found, anything
  * that follows is discarded.</p>
  */
-function getopt (string $short_options, array $long_options = [], int &$rest_index = null): array|false {}
+function getopt (string $short_options, array $long_options = '[]', int &$rest_index = null): array|false {}
 
 /**
  * Flush system output buffer
@@ -1902,6 +1922,7 @@ function gethostbyname (string $hostname): string {}
 function gethostbynamel (string $hostname): array|false {}
 
 /**
+ * {@inheritdoc}
  * @param string $hostname
  * @param string $type [optional]
  */
@@ -1915,7 +1936,7 @@ function dns_check_record (string $hostname, string $type = 'MX'): bool {}
  * @return bool Returns true if any records are found; returns false if no records
  * were found or if an error occurred.
  */
-function checkdnsrr (string $hostname, string $type = "MX"): bool {}
+function checkdnsrr (string $hostname, string $type = '"MX"'): bool {}
 
 /**
  * Fetch DNS Resource Records associated with a hostname
@@ -2101,11 +2122,12 @@ function checkdnsrr (string $hostname, string $type = "MX"): bool {}
 function dns_get_record (string $hostname, int $type = DNS_ANY, array &$authoritative_name_servers = null, array &$additional_records = null, bool $raw = false): array|false {}
 
 /**
+ * {@inheritdoc}
  * @param string $hostname
  * @param mixed $hosts
  * @param mixed $weights [optional]
  */
-function dns_get_mx (string $hostname, &$hosts = null, &$weights = null): bool {}
+function dns_get_mx (string $hostname, &$hosts = null, &$weights = NULL): bool {}
 
 /**
  * Get MX records corresponding to a given Internet host name
@@ -2399,7 +2421,7 @@ function setrawcookie (string $name, string $value = null, int $expires_or_optio
  * setcookie successfully runs, it will return true.
  * This does not indicate whether the user accepted the cookie.
  */
-function setcookie (string $name, string $value = "", int $expires_or_options = null, string $path = "", string $domain = "", bool $secure = false, bool $httponly = false): bool {}
+function setcookie (string $name, string $value = '""', int $expires_or_options = null, string $path = '""', string $domain = '""', bool $secure = false, bool $httponly = false): bool {}
 
 /**
  * Get or Set the HTTP response code
@@ -2449,7 +2471,7 @@ function headers_list (): array {}
  * will be returned, unless either the ENT_IGNORE or
  * ENT_SUBSTITUTE flags are set.</p>
  */
-function htmlspecialchars (string $string, int $flags = ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401, ?string $encoding = null, bool $double_encode = true): string {}
+function htmlspecialchars (string $string, int $flags = 'ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401', ?string $encoding = null, bool $double_encode = true): string {}
 
 /**
  * Convert special HTML entities back to characters
@@ -2458,7 +2480,7 @@ function htmlspecialchars (string $string, int $flags = ENT_QUOTES | ENT_SUBSTIT
  * @param int $flags [optional] 
  * @return string Returns the decoded string.
  */
-function htmlspecialchars_decode (string $string, int $flags = ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401): string {}
+function htmlspecialchars_decode (string $string, int $flags = 'ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401'): string {}
 
 /**
  * Convert HTML entities to their corresponding characters
@@ -2468,7 +2490,7 @@ function htmlspecialchars_decode (string $string, int $flags = ENT_QUOTES | ENT_
  * @param string|null $encoding [optional] 
  * @return string Returns the decoded string.
  */
-function html_entity_decode (string $string, int $flags = ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401, ?string $encoding = null): string {}
+function html_entity_decode (string $string, int $flags = 'ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401', ?string $encoding = null): string {}
 
 /**
  * Convert all applicable characters to HTML entities
@@ -2483,7 +2505,7 @@ function html_entity_decode (string $string, int $flags = ENT_QUOTES | ENT_SUBST
  * will be returned, unless either the ENT_IGNORE or
  * ENT_SUBSTITUTE flags are set.</p>
  */
-function htmlentities (string $string, int $flags = ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401, ?string $encoding = null, bool $double_encode = true): string {}
+function htmlentities (string $string, int $flags = 'ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401', ?string $encoding = null, bool $double_encode = true): string {}
 
 /**
  * Returns the translation table used by htmlspecialchars and htmlentities
@@ -2494,7 +2516,7 @@ function htmlentities (string $string, int $flags = ENT_QUOTES | ENT_SUBSTITUTE 
  * @return array Returns the translation table as an array, with the original characters
  * as keys and entities as values.
  */
-function get_html_translation_table (int $table = HTML_SPECIALCHARS, int $flags = ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401, string $encoding = "UTF-8"): array {}
+function get_html_translation_table (int $table = HTML_SPECIALCHARS, int $flags = 'ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401', string $encoding = '"UTF-8"'): array {}
 
 /**
  * Checks if assertion is false
@@ -2589,7 +2611,7 @@ function strcoll (string $string1, string $string2): int {}
  * @param string $characters [optional] 
  * @return string The trimmed string.
  */
-function trim (string $string, string $characters = " \n\r\t\v\x00"): string {}
+function trim (string $string, string $characters = '" \\n\\r\\t\\v\\x00"'): string {}
 
 /**
  * Strip whitespace (or other characters) from the end of a string
@@ -2598,7 +2620,7 @@ function trim (string $string, string $characters = " \n\r\t\v\x00"): string {}
  * @param string $characters [optional] 
  * @return string Returns the modified string.
  */
-function rtrim (string $string, string $characters = " \n\r\t\v\x00"): string {}
+function rtrim (string $string, string $characters = '" \\n\\r\\t\\v\\x00"'): string {}
 
 /**
  * Alias of rtrim
@@ -2607,7 +2629,7 @@ function rtrim (string $string, string $characters = " \n\r\t\v\x00"): string {}
  * @param string $characters [optional] 
  * @return string Returns the modified string.
  */
-function chop (string $string, string $characters = " \n\r\t\v\x00"): string {}
+function chop (string $string, string $characters = '" \\n\\r\\t\\v\\x00"'): string {}
 
 /**
  * Strip whitespace (or other characters) from the beginning of a string
@@ -2639,7 +2661,7 @@ function chop (string $string, string $characters = " \n\r\t\v\x00"): string {}
  * (0x0B)), a vertical tab.
  * </p>
  */
-function ltrim (string $string, string $characters = " \n\r\t\v\x00"): string {}
+function ltrim (string $string, string $characters = '" \\n\\r\\t\\v\\x00"'): string {}
 
 /**
  * Wraps a string to a given number of characters
@@ -2650,7 +2672,7 @@ function ltrim (string $string, string $characters = " \n\r\t\v\x00"): string {}
  * @param bool $cut_long_words [optional] 
  * @return string Returns the given string wrapped at the specified length.
  */
-function wordwrap (string $string, int $width = 75, string $break = "\n", bool $cut_long_words = false): string {}
+function wordwrap (string $string, int $width = 75, string $break = '"\\n"', bool $cut_long_words = false): string {}
 
 /**
  * Split a string by a string
@@ -2726,7 +2748,7 @@ function strtolower (string $string): string {}
  * @param string $suffix [optional] 
  * @return string Returns the base name of the given path.
  */
-function basename (string $path, string $suffix = ""): string {}
+function basename (string $path, string $suffix = '""'): string {}
 
 /**
  * Returns a parent directory's path
@@ -2912,7 +2934,7 @@ function str_ends_with (string $haystack, string $needle): bool {}
  * @param string $separator [optional] 
  * @return string Returns the chunked string.
  */
-function chunk_split (string $string, int $length = 76, string $separator = "\r\n"): string {}
+function chunk_split (string $string, int $length = 76, string $separator = '"\\r\\n"'): string {}
 
 /**
  * Return part of a string
@@ -2985,7 +3007,7 @@ function lcfirst (string $string): string {}
  * @param string $separators [optional] 
  * @return string Returns the modified string.
  */
-function ucwords (string $string, string $separators = " \t\r\n\f\v"): string {}
+function ucwords (string $string, string $separators = '" \\t\\r\\n\\f\\v"'): string {}
 
 /**
  * Translate characters or replace substrings
@@ -3140,7 +3162,7 @@ function parse_str (string $string, array &$result): void {}
  * @param string $escape [optional] 
  * @return array Returns an indexed array containing the fields read.
  */
-function str_getcsv (string $string, string $separator = ",", string $enclosure = "\"", string $escape = "\\"): array {}
+function str_getcsv (string $string, string $separator = '","', string $enclosure = '"\\""', string $escape = '"\\\\"'): array {}
 
 /**
  * Repeat a string
@@ -3344,7 +3366,7 @@ function substr_count (string $haystack, string $needle, int $offset = null, ?in
  * @param int $pad_type [optional] 
  * @return string Returns the padded string.
  */
-function str_pad (string $string, int $length, string $pad_string = " ", int $pad_type = STR_PAD_RIGHT): string {}
+function str_pad (string $string, int $length, string $pad_string = '" "', int $pad_type = STR_PAD_RIGHT): string {}
 
 /**
  * Parses input from a string according to a format
@@ -3458,7 +3480,7 @@ function utf8_decode (string $string): string {}
  * @return resource|false Returns a directory handle resource on success,
  * or false on failure
  */
-function opendir (string $directory, ?resource $context = null): resource|false {}
+function opendir (string $directory, $context = null) {}
 
 /**
  * Return an instance of the Directory class
@@ -3468,7 +3490,7 @@ function opendir (string $directory, ?resource $context = null): resource|false 
  * resource.
  * @return Directory|false Returns an instance of Directory, or false in case of error.
  */
-function dir (string $directory, ?resource $context = null): Directory|false {}
+function dir (string $directory, $context = null): Directory|false {}
 
 /**
  * Close directory handle
@@ -3476,7 +3498,7 @@ function dir (string $directory, ?resource $context = null): Directory|false {}
  * @param resource|null $dir_handle [optional] 
  * @return void No value is returned.
  */
-function closedir (?resource $dir_handle = null): void {}
+function closedir ($dir_handle = null): void {}
 
 /**
  * Change directory
@@ -3505,7 +3527,7 @@ function getcwd (): string|false {}
  * @param resource|null $dir_handle [optional] 
  * @return void No value is returned.
  */
-function rewinddir (?resource $dir_handle = null): void {}
+function rewinddir ($dir_handle = null): void {}
 
 /**
  * Read entry from directory handle
@@ -3513,7 +3535,7 @@ function rewinddir (?resource $dir_handle = null): void {}
  * @param resource|null $dir_handle [optional] 
  * @return string|false Returns the entry name on success or false on failure.
  */
-function readdir (?resource $dir_handle = null): string|false {}
+function readdir ($dir_handle = null): string|false {}
 
 /**
  * List files and directories inside the specified path
@@ -3526,7 +3548,7 @@ function readdir (?resource $dir_handle = null): string|false {}
  * boolean false is returned, and an error of level 
  * E_WARNING is generated.
  */
-function scandir (string $directory, int $sorting_order = SCANDIR_SORT_ASCENDING, ?resource $context = null): array|false {}
+function scandir (string $directory, int $sorting_order = SCANDIR_SORT_ASCENDING, $context = null): array|false {}
 
 /**
  * Find pathnames matching a pattern
@@ -3621,7 +3643,7 @@ function proc_nice (int $priority): bool {}
  * @param int $would_block [optional] 
  * @return bool Returns true on success or false on failure.
  */
-function flock (resource $stream, int $operation, int &$would_block = null): bool {}
+function flock ($stream, int $operation, int &$would_block = null): bool {}
 
 /**
  * Extracts all meta tag content attributes from a file and returns an array
@@ -3647,7 +3669,7 @@ function get_meta_tags (string $filename, bool $use_include_path = false): array
  * an error then -1 is returned.
  * <p>If PHP has been compiled with --enable-sigchild, the return value of this function is undefined.</p>
  */
-function pclose (resource $handle): int {}
+function pclose ($handle): int {}
 
 /**
  * Opens process file pointer
@@ -3665,7 +3687,7 @@ function pclose (resource $handle): int {}
  * command.
  * <p>If an error occurs, returns false.</p>
  */
-function popen (string $command, string $mode): resource|false {}
+function popen (string $command, string $mode) {}
 
 /**
  * Outputs a file
@@ -3676,7 +3698,7 @@ function popen (string $command, string $mode): resource|false {}
  * @return int|false Returns the number of bytes read from the file on success,
  * or false on failure
  */
-function readfile (string $filename, bool $use_include_path = false, ?resource $context = null): int|false {}
+function readfile (string $filename, bool $use_include_path = false, $context = null): int|false {}
 
 /**
  * Rewind the position of a file pointer
@@ -3684,7 +3706,7 @@ function readfile (string $filename, bool $use_include_path = false, ?resource $
  * @param resource $stream 
  * @return bool Returns true on success or false on failure.
  */
-function rewind (resource $stream): bool {}
+function rewind ($stream): bool {}
 
 /**
  * Removes directory
@@ -3693,7 +3715,7 @@ function rewind (resource $stream): bool {}
  * @param resource|null $context [optional] 
  * @return bool Returns true on success or false on failure.
  */
-function rmdir (string $directory, ?resource $context = null): bool {}
+function rmdir (string $directory, $context = null): bool {}
 
 /**
  * Changes the current umask
@@ -3710,7 +3732,7 @@ function umask (?int $mask = null): int {}
  * @param resource $stream 
  * @return bool Returns true on success or false on failure.
  */
-function fclose (resource $stream): bool {}
+function fclose ($stream): bool {}
 
 /**
  * Tests for end-of-file on a file pointer
@@ -3719,7 +3741,7 @@ function fclose (resource $stream): bool {}
  * @return bool Returns true if the file pointer is at EOF or an error occurs
  * (including socket timeout); otherwise returns false.
  */
-function feof (resource $stream): bool {}
+function feof ($stream): bool {}
 
 /**
  * Gets character from file pointer
@@ -3728,7 +3750,7 @@ function feof (resource $stream): bool {}
  * @return string|false Returns a string containing a single character read from the file pointed
  * to by stream. Returns false on EOF.
  */
-function fgetc (resource $stream): string|false {}
+function fgetc ($stream): string|false {}
 
 /**
  * Gets line from file pointer
@@ -3740,7 +3762,7 @@ function fgetc (resource $stream): string|false {}
  * to read in the file pointer, then false is returned.
  * <p>If an error occurs, false is returned.</p>
  */
-function fgets (resource $stream, ?int $length = null): string|false {}
+function fgets ($stream, ?int $length = null): string|false {}
 
 /**
  * Binary-safe file read
@@ -3749,7 +3771,7 @@ function fgets (resource $stream, ?int $length = null): string|false {}
  * @param int $length 
  * @return string|false Returns the read string or false on failure.
  */
-function fread (resource $stream, int $length): string|false {}
+function fread ($stream, int $length): string|false {}
 
 /**
  * Opens file or URL
@@ -3761,7 +3783,7 @@ function fread (resource $stream, int $length): string|false {}
  * @return resource|false Returns a file pointer resource on success,
  * or false on failure
  */
-function fopen (string $filename, string $mode, bool $use_include_path = false, ?resource $context = null): resource|false {}
+function fopen (string $filename, string $mode, bool $use_include_path = false, $context = null) {}
 
 /**
  * Parses input from a file according to a format
@@ -3777,7 +3799,7 @@ function fopen (string $filename, string $mode, bool $use_include_path = false, 
  * than there are available within string,
  * null will be returned. On other errors, false will be returned.</p>
  */
-function fscanf (resource $stream, string $format, mixed &...$vars): array|int|false|null {}
+function fscanf ($stream, string $format, mixed &...$vars): array|int|false|null {}
 
 /**
  * Output all remaining data on a file pointer
@@ -3786,7 +3808,7 @@ function fscanf (resource $stream, string $format, mixed &...$vars): array|int|f
  * @return int Returns the number of characters read from stream
  * and passed through to the output.
  */
-function fpassthru (resource $stream): int {}
+function fpassthru ($stream): int {}
 
 /**
  * Truncates a file to a given length
@@ -3795,7 +3817,7 @@ function fpassthru (resource $stream): int {}
  * @param int $size 
  * @return bool Returns true on success or false on failure.
  */
-function ftruncate (resource $stream, int $size): bool {}
+function ftruncate ($stream, int $size): bool {}
 
 /**
  * Gets information about a file using an open file pointer
@@ -3805,7 +3827,7 @@ function ftruncate (resource $stream, int $size): bool {}
  * is described in detail on the stat manual page.
  * Returns false on failure.
  */
-function fstat (resource $stream): array|false {}
+function fstat ($stream): array|false {}
 
 /**
  * Seeks on a file pointer
@@ -3815,7 +3837,7 @@ function fstat (resource $stream): array|false {}
  * @param int $whence [optional] 
  * @return int Upon success, returns 0; otherwise, returns -1.
  */
-function fseek (resource $stream, int $offset, int $whence = SEEK_SET): int {}
+function fseek ($stream, int $offset, int $whence = SEEK_SET): int {}
 
 /**
  * Returns the current position of the file read/write pointer
@@ -3825,7 +3847,7 @@ function fseek (resource $stream, int $offset, int $whence = SEEK_SET): int {}
  * stream as an integer; i.e., its offset into the file stream.
  * <p>If an error occurs, returns false.</p>
  */
-function ftell (resource $stream): int|false {}
+function ftell ($stream): int|false {}
 
 /**
  * Flushes the output to a file
@@ -3833,7 +3855,7 @@ function ftell (resource $stream): int|false {}
  * @param resource $stream 
  * @return bool Returns true on success or false on failure.
  */
-function fflush (resource $stream): bool {}
+function fflush ($stream): bool {}
 
 /**
  * Synchronizes changes to the file (including meta-data)
@@ -3841,7 +3863,7 @@ function fflush (resource $stream): bool {}
  * @param resource $stream 
  * @return bool Returns true on success or false on failure.
  */
-function fsync (resource $stream): bool {}
+function fsync ($stream): bool {}
 
 /**
  * Synchronizes data (but not meta-data) to the file
@@ -3849,7 +3871,7 @@ function fsync (resource $stream): bool {}
  * @param resource $stream 
  * @return bool Returns true on success or false on failure.
  */
-function fdatasync (resource $stream): bool {}
+function fdatasync ($stream): bool {}
 
 /**
  * Binary-safe file write
@@ -3860,7 +3882,7 @@ function fdatasync (resource $stream): bool {}
  * @return int|false fwrite returns the number of bytes
  * written, or false on failure.
  */
-function fwrite (resource $stream, string $data, ?int $length = null): int|false {}
+function fwrite ($stream, string $data, ?int $length = null): int|false {}
 
 /**
  * Alias of fwrite
@@ -3871,7 +3893,7 @@ function fwrite (resource $stream, string $data, ?int $length = null): int|false
  * @return int|false fwrite returns the number of bytes
  * written, or false on failure.
  */
-function fputs (resource $stream, string $data, ?int $length = null): int|false {}
+function fputs ($stream, string $data, ?int $length = null): int|false {}
 
 /**
  * Makes directory
@@ -3886,7 +3908,7 @@ function fputs (resource $stream, string $data, ?int $length = null): int|false 
  * file_exists to check if the directory already exists
  * before trying to create it.</p>
  */
-function mkdir (string $directory, int $permissions = 0777, bool $recursive = false, ?resource $context = null): bool {}
+function mkdir (string $directory, int $permissions = 0777, bool $recursive = false, $context = null): bool {}
 
 /**
  * Renames a file or directory
@@ -3896,7 +3918,7 @@ function mkdir (string $directory, int $permissions = 0777, bool $recursive = fa
  * @param resource|null $context [optional] 
  * @return bool Returns true on success or false on failure.
  */
-function rename (string $from, string $to, ?resource $context = null): bool {}
+function rename (string $from, string $to, $context = null): bool {}
 
 /**
  * Copies file
@@ -3906,7 +3928,7 @@ function rename (string $from, string $to, ?resource $context = null): bool {}
  * @param resource|null $context [optional] 
  * @return bool Returns true on success or false on failure.
  */
-function copy (string $from, string $to, ?resource $context = null): bool {}
+function copy (string $from, string $to, $context = null): bool {}
 
 /**
  * Create file with unique file name
@@ -3924,7 +3946,7 @@ function tempnam (string $directory, string $prefix): string|false {}
  * @return resource|false Returns a file handle, similar to the one returned by
  * fopen, for the new file or false on failure.
  */
-function tmpfile (): resource|false {}
+function tmpfile () {}
 
 /**
  * Reads entire file into an array
@@ -3938,7 +3960,7 @@ function tmpfile (): resource|false {}
  * <p>Each line in the resulting array will include the line ending, unless
  * FILE_IGNORE_NEW_LINES is used.</p>
  */
-function file (string $filename, int $flags = null, ?resource $context = null): array|false {}
+function file (string $filename, int $flags = null, $context = null): array|false {}
 
 /**
  * Reads entire file into a string
@@ -3950,7 +3972,7 @@ function file (string $filename, int $flags = null, ?resource $context = null): 
  * @param int|null $length [optional] 
  * @return string|false The function returns the read data or false on failure.
  */
-function file_get_contents (string $filename, bool $use_include_path = false, ?resource $context = null, int $offset = null, ?int $length = null): string|false {}
+function file_get_contents (string $filename, bool $use_include_path = false, $context = null, int $offset = null, ?int $length = null): string|false {}
 
 /**
  * Deletes a file
@@ -3959,7 +3981,7 @@ function file_get_contents (string $filename, bool $use_include_path = false, ?r
  * @param resource|null $context [optional] 
  * @return bool Returns true on success or false on failure.
  */
-function unlink (string $filename, ?resource $context = null): bool {}
+function unlink (string $filename, $context = null): bool {}
 
 /**
  * Write data to a file
@@ -3971,7 +3993,7 @@ function unlink (string $filename, ?resource $context = null): bool {}
  * @return int|false This function returns the number of bytes that were written to the file, or
  * false on failure.
  */
-function file_put_contents (string $filename, mixed $data, int $flags = null, ?resource $context = null): int|false {}
+function file_put_contents (string $filename, mixed $data, int $flags = null, $context = null): int|false {}
 
 /**
  * Format line as CSV and write to file pointer
@@ -3984,7 +4006,7 @@ function file_put_contents (string $filename, mixed $data, int $flags = null, ?r
  * @param string $eol [optional] 
  * @return int|false Returns the length of the written string or false on failure.
  */
-function fputcsv (resource $stream, array $fields, string $separator = ",", string $enclosure = "\"", string $escape = "\\", string $eol = "\n"): int|false {}
+function fputcsv ($stream, array $fields, string $separator = '","', string $enclosure = '"\\""', string $escape = '"\\\\"', string $eol = '"\\n"'): int|false {}
 
 /**
  * Gets line from file pointer and parse for CSV fields
@@ -3999,7 +4021,7 @@ function fputcsv (resource $stream, array $fields, string $separator = ",", stri
  * comprising a single null field, and will not be treated
  * as an error.</p>
  */
-function fgetcsv (resource $stream, ?int $length = null, string $separator = ",", string $enclosure = "\"", string $escape = "\\"): array|false {}
+function fgetcsv ($stream, ?int $length = null, string $separator = '","', string $enclosure = '"\\""', string $escape = '"\\\\"'): array|false {}
 
 /**
  * Returns canonicalized absolute pathname
@@ -4430,7 +4452,7 @@ function touch (string $filename, ?int $mtime = null, ?int $atime = null): bool 
  * @param string $filename [optional] 
  * @return void No value is returned.
  */
-function clearstatcache (bool $clear_realpath_cache = false, string $filename = ""): void {}
+function clearstatcache (bool $clear_realpath_cache = false, string $filename = '""'): void {}
 
 /**
  * Returns the total size of a filesystem or disk partition
@@ -4521,7 +4543,7 @@ function vsprintf (string $format, array $values): string {}
  * @param mixed $values 
  * @return int Returns the length of the string written.
  */
-function fprintf (resource $stream, string $format, mixed ...$values): int {}
+function fprintf ($stream, string $format, mixed ...$values): int {}
 
 /**
  * Write a formatted string to a stream
@@ -4531,7 +4553,7 @@ function fprintf (resource $stream, string $format, mixed ...$values): int {}
  * @param array $values 
  * @return int Returns the length of the outputted string.
  */
-function vfprintf (resource $stream, string $format, array $values): int {}
+function vfprintf ($stream, string $format, array $values): int {}
 
 /**
  * Open Internet or Unix domain socket connection
@@ -4547,7 +4569,7 @@ function vfprintf (resource $stream, string $format, array $values): int {}
  * fwrite, fclose, and
  * feof). If the call fails, it will return false
  */
-function fsockopen (string $hostname, int $port = -1, int &$error_code = null, string &$error_message = null, ?float $timeout = null): resource|false {}
+function fsockopen (string $hostname, int $port = -1, int &$error_code = null, string &$error_message = null, ?float $timeout = null) {}
 
 /**
  * Open persistent Internet or Unix domain socket connection
@@ -4563,7 +4585,7 @@ function fsockopen (string $hostname, int $port = -1, int &$error_code = null, s
  * fwrite, fclose, and
  * feof), or false on failure.
  */
-function pfsockopen (string $hostname, int $port = -1, int &$error_code = null, string &$error_message = null, ?float $timeout = null): resource|false {}
+function pfsockopen (string $hostname, int $port = -1, int &$error_code = null, string &$error_message = null, ?float $timeout = null) {}
 
 /**
  * Generate URL-encoded query string
@@ -4574,7 +4596,7 @@ function pfsockopen (string $hostname, int $port = -1, int &$error_code = null, 
  * @param int $encoding_type [optional] 
  * @return string Returns a URL-encoded string.
  */
-function http_build_query (array|object $data, string $numeric_prefix = "", ?string $arg_separator = null, int $encoding_type = PHP_QUERY_RFC1738): string {}
+function http_build_query (array|object $data, string $numeric_prefix = '""', ?string $arg_separator = null, int $encoding_type = PHP_QUERY_RFC1738): string {}
 
 /**
  * Get Mime-Type for image-type returned by getimagesize,
@@ -4781,7 +4803,7 @@ function php_sapi_name (): string|false {}
  * @param string $mode [optional] 
  * @return string Returns the description, as a string.
  */
-function php_uname (string $mode = "a"): string {}
+function php_uname (string $mode = '"a"'): string {}
 
 /**
  * Return a list of .ini files parsed from the additional ini dir
@@ -4887,7 +4909,7 @@ function link (string $target, string $link): bool {}
  * <p>It is important to note that just because the mail was accepted for delivery,
  * it does NOT mean the mail will actually reach the intended destination.</p>
  */
-function mail (string $to, string $subject, string $message, array|string $additional_headers = [], string $additional_params = ""): bool {}
+function mail (string $to, string $subject, string $message, array|string $additional_headers = '[]', string $additional_params = '""'): bool {}
 
 /**
  * Absolute value
@@ -5241,7 +5263,7 @@ function base_convert (string $num, int $from_base, int $to_base): string {}
  * @param string|null $thousands_separator [optional] 
  * @return string A formatted version of num.
  */
-function number_format (float $num, int $decimals = null, ?string $decimal_separator = ".", ?string $thousands_separator = ","): string {}
+function number_format (float $num, int $decimals = null, ?string $decimal_separator = '"."', ?string $thousands_separator = '","'): string {}
 
 /**
  * Returns the floating point remainder (modulo) of the division
@@ -5367,7 +5389,7 @@ function password_get_info (string $hash): array {}
  * the password_verify function to verify the hash without
  * needing separate storage for the salt or algorithm information.</p>
  */
-function password_hash (string $password, string|int|null $algo, array $options = []): string {}
+function password_hash (string $password, string|int|null $algo, array $options = '[]'): string {}
 
 /**
  * Checks if the given hash matches the given options
@@ -5379,7 +5401,7 @@ function password_hash (string $password, string|int|null $algo, array $options 
  * algo and options, or false
  * otherwise.
  */
-function password_needs_rehash (string $hash, string|int|null $algo, array $options = []): bool {}
+function password_needs_rehash (string $hash, string|int|null $algo, array $options = '[]'): bool {}
 
 /**
  * Verifies that a password matches a hash
@@ -5410,7 +5432,7 @@ function password_algos (): array {}
  * proc_close when you are finished with it. On failure
  * returns false.
  */
-function proc_open (array|string $command, array $descriptor_spec, array &$pipes, ?string $cwd = null, ?array $env_vars = null, ?array $options = null): resource|false {}
+function proc_open (array|string $command, array $descriptor_spec, array &$pipes, ?string $cwd = null, ?array $env_vars = null, ?array $options = null) {}
 
 /**
  * Close a process opened by proc_open and return the exit code of that process
@@ -5420,7 +5442,7 @@ function proc_open (array|string $command, array $descriptor_spec, array &$pipes
  * an error then -1 is returned.
  * <p>If PHP has been compiled with --enable-sigchild, the return value of this function is undefined.</p>
  */
-function proc_close (resource $process): int {}
+function proc_close ($process): int {}
 
 /**
  * Kills a process opened by proc_open
@@ -5429,7 +5451,7 @@ function proc_close (resource $process): int {}
  * @param int $signal [optional] 
  * @return bool Returns the termination status of the process that was run.
  */
-function proc_terminate (resource $process, int $signal = 15): bool {}
+function proc_terminate ($process, int $signal = 15): bool {}
 
 /**
  * Get information about a process opened by proc_open
@@ -5503,7 +5525,7 @@ function proc_terminate (resource $process, int $signal = 15): bool {}
  * </tr>
  * </table></p>
  */
-function proc_get_status (resource $process): array {}
+function proc_get_status ($process): array {}
 
 /**
  * Convert a quoted-printable string to an 8 bit string
@@ -5555,7 +5577,7 @@ function stream_select (?array &$read, ?array &$write, ?array &$except, ?int $se
  * @param array|null $params [optional] 
  * @return resource A stream context resource.
  */
-function stream_context_create (?array $options = null, ?array $params = null): resource {}
+function stream_context_create (?array $options = null, ?array $params = null) {}
 
 /**
  * Set parameters for a stream/wrapper/context
@@ -5564,7 +5586,7 @@ function stream_context_create (?array $options = null, ?array $params = null): 
  * @param array $params 
  * @return bool Returns true on success or false on failure.
  */
-function stream_context_set_params (resource $context, array $params): bool {}
+function stream_context_set_params ($context, array $params): bool {}
 
 /**
  * Retrieves parameters from a context
@@ -5572,7 +5594,7 @@ function stream_context_set_params (resource $context, array $params): bool {}
  * @param resource $context 
  * @return array Returns an associate array containing all context options and parameters.
  */
-function stream_context_get_params (resource $context): array {}
+function stream_context_get_params ($context): array {}
 
 /**
  * Sets an option for a stream/wrapper/context
@@ -5583,7 +5605,7 @@ function stream_context_get_params (resource $context): array {}
  * @param mixed $value 
  * @return bool Returns true on success or false on failure.
  */
-function stream_context_set_option (resource $stream_or_context, string $wrapper, string $option, mixed $value): bool {}
+function stream_context_set_option ($stream_or_context, string $wrapper, string $option, mixed $value): bool {}
 
 /**
  * Retrieve options for a stream/wrapper/context
@@ -5591,7 +5613,7 @@ function stream_context_set_option (resource $stream_or_context, string $wrapper
  * @param resource $stream_or_context 
  * @return array Returns an associative array with the options.
  */
-function stream_context_get_options (resource $stream_or_context): array {}
+function stream_context_get_options ($stream_or_context): array {}
 
 /**
  * Retrieve the default stream context
@@ -5599,7 +5621,7 @@ function stream_context_get_options (resource $stream_or_context): array {}
  * @param array|null $options [optional] 
  * @return resource A stream context resource.
  */
-function stream_context_get_default (?array $options = null): resource {}
+function stream_context_get_default (?array $options = null) {}
 
 /**
  * Set the default stream context
@@ -5607,7 +5629,7 @@ function stream_context_get_default (?array $options = null): resource {}
  * @param array $options 
  * @return resource Returns the default stream context.
  */
-function stream_context_set_default (array $options): resource {}
+function stream_context_set_default (array $options) {}
 
 /**
  * Attach a filter to a stream
@@ -5622,7 +5644,7 @@ function stream_context_set_default (array $options): resource {}
  * <p>false is returned if stream is not a resource or
  * if filtername cannot be located.</p>
  */
-function stream_filter_prepend (resource $stream, string $filtername, int $read_write = null, mixed $params = null): resource {}
+function stream_filter_prepend ($stream, string $filtername, int $read_write = null, mixed $params = null) {}
 
 /**
  * Attach a filter to a stream
@@ -5637,7 +5659,7 @@ function stream_filter_prepend (resource $stream, string $filtername, int $read_
  * <p>false is returned if stream is not a resource or
  * if filtername cannot be located.</p>
  */
-function stream_filter_append (resource $stream, string $filtername, int $read_write = null, mixed $params = null): resource {}
+function stream_filter_append ($stream, string $filtername, int $read_write = null, mixed $params = null) {}
 
 /**
  * Remove a filter from a stream
@@ -5645,7 +5667,7 @@ function stream_filter_append (resource $stream, string $filtername, int $read_w
  * @param resource $stream_filter 
  * @return bool Returns true on success or false on failure.
  */
-function stream_filter_remove (resource $stream_filter): bool {}
+function stream_filter_remove ($stream_filter): bool {}
 
 /**
  * Open Internet or Unix domain socket connection
@@ -5662,7 +5684,7 @@ function stream_filter_remove (resource $stream_filter): bool {}
  * fwrite, fclose, and
  * feof), false on failure.
  */
-function stream_socket_client (string $address, int &$error_code = null, string &$error_message = null, ?float $timeout = null, int $flags = STREAM_CLIENT_CONNECT, ?resource $context = null): resource|false {}
+function stream_socket_client (string $address, int &$error_code = null, string &$error_message = null, ?float $timeout = null, int $flags = STREAM_CLIENT_CONNECT, $context = null) {}
 
 /**
  * Create an Internet or Unix domain server socket
@@ -5674,7 +5696,7 @@ function stream_socket_client (string $address, int &$error_code = null, string 
  * @param resource|null $context [optional] 
  * @return resource|false Returns the created stream, or false on error.
  */
-function stream_socket_server (string $address, int &$error_code = null, string &$error_message = null, int $flags = STREAM_SERVER_BIND | STREAM_SERVER_LISTEN, ?resource $context = null): resource|false {}
+function stream_socket_server (string $address, int &$error_code = null, string &$error_message = null, int $flags = 'STREAM_SERVER_BIND | STREAM_SERVER_LISTEN', $context = null) {}
 
 /**
  * Accept a connection on a socket created by stream_socket_server
@@ -5684,7 +5706,7 @@ function stream_socket_server (string $address, int &$error_code = null, string 
  * @param string $peer_name [optional] 
  * @return resource|false Returns a stream to the accepted socket connection or false on failure.
  */
-function stream_socket_accept (resource $socket, ?float $timeout = null, string &$peer_name = null): resource|false {}
+function stream_socket_accept ($socket, ?float $timeout = null, string &$peer_name = null) {}
 
 /**
  * Retrieve the name of the local or remote sockets
@@ -5693,7 +5715,7 @@ function stream_socket_accept (resource $socket, ?float $timeout = null, string 
  * @param bool $remote 
  * @return string|false The name of the socket, or false on failure.
  */
-function stream_socket_get_name (resource $socket, bool $remote): string|false {}
+function stream_socket_get_name ($socket, bool $remote): string|false {}
 
 /**
  * Receives data from a socket, connected or not
@@ -5704,7 +5726,7 @@ function stream_socket_get_name (resource $socket, bool $remote): string|false {
  * @param string|null $address [optional] 
  * @return string|false Returns the read data, as a string, or false on failure.
  */
-function stream_socket_recvfrom (resource $socket, int $length, int $flags = null, ?string &$address = null): string|false {}
+function stream_socket_recvfrom ($socket, int $length, int $flags = null, ?string &$address = null): string|false {}
 
 /**
  * Sends a message to a socket, whether it is connected or not
@@ -5715,7 +5737,7 @@ function stream_socket_recvfrom (resource $socket, int $length, int $flags = nul
  * @param string $address [optional] 
  * @return int|false Returns a result code, as an integer, or false on failure.
  */
-function stream_socket_sendto (resource $socket, string $data, int $flags = null, string $address = ""): int|false {}
+function stream_socket_sendto ($socket, string $data, int $flags = null, string $address = '""'): int|false {}
 
 /**
  * Turns encryption on/off on an already connected socket
@@ -5728,7 +5750,7 @@ function stream_socket_sendto (resource $socket, string $data, int $flags = null
  * 0 if there isn't enough data and you should try again
  * (only for non-blocking sockets).
  */
-function stream_socket_enable_crypto (resource $stream, bool $enable, ?int $crypto_method = null, ?resource $session_stream = null): int|bool {}
+function stream_socket_enable_crypto ($stream, bool $enable, ?int $crypto_method = null, $session_stream = null): int|bool {}
 
 /**
  * Shutdown a full-duplex connection
@@ -5737,7 +5759,7 @@ function stream_socket_enable_crypto (resource $stream, bool $enable, ?int $cryp
  * @param int $mode 
  * @return bool Returns true on success or false on failure.
  */
-function stream_socket_shutdown (resource $stream, int $mode): bool {}
+function stream_socket_shutdown ($stream, int $mode): bool {}
 
 /**
  * Creates a pair of connected, indistinguishable socket streams
@@ -5759,7 +5781,7 @@ function stream_socket_pair (int $domain, int $type, int $protocol): array|false
  * @param int $offset [optional] 
  * @return int|false Returns the total count of bytes copied, or false on failure.
  */
-function stream_copy_to_stream (resource $from, resource $to, ?int $length = null, int $offset = null): int|false {}
+function stream_copy_to_stream ($from, $to, ?int $length = null, int $offset = null): int|false {}
 
 /**
  * Reads remainder of a stream into a string
@@ -5769,7 +5791,7 @@ function stream_copy_to_stream (resource $from, resource $to, ?int $length = nul
  * @param int $offset [optional] 
  * @return string|false Returns a string or false on failure.
  */
-function stream_get_contents (resource $stream, ?int $length = null, int $offset = -1): string|false {}
+function stream_get_contents ($stream, ?int $length = null, int $offset = -1): string|false {}
 
 /**
  * Tells whether the stream supports locking
@@ -5777,7 +5799,7 @@ function stream_get_contents (resource $stream, ?int $length = null, int $offset
  * @param resource $stream 
  * @return bool Returns true on success or false on failure.
  */
-function stream_supports_lock (resource $stream): bool {}
+function stream_supports_lock ($stream): bool {}
 
 /**
  * Sets write file buffering on the given stream
@@ -5786,7 +5808,7 @@ function stream_supports_lock (resource $stream): bool {}
  * @param int $size 
  * @return int Returns 0 on success, or another value if the request cannot be honored.
  */
-function stream_set_write_buffer (resource $stream, int $size): int {}
+function stream_set_write_buffer ($stream, int $size): int {}
 
 /**
  * Alias of stream_set_write_buffer
@@ -5795,7 +5817,7 @@ function stream_set_write_buffer (resource $stream, int $size): int {}
  * @param int $size 
  * @return int Returns 0 on success, or another value if the request cannot be honored.
  */
-function set_file_buffer (resource $stream, int $size): int {}
+function set_file_buffer ($stream, int $size): int {}
 
 /**
  * Set read file buffering on the given stream
@@ -5808,7 +5830,7 @@ function set_file_buffer (resource $stream, int $size): int {}
  * @return int Returns 0 on success, or another value if the request
  * cannot be honored.
  */
-function stream_set_read_buffer (resource $stream, int $size): int {}
+function stream_set_read_buffer ($stream, int $size): int {}
 
 /**
  * Set blocking/non-blocking mode on a stream
@@ -5817,7 +5839,7 @@ function stream_set_read_buffer (resource $stream, int $size): int {}
  * @param bool $enable 
  * @return bool Returns true on success or false on failure.
  */
-function stream_set_blocking (resource $stream, bool $enable): bool {}
+function stream_set_blocking ($stream, bool $enable): bool {}
 
 /**
  * Alias of stream_set_blocking
@@ -5826,7 +5848,7 @@ function stream_set_blocking (resource $stream, bool $enable): bool {}
  * @param bool $enable 
  * @return bool Returns true on success or false on failure.
  */
-function socket_set_blocking (resource $stream, bool $enable): bool {}
+function socket_set_blocking ($stream, bool $enable): bool {}
 
 /**
  * Retrieves header/meta data from streams/file pointers
@@ -5862,7 +5884,7 @@ function socket_set_blocking (resource $stream, bool $enable): bool {}
  * <p>crypto (array) - the TLS connection metadata for this
  * stream. (Note: Only provided when the resource's stream uses TLS.)</p>
  */
-function stream_get_meta_data (resource $stream): array {}
+function stream_get_meta_data ($stream): array {}
 
 /**
  * Alias of stream_get_meta_data
@@ -5898,7 +5920,7 @@ function stream_get_meta_data (resource $stream): array {}
  * <p>crypto (array) - the TLS connection metadata for this
  * stream. (Note: Only provided when the resource's stream uses TLS.)</p>
  */
-function socket_get_status (resource $stream): array {}
+function socket_get_status ($stream): array {}
 
 /**
  * Gets line from stream resource up to a given delimiter
@@ -5909,7 +5931,7 @@ function socket_get_status (resource $stream): array {}
  * @return string|false Returns a string of up to length bytes read from the file
  * pointed to by stream, or false on failure.
  */
-function stream_get_line (resource $stream, int $length, string $ending = ""): string|false {}
+function stream_get_line ($stream, int $length, string $ending = '""'): string|false {}
 
 /**
  * Resolve filename against the include path
@@ -5940,7 +5962,7 @@ function stream_get_transports (): array {}
  * @param resource|string $stream 
  * @return bool Returns true on success or false on failure.
  */
-function stream_is_local (resource|string $stream): bool {}
+function stream_is_local ($stream): bool {}
 
 /**
  * Check if a stream is a TTY
@@ -5948,7 +5970,7 @@ function stream_is_local (resource|string $stream): bool {}
  * @param resource $stream 
  * @return bool Returns true on success or false on failure.
  */
-function stream_isatty (resource $stream): bool {}
+function stream_isatty ($stream): bool {}
 
 /**
  * Set the stream chunk size
@@ -5959,7 +5981,7 @@ function stream_isatty (resource $stream): bool {}
  * <p>Will return false if size is less than 1 or
  * greater than PHP_INT_MAX.</p>
  */
-function stream_set_chunk_size (resource $stream, int $size): int {}
+function stream_set_chunk_size ($stream, int $size): int {}
 
 /**
  * Set timeout period on a stream
@@ -5969,7 +5991,7 @@ function stream_set_chunk_size (resource $stream, int $size): int {}
  * @param int $microseconds [optional] 
  * @return bool Returns true on success or false on failure.
  */
-function stream_set_timeout (resource $stream, int $seconds, int $microseconds = null): bool {}
+function stream_set_timeout ($stream, int $seconds, int $microseconds = null): bool {}
 
 /**
  * Alias of stream_set_timeout
@@ -5979,7 +6001,7 @@ function stream_set_timeout (resource $stream, int $seconds, int $microseconds =
  * @param int $microseconds [optional] 
  * @return bool Returns true on success or false on failure.
  */
-function socket_set_timeout (resource $stream, int $seconds, int $microseconds = null): bool {}
+function socket_set_timeout ($stream, int $seconds, int $microseconds = null): bool {}
 
 /**
  * Get the type of a variable
@@ -6316,7 +6338,7 @@ function is_countable (mixed $value): bool {}
  * <p>This function tries to create unique identifier, but it does not
  * guarantee 100% uniqueness of return value.</p>
  */
-function uniqid (string $prefix = "", bool $more_entropy = false): string {}
+function uniqid (string $prefix = '""', bool $more_entropy = false): string {}
 
 /**
  * Parse a URL and return its components
@@ -6420,7 +6442,7 @@ function rawurldecode (string $string): string {}
  * @return array|false Returns an indexed or associative array with the headers, or false on
  * failure.
  */
-function get_headers (string $url, bool $associative = false, ?resource $context = null): array|false {}
+function get_headers (string $url, bool $associative = false, $context = null): array|false {}
 
 /**
  * Returns a bucket object from the brigade to operate on
@@ -6444,7 +6466,7 @@ function get_headers (string $url, bool $associative = false, ?resource $context
  * <p>data bucket The current string in the bucket.</p>
  * <p>datalen bucket The length of the string in the bucket.</p>
  */
-function stream_bucket_make_writeable (resource $brigade): ?object {}
+function stream_bucket_make_writeable ($brigade): ?object {}
 
 /**
  * Prepend bucket to brigade
@@ -6454,7 +6476,7 @@ function stream_bucket_make_writeable (resource $brigade): ?object {}
  * @param object $bucket A bucket object.
  * @return void No value is returned.
  */
-function stream_bucket_prepend (resource $brigade, object $bucket): void {}
+function stream_bucket_prepend ($brigade, object $bucket): void {}
 
 /**
  * Append bucket to brigade
@@ -6463,7 +6485,7 @@ function stream_bucket_prepend (resource $brigade, object $bucket): void {}
  * @param object $bucket 
  * @return void 
  */
-function stream_bucket_append (resource $brigade, object $bucket): void {}
+function stream_bucket_append ($brigade, object $bucket): void {}
 
 /**
  * Create a new bucket for use on the current stream
@@ -6472,7 +6494,7 @@ function stream_bucket_append (resource $brigade, object $bucket): void {}
  * @param string $buffer 
  * @return object 
  */
-function stream_bucket_new (resource $stream, string $buffer): object {}
+function stream_bucket_new ($stream, string $buffer): object {}
 
 /**
  * Retrieve list of registered filters
@@ -6562,7 +6584,7 @@ function serialize (mixed $value): string {}
  * <p>In case the passed string is not unserializeable, false is returned and
  * E_NOTICE is issued.</p>
  */
-function unserialize (string $data, array $options = []): mixed {}
+function unserialize (string $data, array $options = '[]'): mixed {}
 
 /**
  * Returns the amount of memory allocated to PHP

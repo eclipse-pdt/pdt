@@ -31,10 +31,27 @@ final class CurlShareHandle  {
  * @link http://www.php.net/manual/en/class.curlfile.php
  */
 class CURLFile  {
-	public $name;
-	public $mime;
-	public $postname;
 
+	/**
+	 * Name of the file to be uploaded.
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.curlfile.php#curlfile.props.name
+	 */
+	public string $name;
+
+	/**
+	 * MIME type of the file (default is application/octet-stream).
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.curlfile.php#curlfile.props.mime
+	 */
+	public string $mime;
+
+	/**
+	 * The name of the file in the upload data (defaults to the name property).
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.curlfile.php#curlfile.props.postname
+	 */
+	public string $postname;
 
 	/**
 	 * Create a CURLFile object
@@ -92,10 +109,27 @@ class CURLFile  {
  * @link http://www.php.net/manual/en/class.curlstringfile.php
  */
 class CURLStringFile  {
-	public $data;
-	public $postname;
-	public $mime;
 
+	/**
+	 * The contents to be uploaded.
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.curlstringfile.php#curlstringfile.props.data
+	 */
+	public string $data;
+
+	/**
+	 * The name of the file to be used in the upload data.
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.curlstringfile.php#curlstringfile.props.postname
+	 */
+	public string $postname;
+
+	/**
+	 * MIME type of the file (default is application/octet-stream).
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.curlstringfile.php#curlstringfile.props.mime
+	 */
+	public string $mime;
 
 	/**
 	 * Create a CURLStringFile object
@@ -105,7 +139,7 @@ class CURLStringFile  {
 	 * @param string $mime [optional] MIME type of the file (default is application/octet-stream).
 	 * @return string 
 	 */
-	public function __construct (string $data, string $postname, string $mime = "application/octet-stream"): string {}
+	public function __construct (string $data, string $postname, string $mime = '"application/octet-stream"'): string {}
 
 }
 

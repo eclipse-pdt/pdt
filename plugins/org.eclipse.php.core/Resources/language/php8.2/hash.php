@@ -41,7 +41,7 @@ final class HashContext  {
  * unless binary is set to true in which case the raw
  * binary representation of the message digest is returned.
  */
-function hash (string $algo, string $data, bool $binary = false, array $options = []): string {}
+function hash (string $algo, string $data, bool $binary = false, array $options = '[]'): string {}
 
 /**
  * Generate a hash value using the contents of a given file
@@ -54,7 +54,7 @@ function hash (string $algo, string $data, bool $binary = false, array $options 
  * unless binary is set to true in which case the raw
  * binary representation of the message digest is returned.
  */
-function hash_file (string $algo, string $filename, bool $binary = false, array $options = []): string|false {}
+function hash_file (string $algo, string $filename, bool $binary = false, array $options = '[]'): string|false {}
 
 /**
  * Generate a keyed hash value using the HMAC method
@@ -94,7 +94,7 @@ function hash_hmac_file (string $algo, string $filename, string $key, bool $bina
  * hash_update_stream, hash_update_file,
  * and hash_final.
  */
-function hash_init (string $algo, int $flags = null, string $key = "", array $options = []): HashContext {}
+function hash_init (string $algo, int $flags = null, string $key = '""', array $options = '[]'): HashContext {}
 
 /**
  * Pump data into an active hashing context
@@ -113,7 +113,7 @@ function hash_update (HashContext $context, string $data): bool {}
  * @param int $length [optional] 
  * @return int Actual number of bytes added to the hashing context from stream.
  */
-function hash_update_stream (HashContext $context, resource $stream, int $length = -1): int {}
+function hash_update_stream (HashContext $context, $stream, int $length = -1): int {}
 
 /**
  * Pump data into an active hashing context from a file
@@ -123,7 +123,7 @@ function hash_update_stream (HashContext $context, resource $stream, int $length
  * @param resource|null $stream_context [optional] 
  * @return bool Returns true on success or false on failure.
  */
-function hash_update_file (HashContext $context, string $filename, ?resource $stream_context = null): bool {}
+function hash_update_file (HashContext $context, string $filename, $stream_context = null): bool {}
 
 /**
  * Finalize an incremental hash and return resulting digest
@@ -195,7 +195,7 @@ function hash_equals (string $known_string, string $user_string): bool {}
  * @return string Returns a string containing a raw binary representation of the derived key
  * (also known as output keying material - OKM).
  */
-function hash_hkdf (string $algo, string $key, int $length = null, string $info = "", string $salt = ""): string {}
+function hash_hkdf (string $algo, string $key, int $length = null, string $info = '""', string $salt = '""'): string {}
 
 /**
  * Gets the block size of the specified hash

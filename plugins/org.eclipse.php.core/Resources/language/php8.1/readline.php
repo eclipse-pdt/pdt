@@ -6,11 +6,11 @@
  * Reads a line
  * @link http://www.php.net/manual/en/function.readline.php
  * @param string|null $prompt [optional] 
- * @return string|bool Returns a single string from the user. The line returned has the ending
+ * @return string|false Returns a single string from the user. The line returned has the ending
  * newline removed.
  * If there is no more data to read, then false is returned.
  */
-function readline (?string $prompt = null): string|bool {}
+function readline (?string $prompt = null): string|int {}
 
 /**
  * Gets/sets various internal readline variables

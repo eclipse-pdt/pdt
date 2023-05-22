@@ -791,23 +791,38 @@ class Memcached  {
 	 */
 	public function quit (): bool {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function flushBuffers (): bool {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getLastErrorMessage (): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getLastErrorCode (): int {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getLastErrorErrno (): int {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getLastDisconnectedServer (): array|false {}
 
 	/**
 	 * Get server pool statistics
 	 * @link http://www.php.net/manual/en/memcached.getstats.php
-	 * @param ?string $type [optional]
+	 * @param string|null $type [optional]
 	 * @return array|false Array of server statistics, one entry per server, or false on failure.
 	 */
-	public function getStats (?string $type = null): array|false {}
+	public function getStats (?string $type = NULL): array|false {}
 
 	/**
 	 * Get server pool version info
@@ -860,13 +875,15 @@ class Memcached  {
 	public function setOptions (array $options): bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array $host_map
-	 * @param ?array $forward_map
+	 * @param array|null $forward_map
 	 * @param int $replicas
 	 */
 	public function setBucket (array $host_map, ?array $forward_map = null, int $replicas): bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param string $key
 	 */
 	public function setEncodingKey (string $key): bool {}
@@ -886,6 +903,7 @@ class Memcached  {
 	public function isPristine (): bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param string $key
 	 */
 	public function checkKey (string $key): bool {}
@@ -896,11 +914,6 @@ class Memcached  {
  * @link http://www.php.net/manual/en/class.memcachedexception.php
  */
 class MemcachedException extends RuntimeException implements Stringable, Throwable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-
 
 	/**
 	 * Construct the exception
@@ -910,8 +923,11 @@ class MemcachedException extends RuntimeException implements Stringable, Throwab
 	 * @param Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**

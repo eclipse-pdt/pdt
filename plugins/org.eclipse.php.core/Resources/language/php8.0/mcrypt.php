@@ -6,20 +6,20 @@
  * Gets the key size of the specified cipher
  * @link http://www.php.net/manual/en/function.mcrypt-get-key-size.php
  * @param int $cipher 
- * @return int|bool Returns the maximum supported key size of the algorithm in bytes
+ * @return int|false Returns the maximum supported key size of the algorithm in bytes
  * or false on failure.
  * @deprecated 1
  */
-function mcrypt_get_key_size (int $cipher): int|bool {}
+function mcrypt_get_key_size (int $cipher): int {}
 
 /**
  * Gets the block size of the specified cipher
  * @link http://www.php.net/manual/en/function.mcrypt-get-block-size.php
  * @param int $cipher 
- * @return int|bool Returns the algorithm block size in bytes or false on failure.
+ * @return int|false Returns the algorithm block size in bytes or false on failure.
  * @deprecated 1
  */
-function mcrypt_get_block_size (int $cipher): int|bool {}
+function mcrypt_get_block_size (int $cipher): int {}
 
 /**
  * Gets the name of the specified cipher
@@ -48,7 +48,7 @@ function mcrypt_create_iv (int $size, int $source = MCRYPT_DEV_URANDOM): string 
  * @return array Returns an array with all the supported algorithms.
  * @deprecated 1
  */
-function mcrypt_list_algorithms (string $lib_dir = ini_get("mcrypt.algorithms_dir")): array {}
+function mcrypt_list_algorithms (string $lib_dir = 'ini_get("mcrypt.algorithms_dir")'): array {}
 
 /**
  * Gets an array of all supported modes
@@ -57,7 +57,7 @@ function mcrypt_list_algorithms (string $lib_dir = ini_get("mcrypt.algorithms_di
  * @return array Returns an array with all the supported modes.
  * @deprecated 1
  */
-function mcrypt_list_modes (string $lib_dir = ini_get("mcrypt.modes_dir")): array {}
+function mcrypt_list_modes (string $lib_dir = 'ini_get("mcrypt.modes_dir")'): array {}
 
 /**
  * Returns the size of the IV belonging to a specific cipher/mode combination
@@ -79,10 +79,10 @@ function mcrypt_get_iv_size (string $cipher, string $mode): int {}
  * @param string $data 
  * @param string $mode 
  * @param string $iv [optional] 
- * @return string|bool Returns the encrypted data as a string or false on failure.
+ * @return string|false Returns the encrypted data as a string or false on failure.
  * @deprecated 1
  */
-function mcrypt_encrypt (string $cipher, string $key, string $data, string $mode, string $iv = null): string|bool {}
+function mcrypt_encrypt (string $cipher, string $key, string $data, string $mode, string $iv = null): string|int {}
 
 /**
  * Decrypts crypttext with given parameters
@@ -92,10 +92,10 @@ function mcrypt_encrypt (string $cipher, string $key, string $data, string $mode
  * @param string $data 
  * @param string $mode 
  * @param string $iv [optional] 
- * @return string|bool Returns the decrypted data as a string or false on failure.
+ * @return string|false Returns the decrypted data as a string or false on failure.
  * @deprecated 1
  */
-function mcrypt_decrypt (string $cipher, string $key, string $data, string $mode, string $iv = null): string|bool {}
+function mcrypt_decrypt (string $cipher, string $key, string $data, string $mode, string $iv = null): string|int {}
 
 /**
  * Opens the module of the algorithm and the mode to be used
@@ -107,7 +107,7 @@ function mcrypt_decrypt (string $cipher, string $key, string $data, string $mode
  * @return resource Normally it returns an encryption descriptor, or false on error.
  * @deprecated 1
  */
-function mcrypt_module_open (string $algorithm, string $algorithm_directory, string $mode, string $mode_directory): resource {}
+function mcrypt_module_open (string $algorithm, string $algorithm_directory, string $mode, string $mode_directory) {}
 
 /**
  * This function initializes all buffers needed for encryption
@@ -122,7 +122,7 @@ function mcrypt_module_open (string $algorithm, string $algorithm_directory, str
  * were passed.
  * @deprecated 1
  */
-function mcrypt_generic_init (resource $td, string $key, string $iv): int {}
+function mcrypt_generic_init ($td, string $key, string $iv): int {}
 
 /**
  * This function encrypts data
@@ -132,7 +132,7 @@ function mcrypt_generic_init (resource $td, string $key, string $iv): int {}
  * @return string Returns the encrypted data.
  * @deprecated 1
  */
-function mcrypt_generic (resource $td, string $data): string {}
+function mcrypt_generic ($td, string $data): string {}
 
 /**
  * Decrypts data
@@ -142,7 +142,7 @@ function mcrypt_generic (resource $td, string $data): string {}
  * @return string Returns decrypted string.
  * @deprecated 1
  */
-function mdecrypt_generic (resource $td, string $data): string {}
+function mdecrypt_generic ($td, string $data): string {}
 
 /**
  * This function deinitializes an encryption module
@@ -151,7 +151,7 @@ function mdecrypt_generic (resource $td, string $data): string {}
  * @return bool Returns true on success or false on failure.
  * @deprecated 1
  */
-function mcrypt_generic_deinit (resource $td): bool {}
+function mcrypt_generic_deinit ($td): bool {}
 
 /**
  * Runs a self test on the opened module
@@ -160,7 +160,7 @@ function mcrypt_generic_deinit (resource $td): bool {}
  * @return int Returns 0 on success and a negative int on failure.
  * @deprecated 1
  */
-function mcrypt_enc_self_test (resource $td): int {}
+function mcrypt_enc_self_test ($td): int {}
 
 /**
  * Checks whether the encryption of the opened mode works on blocks
@@ -170,7 +170,7 @@ function mcrypt_enc_self_test (resource $td): int {}
  * returns false.
  * @deprecated 1
  */
-function mcrypt_enc_is_block_algorithm_mode (resource $td): bool {}
+function mcrypt_enc_is_block_algorithm_mode ($td): bool {}
 
 /**
  * Checks whether the algorithm of the opened mode is a block algorithm
@@ -180,7 +180,7 @@ function mcrypt_enc_is_block_algorithm_mode (resource $td): bool {}
  * a stream one.
  * @deprecated 1
  */
-function mcrypt_enc_is_block_algorithm (resource $td): bool {}
+function mcrypt_enc_is_block_algorithm ($td): bool {}
 
 /**
  * Checks whether the opened mode outputs blocks
@@ -190,7 +190,7 @@ function mcrypt_enc_is_block_algorithm (resource $td): bool {}
  * or false if it outputs just bytes.
  * @deprecated 1
  */
-function mcrypt_enc_is_block_mode (resource $td): bool {}
+function mcrypt_enc_is_block_mode ($td): bool {}
 
 /**
  * Returns the blocksize of the opened algorithm
@@ -199,7 +199,7 @@ function mcrypt_enc_is_block_mode (resource $td): bool {}
  * @return int Returns the block size of the specified algorithm in bytes.
  * @deprecated 1
  */
-function mcrypt_enc_get_block_size (resource $td): int {}
+function mcrypt_enc_get_block_size ($td): int {}
 
 /**
  * Returns the maximum supported keysize of the opened mode
@@ -208,7 +208,7 @@ function mcrypt_enc_get_block_size (resource $td): int {}
  * @return int Returns the maximum supported key size of the algorithm in bytes.
  * @deprecated 1
  */
-function mcrypt_enc_get_key_size (resource $td): int {}
+function mcrypt_enc_get_key_size ($td): int {}
 
 /**
  * Returns an array with the supported keysizes of the opened algorithm
@@ -221,7 +221,7 @@ function mcrypt_enc_get_key_size (resource $td): int {}
  * algorithm.
  * @deprecated 1
  */
-function mcrypt_enc_get_supported_key_sizes (resource $td): array {}
+function mcrypt_enc_get_supported_key_sizes ($td): array {}
 
 /**
  * Returns the size of the IV of the opened algorithm
@@ -230,7 +230,7 @@ function mcrypt_enc_get_supported_key_sizes (resource $td): array {}
  * @return int Returns the size of the IV, or 0 if the IV is ignored by the algorithm.
  * @deprecated 1
  */
-function mcrypt_enc_get_iv_size (resource $td): int {}
+function mcrypt_enc_get_iv_size ($td): int {}
 
 /**
  * Returns the name of the opened algorithm
@@ -239,7 +239,7 @@ function mcrypt_enc_get_iv_size (resource $td): int {}
  * @return string Returns the name of the opened algorithm as a string.
  * @deprecated 1
  */
-function mcrypt_enc_get_algorithms_name (resource $td): string {}
+function mcrypt_enc_get_algorithms_name ($td): string {}
 
 /**
  * Returns the name of the opened mode
@@ -248,7 +248,7 @@ function mcrypt_enc_get_algorithms_name (resource $td): string {}
  * @return string Returns the name as a string.
  * @deprecated 1
  */
-function mcrypt_enc_get_modes_name (resource $td): string {}
+function mcrypt_enc_get_modes_name ($td): string {}
 
 /**
  * This function runs a self test on the specified module
@@ -337,7 +337,7 @@ function mcrypt_module_get_supported_key_sizes (string $algorithm, string $lib_d
  * @return bool Returns true on success or false on failure.
  * @deprecated 1
  */
-function mcrypt_module_close (resource $td): bool {}
+function mcrypt_module_close ($td): bool {}
 
 
 /**

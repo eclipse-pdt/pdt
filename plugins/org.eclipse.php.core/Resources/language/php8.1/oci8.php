@@ -37,17 +37,17 @@ class OCILob  {
 	/**
 	 * Returns large object's contents
 	 * @link http://www.php.net/manual/en/ocilob.load.php
-	 * @return string|bool Returns the contents of the object, or false on errors.
+	 * @return string|false Returns the contents of the object, or false on errors.
 	 */
-	public function load (): string|bool {}
+	public function load (): string|int {}
 
 	/**
 	 * Reads part of the large object
 	 * @link http://www.php.net/manual/en/ocilob.read.php
 	 * @param int $length 
-	 * @return string|bool Returns the contents as a string, or false on failure.
+	 * @return string|false Returns the contents as a string, or false on failure.
 	 */
-	public function read (int $length): string|bool {}
+	public function read (int $length): string|int {}
 
 	/**
 	 * Tests for end-of-file on a large object's descriptor
@@ -60,10 +60,10 @@ class OCILob  {
 	/**
 	 * Returns the current position of internal pointer of large object
 	 * @link http://www.php.net/manual/en/ocilob.tell.php
-	 * @return int|bool Returns current position of a LOB's internal pointer or false if an
+	 * @return int|false Returns current position of a LOB's internal pointer or false if an
 	 * error occurred.
 	 */
-	public function tell (): int|bool {}
+	public function tell (): int {}
 
 	/**
 	 * Moves the internal pointer to the beginning of the large object
@@ -84,19 +84,19 @@ class OCILob  {
 	/**
 	 * Returns size of large object
 	 * @link http://www.php.net/manual/en/ocilob.size.php
-	 * @return int|bool Returns length of large object value or false on failure.
+	 * @return int|false Returns length of large object value or false on failure.
 	 * Empty objects have zero length.
 	 */
-	public function size (): int|bool {}
+	public function size (): int {}
 
 	/**
 	 * Writes data to the large object
 	 * @link http://www.php.net/manual/en/ocilob.write.php
 	 * @param string $data 
 	 * @param int|null $length [optional] 
-	 * @return int|bool Returns the number of bytes written or false on failure.
+	 * @return int|false Returns the number of bytes written or false on failure.
 	 */
-	public function write (string $data, ?int $length = null): int|bool {}
+	public function write (string $data, ?int $length = null): int {}
 
 	/**
 	 * Appends data from the large object to another large object
@@ -119,9 +119,9 @@ class OCILob  {
 	 * @link http://www.php.net/manual/en/ocilob.erase.php
 	 * @param int|null $offset [optional] 
 	 * @param int|null $length [optional] 
-	 * @return int|bool Returns the actual number of characters/bytes erased or false on failure.
+	 * @return int|false Returns the actual number of characters/bytes erased or false on failure.
 	 */
-	public function erase (?int $offset = null, ?int $length = null): int|bool {}
+	public function erase (?int $offset = null, ?int $length = null): int {}
 
 	/**
 	 * Flushes/writes buffer of the LOB to the server
@@ -220,11 +220,11 @@ class OCICollection  {
 	 * Returns value of the element
 	 * @link http://www.php.net/manual/en/ocicollection.getelem.php
 	 * @param int $index 
-	 * @return string|float|null|bool Returns false if such element doesn't exist; null if element is null;
+	 * @return string|float|null|false Returns false if such element doesn't exist; null if element is null;
 	 * string if element is column of a string datatype or number if element is
 	 * numeric field.
 	 */
-	public function getElem (int $index): string|float|null|bool {}
+	public function getElem (int $index): string|float|null|int {}
 
 	/**
 	 * Assigns a value to the collection from another existing collection
@@ -246,17 +246,17 @@ class OCICollection  {
 	/**
 	 * Returns size of the collection
 	 * @link http://www.php.net/manual/en/ocicollection.size.php
-	 * @return int|bool Returns the number of elements in the collection or false on error.
+	 * @return int|false Returns the number of elements in the collection or false on error.
 	 */
-	public function size (): int|bool {}
+	public function size (): int {}
 
 	/**
 	 * Returns the maximum number of elements in the collection
 	 * @link http://www.php.net/manual/en/ocicollection.max.php
-	 * @return int|bool Returns the maximum number as an integer, or false on errors.
+	 * @return int|false Returns the maximum number as an integer, or false on errors.
 	 * <p>If the returned value is 0, then the number of elements is not limited.</p>
 	 */
-	public function max (): int|bool {}
+	public function max (): int {}
 
 	/**
 	 * Trims elements from the end of the collection
@@ -277,9 +277,10 @@ class OCICollection  {
  * @param int $type [optional] 
  * @return bool Returns true on success or false on failure.
  */
-function oci_define_by_name (resource $statement, string $column, mixed &$var, int $type = null): bool {}
+function oci_define_by_name ($statement, string $column, mixed &$var, int $type = null): bool {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $statement
  * @param string $column
  * @param mixed $var
@@ -298,9 +299,10 @@ function ocidefinebyname ($statement = null, string $column, mixed &$var = null,
  * @param int $type [optional] 
  * @return bool Returns true on success or false on failure.
  */
-function oci_bind_by_name (resource $statement, string $param, mixed &$var, int $max_length = -1, int $type = null): bool {}
+function oci_bind_by_name ($statement, string $param, mixed &$var, int $max_length = -1, int $type = null): bool {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $statement
  * @param string $param
  * @param mixed $var
@@ -321,7 +323,7 @@ function ocibindbyname ($statement = null, string $param, mixed &$var = null, in
  * @param int $type [optional] 
  * @return bool Returns true on success or false on failure.
  */
-function oci_bind_array_by_name (resource $statement, string $param, array &$var, int $max_array_length, int $max_item_length = -1, int $type = SQLT_AFC): bool {}
+function oci_bind_array_by_name ($statement, string $param, array &$var, int $max_array_length, int $max_item_length = -1, int $type = SQLT_AFC): bool {}
 
 /**
  * Frees a descriptor
@@ -332,12 +334,14 @@ function oci_bind_array_by_name (resource $statement, string $param, array &$var
 function oci_free_descriptor (OCILob $lob): bool {}
 
 /**
+ * {@inheritdoc}
  * @param OCILob $lob
  * @deprecated 
  */
 function ocifreedesc (OCILob $lob): bool {}
 
 /**
+ * {@inheritdoc}
  * @param OCILob $lob
  * @param string $data
  * @param int $offset [optional]
@@ -345,6 +349,7 @@ function ocifreedesc (OCILob $lob): bool {}
 function oci_lob_save (OCILob $lob, string $data, int $offset = 0): bool {}
 
 /**
+ * {@inheritdoc}
  * @param OCILob $lob
  * @param string $data
  * @param int $offset [optional]
@@ -353,12 +358,14 @@ function oci_lob_save (OCILob $lob, string $data, int $offset = 0): bool {}
 function ocisavelob (OCILob $lob, string $data, int $offset = 0): bool {}
 
 /**
+ * {@inheritdoc}
  * @param OCILob $lob
  * @param string $filename
  */
 function oci_lob_import (OCILob $lob, string $filename): bool {}
 
 /**
+ * {@inheritdoc}
  * @param OCILob $lob
  * @param string $filename
  * @deprecated 
@@ -366,38 +373,45 @@ function oci_lob_import (OCILob $lob, string $filename): bool {}
 function ocisavelobfile (OCILob $lob, string $filename): bool {}
 
 /**
+ * {@inheritdoc}
  * @param OCILob $lob
  */
-function oci_lob_load (OCILob $lob): string|false {}
+function oci_lob_load (OCILob $lob): string|int {}
 
 /**
+ * {@inheritdoc}
  * @param OCILob $lob
  * @deprecated 
  */
-function ociloadlob (OCILob $lob): string|false {}
+function ociloadlob (OCILob $lob): string|int {}
 
 /**
+ * {@inheritdoc}
  * @param OCILob $lob
  * @param int $length
  */
-function oci_lob_read (OCILob $lob, int $length): string|false {}
+function oci_lob_read (OCILob $lob, int $length): string|int {}
 
 /**
+ * {@inheritdoc}
  * @param OCILob $lob
  */
 function oci_lob_eof (OCILob $lob): bool {}
 
 /**
+ * {@inheritdoc}
  * @param OCILob $lob
  */
-function oci_lob_tell (OCILob $lob): int|false {}
+function oci_lob_tell (OCILob $lob): int {}
 
 /**
+ * {@inheritdoc}
  * @param OCILob $lob
  */
 function oci_lob_rewind (OCILob $lob): bool {}
 
 /**
+ * {@inheritdoc}
  * @param OCILob $lob
  * @param int $offset
  * @param int $whence [optional]
@@ -405,49 +419,57 @@ function oci_lob_rewind (OCILob $lob): bool {}
 function oci_lob_seek (OCILob $lob, int $offset, int $whence = 0): bool {}
 
 /**
+ * {@inheritdoc}
  * @param OCILob $lob
  */
-function oci_lob_size (OCILob $lob): int|false {}
+function oci_lob_size (OCILob $lob): int {}
 
 /**
+ * {@inheritdoc}
  * @param OCILob $lob
  * @param string $data
- * @param ?int $length [optional]
+ * @param int|null $length [optional]
  */
-function oci_lob_write (OCILob $lob, string $data, ?int $length = null): int|false {}
+function oci_lob_write (OCILob $lob, string $data, ?int $length = NULL): int {}
 
 /**
+ * {@inheritdoc}
  * @param OCILob $to
  * @param OCILob $from
  */
 function oci_lob_append (OCILob $to, OCILob $from): bool {}
 
 /**
+ * {@inheritdoc}
  * @param OCILob $lob
  * @param int $length [optional]
  */
 function oci_lob_truncate (OCILob $lob, int $length = 0): bool {}
 
 /**
+ * {@inheritdoc}
  * @param OCILob $lob
- * @param ?int $offset [optional]
- * @param ?int $length [optional]
+ * @param int|null $offset [optional]
+ * @param int|null $length [optional]
  */
-function oci_lob_erase (OCILob $lob, ?int $offset = null, ?int $length = null): int|false {}
+function oci_lob_erase (OCILob $lob, ?int $offset = NULL, ?int $length = NULL): int {}
 
 /**
+ * {@inheritdoc}
  * @param OCILob $lob
  * @param int $flag [optional]
  */
 function oci_lob_flush (OCILob $lob, int $flag = 0): bool {}
 
 /**
+ * {@inheritdoc}
  * @param OCILob $lob
  * @param bool $mode
  */
 function ocisetbufferinglob (OCILob $lob, bool $mode): bool {}
 
 /**
+ * {@inheritdoc}
  * @param OCILob $lob
  */
 function ocigetbufferinglob (OCILob $lob): bool {}
@@ -472,21 +494,23 @@ function oci_lob_copy (OCILob $to, OCILob $from, ?int $length = null): bool {}
 function oci_lob_is_equal (OCILob $lob1, OCILob $lob2): bool {}
 
 /**
+ * {@inheritdoc}
  * @param OCILob $lob
  * @param string $filename
- * @param ?int $offset [optional]
- * @param ?int $length [optional]
+ * @param int|null $offset [optional]
+ * @param int|null $length [optional]
  */
-function oci_lob_export (OCILob $lob, string $filename, ?int $offset = null, ?int $length = null): bool {}
+function oci_lob_export (OCILob $lob, string $filename, ?int $offset = NULL, ?int $length = NULL): bool {}
 
 /**
+ * {@inheritdoc}
  * @param OCILob $lob
  * @param string $filename
- * @param ?int $offset [optional]
- * @param ?int $length [optional]
+ * @param int|null $offset [optional]
+ * @param int|null $length [optional]
  * @deprecated 
  */
-function ociwritelobtofile (OCILob $lob, string $filename, ?int $offset = null, ?int $length = null): bool {}
+function ociwritelobtofile (OCILob $lob, string $filename, ?int $offset = NULL, ?int $length = NULL): bool {}
 
 /**
  * Initializes a new empty LOB or FILE descriptor
@@ -495,9 +519,10 @@ function ociwritelobtofile (OCILob $lob, string $filename, ?int $offset = null, 
  * @param int $type [optional] 
  * @return OCILob|null Returns a new LOB or FILE descriptor on success, or null on failure.
  */
-function oci_new_descriptor (resource $connection, int $type = OCI_DTYPE_LOB): ?OCILob {}
+function oci_new_descriptor ($connection, int $type = OCI_DTYPE_LOB): ?OCILob {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $connection
  * @param int $type [optional]
  * @deprecated 
@@ -510,9 +535,10 @@ function ocinewdescriptor ($connection = null, int $type = 50): ?OCILob {}
  * @param resource $connection 
  * @return bool Returns true on success or false on failure.
  */
-function oci_rollback (resource $connection): bool {}
+function oci_rollback ($connection): bool {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $connection
  * @deprecated 
  */
@@ -524,9 +550,10 @@ function ocirollback ($connection = null): bool {}
  * @param resource $connection 
  * @return bool Returns true on success or false on failure.
  */
-function oci_commit (resource $connection): bool {}
+function oci_commit ($connection): bool {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $connection
  * @deprecated 
  */
@@ -537,96 +564,102 @@ function ocicommit ($connection = null): bool {}
  * @link http://www.php.net/manual/en/function.oci-field-name.php
  * @param resource $statement 
  * @param string|int $column 
- * @return string|bool Returns the name as a string, or false on failure
+ * @return string|false Returns the name as a string, or false on failure
  */
-function oci_field_name (resource $statement, string|int $column): string|bool {}
+function oci_field_name ($statement, string|int $column): string|int {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $statement
  * @param string|int $column
  * @deprecated 
  */
-function ocicolumnname ($statement = null, string|int $column): string|false {}
+function ocicolumnname ($statement = null, string|int $column): string|int {}
 
 /**
  * Returns field's size
  * @link http://www.php.net/manual/en/function.oci-field-size.php
  * @param resource $statement 
  * @param string|int $column 
- * @return int|bool Returns the size of a column in bytes, or false on failure
+ * @return int|false Returns the size of a column in bytes, or false on failure
  */
-function oci_field_size (resource $statement, string|int $column): int|bool {}
+function oci_field_size ($statement, string|int $column): int {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $statement
  * @param string|int $column
  * @deprecated 
  */
-function ocicolumnsize ($statement = null, string|int $column): int|false {}
+function ocicolumnsize ($statement = null, string|int $column): int {}
 
 /**
  * Tell the scale of the field
  * @link http://www.php.net/manual/en/function.oci-field-scale.php
  * @param resource $statement 
  * @param string|int $column 
- * @return int|bool Returns the scale as an integer, or false on failure
+ * @return int|false Returns the scale as an integer, or false on failure
  */
-function oci_field_scale (resource $statement, string|int $column): int|bool {}
+function oci_field_scale ($statement, string|int $column): int {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $statement
  * @param string|int $column
  * @deprecated 
  */
-function ocicolumnscale ($statement = null, string|int $column): int|false {}
+function ocicolumnscale ($statement = null, string|int $column): int {}
 
 /**
  * Tell the precision of a field
  * @link http://www.php.net/manual/en/function.oci-field-precision.php
  * @param resource $statement 
  * @param string|int $column 
- * @return int|bool Returns the precision as an integer, or false on failure
+ * @return int|false Returns the precision as an integer, or false on failure
  */
-function oci_field_precision (resource $statement, string|int $column): int|bool {}
+function oci_field_precision ($statement, string|int $column): int {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $statement
  * @param string|int $column
  * @deprecated 
  */
-function ocicolumnprecision ($statement = null, string|int $column): int|false {}
+function ocicolumnprecision ($statement = null, string|int $column): int {}
 
 /**
  * Returns a field's data type name
  * @link http://www.php.net/manual/en/function.oci-field-type.php
  * @param resource $statement 
  * @param string|int $column 
- * @return string|int|bool Returns the field data type as a string or an int, or false on failure
+ * @return string|int|false Returns the field data type as a string or an int, or false on failure
  */
-function oci_field_type (resource $statement, string|int $column): string|int|bool {}
+function oci_field_type ($statement, string|int $column): string|int {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $statement
  * @param string|int $column
  * @deprecated 
  */
-function ocicolumntype ($statement = null, string|int $column): string|int|false {}
+function ocicolumntype ($statement = null, string|int $column): string|int {}
 
 /**
  * Tell the raw Oracle data type of the field
  * @link http://www.php.net/manual/en/function.oci-field-type-raw.php
  * @param resource $statement 
  * @param string|int $column 
- * @return int|bool Returns Oracle's raw data type as a number, or false on failure
+ * @return int|false Returns Oracle's raw data type as a number, or false on failure
  */
-function oci_field_type_raw (resource $statement, string|int $column): int|bool {}
+function oci_field_type_raw ($statement, string|int $column): int {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $statement
  * @param string|int $column
  * @deprecated 
  */
-function ocicolumntyperaw ($statement = null, string|int $column): int|false {}
+function ocicolumntyperaw ($statement = null, string|int $column): int {}
 
 /**
  * Checks if a field in the currently fetched row is null
@@ -635,9 +668,10 @@ function ocicolumntyperaw ($statement = null, string|int $column): int|false {}
  * @param string|int $column 
  * @return bool Returns true if column is null, false otherwise.
  */
-function oci_field_is_null (resource $statement, string|int $column): bool {}
+function oci_field_is_null ($statement, string|int $column): bool {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $statement
  * @param string|int $column
  * @deprecated 
@@ -651,9 +685,10 @@ function ocicolumnisnull ($statement = null, string|int $column): bool {}
  * @param int $mode [optional] 
  * @return bool Returns true on success or false on failure.
  */
-function oci_execute (resource $statement, int $mode = OCI_COMMIT_ON_SUCCESS): bool {}
+function oci_execute ($statement, int $mode = OCI_COMMIT_ON_SUCCESS): bool {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $statement
  * @param int $mode [optional]
  * @deprecated 
@@ -666,9 +701,10 @@ function ociexecute ($statement = null, int $mode = 32): bool {}
  * @param resource $statement 
  * @return bool Returns true on success or false on failure.
  */
-function oci_cancel (resource $statement): bool {}
+function oci_cancel ($statement): bool {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $statement
  * @deprecated 
  */
@@ -681,21 +717,23 @@ function ocicancel ($statement = null): bool {}
  * @return bool Returns true on success or false if there are no more rows in the
  * statement.
  */
-function oci_fetch (resource $statement): bool {}
+function oci_fetch ($statement): bool {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $statement
  * @deprecated 
  */
 function ocifetch ($statement = null): bool {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $statement
  * @param mixed $result
  * @param int $mode [optional]
  * @deprecated 
  */
-function ocifetchinto ($statement = null, &$result = null, int $mode = 2): int|false {}
+function ocifetchinto ($statement = null, &$result = null, int $mode = 2): int {}
 
 /**
  * Fetches multiple rows from a query into a two-dimensional array
@@ -708,9 +746,10 @@ function ocifetchinto ($statement = null, &$result = null, int $mode = 2): int|f
  * @return int Returns the number of rows in output, which
  * may be 0 or more.
  */
-function oci_fetch_all (resource $statement, array &$output, int $offset = null, int $limit = -1, int $flags = OCI_FETCHSTATEMENT_BY_COLUMN | OCI_ASSOC): int {}
+function oci_fetch_all ($statement, array &$output, int $offset = null, int $limit = -1, int $flags = 'OCI_FETCHSTATEMENT_BY_COLUMN | OCI_ASSOC'): int {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $statement
  * @param mixed $output
  * @param int $offset [optional]
@@ -725,7 +764,7 @@ function ocifetchstatement ($statement = null, &$output = null, int $offset = 0,
  * @link http://www.php.net/manual/en/function.oci-fetch-object.php
  * @param resource $statement 
  * @param int $mode [optional] 
- * @return stdClass|bool Returns an object. Each attribute of the object corresponds to a
+ * @return stdClass|false Returns an object. Each attribute of the object corresponds to a
  * column of the row. If there are no more rows in
  * the statement then false is returned.
  * <p>Any LOB columns are returned as LOB descriptors.</p>
@@ -742,32 +781,32 @@ function ocifetchstatement ($statement = null, &$output = null, int $offset = 0,
  * <p>Attribute values will be null for any NULL
  * data fields.</p>
  */
-function oci_fetch_object (resource $statement, int $mode = OCI_ASSOC | OCI_RETURN_NULLS): stdClass|bool {}
+function oci_fetch_object ($statement, int $mode = 'OCI_ASSOC | OCI_RETURN_NULLS'): stdClass|int {}
 
 /**
  * Returns the next row from a query as a numeric array
  * @link http://www.php.net/manual/en/function.oci-fetch-row.php
  * @param resource $statement 
- * @return array|bool Returns a numerically indexed array. If there are no more rows in
+ * @return array|false Returns a numerically indexed array. If there are no more rows in
  * the statement then false is returned.
  */
-function oci_fetch_row (resource $statement): array|bool {}
+function oci_fetch_row ($statement): array|int {}
 
 /**
  * Returns the next row from a query as an associative array
  * @link http://www.php.net/manual/en/function.oci-fetch-assoc.php
  * @param resource $statement 
- * @return array|bool Returns an associative array. If there are no more rows in
+ * @return array|false Returns an associative array. If there are no more rows in
  * the statement then false is returned.
  */
-function oci_fetch_assoc (resource $statement): array|bool {}
+function oci_fetch_assoc ($statement): array|int {}
 
 /**
  * Returns the next row from a query as an associative or numeric array
  * @link http://www.php.net/manual/en/function.oci-fetch-array.php
  * @param resource $statement 
  * @param int $mode [optional] 
- * @return array|bool Returns an array with associative and/or numeric indices. If there
+ * @return array|false Returns an array with associative and/or numeric indices. If there
  * are no more rows in the statement then
  * false is returned.
  * <p>By default, LOB columns are returned as LOB descriptors.</p>
@@ -787,7 +826,7 @@ function oci_fetch_assoc (resource $statement): array|bool {}
  * to ensure name uniqueness, see example #7. Otherwise only one
  * column will be returned via PHP.</p>
  */
-function oci_fetch_array (resource $statement, int $mode = OCI_BOTH | OCI_RETURN_NULLS): array|bool {}
+function oci_fetch_array ($statement, int $mode = 'OCI_BOTH | OCI_RETURN_NULLS'): array|int {}
 
 /**
  * Frees all resources associated with statement or cursor
@@ -795,20 +834,23 @@ function oci_fetch_array (resource $statement, int $mode = OCI_BOTH | OCI_RETURN
  * @param resource $statement 
  * @return bool Returns true on success or false on failure.
  */
-function oci_free_statement (resource $statement): bool {}
+function oci_free_statement ($statement): bool {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $statement
  * @deprecated 
  */
 function ocifreestatement ($statement = null): bool {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $statement
  */
 function oci_free_cursor ($statement = null): bool {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $statement
  * @deprecated 
  */
@@ -821,9 +863,10 @@ function ocifreecursor ($statement = null): bool {}
  * @return bool|null Returns null when oci8.old_oci_close_semantics is enabled,
  * or true otherwise.
  */
-function oci_close (resource $connection): ?bool {}
+function oci_close ($connection): ?bool {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $connection
  * @deprecated 
  */
@@ -837,19 +880,20 @@ function ocilogoff ($connection = null): ?bool {}
  * @param string|null $connection_string [optional] 
  * @param string $encoding [optional] 
  * @param int $session_mode [optional] 
- * @return resource|bool Returns a connection identifier or false on error.
+ * @return resource|false Returns a connection identifier or false on error.
  */
-function oci_new_connect (string $username, string $password, ?string $connection_string = null, string $encoding = "", int $session_mode = OCI_DEFAULT): resource|bool {}
+function oci_new_connect (string $username, string $password, ?string $connection_string = null, string $encoding = '""', int $session_mode = OCI_DEFAULT) {}
 
 /**
+ * {@inheritdoc}
  * @param string $username
  * @param string $password
- * @param ?string $connection_string [optional]
+ * @param string|null $connection_string [optional]
  * @param string $encoding [optional]
  * @param int $session_mode [optional]
  * @deprecated 
  */
-function ocinlogon (string $username, string $password, ?string $connection_string = null, string $encoding = '', int $session_mode = 0) {}
+function ocinlogon (string $username, string $password, ?string $connection_string = NULL, string $encoding = '', int $session_mode = 0) {}
 
 /**
  * Connect to an Oracle database
@@ -859,19 +903,20 @@ function ocinlogon (string $username, string $password, ?string $connection_stri
  * @param string|null $connection_string [optional] 
  * @param string $encoding [optional] 
  * @param int $session_mode [optional] 
- * @return resource|bool Returns a connection identifier or false on error.
+ * @return resource|false Returns a connection identifier or false on error.
  */
-function oci_connect (string $username, string $password, ?string $connection_string = null, string $encoding = "", int $session_mode = OCI_DEFAULT): resource|bool {}
+function oci_connect (string $username, string $password, ?string $connection_string = null, string $encoding = '""', int $session_mode = OCI_DEFAULT) {}
 
 /**
+ * {@inheritdoc}
  * @param string $username
  * @param string $password
- * @param ?string $connection_string [optional]
+ * @param string|null $connection_string [optional]
  * @param string $encoding [optional]
  * @param int $session_mode [optional]
  * @deprecated 
  */
-function ocilogon (string $username, string $password, ?string $connection_string = null, string $encoding = '', int $session_mode = 0) {}
+function ocilogon (string $username, string $password, ?string $connection_string = NULL, string $encoding = '', int $session_mode = 0) {}
 
 /**
  * Connect to an Oracle database using a persistent connection
@@ -881,25 +926,26 @@ function ocilogon (string $username, string $password, ?string $connection_strin
  * @param string|null $connection_string [optional] 
  * @param string $encoding [optional] 
  * @param int $session_mode [optional] 
- * @return resource|bool Returns a connection identifier or false on error.
+ * @return resource|false Returns a connection identifier or false on error.
  */
-function oci_pconnect (string $username, string $password, ?string $connection_string = null, string $encoding = "", int $session_mode = OCI_DEFAULT): resource|bool {}
+function oci_pconnect (string $username, string $password, ?string $connection_string = null, string $encoding = '""', int $session_mode = OCI_DEFAULT) {}
 
 /**
+ * {@inheritdoc}
  * @param string $username
  * @param string $password
- * @param ?string $connection_string [optional]
+ * @param string|null $connection_string [optional]
  * @param string $encoding [optional]
  * @param int $session_mode [optional]
  * @deprecated 
  */
-function ociplogon (string $username, string $password, ?string $connection_string = null, string $encoding = '', int $session_mode = 0) {}
+function ociplogon (string $username, string $password, ?string $connection_string = NULL, string $encoding = '', int $session_mode = 0) {}
 
 /**
  * Returns the last error found
  * @link http://www.php.net/manual/en/function.oci-error.php
  * @param resource|null $connection_or_statement [optional] 
- * @return array|bool If no error is found, oci_error returns
+ * @return array|false If no error is found, oci_error returns
  * false. Otherwise, oci_error returns the
  * error information as an associative array.
  * <p><table>
@@ -943,13 +989,14 @@ function ociplogon (string $username, string $password, ?string $connection_stri
  * </table>
  * </table></p>
  */
-function oci_error (?resource $connection_or_statement = null): array|bool {}
+function oci_error ($connection_or_statement = null): array|int {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $connection_or_statement [optional]
  * @deprecated 
  */
-function ocierror ($connection_or_statement = null): array|false {}
+function ocierror ($connection_or_statement = NULL): array|int {}
 
 /**
  * Returns the number of result columns in a statement
@@ -957,9 +1004,10 @@ function ocierror ($connection_or_statement = null): array|false {}
  * @param resource $statement 
  * @return int Returns the number of columns as an int.
  */
-function oci_num_fields (resource $statement): int {}
+function oci_num_fields ($statement): int {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $statement
  * @deprecated 
  */
@@ -970,11 +1018,12 @@ function ocinumcols ($statement = null): int {}
  * @link http://www.php.net/manual/en/function.oci-parse.php
  * @param resource $connection 
  * @param string $sql 
- * @return resource|bool Returns a statement handle on success, or false on error.
+ * @return resource|false Returns a statement handle on success, or false on error.
  */
-function oci_parse (resource $connection, string $sql): resource|bool {}
+function oci_parse ($connection, string $sql) {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $connection
  * @param string $sql
  * @deprecated 
@@ -985,13 +1034,13 @@ function ociparse ($connection = null, string $sql) {}
  * Returns the next child statement resource from a parent statement resource that has Oracle Database Implicit Result Sets
  * @link http://www.php.net/manual/en/function.oci-get-implicit-resultset.php
  * @param resource $statement 
- * @return resource|bool Returns a statement handle for the next child statement available
+ * @return resource|false Returns a statement handle for the next child statement available
  * on statement. Returns false when child
  * statements do not exist, or all child statements have been returned
  * by previous calls
  * to oci_get_implicit_resultset.
  */
-function oci_get_implicit_resultset (resource $statement): resource|bool {}
+function oci_get_implicit_resultset ($statement) {}
 
 /**
  * Sets number of rows to be prefetched by queries
@@ -1000,9 +1049,10 @@ function oci_get_implicit_resultset (resource $statement): resource|bool {}
  * @param int $rows 
  * @return bool Returns true on success or false on failure.
  */
-function oci_set_prefetch (resource $statement, int $rows): bool {}
+function oci_set_prefetch ($statement, int $rows): bool {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $statement
  * @param int $rows
  * @deprecated 
@@ -1016,7 +1066,7 @@ function ocisetprefetch ($statement = null, int $rows): bool {}
  * @param string $client_id 
  * @return bool Returns true on success or false on failure.
  */
-function oci_set_client_identifier (resource $connection, string $client_id): bool {}
+function oci_set_client_identifier ($connection, string $client_id): bool {}
 
 /**
  * Sets the database edition
@@ -1033,7 +1083,7 @@ function oci_set_edition (string $edition): bool {}
  * @param string $name 
  * @return bool Returns true on success or false on failure.
  */
-function oci_set_module_name (resource $connection, string $name): bool {}
+function oci_set_module_name ($connection, string $name): bool {}
 
 /**
  * Sets the action name
@@ -1042,7 +1092,7 @@ function oci_set_module_name (resource $connection, string $name): bool {}
  * @param string $action 
  * @return bool Returns true on success or false on failure.
  */
-function oci_set_action (resource $connection, string $action): bool {}
+function oci_set_action ($connection, string $action): bool {}
 
 /**
  * Sets the client information
@@ -1051,7 +1101,7 @@ function oci_set_action (resource $connection, string $action): bool {}
  * @param string $client_info 
  * @return bool Returns true on success or false on failure.
  */
-function oci_set_client_info (resource $connection, string $client_info): bool {}
+function oci_set_client_info ($connection, string $client_info): bool {}
 
 /**
  * Sets the database operation
@@ -1060,7 +1110,7 @@ function oci_set_client_info (resource $connection, string $client_info): bool {
  * @param string $action 
  * @return bool Returns true on success or false on failure.
  */
-function oci_set_db_operation (resource $connection, string $action): bool {}
+function oci_set_db_operation ($connection, string $action): bool {}
 
 /**
  * Sets a millisecond timeout for database calls
@@ -1069,7 +1119,7 @@ function oci_set_db_operation (resource $connection, string $action): bool {}
  * @param int $timeout 
  * @return bool Returns true on success or false on failure.
  */
-function oci_set_call_timeout (resource $connection, int $timeout): bool {}
+function oci_set_call_timeout ($connection, int $timeout): bool {}
 
 /**
  * Changes password of Oracle's user
@@ -1082,9 +1132,10 @@ function oci_set_call_timeout (resource $connection, int $timeout): bool {}
  * or false on failure. When connection is provided, oci_password_change returns
  * the connection resource on success, or false on failure.
  */
-function oci_password_change (resource $connection, string $username, string $old_password, string $new_password): bool {}
+function oci_password_change ($connection, string $username, string $old_password, string $new_password): bool {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $connection
  * @param string $username
  * @param string $old_password
@@ -1097,11 +1148,12 @@ function ocipasswordchange ($connection = null, string $username, string $old_pa
  * Allocates and returns a new cursor (statement handle)
  * @link http://www.php.net/manual/en/function.oci-new-cursor.php
  * @param resource $connection 
- * @return resource|bool Returns a new statement handle, or false on error.
+ * @return resource|false Returns a new statement handle, or false on error.
  */
-function oci_new_cursor (resource $connection): resource|bool {}
+function oci_new_cursor ($connection) {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $connection
  * @deprecated 
  */
@@ -1115,9 +1167,10 @@ function ocinewcursor ($connection = null) {}
  * @return mixed Returns everything as strings except for abstract types (ROWIDs, LOBs and
  * FILEs). Returns false on error.
  */
-function oci_result (resource $statement, string|int $column): mixed {}
+function oci_result ($statement, string|int $column): mixed {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $statement
  * @param string|int $column
  * @deprecated 
@@ -1135,21 +1188,22 @@ function oci_client_version (): string {}
  * Returns the Oracle Database version
  * @link http://www.php.net/manual/en/function.oci-server-version.php
  * @param resource $connection 
- * @return string|bool Returns the version information as a string or false on error.
+ * @return string|false Returns the version information as a string or false on error.
  */
-function oci_server_version (resource $connection): string|bool {}
+function oci_server_version ($connection): string|int {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $connection
  * @deprecated 
  */
-function ociserverversion ($connection = null): string|false {}
+function ociserverversion ($connection = null): string|int {}
 
 /**
  * Returns the type of a statement
  * @link http://www.php.net/manual/en/function.oci-statement-type.php
  * @param resource $statement 
- * @return string|bool Returns the type of statement as one of the
+ * @return string|false Returns the type of statement as one of the
  * following strings.
  * <table>
  * Statement type
@@ -1196,46 +1250,52 @@ function ociserverversion ($connection = null): string|false {}
  * </table>
  * <p>Returns false on error.</p>
  */
-function oci_statement_type (resource $statement): string|bool {}
+function oci_statement_type ($statement): string|int {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $statement
  * @deprecated 
  */
-function ocistatementtype ($statement = null): string|false {}
+function ocistatementtype ($statement = null): string|int {}
 
 /**
  * Returns number of rows affected during statement execution
  * @link http://www.php.net/manual/en/function.oci-num-rows.php
  * @param resource $statement 
- * @return int|bool Returns the number of rows affected as an integer, or false on failure
+ * @return int|false Returns the number of rows affected as an integer, or false on failure
  */
-function oci_num_rows (resource $statement): int|bool {}
+function oci_num_rows ($statement): int {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $statement
  * @deprecated 
  */
-function ocirowcount ($statement = null): int|false {}
+function ocirowcount ($statement = null): int {}
 
 /**
+ * {@inheritdoc}
  * @param OCICollection $collection
  */
 function oci_free_collection (OCICollection $collection): bool {}
 
 /**
+ * {@inheritdoc}
  * @param OCICollection $collection
  * @deprecated 
  */
 function ocifreecollection (OCICollection $collection): bool {}
 
 /**
+ * {@inheritdoc}
  * @param OCICollection $collection
  * @param string $value
  */
 function oci_collection_append (OCICollection $collection, string $value): bool {}
 
 /**
+ * {@inheritdoc}
  * @param OCICollection $collection
  * @param string $value
  * @deprecated 
@@ -1243,25 +1303,29 @@ function oci_collection_append (OCICollection $collection, string $value): bool 
 function ocicollappend (OCICollection $collection, string $value): bool {}
 
 /**
+ * {@inheritdoc}
  * @param OCICollection $collection
  * @param int $index
  */
-function oci_collection_element_get (OCICollection $collection, int $index): string|float|false|null {}
+function oci_collection_element_get (OCICollection $collection, int $index): string|float|int|null {}
 
 /**
+ * {@inheritdoc}
  * @param OCICollection $collection
  * @param int $index
  * @deprecated 
  */
-function ocicollgetelem (OCICollection $collection, int $index): string|float|false|null {}
+function ocicollgetelem (OCICollection $collection, int $index): string|float|int|null {}
 
 /**
+ * {@inheritdoc}
  * @param OCICollection $to
  * @param OCICollection $from
  */
 function oci_collection_assign (OCICollection $to, OCICollection $from): bool {}
 
 /**
+ * {@inheritdoc}
  * @param OCICollection $collection
  * @param int $index
  * @param string $value
@@ -1269,6 +1333,7 @@ function oci_collection_assign (OCICollection $to, OCICollection $from): bool {}
 function oci_collection_element_assign (OCICollection $collection, int $index, string $value): bool {}
 
 /**
+ * {@inheritdoc}
  * @param OCICollection $collection
  * @param int $index
  * @param string $value
@@ -1277,34 +1342,40 @@ function oci_collection_element_assign (OCICollection $collection, int $index, s
 function ocicollassignelem (OCICollection $collection, int $index, string $value): bool {}
 
 /**
+ * {@inheritdoc}
  * @param OCICollection $collection
  */
-function oci_collection_size (OCICollection $collection): int|false {}
+function oci_collection_size (OCICollection $collection): int {}
 
 /**
- * @param OCICollection $collection
- * @deprecated 
- */
-function ocicollsize (OCICollection $collection): int|false {}
-
-/**
- * @param OCICollection $collection
- */
-function oci_collection_max (OCICollection $collection): int|false {}
-
-/**
+ * {@inheritdoc}
  * @param OCICollection $collection
  * @deprecated 
  */
-function ocicollmax (OCICollection $collection): int|false {}
+function ocicollsize (OCICollection $collection): int {}
 
 /**
+ * {@inheritdoc}
+ * @param OCICollection $collection
+ */
+function oci_collection_max (OCICollection $collection): int {}
+
+/**
+ * {@inheritdoc}
+ * @param OCICollection $collection
+ * @deprecated 
+ */
+function ocicollmax (OCICollection $collection): int {}
+
+/**
+ * {@inheritdoc}
  * @param OCICollection $collection
  * @param int $num
  */
 function oci_collection_trim (OCICollection $collection, int $num): bool {}
 
 /**
+ * {@inheritdoc}
  * @param OCICollection $collection
  * @param int $num
  * @deprecated 
@@ -1317,18 +1388,19 @@ function ocicolltrim (OCICollection $collection, int $num): bool {}
  * @param resource $connection 
  * @param string $type_name 
  * @param string|null $schema [optional] 
- * @return OCICollection|bool Returns a new OCICollection object or false on
+ * @return OCICollection|false Returns a new OCICollection object or false on
  * error.
  */
-function oci_new_collection (resource $connection, string $type_name, ?string $schema = null): OCICollection|bool {}
+function oci_new_collection ($connection, string $type_name, ?string $schema = null): OCICollection|int {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $connection
  * @param string $type_name
- * @param ?string $schema [optional]
+ * @param string|null $schema [optional]
  * @deprecated 
  */
-function ocinewcollection ($connection = null, string $type_name, ?string $schema = null): OCICollection|false {}
+function ocinewcollection ($connection = null, string $type_name, ?string $schema = NULL): OCICollection|int {}
 
 /**
  * Register a user-defined callback function for Oracle Database TAF
@@ -1337,7 +1409,7 @@ function ocinewcollection ($connection = null, string $type_name, ?string $schem
  * @param callable|null $callback 
  * @return bool Returns true on success or false on failure.
  */
-function oci_register_taf_callback (resource $connection, ?callable $callback): bool {}
+function oci_register_taf_callback ($connection, ?callable $callback): bool {}
 
 /**
  * Unregister a user-defined callback function for Oracle Database TAF
@@ -1345,7 +1417,7 @@ function oci_register_taf_callback (resource $connection, ?callable $callback): 
  * @param resource $connection 
  * @return bool Returns true on success or false on failure.
  */
-function oci_unregister_taf_callback (resource $connection): bool {}
+function oci_unregister_taf_callback ($connection): bool {}
 
 define ('OCI_DEFAULT', 0);
 define ('OCI_SYSOPER', 4);

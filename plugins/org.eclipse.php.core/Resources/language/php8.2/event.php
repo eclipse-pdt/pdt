@@ -71,9 +71,17 @@ final class Event  {
 	 * argument to the callback function when a timeout has occurred.</p>
 	const TIMEOUT = 1;
 
-	public $pending;
-	public $data;
 
+	/**
+	 * Whether event is pending. See
+	 * About event persistence
+	 * .
+	 * @var bool
+	 * @link http://www.php.net/manual/en/class.event.php#event.props.pending
+	 */
+	public readonly bool $pending;
+
+	public $data;
 
 	/**
 	 * Constructs Event object
@@ -173,6 +181,9 @@ final class Event  {
 	 */
 	public function pending (int $flags): bool {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function removeTimer (): bool {}
 
 	/**
@@ -216,17 +227,25 @@ final class Event  {
 	public static function signal (EventBase $base, int $signum, callable $cb, mixed $arg = null): Event {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param float $timeout [optional]
 	 */
 	public function addTimer (float $timeout = -1): bool {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function delTimer (): bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param float $timeout [optional]
 	 */
 	public function addSignal (float $timeout = -1): bool {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function delSignal (): bool {}
 
 }
@@ -325,8 +344,14 @@ final class EventBase  {
 	 */
 	public function __construct (EventConfig $cfg = null): EventConfig {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	final public function __sleep (): array {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	final public function __wakeup (): void {}
 
 	/**
@@ -382,6 +407,7 @@ final class EventBase  {
 	public function exit (float $timeout = null): bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param Event $event
 	 */
 	public function set (Event $event): bool {}
@@ -434,8 +460,14 @@ final class EventBase  {
 	 */
 	public function free (): void {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function updateCacheTime (): bool {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function resume (): bool {}
 
 }
@@ -470,8 +502,14 @@ final class EventConfig  {
 	 */
 	public function __construct (): void {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	final public function __sleep (): array {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	final public function __wakeup (): void {}
 
 	/**
@@ -603,12 +641,42 @@ final class EventBufferEvent  {
 	 * SSL is currently performing negotiation as a server
 	const SSL_ACCEPTING = 2;
 
-	public $priority;
-	public $fd;
-	public $input;
-	public $output;
-	public $allow_ssl_dirty_shutdown;
 
+	/**
+	 * Numeric file descriptor associated with the buffer event. Normally
+	 * represents a bound socket. Equals to null, if there is no file
+	 * descriptor(socket) associated with the buffer event.
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.eventbufferevent.php#eventbufferevent.props.fd
+	 */
+	public int $fd;
+
+	/**
+	 * The priority of the events used to implement the buffer event.
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.eventbufferevent.php#eventbufferevent.props.priority
+	 */
+	public int $priority;
+
+	/**
+	 * Underlying input buffer object(
+	 * EventBuffer
+	 * )
+	 * @var EventBuffer
+	 * @link http://www.php.net/manual/en/class.eventbufferevent.php#eventbufferevent.props.input
+	 */
+	public readonly EventBuffer $input;
+
+	/**
+	 * Underlying output buffer object(
+	 * EventBuffer
+	 * )
+	 * @var EventBuffer
+	 * @link http://www.php.net/manual/en/class.eventbufferevent.php#eventbufferevent.props.output
+	 */
+	public readonly EventBuffer $output;
+
+	public $allow_ssl_dirty_shutdown;
 
 	/**
 	 * Constructs EventBufferEvent object
@@ -701,7 +769,7 @@ final class EventBufferEvent  {
 	 * .
 	 * @return bool Returns true on success or false on failure.
 	 */
-	public function connectHost (EventDnsBase $dns_base, string $hostname, int $port, int $family = EventUtil::AF_UNSPEC): bool {}
+	public function connectHost (EventDnsBase $dns_base, string $hostname, int $port, int $family = \EventUtil::AF_UNSPEC): bool {}
 
 	/**
 	 * Returns string describing the last failed DNS lookup attempt
@@ -865,6 +933,7 @@ final class EventBufferEvent  {
 	public function setTimeouts (float $timeout_read, float $timeout_write): bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param EventBufferEvent $unnderlying
 	 * @param EventSslContext $ctx
 	 * @param int $state
@@ -1005,9 +1074,23 @@ class EventBuffer  {
 	 * bytes(instead of setting absolute position).
 	const PTR_ADD = 1;
 
-	public $length;
-	public $contiguous_space;
 
+	/**
+	 * The number of bytes stored in an event buffer.
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.eventbuffer.php#eventbuffer.props.length
+	 */
+	public readonly int $length;
+
+	/**
+	 * The number of bytes stored contiguously at the front of the buffer. The
+	 * bytes in a buffer may be stored in multiple separate chunks of memory;
+	 * the property returns the number of bytes currently stored in the first
+	 * chunk.
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.eventbuffer.php#eventbuffer.props.contiguous_space
+	 */
+	public readonly int $contiguous_space;
 
 	/**
 	 * Constructs EventBuffer object
@@ -1163,9 +1246,9 @@ class EventBuffer  {
 	 * @return mixed Returns numeric position of the first occurrence of end-of-line symbol in
 	 * the buffer, or false if not found.
 	 */
-	public function searchEol (int $start = -1, int $eol_style = 
+	public function searchEol (int $start = -1, int $eol_style = '
      EventBuffer::EOL_ANY
-    ): mixed {}
+    '): mixed {}
 
 	/**
 	 * Linearizes data within buffer
@@ -1402,8 +1485,15 @@ final class EventListener  {
 	const OPT_THREADSAFE = 16;
 	const OPT_DEFERRED_ACCEPT = 64;
 
-	public $fd;
 
+	/**
+	 * Numeric file descriptor of the underlying socket. (Added in
+	 * event-1.6.0
+	 * .)
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.eventlistener.php#eventlistener.props.fd
+	 */
+	public readonly int $fd;
 
 	/**
 	 * Creates new connection listener associated with an event base
@@ -1448,10 +1538,19 @@ final class EventListener  {
 	 */
 	public function __construct (EventBase $base, callable $cb, mixed $data, int $flags, int $backlog, mixed $target): EventBase {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	final public function __sleep (): array {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	final public function __wakeup (): void {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function free (): void {}
 
 	/**
@@ -1586,8 +1685,14 @@ final class EventHttpConnection  {
 	 */
 	public function __construct (EventBase $base, EventDnsBase $dns_base, string $address, int $port, EventSslContext $ctx = null): EventBase {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	final public function __sleep (): array {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	final public function __wakeup (): void {}
 
 	/**
@@ -1710,8 +1815,14 @@ final class EventHttp  {
 	 */
 	public function __construct (EventBase $base, EventSslContext $ctx = null): EventBase {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	final public function __sleep (): array {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	final public function __wakeup (): void {}
 
 	/**
@@ -1893,8 +2004,14 @@ final class EventHttpRequest  {
 	 */
 	public function __construct (callable $callback, mixed $data = null): callable {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	final public function __sleep (): array {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	final public function __wakeup (): void {}
 
 	/**
@@ -2313,6 +2430,7 @@ final class EventUtil  {
 	public static function setSocketOption (mixed $socket, int $level, int $optname, mixed $optval): bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param int $fd
 	 */
 	public static function createSocket (int $fd): Socket|false {}
@@ -2404,9 +2522,22 @@ final class EventSslContext  {
 	const DTLS1_VERSION = 65279;
 	const DTLS1_2_VERSION = 65277;
 
-	public $local_cert;
-	public $local_pk;
 
+	/**
+	 * Path to local certificate file on filesystem. It must be a PEM-encoded
+	 * file which contains certificate. It can optionally contain the
+	 * certificate chain of issuers.
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.eventsslcontext.php#eventsslcontext.props.local_cert
+	 */
+	public string $local_cert;
+
+	/**
+	 * Path to local private key file
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.eventsslcontext.php#eventsslcontext.props.local_pk
+	 */
+	public string $local_pk;
 
 	/**
 	 * Constructs an OpenSSL context for use with Event classes
@@ -2424,11 +2555,13 @@ final class EventSslContext  {
 	public function __construct (string $method, string $options): string {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param int $proto
 	 */
 	public function setMinProtoVersion (int $proto): bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param int $proto
 	 */
 	public function setMaxProtoVersion (int $proto): bool {}
@@ -2436,12 +2569,8 @@ final class EventSslContext  {
 }
 
 class EventException extends RuntimeException implements Stringable, Throwable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-	public $errorInfo;
 
+	public $errorInfo;
 
 	/**
 	 * Construct the exception
@@ -2451,8 +2580,11 @@ class EventException extends RuntimeException implements Stringable, Throwable {
 	 * @param Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**

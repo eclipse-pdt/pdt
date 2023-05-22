@@ -28,7 +28,7 @@ namespace {
  * @param array $options [optional] 
  * @return IMAP\Connection|false Returns an IMAP\Connection instance on success, or false on failure.
  */
-function imap_open (string $mailbox, string $user, string $password, int $flags = null, int $retries = null, array $options = []): IMAP\Connection|false {}
+function imap_open (string $mailbox, string $user, string $password, int $flags = null, int $retries = null, array $options = '[]'): IMAP\Connection|false {}
 
 /**
  * Reopen IMAP stream to new mailbox
@@ -51,6 +51,7 @@ function imap_reopen (IMAP\Connection $imap, string $mailbox, int $flags = null,
 function imap_close (IMAP\Connection $imap, int $flags = null): bool {}
 
 /**
+ * {@inheritdoc}
  * @param IMAP\Connection $imap
  */
 function imap_is_open (IMAP\Connection $imap): bool {}
@@ -195,7 +196,7 @@ function imap_headerinfo (IMAP\Connection $imap, int $message_num, int $from_len
  * imap_header, except for the flags and other 
  * properties that come from the IMAP server.
  */
-function imap_rfc822_parse_headers (string $headers, string $default_hostname = "UNKNOWN"): stdClass {}
+function imap_rfc822_parse_headers (string $headers, string $default_hostname = '"UNKNOWN"'): stdClass {}
 
 /**
  * Returns a properly formatted email address given the mailbox, host, and personal info
@@ -291,7 +292,7 @@ function imap_fetchmime (IMAP\Connection $imap, int $message_num, string $sectio
  * @param int $flags [optional] 
  * @return bool Returns true on success or false on failure.
  */
-function imap_savebody (IMAP\Connection $imap, resource|string|int $file, int $message_num, string $section = "", int $flags = null): bool {}
+function imap_savebody (IMAP\Connection $imap, $file, int $message_num, string $section = '""', int $flags = null): bool {}
 
 /**
  * Returns header for a message
@@ -1018,7 +1019,7 @@ function imap_last_error (): string|false {}
  * <p>Return false if it does not understand the search
  * criteria or no messages have been found.</p>
  */
-function imap_search (IMAP\Connection $imap, string $criteria, int $flags = SE_FREE, string $charset = ""): array|false {}
+function imap_search (IMAP\Connection $imap, string $criteria, int $flags = SE_FREE, string $charset = '""'): array|false {}
 
 /**
  * Decodes a modified UTF-7 encoded string

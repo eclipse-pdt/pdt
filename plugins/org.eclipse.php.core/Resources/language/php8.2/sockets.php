@@ -359,7 +359,7 @@ function socket_clear_error (?Socket $socket = null): void {}
  * @param resource $stream 
  * @return Socket|false Returns false on failure.
  */
-function socket_import_stream (resource $stream): Socket|false {}
+function socket_import_stream ($stream): Socket|false {}
 
 /**
  * Export a socket into a stream that encapsulates a socket
@@ -367,7 +367,7 @@ function socket_import_stream (resource $stream): Socket|false {}
  * @param Socket $socket 
  * @return resource|false Return resource or false on failure.
  */
-function socket_export_stream (Socket $socket): resource|false {}
+function socket_export_stream (Socket $socket) {}
 
 /**
  * Send a message
@@ -410,7 +410,7 @@ function socket_cmsg_space (int $level, int $type, int $num = null): ?int {}
  * @return array|false Returns an array of AddressInfo instances that can be used with the other socket_addrinfo functions.
  * On failure, false is returned.
  */
-function socket_addrinfo_lookup (string $host, ?string $service = null, array $hints = []): array|false {}
+function socket_addrinfo_lookup (string $host, ?string $service = null, array $hints = '[]'): array|false {}
 
 /**
  * Create and connect to a socket from a given addrinfo

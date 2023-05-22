@@ -13,7 +13,7 @@
  * @param int|null $flags [optional] 
  * @return resource|false Returns a positive handle on success or false on failure.
  */
-function dba_popen (string $path, string $mode, ?string $handler = null, int $permission = 0644, int $map_size = null, ?int $flags = null): resource|false {}
+function dba_popen (string $path, string $mode, ?string $handler = null, int $permission = 0644, int $map_size = null, ?int $flags = null) {}
 
 /**
  * Open database
@@ -26,7 +26,7 @@ function dba_popen (string $path, string $mode, ?string $handler = null, int $pe
  * @param int|null $flags [optional] 
  * @return resource|false Returns a positive handle on success or false on failure.
  */
-function dba_open (string $path, string $mode, ?string $handler = null, int $permission = 0644, int $map_size = null, ?int $flags = null): resource|false {}
+function dba_open (string $path, string $mode, ?string $handler = null, int $permission = 0644, int $map_size = null, ?int $flags = null) {}
 
 /**
  * Close a DBA database
@@ -34,7 +34,7 @@ function dba_open (string $path, string $mode, ?string $handler = null, int $per
  * @param resource $dba 
  * @return void No value is returned.
  */
-function dba_close (resource $dba): void {}
+function dba_close ($dba): void {}
 
 /**
  * Check whether key exists
@@ -43,7 +43,7 @@ function dba_close (resource $dba): void {}
  * @param resource $dba 
  * @return bool Returns true if the key exists, false otherwise.
  */
-function dba_exists (string|array $key, resource $dba): bool {}
+function dba_exists (string|array $key, $dba): bool {}
 
 /**
  * Fetch data specified by key
@@ -54,7 +54,7 @@ function dba_exists (string|array $key, resource $dba): bool {}
  * @return string|false Returns the associated string if the key/data pair is found, false 
  * otherwise.
  */
-function dba_fetch (string|array $key, resource $dba, int $skip = null): string|false {}
+function dba_fetch (string|array $key, $dba, int $skip = null): string|false {}
 
 /**
  * Splits a key in string representation into array representation
@@ -72,7 +72,7 @@ function dba_key_split (string|false|null $key): array|false {}
  * @param resource $dba 
  * @return string|false Returns the key on success or false on failure.
  */
-function dba_firstkey (resource $dba): string|false {}
+function dba_firstkey ($dba): string|false {}
 
 /**
  * Fetch next key
@@ -80,7 +80,7 @@ function dba_firstkey (resource $dba): string|false {}
  * @param resource $dba 
  * @return string|false Returns the key on success or false on failure.
  */
-function dba_nextkey (resource $dba): string|false {}
+function dba_nextkey ($dba): string|false {}
 
 /**
  * Delete DBA entry specified by key
@@ -89,7 +89,7 @@ function dba_nextkey (resource $dba): string|false {}
  * @param resource $dba 
  * @return bool Returns true on success or false on failure.
  */
-function dba_delete (string|array $key, resource $dba): bool {}
+function dba_delete (string|array $key, $dba): bool {}
 
 /**
  * Insert entry
@@ -99,7 +99,7 @@ function dba_delete (string|array $key, resource $dba): bool {}
  * @param resource $dba 
  * @return bool Returns true on success or false on failure.
  */
-function dba_insert (string|array $key, string $value, resource $dba): bool {}
+function dba_insert (string|array $key, string $value, $dba): bool {}
 
 /**
  * Replace or insert entry
@@ -109,7 +109,7 @@ function dba_insert (string|array $key, string $value, resource $dba): bool {}
  * @param resource $dba 
  * @return bool Returns true on success or false on failure.
  */
-function dba_replace (string|array $key, string $value, resource $dba): bool {}
+function dba_replace (string|array $key, string $value, $dba): bool {}
 
 /**
  * Optimize database
@@ -117,7 +117,7 @@ function dba_replace (string|array $key, string $value, resource $dba): bool {}
  * @param resource $dba 
  * @return bool Returns true on success or false on failure.
  */
-function dba_optimize (resource $dba): bool {}
+function dba_optimize ($dba): bool {}
 
 /**
  * Synchronize database
@@ -125,7 +125,7 @@ function dba_optimize (resource $dba): bool {}
  * @param resource $dba 
  * @return bool Returns true on success or false on failure.
  */
-function dba_sync (resource $dba): bool {}
+function dba_sync ($dba): bool {}
 
 /**
  * List all the handlers available

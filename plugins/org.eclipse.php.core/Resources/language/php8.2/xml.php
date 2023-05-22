@@ -24,7 +24,7 @@ function xml_parser_create (?string $encoding = null): XMLParser {}
  * @param string $separator [optional] 
  * @return XMLParser Returns a new XMLParser instance.
  */
-function xml_parser_create_ns (?string $encoding = null, string $separator = ":"): XMLParser {}
+function xml_parser_create_ns (?string $encoding = null, string $separator = '":"'): XMLParser {}
 
 /**
  * Use XML Parser within an object

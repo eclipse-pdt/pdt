@@ -40,10 +40,16 @@ class V8Js  {
 	 * the uncaught exception can be accessed using V8Js::getPendingException.
 	 * @return string 
 	 */
-	public function __construct (string $object_name = "PHP", array $variables = array(), array $extensions = array(), bool $report_uncaught_exceptions = true): string {}
+	public function __construct (string $object_name = '"PHP"', array $variables = 'array()', array $extensions = 'array()', bool $report_uncaught_exceptions = true): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	final public function __sleep () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	final public function __wakeup () {}
 
 	/**
@@ -70,54 +76,63 @@ class V8Js  {
 	 * objects passed to PHP to be associative arrays</p>
 	 * @return mixed Returns the last variable instantiated in the Javascript code converted to matching PHP variable type.
 	 */
-	public function executeString (string $script, string $identifier = "V8Js::executeString()", int $flags = V8Js::FLAG_NONE): mixed {}
+	public function executeString (string $script, string $identifier = '"V8Js::executeString()"', int $flags = \V8Js::FLAG_NONE): mixed {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $script
 	 * @param mixed $identifier [optional]
 	 */
-	public function compileString ($script = null, $identifier = null) {}
+	public function compileString ($script = null, $identifier = NULL) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $script
 	 * @param mixed $flags [optional]
 	 * @param mixed $time_limit [optional]
 	 * @param mixed $memory_limit [optional]
 	 */
-	public function executeScript ($script = null, $flags = null, $time_limit = null, $memory_limit = null) {}
+	public function executeScript ($script = null, $flags = NULL, $time_limit = NULL, $memory_limit = NULL) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $base
 	 * @param mixed $module_id
 	 */
 	public function setModuleNormaliser ($base = null, $module_id = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $callable
 	 */
 	public function setModuleLoader ($callable = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $callable
 	 */
 	public function setExceptionFilter ($callable = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $time_limit
 	 */
 	public function setTimeLimit ($time_limit = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $memory_limit
 	 */
 	public function setMemoryLimit ($memory_limit = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $average_object_size
 	 */
 	public function setAverageObjectSize ($average_object_size = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $script
 	 */
 	public static function createSnapshot ($script = null) {}
@@ -128,11 +143,14 @@ class V8Js  {
  * @link http://www.php.net/manual/en/class.v8jsexception.php
  */
 class V8JsException extends RuntimeException implements Stringable, Throwable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
 
+	protected $JsFileName;
+
+	protected $JsLineNumber;
+
+	protected $JsSourceLine;
+
+	protected $JsTrace;
 
 	/**
 	 * Construct the exception
@@ -142,8 +160,11 @@ class V8JsException extends RuntimeException implements Stringable, Throwable {
 	 * @param Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -209,28 +230,47 @@ class V8JsException extends RuntimeException implements Stringable, Throwable {
 }
 
 final class V8JsScriptException extends V8JsException implements Throwable, Stringable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
+
 	protected $JsFileName;
+
 	protected $JsLineNumber;
+
 	protected $JsStartColumn;
+
 	protected $JsEndColumn;
+
 	protected $JsSourceLine;
+
 	protected $JsTrace;
 
-
+	/**
+	 * {@inheritdoc}
+	 */
 	final public function getJsFileName () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	final public function getJsLineNumber () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	final public function getJsStartColumn () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	final public function getJsEndColumn () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	final public function getJsSourceLine () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	final public function getJsTrace () {}
 
 	/**
@@ -241,8 +281,11 @@ final class V8JsScriptException extends V8JsException implements Throwable, Stri
 	 * @param Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -308,11 +351,6 @@ final class V8JsScriptException extends V8JsException implements Throwable, Stri
 }
 
 final class V8JsTimeLimitException extends V8JsException implements Throwable, Stringable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-
 
 	/**
 	 * Construct the exception
@@ -322,8 +360,11 @@ final class V8JsTimeLimitException extends V8JsException implements Throwable, S
 	 * @param Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -389,11 +430,6 @@ final class V8JsTimeLimitException extends V8JsException implements Throwable, S
 }
 
 final class V8JsMemoryLimitException extends V8JsException implements Throwable, Stringable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-
 
 	/**
 	 * Construct the exception
@@ -403,8 +439,11 @@ final class V8JsMemoryLimitException extends V8JsException implements Throwable,
 	 * @param Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -471,40 +510,82 @@ final class V8JsMemoryLimitException extends V8JsException implements Throwable,
 
 final class V8Object  {
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __construct () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	final public function __sleep () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	final public function __wakeup () {}
 
 }
 
 final class V8Function  {
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __construct () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	final public function __sleep () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	final public function __wakeup () {}
 
 }
 
 final class V8Generator implements Iterator, Traversable {
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __construct () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	final public function __sleep () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	final public function __wakeup () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function current (): mixed {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function key (): mixed {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function next (): void {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function rewind (): void {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function valid (): bool {}
 
 }

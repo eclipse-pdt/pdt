@@ -253,18 +253,26 @@ class ZMQ  {
 	 */
 	private function __construct (): void {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public static function clock () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $data
 	 */
 	public static function z85encode ($data = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $data
 	 */
 	public static function z85decode ($data = null) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public static function curvekeypair () {}
 
 }
@@ -283,8 +291,14 @@ class ZMQContext  {
 	 */
 	final public function __construct (int $io_threads = 1, bool $is_persistent = true): int {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public static function acquire () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getsocketcount () {}
 
 	/**
@@ -304,6 +318,9 @@ class ZMQContext  {
 	 */
 	public function ispersistent (): bool {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	final private function __clone () {}
 
 	/**
@@ -402,15 +419,17 @@ class ZMQSocket  {
 	public function connect (string $dsn, bool $force = false): ZMQSocket {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $dsn
 	 * @param mixed $events [optional]
 	 */
-	public function monitor ($dsn = null, $events = null) {}
+	public function monitor ($dsn = null, $events = NULL) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $flags [optional]
 	 */
-	public function recvevent ($flags = null) {}
+	public function recvevent ($flags = NULL) {}
 
 	/**
 	 * Unbind the socket
@@ -475,18 +494,23 @@ class ZMQSocket  {
 	 */
 	public function getsockopt (string $key): mixed {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	final private function __clone () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $message
 	 * @param mixed $mode [optional]
 	 */
-	public function sendmsg ($message = null, $mode = null) {}
+	public function sendmsg ($message = null, $mode = NULL) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $mode [optional]
 	 */
-	public function recvmsg ($mode = null) {}
+	public function recvmsg ($mode = NULL) {}
 
 }
 
@@ -546,8 +570,14 @@ class ZMQPoll  {
 	 */
 	public function clear (): ZMQPoll {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function items () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	final private function __clone () {}
 
 }
@@ -641,16 +671,14 @@ class ZMQDevice  {
 	 */
 	public function gettimertimeout (): ZMQDevice {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	final private function __clone () {}
 
 }
 
 class ZMQException extends Exception implements Throwable, Stringable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-
 
 	/**
 	 * Construct the exception
@@ -660,8 +688,11 @@ class ZMQException extends Exception implements Throwable, Stringable {
 	 * @param Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -727,11 +758,6 @@ class ZMQException extends Exception implements Throwable, Stringable {
 }
 
 final class ZMQContextException extends ZMQException implements Stringable, Throwable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-
 
 	/**
 	 * Construct the exception
@@ -741,8 +767,11 @@ final class ZMQContextException extends ZMQException implements Stringable, Thro
 	 * @param Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -808,11 +837,6 @@ final class ZMQContextException extends ZMQException implements Stringable, Thro
 }
 
 final class ZMQSocketException extends ZMQException implements Stringable, Throwable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-
 
 	/**
 	 * Construct the exception
@@ -822,8 +846,11 @@ final class ZMQSocketException extends ZMQException implements Stringable, Throw
 	 * @param Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -889,11 +916,6 @@ final class ZMQSocketException extends ZMQException implements Stringable, Throw
 }
 
 final class ZMQPollException extends ZMQException implements Stringable, Throwable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-
 
 	/**
 	 * Construct the exception
@@ -903,8 +925,11 @@ final class ZMQPollException extends ZMQException implements Stringable, Throwab
 	 * @param Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -970,11 +995,6 @@ final class ZMQPollException extends ZMQException implements Stringable, Throwab
 }
 
 final class ZMQDeviceException extends ZMQException implements Stringable, Throwable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-
 
 	/**
 	 * Construct the exception
@@ -984,8 +1004,11 @@ final class ZMQDeviceException extends ZMQException implements Stringable, Throw
 	 * @param Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**

@@ -170,9 +170,9 @@ function juliantojd (int $month, int $day, int $year): int {}
  * Convert Unix timestamp to Julian Day
  * @link http://www.php.net/manual/en/function.unixtojd.php
  * @param int|null $timestamp [optional] 
- * @return int|bool A julian day number as integer, or false on failure.
+ * @return int|false A julian day number as integer, or false on failure.
  */
-function unixtojd (?int $timestamp = null): int|bool {}
+function unixtojd (?int $timestamp = null): int {}
 
 
 /**

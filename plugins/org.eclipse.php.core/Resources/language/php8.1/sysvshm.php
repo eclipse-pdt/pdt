@@ -15,9 +15,9 @@ final class SysvSharedMemory  {
  * @param int $key 
  * @param int|null $size [optional] 
  * @param int $permissions [optional] 
- * @return SysvSharedMemory|bool Returns a SysvSharedMemory instance on success, or false on failure.
+ * @return SysvSharedMemory|false Returns a SysvSharedMemory instance on success, or false on failure.
  */
-function shm_attach (int $key, ?int $size = null, int $permissions = 0666): SysvSharedMemory|bool {}
+function shm_attach (int $key, ?int $size = null, int $permissions = 0666): SysvSharedMemory|int {}
 
 /**
  * Disconnects from shared memory segment

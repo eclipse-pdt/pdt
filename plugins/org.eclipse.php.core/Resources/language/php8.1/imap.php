@@ -26,9 +26,9 @@ namespace {
  * @param int $flags [optional] 
  * @param int $retries [optional] 
  * @param array $options [optional] 
- * @return IMAP\Connection|bool Returns an IMAP\Connection instance on success, or false on failure.
+ * @return IMAP\Connection|false Returns an IMAP\Connection instance on success, or false on failure.
  */
-function imap_open (string $mailbox, string $user, string $password, int $flags = null, int $retries = null, array $options = []): IMAP\Connection|bool {}
+function imap_open (string $mailbox, string $user, string $password, int $flags = null, int $retries = null, array $options = '[]'): IMAP\Connection|int {}
 
 /**
  * Reopen IMAP stream to new mailbox
@@ -54,9 +54,9 @@ function imap_close (IMAP\Connection $imap, int $flags = null): bool {}
  * Gets the number of messages in the current mailbox
  * @link http://www.php.net/manual/en/function.imap-num-msg.php
  * @param IMAP\Connection $imap 
- * @return int|bool Return the number of messages in the current mailbox, as an integer, or false on error.
+ * @return int|false Return the number of messages in the current mailbox, as an integer, or false on error.
  */
-function imap_num_msg (IMAP\Connection $imap): int|bool {}
+function imap_num_msg (IMAP\Connection $imap): int {}
 
 /**
  * Gets the number of recent messages in current mailbox
@@ -71,11 +71,11 @@ function imap_num_recent (IMAP\Connection $imap): int {}
  * Returns headers for all messages in a mailbox
  * @link http://www.php.net/manual/en/function.imap-headers.php
  * @param IMAP\Connection $imap 
- * @return array|bool Returns an array of string formatted with header info. One
+ * @return array|false Returns an array of string formatted with header info. One
  * element per mail message.
  * Returns false on failure.
  */
-function imap_headers (IMAP\Connection $imap): array|bool {}
+function imap_headers (IMAP\Connection $imap): array|int {}
 
 /**
  * Read the header of the message
@@ -84,7 +84,7 @@ function imap_headers (IMAP\Connection $imap): array|bool {}
  * @param int $message_num 
  * @param int $from_length [optional] 
  * @param int $subject_length [optional] 
- * @return stdClass|bool Returns false on error or, if successful, the information in an object with following properties:
+ * @return stdClass|false Returns false on error or, if successful, the information in an object with following properties:
  * <p>
  * <br>
  * toaddress - full to: line, up to 1024 characters
@@ -179,7 +179,7 @@ function imap_headers (IMAP\Connection $imap): array|bool {}
  * subject_length characters
  * </p>
  */
-function imap_headerinfo (IMAP\Connection $imap, int $message_num, int $from_length = null, int $subject_length = null): stdClass|bool {}
+function imap_headerinfo (IMAP\Connection $imap, int $message_num, int $from_length = null, int $subject_length = null): stdClass|int {}
 
 /**
  * Parse mail headers from a string
@@ -190,7 +190,7 @@ function imap_headerinfo (IMAP\Connection $imap, int $message_num, int $from_len
  * imap_header, except for the flags and other 
  * properties that come from the IMAP server.
  */
-function imap_rfc822_parse_headers (string $headers, string $default_hostname = "UNKNOWN"): stdClass {}
+function imap_rfc822_parse_headers (string $headers, string $default_hostname = '"UNKNOWN"'): stdClass {}
 
 /**
  * Returns a properly formatted email address given the mailbox, host, and personal info
@@ -198,9 +198,9 @@ function imap_rfc822_parse_headers (string $headers, string $default_hostname = 
  * @param string $mailbox 
  * @param string $hostname 
  * @param string $personal 
- * @return string|bool Returns a string properly formatted email address as defined in RFC2822, or false on failure.
+ * @return string|false Returns a string properly formatted email address as defined in RFC2822, or false on failure.
  */
-function imap_rfc822_write_address (string $mailbox, string $hostname, string $personal): string|bool {}
+function imap_rfc822_write_address (string $mailbox, string $hostname, string $personal): string|int {}
 
 /**
  * Parses an address string
@@ -225,9 +225,9 @@ function imap_rfc822_parse_adrlist (string $string, string $default_hostname): a
  * @param IMAP\Connection $imap 
  * @param int $message_num 
  * @param int $flags [optional] 
- * @return string|bool Returns the body of the specified message, as a string, or false on failure.
+ * @return string|false Returns the body of the specified message, as a string, or false on failure.
  */
-function imap_body (IMAP\Connection $imap, int $message_num, int $flags = null): string|bool {}
+function imap_body (IMAP\Connection $imap, int $message_num, int $flags = null): string|int {}
 
 /**
  * Alias of imap_body
@@ -235,9 +235,9 @@ function imap_body (IMAP\Connection $imap, int $message_num, int $flags = null):
  * @param IMAP\Connection $imap 
  * @param int $message_num 
  * @param int $flags [optional] 
- * @return string|bool Returns the body of the specified message, as a string, or false on failure.
+ * @return string|false Returns the body of the specified message, as a string, or false on failure.
  */
-function imap_fetchtext (IMAP\Connection $imap, int $message_num, int $flags = null): string|bool {}
+function imap_fetchtext (IMAP\Connection $imap, int $message_num, int $flags = null): string|int {}
 
 /**
  * Read the structure of a specified body section of a specific message
@@ -245,12 +245,12 @@ function imap_fetchtext (IMAP\Connection $imap, int $message_num, int $flags = n
  * @param IMAP\Connection $imap 
  * @param int $message_num 
  * @param string $section 
- * @return stdClass|bool Returns the information in an object, or false on failure.
+ * @return stdClass|false Returns the information in an object, or false on failure.
  * For a detailed description
  * of the object structure and properties see 
  * imap_fetchstructure.
  */
-function imap_bodystruct (IMAP\Connection $imap, int $message_num, string $section): stdClass|bool {}
+function imap_bodystruct (IMAP\Connection $imap, int $message_num, string $section): stdClass|int {}
 
 /**
  * Fetch a particular section of the body of the message
@@ -259,10 +259,10 @@ function imap_bodystruct (IMAP\Connection $imap, int $message_num, string $secti
  * @param int $message_num 
  * @param string $section 
  * @param int $flags [optional] 
- * @return string|bool Returns a particular section of the body of the specified messages as a
+ * @return string|false Returns a particular section of the body of the specified messages as a
  * text string, or false on failure.
  */
-function imap_fetchbody (IMAP\Connection $imap, int $message_num, string $section, int $flags = null): string|bool {}
+function imap_fetchbody (IMAP\Connection $imap, int $message_num, string $section, int $flags = null): string|int {}
 
 /**
  * Fetch MIME headers for a particular section of the message
@@ -271,10 +271,10 @@ function imap_fetchbody (IMAP\Connection $imap, int $message_num, string $sectio
  * @param int $message_num 
  * @param string $section 
  * @param int $flags [optional] 
- * @return string|bool Returns the MIME headers of a particular section of the body of the specified messages as a
+ * @return string|false Returns the MIME headers of a particular section of the body of the specified messages as a
  * text string, or false on failure.
  */
-function imap_fetchmime (IMAP\Connection $imap, int $message_num, string $section, int $flags = null): string|bool {}
+function imap_fetchmime (IMAP\Connection $imap, int $message_num, string $section, int $flags = null): string|int {}
 
 /**
  * Save a specific body section to a file
@@ -286,7 +286,7 @@ function imap_fetchmime (IMAP\Connection $imap, int $message_num, string $sectio
  * @param int $flags [optional] 
  * @return bool Returns true on success or false on failure.
  */
-function imap_savebody (IMAP\Connection $imap, resource|string|int $file, int $message_num, string $section = "", int $flags = null): bool {}
+function imap_savebody (IMAP\Connection $imap, $file, int $message_num, string $section = '""', int $flags = null): bool {}
 
 /**
  * Returns header for a message
@@ -294,9 +294,9 @@ function imap_savebody (IMAP\Connection $imap, resource|string|int $file, int $m
  * @param IMAP\Connection $imap 
  * @param int $message_num 
  * @param int $flags [optional] 
- * @return string|bool Returns the header of the specified message as a text string, or false on failure.
+ * @return string|false Returns the header of the specified message as a text string, or false on failure.
  */
-function imap_fetchheader (IMAP\Connection $imap, int $message_num, int $flags = null): string|bool {}
+function imap_fetchheader (IMAP\Connection $imap, int $message_num, int $flags = null): string|int {}
 
 /**
  * Read the structure of a particular message
@@ -304,7 +304,7 @@ function imap_fetchheader (IMAP\Connection $imap, int $message_num, int $flags =
  * @param IMAP\Connection $imap 
  * @param int $message_num 
  * @param int $flags [optional] 
- * @return stdClass|bool Returns an object with properties listed in the table below, or false on failure.
+ * @return stdClass|false Returns an object with properties listed in the table below, or false on failure.
  * <p><table>
  * Returned Object for imap_fetchstructure
  * <table>
@@ -414,7 +414,7 @@ function imap_fetchheader (IMAP\Connection $imap, int $message_num, int $flags =
  * </table>
  * </table></p>
  */
-function imap_fetchstructure (IMAP\Connection $imap, int $message_num, int $flags = null): stdClass|bool {}
+function imap_fetchstructure (IMAP\Connection $imap, int $message_num, int $flags = null): stdClass|int {}
 
 /**
  * Clears IMAP cache
@@ -457,7 +457,7 @@ function imap_undelete (IMAP\Connection $imap, string $message_nums, int $flags 
  * Check current mailbox
  * @link http://www.php.net/manual/en/function.imap-check.php
  * @param IMAP\Connection $imap 
- * @return stdClass|bool Returns the information in an object with following properties:
+ * @return stdClass|false Returns the information in an object with following properties:
  * <p>
  * <br>
  * Date - current system time formatted according to RFC2822
@@ -473,7 +473,7 @@ function imap_undelete (IMAP\Connection $imap, string $message_nums, int $flags 
  * </p>
  * <p>Returns false on failure.</p>
  */
-function imap_check (IMAP\Connection $imap): stdClass|bool {}
+function imap_check (IMAP\Connection $imap): stdClass|int {}
 
 /**
  * Returns the list of mailboxes that matches the given text
@@ -482,10 +482,10 @@ function imap_check (IMAP\Connection $imap): stdClass|bool {}
  * @param string $reference 
  * @param string $pattern 
  * @param string $content 
- * @return array|bool Returns an array containing the names of the mailboxes that have
+ * @return array|false Returns an array containing the names of the mailboxes that have
  * content in the text of the mailbox, or false on failure.
  */
-function imap_listscan (IMAP\Connection $imap, string $reference, string $pattern, string $content): array|bool {}
+function imap_listscan (IMAP\Connection $imap, string $reference, string $pattern, string $content): array|int {}
 
 /**
  * Alias of imap_listscan
@@ -494,10 +494,10 @@ function imap_listscan (IMAP\Connection $imap, string $reference, string $patter
  * @param string $reference 
  * @param string $pattern 
  * @param string $content 
- * @return array|bool Returns an array containing the names of the mailboxes that have
+ * @return array|false Returns an array containing the names of the mailboxes that have
  * content in the text of the mailbox, or false on failure.
  */
-function imap_scan (IMAP\Connection $imap, string $reference, string $pattern, string $content): array|bool {}
+function imap_scan (IMAP\Connection $imap, string $reference, string $pattern, string $content): array|int {}
 
 /**
  * Alias of imap_listscan
@@ -506,10 +506,10 @@ function imap_scan (IMAP\Connection $imap, string $reference, string $pattern, s
  * @param string $reference 
  * @param string $pattern 
  * @param string $content 
- * @return array|bool Returns an array containing the names of the mailboxes that have
+ * @return array|false Returns an array containing the names of the mailboxes that have
  * content in the text of the mailbox, or false on failure.
  */
-function imap_scanmailbox (IMAP\Connection $imap, string $reference, string $pattern, string $content): array|bool {}
+function imap_scanmailbox (IMAP\Connection $imap, string $reference, string $pattern, string $content): array|int {}
 
 /**
  * Copy specified messages to a mailbox
@@ -538,9 +538,9 @@ function imap_mail_move (IMAP\Connection $imap, string $message_nums, string $ma
  * @link http://www.php.net/manual/en/function.imap-mail-compose.php
  * @param array $envelope 
  * @param array $bodies 
- * @return string|bool Returns the MIME message as string, or false on failure.
+ * @return string|false Returns the MIME message as string, or false on failure.
  */
-function imap_mail_compose (array $envelope, array $bodies): string|bool {}
+function imap_mail_compose (array $envelope, array $bodies): string|int {}
 
 /**
  * Create a new mailbox
@@ -631,33 +631,33 @@ function imap_ping (IMAP\Connection $imap): bool {}
  * Decode BASE64 encoded text
  * @link http://www.php.net/manual/en/function.imap-base64.php
  * @param string $string 
- * @return string|bool Returns the decoded message as a string, or false on failure.
+ * @return string|false Returns the decoded message as a string, or false on failure.
  */
-function imap_base64 (string $string): string|bool {}
+function imap_base64 (string $string): string|int {}
 
 /**
  * Convert a quoted-printable string to an 8 bit string
  * @link http://www.php.net/manual/en/function.imap-qprint.php
  * @param string $string 
- * @return string|bool Returns an 8 bits string, or false on failure.
+ * @return string|false Returns an 8 bits string, or false on failure.
  */
-function imap_qprint (string $string): string|bool {}
+function imap_qprint (string $string): string|int {}
 
 /**
  * Convert an 8bit string to a quoted-printable string
  * @link http://www.php.net/manual/en/function.imap-8bit.php
  * @param string $string 
- * @return string|bool Returns a quoted-printable string, or false on failure.
+ * @return string|false Returns a quoted-printable string, or false on failure.
  */
-function imap_8bit (string $string): string|bool {}
+function imap_8bit (string $string): string|int {}
 
 /**
  * Convert an 8bit string to a base64 string
  * @link http://www.php.net/manual/en/function.imap-binary.php
  * @param string $string 
- * @return string|bool Returns a base64 encoded string, or false on failure.
+ * @return string|false Returns a base64 encoded string, or false on failure.
  */
-function imap_binary (string $string): string|bool {}
+function imap_binary (string $string): string|int {}
 
 /**
  * Converts MIME-encoded text to UTF-8
@@ -673,14 +673,14 @@ function imap_utf8 (string $mime_encoded_text): string {}
  * @param IMAP\Connection $imap 
  * @param string $mailbox 
  * @param int $flags 
- * @return stdClass|bool This function returns an object containing status information, or false on failure.
+ * @return stdClass|false This function returns an object containing status information, or false on failure.
  * The object has the following properties: messages,
  * recent, unseen, 
  * uidnext, and uidvalidity.
  * <p>flags is also set, which contains a bitmask which can
  * be checked against any of the above constants.</p>
  */
-function imap_status (IMAP\Connection $imap, string $mailbox, int $flags): stdClass|bool {}
+function imap_status (IMAP\Connection $imap, string $mailbox, int $flags): stdClass|int {}
 
 /**
  * Get information about the current mailbox
@@ -758,19 +758,19 @@ function imap_clearflag_full (IMAP\Connection $imap, string $sequence, string $f
  * @param int $flags [optional] 
  * @param string|null $search_criteria [optional] 
  * @param string|null $charset [optional] 
- * @return array|bool Returns an array of message numbers sorted by the given
+ * @return array|false Returns an array of message numbers sorted by the given
  * parameters, or false on failure.
  */
-function imap_sort (IMAP\Connection $imap, int $criteria, bool $reverse, int $flags = null, ?string $search_criteria = null, ?string $charset = null): array|bool {}
+function imap_sort (IMAP\Connection $imap, int $criteria, bool $reverse, int $flags = null, ?string $search_criteria = null, ?string $charset = null): array|int {}
 
 /**
  * This function returns the UID for the given message sequence number
  * @link http://www.php.net/manual/en/function.imap-uid.php
  * @param IMAP\Connection $imap 
  * @param int $message_num 
- * @return int|bool The UID of the given message.
+ * @return int|false The UID of the given message.
  */
-function imap_uid (IMAP\Connection $imap, int $message_num): int|bool {}
+function imap_uid (IMAP\Connection $imap, int $message_num): int {}
 
 /**
  * Gets the message sequence number for the given UID
@@ -788,9 +788,9 @@ function imap_msgno (IMAP\Connection $imap, int $message_uid): int {}
  * @param IMAP\Connection $imap 
  * @param string $reference 
  * @param string $pattern 
- * @return array|bool Returns an array containing the names of the mailboxes or false in case of failure.
+ * @return array|false Returns an array containing the names of the mailboxes or false in case of failure.
  */
-function imap_list (IMAP\Connection $imap, string $reference, string $pattern): array|bool {}
+function imap_list (IMAP\Connection $imap, string $reference, string $pattern): array|int {}
 
 /**
  * Alias of imap_list
@@ -798,9 +798,9 @@ function imap_list (IMAP\Connection $imap, string $reference, string $pattern): 
  * @param IMAP\Connection $imap 
  * @param string $reference 
  * @param string $pattern 
- * @return array|bool Returns an array containing the names of the mailboxes or false in case of failure.
+ * @return array|false Returns an array containing the names of the mailboxes or false in case of failure.
  */
-function imap_listmailbox (IMAP\Connection $imap, string $reference, string $pattern): array|bool {}
+function imap_listmailbox (IMAP\Connection $imap, string $reference, string $pattern): array|int {}
 
 /**
  * List all the subscribed mailboxes
@@ -808,9 +808,9 @@ function imap_listmailbox (IMAP\Connection $imap, string $reference, string $pat
  * @param IMAP\Connection $imap 
  * @param string $reference 
  * @param string $pattern 
- * @return array|bool Returns an array of all the subscribed mailboxes, or false on failure.
+ * @return array|false Returns an array of all the subscribed mailboxes, or false on failure.
  */
-function imap_lsub (IMAP\Connection $imap, string $reference, string $pattern): array|bool {}
+function imap_lsub (IMAP\Connection $imap, string $reference, string $pattern): array|int {}
 
 /**
  * Alias of imap_lsub
@@ -818,9 +818,9 @@ function imap_lsub (IMAP\Connection $imap, string $reference, string $pattern): 
  * @param IMAP\Connection $imap 
  * @param string $reference 
  * @param string $pattern 
- * @return array|bool Returns an array of all the subscribed mailboxes, or false on failure.
+ * @return array|false Returns an array of all the subscribed mailboxes, or false on failure.
  */
-function imap_listsubscribed (IMAP\Connection $imap, string $reference, string $pattern): array|bool {}
+function imap_listsubscribed (IMAP\Connection $imap, string $reference, string $pattern): array|int {}
 
 /**
  * List all the subscribed mailboxes
@@ -828,7 +828,7 @@ function imap_listsubscribed (IMAP\Connection $imap, string $reference, string $
  * @param IMAP\Connection $imap 
  * @param string $reference 
  * @param string $pattern 
- * @return array|bool Returns an array of objects containing mailbox information. Each
+ * @return array|false Returns an array of objects containing mailbox information. Each
  * object has the attributes name, specifying
  * the full name of the mailbox; delimiter,
  * which is the hierarchy delimiter for the part of the hierarchy
@@ -857,7 +857,7 @@ function imap_listsubscribed (IMAP\Connection $imap, string $reference, string $
  * </p>
  * The function returns false on failure.
  */
-function imap_getsubscribed (IMAP\Connection $imap, string $reference, string $pattern): array|bool {}
+function imap_getsubscribed (IMAP\Connection $imap, string $reference, string $pattern): array|int {}
 
 /**
  * Read the list of mailboxes, returning detailed information on each one
@@ -865,7 +865,7 @@ function imap_getsubscribed (IMAP\Connection $imap, string $reference, string $p
  * @param IMAP\Connection $imap 
  * @param string $reference 
  * @param string $pattern 
- * @return array|bool Returns an array of objects containing mailbox information. Each
+ * @return array|false Returns an array of objects containing mailbox information. Each
  * object has the attributes name, specifying
  * the full name of the mailbox; delimiter,
  * which is the hierarchy delimiter for the part of the hierarchy
@@ -925,7 +925,7 @@ function imap_getsubscribed (IMAP\Connection $imap, string $reference, string $p
  * <p>LATT_HASCHILDREN - This mailbox has selectable inferiors.</p>
  * <p>LATT_HASNOCHILDREN - This mailbox has no selectable inferiors.</p>
  */
-function imap_getmailboxes (IMAP\Connection $imap, string $reference, string $pattern): array|bool {}
+function imap_getmailboxes (IMAP\Connection $imap, string $reference, string $pattern): array|int {}
 
 /**
  * Read an overview of the information in the headers of the given message
@@ -933,7 +933,7 @@ function imap_getmailboxes (IMAP\Connection $imap, string $reference, string $pa
  * @param IMAP\Connection $imap 
  * @param string $sequence 
  * @param int $flags [optional] 
- * @return array|bool Returns an array of objects describing one message header each.
+ * @return array|false Returns an array of objects describing one message header each.
  * The object will only define a property if it exists. The possible
  * properties are:
  * <p>
@@ -974,33 +974,33 @@ function imap_getmailboxes (IMAP\Connection $imap, string $reference, string $pa
  * </p>
  * The function returns false on failure.
  */
-function imap_fetch_overview (IMAP\Connection $imap, string $sequence, int $flags = null): array|bool {}
+function imap_fetch_overview (IMAP\Connection $imap, string $sequence, int $flags = null): array|int {}
 
 /**
  * Returns all IMAP alert messages that have occurred
  * @link http://www.php.net/manual/en/function.imap-alerts.php
- * @return array|bool Returns an array of all of the IMAP alert messages generated or false if
+ * @return array|false Returns an array of all of the IMAP alert messages generated or false if
  * no alert messages are available.
  */
-function imap_alerts (): array|bool {}
+function imap_alerts (): array|int {}
 
 /**
  * Returns all of the IMAP errors that have occurred
  * @link http://www.php.net/manual/en/function.imap-errors.php
- * @return array|bool This function returns an array of all of the IMAP error messages
+ * @return array|false This function returns an array of all of the IMAP error messages
  * generated since the last imap_errors call,
  * or the beginning of the page. Returns false if no error messages are
  * available.
  */
-function imap_errors (): array|bool {}
+function imap_errors (): array|int {}
 
 /**
  * Gets the last IMAP error that occurred during this page request
  * @link http://www.php.net/manual/en/function.imap-last-error.php
- * @return string|bool Returns the full text of the last IMAP error message that occurred on the
+ * @return string|false Returns the full text of the last IMAP error message that occurred on the
  * current page. Returns false if no error messages are available.
  */
-function imap_last_error (): string|bool {}
+function imap_last_error (): string|int {}
 
 /**
  * This function returns an array of messages matching the given search criteria
@@ -1009,23 +1009,23 @@ function imap_last_error (): string|bool {}
  * @param string $criteria 
  * @param int $flags [optional] 
  * @param string $charset [optional] 
- * @return array|bool Returns an array of message numbers or UIDs.
+ * @return array|false Returns an array of message numbers or UIDs.
  * <p>Return false if it does not understand the search
  * criteria or no messages have been found.</p>
  */
-function imap_search (IMAP\Connection $imap, string $criteria, int $flags = SE_FREE, string $charset = ""): array|bool {}
+function imap_search (IMAP\Connection $imap, string $criteria, int $flags = SE_FREE, string $charset = '""'): array|int {}
 
 /**
  * Decodes a modified UTF-7 encoded string
  * @link http://www.php.net/manual/en/function.imap-utf7-decode.php
  * @param string $string 
- * @return string|bool Returns a string that is encoded in ISO-8859-1 and consists of the same
+ * @return string|false Returns a string that is encoded in ISO-8859-1 and consists of the same
  * sequence of characters in string, or false
  * if string contains invalid modified UTF-7 sequence
  * or string contains a character that is not part of
  * ISO-8859-1 character set.
  */
-function imap_utf7_decode (string $string): string|bool {}
+function imap_utf7_decode (string $string): string|int {}
 
 /**
  * Converts ISO-8859-1 string to modified UTF-7 text
@@ -1041,25 +1041,25 @@ function imap_utf7_encode (string $string): string {}
  * Encode a UTF-8 string to modified UTF-7
  * @link http://www.php.net/manual/en/function.imap-utf8-to-mutf7.php
  * @param string $string A UTF-8 encoded string.
- * @return string|bool Returns string converted to modified UTF-7,
+ * @return string|false Returns string converted to modified UTF-7,
  * or false on failure.
  */
-function imap_utf8_to_mutf7 (string $string): string|bool {}
+function imap_utf8_to_mutf7 (string $string): string|int {}
 
 /**
  * Decode a modified UTF-7 string to UTF-8
  * @link http://www.php.net/manual/en/function.imap-mutf7-to-utf8.php
  * @param string $string A string encoded in modified UTF-7.
- * @return string|bool Returns string converted to UTF-8,
+ * @return string|false Returns string converted to UTF-8,
  * or false on failure.
  */
-function imap_mutf7_to_utf8 (string $string): string|bool {}
+function imap_mutf7_to_utf8 (string $string): string|int {}
 
 /**
  * Decode MIME header elements
  * @link http://www.php.net/manual/en/function.imap-mime-header-decode.php
  * @param string $string 
- * @return array|bool The decoded elements are returned in an array of objects, where each
+ * @return array|false The decoded elements are returned in an array of objects, where each
  * object has two properties, charset and 
  * text.
  * <p>If the element hasn't been encoded, and in other words is in
@@ -1067,14 +1067,14 @@ function imap_mutf7_to_utf8 (string $string): string|bool {}
  * set to default.</p>
  * <p>The function returns false on failure.</p>
  */
-function imap_mime_header_decode (string $string): array|bool {}
+function imap_mime_header_decode (string $string): array|int {}
 
 /**
  * Returns a tree of threaded message
  * @link http://www.php.net/manual/en/function.imap-thread.php
  * @param IMAP\Connection $imap 
  * @param int $flags [optional] 
- * @return array|bool imap_thread returns an associative array containing
+ * @return array|false imap_thread returns an associative array containing
  * a tree of messages threaded by REFERENCES, or false
  * on error.
  * <p>Every message in the current mailbox will be represented by three entries
@@ -1094,7 +1094,7 @@ function imap_mime_header_decode (string $string): array|bool {}
  * <p>$thread["XX.next"]</p>
  * <p>$thread["XX.branch"]</p>
  */
-function imap_thread (IMAP\Connection $imap, int $flags = SE_FREE): array|bool {}
+function imap_thread (IMAP\Connection $imap, int $flags = SE_FREE): array|int {}
 
 /**
  * Set or fetch imap timeout
@@ -1114,7 +1114,7 @@ function imap_timeout (int $timeout_type, int $timeout = -1): int|bool {}
  * @link http://www.php.net/manual/en/function.imap-get-quota.php
  * @param IMAP\Connection $imap 
  * @param string $quota_root 
- * @return array|bool Returns an array with integer values limit and usage for the given
+ * @return array|false Returns an array with integer values limit and usage for the given
  * mailbox. The value of limit represents the total amount of space
  * allowed for this mailbox. The usage value represents the mailboxes
  * current level of capacity. Will return false in the case of failure.
@@ -1127,21 +1127,21 @@ function imap_timeout (int $timeout_type, int $timeout = -1): int|bool {}
  * <p>For backwards compatibility reasons, the original access methods are
  * still available for use, although it is suggested to update.</p>
  */
-function imap_get_quota (IMAP\Connection $imap, string $quota_root): array|bool {}
+function imap_get_quota (IMAP\Connection $imap, string $quota_root): array|int {}
 
 /**
  * Retrieve the quota settings per user
  * @link http://www.php.net/manual/en/function.imap-get-quotaroot.php
  * @param IMAP\Connection $imap 
  * @param string $mailbox 
- * @return array|bool Returns an array of integer values pertaining to the specified user
+ * @return array|false Returns an array of integer values pertaining to the specified user
  * mailbox. All values contain a key based upon the resource name, and a
  * corresponding array with the usage and limit values within.
  * <p>This function will return false in the case of call failure, and an
  * array of information about the connection upon an un-parsable response
  * from the server.</p>
  */
-function imap_get_quotaroot (IMAP\Connection $imap, string $mailbox): array|bool {}
+function imap_get_quotaroot (IMAP\Connection $imap, string $mailbox): array|int {}
 
 /**
  * Sets a quota for a given mailbox
@@ -1169,9 +1169,9 @@ function imap_setacl (IMAP\Connection $imap, string $mailbox, string $user_id, s
  * @link http://www.php.net/manual/en/function.imap-getacl.php
  * @param IMAP\Connection $imap 
  * @param string $mailbox 
- * @return array|bool Returns an associative array of "folder" =&gt; "acl" pairs, or false on failure.
+ * @return array|false Returns an associative array of "folder" =&gt; "acl" pairs, or false on failure.
  */
-function imap_getacl (IMAP\Connection $imap, string $mailbox): array|bool {}
+function imap_getacl (IMAP\Connection $imap, string $mailbox): array|int {}
 
 /**
  * Send an email message

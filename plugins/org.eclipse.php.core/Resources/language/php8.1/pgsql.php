@@ -36,18 +36,18 @@ namespace {
  * @link http://www.php.net/manual/en/function.pg-connect.php
  * @param string $connection_string 
  * @param int $flags [optional] 
- * @return PgSql\Connection|bool Returns an PgSql\Connection instance on success, or false on failure.
+ * @return PgSql\Connection|false Returns an PgSql\Connection instance on success, or false on failure.
  */
-function pg_connect (string $connection_string, int $flags = null): PgSql\Connection|bool {}
+function pg_connect (string $connection_string, int $flags = null): PgSql\Connection|int {}
 
 /**
  * Open a persistent PostgreSQL connection
  * @link http://www.php.net/manual/en/function.pg-pconnect.php
  * @param string $connection_string 
  * @param int $flags [optional] 
- * @return PgSql\Connection|bool Returns an PgSql\Connection instance on success, or false on failure.
+ * @return PgSql\Connection|false Returns an PgSql\Connection instance on success, or false on failure.
  */
-function pg_pconnect (string $connection_string, int $flags = null): PgSql\Connection|bool {}
+function pg_pconnect (string $connection_string, int $flags = null): PgSql\Connection|int {}
 
 /**
  * Poll the status of an in-progress asynchronous PostgreSQL connection
@@ -66,9 +66,9 @@ function pg_connect_poll (PgSql\Connection $connection): int {}
  * Closes a PostgreSQL connection
  * @link http://www.php.net/manual/en/function.pg-close.php
  * @param PgSql\Connection|null $connection [optional] 
- * @return bool Always returns true.
+ * @return true Always returns true.
  */
-function pg_close (?PgSql\Connection $connection = null): bool {}
+function pg_close (?PgSql\Connection $connection = null): int {}
 
 /**
  * Get the database name
@@ -89,10 +89,11 @@ function pg_dbname (?PgSql\Connection $connection = null): string {}
 function pg_last_error (?PgSql\Connection $connection = null): string {}
 
 /**
- * @param ?PgSql\Connection $connection [optional]
+ * {@inheritdoc}
+ * @param PgSql\Connection|null $connection [optional]
  * @deprecated 
  */
-function pg_errormessage (?PgSql\Connection $connection = null): string {}
+function pg_errormessage (?PgSql\Connection $connection = NULL): string {}
 
 /**
  * Get the options associated with the connection
@@ -162,15 +163,16 @@ function pg_ping (?PgSql\Connection $connection = null): bool {}
  * @link http://www.php.net/manual/en/function.pg-query.php
  * @param PgSql\Connection $connection [optional] 
  * @param string $query 
- * @return PgSql\Result|bool An PgSql\Result instance on success, or false on failure.
+ * @return PgSql\Result|false An PgSql\Result instance on success, or false on failure.
  */
-function pg_query (PgSql\Connection $connection = null, string $query): PgSql\Result|bool {}
+function pg_query (PgSql\Connection $connection = null, string $query): PgSql\Result|int {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $connection
  * @param string $query [optional]
  */
-function pg_exec ($connection = null, string $query = 'null'): PgSql\Result|false {}
+function pg_exec ($connection = null, string $query = NULL): PgSql\Result|int {}
 
 /**
  * Submits a command to the server and waits for the result, with the ability to pass parameters separately from the SQL command text
@@ -178,9 +180,9 @@ function pg_exec ($connection = null, string $query = 'null'): PgSql\Result|fals
  * @param PgSql\Connection $connection [optional] 
  * @param string $query 
  * @param array $params 
- * @return PgSql\Result|bool An PgSql\Result instance on success, or false on failure.
+ * @return PgSql\Result|false An PgSql\Result instance on success, or false on failure.
  */
-function pg_query_params (PgSql\Connection $connection = null, string $query, array $params): PgSql\Result|bool {}
+function pg_query_params (PgSql\Connection $connection = null, string $query, array $params): PgSql\Result|int {}
 
 /**
  * Submits a request to create a prepared statement with the 
@@ -189,9 +191,9 @@ function pg_query_params (PgSql\Connection $connection = null, string $query, ar
  * @param PgSql\Connection $connection [optional] 
  * @param string $stmtname 
  * @param string $query 
- * @return PgSql\Result|bool An PgSql\Result instance on success, or false on failure.
+ * @return PgSql\Result|false An PgSql\Result instance on success, or false on failure.
  */
-function pg_prepare (PgSql\Connection $connection = null, string $stmtname, string $query): PgSql\Result|bool {}
+function pg_prepare (PgSql\Connection $connection = null, string $stmtname, string $query): PgSql\Result|int {}
 
 /**
  * Sends a request to execute a prepared statement with given parameters, and waits for the result
@@ -199,9 +201,9 @@ function pg_prepare (PgSql\Connection $connection = null, string $stmtname, stri
  * @param PgSql\Connection $connection [optional] 
  * @param string $stmtname 
  * @param array $params 
- * @return PgSql\Result|bool An PgSql\Result instance on success, or false on failure.
+ * @return PgSql\Result|false An PgSql\Result instance on success, or false on failure.
  */
-function pg_execute (PgSql\Connection $connection = null, string $stmtname, array $params): PgSql\Result|bool {}
+function pg_execute (PgSql\Connection $connection = null, string $stmtname, array $params): PgSql\Result|int {}
 
 /**
  * Returns the number of rows in a result
@@ -212,6 +214,7 @@ function pg_execute (PgSql\Connection $connection = null, string $stmtname, arra
 function pg_num_rows (PgSql\Result $result): int {}
 
 /**
+ * {@inheritdoc}
  * @param PgSql\Result $result
  * @deprecated 
  */
@@ -226,6 +229,7 @@ function pg_numrows (PgSql\Result $result): int {}
 function pg_num_fields (PgSql\Result $result): int {}
 
 /**
+ * {@inheritdoc}
  * @param PgSql\Result $result
  * @deprecated 
  */
@@ -241,6 +245,7 @@ function pg_numfields (PgSql\Result $result): int {}
 function pg_affected_rows (PgSql\Result $result): int {}
 
 /**
+ * {@inheritdoc}
  * @param PgSql\Result $result
  * @deprecated 
  */
@@ -265,9 +270,9 @@ function pg_last_notice (PgSql\Connection $connection, int $mode = PGSQL_NOTICE_
  * @param PgSql\Result $result 
  * @param int $field 
  * @param bool $oid_only [optional] 
- * @return string|int|bool On success either the fields table name or oid, or false on failure.
+ * @return string|int|false On success either the fields table name or oid, or false on failure.
  */
-function pg_field_table (PgSql\Result $result, int $field, bool $oid_only = false): string|int|bool {}
+function pg_field_table (PgSql\Result $result, int $field, bool $oid_only = false): string|int {}
 
 /**
  * Returns the name of a field
@@ -279,6 +284,7 @@ function pg_field_table (PgSql\Result $result, int $field, bool $oid_only = fals
 function pg_field_name (PgSql\Result $result, int $field): string {}
 
 /**
+ * {@inheritdoc}
  * @param PgSql\Result $result
  * @param int $field
  * @deprecated 
@@ -296,6 +302,7 @@ function pg_fieldname (PgSql\Result $result, int $field): string {}
 function pg_field_size (PgSql\Result $result, int $field): int {}
 
 /**
+ * {@inheritdoc}
  * @param PgSql\Result $result
  * @param int $field
  * @deprecated 
@@ -312,6 +319,7 @@ function pg_fieldsize (PgSql\Result $result, int $field): int {}
 function pg_field_type (PgSql\Result $result, int $field): string {}
 
 /**
+ * {@inheritdoc}
  * @param PgSql\Result $result
  * @param int $field
  * @deprecated 
@@ -337,6 +345,7 @@ function pg_field_type_oid (PgSql\Result $result, int $field): string|int {}
 function pg_field_num (PgSql\Result $result, string $field): int {}
 
 /**
+ * {@inheritdoc}
  * @param PgSql\Result $result
  * @param string $field
  * @deprecated 
@@ -349,7 +358,7 @@ function pg_fieldnum (PgSql\Result $result, string $field): int {}
  * @param PgSql\Result $result 
  * @param int $row 
  * @param mixed $field 
- * @return string|bool|null Boolean is returned as "t" or "f". All
+ * @return string|false|null Boolean is returned as "t" or "f". All
  * other types, including arrays are returned as strings formatted
  * in the same default PostgreSQL manner that you would see in the
  * psql program. Database NULL
@@ -357,15 +366,16 @@ function pg_fieldnum (PgSql\Result $result, string $field): int {}
  * <p>false is returned if row exceeds the number
  * of rows in the set, or on any other error.</p>
  */
-function pg_fetch_result (PgSql\Result $result, int $row, mixed $field): string|bool|null {}
+function pg_fetch_result (PgSql\Result $result, int $row, mixed $field): string|int|null {}
 
 /**
+ * {@inheritdoc}
  * @param PgSql\Result $result
  * @param mixed $row
  * @param string|int $field [optional]
  * @deprecated 
  */
-function pg_result (PgSql\Result $result, $row = null, string|int $field = 'null'): string|false|null {}
+function pg_result (PgSql\Result $result, $row = null, string|int $field = NULL): string|int|null {}
 
 /**
  * Get a row as an enumerated array
@@ -373,27 +383,27 @@ function pg_result (PgSql\Result $result, $row = null, string|int $field = 'null
  * @param PgSql\Result $result 
  * @param int|null $row [optional] 
  * @param int $mode [optional] 
- * @return array|bool An array, indexed from 0 upwards, with each value
+ * @return array|false An array, indexed from 0 upwards, with each value
  * represented as a string. Database NULL
  * values are returned as null.
  * <p>false is returned if row exceeds the number
  * of rows in the set, there are no more rows, or on any other error.</p>
  */
-function pg_fetch_row (PgSql\Result $result, ?int $row = null, int $mode = PGSQL_NUM): array|bool {}
+function pg_fetch_row (PgSql\Result $result, ?int $row = null, int $mode = PGSQL_NUM): array|int {}
 
 /**
  * Fetch a row as an associative array
  * @link http://www.php.net/manual/en/function.pg-fetch-assoc.php
  * @param PgSql\Result $result 
  * @param int|null $row [optional] 
- * @return array|bool An array indexed associatively (by field name).
+ * @return array|false An array indexed associatively (by field name).
  * Each value in the array is represented as a 
  * string. Database NULL
  * values are returned as null.
  * <p>false is returned if row exceeds the number
  * of rows in the set, there are no more rows, or on any other error.</p>
  */
-function pg_fetch_assoc (PgSql\Result $result, ?int $row = null): array|bool {}
+function pg_fetch_assoc (PgSql\Result $result, ?int $row = null): array|int {}
 
 /**
  * Fetch a row as an array
@@ -401,7 +411,7 @@ function pg_fetch_assoc (PgSql\Result $result, ?int $row = null): array|bool {}
  * @param PgSql\Result $result 
  * @param int|null $row [optional] 
  * @param int $mode [optional] 
- * @return array|bool An array indexed numerically (beginning with 0) or
+ * @return array|false An array indexed numerically (beginning with 0) or
  * associatively (indexed by field name), or both.
  * Each value in the array is represented as a 
  * string. Database NULL
@@ -410,7 +420,7 @@ function pg_fetch_assoc (PgSql\Result $result, ?int $row = null): array|bool {}
  * of rows in the set, there are no more rows, or on any other error.
  * Fetching from the result of a query other than SELECT will also return false.</p>
  */
-function pg_fetch_array (PgSql\Result $result, ?int $row = null, int $mode = PGSQL_BOTH): array|bool {}
+function pg_fetch_array (PgSql\Result $result, ?int $row = null, int $mode = PGSQL_BOTH): array|int {}
 
 /**
  * Fetch a row as an object
@@ -419,13 +429,13 @@ function pg_fetch_array (PgSql\Result $result, ?int $row = null, int $mode = PGS
  * @param int|null $row [optional] 
  * @param string $class [optional] 
  * @param array $constructor_args [optional] 
- * @return object|bool An object with one attribute for each field
+ * @return object|false An object with one attribute for each field
  * name in the result. Database NULL
  * values are returned as null.
  * <p>false is returned if row exceeds the number
  * of rows in the set, there are no more rows, or on any other error.</p>
  */
-function pg_fetch_object (PgSql\Result $result, ?int $row = null, string $class = "stdClass", array $constructor_args = []): object|bool {}
+function pg_fetch_object (PgSql\Result $result, ?int $row = null, string $class = '"stdClass"', array $constructor_args = '[]'): object|int {}
 
 /**
  * Fetches all rows from a result as an array
@@ -466,12 +476,13 @@ function pg_result_seek (PgSql\Result $result, int $row): bool {}
 function pg_field_prtlen (PgSql\Result $result, int $row_number, mixed $field_name_or_number): int {}
 
 /**
+ * {@inheritdoc}
  * @param PgSql\Result $result
  * @param mixed $row
  * @param string|int $field [optional]
  * @deprecated 
  */
-function pg_fieldprtlen (PgSql\Result $result, $row = null, string|int $field = 'null'): int|false {}
+function pg_fieldprtlen (PgSql\Result $result, $row = null, string|int $field = NULL): int {}
 
 /**
  * Test if a field is SQL NULL
@@ -485,12 +496,13 @@ function pg_fieldprtlen (PgSql\Result $result, $row = null, string|int $field = 
 function pg_field_is_null (PgSql\Result $result, int $row, mixed $field): int {}
 
 /**
+ * {@inheritdoc}
  * @param PgSql\Result $result
  * @param mixed $row
  * @param string|int $field [optional]
  * @deprecated 
  */
-function pg_fieldisnull (PgSql\Result $result, $row = null, string|int $field = 'null'): int|false {}
+function pg_fieldisnull (PgSql\Result $result, $row = null, string|int $field = NULL): int {}
 
 /**
  * Free result memory
@@ -501,6 +513,7 @@ function pg_fieldisnull (PgSql\Result $result, $row = null, string|int $field = 
 function pg_free_result (PgSql\Result $result): bool {}
 
 /**
+ * {@inheritdoc}
  * @param PgSql\Result $result
  * @deprecated 
  */
@@ -510,17 +523,18 @@ function pg_freeresult (PgSql\Result $result): bool {}
  * Returns the last row's OID
  * @link http://www.php.net/manual/en/function.pg-last-oid.php
  * @param PgSql\Result $result 
- * @return string|int|bool An int or string containing the OID assigned to the most recently inserted
+ * @return string|int|false An int or string containing the OID assigned to the most recently inserted
  * row in the specified connection, or false on error or
  * no available OID.
  */
-function pg_last_oid (PgSql\Result $result): string|int|bool {}
+function pg_last_oid (PgSql\Result $result): string|int {}
 
 /**
+ * {@inheritdoc}
  * @param PgSql\Result $result
  * @deprecated 
  */
-function pg_getlastoid (PgSql\Result $result): string|int|false {}
+function pg_getlastoid (PgSql\Result $result): string|int {}
 
 /**
  * Enable tracing a PostgreSQL connection
@@ -530,15 +544,15 @@ function pg_getlastoid (PgSql\Result $result): string|int|false {}
  * @param PgSql\Connection|null $connection [optional] 
  * @return bool Returns true on success or false on failure.
  */
-function pg_trace (string $filename, string $mode = "w", ?PgSql\Connection $connection = null): bool {}
+function pg_trace (string $filename, string $mode = '"w"', ?PgSql\Connection $connection = null): bool {}
 
 /**
  * Disable tracing of a PostgreSQL connection
  * @link http://www.php.net/manual/en/function.pg-untrace.php
  * @param PgSql\Connection|null $connection [optional] 
- * @return bool Always returns true.
+ * @return true Always returns true.
  */
-function pg_untrace (?PgSql\Connection $connection = null): bool {}
+function pg_untrace (?PgSql\Connection $connection = null): int {}
 
 /**
  * Create a large object
@@ -550,11 +564,12 @@ function pg_untrace (?PgSql\Connection $connection = null): bool {}
 function pg_lo_create (PgSql\Connection $connection = null, mixed $object_id = null): int {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $connection [optional]
  * @param mixed $oid [optional]
  * @deprecated 
  */
-function pg_locreate ($connection = null, $oid = null): string|int|false {}
+function pg_locreate ($connection = NULL, $oid = NULL): string|int {}
 
 /**
  * Delete a large object
@@ -566,11 +581,12 @@ function pg_locreate ($connection = null, $oid = null): string|int|false {}
 function pg_lo_unlink (PgSql\Connection $connection, int $oid): bool {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $connection
  * @param mixed $oid [optional]
  * @deprecated 
  */
-function pg_lounlink ($connection = null, $oid = null): bool {}
+function pg_lounlink ($connection = null, $oid = NULL): bool {}
 
 /**
  * Open a large object
@@ -578,17 +594,18 @@ function pg_lounlink ($connection = null, $oid = null): bool {}
  * @param PgSql\Connection $connection 
  * @param int $oid 
  * @param string $mode 
- * @return PgSql\Lob|bool An PgSql\Lob instance, or false on failure.
+ * @return PgSql\Lob|false An PgSql\Lob instance, or false on failure.
  */
-function pg_lo_open (PgSql\Connection $connection, int $oid, string $mode): PgSql\Lob|bool {}
+function pg_lo_open (PgSql\Connection $connection, int $oid, string $mode): PgSql\Lob|int {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $connection
  * @param mixed $oid [optional]
  * @param string $mode [optional]
  * @deprecated 
  */
-function pg_loopen ($connection = null, $oid = null, string $mode = 'null'): PgSql\Lob|false {}
+function pg_loopen ($connection = null, $oid = NULL, string $mode = NULL): PgSql\Lob|int {}
 
 /**
  * Close a large object
@@ -599,6 +616,7 @@ function pg_loopen ($connection = null, $oid = null, string $mode = 'null'): PgS
 function pg_lo_close (PgSql\Lob $lob): bool {}
 
 /**
+ * {@inheritdoc}
  * @param PgSql\Lob $lob
  * @deprecated 
  */
@@ -609,17 +627,18 @@ function pg_loclose (PgSql\Lob $lob): bool {}
  * @link http://www.php.net/manual/en/function.pg-lo-read.php
  * @param PgSql\Lob $lob 
  * @param int $length [optional] 
- * @return string|bool A string containing length bytes from the
+ * @return string|false A string containing length bytes from the
  * large object, or false on error.
  */
-function pg_lo_read (PgSql\Lob $lob, int $length = 8192): string|bool {}
+function pg_lo_read (PgSql\Lob $lob, int $length = 8192): string|int {}
 
 /**
+ * {@inheritdoc}
  * @param PgSql\Lob $lob
  * @param int $length [optional]
  * @deprecated 
  */
-function pg_loread (PgSql\Lob $lob, int $length = 8192): string|false {}
+function pg_loread (PgSql\Lob $lob, int $length = 8192): string|int {}
 
 /**
  * Write to a large object
@@ -627,17 +646,18 @@ function pg_loread (PgSql\Lob $lob, int $length = 8192): string|false {}
  * @param PgSql\Lob $lob 
  * @param string $data 
  * @param int|null $length [optional] 
- * @return int|bool The number of bytes written to the large object, or false on error.
+ * @return int|false The number of bytes written to the large object, or false on error.
  */
-function pg_lo_write (PgSql\Lob $lob, string $data, ?int $length = null): int|bool {}
+function pg_lo_write (PgSql\Lob $lob, string $data, ?int $length = null): int {}
 
 /**
+ * {@inheritdoc}
  * @param PgSql\Lob $lob
  * @param string $data
- * @param ?int $length [optional]
+ * @param int|null $length [optional]
  * @deprecated 
  */
-function pg_lowrite (PgSql\Lob $lob, string $data, ?int $length = null): int|false {}
+function pg_lowrite (PgSql\Lob $lob, string $data, ?int $length = NULL): int {}
 
 /**
  * Reads an entire large object and send straight to browser
@@ -648,6 +668,7 @@ function pg_lowrite (PgSql\Lob $lob, string $data, ?int $length = null): int|fal
 function pg_lo_read_all (PgSql\Lob $lob): int {}
 
 /**
+ * {@inheritdoc}
  * @param PgSql\Lob $lob
  * @deprecated 
  */
@@ -664,12 +685,13 @@ function pg_loreadall (PgSql\Lob $lob): int {}
 function pg_lo_import (PgSql\Connection $connection = null, string $pathname, mixed $object_id = null): int {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $connection
  * @param mixed $filename [optional]
  * @param mixed $oid [optional]
  * @deprecated 
  */
-function pg_loimport ($connection = null, $filename = null, $oid = null): string|int|false {}
+function pg_loimport ($connection = null, $filename = NULL, $oid = NULL): string|int {}
 
 /**
  * Export a large object to file
@@ -682,12 +704,13 @@ function pg_loimport ($connection = null, $filename = null, $oid = null): string
 function pg_lo_export (PgSql\Connection $connection = null, int $oid, string $pathname): bool {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $connection
  * @param mixed $oid [optional]
  * @param mixed $filename [optional]
  * @deprecated 
  */
-function pg_loexport ($connection = null, $oid = null, $filename = null): bool {}
+function pg_loexport ($connection = null, $oid = NULL, $filename = NULL): bool {}
 
 /**
  * Seeks position within a large object
@@ -739,11 +762,12 @@ function pg_set_error_verbosity (PgSql\Connection $connection = null, int $verbo
 function pg_set_client_encoding (PgSql\Connection $connection = null, string $encoding): int {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $connection
  * @param string $encoding [optional]
  * @deprecated 
  */
-function pg_setclientencoding ($connection = null, string $encoding = 'null'): int {}
+function pg_setclientencoding ($connection = null, string $encoding = NULL): int {}
 
 /**
  * Gets the client encoding
@@ -754,10 +778,11 @@ function pg_setclientencoding ($connection = null, string $encoding = 'null'): i
 function pg_client_encoding (?PgSql\Connection $connection = null): string {}
 
 /**
- * @param ?PgSql\Connection $connection [optional]
+ * {@inheritdoc}
+ * @param PgSql\Connection|null $connection [optional]
  * @deprecated 
  */
-function pg_clientencoding (?PgSql\Connection $connection = null): string {}
+function pg_clientencoding (?PgSql\Connection $connection = NULL): string {}
 
 /**
  * Sync with PostgreSQL backend
@@ -783,9 +808,9 @@ function pg_put_line (PgSql\Connection $connection = null, string $data): bool {
  * @param string $table_name 
  * @param string $separator [optional] 
  * @param string $null_as [optional] 
- * @return array|bool An array with one element for each line of COPY data, or false on failure.
+ * @return array|false An array with one element for each line of COPY data, or false on failure.
  */
-function pg_copy_to (PgSql\Connection $connection, string $table_name, string $separator = "\t", string $null_as = "\\\\N"): array|bool {}
+function pg_copy_to (PgSql\Connection $connection, string $table_name, string $separator = '"\\t"', string $null_as = '"\\\\\\\\N"'): array|int {}
 
 /**
  * Insert records into a table from an array
@@ -797,7 +822,7 @@ function pg_copy_to (PgSql\Connection $connection, string $table_name, string $s
  * @param string $null_as [optional] 
  * @return bool Returns true on success or false on failure.
  */
-function pg_copy_from (PgSql\Connection $connection, string $table_name, array $rows, string $separator = "\t", string $null_as = "\\\\N"): bool {}
+function pg_copy_from (PgSql\Connection $connection, string $table_name, array $rows, string $separator = '"\\t"', string $null_as = '"\\\\\\\\N"'): bool {}
 
 /**
  * Escape a string for query
@@ -847,20 +872,20 @@ function pg_escape_identifier (PgSql\Connection $connection = null, string $data
  * Get error message associated with result
  * @link http://www.php.net/manual/en/function.pg-result-error.php
  * @param PgSql\Result $result 
- * @return string|bool Returns a string. Returns empty string if there is no error. If there is an error associated with the
+ * @return string|false Returns a string. Returns empty string if there is no error. If there is an error associated with the
  * result parameter, returns false.
  */
-function pg_result_error (PgSql\Result $result): string|bool {}
+function pg_result_error (PgSql\Result $result): string|int {}
 
 /**
  * Returns an individual field of an error report
  * @link http://www.php.net/manual/en/function.pg-result-error-field.php
  * @param PgSql\Result $result 
  * @param int $field_code 
- * @return string|bool|null A string containing the contents of the error field, null if the field does not exist or false
+ * @return string|false|null A string containing the contents of the error field, null if the field does not exist or false
  * on failure.
  */
-function pg_result_error_field (PgSql\Result $result, int $field_code): string|bool|null {}
+function pg_result_error_field (PgSql\Result $result, int $field_code): string|int|null {}
 
 /**
  * Get connection status
@@ -956,9 +981,9 @@ function pg_send_execute (PgSql\Connection $connection, string $statement_name, 
  * Get asynchronous query result
  * @link http://www.php.net/manual/en/function.pg-get-result.php
  * @param PgSql\Connection $connection 
- * @return PgSql\Result|bool An PgSql\Result instance, or false if no more results are available.
+ * @return PgSql\Result|false An PgSql\Result instance, or false if no more results are available.
  */
-function pg_get_result (PgSql\Connection $connection): PgSql\Result|bool {}
+function pg_get_result (PgSql\Connection $connection): PgSql\Result|int {}
 
 /**
  * Get status of query result
@@ -978,11 +1003,11 @@ function pg_result_status (PgSql\Result $result, int $mode = PGSQL_STATUS_LONG):
  * @link http://www.php.net/manual/en/function.pg-get-notify.php
  * @param PgSql\Connection $connection 
  * @param int $mode [optional] 
- * @return array|bool An array containing the NOTIFY message name and backend PID.
+ * @return array|false An array containing the NOTIFY message name and backend PID.
  * If supported by the server, the array also contains the server version and the payload.
  * Otherwise if no NOTIFY is waiting, then false is returned.
  */
-function pg_get_notify (PgSql\Connection $connection, int $mode = PGSQL_ASSOC): array|bool {}
+function pg_get_notify (PgSql\Connection $connection, int $mode = PGSQL_ASSOC): array|int {}
 
 /**
  * Gets the backend's process ID
@@ -996,9 +1021,9 @@ function pg_get_pid (PgSql\Connection $connection): int {}
  * Get a read only handle to the socket underlying a PostgreSQL connection
  * @link http://www.php.net/manual/en/function.pg-socket.php
  * @param PgSql\Connection $connection >An PgSql\Connection instance.
- * @return resource|bool A socket resource on success or false on failure.
+ * @return resource|false A socket resource on success or false on failure.
  */
-function pg_socket (PgSql\Connection $connection): resource|bool {}
+function pg_socket (PgSql\Connection $connection) {}
 
 /**
  * Reads input on the connection
@@ -1025,9 +1050,9 @@ function pg_flush (PgSql\Connection $connection): int|bool {}
  * @param PgSql\Connection $connection 
  * @param string $table_name 
  * @param bool $extended [optional] 
- * @return array|bool An array of the table definition, or false on failure.
+ * @return array|false An array of the table definition, or false on failure.
  */
-function pg_meta_data (PgSql\Connection $connection, string $table_name, bool $extended = false): array|bool {}
+function pg_meta_data (PgSql\Connection $connection, string $table_name, bool $extended = false): array|int {}
 
 /**
  * Convert associative array values into forms suitable for SQL statements
@@ -1036,9 +1061,9 @@ function pg_meta_data (PgSql\Connection $connection, string $table_name, bool $e
  * @param string $table_name 
  * @param array $values 
  * @param int $flags [optional] 
- * @return array|bool An array of converted values, or false on failure.
+ * @return array|false An array of converted values, or false on failure.
  */
-function pg_convert (PgSql\Connection $connection, string $table_name, array $values, int $flags = null): array|bool {}
+function pg_convert (PgSql\Connection $connection, string $table_name, array $values, int $flags = null): array|int {}
 
 /**
  * Insert array into table
@@ -1085,10 +1110,10 @@ function pg_delete (PgSql\Connection $connection, string $table_name, array $con
  * @param array $conditions 
  * @param int $flags [optional] 
  * @param int $mode [optional] 
- * @return array|string|bool Returns string if PGSQL_DML_STRING is passed
+ * @return array|string|false Returns string if PGSQL_DML_STRING is passed
  * via flags, otherwise it returns an array on success, or false on failure.
  */
-function pg_select (PgSql\Connection $connection, string $table_name, array $conditions, int $flags = PGSQL_DML_EXEC, int $mode = PGSQL_ASSOC): array|string|bool {}
+function pg_select (PgSql\Connection $connection, string $table_name, array $conditions, int $flags = PGSQL_DML_EXEC, int $mode = PGSQL_ASSOC): array|string|int {}
 
 
 /**

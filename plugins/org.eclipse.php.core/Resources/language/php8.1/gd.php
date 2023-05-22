@@ -97,9 +97,9 @@ function gd_info (): array {}
  * Load a new font
  * @link http://www.php.net/manual/en/function.imageloadfont.php
  * @param string $filename 
- * @return GdFont|bool Returns an GdFont instance, or false on failure.
+ * @return GdFont|false Returns an GdFont instance, or false on failure.
  */
-function imageloadfont (string $filename): GdFont|bool {}
+function imageloadfont (string $filename): GdFont|int {}
 
 /**
  * Set the style for line drawing
@@ -115,9 +115,9 @@ function imagesetstyle (GdImage $image, array $style): bool {}
  * @link http://www.php.net/manual/en/function.imagecreatetruecolor.php
  * @param int $width 
  * @param int $height 
- * @return GdImage|bool Returns an image object on success, false on errors.
+ * @return GdImage|false Returns an image object on success, false on errors.
  */
-function imagecreatetruecolor (int $width, int $height): GdImage|bool {}
+function imagecreatetruecolor (int $width, int $height): GdImage|int {}
 
 /**
  * Finds whether an image is a truecolor image
@@ -229,9 +229,9 @@ function imagelayereffect (GdImage $image, int $effect): bool {}
  * @param int $green 
  * @param int $blue 
  * @param int $alpha 
- * @return int|bool A color identifier or false if the allocation failed.
+ * @return int|false A color identifier or false if the allocation failed.
  */
-function imagecolorallocatealpha (GdImage $image, int $red, int $green, int $blue, int $alpha): int|bool {}
+function imagecolorallocatealpha (GdImage $image, int $red, int $green, int $blue, int $alpha): int {}
 
 /**
  * Get the index of the specified color + alpha or its closest possible alternative
@@ -294,9 +294,9 @@ function imagecopyresampled (GdImage $dst_image, GdImage $src_image, int $dst_x,
  * @param float $angle 
  * @param int $background_color 
  * @param bool $ignore_transparent [optional] 
- * @return GdImage|bool Returns an image object for the rotated image, or false on failure.
+ * @return GdImage|false Returns an image object for the rotated image, or false on failure.
  */
-function imagerotate (GdImage $image, float $angle, int $background_color, bool $ignore_transparent = false): GdImage|bool {}
+function imagerotate (GdImage $image, float $angle, int $background_color, bool $ignore_transparent = false): GdImage|int {}
 
 /**
  * Set the tile image for filling
@@ -321,9 +321,9 @@ function imagesetbrush (GdImage $image, GdImage $brush): bool {}
  * @link http://www.php.net/manual/en/function.imagecreate.php
  * @param int $width 
  * @param int $height 
- * @return GdImage|bool Returns an image object on success, false on errors.
+ * @return GdImage|false Returns an image object on success, false on errors.
  */
-function imagecreate (int $width, int $height): GdImage|bool {}
+function imagecreate (int $width, int $height): GdImage|int {}
 
 /**
  * Return the image types supported by this PHP build
@@ -341,91 +341,91 @@ function imagetypes (): int {}
  * Create a new image from the image stream in the string
  * @link http://www.php.net/manual/en/function.imagecreatefromstring.php
  * @param string $data 
- * @return GdImage|bool An image object will be returned on success. false is returned if
+ * @return GdImage|false An image object will be returned on success. false is returned if
  * the image type is unsupported, the data is not in a recognised format,
  * or the image is corrupt and cannot be loaded.
  */
-function imagecreatefromstring (string $data): GdImage|bool {}
+function imagecreatefromstring (string $data): GdImage|int {}
 
 /**
  * Create a new image from file or URL
  * @link http://www.php.net/manual/en/function.imagecreatefromavif.php
  * @param string $filename 
- * @return GdImage|bool Returns an image object on success, false on errors.
+ * @return GdImage|false Returns an image object on success, false on errors.
  */
-function imagecreatefromavif (string $filename): GdImage|bool {}
+function imagecreatefromavif (string $filename): GdImage|int {}
 
 /**
  * Create a new image from file or URL
  * @link http://www.php.net/manual/en/function.imagecreatefromgif.php
  * @param string $filename 
- * @return GdImage|bool Returns an image object on success, false on errors.
+ * @return GdImage|false Returns an image object on success, false on errors.
  */
-function imagecreatefromgif (string $filename): GdImage|bool {}
+function imagecreatefromgif (string $filename): GdImage|int {}
 
 /**
  * Create a new image from file or URL
  * @link http://www.php.net/manual/en/function.imagecreatefromjpeg.php
  * @param string $filename 
- * @return GdImage|bool Returns an image object on success, false on errors.
+ * @return GdImage|false Returns an image object on success, false on errors.
  */
-function imagecreatefromjpeg (string $filename): GdImage|bool {}
+function imagecreatefromjpeg (string $filename): GdImage|int {}
 
 /**
  * Create a new image from file or URL
  * @link http://www.php.net/manual/en/function.imagecreatefrompng.php
  * @param string $filename 
- * @return GdImage|bool Returns an image object on success, false on errors.
+ * @return GdImage|false Returns an image object on success, false on errors.
  */
-function imagecreatefrompng (string $filename): GdImage|bool {}
+function imagecreatefrompng (string $filename): GdImage|int {}
 
 /**
  * Create a new image from file or URL
  * @link http://www.php.net/manual/en/function.imagecreatefromwebp.php
  * @param string $filename 
- * @return GdImage|bool Returns an image object on success, false on errors.
+ * @return GdImage|false Returns an image object on success, false on errors.
  */
-function imagecreatefromwebp (string $filename): GdImage|bool {}
+function imagecreatefromwebp (string $filename): GdImage|int {}
 
 /**
  * Create a new image from file or URL
  * @link http://www.php.net/manual/en/function.imagecreatefromxbm.php
  * @param string $filename 
- * @return GdImage|bool Returns an image object on success, false on errors.
+ * @return GdImage|false Returns an image object on success, false on errors.
  */
-function imagecreatefromxbm (string $filename): GdImage|bool {}
+function imagecreatefromxbm (string $filename): GdImage|int {}
 
 /**
  * Create a new image from file or URL
  * @link http://www.php.net/manual/en/function.imagecreatefromxpm.php
  * @param string $filename 
- * @return GdImage|bool Returns an image object on success, false on errors.
+ * @return GdImage|false Returns an image object on success, false on errors.
  */
-function imagecreatefromxpm (string $filename): GdImage|bool {}
+function imagecreatefromxpm (string $filename): GdImage|int {}
 
 /**
  * Create a new image from file or URL
  * @link http://www.php.net/manual/en/function.imagecreatefromwbmp.php
  * @param string $filename 
- * @return GdImage|bool Returns an image object on success, false on errors.
+ * @return GdImage|false Returns an image object on success, false on errors.
  */
-function imagecreatefromwbmp (string $filename): GdImage|bool {}
+function imagecreatefromwbmp (string $filename): GdImage|int {}
 
 /**
  * Create a new image from GD file or URL
  * @link http://www.php.net/manual/en/function.imagecreatefromgd.php
  * @param string $filename 
- * @return GdImage|bool Returns an image object on success, false on errors.
+ * @return GdImage|false Returns an image object on success, false on errors.
  */
-function imagecreatefromgd (string $filename): GdImage|bool {}
+function imagecreatefromgd (string $filename): GdImage|int {}
 
 /**
  * Create a new image from GD2 file or URL
  * @link http://www.php.net/manual/en/function.imagecreatefromgd2.php
  * @param string $filename 
- * @return GdImage|bool Returns an image object on success, false on errors.
+ * @return GdImage|false Returns an image object on success, false on errors.
  */
-function imagecreatefromgd2 (string $filename): GdImage|bool {}
+function imagecreatefromgd2 (string $filename): GdImage|int {}
 
 /**
  * Create a new image from a given part of GD2 file or URL
@@ -435,25 +435,25 @@ function imagecreatefromgd2 (string $filename): GdImage|bool {}
  * @param int $y 
  * @param int $width 
  * @param int $height 
- * @return GdImage|bool Returns an image object on success, false on errors.
+ * @return GdImage|false Returns an image object on success, false on errors.
  */
-function imagecreatefromgd2part (string $filename, int $x, int $y, int $width, int $height): GdImage|bool {}
+function imagecreatefromgd2part (string $filename, int $x, int $y, int $width, int $height): GdImage|int {}
 
 /**
  * Create a new image from file or URL
  * @link http://www.php.net/manual/en/function.imagecreatefrombmp.php
  * @param string $filename 
- * @return GdImage|bool Returns an image object on success, false on errors.
+ * @return GdImage|false Returns an image object on success, false on errors.
  */
-function imagecreatefrombmp (string $filename): GdImage|bool {}
+function imagecreatefrombmp (string $filename): GdImage|int {}
 
 /**
  * Create a new image from file or URL
  * @link http://www.php.net/manual/en/function.imagecreatefromtga.php
  * @param string $filename 
- * @return GdImage|bool Returns an image object on success, false on errors.
+ * @return GdImage|false Returns an image object on success, false on errors.
  */
-function imagecreatefromtga (string $filename): GdImage|bool {}
+function imagecreatefromtga (string $filename): GdImage|int {}
 
 /**
  * Output an XBM image to browser or file
@@ -474,7 +474,7 @@ function imagexbm (GdImage $image, ?string $filename, ?int $foreground_color = n
  * @param int $speed [optional] 
  * @return bool Returns true on success or false on failure.
  */
-function imageavif (GdImage $image, resource|string|null $file = null, int $quality = -1, int $speed = -1): bool {}
+function imageavif (GdImage $image, $file = null, int $quality = -1, int $speed = -1): bool {}
 
 /**
  * Output image to browser or file
@@ -483,7 +483,7 @@ function imageavif (GdImage $image, resource|string|null $file = null, int $qual
  * @param resource|string|null $file [optional] 
  * @return bool Returns true on success or false on failure.
  */
-function imagegif (GdImage $image, resource|string|null $file = null): bool {}
+function imagegif (GdImage $image, $file = null): bool {}
 
 /**
  * Output a PNG image to either the browser or a file
@@ -494,7 +494,7 @@ function imagegif (GdImage $image, resource|string|null $file = null): bool {}
  * @param int $filters [optional] 
  * @return bool Returns true on success or false on failure.
  */
-function imagepng (GdImage $image, resource|string|null $file = null, int $quality = -1, int $filters = -1): bool {}
+function imagepng (GdImage $image, $file = null, int $quality = -1, int $filters = -1): bool {}
 
 /**
  * Output a WebP image to browser or file
@@ -504,7 +504,7 @@ function imagepng (GdImage $image, resource|string|null $file = null, int $quali
  * @param int $quality [optional] 
  * @return bool Returns true on success or false on failure.
  */
-function imagewebp (GdImage $image, resource|string|null $file = null, int $quality = -1): bool {}
+function imagewebp (GdImage $image, $file = null, int $quality = -1): bool {}
 
 /**
  * Output image to browser or file
@@ -514,7 +514,7 @@ function imagewebp (GdImage $image, resource|string|null $file = null, int $qual
  * @param int $quality [optional] 
  * @return bool Returns true on success or false on failure.
  */
-function imagejpeg (GdImage $image, resource|string|null $file = null, int $quality = -1): bool {}
+function imagejpeg (GdImage $image, $file = null, int $quality = -1): bool {}
 
 /**
  * Output image to browser or file
@@ -524,7 +524,7 @@ function imagejpeg (GdImage $image, resource|string|null $file = null, int $qual
  * @param int|null $foreground_color [optional] 
  * @return bool Returns true on success or false on failure.
  */
-function imagewbmp (GdImage $image, resource|string|null $file = null, ?int $foreground_color = null): bool {}
+function imagewbmp (GdImage $image, $file = null, ?int $foreground_color = null): bool {}
 
 /**
  * Output GD image to browser or file
@@ -554,7 +554,7 @@ function imagegd2 (GdImage $image, ?string $file = null, int $chunk_size = 128, 
  * @param bool $compressed [optional] 
  * @return bool Returns true on success or false on failure.
  */
-function imagebmp (GdImage $image, resource|string|null $file = null, bool $compressed = true): bool {}
+function imagebmp (GdImage $image, $file = null, bool $compressed = true): bool {}
 
 /**
  * Destroy an image
@@ -571,9 +571,9 @@ function imagedestroy (GdImage $image): bool {}
  * @param int $red 
  * @param int $green 
  * @param int $blue 
- * @return int|bool A color identifier or false if the allocation failed.
+ * @return int|false A color identifier or false if the allocation failed.
  */
-function imagecolorallocate (GdImage $image, int $red, int $green, int $blue): int|bool {}
+function imagecolorallocate (GdImage $image, int $red, int $green, int $blue): int {}
 
 /**
  * Copy the palette from one image to another
@@ -590,9 +590,9 @@ function imagepalettecopy (GdImage $dst, GdImage $src): void {}
  * @param GdImage $image 
  * @param int $x 
  * @param int $y 
- * @return int|bool Returns the index of the color or false on failure.
+ * @return int|false Returns the index of the color or false on failure.
  */
-function imagecolorat (GdImage $image, int $x, int $y): int|bool {}
+function imagecolorat (GdImage $image, int $x, int $y): int {}
 
 /**
  * Get the index of the closest color to the specified color
@@ -659,9 +659,9 @@ function imagecolorexact (GdImage $image, int $red, int $green, int $blue): int 
  * @param int $green 
  * @param int $blue 
  * @param int $alpha [optional] 
- * @return bool|null The function returns null on success, or false on failure.
+ * @return false|null The function returns null on success, or false on failure.
  */
-function imagecolorset (GdImage $image, int $color, int $red, int $green, int $blue, int $alpha = null): ?bool {}
+function imagecolorset (GdImage $image, int $color, int $red, int $green, int $blue, int $alpha = null): ?int {}
 
 /**
  * Get the colors for an index
@@ -1046,7 +1046,7 @@ function imagegetclip (GdImage $image): array {}
  * @param string $font_filename 
  * @param string $string 
  * @param array $options [optional] 
- * @return array|bool imageftbbox returns an array with 8
+ * @return array|false imageftbbox returns an array with 8
  * elements representing four points making the bounding box of the
  * text:
  * <table>
@@ -1088,7 +1088,7 @@ function imagegetclip (GdImage $image): array {}
  * corner seeing the text horizontally.</p>
  * <p>On failure, false is returned.</p>
  */
-function imageftbbox (float $size, float $angle, string $font_filename, string $string, array $options = []): array|bool {}
+function imageftbbox (float $size, float $angle, string $font_filename, string $string, array $options = '[]'): array|int {}
 
 /**
  * Write text to the image using fonts using FreeType 2
@@ -1102,7 +1102,7 @@ function imageftbbox (float $size, float $angle, string $font_filename, string $
  * @param string $font_filename 
  * @param string $text 
  * @param array $options [optional] 
- * @return array|bool This function returns an array defining the four points of the box, starting in the lower left and moving counter-clockwise:
+ * @return array|false This function returns an array defining the four points of the box, starting in the lower left and moving counter-clockwise:
  * <table>
  * <tr valign="top">
  * <td>0</td>
@@ -1139,7 +1139,7 @@ function imageftbbox (float $size, float $angle, string $font_filename, string $
  * </table>
  * <p>On failure, false is returned.</p>
  */
-function imagefttext (GdImage $image, float $size, float $angle, int $x, int $y, int $color, string $font_filename, string $text, array $options = []): array|bool {}
+function imagefttext (GdImage $image, float $size, float $angle, int $x, int $y, int $color, string $font_filename, string $text, array $options = '[]'): array|int {}
 
 /**
  * Give the bounding box of a text using TrueType fonts
@@ -1149,7 +1149,7 @@ function imagefttext (GdImage $image, float $size, float $angle, int $x, int $y,
  * @param string $font_filename 
  * @param string $string 
  * @param array $options [optional] 
- * @return array|bool imagettfbbox returns an array with 8
+ * @return array|false imagettfbbox returns an array with 8
  * elements representing four points making the bounding box of the
  * text on success and false on error.
  * <table>
@@ -1194,7 +1194,7 @@ function imagefttext (GdImage $image, float $size, float $angle, int $x, int $y,
  * angle, so "upper left" means in the top left-hand 
  * corner seeing the text horizontally.</p>
  */
-function imagettfbbox (float $size, float $angle, string $font_filename, string $string, array $options = []): array|bool {}
+function imagettfbbox (float $size, float $angle, string $font_filename, string $string, array $options = '[]'): array|int {}
 
 /**
  * Write text to the image using TrueType fonts
@@ -1208,14 +1208,14 @@ function imagettfbbox (float $size, float $angle, string $font_filename, string 
  * @param string $font_filename 
  * @param string $text 
  * @param array $options [optional] 
- * @return array|bool Returns an array with 8 elements representing four points making the
+ * @return array|false Returns an array with 8 elements representing four points making the
  * bounding box of the text. The order of the points is lower left, lower 
  * right, upper right, upper left. The points are relative to the text
  * regardless of the angle, so "upper left" means in the top left-hand 
  * corner when you see the text horizontally.
  * Returns false on error.
  */
-function imagettftext (GdImage $image, float $size, float $angle, int $x, int $y, int $color, string $font_filename, string $text, array $options = []): array|bool {}
+function imagettftext (GdImage $image, float $size, float $angle, int $x, int $y, int $color, string $font_filename, string $text, array $options = '[]'): array|int {}
 
 /**
  * Applies a filter to an image
@@ -1264,9 +1264,9 @@ function imageantialias (GdImage $image, bool $enable): bool {}
  * @param array $rectangle The cropping rectangle as array with keys
  * x, y, width and
  * height.
- * @return GdImage|bool Return cropped image object on success or false on failure.
+ * @return GdImage|false Return cropped image object on success or false on failure.
  */
-function imagecrop (GdImage $image, array $rectangle): GdImage|bool {}
+function imagecrop (GdImage $image, array $rectangle): GdImage|int {}
 
 /**
  * Crop an image automatically using one of the available modes
@@ -1280,10 +1280,10 @@ function imagecrop (GdImage $image, array $rectangle): GdImage|bool {}
  * <p>Used only in IMG_CROP_THRESHOLD mode.</p>
  * @param int $color [optional] Either an RGB color value or a palette index.
  * <p>Used only in IMG_CROP_THRESHOLD mode.</p>
- * @return GdImage|bool Returns a cropped image object on success or false on failure.
+ * @return GdImage|false Returns a cropped image object on success or false on failure.
  * If the complete image was cropped, imagecrop returns false.
  */
-function imagecropauto (GdImage $image, int $mode = IMG_CROP_DEFAULT, float $threshold = 0.5, int $color = -1): GdImage|bool {}
+function imagecropauto (GdImage $image, int $mode = IMG_CROP_DEFAULT, float $threshold = 0.5, int $color = -1): GdImage|int {}
 
 /**
  * Scale an image using the given new width and height
@@ -1299,9 +1299,9 @@ function imagecropauto (GdImage $image, int $mode = IMG_CROP_DEFAULT, float $thr
  * IMG_BICUBIC_FIXED or anything else (will use two
  * pass).
  * IMG_WEIGHTED4 is not yet supported.
- * @return GdImage|bool Return the scaled image object on success or false on failure.
+ * @return GdImage|false Return the scaled image object on success or false on failure.
  */
-function imagescale (GdImage $image, int $width, int $height = -1, int $mode = IMG_BILINEAR_FIXED): GdImage|bool {}
+function imagescale (GdImage $image, int $width, int $height = -1, int $mode = IMG_BILINEAR_FIXED): GdImage|int {}
 
 /**
  * Return an image containing the affine transformed src image, using an optional clipping area
@@ -1310,9 +1310,9 @@ function imagescale (GdImage $image, int $width, int $height = -1, int $mode = I
  * such as imagecreatetruecolor.
  * @param array $affine Array with keys 0 to 5.
  * @param array|null $clip [optional] Array with keys "x", "y", "width" and "height"; or null.
- * @return GdImage|bool Return affined image object on success or false on failure.
+ * @return GdImage|false Return affined image object on success or false on failure.
  */
-function imageaffine (GdImage $image, array $affine, ?array $clip = null): GdImage|bool {}
+function imageaffine (GdImage $image, array $affine, ?array $clip = null): GdImage|int {}
 
 /**
  * Get an affine transformation matrix
@@ -1325,11 +1325,11 @@ function imageaffine (GdImage $image, array $affine, ?array $clip = null): GdIma
  * <p>If type is IMG_AFFINE_ROTATE,
  * IMG_AFFINE_SHEAR_HORIZONTAL or IMG_AFFINE_SHEAR_VERTICAL,
  * options has to be a float specifying the angle.</p>
- * @return array|bool An affine transformation matrix (an array with keys
+ * @return array|false An affine transformation matrix (an array with keys
  * 0 to 5 and float values)
  * or false on failure.
  */
-function imageaffinematrixget (int $type, array|float $options): array|bool {}
+function imageaffinematrixget (int $type, array|float $options): array|int {}
 
 /**
  * Concatenate two affine transformation matrices
@@ -1338,11 +1338,11 @@ function imageaffinematrixget (int $type, array|float $options): array|bool {}
  * 0 to 5 and float values).
  * @param array $matrix2 An affine transformation matrix (an array with keys
  * 0 to 5 and float values).
- * @return array|bool An affine transformation matrix (an array with keys
+ * @return array|false An affine transformation matrix (an array with keys
  * 0 to 5 and float values)
  * or false on failure.
  */
-function imageaffinematrixconcat (array $matrix1, array $matrix2): array|bool {}
+function imageaffinematrixconcat (array $matrix1, array $matrix2): array|int {}
 
 /**
  * Get the interpolation method

@@ -23,9 +23,9 @@ namespace {
  * @param string $hostname 
  * @param int $port [optional] 
  * @param int $timeout [optional] 
- * @return FTP\Connection|bool Returns an FTP\Connection instance on success, or false on failure.
+ * @return FTP\Connection|false Returns an FTP\Connection instance on success, or false on failure.
  */
-function ftp_connect (string $hostname, int $port = 21, int $timeout = 90): FTP\Connection|bool {}
+function ftp_connect (string $hostname, int $port = 21, int $timeout = 90): FTP\Connection|int {}
 
 /**
  * Opens a Secure SSL-FTP connection
@@ -33,9 +33,9 @@ function ftp_connect (string $hostname, int $port = 21, int $timeout = 90): FTP\
  * @param string $hostname 
  * @param int $port [optional] 
  * @param int $timeout [optional] 
- * @return FTP\Connection|bool Returns an FTP\Connection instance on success, or false on failure.
+ * @return FTP\Connection|false Returns an FTP\Connection instance on success, or false on failure.
  */
-function ftp_ssl_connect (string $hostname, int $port = 21, int $timeout = 90): FTP\Connection|bool {}
+function ftp_ssl_connect (string $hostname, int $port = 21, int $timeout = 90): FTP\Connection|int {}
 
 /**
  * Logs in to an FTP connection
@@ -52,9 +52,9 @@ function ftp_login (FTP\Connection $ftp, string $username, string $password): bo
  * Returns the current directory name
  * @link http://www.php.net/manual/en/function.ftp-pwd.php
  * @param FTP\Connection $ftp 
- * @return string|bool Returns the current directory name or false on error.
+ * @return string|false Returns the current directory name or false on error.
  */
-function ftp_pwd (FTP\Connection $ftp): string|bool {}
+function ftp_pwd (FTP\Connection $ftp): string|int {}
 
 /**
  * Changes to the parent directory
@@ -100,9 +100,9 @@ function ftp_raw (FTP\Connection $ftp, string $command): ?array {}
  * @link http://www.php.net/manual/en/function.ftp-mkdir.php
  * @param FTP\Connection $ftp 
  * @param string $directory 
- * @return string|bool Returns the newly created directory name on success or false on error.
+ * @return string|false Returns the newly created directory name on success or false on error.
  */
-function ftp_mkdir (FTP\Connection $ftp, string $directory): string|bool {}
+function ftp_mkdir (FTP\Connection $ftp, string $directory): string|int {}
 
 /**
  * Removes a directory
@@ -119,9 +119,9 @@ function ftp_rmdir (FTP\Connection $ftp, string $directory): bool {}
  * @param FTP\Connection $ftp 
  * @param int $permissions 
  * @param string $filename 
- * @return int|bool Returns the new file permissions on success or false on error.
+ * @return int|false Returns the new file permissions on success or false on error.
  */
-function ftp_chmod (FTP\Connection $ftp, int $permissions, string $filename): int|bool {}
+function ftp_chmod (FTP\Connection $ftp, int $permissions, string $filename): int {}
 
 /**
  * Allocates space for a file to be uploaded
@@ -138,10 +138,10 @@ function ftp_alloc (FTP\Connection $ftp, int $size, string &$response = null): b
  * @link http://www.php.net/manual/en/function.ftp-nlist.php
  * @param FTP\Connection $ftp 
  * @param string $directory 
- * @return array|bool Returns an array of filenames from the specified directory on success or
+ * @return array|false Returns an array of filenames from the specified directory on success or
  * false on error.
  */
-function ftp_nlist (FTP\Connection $ftp, string $directory): array|bool {}
+function ftp_nlist (FTP\Connection $ftp, string $directory): array|int {}
 
 /**
  * Returns a detailed list of files in the given directory
@@ -149,31 +149,31 @@ function ftp_nlist (FTP\Connection $ftp, string $directory): array|bool {}
  * @param FTP\Connection $ftp 
  * @param string $directory 
  * @param bool $recursive [optional] 
- * @return array|bool Returns an array where each element corresponds to one line of text. Returns
+ * @return array|false Returns an array where each element corresponds to one line of text. Returns
  * false when passed directory is invalid.
  * <p>The output is not parsed in any way. The system type identifier returned by
  * ftp_systype can be used to determine how the results 
  * should be interpreted.</p>
  */
-function ftp_rawlist (FTP\Connection $ftp, string $directory, bool $recursive = false): array|bool {}
+function ftp_rawlist (FTP\Connection $ftp, string $directory, bool $recursive = false): array|int {}
 
 /**
  * Returns a list of files in the given directory
  * @link http://www.php.net/manual/en/function.ftp-mlsd.php
  * @param FTP\Connection $ftp 
  * @param string $directory 
- * @return array|bool Returns an array of arrays with file infos from the specified directory on success or
+ * @return array|false Returns an array of arrays with file infos from the specified directory on success or
  * false on error.
  */
-function ftp_mlsd (FTP\Connection $ftp, string $directory): array|bool {}
+function ftp_mlsd (FTP\Connection $ftp, string $directory): array|int {}
 
 /**
  * Returns the system type identifier of the remote FTP server
  * @link http://www.php.net/manual/en/function.ftp-systype.php
  * @param FTP\Connection $ftp 
- * @return string|bool Returns the remote system type, or false on error.
+ * @return string|false Returns the remote system type, or false on error.
  */
-function ftp_systype (FTP\Connection $ftp): string|bool {}
+function ftp_systype (FTP\Connection $ftp): string|int {}
 
 /**
  * Downloads a file from the FTP server and saves to an open file
@@ -185,7 +185,7 @@ function ftp_systype (FTP\Connection $ftp): string|bool {}
  * @param int $offset [optional] 
  * @return bool Returns true on success or false on failure.
  */
-function ftp_fget (FTP\Connection $ftp, resource $stream, string $remote_filename, int $mode = FTP_BINARY, int $offset = null): bool {}
+function ftp_fget (FTP\Connection $ftp, $stream, string $remote_filename, int $mode = FTP_BINARY, int $offset = null): bool {}
 
 /**
  * Retrieves a file from the FTP server and writes it to an open file (non-blocking)
@@ -198,7 +198,7 @@ function ftp_fget (FTP\Connection $ftp, resource $stream, string $remote_filenam
  * @return int Returns FTP_FAILED or FTP_FINISHED
  * or FTP_MOREDATA.
  */
-function ftp_nb_fget (FTP\Connection $ftp, resource $stream, string $remote_filename, int $mode = FTP_BINARY, int $offset = null): int {}
+function ftp_nb_fget (FTP\Connection $ftp, $stream, string $remote_filename, int $mode = FTP_BINARY, int $offset = null): int {}
 
 /**
  * Turns passive mode on or off
@@ -229,10 +229,10 @@ function ftp_get (FTP\Connection $ftp, string $local_filename, string $remote_fi
  * @param string $remote_filename 
  * @param int $mode [optional] 
  * @param int $offset [optional] 
- * @return int|bool Returns FTP_FAILED or FTP_FINISHED
+ * @return int|false Returns FTP_FAILED or FTP_FINISHED
  * or FTP_MOREDATA, or false on failure to open the local file.
  */
-function ftp_nb_get (FTP\Connection $ftp, string $local_filename, string $remote_filename, int $mode = FTP_BINARY, int $offset = null): int|bool {}
+function ftp_nb_get (FTP\Connection $ftp, string $local_filename, string $remote_filename, int $mode = FTP_BINARY, int $offset = null): int {}
 
 /**
  * Continues retrieving/sending a file (non-blocking)
@@ -253,7 +253,7 @@ function ftp_nb_continue (FTP\Connection $ftp): int {}
  * @param int $offset [optional] 
  * @return bool Returns true on success or false on failure.
  */
-function ftp_fput (FTP\Connection $ftp, string $remote_filename, resource $stream, int $mode = FTP_BINARY, int $offset = null): bool {}
+function ftp_fput (FTP\Connection $ftp, string $remote_filename, $stream, int $mode = FTP_BINARY, int $offset = null): bool {}
 
 /**
  * Stores a file from an open file to the FTP server (non-blocking)
@@ -266,7 +266,7 @@ function ftp_fput (FTP\Connection $ftp, string $remote_filename, resource $strea
  * @return int Returns FTP_FAILED or FTP_FINISHED
  * or FTP_MOREDATA.
  */
-function ftp_nb_fput (FTP\Connection $ftp, string $remote_filename, resource $stream, int $mode = FTP_BINARY, int $offset = null): int {}
+function ftp_nb_fput (FTP\Connection $ftp, string $remote_filename, $stream, int $mode = FTP_BINARY, int $offset = null): int {}
 
 /**
  * Uploads a file to the FTP server
@@ -299,10 +299,10 @@ function ftp_append (FTP\Connection $ftp, string $remote_filename, string $local
  * @param string $local_filename 
  * @param int $mode [optional] 
  * @param int $offset [optional] 
- * @return int|bool Returns FTP_FAILED or FTP_FINISHED
+ * @return int|false Returns FTP_FAILED or FTP_FINISHED
  * or FTP_MOREDATA, or false on failure to open the local file.
  */
-function ftp_nb_put (FTP\Connection $ftp, string $remote_filename, string $local_filename, int $mode = FTP_BINARY, int $offset = null): int|bool {}
+function ftp_nb_put (FTP\Connection $ftp, string $remote_filename, string $local_filename, int $mode = FTP_BINARY, int $offset = null): int {}
 
 /**
  * Returns the size of the given file

@@ -38,9 +38,10 @@ class SimpleXMLElement implements Stringable, Countable, RecursiveIterator, Trav
 	public function asXML (?string $filename = null): string|bool {}
 
 	/**
-	 * @param ?string $filename [optional]
+	 * {@inheritdoc}
+	 * @param string|null $filename [optional]
 	 */
-	public function saveXML (?string $filename = null) {}
+	public function saveXML (?string $filename = NULL) {}
 
 	/**
 	 * Returns namespaces used in document
@@ -94,7 +95,7 @@ class SimpleXMLElement implements Stringable, Countable, RecursiveIterator, Trav
 	 * @param bool $isPrefix [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $data, int $options = null, bool $dataIsURL = false, string $namespaceOrPrefix = "", bool $isPrefix = false): string {}
+	public function __construct (string $data, int $options = null, bool $dataIsURL = false, string $namespaceOrPrefix = '""', bool $isPrefix = false): string {}
 
 	/**
 	 * Adds a child element to the XML node
@@ -227,9 +228,10 @@ class SimpleXMLIterator extends SimpleXMLElement implements Iterator, Traversabl
 	public function asXML (?string $filename = null): string|bool {}
 
 	/**
-	 * @param ?string $filename [optional]
+	 * {@inheritdoc}
+	 * @param string|null $filename [optional]
 	 */
-	public function saveXML (?string $filename = null) {}
+	public function saveXML (?string $filename = NULL) {}
 
 	/**
 	 * Returns namespaces used in document
@@ -283,7 +285,7 @@ class SimpleXMLIterator extends SimpleXMLElement implements Iterator, Traversabl
 	 * @param bool $isPrefix [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $data, int $options = null, bool $dataIsURL = false, string $namespaceOrPrefix = "", bool $isPrefix = false): string {}
+	public function __construct (string $data, int $options = null, bool $dataIsURL = false, string $namespaceOrPrefix = '""', bool $isPrefix = false): string {}
 
 	/**
 	 * Adds a child element to the XML node
@@ -391,7 +393,7 @@ class SimpleXMLIterator extends SimpleXMLElement implements Iterator, Traversabl
  * @return SimpleXMLElement|false Returns an object of class SimpleXMLElement with
  * properties containing the data held within the XML document, or false on failure.
  */
-function simplexml_load_file (string $filename, ?string $class_name = SimpleXMLElement::class, int $options = null, string $namespace_or_prefix = "", bool $is_prefix = false): SimpleXMLElement|false {}
+function simplexml_load_file (string $filename, ?string $class_name = 'SimpleXMLElement::class', int $options = null, string $namespace_or_prefix = '""', bool $is_prefix = false): SimpleXMLElement|false {}
 
 /**
  * Interprets a string of XML into an object
@@ -404,7 +406,7 @@ function simplexml_load_file (string $filename, ?string $class_name = SimpleXMLE
  * @return SimpleXMLElement|false Returns an object of class SimpleXMLElement with
  * properties containing the data held within the xml document, or false on failure.
  */
-function simplexml_load_string (string $data, ?string $class_name = SimpleXMLElement::class, int $options = null, string $namespace_or_prefix = "", bool $is_prefix = false): SimpleXMLElement|false {}
+function simplexml_load_string (string $data, ?string $class_name = 'SimpleXMLElement::class', int $options = null, string $namespace_or_prefix = '""', bool $is_prefix = false): SimpleXMLElement|false {}
 
 /**
  * Get a SimpleXMLElement object from a DOM node
@@ -413,6 +415,6 @@ function simplexml_load_string (string $data, ?string $class_name = SimpleXMLEle
  * @param string|null $class_name [optional] 
  * @return SimpleXMLElement|null Returns a SimpleXMLElement or null on failure.
  */
-function simplexml_import_dom (SimpleXMLElement|DOMNode $node, ?string $class_name = SimpleXMLElement::class): ?SimpleXMLElement {}
+function simplexml_import_dom (SimpleXMLElement|DOMNode $node, ?string $class_name = 'SimpleXMLElement::class'): ?SimpleXMLElement {}
 
 // End of SimpleXML v.8.2.6

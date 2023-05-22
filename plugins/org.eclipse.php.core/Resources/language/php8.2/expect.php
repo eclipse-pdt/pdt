@@ -11,7 +11,7 @@
  * stdout, and stderr.
  * <p>On failure this function returns false.</p>
  */
-function expect_popen (string $command): resource {}
+function expect_popen (string $command) {}
 
 /**
  * Waits until the output from a process matches one
@@ -27,7 +27,7 @@ function expect_popen (string $command): resource {}
  * or
  * EXP_FULLBUFFER</p>
  */
-function expect_expectl (resource $expect, array $cases, array &$match = null): int {}
+function expect_expectl ($expect, array $cases, array &$match = null): int {}
 
 
 /**

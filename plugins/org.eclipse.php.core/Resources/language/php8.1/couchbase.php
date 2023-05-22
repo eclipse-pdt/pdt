@@ -5,13 +5,10 @@
 namespace Couchbase\Exception {
 
 class CouchbaseException extends \Exception implements \Throwable, \Stringable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-	private $context;
 
-
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getContext (): array {}
 
 	/**
@@ -19,11 +16,14 @@ class CouchbaseException extends \Exception implements \Throwable, \Stringable {
 	 * @link http://www.php.net/manual/en/exception.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -67,10 +67,10 @@ class CouchbaseException extends \Exception implements \Throwable, \Stringable {
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -89,12 +89,10 @@ class CouchbaseException extends \Exception implements \Throwable, \Stringable {
 }
 
 class TimeoutException extends \Couchbase\Exception\CouchbaseException implements \Stringable, \Throwable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
 
-
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getContext (): array {}
 
 	/**
@@ -102,11 +100,14 @@ class TimeoutException extends \Couchbase\Exception\CouchbaseException implement
 	 * @link http://www.php.net/manual/en/exception.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -150,10 +151,10 @@ class TimeoutException extends \Couchbase\Exception\CouchbaseException implement
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -172,12 +173,10 @@ class TimeoutException extends \Couchbase\Exception\CouchbaseException implement
 }
 
 class UnambiguousTimeoutException extends \Couchbase\Exception\TimeoutException implements \Throwable, \Stringable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
 
-
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getContext (): array {}
 
 	/**
@@ -185,11 +184,14 @@ class UnambiguousTimeoutException extends \Couchbase\Exception\TimeoutException 
 	 * @link http://www.php.net/manual/en/exception.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -233,10 +235,10 @@ class UnambiguousTimeoutException extends \Couchbase\Exception\TimeoutException 
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -255,12 +257,10 @@ class UnambiguousTimeoutException extends \Couchbase\Exception\TimeoutException 
 }
 
 class AmbiguousTimeoutException extends \Couchbase\Exception\TimeoutException implements \Throwable, \Stringable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
 
-
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getContext (): array {}
 
 	/**
@@ -268,11 +268,14 @@ class AmbiguousTimeoutException extends \Couchbase\Exception\TimeoutException im
 	 * @link http://www.php.net/manual/en/exception.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -316,10 +319,10 @@ class AmbiguousTimeoutException extends \Couchbase\Exception\TimeoutException im
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -338,12 +341,10 @@ class AmbiguousTimeoutException extends \Couchbase\Exception\TimeoutException im
 }
 
 class AuthenticationFailureException extends \Couchbase\Exception\CouchbaseException implements \Stringable, \Throwable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
 
-
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getContext (): array {}
 
 	/**
@@ -351,11 +352,14 @@ class AuthenticationFailureException extends \Couchbase\Exception\CouchbaseExcep
 	 * @link http://www.php.net/manual/en/exception.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -399,10 +403,10 @@ class AuthenticationFailureException extends \Couchbase\Exception\CouchbaseExcep
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -421,12 +425,10 @@ class AuthenticationFailureException extends \Couchbase\Exception\CouchbaseExcep
 }
 
 class BucketExistsException extends \Couchbase\Exception\CouchbaseException implements \Stringable, \Throwable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
 
-
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getContext (): array {}
 
 	/**
@@ -434,11 +436,14 @@ class BucketExistsException extends \Couchbase\Exception\CouchbaseException impl
 	 * @link http://www.php.net/manual/en/exception.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -482,10 +487,10 @@ class BucketExistsException extends \Couchbase\Exception\CouchbaseException impl
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -504,12 +509,10 @@ class BucketExistsException extends \Couchbase\Exception\CouchbaseException impl
 }
 
 class BucketNotFlushableException extends \Couchbase\Exception\CouchbaseException implements \Stringable, \Throwable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
 
-
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getContext (): array {}
 
 	/**
@@ -517,11 +520,14 @@ class BucketNotFlushableException extends \Couchbase\Exception\CouchbaseExceptio
 	 * @link http://www.php.net/manual/en/exception.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -565,10 +571,10 @@ class BucketNotFlushableException extends \Couchbase\Exception\CouchbaseExceptio
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -587,12 +593,10 @@ class BucketNotFlushableException extends \Couchbase\Exception\CouchbaseExceptio
 }
 
 class BucketNotFoundException extends \Couchbase\Exception\CouchbaseException implements \Stringable, \Throwable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
 
-
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getContext (): array {}
 
 	/**
@@ -600,11 +604,14 @@ class BucketNotFoundException extends \Couchbase\Exception\CouchbaseException im
 	 * @link http://www.php.net/manual/en/exception.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -648,10 +655,10 @@ class BucketNotFoundException extends \Couchbase\Exception\CouchbaseException im
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -670,12 +677,10 @@ class BucketNotFoundException extends \Couchbase\Exception\CouchbaseException im
 }
 
 class CasMismatchException extends \Couchbase\Exception\CouchbaseException implements \Stringable, \Throwable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
 
-
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getContext (): array {}
 
 	/**
@@ -683,11 +688,14 @@ class CasMismatchException extends \Couchbase\Exception\CouchbaseException imple
 	 * @link http://www.php.net/manual/en/exception.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -731,10 +739,10 @@ class CasMismatchException extends \Couchbase\Exception\CouchbaseException imple
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -753,12 +761,10 @@ class CasMismatchException extends \Couchbase\Exception\CouchbaseException imple
 }
 
 class CollectionExistsException extends \Couchbase\Exception\CouchbaseException implements \Stringable, \Throwable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
 
-
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getContext (): array {}
 
 	/**
@@ -766,11 +772,14 @@ class CollectionExistsException extends \Couchbase\Exception\CouchbaseException 
 	 * @link http://www.php.net/manual/en/exception.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -814,10 +823,10 @@ class CollectionExistsException extends \Couchbase\Exception\CouchbaseException 
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -836,12 +845,10 @@ class CollectionExistsException extends \Couchbase\Exception\CouchbaseException 
 }
 
 class CollectionNotFoundException extends \Couchbase\Exception\CouchbaseException implements \Stringable, \Throwable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
 
-
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getContext (): array {}
 
 	/**
@@ -849,11 +856,14 @@ class CollectionNotFoundException extends \Couchbase\Exception\CouchbaseExceptio
 	 * @link http://www.php.net/manual/en/exception.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -897,10 +907,10 @@ class CollectionNotFoundException extends \Couchbase\Exception\CouchbaseExceptio
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -919,12 +929,10 @@ class CollectionNotFoundException extends \Couchbase\Exception\CouchbaseExceptio
 }
 
 class CompilationFailureException extends \Couchbase\Exception\CouchbaseException implements \Stringable, \Throwable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
 
-
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getContext (): array {}
 
 	/**
@@ -932,11 +940,14 @@ class CompilationFailureException extends \Couchbase\Exception\CouchbaseExceptio
 	 * @link http://www.php.net/manual/en/exception.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -980,10 +991,10 @@ class CompilationFailureException extends \Couchbase\Exception\CouchbaseExceptio
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -1002,12 +1013,10 @@ class CompilationFailureException extends \Couchbase\Exception\CouchbaseExceptio
 }
 
 class ConsistencyMismatchException extends \Couchbase\Exception\CouchbaseException implements \Stringable, \Throwable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
 
-
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getContext (): array {}
 
 	/**
@@ -1015,11 +1024,14 @@ class ConsistencyMismatchException extends \Couchbase\Exception\CouchbaseExcepti
 	 * @link http://www.php.net/manual/en/exception.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -1063,10 +1075,10 @@ class ConsistencyMismatchException extends \Couchbase\Exception\CouchbaseExcepti
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -1085,12 +1097,10 @@ class ConsistencyMismatchException extends \Couchbase\Exception\CouchbaseExcepti
 }
 
 class DatasetExistsException extends \Couchbase\Exception\CouchbaseException implements \Stringable, \Throwable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
 
-
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getContext (): array {}
 
 	/**
@@ -1098,11 +1108,14 @@ class DatasetExistsException extends \Couchbase\Exception\CouchbaseException imp
 	 * @link http://www.php.net/manual/en/exception.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -1146,10 +1159,10 @@ class DatasetExistsException extends \Couchbase\Exception\CouchbaseException imp
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -1168,12 +1181,10 @@ class DatasetExistsException extends \Couchbase\Exception\CouchbaseException imp
 }
 
 class DatasetNotFoundException extends \Couchbase\Exception\CouchbaseException implements \Stringable, \Throwable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
 
-
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getContext (): array {}
 
 	/**
@@ -1181,11 +1192,14 @@ class DatasetNotFoundException extends \Couchbase\Exception\CouchbaseException i
 	 * @link http://www.php.net/manual/en/exception.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -1229,10 +1243,10 @@ class DatasetNotFoundException extends \Couchbase\Exception\CouchbaseException i
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -1251,12 +1265,10 @@ class DatasetNotFoundException extends \Couchbase\Exception\CouchbaseException i
 }
 
 class DataverseExistsException extends \Couchbase\Exception\CouchbaseException implements \Stringable, \Throwable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
 
-
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getContext (): array {}
 
 	/**
@@ -1264,11 +1276,14 @@ class DataverseExistsException extends \Couchbase\Exception\CouchbaseException i
 	 * @link http://www.php.net/manual/en/exception.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -1312,10 +1327,10 @@ class DataverseExistsException extends \Couchbase\Exception\CouchbaseException i
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -1334,12 +1349,10 @@ class DataverseExistsException extends \Couchbase\Exception\CouchbaseException i
 }
 
 class DataverseNotFoundException extends \Couchbase\Exception\CouchbaseException implements \Stringable, \Throwable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
 
-
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getContext (): array {}
 
 	/**
@@ -1347,11 +1360,14 @@ class DataverseNotFoundException extends \Couchbase\Exception\CouchbaseException
 	 * @link http://www.php.net/manual/en/exception.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -1395,10 +1411,10 @@ class DataverseNotFoundException extends \Couchbase\Exception\CouchbaseException
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -1417,12 +1433,10 @@ class DataverseNotFoundException extends \Couchbase\Exception\CouchbaseException
 }
 
 class DecodingFailureException extends \Couchbase\Exception\CouchbaseException implements \Stringable, \Throwable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
 
-
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getContext (): array {}
 
 	/**
@@ -1430,11 +1444,14 @@ class DecodingFailureException extends \Couchbase\Exception\CouchbaseException i
 	 * @link http://www.php.net/manual/en/exception.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -1478,10 +1495,10 @@ class DecodingFailureException extends \Couchbase\Exception\CouchbaseException i
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -1500,12 +1517,10 @@ class DecodingFailureException extends \Couchbase\Exception\CouchbaseException i
 }
 
 class DeltaInvalidException extends \Couchbase\Exception\CouchbaseException implements \Stringable, \Throwable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
 
-
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getContext (): array {}
 
 	/**
@@ -1513,11 +1528,14 @@ class DeltaInvalidException extends \Couchbase\Exception\CouchbaseException impl
 	 * @link http://www.php.net/manual/en/exception.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -1561,10 +1579,10 @@ class DeltaInvalidException extends \Couchbase\Exception\CouchbaseException impl
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -1583,12 +1601,10 @@ class DeltaInvalidException extends \Couchbase\Exception\CouchbaseException impl
 }
 
 class DesignDocumentNotFoundException extends \Couchbase\Exception\CouchbaseException implements \Stringable, \Throwable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
 
-
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getContext (): array {}
 
 	/**
@@ -1596,11 +1612,14 @@ class DesignDocumentNotFoundException extends \Couchbase\Exception\CouchbaseExce
 	 * @link http://www.php.net/manual/en/exception.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -1644,10 +1663,10 @@ class DesignDocumentNotFoundException extends \Couchbase\Exception\CouchbaseExce
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -1666,12 +1685,10 @@ class DesignDocumentNotFoundException extends \Couchbase\Exception\CouchbaseExce
 }
 
 class DocumentExistsException extends \Couchbase\Exception\CouchbaseException implements \Stringable, \Throwable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
 
-
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getContext (): array {}
 
 	/**
@@ -1679,11 +1696,14 @@ class DocumentExistsException extends \Couchbase\Exception\CouchbaseException im
 	 * @link http://www.php.net/manual/en/exception.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -1727,10 +1747,10 @@ class DocumentExistsException extends \Couchbase\Exception\CouchbaseException im
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -1749,12 +1769,10 @@ class DocumentExistsException extends \Couchbase\Exception\CouchbaseException im
 }
 
 class DocumentIrretrievableException extends \Couchbase\Exception\CouchbaseException implements \Stringable, \Throwable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
 
-
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getContext (): array {}
 
 	/**
@@ -1762,11 +1780,14 @@ class DocumentIrretrievableException extends \Couchbase\Exception\CouchbaseExcep
 	 * @link http://www.php.net/manual/en/exception.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -1810,10 +1831,10 @@ class DocumentIrretrievableException extends \Couchbase\Exception\CouchbaseExcep
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -1832,12 +1853,10 @@ class DocumentIrretrievableException extends \Couchbase\Exception\CouchbaseExcep
 }
 
 class DocumentLockedException extends \Couchbase\Exception\CouchbaseException implements \Stringable, \Throwable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
 
-
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getContext (): array {}
 
 	/**
@@ -1845,11 +1864,14 @@ class DocumentLockedException extends \Couchbase\Exception\CouchbaseException im
 	 * @link http://www.php.net/manual/en/exception.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -1893,10 +1915,10 @@ class DocumentLockedException extends \Couchbase\Exception\CouchbaseException im
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -1915,12 +1937,10 @@ class DocumentLockedException extends \Couchbase\Exception\CouchbaseException im
 }
 
 class DocumentNotFoundException extends \Couchbase\Exception\CouchbaseException implements \Stringable, \Throwable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
 
-
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getContext (): array {}
 
 	/**
@@ -1928,11 +1948,14 @@ class DocumentNotFoundException extends \Couchbase\Exception\CouchbaseException 
 	 * @link http://www.php.net/manual/en/exception.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -1976,10 +1999,10 @@ class DocumentNotFoundException extends \Couchbase\Exception\CouchbaseException 
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -1998,12 +2021,10 @@ class DocumentNotFoundException extends \Couchbase\Exception\CouchbaseException 
 }
 
 class DocumentNotJsonException extends \Couchbase\Exception\CouchbaseException implements \Stringable, \Throwable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
 
-
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getContext (): array {}
 
 	/**
@@ -2011,11 +2032,14 @@ class DocumentNotJsonException extends \Couchbase\Exception\CouchbaseException i
 	 * @link http://www.php.net/manual/en/exception.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -2059,10 +2083,10 @@ class DocumentNotJsonException extends \Couchbase\Exception\CouchbaseException i
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -2081,12 +2105,10 @@ class DocumentNotJsonException extends \Couchbase\Exception\CouchbaseException i
 }
 
 class DurabilityAmbiguousException extends \Couchbase\Exception\CouchbaseException implements \Stringable, \Throwable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
 
-
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getContext (): array {}
 
 	/**
@@ -2094,11 +2116,14 @@ class DurabilityAmbiguousException extends \Couchbase\Exception\CouchbaseExcepti
 	 * @link http://www.php.net/manual/en/exception.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -2142,10 +2167,10 @@ class DurabilityAmbiguousException extends \Couchbase\Exception\CouchbaseExcepti
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -2164,12 +2189,10 @@ class DurabilityAmbiguousException extends \Couchbase\Exception\CouchbaseExcepti
 }
 
 class DurabilityImpossibleException extends \Couchbase\Exception\CouchbaseException implements \Stringable, \Throwable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
 
-
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getContext (): array {}
 
 	/**
@@ -2177,11 +2200,14 @@ class DurabilityImpossibleException extends \Couchbase\Exception\CouchbaseExcept
 	 * @link http://www.php.net/manual/en/exception.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -2225,10 +2251,10 @@ class DurabilityImpossibleException extends \Couchbase\Exception\CouchbaseExcept
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -2247,12 +2273,10 @@ class DurabilityImpossibleException extends \Couchbase\Exception\CouchbaseExcept
 }
 
 class DurabilityLevelNotAvailableException extends \Couchbase\Exception\CouchbaseException implements \Stringable, \Throwable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
 
-
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getContext (): array {}
 
 	/**
@@ -2260,11 +2284,14 @@ class DurabilityLevelNotAvailableException extends \Couchbase\Exception\Couchbas
 	 * @link http://www.php.net/manual/en/exception.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -2308,10 +2335,10 @@ class DurabilityLevelNotAvailableException extends \Couchbase\Exception\Couchbas
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -2330,12 +2357,10 @@ class DurabilityLevelNotAvailableException extends \Couchbase\Exception\Couchbas
 }
 
 class DurableWriteInProgressException extends \Couchbase\Exception\CouchbaseException implements \Stringable, \Throwable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
 
-
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getContext (): array {}
 
 	/**
@@ -2343,11 +2368,14 @@ class DurableWriteInProgressException extends \Couchbase\Exception\CouchbaseExce
 	 * @link http://www.php.net/manual/en/exception.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -2391,10 +2419,10 @@ class DurableWriteInProgressException extends \Couchbase\Exception\CouchbaseExce
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -2413,12 +2441,10 @@ class DurableWriteInProgressException extends \Couchbase\Exception\CouchbaseExce
 }
 
 class DurableWriteReCommitInProgressException extends \Couchbase\Exception\CouchbaseException implements \Stringable, \Throwable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
 
-
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getContext (): array {}
 
 	/**
@@ -2426,11 +2452,14 @@ class DurableWriteReCommitInProgressException extends \Couchbase\Exception\Couch
 	 * @link http://www.php.net/manual/en/exception.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -2474,10 +2503,10 @@ class DurableWriteReCommitInProgressException extends \Couchbase\Exception\Couch
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -2496,12 +2525,10 @@ class DurableWriteReCommitInProgressException extends \Couchbase\Exception\Couch
 }
 
 class EncodingFailureException extends \Couchbase\Exception\CouchbaseException implements \Stringable, \Throwable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
 
-
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getContext (): array {}
 
 	/**
@@ -2509,11 +2536,14 @@ class EncodingFailureException extends \Couchbase\Exception\CouchbaseException i
 	 * @link http://www.php.net/manual/en/exception.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -2557,10 +2587,10 @@ class EncodingFailureException extends \Couchbase\Exception\CouchbaseException i
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -2579,12 +2609,10 @@ class EncodingFailureException extends \Couchbase\Exception\CouchbaseException i
 }
 
 class FeatureNotAvailableException extends \Couchbase\Exception\CouchbaseException implements \Stringable, \Throwable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
 
-
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getContext (): array {}
 
 	/**
@@ -2592,11 +2620,14 @@ class FeatureNotAvailableException extends \Couchbase\Exception\CouchbaseExcepti
 	 * @link http://www.php.net/manual/en/exception.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -2640,10 +2671,10 @@ class FeatureNotAvailableException extends \Couchbase\Exception\CouchbaseExcepti
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -2662,12 +2693,10 @@ class FeatureNotAvailableException extends \Couchbase\Exception\CouchbaseExcepti
 }
 
 class GroupNotFoundException extends \Couchbase\Exception\CouchbaseException implements \Stringable, \Throwable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
 
-
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getContext (): array {}
 
 	/**
@@ -2675,11 +2704,14 @@ class GroupNotFoundException extends \Couchbase\Exception\CouchbaseException imp
 	 * @link http://www.php.net/manual/en/exception.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -2723,10 +2755,10 @@ class GroupNotFoundException extends \Couchbase\Exception\CouchbaseException imp
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -2745,12 +2777,10 @@ class GroupNotFoundException extends \Couchbase\Exception\CouchbaseException imp
 }
 
 class IndexExistsException extends \Couchbase\Exception\CouchbaseException implements \Stringable, \Throwable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
 
-
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getContext (): array {}
 
 	/**
@@ -2758,11 +2788,14 @@ class IndexExistsException extends \Couchbase\Exception\CouchbaseException imple
 	 * @link http://www.php.net/manual/en/exception.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -2806,10 +2839,10 @@ class IndexExistsException extends \Couchbase\Exception\CouchbaseException imple
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -2828,12 +2861,10 @@ class IndexExistsException extends \Couchbase\Exception\CouchbaseException imple
 }
 
 class IndexFailureException extends \Couchbase\Exception\CouchbaseException implements \Stringable, \Throwable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
 
-
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getContext (): array {}
 
 	/**
@@ -2841,11 +2872,14 @@ class IndexFailureException extends \Couchbase\Exception\CouchbaseException impl
 	 * @link http://www.php.net/manual/en/exception.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -2889,10 +2923,10 @@ class IndexFailureException extends \Couchbase\Exception\CouchbaseException impl
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -2911,12 +2945,10 @@ class IndexFailureException extends \Couchbase\Exception\CouchbaseException impl
 }
 
 class IndexNotFoundException extends \Couchbase\Exception\CouchbaseException implements \Stringable, \Throwable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
 
-
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getContext (): array {}
 
 	/**
@@ -2924,11 +2956,14 @@ class IndexNotFoundException extends \Couchbase\Exception\CouchbaseException imp
 	 * @link http://www.php.net/manual/en/exception.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -2972,10 +3007,10 @@ class IndexNotFoundException extends \Couchbase\Exception\CouchbaseException imp
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -2994,12 +3029,10 @@ class IndexNotFoundException extends \Couchbase\Exception\CouchbaseException imp
 }
 
 class IndexNotReadyException extends \Couchbase\Exception\CouchbaseException implements \Stringable, \Throwable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
 
-
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getContext (): array {}
 
 	/**
@@ -3007,11 +3040,14 @@ class IndexNotReadyException extends \Couchbase\Exception\CouchbaseException imp
 	 * @link http://www.php.net/manual/en/exception.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -3055,10 +3091,10 @@ class IndexNotReadyException extends \Couchbase\Exception\CouchbaseException imp
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -3077,12 +3113,10 @@ class IndexNotReadyException extends \Couchbase\Exception\CouchbaseException imp
 }
 
 class InternalServerFailureException extends \Couchbase\Exception\CouchbaseException implements \Stringable, \Throwable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
 
-
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getContext (): array {}
 
 	/**
@@ -3090,11 +3124,14 @@ class InternalServerFailureException extends \Couchbase\Exception\CouchbaseExcep
 	 * @link http://www.php.net/manual/en/exception.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -3138,10 +3175,10 @@ class InternalServerFailureException extends \Couchbase\Exception\CouchbaseExcep
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -3160,12 +3197,10 @@ class InternalServerFailureException extends \Couchbase\Exception\CouchbaseExcep
 }
 
 class InvalidArgumentException extends \Couchbase\Exception\CouchbaseException implements \Stringable, \Throwable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
 
-
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getContext (): array {}
 
 	/**
@@ -3173,11 +3208,14 @@ class InvalidArgumentException extends \Couchbase\Exception\CouchbaseException i
 	 * @link http://www.php.net/manual/en/exception.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -3221,10 +3259,10 @@ class InvalidArgumentException extends \Couchbase\Exception\CouchbaseException i
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -3243,12 +3281,10 @@ class InvalidArgumentException extends \Couchbase\Exception\CouchbaseException i
 }
 
 class JobQueueFullException extends \Couchbase\Exception\CouchbaseException implements \Stringable, \Throwable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
 
-
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getContext (): array {}
 
 	/**
@@ -3256,11 +3292,14 @@ class JobQueueFullException extends \Couchbase\Exception\CouchbaseException impl
 	 * @link http://www.php.net/manual/en/exception.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -3304,10 +3343,10 @@ class JobQueueFullException extends \Couchbase\Exception\CouchbaseException impl
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -3326,12 +3365,10 @@ class JobQueueFullException extends \Couchbase\Exception\CouchbaseException impl
 }
 
 class LinkExistsException extends \Couchbase\Exception\CouchbaseException implements \Stringable, \Throwable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
 
-
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getContext (): array {}
 
 	/**
@@ -3339,11 +3376,14 @@ class LinkExistsException extends \Couchbase\Exception\CouchbaseException implem
 	 * @link http://www.php.net/manual/en/exception.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -3387,10 +3427,10 @@ class LinkExistsException extends \Couchbase\Exception\CouchbaseException implem
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -3409,12 +3449,10 @@ class LinkExistsException extends \Couchbase\Exception\CouchbaseException implem
 }
 
 class LinkNotFoundException extends \Couchbase\Exception\CouchbaseException implements \Stringable, \Throwable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
 
-
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getContext (): array {}
 
 	/**
@@ -3422,11 +3460,14 @@ class LinkNotFoundException extends \Couchbase\Exception\CouchbaseException impl
 	 * @link http://www.php.net/manual/en/exception.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -3470,10 +3511,10 @@ class LinkNotFoundException extends \Couchbase\Exception\CouchbaseException impl
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -3492,12 +3533,10 @@ class LinkNotFoundException extends \Couchbase\Exception\CouchbaseException impl
 }
 
 class NumberTooBigException extends \Couchbase\Exception\CouchbaseException implements \Stringable, \Throwable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
 
-
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getContext (): array {}
 
 	/**
@@ -3505,11 +3544,14 @@ class NumberTooBigException extends \Couchbase\Exception\CouchbaseException impl
 	 * @link http://www.php.net/manual/en/exception.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -3553,10 +3595,10 @@ class NumberTooBigException extends \Couchbase\Exception\CouchbaseException impl
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -3575,12 +3617,10 @@ class NumberTooBigException extends \Couchbase\Exception\CouchbaseException impl
 }
 
 class ParsingFailureException extends \Couchbase\Exception\CouchbaseException implements \Stringable, \Throwable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
 
-
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getContext (): array {}
 
 	/**
@@ -3588,11 +3628,14 @@ class ParsingFailureException extends \Couchbase\Exception\CouchbaseException im
 	 * @link http://www.php.net/manual/en/exception.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -3636,10 +3679,10 @@ class ParsingFailureException extends \Couchbase\Exception\CouchbaseException im
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -3658,12 +3701,10 @@ class ParsingFailureException extends \Couchbase\Exception\CouchbaseException im
 }
 
 class PathExistsException extends \Couchbase\Exception\CouchbaseException implements \Stringable, \Throwable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
 
-
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getContext (): array {}
 
 	/**
@@ -3671,11 +3712,14 @@ class PathExistsException extends \Couchbase\Exception\CouchbaseException implem
 	 * @link http://www.php.net/manual/en/exception.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -3719,10 +3763,10 @@ class PathExistsException extends \Couchbase\Exception\CouchbaseException implem
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -3741,12 +3785,10 @@ class PathExistsException extends \Couchbase\Exception\CouchbaseException implem
 }
 
 class PathInvalidException extends \Couchbase\Exception\CouchbaseException implements \Stringable, \Throwable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
 
-
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getContext (): array {}
 
 	/**
@@ -3754,11 +3796,14 @@ class PathInvalidException extends \Couchbase\Exception\CouchbaseException imple
 	 * @link http://www.php.net/manual/en/exception.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -3802,10 +3847,10 @@ class PathInvalidException extends \Couchbase\Exception\CouchbaseException imple
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -3824,12 +3869,10 @@ class PathInvalidException extends \Couchbase\Exception\CouchbaseException imple
 }
 
 class PathMismatchException extends \Couchbase\Exception\CouchbaseException implements \Stringable, \Throwable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
 
-
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getContext (): array {}
 
 	/**
@@ -3837,11 +3880,14 @@ class PathMismatchException extends \Couchbase\Exception\CouchbaseException impl
 	 * @link http://www.php.net/manual/en/exception.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -3885,10 +3931,10 @@ class PathMismatchException extends \Couchbase\Exception\CouchbaseException impl
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -3907,12 +3953,10 @@ class PathMismatchException extends \Couchbase\Exception\CouchbaseException impl
 }
 
 class PathNotFoundException extends \Couchbase\Exception\CouchbaseException implements \Stringable, \Throwable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
 
-
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getContext (): array {}
 
 	/**
@@ -3920,11 +3964,14 @@ class PathNotFoundException extends \Couchbase\Exception\CouchbaseException impl
 	 * @link http://www.php.net/manual/en/exception.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -3968,10 +4015,10 @@ class PathNotFoundException extends \Couchbase\Exception\CouchbaseException impl
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -3990,12 +4037,10 @@ class PathNotFoundException extends \Couchbase\Exception\CouchbaseException impl
 }
 
 class PathTooBigException extends \Couchbase\Exception\CouchbaseException implements \Stringable, \Throwable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
 
-
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getContext (): array {}
 
 	/**
@@ -4003,11 +4048,14 @@ class PathTooBigException extends \Couchbase\Exception\CouchbaseException implem
 	 * @link http://www.php.net/manual/en/exception.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -4051,10 +4099,10 @@ class PathTooBigException extends \Couchbase\Exception\CouchbaseException implem
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -4073,12 +4121,10 @@ class PathTooBigException extends \Couchbase\Exception\CouchbaseException implem
 }
 
 class PathTooDeepException extends \Couchbase\Exception\CouchbaseException implements \Stringable, \Throwable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
 
-
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getContext (): array {}
 
 	/**
@@ -4086,11 +4132,14 @@ class PathTooDeepException extends \Couchbase\Exception\CouchbaseException imple
 	 * @link http://www.php.net/manual/en/exception.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -4134,10 +4183,10 @@ class PathTooDeepException extends \Couchbase\Exception\CouchbaseException imple
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -4156,12 +4205,10 @@ class PathTooDeepException extends \Couchbase\Exception\CouchbaseException imple
 }
 
 class PlanningFailureException extends \Couchbase\Exception\CouchbaseException implements \Stringable, \Throwable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
 
-
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getContext (): array {}
 
 	/**
@@ -4169,11 +4216,14 @@ class PlanningFailureException extends \Couchbase\Exception\CouchbaseException i
 	 * @link http://www.php.net/manual/en/exception.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -4217,10 +4267,10 @@ class PlanningFailureException extends \Couchbase\Exception\CouchbaseException i
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -4239,12 +4289,10 @@ class PlanningFailureException extends \Couchbase\Exception\CouchbaseException i
 }
 
 class PreparedStatementFailureException extends \Couchbase\Exception\CouchbaseException implements \Stringable, \Throwable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
 
-
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getContext (): array {}
 
 	/**
@@ -4252,11 +4300,14 @@ class PreparedStatementFailureException extends \Couchbase\Exception\CouchbaseEx
 	 * @link http://www.php.net/manual/en/exception.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -4300,10 +4351,10 @@ class PreparedStatementFailureException extends \Couchbase\Exception\CouchbaseEx
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -4322,12 +4373,10 @@ class PreparedStatementFailureException extends \Couchbase\Exception\CouchbaseEx
 }
 
 class RequestCanceledException extends \Couchbase\Exception\CouchbaseException implements \Stringable, \Throwable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
 
-
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getContext (): array {}
 
 	/**
@@ -4335,11 +4384,14 @@ class RequestCanceledException extends \Couchbase\Exception\CouchbaseException i
 	 * @link http://www.php.net/manual/en/exception.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -4383,10 +4435,10 @@ class RequestCanceledException extends \Couchbase\Exception\CouchbaseException i
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -4405,12 +4457,10 @@ class RequestCanceledException extends \Couchbase\Exception\CouchbaseException i
 }
 
 class ScopeExistsException extends \Couchbase\Exception\CouchbaseException implements \Stringable, \Throwable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
 
-
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getContext (): array {}
 
 	/**
@@ -4418,11 +4468,14 @@ class ScopeExistsException extends \Couchbase\Exception\CouchbaseException imple
 	 * @link http://www.php.net/manual/en/exception.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -4466,10 +4519,10 @@ class ScopeExistsException extends \Couchbase\Exception\CouchbaseException imple
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -4488,12 +4541,10 @@ class ScopeExistsException extends \Couchbase\Exception\CouchbaseException imple
 }
 
 class ScopeNotFoundException extends \Couchbase\Exception\CouchbaseException implements \Stringable, \Throwable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
 
-
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getContext (): array {}
 
 	/**
@@ -4501,11 +4552,14 @@ class ScopeNotFoundException extends \Couchbase\Exception\CouchbaseException imp
 	 * @link http://www.php.net/manual/en/exception.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -4549,10 +4603,10 @@ class ScopeNotFoundException extends \Couchbase\Exception\CouchbaseException imp
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -4571,12 +4625,10 @@ class ScopeNotFoundException extends \Couchbase\Exception\CouchbaseException imp
 }
 
 class ServiceNotAvailableException extends \Couchbase\Exception\CouchbaseException implements \Stringable, \Throwable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
 
-
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getContext (): array {}
 
 	/**
@@ -4584,11 +4636,14 @@ class ServiceNotAvailableException extends \Couchbase\Exception\CouchbaseExcepti
 	 * @link http://www.php.net/manual/en/exception.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -4632,10 +4687,10 @@ class ServiceNotAvailableException extends \Couchbase\Exception\CouchbaseExcepti
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -4654,12 +4709,10 @@ class ServiceNotAvailableException extends \Couchbase\Exception\CouchbaseExcepti
 }
 
 class TemporaryFailureException extends \Couchbase\Exception\CouchbaseException implements \Stringable, \Throwable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
 
-
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getContext (): array {}
 
 	/**
@@ -4667,11 +4720,14 @@ class TemporaryFailureException extends \Couchbase\Exception\CouchbaseException 
 	 * @link http://www.php.net/manual/en/exception.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -4715,10 +4771,10 @@ class TemporaryFailureException extends \Couchbase\Exception\CouchbaseException 
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -4737,12 +4793,10 @@ class TemporaryFailureException extends \Couchbase\Exception\CouchbaseException 
 }
 
 class UnsupportedOperationException extends \Couchbase\Exception\CouchbaseException implements \Stringable, \Throwable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
 
-
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getContext (): array {}
 
 	/**
@@ -4750,11 +4804,14 @@ class UnsupportedOperationException extends \Couchbase\Exception\CouchbaseExcept
 	 * @link http://www.php.net/manual/en/exception.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -4798,10 +4855,10 @@ class UnsupportedOperationException extends \Couchbase\Exception\CouchbaseExcept
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -4820,12 +4877,10 @@ class UnsupportedOperationException extends \Couchbase\Exception\CouchbaseExcept
 }
 
 class UserExistsException extends \Couchbase\Exception\CouchbaseException implements \Stringable, \Throwable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
 
-
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getContext (): array {}
 
 	/**
@@ -4833,11 +4888,14 @@ class UserExistsException extends \Couchbase\Exception\CouchbaseException implem
 	 * @link http://www.php.net/manual/en/exception.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -4881,10 +4939,10 @@ class UserExistsException extends \Couchbase\Exception\CouchbaseException implem
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -4903,12 +4961,10 @@ class UserExistsException extends \Couchbase\Exception\CouchbaseException implem
 }
 
 class UserNotFoundException extends \Couchbase\Exception\CouchbaseException implements \Stringable, \Throwable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
 
-
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getContext (): array {}
 
 	/**
@@ -4916,11 +4972,14 @@ class UserNotFoundException extends \Couchbase\Exception\CouchbaseException impl
 	 * @link http://www.php.net/manual/en/exception.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -4964,10 +5023,10 @@ class UserNotFoundException extends \Couchbase\Exception\CouchbaseException impl
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -4986,12 +5045,10 @@ class UserNotFoundException extends \Couchbase\Exception\CouchbaseException impl
 }
 
 class ValueInvalidException extends \Couchbase\Exception\CouchbaseException implements \Stringable, \Throwable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
 
-
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getContext (): array {}
 
 	/**
@@ -4999,11 +5056,14 @@ class ValueInvalidException extends \Couchbase\Exception\CouchbaseException impl
 	 * @link http://www.php.net/manual/en/exception.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -5047,10 +5107,10 @@ class ValueInvalidException extends \Couchbase\Exception\CouchbaseException impl
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -5069,12 +5129,10 @@ class ValueInvalidException extends \Couchbase\Exception\CouchbaseException impl
 }
 
 class ValueTooDeepException extends \Couchbase\Exception\CouchbaseException implements \Stringable, \Throwable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
 
-
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getContext (): array {}
 
 	/**
@@ -5082,11 +5140,14 @@ class ValueTooDeepException extends \Couchbase\Exception\CouchbaseException impl
 	 * @link http://www.php.net/manual/en/exception.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -5130,10 +5191,10 @@ class ValueTooDeepException extends \Couchbase\Exception\CouchbaseException impl
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -5152,12 +5213,10 @@ class ValueTooDeepException extends \Couchbase\Exception\CouchbaseException impl
 }
 
 class ValueTooLargeException extends \Couchbase\Exception\CouchbaseException implements \Stringable, \Throwable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
 
-
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getContext (): array {}
 
 	/**
@@ -5165,11 +5224,14 @@ class ValueTooLargeException extends \Couchbase\Exception\CouchbaseException imp
 	 * @link http://www.php.net/manual/en/exception.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -5213,10 +5275,10 @@ class ValueTooLargeException extends \Couchbase\Exception\CouchbaseException imp
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -5235,12 +5297,10 @@ class ValueTooLargeException extends \Couchbase\Exception\CouchbaseException imp
 }
 
 class ViewNotFoundException extends \Couchbase\Exception\CouchbaseException implements \Stringable, \Throwable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
 
-
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getContext (): array {}
 
 	/**
@@ -5248,11 +5308,14 @@ class ViewNotFoundException extends \Couchbase\Exception\CouchbaseException impl
 	 * @link http://www.php.net/manual/en/exception.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -5296,10 +5359,10 @@ class ViewNotFoundException extends \Couchbase\Exception\CouchbaseException impl
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -5318,12 +5381,10 @@ class ViewNotFoundException extends \Couchbase\Exception\CouchbaseException impl
 }
 
 class XattrCannotModifyVirtualAttributeException extends \Couchbase\Exception\CouchbaseException implements \Stringable, \Throwable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
 
-
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getContext (): array {}
 
 	/**
@@ -5331,11 +5392,14 @@ class XattrCannotModifyVirtualAttributeException extends \Couchbase\Exception\Co
 	 * @link http://www.php.net/manual/en/exception.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -5379,10 +5443,10 @@ class XattrCannotModifyVirtualAttributeException extends \Couchbase\Exception\Co
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -5401,12 +5465,10 @@ class XattrCannotModifyVirtualAttributeException extends \Couchbase\Exception\Co
 }
 
 class XattrInvalidKeyComboException extends \Couchbase\Exception\CouchbaseException implements \Stringable, \Throwable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
 
-
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getContext (): array {}
 
 	/**
@@ -5414,11 +5476,14 @@ class XattrInvalidKeyComboException extends \Couchbase\Exception\CouchbaseExcept
 	 * @link http://www.php.net/manual/en/exception.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -5462,10 +5527,10 @@ class XattrInvalidKeyComboException extends \Couchbase\Exception\CouchbaseExcept
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -5484,12 +5549,10 @@ class XattrInvalidKeyComboException extends \Couchbase\Exception\CouchbaseExcept
 }
 
 class XattrUnknownMacroException extends \Couchbase\Exception\CouchbaseException implements \Stringable, \Throwable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
 
-
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getContext (): array {}
 
 	/**
@@ -5497,11 +5560,14 @@ class XattrUnknownMacroException extends \Couchbase\Exception\CouchbaseException
 	 * @link http://www.php.net/manual/en/exception.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -5545,10 +5611,10 @@ class XattrUnknownMacroException extends \Couchbase\Exception\CouchbaseException
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -5567,12 +5633,10 @@ class XattrUnknownMacroException extends \Couchbase\Exception\CouchbaseException
 }
 
 class XattrUnknownVirtualAttributeException extends \Couchbase\Exception\CouchbaseException implements \Stringable, \Throwable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
 
-
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getContext (): array {}
 
 	/**
@@ -5580,11 +5644,14 @@ class XattrUnknownVirtualAttributeException extends \Couchbase\Exception\Couchba
 	 * @link http://www.php.net/manual/en/exception.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -5628,10 +5695,10 @@ class XattrUnknownVirtualAttributeException extends \Couchbase\Exception\Couchba
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -5650,12 +5717,10 @@ class XattrUnknownVirtualAttributeException extends \Couchbase\Exception\Couchba
 }
 
 class TransactionException extends \Couchbase\Exception\CouchbaseException implements \Stringable, \Throwable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
 
-
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getContext (): array {}
 
 	/**
@@ -5663,11 +5728,14 @@ class TransactionException extends \Couchbase\Exception\CouchbaseException imple
 	 * @link http://www.php.net/manual/en/exception.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -5711,10 +5779,10 @@ class TransactionException extends \Couchbase\Exception\CouchbaseException imple
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -5733,12 +5801,10 @@ class TransactionException extends \Couchbase\Exception\CouchbaseException imple
 }
 
 class TransactionOperationFailedException extends \Couchbase\Exception\TransactionException implements \Throwable, \Stringable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
 
-
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getContext (): array {}
 
 	/**
@@ -5746,11 +5812,14 @@ class TransactionOperationFailedException extends \Couchbase\Exception\Transacti
 	 * @link http://www.php.net/manual/en/exception.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -5794,10 +5863,10 @@ class TransactionOperationFailedException extends \Couchbase\Exception\Transacti
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -5816,12 +5885,10 @@ class TransactionOperationFailedException extends \Couchbase\Exception\Transacti
 }
 
 class TransactionFailedException extends \Couchbase\Exception\TransactionException implements \Throwable, \Stringable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
 
-
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getContext (): array {}
 
 	/**
@@ -5829,11 +5896,14 @@ class TransactionFailedException extends \Couchbase\Exception\TransactionExcepti
 	 * @link http://www.php.net/manual/en/exception.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -5877,10 +5947,10 @@ class TransactionFailedException extends \Couchbase\Exception\TransactionExcepti
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -5899,12 +5969,10 @@ class TransactionFailedException extends \Couchbase\Exception\TransactionExcepti
 }
 
 class TransactionExpiredException extends \Couchbase\Exception\TransactionException implements \Throwable, \Stringable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
 
-
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getContext (): array {}
 
 	/**
@@ -5912,11 +5980,14 @@ class TransactionExpiredException extends \Couchbase\Exception\TransactionExcept
 	 * @link http://www.php.net/manual/en/exception.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -5960,10 +6031,10 @@ class TransactionExpiredException extends \Couchbase\Exception\TransactionExcept
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -5982,12 +6053,10 @@ class TransactionExpiredException extends \Couchbase\Exception\TransactionExcept
 }
 
 class TransactionCommitAmbiguousException extends \Couchbase\Exception\TransactionException implements \Throwable, \Stringable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
 
-
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getContext (): array {}
 
 	/**
@@ -5995,11 +6064,14 @@ class TransactionCommitAmbiguousException extends \Couchbase\Exception\Transacti
 	 * @link http://www.php.net/manual/en/exception.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -6043,10 +6115,10 @@ class TransactionCommitAmbiguousException extends \Couchbase\Exception\Transacti
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -6070,21 +6142,27 @@ class TransactionCommitAmbiguousException extends \Couchbase\Exception\Transacti
 
 namespace couchbase\extension {
 
+/**
+ * {@inheritdoc}
+ */
 function version () {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $connection
  * @param string $bucketName
  */
 function clusterVersion ($connection = null, string $bucketName) {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $connection
  * @param string $bucketName
  */
 function replicasConfiguredForBucket ($connection = null, string $bucketName) {}
 
 /**
+ * {@inheritdoc}
  * @param string $connectionHash
  * @param string $connectionString
  * @param array $options
@@ -6092,18 +6170,21 @@ function replicasConfiguredForBucket ($connection = null, string $bucketName) {}
 function createConnection (string $connectionHash, string $connectionString, array $options) {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $connection
  * @param string $bucketName
  */
 function openBucket ($connection = null, string $bucketName) {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $connection
  * @param string $bucketName
  */
 function closeBucket ($connection = null, string $bucketName) {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $connection
  * @param string $bucket
  * @param string $scope
@@ -6111,11 +6192,12 @@ function closeBucket ($connection = null, string $bucketName) {}
  * @param string $id
  * @param string $value
  * @param int $flags
- * @param ?array $options [optional]
+ * @param array|null $options [optional]
  */
-function documentUpsert ($connection = null, string $bucket, string $scope, string $collection, string $id, string $value, int $flags, ?array $options = null) {}
+function documentUpsert ($connection = null, string $bucket, string $scope, string $collection, string $id, string $value, int $flags, ?array $options = NULL) {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $connection
  * @param string $bucket
  * @param string $scope
@@ -6123,11 +6205,12 @@ function documentUpsert ($connection = null, string $bucket, string $scope, stri
  * @param string $id
  * @param string $value
  * @param int $flags
- * @param ?array $options [optional]
+ * @param array|null $options [optional]
  */
-function documentInsert ($connection = null, string $bucket, string $scope, string $collection, string $id, string $value, int $flags, ?array $options = null) {}
+function documentInsert ($connection = null, string $bucket, string $scope, string $collection, string $id, string $value, int $flags, ?array $options = NULL) {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $connection
  * @param string $bucket
  * @param string $scope
@@ -6135,271 +6218,301 @@ function documentInsert ($connection = null, string $bucket, string $scope, stri
  * @param string $id
  * @param string $value
  * @param int $flags
- * @param ?array $options [optional]
+ * @param array|null $options [optional]
  */
-function documentReplace ($connection = null, string $bucket, string $scope, string $collection, string $id, string $value, int $flags, ?array $options = null) {}
+function documentReplace ($connection = null, string $bucket, string $scope, string $collection, string $id, string $value, int $flags, ?array $options = NULL) {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $connection
  * @param string $bucket
  * @param string $scope
  * @param string $collection
  * @param string $id
  * @param string $value
- * @param ?array $options [optional]
+ * @param array|null $options [optional]
  */
-function documentAppend ($connection = null, string $bucket, string $scope, string $collection, string $id, string $value, ?array $options = null) {}
+function documentAppend ($connection = null, string $bucket, string $scope, string $collection, string $id, string $value, ?array $options = NULL) {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $connection
  * @param string $bucket
  * @param string $scope
  * @param string $collection
  * @param string $id
  * @param string $value
- * @param ?array $options [optional]
+ * @param array|null $options [optional]
  */
-function documentPrepend ($connection = null, string $bucket, string $scope, string $collection, string $id, string $value, ?array $options = null) {}
+function documentPrepend ($connection = null, string $bucket, string $scope, string $collection, string $id, string $value, ?array $options = NULL) {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $connection
  * @param string $bucket
  * @param string $scope
  * @param string $collection
  * @param string $id
- * @param ?array $options [optional]
+ * @param array|null $options [optional]
  */
-function documentIncrement ($connection = null, string $bucket, string $scope, string $collection, string $id, ?array $options = null) {}
+function documentIncrement ($connection = null, string $bucket, string $scope, string $collection, string $id, ?array $options = NULL) {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $connection
  * @param string $bucket
  * @param string $scope
  * @param string $collection
  * @param string $id
- * @param ?array $options [optional]
+ * @param array|null $options [optional]
  */
-function documentDecrement ($connection = null, string $bucket, string $scope, string $collection, string $id, ?array $options = null) {}
+function documentDecrement ($connection = null, string $bucket, string $scope, string $collection, string $id, ?array $options = NULL) {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $connection
  * @param string $bucket
  * @param string $scope
  * @param string $collection
  * @param string $id
- * @param ?array $options [optional]
+ * @param array|null $options [optional]
  */
-function documentGet ($connection = null, string $bucket, string $scope, string $collection, string $id, ?array $options = null) {}
+function documentGet ($connection = null, string $bucket, string $scope, string $collection, string $id, ?array $options = NULL) {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $connection
  * @param string $bucket
  * @param string $scope
  * @param string $collection
  * @param string $id
- * @param ?array $options [optional]
+ * @param array|null $options [optional]
  */
-function documentGetAnyReplica ($connection = null, string $bucket, string $scope, string $collection, string $id, ?array $options = null) {}
+function documentGetAnyReplica ($connection = null, string $bucket, string $scope, string $collection, string $id, ?array $options = NULL) {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $connection
  * @param string $bucket
  * @param string $scope
  * @param string $collection
  * @param string $id
- * @param ?array $options [optional]
+ * @param array|null $options [optional]
  */
-function documentGetAllReplicas ($connection = null, string $bucket, string $scope, string $collection, string $id, ?array $options = null) {}
+function documentGetAllReplicas ($connection = null, string $bucket, string $scope, string $collection, string $id, ?array $options = NULL) {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $connection
  * @param string $bucket
  * @param string $scope
  * @param string $collection
  * @param string $id
  * @param int $expirySeconds
- * @param ?array $options [optional]
+ * @param array|null $options [optional]
  */
-function documentGetAndTouch ($connection = null, string $bucket, string $scope, string $collection, string $id, int $expirySeconds, ?array $options = null) {}
+function documentGetAndTouch ($connection = null, string $bucket, string $scope, string $collection, string $id, int $expirySeconds, ?array $options = NULL) {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $connection
  * @param string $bucket
  * @param string $scope
  * @param string $collection
  * @param string $id
  * @param int $lockTimeSeconds
- * @param ?array $options [optional]
+ * @param array|null $options [optional]
  */
-function documentGetAndLock ($connection = null, string $bucket, string $scope, string $collection, string $id, int $lockTimeSeconds, ?array $options = null) {}
+function documentGetAndLock ($connection = null, string $bucket, string $scope, string $collection, string $id, int $lockTimeSeconds, ?array $options = NULL) {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $connection
  * @param string $bucket
  * @param string $scope
  * @param string $collection
  * @param string $id
  * @param string $cas
- * @param ?array $options [optional]
+ * @param array|null $options [optional]
  */
-function documentUnlock ($connection = null, string $bucket, string $scope, string $collection, string $id, string $cas, ?array $options = null) {}
+function documentUnlock ($connection = null, string $bucket, string $scope, string $collection, string $id, string $cas, ?array $options = NULL) {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $connection
  * @param string $bucket
  * @param string $scope
  * @param string $collection
  * @param string $id
- * @param ?array $options [optional]
+ * @param array|null $options [optional]
  */
-function documentRemove ($connection = null, string $bucket, string $scope, string $collection, string $id, ?array $options = null) {}
+function documentRemove ($connection = null, string $bucket, string $scope, string $collection, string $id, ?array $options = NULL) {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $connection
  * @param string $bucket
  * @param string $scope
  * @param string $collection
  * @param string $id
  * @param int $expirySeconds
- * @param ?array $options [optional]
+ * @param array|null $options [optional]
  */
-function documentTouch ($connection = null, string $bucket, string $scope, string $collection, string $id, int $expirySeconds, ?array $options = null) {}
+function documentTouch ($connection = null, string $bucket, string $scope, string $collection, string $id, int $expirySeconds, ?array $options = NULL) {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $connection
  * @param string $bucket
  * @param string $scope
  * @param string $collection
  * @param string $id
- * @param ?array $options [optional]
+ * @param array|null $options [optional]
  */
-function documentExists ($connection = null, string $bucket, string $scope, string $collection, string $id, ?array $options = null) {}
+function documentExists ($connection = null, string $bucket, string $scope, string $collection, string $id, ?array $options = NULL) {}
 
 /**
- * @param mixed $connection
- * @param string $bucket
- * @param string $scope
- * @param string $collection
- * @param string $id
- * @param array $specs
- * @param ?array $options [optional]
- */
-function documentMutateIn ($connection = null, string $bucket, string $scope, string $collection, string $id, array $specs, ?array $options = null) {}
-
-/**
+ * {@inheritdoc}
  * @param mixed $connection
  * @param string $bucket
  * @param string $scope
  * @param string $collection
  * @param string $id
  * @param array $specs
- * @param ?array $options [optional]
+ * @param array|null $options [optional]
  */
-function documentLookupIn ($connection = null, string $bucket, string $scope, string $collection, string $id, array $specs, ?array $options = null) {}
+function documentMutateIn ($connection = null, string $bucket, string $scope, string $collection, string $id, array $specs, ?array $options = NULL) {}
 
 /**
+ * {@inheritdoc}
+ * @param mixed $connection
+ * @param string $bucket
+ * @param string $scope
+ * @param string $collection
+ * @param string $id
+ * @param array $specs
+ * @param array|null $options [optional]
+ */
+function documentLookupIn ($connection = null, string $bucket, string $scope, string $collection, string $id, array $specs, ?array $options = NULL) {}
+
+/**
+ * {@inheritdoc}
  * @param mixed $connection
  * @param string $bucket
  * @param string $scope
  * @param string $collection
  * @param array $ids
- * @param ?array $options [optional]
+ * @param array|null $options [optional]
  */
-function documentGetMulti ($connection = null, string $bucket, string $scope, string $collection, array $ids, ?array $options = null) {}
+function documentGetMulti ($connection = null, string $bucket, string $scope, string $collection, array $ids, ?array $options = NULL) {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $connection
  * @param string $bucket
  * @param string $scope
  * @param string $collection
  * @param array $entries
- * @param ?array $options [optional]
+ * @param array|null $options [optional]
  */
-function documentRemoveMulti ($connection = null, string $bucket, string $scope, string $collection, array $entries, ?array $options = null) {}
+function documentRemoveMulti ($connection = null, string $bucket, string $scope, string $collection, array $entries, ?array $options = NULL) {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $connection
  * @param string $bucket
  * @param string $scope
  * @param string $collection
  * @param array $entries
- * @param ?array $options [optional]
+ * @param array|null $options [optional]
  */
-function documentUpsertMulti ($connection = null, string $bucket, string $scope, string $collection, array $entries, ?array $options = null) {}
+function documentUpsertMulti ($connection = null, string $bucket, string $scope, string $collection, array $entries, ?array $options = NULL) {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $connection
  * @param string $statement
- * @param ?array $options [optional]
+ * @param array|null $options [optional]
  */
-function query ($connection = null, string $statement, ?array $options = null) {}
+function query ($connection = null, string $statement, ?array $options = NULL) {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $connection
  * @param string $statement
- * @param ?array $options [optional]
+ * @param array|null $options [optional]
  */
-function analyticsQuery ($connection = null, string $statement, ?array $options = null) {}
+function analyticsQuery ($connection = null, string $statement, ?array $options = NULL) {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $connection
  * @param string $bucketName
  * @param string $designDocumentName
  * @param string $viewName
  * @param int $nameSpace
- * @param ?array $options [optional]
+ * @param array|null $options [optional]
  */
-function viewQuery ($connection = null, string $bucketName, string $designDocumentName, string $viewName, int $nameSpace, ?array $options = null) {}
+function viewQuery ($connection = null, string $bucketName, string $designDocumentName, string $viewName, int $nameSpace, ?array $options = NULL) {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $connection
  * @param string $indexName
  * @param string $query
- * @param ?array $options [optional]
+ * @param array|null $options [optional]
  */
-function searchQuery ($connection = null, string $indexName, string $query, ?array $options = null) {}
+function searchQuery ($connection = null, string $indexName, string $query, ?array $options = NULL) {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $connection
- * @param ?array $options [optional]
+ * @param array|null $options [optional]
  */
-function ping ($connection = null, ?array $options = null) {}
+function ping ($connection = null, ?array $options = NULL) {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $connection
  * @param string $reportId
- * @param ?array $options [optional]
+ * @param array|null $options [optional]
  */
-function diagnostics ($connection = null, string $reportId, ?array $options = null) {}
+function diagnostics ($connection = null, string $reportId, ?array $options = NULL) {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $connection [optional]
- * @param ?array $configuration [optional]
+ * @param array|null $configuration [optional]
  */
-function createTransactions ($connection = null, ?array $configuration = null): null {}
+function createTransactions ($connection = NULL, ?array $configuration = NULL): null {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $transactions [optional]
- * @param ?array $configuration [optional]
+ * @param array|null $configuration [optional]
  */
-function createTransactionContext ($transactions = null, ?array $configuration = null): null {}
+function createTransactionContext ($transactions = NULL, ?array $configuration = NULL): null {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $transactions
  */
 function transactionNewAttempt ($transactions = null) {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $transactions
  */
 function transactionCommit ($transactions = null) {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $transactions
  */
 function transactionRollback ($transactions = null) {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $transactions
  * @param string $bucketName
  * @param string $scopeName
@@ -6409,6 +6522,7 @@ function transactionRollback ($transactions = null) {}
 function transactionGet ($transactions = null, string $bucketName, string $scopeName, string $collectionName, string $id) {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $transactions
  * @param string $bucketName
  * @param string $scopeName
@@ -6419,6 +6533,7 @@ function transactionGet ($transactions = null, string $bucketName, string $scope
 function transactionInsert ($transactions = null, string $bucketName, string $scopeName, string $collectionName, string $id, string $value) {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $transactions
  * @param array $document
  * @param string $value
@@ -6426,282 +6541,319 @@ function transactionInsert ($transactions = null, string $bucketName, string $sc
 function transactionReplace ($transactions = null, array $document, string $value) {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $transactions
  * @param array $document
  */
 function transactionRemove ($transactions = null, array $document) {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $transactions
  * @param string $statement
- * @param ?array $options [optional]
+ * @param array|null $options [optional]
  */
-function transactionQuery ($transactions = null, string $statement, ?array $options = null) {}
+function transactionQuery ($transactions = null, string $statement, ?array $options = NULL) {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $connection
  * @param array $index
- * @param ?array $options [optional]
+ * @param array|null $options [optional]
  */
-function searchIndexUpsert ($connection = null, array $index, ?array $options = null) {}
+function searchIndexUpsert ($connection = null, array $index, ?array $options = NULL) {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $connection
  * @param string $bucketName
  * @param array $index
  * @param int $nameSpace
- * @param ?array $options [optional]
+ * @param array|null $options [optional]
  */
-function viewIndexUpsert ($connection = null, string $bucketName, array $index, int $nameSpace, ?array $options = null) {}
+function viewIndexUpsert ($connection = null, string $bucketName, array $index, int $nameSpace, ?array $options = NULL) {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $connection
  * @param array $bucketSettings
- * @param ?array $options [optional]
+ * @param array|null $options [optional]
  */
-function bucketCreate ($connection = null, array $bucketSettings, ?array $options = null) {}
+function bucketCreate ($connection = null, array $bucketSettings, ?array $options = NULL) {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $connection
  * @param array $bucketSettings
- * @param ?array $options [optional]
+ * @param array|null $options [optional]
  */
-function bucketUpdate ($connection = null, array $bucketSettings, ?array $options = null) {}
+function bucketUpdate ($connection = null, array $bucketSettings, ?array $options = NULL) {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $connection
  * @param string $name
- * @param ?array $options [optional]
+ * @param array|null $options [optional]
  */
-function bucketGet ($connection = null, string $name, ?array $options = null) {}
+function bucketGet ($connection = null, string $name, ?array $options = NULL) {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $connection
- * @param ?array $options [optional]
+ * @param array|null $options [optional]
  */
-function bucketGetAll ($connection = null, ?array $options = null) {}
+function bucketGetAll ($connection = null, ?array $options = NULL) {}
 
 /**
- * @param mixed $connection
- * @param string $name
- * @param ?array $options [optional]
- */
-function bucketDrop ($connection = null, string $name, ?array $options = null) {}
-
-/**
+ * {@inheritdoc}
  * @param mixed $connection
  * @param string $name
- * @param ?array $options [optional]
+ * @param array|null $options [optional]
  */
-function bucketFlush ($connection = null, string $name, ?array $options = null) {}
+function bucketDrop ($connection = null, string $name, ?array $options = NULL) {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $connection
  * @param string $name
- * @param ?array $options [optional]
+ * @param array|null $options [optional]
  */
-function scopeGetAll ($connection = null, string $name, ?array $options = null) {}
+function bucketFlush ($connection = null, string $name, ?array $options = NULL) {}
 
 /**
+ * {@inheritdoc}
+ * @param mixed $connection
+ * @param string $name
+ * @param array|null $options [optional]
+ */
+function scopeGetAll ($connection = null, string $name, ?array $options = NULL) {}
+
+/**
+ * {@inheritdoc}
  * @param mixed $connection
  * @param string $bucketName
  * @param string $scopeName
- * @param ?array $options [optional]
+ * @param array|null $options [optional]
  */
-function scopeCreate ($connection = null, string $bucketName, string $scopeName, ?array $options = null) {}
+function scopeCreate ($connection = null, string $bucketName, string $scopeName, ?array $options = NULL) {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $connection
  * @param string $bucketName
  * @param string $scopeName
- * @param ?array $options [optional]
+ * @param array|null $options [optional]
  */
-function scopeDrop ($connection = null, string $bucketName, string $scopeName, ?array $options = null) {}
+function scopeDrop ($connection = null, string $bucketName, string $scopeName, ?array $options = NULL) {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $connection
  * @param string $bucketName
  * @param array $collectionSpec
- * @param ?array $options [optional]
+ * @param array|null $options [optional]
  */
-function collectionCreate ($connection = null, string $bucketName, array $collectionSpec, ?array $options = null) {}
+function collectionCreate ($connection = null, string $bucketName, array $collectionSpec, ?array $options = NULL) {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $connection
  * @param string $bucketName
  * @param array $collectionSpec
- * @param ?array $options [optional]
+ * @param array|null $options [optional]
  */
-function collectionDrop ($connection = null, string $bucketName, array $collectionSpec, ?array $options = null) {}
+function collectionDrop ($connection = null, string $bucketName, array $collectionSpec, ?array $options = NULL) {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $connection
  * @param array $user
- * @param ?array $options [optional]
+ * @param array|null $options [optional]
  */
-function userUpsert ($connection = null, array $user, ?array $options = null) {}
+function userUpsert ($connection = null, array $user, ?array $options = NULL) {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $connection
  * @param string $name
- * @param ?array $options [optional]
+ * @param array|null $options [optional]
  */
-function userGet ($connection = null, string $name, ?array $options = null) {}
+function userGet ($connection = null, string $name, ?array $options = NULL) {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $connection
- * @param ?array $options [optional]
+ * @param array|null $options [optional]
  */
-function userGetAll ($connection = null, ?array $options = null) {}
+function userGetAll ($connection = null, ?array $options = NULL) {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $connection
  * @param string $name
- * @param ?array $options [optional]
+ * @param array|null $options [optional]
  */
-function userDrop ($connection = null, string $name, ?array $options = null) {}
+function userDrop ($connection = null, string $name, ?array $options = NULL) {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $connection
  * @param string $new_password
- * @param ?array $options [optional]
+ * @param array|null $options [optional]
  */
-function passwordChange ($connection = null, string $new_password, ?array $options = null) {}
+function passwordChange ($connection = null, string $new_password, ?array $options = NULL) {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $connection
  * @param array $group
- * @param ?array $options [optional]
+ * @param array|null $options [optional]
  */
-function groupUpsert ($connection = null, array $group, ?array $options = null) {}
+function groupUpsert ($connection = null, array $group, ?array $options = NULL) {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $connection
  * @param string $name
- * @param ?array $options [optional]
+ * @param array|null $options [optional]
  */
-function groupGet ($connection = null, string $name, ?array $options = null) {}
+function groupGet ($connection = null, string $name, ?array $options = NULL) {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $connection
- * @param ?array $options [optional]
+ * @param array|null $options [optional]
  */
-function groupGetAll ($connection = null, ?array $options = null) {}
+function groupGetAll ($connection = null, ?array $options = NULL) {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $connection
  * @param string $name
- * @param ?array $options [optional]
+ * @param array|null $options [optional]
  */
-function groupDrop ($connection = null, string $name, ?array $options = null) {}
+function groupDrop ($connection = null, string $name, ?array $options = NULL) {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $connection
- * @param ?array $options [optional]
+ * @param array|null $options [optional]
  */
-function roleGetAll ($connection = null, ?array $options = null) {}
+function roleGetAll ($connection = null, ?array $options = NULL) {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $connection
  * @param string $bucketName
- * @param ?array $options [optional]
+ * @param array|null $options [optional]
  */
-function queryIndexGetAll ($connection = null, string $bucketName, ?array $options = null) {}
+function queryIndexGetAll ($connection = null, string $bucketName, ?array $options = NULL) {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $connection
  * @param string $bucketName
  * @param string $indexName
  * @param array $fields
- * @param ?array $options [optional]
+ * @param array|null $options [optional]
  */
-function queryIndexCreate ($connection = null, string $bucketName, string $indexName, array $fields, ?array $options = null) {}
+function queryIndexCreate ($connection = null, string $bucketName, string $indexName, array $fields, ?array $options = NULL) {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $connection
  * @param string $bucketName
- * @param ?array $options [optional]
+ * @param array|null $options [optional]
  */
-function queryIndexCreatePrimary ($connection = null, string $bucketName, ?array $options = null) {}
+function queryIndexCreatePrimary ($connection = null, string $bucketName, ?array $options = NULL) {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $connection
  * @param string $bucketName
  * @param string $indexName
- * @param ?array $options [optional]
+ * @param array|null $options [optional]
  */
-function queryIndexDrop ($connection = null, string $bucketName, string $indexName, ?array $options = null) {}
+function queryIndexDrop ($connection = null, string $bucketName, string $indexName, ?array $options = NULL) {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $connection
  * @param string $bucketName
- * @param ?array $options [optional]
+ * @param array|null $options [optional]
  */
-function queryIndexDropPrimary ($connection = null, string $bucketName, ?array $options = null) {}
+function queryIndexDropPrimary ($connection = null, string $bucketName, ?array $options = NULL) {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $connection
  * @param string $bucketName
- * @param ?array $options [optional]
+ * @param array|null $options [optional]
  */
-function queryIndexBuildDeferred ($connection = null, string $bucketName, ?array $options = null) {}
+function queryIndexBuildDeferred ($connection = null, string $bucketName, ?array $options = NULL) {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $connection
  * @param string $bucketName
  * @param string $scopeName
  * @param string $collectionName
- * @param ?array $options [optional]
+ * @param array|null $options [optional]
  */
-function collectionQueryIndexGetAll ($connection = null, string $bucketName, string $scopeName, string $collectionName, ?array $options = null) {}
+function collectionQueryIndexGetAll ($connection = null, string $bucketName, string $scopeName, string $collectionName, ?array $options = NULL) {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $connection
  * @param string $bucketName
  * @param string $scopeName
  * @param string $collectionName
  * @param string $indexName
  * @param array $fields
- * @param ?array $options [optional]
+ * @param array|null $options [optional]
  */
-function collectionQueryIndexCreate ($connection = null, string $bucketName, string $scopeName, string $collectionName, string $indexName, array $fields, ?array $options = null) {}
+function collectionQueryIndexCreate ($connection = null, string $bucketName, string $scopeName, string $collectionName, string $indexName, array $fields, ?array $options = NULL) {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $connection
  * @param string $bucketName
  * @param string $scopeName
  * @param string $collectionName
- * @param ?array $options [optional]
+ * @param array|null $options [optional]
  */
-function collectionQueryIndexCreatePrimary ($connection = null, string $bucketName, string $scopeName, string $collectionName, ?array $options = null) {}
+function collectionQueryIndexCreatePrimary ($connection = null, string $bucketName, string $scopeName, string $collectionName, ?array $options = NULL) {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $connection
  * @param string $bucketName
  * @param string $scopeName
  * @param string $collectionName
  * @param string $indexName
- * @param ?array $options [optional]
+ * @param array|null $options [optional]
  */
-function collectionQueryIndexDrop ($connection = null, string $bucketName, string $scopeName, string $collectionName, string $indexName, ?array $options = null) {}
+function collectionQueryIndexDrop ($connection = null, string $bucketName, string $scopeName, string $collectionName, string $indexName, ?array $options = NULL) {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $connection
  * @param string $bucketName
  * @param string $scopeName
  * @param string $collectionName
- * @param ?array $options [optional]
+ * @param array|null $options [optional]
  */
-function collectionQueryIndexDropPrimary ($connection = null, string $bucketName, string $scopeName, string $collectionName, ?array $options = null) {}
+function collectionQueryIndexDropPrimary ($connection = null, string $bucketName, string $scopeName, string $collectionName, ?array $options = NULL) {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $connection
  * @param string $bucketName
  * @param string $scopeName
  * @param string $collectionName
- * @param ?array $options [optional]
+ * @param array|null $options [optional]
  */
-function collectionQueryIndexBuildDeferred ($connection = null, string $bucketName, string $scopeName, string $collectionName, ?array $options = null) {}
+function collectionQueryIndexBuildDeferred ($connection = null, string $bucketName, string $scopeName, string $collectionName, ?array $options = NULL) {}
 
 
 }

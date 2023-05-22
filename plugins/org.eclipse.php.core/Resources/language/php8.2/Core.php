@@ -35,7 +35,7 @@ interface IteratorAggregate extends Traversable {
 	 * @return Traversable An instance of an object implementing Iterator or
 	 * Traversable
 	 */
-	abstract public function getIterator (): Traversable
+	abstract public function getIterator (): Traversable;
 
 }
 
@@ -51,21 +51,21 @@ interface Iterator extends Traversable {
 	 * @link http://www.php.net/manual/en/iterator.current.php
 	 * @return mixed Can return any type.
 	 */
-	abstract public function current (): mixed
+	abstract public function current (): mixed;
 
 	/**
 	 * Move forward to next element
 	 * @link http://www.php.net/manual/en/iterator.next.php
 	 * @return void Any returned value is ignored.
 	 */
-	abstract public function next (): void
+	abstract public function next (): void;
 
 	/**
 	 * Return the key of the current element
 	 * @link http://www.php.net/manual/en/iterator.key.php
 	 * @return mixed Returns scalar on success, or null on failure.
 	 */
-	abstract public function key (): mixed
+	abstract public function key (): mixed;
 
 	/**
 	 * Checks if current position is valid
@@ -73,14 +73,14 @@ interface Iterator extends Traversable {
 	 * @return bool The return value will be casted to bool and then evaluated.
 	 * Returns true on success or false on failure.
 	 */
-	abstract public function valid (): bool
+	abstract public function valid (): bool;
 
 	/**
 	 * Rewind the Iterator to the first element
 	 * @link http://www.php.net/manual/en/iterator.rewind.php
 	 * @return void Any returned value is ignored.
 	 */
-	abstract public function rewind (): void
+	abstract public function rewind (): void;
 
 }
 
@@ -104,7 +104,7 @@ interface Serializable  {
 	 * @link http://www.php.net/manual/en/serializable.serialize.php
 	 * @return string|null Returns the string representation of the object or null
 	 */
-	abstract public function serialize (): ?string
+	abstract public function serialize (): ?string;
 
 	/**
 	 * Constructs the object
@@ -112,7 +112,7 @@ interface Serializable  {
 	 * @param string $data 
 	 * @return void The return value from this method is ignored.
 	 */
-	abstract public function unserialize (string $data): void
+	abstract public function unserialize (string $data): void;
 
 }
 
@@ -129,7 +129,7 @@ interface ArrayAccess  {
 	 * @return bool Returns true on success or false on failure.
 	 * <p>The return value will be casted to bool if non-boolean was returned.</p>
 	 */
-	abstract public function offsetExists (mixed $offset): bool
+	abstract public function offsetExists (mixed $offset): bool;
 
 	/**
 	 * Offset to retrieve
@@ -137,7 +137,7 @@ interface ArrayAccess  {
 	 * @param mixed $offset 
 	 * @return mixed Can return all value types.
 	 */
-	abstract public function offsetGet (mixed $offset): mixed
+	abstract public function offsetGet (mixed $offset): mixed;
 
 	/**
 	 * Assign a value to the specified offset
@@ -146,7 +146,7 @@ interface ArrayAccess  {
 	 * @param mixed $value 
 	 * @return void No value is returned.
 	 */
-	abstract public function offsetSet (mixed $offset, mixed $value): void
+	abstract public function offsetSet (mixed $offset, mixed $value): void;
 
 	/**
 	 * Unset an offset
@@ -154,7 +154,7 @@ interface ArrayAccess  {
 	 * @param mixed $offset 
 	 * @return void No value is returned.
 	 */
-	abstract public function offsetUnset (mixed $offset): void
+	abstract public function offsetUnset (mixed $offset): void;
 
 }
 
@@ -171,7 +171,7 @@ interface Countable  {
 	 * @return int The custom count as an int.
 	 * <p>The return value is cast to an int.</p>
 	 */
-	abstract public function count (): int
+	abstract public function count (): int;
 
 }
 
@@ -193,7 +193,7 @@ interface Stringable  {
 	 * @link http://www.php.net/manual/en/stringable.tostring.php
 	 * @return string Returns the string representation of the object.
 	 */
-	abstract public function __toString (): string
+	abstract public function __toString (): string;
 
 }
 
@@ -263,7 +263,7 @@ interface Throwable extends Stringable {
 	 * @link http://www.php.net/manual/en/throwable.getmessage.php
 	 * @return string Returns the message associated with the thrown object.
 	 */
-	abstract public function getMessage (): string
+	abstract public function getMessage (): string;
 
 	/**
 	 * Gets the exception code
@@ -273,21 +273,21 @@ interface Throwable extends Stringable {
 	 * Exception descendants (for example as
 	 * string in PDOException).
 	 */
-	abstract public function getCode (): int
+	abstract public function getCode (): int;
 
 	/**
 	 * Gets the file in which the object was created
 	 * @link http://www.php.net/manual/en/throwable.getfile.php
 	 * @return string Returns the filename in which the thrown object was created.
 	 */
-	abstract public function getFile (): string
+	abstract public function getFile (): string;
 
 	/**
 	 * Gets the line on which the object was instantiated
 	 * @link http://www.php.net/manual/en/throwable.getline.php
 	 * @return int Returns the line number where the thrown object was instantiated.
 	 */
-	abstract public function getLine (): int
+	abstract public function getLine (): int;
 
 	/**
 	 * Gets the stack trace
@@ -295,7 +295,7 @@ interface Throwable extends Stringable {
 	 * @return array Returns the stack trace as an array in the same format as
 	 * debug_backtrace.
 	 */
-	abstract public function getTrace (): array
+	abstract public function getTrace (): array;
 
 	/**
 	 * Returns the previous Throwable
@@ -303,21 +303,21 @@ interface Throwable extends Stringable {
 	 * @return Throwable|null Returns the previous Throwable if available, or
 	 * null otherwise.
 	 */
-	abstract public function getPrevious (): ?Throwable
+	abstract public function getPrevious (): ?Throwable;
 
 	/**
 	 * Gets the stack trace as a string
 	 * @link http://www.php.net/manual/en/throwable.gettraceasstring.php
 	 * @return string Returns the stack trace as a string.
 	 */
-	abstract public function getTraceAsString (): string
+	abstract public function getTraceAsString (): string;
 
 	/**
 	 * Gets a string representation of the object
 	 * @link http://www.php.net/manual/en/stringable.tostring.php
 	 * @return string Returns the string representation of the object.
 	 */
-	abstract public function __toString (): string
+	abstract public function __toString (): string;
 
 }
 
@@ -327,14 +327,34 @@ interface Throwable extends Stringable {
  * @link http://www.php.net/manual/en/class.exception.php
  */
 class Exception implements Stringable, Throwable {
-	protected $message;
-	private $string;
-	protected $code;
-	protected $file;
-	protected $line;
-	private $trace;
-	private $previous;
 
+	/**
+	 * The exception message
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.exception.php#exception.props.message
+	 */
+	protected string $message;
+
+	/**
+	 * The exception code
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.exception.php#exception.props.code
+	 */
+	protected int $code;
+
+	/**
+	 * The filename where the exception was created
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.exception.php#exception.props.file
+	 */
+	protected string $file;
+
+	/**
+	 * The line where the exception was created
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.exception.php#exception.props.line
+	 */
+	protected int $line;
 
 	/**
 	 * Clone the exception
@@ -351,8 +371,11 @@ class Exception implements Stringable, Throwable {
 	 * @param Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -422,12 +445,13 @@ class Exception implements Stringable, Throwable {
  * @link http://www.php.net/manual/en/class.errorexception.php
  */
 class ErrorException extends Exception implements Throwable, Stringable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-	protected $severity;
 
+	/**
+	 * The severity of the exception
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.errorexception.php#errorexception.props.severity
+	 */
+	protected int $severity;
 
 	/**
 	 * Constructs the exception
@@ -440,7 +464,7 @@ class ErrorException extends Exception implements Throwable, Stringable {
 	 * @param Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, int $severity = E_ERROR, ?string $filename = null, ?int $line = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, int $severity = E_ERROR, ?string $filename = null, ?int $line = null, ?Throwable $previous = null): string {}
 
 	/**
 	 * Gets the exception severity
@@ -449,6 +473,9 @@ class ErrorException extends Exception implements Throwable, Stringable {
 	 */
 	final public function getSeverity (): int {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -519,14 +546,34 @@ class ErrorException extends Exception implements Throwable, Stringable {
  * @link http://www.php.net/manual/en/class.error.php
  */
 class Error implements Stringable, Throwable {
-	protected $message;
-	private $string;
-	protected $code;
-	protected $file;
-	protected $line;
-	private $trace;
-	private $previous;
 
+	/**
+	 * The error message
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.error.php#error.props.message
+	 */
+	protected string $message;
+
+	/**
+	 * The error code
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.error.php#error.props.code
+	 */
+	protected int $code;
+
+	/**
+	 * The filename where the error happened
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.error.php#error.props.file
+	 */
+	protected string $file;
+
+	/**
+	 * The line where the error happened
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.error.php#error.props.line
+	 */
+	protected int $line;
 
 	/**
 	 * Clone the error
@@ -543,8 +590,11 @@ class Error implements Stringable, Throwable {
 	 * @param Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -612,11 +662,6 @@ class Error implements Stringable, Throwable {
  * @link http://www.php.net/manual/en/class.compileerror.php
  */
 class CompileError extends Error implements Throwable, Stringable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-
 
 	/**
 	 * Construct the error object
@@ -626,8 +671,11 @@ class CompileError extends Error implements Throwable, Stringable {
 	 * @param Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -696,11 +744,6 @@ class CompileError extends Error implements Throwable, Stringable {
  * @link http://www.php.net/manual/en/class.parseerror.php
  */
 class ParseError extends CompileError implements Stringable, Throwable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-
 
 	/**
 	 * Construct the error object
@@ -710,8 +753,11 @@ class ParseError extends CompileError implements Stringable, Throwable {
 	 * @param Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -786,11 +832,6 @@ class ParseError extends CompileError implements Stringable, Throwable {
  * @link http://www.php.net/manual/en/class.typeerror.php
  */
 class TypeError extends Error implements Throwable, Stringable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-
 
 	/**
 	 * Construct the error object
@@ -800,8 +841,11 @@ class TypeError extends Error implements Throwable, Stringable {
 	 * @param Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -869,11 +913,6 @@ class TypeError extends Error implements Throwable, Stringable {
  * @link http://www.php.net/manual/en/class.argumentcounterror.php
  */
 class ArgumentCountError extends TypeError implements Stringable, Throwable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-
 
 	/**
 	 * Construct the error object
@@ -883,8 +922,11 @@ class ArgumentCountError extends TypeError implements Stringable, Throwable {
 	 * @param Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -955,11 +997,6 @@ class ArgumentCountError extends TypeError implements Stringable, Throwable {
  * @link http://www.php.net/manual/en/class.valueerror.php
  */
 class ValueError extends Error implements Throwable, Stringable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-
 
 	/**
 	 * Construct the error object
@@ -969,8 +1006,11 @@ class ValueError extends Error implements Throwable, Stringable {
 	 * @param Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -1041,11 +1081,6 @@ class ValueError extends Error implements Throwable, Stringable {
  * @link http://www.php.net/manual/en/class.arithmeticerror.php
  */
 class ArithmeticError extends Error implements Throwable, Stringable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-
 
 	/**
 	 * Construct the error object
@@ -1055,8 +1090,11 @@ class ArithmeticError extends Error implements Throwable, Stringable {
 	 * @param Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -1124,11 +1162,6 @@ class ArithmeticError extends Error implements Throwable, Stringable {
  * @link http://www.php.net/manual/en/class.divisionbyzeroerror.php
  */
 class DivisionByZeroError extends ArithmeticError implements Stringable, Throwable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-
 
 	/**
 	 * Construct the error object
@@ -1138,8 +1171,11 @@ class DivisionByZeroError extends ArithmeticError implements Stringable, Throwab
 	 * @param Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -1208,11 +1244,6 @@ class DivisionByZeroError extends ArithmeticError implements Stringable, Throwab
  * @link http://www.php.net/manual/en/class.unhandledmatcherror.php
  */
 class UnhandledMatchError extends Error implements Throwable, Stringable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-
 
 	/**
 	 * Construct the error object
@@ -1222,8 +1253,11 @@ class UnhandledMatchError extends Error implements Throwable, Stringable {
 	 * @param Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -1318,7 +1352,7 @@ final class Closure  {
 	 * It is not allowed to pass (an object of) an internal class as this parameter.
 	 * @return Closure|null Returns a new Closure object, or null on failure.
 	 */
-	public static function bind (Closure $closure, ?object $newThis, object|string|null $newScope = "static"): ?Closure {}
+	public static function bind (Closure $closure, ?object $newThis, object|string|null $newScope = '"static"'): ?Closure {}
 
 	/**
 	 * Duplicates the closure with a new bound object and class scope
@@ -1333,7 +1367,7 @@ final class Closure  {
 	 * @return Closure|null Returns the newly created Closure object
 	 * or null on failure.
 	 */
-	public function bindTo (?object $newThis, object|string|null $newScope = "static"): ?Closure {}
+	public function bindTo (?object $newThis, object|string|null $newScope = '"static"'): ?Closure {}
 
 	/**
 	 * Binds and calls the closure
@@ -1356,6 +1390,9 @@ final class Closure  {
 	 */
 	public static function fromCallable (callable $callback): Closure {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __invoke () {}
 
 }
@@ -1430,11 +1467,6 @@ final class Generator implements Iterator, Traversable {
 }
 
 class ClosedGeneratorException extends Exception implements Throwable, Stringable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-
 
 	/**
 	 * Construct the exception
@@ -1444,8 +1476,11 @@ class ClosedGeneratorException extends Exception implements Throwable, Stringabl
 	 * @param Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -1627,8 +1662,8 @@ final class Attribute  {
 	const TARGET_ALL = 63;
 	const IS_REPEATABLE = 64;
 
-	public $flags;
 
+	public int $flags;
 
 	/**
 	 * Construct a new Attribute instance
@@ -1636,7 +1671,7 @@ final class Attribute  {
 	 * @param int $flags [optional] 
 	 * @return int 
 	 */
-	public function __construct (int $flags = Attribute::TARGET_ALL): int {}
+	public function __construct (int $flags = \Attribute::TARGET_ALL): int {}
 
 }
 
@@ -1702,8 +1737,8 @@ final class SensitiveParameter  {
  * @link http://www.php.net/manual/en/class.sensitiveparametervalue.php
  */
 final class SensitiveParameterValue  {
-	private readonly $value;
 
+	readonly mixed $value;
 
 	/**
 	 * Constructs a new SensitiveParameterValue object
@@ -1743,7 +1778,7 @@ interface UnitEnum  {
 	 * @link http://www.php.net/manual/en/unitenum.cases.php
 	 * @return array An array of all defined cases of this enumeration, in order of declaration.
 	 */
-	abstract public static function cases (): array
+	abstract public static function cases (): array;
 
 }
 
@@ -1762,7 +1797,7 @@ interface BackedEnum extends UnitEnum {
 	 * @param int|string $value The scalar value to map to an enum case.
 	 * @return static A case instance of this enumeration.
 	 */
-	abstract public static function from (int|string $value): static
+	abstract public static function from (int|string $value): static;
 
 	/**
 	 * Maps a scalar to an enum instance or null
@@ -1770,14 +1805,14 @@ interface BackedEnum extends UnitEnum {
 	 * @param int|string $value The scalar value to map to an enum case.
 	 * @return static|null A case instance of this enumeration, or null if not found.
 	 */
-	abstract public static function tryFrom (int|string $value): ?static
+	abstract public static function tryFrom (int|string $value): ?static;
 
 	/**
 	 * Generates a list of cases on an enum
 	 * @link http://www.php.net/manual/en/unitenum.cases.php
 	 * @return array An array of all defined cases of this enumeration, in order of declaration.
 	 */
-	abstract public static function cases (): array
+	abstract public static function cases (): array;
 
 }
 
@@ -1893,11 +1928,6 @@ final class Fiber  {
  * @link http://www.php.net/manual/en/class.fibererror.php
  */
 final class FiberError extends Error implements Throwable, Stringable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-
 
 	/**
 	 * Constructor to disallow direct instantiation
@@ -1905,6 +1935,9 @@ final class FiberError extends Error implements Throwable, Stringable {
 	 */
 	public function __construct () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -2314,6 +2347,7 @@ function get_required_files (): array {}
 function trigger_error (string $message, int $error_level = E_USER_NOTICE): bool {}
 
 /**
+ * {@inheritdoc}
  * @param string $message
  * @param int $error_level [optional]
  */
@@ -2413,7 +2447,7 @@ function get_defined_vars (): array {}
  * <p>This function will return null and generate an error if 
  * resource is not a resource.</p>
  */
-function get_resource_type (resource $resource): string {}
+function get_resource_type ($resource): string {}
 
 /**
  * Returns an integer identifier for the given resource
@@ -2423,7 +2457,7 @@ function get_resource_type (resource $resource): string {}
  * <p>This function is essentially an int cast of
  * resource to make it easier to retrieve the resource ID.</p>
  */
-function get_resource_id (resource $resource): int {}
+function get_resource_id ($resource): int {}
 
 /**
  * Returns active resources

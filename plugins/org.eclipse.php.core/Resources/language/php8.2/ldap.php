@@ -114,7 +114,7 @@ function ldap_sasl_bind (LDAP\Connection $ldap, ?string $dn = null, ?string $pas
  * @param array|null $controls [optional] 
  * @return LDAP\Result|array|false Returns an LDAP\Result instance, an array of LDAP\Result instances, or false on failure.
  */
-function ldap_read (LDAP\Connection|array $ldap, array|string $base, array|string $filter, array $attributes = [], int $attributes_only = null, int $sizelimit = -1, int $timelimit = -1, int $deref = LDAP_DEREF_NEVER, ?array $controls = null): LDAP\Result|array|false {}
+function ldap_read (LDAP\Connection|array $ldap, array|string $base, array|string $filter, array $attributes = '[]', int $attributes_only = null, int $sizelimit = -1, int $timelimit = -1, int $deref = LDAP_DEREF_NEVER, ?array $controls = null): LDAP\Result|array|false {}
 
 /**
  * Single-level search
@@ -130,7 +130,7 @@ function ldap_read (LDAP\Connection|array $ldap, array|string $base, array|strin
  * @param array|null $controls [optional] 
  * @return LDAP\Result|array|false Returns an LDAP\Result instance, an array of LDAP\Result instances, or false on failure.
  */
-function ldap_list (LDAP\Connection|array $ldap, array|string $base, array|string $filter, array $attributes = [], int $attributes_only = null, int $sizelimit = -1, int $timelimit = -1, int $deref = LDAP_DEREF_NEVER, ?array $controls = null): LDAP\Result|array|false {}
+function ldap_list (LDAP\Connection|array $ldap, array|string $base, array|string $filter, array $attributes = '[]', int $attributes_only = null, int $sizelimit = -1, int $timelimit = -1, int $deref = LDAP_DEREF_NEVER, ?array $controls = null): LDAP\Result|array|false {}
 
 /**
  * Search LDAP tree
@@ -146,7 +146,7 @@ function ldap_list (LDAP\Connection|array $ldap, array|string $base, array|strin
  * @param array|null $controls [optional] 
  * @return LDAP\Result|array|false Returns an LDAP\Result instance, an array of LDAP\Result instances, or false on failure.
  */
-function ldap_search (LDAP\Connection|array $ldap, array|string $base, array|string $filter, array $attributes = [], int $attributes_only = null, int $sizelimit = -1, int $timelimit = -1, int $deref = LDAP_DEREF_NEVER, ?array $controls = null): LDAP\Result|array|false {}
+function ldap_search (LDAP\Connection|array $ldap, array|string $base, array|string $filter, array $attributes = '[]', int $attributes_only = null, int $sizelimit = -1, int $timelimit = -1, int $deref = LDAP_DEREF_NEVER, ?array $controls = null): LDAP\Result|array|false {}
 
 /**
  * Free result memory
@@ -589,7 +589,7 @@ function ldap_start_tls (LDAP\Connection $ldap): bool {}
  * @param int $flags [optional] 
  * @return string Returns the escaped string.
  */
-function ldap_escape (string $value, string $ignore = "", int $flags = null): string {}
+function ldap_escape (string $value, string $ignore = '""', int $flags = null): string {}
 
 /**
  * Performs an extended operation
@@ -620,7 +620,7 @@ function ldap_exop (LDAP\Connection $ldap, string $request_oid, string $request_
  * @return string|bool Returns the generated password if new_password is empty or omitted.
  * Otherwise returns true on success and false on failure.
  */
-function ldap_exop_passwd (LDAP\Connection $ldap, string $user = "", string $old_password = "", string $new_password = "", array &$controls = null): string|bool {}
+function ldap_exop_passwd (LDAP\Connection $ldap, string $user = '""', string $old_password = '""', string $new_password = '""', array &$controls = null): string|bool {}
 
 /**
  * WHOAMI extended operation helper

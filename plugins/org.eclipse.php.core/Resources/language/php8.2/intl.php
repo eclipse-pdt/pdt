@@ -267,7 +267,7 @@ class Collator  {
 	 * @param int $flags [optional] 
 	 * @return bool Returns true on success or false on failure.
 	 */
-	public function sort (array &$array, int $flags = Collator::SORT_REGULAR): bool {}
+	public function sort (array &$array, int $flags = \Collator::SORT_REGULAR): bool {}
 
 	/**
 	 * Sort array using specified collator and sort keys
@@ -284,7 +284,7 @@ class Collator  {
 	 * @param int $flags [optional] 
 	 * @return bool Returns true on success or false on failure.
 	 */
-	public function asort (array &$array, int $flags = Collator::SORT_REGULAR): bool {}
+	public function asort (array &$array, int $flags = \Collator::SORT_REGULAR): bool {}
 
 	/**
 	 * Get collation attribute value
@@ -629,7 +629,7 @@ class NumberFormatter  {
 	 * @param int $type [optional] 
 	 * @return string|false Returns the string containing formatted value, or false on error.
 	 */
-	public function format (int|float $num, int $type = NumberFormatter::TYPE_DEFAULT): string|false {}
+	public function format (int|float $num, int $type = \NumberFormatter::TYPE_DEFAULT): string|false {}
 
 	/**
 	 * Parse a number
@@ -639,7 +639,7 @@ class NumberFormatter  {
 	 * @param int $offset [optional] 
 	 * @return int|float|false The value of the parsed number or false on error.
 	 */
-	public function parse (string $string, int $type = NumberFormatter::TYPE_DOUBLE, int &$offset = null): int|float|false {}
+	public function parse (string $string, int $type = \NumberFormatter::TYPE_DOUBLE, int &$offset = null): int|float|false {}
 
 	/**
 	 * Format a currency value
@@ -796,7 +796,7 @@ class Normalizer  {
 	 * @param int $form [optional] 
 	 * @return string|false The normalized string or false if an error occurred.
 	 */
-	public static function normalize (string $string, int $form = Normalizer::FORM_C): string|false {}
+	public static function normalize (string $string, int $form = \Normalizer::FORM_C): string|false {}
 
 	/**
 	 * Checks if the provided string is already in the specified normalization
@@ -806,7 +806,7 @@ class Normalizer  {
 	 * @param int $form [optional] 
 	 * @return bool true if normalized, false otherwise or if there an error
 	 */
-	public static function isNormalized (string $string, int $form = Normalizer::FORM_C): bool {}
+	public static function isNormalized (string $string, int $form = \Normalizer::FORM_C): bool {}
 
 	/**
 	 * Gets the Decomposition_Mapping property for the given UTF-8 encoded code point
@@ -816,7 +816,7 @@ class Normalizer  {
 	 * @return string|null Returns a string containing the Decomposition_Mapping property, if present in the UCD.
 	 * <p>Returns null if there is no Decomposition_Mapping property for the character.</p>
 	 */
-	public static function getRawDecomposition (string $string, int $form = Normalizer::FORM_C): ?string {}
+	public static function getRawDecomposition (string $string, int $form = \Normalizer::FORM_C): ?string {}
 
 }
 
@@ -1195,7 +1195,7 @@ class IntlDateFormatter  {
 	 * @return IntlDateFormatter|null The created IntlDateFormatter or null in case of
 	 * failure.
 	 */
-	public function __construct (?string $locale, int $dateType = IntlDateFormatter::FULL, int $timeType = IntlDateFormatter::FULL, IntlTimeZone|DateTimeZone|string|null $timezone = null, IntlCalendar|int|null $calendar = null, ?string $pattern = null): ?IntlDateFormatter {}
+	public function __construct (?string $locale, int $dateType = \IntlDateFormatter::FULL, int $timeType = \IntlDateFormatter::FULL, IntlTimeZone|DateTimeZone|string|null $timezone = null, IntlCalendar|int|null $calendar = null, ?string $pattern = null): ?IntlDateFormatter {}
 
 	/**
 	 * Create a date formatter
@@ -1209,7 +1209,7 @@ class IntlDateFormatter  {
 	 * @return IntlDateFormatter|null The created IntlDateFormatter or null in case of
 	 * failure.
 	 */
-	public static function create (?string $locale, int $dateType = IntlDateFormatter::FULL, int $timeType = IntlDateFormatter::FULL, IntlTimeZone|DateTimeZone|string|null $timezone = null, IntlCalendar|int|null $calendar = null, ?string $pattern = null): ?IntlDateFormatter {}
+	public static function create (?string $locale, int $dateType = \IntlDateFormatter::FULL, int $timeType = \IntlDateFormatter::FULL, IntlTimeZone|DateTimeZone|string|null $timezone = null, IntlCalendar|int|null $calendar = null, ?string $pattern = null): ?IntlDateFormatter {}
 
 	/**
 	 * Get the datetype used for the IntlDateFormatter
@@ -1491,6 +1491,9 @@ class ResourceBundle implements IteratorAggregate, Traversable, Countable {
 	 */
 	public function getErrorMessage (): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getIterator (): Iterator {}
 
 }
@@ -1502,8 +1505,8 @@ class Transliterator  {
 	const FORWARD = 0;
 	const REVERSE = 1;
 
-	public readonly $id;
 
+	public readonly string $id;
 
 	/**
 	 * Private constructor to deny instantiation
@@ -1523,7 +1526,7 @@ class Transliterator  {
 	 * @return Transliterator|null Returns a Transliterator object on success,
 	 * or null on failure.
 	 */
-	public static function create (string $id, int $direction = Transliterator::FORWARD): ?Transliterator {}
+	public static function create (string $id, int $direction = \Transliterator::FORWARD): ?Transliterator {}
 
 	/**
 	 * Create transliterator from rules
@@ -1536,7 +1539,7 @@ class Transliterator  {
 	 * @return Transliterator|null Returns a Transliterator object on success,
 	 * or null on failure.
 	 */
-	public static function createFromRules (string $rules, int $direction = Transliterator::FORWARD): ?Transliterator {}
+	public static function createFromRules (string $rules, int $direction = \Transliterator::FORWARD): ?Transliterator {}
 
 	/**
 	 * Create an inverse transliterator
@@ -1676,7 +1679,7 @@ class IntlTimeZone  {
 	 * @param string|null $locale [optional] 
 	 * @return string|false 
 	 */
-	public function getDisplayName (bool $dst = false, int $style = IntlTimeZone::DISPLAY_LONG, ?string $locale = null): string|false {}
+	public function getDisplayName (bool $dst = false, int $style = \IntlTimeZone::DISPLAY_LONG, ?string $locale = null): string|false {}
 
 	/**
 	 * Get the amount of time to be added to local standard time to get local wall clock time
@@ -3202,6 +3205,7 @@ class Spoofchecker  {
 	public function setChecks (int $checks): void {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param int $level
 	 */
 	public function setRestrictionLevel (int $level) {}
@@ -3214,11 +3218,6 @@ class Spoofchecker  {
  * @link http://www.php.net/manual/en/class.intlexception.php
  */
 class IntlException extends Exception implements Throwable, Stringable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-
 
 	/**
 	 * Construct the exception
@@ -3228,8 +3227,11 @@ class IntlException extends Exception implements Throwable, Stringable {
 	 * @param Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -3500,7 +3502,7 @@ class IntlBreakIterator implements IteratorAggregate, Traversable {
 	 * </p>
 	 * @return IntlPartsIterator 
 	 */
-	public function getPartsIterator (string $type = IntlPartsIterator::KEY_SEQUENTIAL): IntlPartsIterator {}
+	public function getPartsIterator (string $type = \IntlPartsIterator::KEY_SEQUENTIAL): IntlPartsIterator {}
 
 	/**
 	 * Get the text being scanned
@@ -3555,6 +3557,9 @@ class IntlBreakIterator implements IteratorAggregate, Traversable {
 	 */
 	public function setText (string $text): ?bool {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getIterator (): Iterator {}
 
 }
@@ -3731,7 +3736,7 @@ class IntlRuleBasedBreakIterator extends IntlBreakIterator implements Traversabl
 	 * </p>
 	 * @return IntlPartsIterator 
 	 */
-	public function getPartsIterator (string $type = IntlPartsIterator::KEY_SEQUENTIAL): IntlPartsIterator {}
+	public function getPartsIterator (string $type = \IntlPartsIterator::KEY_SEQUENTIAL): IntlPartsIterator {}
 
 	/**
 	 * Get the text being scanned
@@ -3786,6 +3791,9 @@ class IntlRuleBasedBreakIterator extends IntlBreakIterator implements Traversabl
 	 */
 	public function setText (string $text): ?bool {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getIterator (): Iterator {}
 
 }
@@ -3929,7 +3937,7 @@ class IntlCodePointBreakIterator extends IntlBreakIterator implements Traversabl
 	 * </p>
 	 * @return IntlPartsIterator 
 	 */
-	public function getPartsIterator (string $type = IntlPartsIterator::KEY_SEQUENTIAL): IntlPartsIterator {}
+	public function getPartsIterator (string $type = \IntlPartsIterator::KEY_SEQUENTIAL): IntlPartsIterator {}
 
 	/**
 	 * Get the text being scanned
@@ -3984,6 +3992,9 @@ class IntlCodePointBreakIterator extends IntlBreakIterator implements Traversabl
 	 */
 	public function setText (string $text): ?bool {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getIterator (): Iterator {}
 
 }
@@ -4013,6 +4024,9 @@ class IntlPartsIterator extends IntlIterator implements Traversable, Iterator {
 	 */
 	public function getBreakIterator (): IntlBreakIterator {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getRuleStatus () {}
 
 	/**
@@ -5016,7 +5030,7 @@ class IntlChar  {
 	 * </p>
 	 * @return int|null The Unicode value of the code point with the given name (as an int), or null if there is no such code point.
 	 */
-	public static function charFromName (string $name, int $type = IntlChar::UNICODE_CHAR_NAME): ?int {}
+	public static function charFromName (string $name, int $type = \IntlChar::UNICODE_CHAR_NAME): ?int {}
 
 	/**
 	 * Get the "mirror-image" character for a code point
@@ -5044,7 +5058,7 @@ class IntlChar  {
 	 * @return string|null The corresponding name, or an empty string if there is no name for this character,
 	 * or null if there is no such code point.
 	 */
-	public static function charName (int|string $codepoint, int $type = IntlChar::UNICODE_CHAR_NAME): ?string {}
+	public static function charName (int|string $codepoint, int $type = \IntlChar::UNICODE_CHAR_NAME): ?string {}
 
 	/**
 	 * Get the general category value for a code point
@@ -5127,7 +5141,7 @@ class IntlChar  {
 	 * </p>
 	 * @return bool|null Returns null on success or false on failure.
 	 */
-	public static function enumCharNames (int|string $start, int|string $end, callable $callback, int $type = IntlChar::UNICODE_CHAR_NAME): ?bool {}
+	public static function enumCharNames (int|string $start, int|string $end, callable $callback, int $type = \IntlChar::UNICODE_CHAR_NAME): ?bool {}
 
 	/**
 	 * Enumerate all code points with their Unicode general categories
@@ -5152,7 +5166,7 @@ class IntlChar  {
 	 * @return int|string|null Returns the Simple_Case_Folding of the code point, if any; otherwise the code point itself on success,
 	 * or null on failure.
 	 */
-	public static function foldCase (int|string $codepoint, int $options = IntlChar::FOLD_CASE_DEFAULT): int|string|null {}
+	public static function foldCase (int|string $codepoint, int $options = \IntlChar::FOLD_CASE_DEFAULT): int|string|null {}
 
 	/**
 	 * Get character representation for a given digit and radix
@@ -5267,7 +5281,7 @@ class IntlChar  {
 	 * IntlChar::SHORT_PROPERTY_NAME, then IntlChar::LONG_PROPERTY_NAME
 	 * (and higher) may still return a non-false value.</p>
 	 */
-	public static function getPropertyName (int $property, int $type = IntlChar::LONG_PROPERTY_NAME): string|false {}
+	public static function getPropertyName (int $property, int $type = \IntlChar::LONG_PROPERTY_NAME): string|false {}
 
 	/**
 	 * Get the property value for a given value name
@@ -5301,7 +5315,7 @@ class IntlChar  {
 	 * will return false, with one exception: if false is returned for IntlChar::SHORT_PROPERTY_NAME,
 	 * then IntlChar::LONG_PROPERTY_NAME (and higher) may still return a non-false value.</p>
 	 */
-	public static function getPropertyValueName (int $property, int $value, int $type = IntlChar::LONG_PROPERTY_NAME): string|false {}
+	public static function getPropertyValueName (int $property, int $value, int $type = \IntlChar::LONG_PROPERTY_NAME): string|false {}
 
 	/**
 	 * Get the Unicode version
@@ -5603,40 +5617,52 @@ class IntlChar  {
 }
 
 /**
+ * {@inheritdoc}
  * @param mixed $timezone [optional]
- * @param ?string $locale [optional]
+ * @param string|null $locale [optional]
  */
-function intlcal_create_instance ($timezone = null, ?string $locale = null): ?IntlCalendar {}
+function intlcal_create_instance ($timezone = NULL, ?string $locale = NULL): ?IntlCalendar {}
 
 /**
+ * {@inheritdoc}
  * @param string $keyword
  * @param string $locale
  * @param bool $onlyCommon
  */
 function intlcal_get_keyword_values_for_locale (string $keyword, string $locale, bool $onlyCommon): IntlIterator|false {}
 
+/**
+ * {@inheritdoc}
+ */
 function intlcal_get_now (): float {}
 
+/**
+ * {@inheritdoc}
+ */
 function intlcal_get_available_locales (): array {}
 
 /**
+ * {@inheritdoc}
  * @param IntlCalendar $calendar
  * @param int $field
  */
 function intlcal_get (IntlCalendar $calendar, int $field): int|false {}
 
 /**
+ * {@inheritdoc}
  * @param IntlCalendar $calendar
  */
 function intlcal_get_time (IntlCalendar $calendar): float|false {}
 
 /**
+ * {@inheritdoc}
  * @param IntlCalendar $calendar
  * @param float $timestamp
  */
 function intlcal_set_time (IntlCalendar $calendar, float $timestamp): bool {}
 
 /**
+ * {@inheritdoc}
  * @param IntlCalendar $calendar
  * @param int $field
  * @param int $value
@@ -5644,24 +5670,28 @@ function intlcal_set_time (IntlCalendar $calendar, float $timestamp): bool {}
 function intlcal_add (IntlCalendar $calendar, int $field, int $value): bool {}
 
 /**
+ * {@inheritdoc}
  * @param IntlCalendar $calendar
  * @param mixed $timezone
  */
 function intlcal_set_time_zone (IntlCalendar $calendar, $timezone = null): bool {}
 
 /**
+ * {@inheritdoc}
  * @param IntlCalendar $calendar
  * @param IntlCalendar $other
  */
 function intlcal_after (IntlCalendar $calendar, IntlCalendar $other): bool {}
 
 /**
+ * {@inheritdoc}
  * @param IntlCalendar $calendar
  * @param IntlCalendar $other
  */
 function intlcal_before (IntlCalendar $calendar, IntlCalendar $other): bool {}
 
 /**
+ * {@inheritdoc}
  * @param IntlCalendar $calendar
  * @param int $year
  * @param int $month
@@ -5670,9 +5700,10 @@ function intlcal_before (IntlCalendar $calendar, IntlCalendar $other): bool {}
  * @param int $minute [optional]
  * @param int $second [optional]
  */
-function intlcal_set (IntlCalendar $calendar, int $year, int $month, int $dayOfMonth = 'null', int $hour = 'null', int $minute = 'null', int $second = 'null'): bool {}
+function intlcal_set (IntlCalendar $calendar, int $year, int $month, int $dayOfMonth = NULL, int $hour = NULL, int $minute = NULL, int $second = NULL): bool {}
 
 /**
+ * {@inheritdoc}
  * @param IntlCalendar $calendar
  * @param int $field
  * @param mixed $value
@@ -5680,12 +5711,14 @@ function intlcal_set (IntlCalendar $calendar, int $year, int $month, int $dayOfM
 function intlcal_roll (IntlCalendar $calendar, int $field, $value = null): bool {}
 
 /**
+ * {@inheritdoc}
  * @param IntlCalendar $calendar
- * @param ?int $field [optional]
+ * @param int|null $field [optional]
  */
-function intlcal_clear (IntlCalendar $calendar, ?int $field = null): bool {}
+function intlcal_clear (IntlCalendar $calendar, ?int $field = NULL): bool {}
 
 /**
+ * {@inheritdoc}
  * @param IntlCalendar $calendar
  * @param float $timestamp
  * @param int $field
@@ -5693,160 +5726,188 @@ function intlcal_clear (IntlCalendar $calendar, ?int $field = null): bool {}
 function intlcal_field_difference (IntlCalendar $calendar, float $timestamp, int $field): int|false {}
 
 /**
+ * {@inheritdoc}
  * @param IntlCalendar $calendar
  * @param int $field
  */
 function intlcal_get_actual_maximum (IntlCalendar $calendar, int $field): int|false {}
 
 /**
+ * {@inheritdoc}
  * @param IntlCalendar $calendar
  * @param int $field
  */
 function intlcal_get_actual_minimum (IntlCalendar $calendar, int $field): int|false {}
 
 /**
+ * {@inheritdoc}
  * @param IntlCalendar $calendar
  * @param int $dayOfWeek
  */
 function intlcal_get_day_of_week_type (IntlCalendar $calendar, int $dayOfWeek): int|false {}
 
 /**
+ * {@inheritdoc}
  * @param IntlCalendar $calendar
  */
 function intlcal_get_first_day_of_week (IntlCalendar $calendar): int|false {}
 
 /**
+ * {@inheritdoc}
  * @param IntlCalendar $calendar
  * @param int $field
  */
 function intlcal_get_least_maximum (IntlCalendar $calendar, int $field): int|false {}
 
 /**
+ * {@inheritdoc}
  * @param IntlCalendar $calendar
  * @param int $field
  */
 function intlcal_get_greatest_minimum (IntlCalendar $calendar, int $field): int|false {}
 
 /**
+ * {@inheritdoc}
  * @param IntlCalendar $calendar
  * @param int $type
  */
 function intlcal_get_locale (IntlCalendar $calendar, int $type): string|false {}
 
 /**
+ * {@inheritdoc}
  * @param IntlCalendar $calendar
  * @param int $field
  */
 function intlcal_get_maximum (IntlCalendar $calendar, int $field): int|false {}
 
 /**
+ * {@inheritdoc}
  * @param IntlCalendar $calendar
  */
 function intlcal_get_minimal_days_in_first_week (IntlCalendar $calendar): int|false {}
 
 /**
+ * {@inheritdoc}
  * @param IntlCalendar $calendar
  * @param int $days
  */
 function intlcal_set_minimal_days_in_first_week (IntlCalendar $calendar, int $days): bool {}
 
 /**
+ * {@inheritdoc}
  * @param IntlCalendar $calendar
  * @param int $field
  */
 function intlcal_get_minimum (IntlCalendar $calendar, int $field): int|false {}
 
 /**
+ * {@inheritdoc}
  * @param IntlCalendar $calendar
  */
 function intlcal_get_time_zone (IntlCalendar $calendar): IntlTimeZone|false {}
 
 /**
+ * {@inheritdoc}
  * @param IntlCalendar $calendar
  */
 function intlcal_get_type (IntlCalendar $calendar): string {}
 
 /**
+ * {@inheritdoc}
  * @param IntlCalendar $calendar
  * @param int $dayOfWeek
  */
 function intlcal_get_weekend_transition (IntlCalendar $calendar, int $dayOfWeek): int|false {}
 
 /**
+ * {@inheritdoc}
  * @param IntlCalendar $calendar
  */
 function intlcal_in_daylight_time (IntlCalendar $calendar): bool {}
 
 /**
+ * {@inheritdoc}
  * @param IntlCalendar $calendar
  */
 function intlcal_is_lenient (IntlCalendar $calendar): bool {}
 
 /**
+ * {@inheritdoc}
  * @param IntlCalendar $calendar
  * @param int $field
  */
 function intlcal_is_set (IntlCalendar $calendar, int $field): bool {}
 
 /**
+ * {@inheritdoc}
  * @param IntlCalendar $calendar
  * @param IntlCalendar $other
  */
 function intlcal_is_equivalent_to (IntlCalendar $calendar, IntlCalendar $other): bool {}
 
 /**
+ * {@inheritdoc}
  * @param IntlCalendar $calendar
- * @param ?float $timestamp [optional]
+ * @param float|null $timestamp [optional]
  */
-function intlcal_is_weekend (IntlCalendar $calendar, ?float $timestamp = null): bool {}
+function intlcal_is_weekend (IntlCalendar $calendar, ?float $timestamp = NULL): bool {}
 
 /**
+ * {@inheritdoc}
  * @param IntlCalendar $calendar
  * @param int $dayOfWeek
  */
 function intlcal_set_first_day_of_week (IntlCalendar $calendar, int $dayOfWeek): bool {}
 
 /**
+ * {@inheritdoc}
  * @param IntlCalendar $calendar
  * @param bool $lenient
  */
 function intlcal_set_lenient (IntlCalendar $calendar, bool $lenient): bool {}
 
 /**
+ * {@inheritdoc}
  * @param IntlCalendar $calendar
  */
 function intlcal_get_repeated_wall_time_option (IntlCalendar $calendar): int {}
 
 /**
+ * {@inheritdoc}
  * @param IntlCalendar $calendar
  * @param IntlCalendar $other
  */
 function intlcal_equals (IntlCalendar $calendar, IntlCalendar $other): bool {}
 
 /**
+ * {@inheritdoc}
  * @param IntlCalendar $calendar
  */
 function intlcal_get_skipped_wall_time_option (IntlCalendar $calendar): int {}
 
 /**
+ * {@inheritdoc}
  * @param IntlCalendar $calendar
  * @param int $option
  */
 function intlcal_set_repeated_wall_time_option (IntlCalendar $calendar, int $option): bool {}
 
 /**
+ * {@inheritdoc}
  * @param IntlCalendar $calendar
  * @param int $option
  */
 function intlcal_set_skipped_wall_time_option (IntlCalendar $calendar, int $option): bool {}
 
 /**
+ * {@inheritdoc}
  * @param DateTime|string $datetime
- * @param ?string $locale [optional]
+ * @param string|null $locale [optional]
  */
-function intlcal_from_date_time (DateTime|string $datetime, ?string $locale = null): ?IntlCalendar {}
+function intlcal_from_date_time (DateTime|string $datetime, ?string $locale = NULL): ?IntlCalendar {}
 
 /**
+ * {@inheritdoc}
  * @param IntlCalendar $calendar
  */
 function intlcal_to_date_time (IntlCalendar $calendar): DateTime|false {}
@@ -5871,6 +5932,7 @@ function intlcal_get_error_code (IntlCalendar $calendar): int|false {}
 function intlcal_get_error_message (IntlCalendar $calendar): string|false {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $timezoneOrYear [optional]
  * @param mixed $localeOrMonth [optional]
  * @param mixed $day [optional]
@@ -5878,20 +5940,23 @@ function intlcal_get_error_message (IntlCalendar $calendar): string|false {}
  * @param mixed $minute [optional]
  * @param mixed $second [optional]
  */
-function intlgregcal_create_instance ($timezoneOrYear = null, $localeOrMonth = null, $day = null, $hour = null, $minute = null, $second = null): ?IntlGregorianCalendar {}
+function intlgregcal_create_instance ($timezoneOrYear = NULL, $localeOrMonth = NULL, $day = NULL, $hour = NULL, $minute = NULL, $second = NULL): ?IntlGregorianCalendar {}
 
 /**
+ * {@inheritdoc}
  * @param IntlGregorianCalendar $calendar
  * @param float $timestamp
  */
 function intlgregcal_set_gregorian_change (IntlGregorianCalendar $calendar, float $timestamp): bool {}
 
 /**
+ * {@inheritdoc}
  * @param IntlGregorianCalendar $calendar
  */
 function intlgregcal_get_gregorian_change (IntlGregorianCalendar $calendar): float {}
 
 /**
+ * {@inheritdoc}
  * @param IntlGregorianCalendar $calendar
  * @param int $year
  */
@@ -5984,7 +6049,7 @@ function collator_set_strength (Collator $object, int $strength): bool {}
  * @param int $flags [optional] 
  * @return bool Returns true on success or false on failure.
  */
-function collator_sort (Collator $object, array &$array, int $flags = Collator::SORT_REGULAR): bool {}
+function collator_sort (Collator $object, array &$array, int $flags = \Collator::SORT_REGULAR): bool {}
 
 /**
  * Sort array using specified collator and sort keys
@@ -6003,7 +6068,7 @@ function collator_sort_with_sort_keys (Collator $object, array &$array): bool {}
  * @param int $flags [optional] 
  * @return bool Returns true on success or false on failure.
  */
-function collator_asort (Collator $object, array &$array, int $flags = Collator::SORT_REGULAR): bool {}
+function collator_asort (Collator $object, array &$array, int $flags = \Collator::SORT_REGULAR): bool {}
 
 /**
  * Get the locale name of the collator
@@ -6086,7 +6151,7 @@ function intl_error_name (int $errorCode): string {}
  * @return IntlDateFormatter|null The created IntlDateFormatter or null in case of
  * failure.
  */
-function datefmt_create (?string $locale, int $dateType = IntlDateFormatter::FULL, int $timeType = IntlDateFormatter::FULL, IntlTimeZone|DateTimeZone|string|null $timezone = null, IntlCalendar|int|null $calendar = null, ?string $pattern = null): ?IntlDateFormatter {}
+function datefmt_create (?string $locale, int $dateType = \IntlDateFormatter::FULL, int $timeType = \IntlDateFormatter::FULL, IntlTimeZone|DateTimeZone|string|null $timezone = null, IntlCalendar|int|null $calendar = null, ?string $pattern = null): ?IntlDateFormatter {}
 
 /**
  * Get the datetype used for the IntlDateFormatter
@@ -6304,7 +6369,7 @@ function numfmt_create (string $locale, int $style, ?string $pattern = null): ?N
  * @param int $type [optional] 
  * @return string|false Returns the string containing formatted value, or false on error.
  */
-function numfmt_format (NumberFormatter $formatter, int|float $num, int $type = NumberFormatter::TYPE_DEFAULT): string|false {}
+function numfmt_format (NumberFormatter $formatter, int|float $num, int $type = \NumberFormatter::TYPE_DEFAULT): string|false {}
 
 /**
  * Parse a number
@@ -6315,7 +6380,7 @@ function numfmt_format (NumberFormatter $formatter, int|float $num, int $type = 
  * @param int $offset [optional] 
  * @return int|float|false The value of the parsed number or false on error.
  */
-function numfmt_parse (NumberFormatter $formatter, string $string, int $type = NumberFormatter::TYPE_DOUBLE, int &$offset = null): int|float|false {}
+function numfmt_parse (NumberFormatter $formatter, string $string, int $type = \NumberFormatter::TYPE_DOUBLE, int &$offset = null): int|float|false {}
 
 /**
  * Format a currency value
@@ -6819,7 +6884,7 @@ function msgfmt_get_error_message (MessageFormatter $formatter): string {}
  * @param int $form [optional] 
  * @return string|false The normalized string or false if an error occurred.
  */
-function normalizer_normalize (string $string, int $form = Normalizer::FORM_C): string|false {}
+function normalizer_normalize (string $string, int $form = \Normalizer::FORM_C): string|false {}
 
 /**
  * Checks if the provided string is already in the specified normalization
@@ -6829,7 +6894,7 @@ function normalizer_normalize (string $string, int $form = Normalizer::FORM_C): 
  * @param int $form [optional] 
  * @return bool true if normalized, false otherwise or if there an error
  */
-function normalizer_is_normalized (string $string, int $form = Normalizer::FORM_C): bool {}
+function normalizer_is_normalized (string $string, int $form = \Normalizer::FORM_C): bool {}
 
 /**
  * Gets the Decomposition_Mapping property for the given UTF-8 encoded code point
@@ -6839,7 +6904,7 @@ function normalizer_is_normalized (string $string, int $form = Normalizer::FORM_
  * @return string|null Returns a string containing the Decomposition_Mapping property, if present in the UCD.
  * <p>Returns null if there is no Decomposition_Mapping property for the character.</p>
  */
-function normalizer_get_raw_decomposition (string $string, int $form = Normalizer::FORM_C): ?string {}
+function normalizer_get_raw_decomposition (string $string, int $form = \Normalizer::FORM_C): ?string {}
 
 /**
  * Create a resource bundle
@@ -6963,7 +7028,7 @@ function intltz_get_canonical_id (string $timezoneId, bool &$isSystemId = null):
  * @param string|null $locale [optional] 
  * @return string|false 
  */
-function intltz_get_display_name (IntlTimeZone $timezone, bool $dst = false, int $style = IntlTimeZone::DISPLAY_LONG, ?string $locale = null): string|false {}
+function intltz_get_display_name (IntlTimeZone $timezone, bool $dst = false, int $style = \IntlTimeZone::DISPLAY_LONG, ?string $locale = null): string|false {}
 
 /**
  * Get the amount of time to be added to local standard time to get local wall clock time
@@ -7109,7 +7174,7 @@ function intltz_use_daylight_time (IntlTimeZone $timezone): bool {}
  * @return Transliterator|null Returns a Transliterator object on success,
  * or null on failure.
  */
-function transliterator_create (string $id, int $direction = Transliterator::FORWARD): ?Transliterator {}
+function transliterator_create (string $id, int $direction = \Transliterator::FORWARD): ?Transliterator {}
 
 /**
  * Create transliterator from rules
@@ -7122,7 +7187,7 @@ function transliterator_create (string $id, int $direction = Transliterator::FOR
  * @return Transliterator|null Returns a Transliterator object on success,
  * or null on failure.
  */
-function transliterator_create_from_rules (string $rules, int $direction = Transliterator::FORWARD): ?Transliterator {}
+function transliterator_create_from_rules (string $rules, int $direction = \Transliterator::FORWARD): ?Transliterator {}
 
 /**
  * Get transliterator IDs

@@ -100,9 +100,9 @@ function apcu_clear_cache (): bool {}
  * Retrieves cached information from APCu's data store
  * @link http://www.php.net/manual/en/function.apcu-cache-info.php
  * @param bool $limited [optional] 
- * @return array|bool Array of cached data (and meta-data) or false on failure
+ * @return array|false Array of cached data (and meta-data) or false on failure
  */
-function apcu_cache_info (bool $limited = false): array|bool {}
+function apcu_cache_info (bool $limited = false): array|int {}
 
 /**
  * Get detailed information about the cache key
@@ -116,9 +116,9 @@ function apcu_key_info (string $key): ?array {}
  * Retrieves APCu Shared Memory Allocation information
  * @link http://www.php.net/manual/en/function.apcu-sma-info.php
  * @param bool $limited [optional] 
- * @return array|bool Array of Shared Memory Allocation data; false on failure.
+ * @return array|false Array of Shared Memory Allocation data; false on failure.
  */
-function apcu_sma_info (bool $limited = false): array|bool {}
+function apcu_sma_info (bool $limited = false): array|int {}
 
 /**
  * Whether APCu is usable in the current environment
@@ -157,10 +157,10 @@ function apcu_add (string $key, mixed $var, int $ttl = null): bool {}
  * @param bool $success [optional] Optionally pass the success or fail boolean value to
  * this referenced variable.
  * @param int $ttl [optional] TTL to use if the operation inserts a new value (rather than incrementing an existing one).
- * @return int|bool Returns the current value of key's value on success,
+ * @return int|false Returns the current value of key's value on success,
  * or false on failure
  */
-function apcu_inc (string $key, int $step = 1, bool &$success = null, int $ttl = null): int|bool {}
+function apcu_inc (string $key, int $step = 1, bool &$success = null, int $ttl = null): int {}
 
 /**
  * Decrease a stored number
@@ -170,10 +170,10 @@ function apcu_inc (string $key, int $step = 1, bool &$success = null, int $ttl =
  * @param bool $success [optional] Optionally pass the success or fail boolean value to
  * this referenced variable.
  * @param int $ttl [optional] TTL to use if the operation inserts a new value (rather than decrementing an existing one).
- * @return int|bool Returns the current value of key's value on success,
+ * @return int|false Returns the current value of key's value on success,
  * or false on failure
  */
-function apcu_dec (string $key, int $step = 1, bool &$success = null, int $ttl = null): int|bool {}
+function apcu_dec (string $key, int $step = 1, bool &$success = null, int $ttl = null): int {}
 
 /**
  * Updates an old value with a new value

@@ -9,11 +9,13 @@
  * @link http://www.php.net/manual/en/class.domexception.php
  */
 final class DOMException extends Exception implements Throwable, Stringable {
-	protected $message;
-	protected $file;
-	protected $line;
-	public $code;
 
+	/**
+	 * The exception code
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.domexception.php#domexception.props.code
+	 */
+	protected int $code;
 
 	/**
 	 * Construct the exception
@@ -23,8 +25,11 @@ final class DOMException extends Exception implements Throwable, Stringable {
 	 * @param Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -100,7 +105,7 @@ interface DOMParentNode  {
 	 * @param DOMNode|string $nodes 
 	 * @return void No value is returned.
 	 */
-	abstract public function append (DOMNode|string ...$nodes): void
+	abstract public function append (DOMNode|string ...$nodes): void;
 
 	/**
 	 * Prepends nodes before the first child node
@@ -108,7 +113,7 @@ interface DOMParentNode  {
 	 * @param DOMNode|string $nodes 
 	 * @return void No value is returned.
 	 */
-	abstract public function prepend (DOMNode|string ...$nodes): void
+	abstract public function prepend (DOMNode|string ...$nodes): void;
 
 }
 
@@ -122,7 +127,7 @@ interface DOMChildNode  {
 	 * @link http://www.php.net/manual/en/domchildnode.remove.php
 	 * @return void No value is returned.
 	 */
-	abstract public function remove (): void
+	abstract public function remove (): void;
 
 	/**
 	 * Adds nodes before the node
@@ -130,7 +135,7 @@ interface DOMChildNode  {
 	 * @param DOMNode|string $nodes 
 	 * @return void No value is returned.
 	 */
-	abstract public function before (DOMNode|string ...$nodes): void
+	abstract public function before (DOMNode|string ...$nodes): void;
 
 	/**
 	 * Adds nodes after the node
@@ -138,7 +143,7 @@ interface DOMChildNode  {
 	 * @param DOMNode|string $nodes 
 	 * @return void No value is returned.
 	 */
-	abstract public function after (DOMNode|string ...$nodes): void
+	abstract public function after (DOMNode|string ...$nodes): void;
 
 	/**
 	 * Replaces the node with new nodes
@@ -146,7 +151,7 @@ interface DOMChildNode  {
 	 * @param DOMNode|string $nodes 
 	 * @return void No value is returned.
 	 */
-	abstract public function replaceWith (DOMNode|string ...$nodes): void
+	abstract public function replaceWith (DOMNode|string ...$nodes): void;
 
 }
 
@@ -159,6 +164,7 @@ interface DOMChildNode  {
 class DOMImplementation  {
 
 	/**
+	 * {@inheritdoc}
 	 * @param string $feature
 	 * @param string $version
 	 */
@@ -179,10 +185,10 @@ class DOMImplementation  {
 	 * @param string $qualifiedName 
 	 * @param string $publicId [optional] 
 	 * @param string $systemId [optional] 
-	 * @return DOMDocumentType|bool A new DOMDocumentType node with its 
+	 * @return DOMDocumentType|false A new DOMDocumentType node with its 
 	 * ownerDocument set to null or false on error.
 	 */
-	public function createDocumentType (string $qualifiedName, string $publicId = "", string $systemId = ""): DOMDocumentType|bool {}
+	public function createDocumentType (string $qualifiedName, string $publicId = '""', string $systemId = '""'): DOMDocumentType|int {}
 
 	/**
 	 * Creates a DOMDocument object of the specified type with its document element
@@ -190,12 +196,12 @@ class DOMImplementation  {
 	 * @param string|null $namespace [optional] 
 	 * @param string $qualifiedName [optional] 
 	 * @param DOMDocumentType|null $doctype [optional] 
-	 * @return DOMDocument|bool A new DOMDocument object or false on error. If
+	 * @return DOMDocument|false A new DOMDocument object or false on error. If
 	 * namespace, qualifiedName,
 	 * and doctype are null, the returned
 	 * DOMDocument is empty with no document element
 	 */
-	public function createDocument (?string $namespace = null, string $qualifiedName = "", ?DOMDocumentType $doctype = null): DOMDocument|bool {}
+	public function createDocument (?string $namespace = null, string $qualifiedName = '""', ?DOMDocumentType $doctype = null): DOMDocument|int {}
 
 }
 
@@ -203,31 +209,137 @@ class DOMImplementation  {
  * @link http://www.php.net/manual/en/class.domnode.php
  */
 class DOMNode  {
-	public $nodeName;
-	public $nodeValue;
-	public $nodeType;
-	public $parentNode;
-	public $childNodes;
-	public $firstChild;
-	public $lastChild;
-	public $previousSibling;
-	public $nextSibling;
-	public $attributes;
-	public $ownerDocument;
-	public $namespaceURI;
-	public $prefix;
-	public $localName;
-	public $baseURI;
-	public $textContent;
 
+	/**
+	 * Returns the most accurate name for the current node type
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.domnode.php#domnode.props.nodename
+	 */
+	public readonly string $nodeName;
+
+	/**
+	 * The value of this node, depending on its type.
+	 * Contrary to the W3C specification, the node value of
+	 * DOMElement nodes is equal to DOMNode::textContent instead
+	 * of null.
+	 * @var string|null
+	 * @link http://www.php.net/manual/en/class.domnode.php#domnode.props.nodevalue
+	 */
+	public ?string $nodeValue;
+
+	/**
+	 * Gets the type of the node. One of the predefined XML_xxx_NODE constants
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.domnode.php#domnode.props.nodetype
+	 */
+	public readonly int $nodeType;
+
+	/**
+	 * The parent of this node. If there is no such node, this returns null.
+	 * @var DOMNode|null
+	 * @link http://www.php.net/manual/en/class.domnode.php#domnode.props.parentnode
+	 */
+	public readonly ?DOMNode $parentNode;
+
+	/**
+	 * A DOMNodeList that contains all
+	 * children of this node. If there are no children, this is an empty
+	 * DOMNodeList.
+	 * @var DOMNodeList
+	 * @link http://www.php.net/manual/en/class.domnode.php#domnode.props.childnodes
+	 */
+	public readonly DOMNodeList $childNodes;
+
+	/**
+	 * The first child of this node. If there is no such node, this
+	 * returns null.
+	 * @var DOMNode|null
+	 * @link http://www.php.net/manual/en/class.domnode.php#domnode.props.firstchild
+	 */
+	public readonly ?DOMNode $firstChild;
+
+	/**
+	 * The last child of this node. If there is no such node, this returns null.
+	 * @var DOMNode|null
+	 * @link http://www.php.net/manual/en/class.domnode.php#domnode.props.lastchild
+	 */
+	public readonly ?DOMNode $lastChild;
+
+	/**
+	 * The node immediately preceding this node. If there is no such
+	 * node, this returns null.
+	 * @var DOMNode|null
+	 * @link http://www.php.net/manual/en/class.domnode.php#domnode.props.previoussibling
+	 */
+	public readonly ?DOMNode $previousSibling;
+
+	/**
+	 * The node immediately following this node. If there is no such
+	 * node, this returns null.
+	 * @var DOMNode|null
+	 * @link http://www.php.net/manual/en/class.domnode.php#domnode.props.nextsibling
+	 */
+	public readonly ?DOMNode $nextSibling;
+
+	/**
+	 * A DOMNamedNodeMap containing the
+	 * attributes of this node (if it is a DOMElement)
+	 * or null otherwise.
+	 * @var DOMNamedNodeMap|null
+	 * @link http://www.php.net/manual/en/class.domnode.php#domnode.props.attributes
+	 */
+	public readonly ?DOMNamedNodeMap $attributes;
+
+	/**
+	 * The DOMDocument object associated with this node, or null if this node is a DOMDocument
+	 * @var DOMDocument|null
+	 * @link http://www.php.net/manual/en/class.domnode.php#domnode.props.ownerdocument
+	 */
+	public readonly ?DOMDocument $ownerDocument;
+
+	/**
+	 * The namespace URI of this node, or null if it is unspecified.
+	 * @var string|null
+	 * @link http://www.php.net/manual/en/class.domnode.php#domnode.props.namespaceuri
+	 */
+	public readonly ?string $namespaceURI;
+
+	/**
+	 * The namespace prefix of this node.
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.domnode.php#domnode.props.prefix
+	 */
+	public string $prefix;
+
+	/**
+	 * Returns the local part of the qualified name of this node.
+	 * @var string|null
+	 * @link http://www.php.net/manual/en/class.domnode.php#domnode.props.localname
+	 */
+	public readonly ?string $localName;
+
+	/**
+	 * The absolute base URI of this node or null if the implementation
+	 * wasn't able to obtain an absolute URI.
+	 * @var string|null
+	 * @link http://www.php.net/manual/en/class.domnode.php#domnode.props.baseuri
+	 */
+	public readonly ?string $baseURI;
+
+	/**
+	 * The text content of this node and its descendants.
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.domnode.php#domnode.props.textcontent
+	 */
+	public string $textContent;
 
 	/**
 	 * Adds new child at the end of the children
 	 * @link http://www.php.net/manual/en/domnode.appendchild.php
 	 * @param DOMNode $node 
-	 * @return DOMNode|bool The node added or false on error.
+	 * @return DOMNode|false The node added or false on error.
 	 */
-	public function appendChild (DOMNode $node): DOMNode|bool {}
+	public function appendChild (DOMNode $node): DOMNode|int {}
 
 	/**
 	 * Canonicalize nodes to a string
@@ -237,9 +349,9 @@ class DOMNode  {
 	 * @param bool $withComments [optional] Retain comments in output.
 	 * @param array|null $xpath [optional] An array of xpaths to filter the nodes by.
 	 * @param array|null $nsPrefixes [optional] An array of namespace prefixes to filter the nodes by.
-	 * @return string|bool Returns canonicalized nodes as a string or false on failure
+	 * @return string|false Returns canonicalized nodes as a string or false on failure
 	 */
-	public function C14N (bool $exclusive = false, bool $withComments = false, ?array $xpath = null, ?array $nsPrefixes = null): string|bool {}
+	public function C14N (bool $exclusive = false, bool $withComments = false, ?array $xpath = null, ?array $nsPrefixes = null): string|int {}
 
 	/**
 	 * Canonicalize nodes to a file
@@ -250,17 +362,17 @@ class DOMNode  {
 	 * @param bool $withComments [optional] Retain comments in output.
 	 * @param array|null $xpath [optional] An array of xpaths to filter the nodes by.
 	 * @param array|null $nsPrefixes [optional] An array of namespace prefixes to filter the nodes by.
-	 * @return int|bool Number of bytes written or false on failure
+	 * @return int|false Number of bytes written or false on failure
 	 */
-	public function C14NFile (string $uri, bool $exclusive = false, bool $withComments = false, ?array $xpath = null, ?array $nsPrefixes = null): int|bool {}
+	public function C14NFile (string $uri, bool $exclusive = false, bool $withComments = false, ?array $xpath = null, ?array $nsPrefixes = null): int {}
 
 	/**
 	 * Clones a node
 	 * @link http://www.php.net/manual/en/domnode.clonenode.php
 	 * @param bool $deep [optional] 
-	 * @return DOMNode|bool The cloned node.
+	 * @return DOMNode|false The cloned node.
 	 */
-	public function cloneNode (bool $deep = false): DOMNode|bool {}
+	public function cloneNode (bool $deep = false): DOMNode|int {}
 
 	/**
 	 * Get line number for a node
@@ -295,9 +407,9 @@ class DOMNode  {
 	 * @link http://www.php.net/manual/en/domnode.insertbefore.php
 	 * @param DOMNode $node 
 	 * @param DOMNode|null $child [optional] 
-	 * @return DOMNode|bool The inserted node or false on error.
+	 * @return DOMNode|false The inserted node or false on error.
 	 */
-	public function insertBefore (DOMNode $node, ?DOMNode $child = null): DOMNode|bool {}
+	public function insertBefore (DOMNode $node, ?DOMNode $child = null): DOMNode|int {}
 
 	/**
 	 * Checks if the specified namespaceURI is the default namespace or not
@@ -352,57 +464,65 @@ class DOMNode  {
 	 * Removes child from list of children
 	 * @link http://www.php.net/manual/en/domnode.removechild.php
 	 * @param DOMNode $child 
-	 * @return DOMNode|bool If the child could be removed the function returns the old child or false on error.
+	 * @return DOMNode|false If the child could be removed the function returns the old child or false on error.
 	 */
-	public function removeChild (DOMNode $child): DOMNode|bool {}
+	public function removeChild (DOMNode $child): DOMNode|int {}
 
 	/**
 	 * Replaces a child
 	 * @link http://www.php.net/manual/en/domnode.replacechild.php
 	 * @param DOMNode $node 
 	 * @param DOMNode $child 
-	 * @return DOMNode|bool The old node or false if an error occur.
+	 * @return DOMNode|false The old node or false if an error occur.
 	 */
-	public function replaceChild (DOMNode $node, DOMNode $child): DOMNode|bool {}
+	public function replaceChild (DOMNode $node, DOMNode $child): DOMNode|int {}
 
 }
 
 class DOMNameSpaceNode  {
-	public $nodeName;
-	public $nodeValue;
-	public $nodeType;
-	public $prefix;
-	public $localName;
-	public $namespaceURI;
-	public $ownerDocument;
-	public $parentNode;
 
+	public string $nodeName;
+
+	public ?string $nodeValue;
+
+	public int $nodeType;
+
+	public string $prefix;
+
+	public ?string $localName;
+
+	public ?string $namespaceURI;
+
+	public ?DOMDocument $ownerDocument;
+
+	public ?DOMNode $parentNode;
 }
 
 /**
  * @link http://www.php.net/manual/en/class.domdocumentfragment.php
  */
 class DOMDocumentFragment extends DOMNode implements DOMParentNode {
-	public $nodeName;
-	public $nodeValue;
-	public $nodeType;
-	public $parentNode;
-	public $childNodes;
-	public $firstChild;
-	public $lastChild;
-	public $previousSibling;
-	public $nextSibling;
-	public $attributes;
-	public $ownerDocument;
-	public $namespaceURI;
-	public $prefix;
-	public $localName;
-	public $baseURI;
-	public $textContent;
-	public $firstElementChild;
-	public $lastElementChild;
-	public $childElementCount;
 
+	/**
+	 * First child element or null.
+	 * @var DOMElement|null
+	 * @link http://www.php.net/manual/en/class.domdocumentfragment.php#domdocumentfragment.props.firstelementchild
+	 */
+	public readonly ?DOMElement $firstElementChild;
+
+	/**
+	 * Last child element or null.
+	 * @var DOMElement|null
+	 * @link http://www.php.net/manual/en/class.domdocumentfragment.php#domdocumentfragment.props.lastelementchild
+	 */
+	public readonly ?DOMElement $lastElementChild;
+
+	/**
+	 * The number of child elements.
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.domdocumentfragment.php#domdocumentfragment.props.childelementcount
+	 */
+	public readonly int $childElementCount;
 
 	/**
 	 * Constructs a DOMDocumentFragment object
@@ -419,11 +539,13 @@ class DOMDocumentFragment extends DOMNode implements DOMParentNode {
 	public function appendXML (string $data): bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $nodes [optional]
 	 */
 	public function append (...$nodes): void {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $nodes [optional]
 	 */
 	public function prepend (...$nodes): void {}
@@ -432,9 +554,9 @@ class DOMDocumentFragment extends DOMNode implements DOMParentNode {
 	 * Adds new child at the end of the children
 	 * @link http://www.php.net/manual/en/domnode.appendchild.php
 	 * @param DOMNode $node 
-	 * @return DOMNode|bool The node added or false on error.
+	 * @return DOMNode|false The node added or false on error.
 	 */
-	public function appendChild (DOMNode $node): DOMNode|bool {}
+	public function appendChild (DOMNode $node): DOMNode|int {}
 
 	/**
 	 * Canonicalize nodes to a string
@@ -444,9 +566,9 @@ class DOMDocumentFragment extends DOMNode implements DOMParentNode {
 	 * @param bool $withComments [optional] Retain comments in output.
 	 * @param array|null $xpath [optional] An array of xpaths to filter the nodes by.
 	 * @param array|null $nsPrefixes [optional] An array of namespace prefixes to filter the nodes by.
-	 * @return string|bool Returns canonicalized nodes as a string or false on failure
+	 * @return string|false Returns canonicalized nodes as a string or false on failure
 	 */
-	public function C14N (bool $exclusive = false, bool $withComments = false, ?array $xpath = null, ?array $nsPrefixes = null): string|bool {}
+	public function C14N (bool $exclusive = false, bool $withComments = false, ?array $xpath = null, ?array $nsPrefixes = null): string|int {}
 
 	/**
 	 * Canonicalize nodes to a file
@@ -457,17 +579,17 @@ class DOMDocumentFragment extends DOMNode implements DOMParentNode {
 	 * @param bool $withComments [optional] Retain comments in output.
 	 * @param array|null $xpath [optional] An array of xpaths to filter the nodes by.
 	 * @param array|null $nsPrefixes [optional] An array of namespace prefixes to filter the nodes by.
-	 * @return int|bool Number of bytes written or false on failure
+	 * @return int|false Number of bytes written or false on failure
 	 */
-	public function C14NFile (string $uri, bool $exclusive = false, bool $withComments = false, ?array $xpath = null, ?array $nsPrefixes = null): int|bool {}
+	public function C14NFile (string $uri, bool $exclusive = false, bool $withComments = false, ?array $xpath = null, ?array $nsPrefixes = null): int {}
 
 	/**
 	 * Clones a node
 	 * @link http://www.php.net/manual/en/domnode.clonenode.php
 	 * @param bool $deep [optional] 
-	 * @return DOMNode|bool The cloned node.
+	 * @return DOMNode|false The cloned node.
 	 */
-	public function cloneNode (bool $deep = false): DOMNode|bool {}
+	public function cloneNode (bool $deep = false): DOMNode|int {}
 
 	/**
 	 * Get line number for a node
@@ -502,9 +624,9 @@ class DOMDocumentFragment extends DOMNode implements DOMParentNode {
 	 * @link http://www.php.net/manual/en/domnode.insertbefore.php
 	 * @param DOMNode $node 
 	 * @param DOMNode|null $child [optional] 
-	 * @return DOMNode|bool The inserted node or false on error.
+	 * @return DOMNode|false The inserted node or false on error.
 	 */
-	public function insertBefore (DOMNode $node, ?DOMNode $child = null): DOMNode|bool {}
+	public function insertBefore (DOMNode $node, ?DOMNode $child = null): DOMNode|int {}
 
 	/**
 	 * Checks if the specified namespaceURI is the default namespace or not
@@ -559,18 +681,18 @@ class DOMDocumentFragment extends DOMNode implements DOMParentNode {
 	 * Removes child from list of children
 	 * @link http://www.php.net/manual/en/domnode.removechild.php
 	 * @param DOMNode $child 
-	 * @return DOMNode|bool If the child could be removed the function returns the old child or false on error.
+	 * @return DOMNode|false If the child could be removed the function returns the old child or false on error.
 	 */
-	public function removeChild (DOMNode $child): DOMNode|bool {}
+	public function removeChild (DOMNode $child): DOMNode|int {}
 
 	/**
 	 * Replaces a child
 	 * @link http://www.php.net/manual/en/domnode.replacechild.php
 	 * @param DOMNode $node 
 	 * @param DOMNode $child 
-	 * @return DOMNode|bool The old node or false if an error occur.
+	 * @return DOMNode|false The old node or false if an error occur.
 	 */
-	public function replaceChild (DOMNode $node, DOMNode $child): DOMNode|bool {}
+	public function replaceChild (DOMNode $node, DOMNode $child): DOMNode|int {}
 
 }
 
@@ -580,45 +702,187 @@ class DOMDocumentFragment extends DOMNode implements DOMParentNode {
  * @link http://www.php.net/manual/en/class.domdocument.php
  */
 class DOMDocument extends DOMNode implements DOMParentNode {
-	public $nodeName;
-	public $nodeValue;
-	public $nodeType;
-	public $parentNode;
-	public $childNodes;
-	public $firstChild;
-	public $lastChild;
-	public $previousSibling;
-	public $nextSibling;
-	public $attributes;
-	public $ownerDocument;
-	public $namespaceURI;
-	public $prefix;
-	public $localName;
-	public $baseURI;
-	public $textContent;
-	public $doctype;
-	public $implementation;
-	public $documentElement;
-	public $actualEncoding;
-	public $encoding;
-	public $xmlEncoding;
-	public $standalone;
-	public $xmlStandalone;
-	public $version;
-	public $xmlVersion;
-	public $strictErrorChecking;
-	public $documentURI;
-	public $config;
-	public $formatOutput;
-	public $validateOnParse;
-	public $resolveExternals;
-	public $preserveWhiteSpace;
-	public $recover;
-	public $substituteEntities;
-	public $firstElementChild;
-	public $lastElementChild;
-	public $childElementCount;
 
+	/**
+	 * The Document Type Declaration associated with this document.
+	 * @var DOMDocumentType|null
+	 * @link http://www.php.net/manual/en/class.domdocument.php#domdocument.props.doctype
+	 */
+	public readonly ?DOMDocumentType $doctype;
+
+	/**
+	 * The DOMImplementation object that handles 
+	 * this document.
+	 * @var DOMImplementation
+	 * @link http://www.php.net/manual/en/class.domdocument.php#domdocument.props.implementation
+	 */
+	public readonly DOMImplementation $implementation;
+
+	/**
+	 * The DOMElement object that is the first
+	 * document element. If not found, this evaluates to null.
+	 * @var DOMElement|null
+	 * @link http://www.php.net/manual/en/class.domdocument.php#domdocument.props.documentelement
+	 */
+	public readonly ?DOMElement $documentElement;
+
+	/**
+	 * Deprecated. Actual encoding of the document,
+	 * is a readonly equivalent to
+	 * encoding.
+	 * @var string|null
+	 * @link http://www.php.net/manual/en/class.domdocument.php#domdocument.props.actualencoding
+	 */
+	public readonly ?string $actualEncoding;
+
+	/**
+	 * Encoding of the document, as specified by the XML declaration. This
+	 * attribute is not present in the final DOM Level 3 specification, but
+	 * is the only way of manipulating XML document encoding in this
+	 * implementation.
+	 * @var string|null
+	 * @link http://www.php.net/manual/en/class.domdocument.php#domdocument.props.encoding
+	 */
+	public ?string $encoding;
+
+	/**
+	 * An attribute specifying, as part of the XML declaration, the
+	 * encoding of this document. This is null when unspecified or when it
+	 * is not known, such as when the Document was created in memory.
+	 * @var string|null
+	 * @link http://www.php.net/manual/en/class.domdocument.php#domdocument.props.xmlencoding
+	 */
+	public readonly ?string $xmlEncoding;
+
+	/**
+	 * Deprecated. Whether or not the document is
+	 * standalone, as specified by the XML declaration, corresponds to
+	 * xmlStandalone.
+	 * @var bool
+	 * @link http://www.php.net/manual/en/class.domdocument.php#domdocument.props.standalone
+	 */
+	public bool $standalone;
+
+	/**
+	 * An attribute specifying, as part of the XML declaration, whether
+	 * this document is standalone. This is false when unspecified.
+	 * @var bool
+	 * @link http://www.php.net/manual/en/class.domdocument.php#domdocument.props.xmlstandalone
+	 */
+	public bool $xmlStandalone;
+
+	/**
+	 * Deprecated. Version of XML, corresponds to
+	 * xmlVersion.
+	 * @var string|null
+	 * @link http://www.php.net/manual/en/class.domdocument.php#domdocument.props.version
+	 */
+	public ?string $version;
+
+	/**
+	 * An attribute specifying, as part of the XML declaration, the
+	 * version number of this document. If there is no declaration and if
+	 * this document supports the "XML" feature, the value is "1.0".
+	 * @var string|null
+	 * @link http://www.php.net/manual/en/class.domdocument.php#domdocument.props.xmlversion
+	 */
+	public ?string $xmlVersion;
+
+	/**
+	 * Throws DOMException on errors. Default to true.
+	 * @var bool
+	 * @link http://www.php.net/manual/en/class.domdocument.php#domdocument.props.stricterrorchecking
+	 */
+	public bool $strictErrorChecking;
+
+	/**
+	 * The location of the document or null if undefined.
+	 * @var string|null
+	 * @link http://www.php.net/manual/en/class.domdocument.php#domdocument.props.documenturi
+	 */
+	public ?string $documentURI;
+
+	/**
+	 * Deprecated. Configuration used when
+	 * DOMDocument::normalizeDocument is
+	 * invoked.
+	 * @var mixed
+	 * @link http://www.php.net/manual/en/class.domdocument.php#domdocument.props.config
+	 */
+	public readonly mixed $config;
+
+	/**
+	 * Nicely formats output with indentation and extra space.
+	 * This has no effect if the document was loaded with
+	 * preserveWhitespace enabled.
+	 * @var bool
+	 * @link http://www.php.net/manual/en/class.domdocument.php#domdocument.props.formatoutput
+	 */
+	public bool $formatOutput;
+
+	/**
+	 * Loads and validates against the DTD. Default to false.
+	 * @var bool
+	 * @link http://www.php.net/manual/en/class.domdocument.php#domdocument.props.validateonparse
+	 */
+	public bool $validateOnParse;
+
+	/**
+	 * Set it to true to load external entities from a doctype 
+	 * declaration. This is useful for including character entities in
+	 * your XML document.
+	 * @var bool
+	 * @link http://www.php.net/manual/en/class.domdocument.php#domdocument.props.resolveexternals
+	 */
+	public bool $resolveExternals;
+
+	/**
+	 * Do not remove redundant white space. Default to true.
+	 * Setting this to false has the same effect as passing LIBXML_NOBLANKS
+	 * as option to DOMDocument::load etc.
+	 * @var bool
+	 * @link http://www.php.net/manual/en/class.domdocument.php#domdocument.props.preservewhitespace
+	 */
+	public bool $preserveWhiteSpace;
+
+	/**
+	 * Proprietary. Enables recovery mode, i.e. trying
+	 * to parse non-well formed documents. This attribute is not part of
+	 * the DOM specification and is specific to libxml.
+	 * @var bool
+	 * @link http://www.php.net/manual/en/class.domdocument.php#domdocument.props.recover
+	 */
+	public bool $recover;
+
+	/**
+	 * Proprietary. Whether or not to substitute
+	 * entities. This attribute is not part of
+	 * the DOM specification and is specific to libxml.
+	 * @var bool
+	 * @link http://www.php.net/manual/en/class.domdocument.php#domdocument.props.substituteentities
+	 */
+	public bool $substituteEntities;
+
+	/**
+	 * First child element or null.
+	 * @var DOMElement|null
+	 * @link http://www.php.net/manual/en/class.domdocument.php#domdocument.props.firstelementchild
+	 */
+	public readonly ?DOMElement $firstElementChild;
+
+	/**
+	 * Last child element or null.
+	 * @var DOMElement|null
+	 * @link http://www.php.net/manual/en/class.domdocument.php#domdocument.props.lastelementchild
+	 */
+	public readonly ?DOMElement $lastElementChild;
+
+	/**
+	 * The number of child elements.
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.domdocument.php#domdocument.props.childelementcount
+	 */
+	public readonly int $childElementCount;
 
 	/**
 	 * Creates a new DOMDocument object
@@ -627,32 +891,32 @@ class DOMDocument extends DOMNode implements DOMParentNode {
 	 * @param string $encoding [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $version = "1.0", string $encoding = ""): string {}
+	public function __construct (string $version = '"1.0"', string $encoding = '""'): string {}
 
 	/**
 	 * Create new attribute
 	 * @link http://www.php.net/manual/en/domdocument.createattribute.php
 	 * @param string $localName 
-	 * @return DOMAttr|bool The new DOMAttr or false if an error occurred.
+	 * @return DOMAttr|false The new DOMAttr or false if an error occurred.
 	 */
-	public function createAttribute (string $localName): DOMAttr|bool {}
+	public function createAttribute (string $localName): DOMAttr|int {}
 
 	/**
 	 * Create new attribute node with an associated namespace
 	 * @link http://www.php.net/manual/en/domdocument.createattributens.php
 	 * @param string|null $namespace 
 	 * @param string $qualifiedName 
-	 * @return DOMAttr|bool The new DOMAttr or false if an error occurred.
+	 * @return DOMAttr|false The new DOMAttr or false if an error occurred.
 	 */
-	public function createAttributeNS (?string $namespace, string $qualifiedName): DOMAttr|bool {}
+	public function createAttributeNS (?string $namespace, string $qualifiedName): DOMAttr|int {}
 
 	/**
 	 * Create new cdata node
 	 * @link http://www.php.net/manual/en/domdocument.createcdatasection.php
 	 * @param string $data 
-	 * @return DOMCdataSection|bool The new DOMCDATASection or false if an error occurred.
+	 * @return DOMCdataSection|false The new DOMCDATASection or false if an error occurred.
 	 */
-	public function createCDATASection (string $data): DOMCdataSection|bool {}
+	public function createCDATASection (string $data): DOMCdataSection|int {}
 
 	/**
 	 * Create new comment node
@@ -674,10 +938,10 @@ class DOMDocument extends DOMNode implements DOMParentNode {
 	 * @link http://www.php.net/manual/en/domdocument.createelement.php
 	 * @param string $localName 
 	 * @param string $value [optional] 
-	 * @return DOMElement|bool Returns a new instance of class DOMElement or false
+	 * @return DOMElement|false Returns a new instance of class DOMElement or false
 	 * if an error occurred.
 	 */
-	public function createElement (string $localName, string $value = ""): DOMElement|bool {}
+	public function createElement (string $localName, string $value = '""'): DOMElement|int {}
 
 	/**
 	 * Create new element node with an associated namespace
@@ -685,27 +949,27 @@ class DOMDocument extends DOMNode implements DOMParentNode {
 	 * @param string|null $namespace 
 	 * @param string $qualifiedName 
 	 * @param string $value [optional] 
-	 * @return DOMElement|bool The new DOMElement or false if an error occurred.
+	 * @return DOMElement|false The new DOMElement or false if an error occurred.
 	 */
-	public function createElementNS (?string $namespace, string $qualifiedName, string $value = ""): DOMElement|bool {}
+	public function createElementNS (?string $namespace, string $qualifiedName, string $value = '""'): DOMElement|int {}
 
 	/**
 	 * Create new entity reference node
 	 * @link http://www.php.net/manual/en/domdocument.createentityreference.php
 	 * @param string $name 
-	 * @return DOMEntityReference|bool The new DOMEntityReference or false if an error
+	 * @return DOMEntityReference|false The new DOMEntityReference or false if an error
 	 * occurred.
 	 */
-	public function createEntityReference (string $name): DOMEntityReference|bool {}
+	public function createEntityReference (string $name): DOMEntityReference|int {}
 
 	/**
 	 * Creates new PI node
 	 * @link http://www.php.net/manual/en/domdocument.createprocessinginstruction.php
 	 * @param string $target 
 	 * @param string $data [optional] 
-	 * @return DOMProcessingInstruction|bool The new DOMProcessingInstruction or false if an error occurred.
+	 * @return DOMProcessingInstruction|false The new DOMProcessingInstruction or false if an error occurred.
 	 */
-	public function createProcessingInstruction (string $target, string $data = ""): DOMProcessingInstruction|bool {}
+	public function createProcessingInstruction (string $target, string $data = '""'): DOMProcessingInstruction|int {}
 
 	/**
 	 * Create new text node
@@ -748,9 +1012,9 @@ class DOMDocument extends DOMNode implements DOMParentNode {
 	 * @link http://www.php.net/manual/en/domdocument.importnode.php
 	 * @param DOMNode $node 
 	 * @param bool $deep [optional] 
-	 * @return DOMNode|bool The copied node or false, if it cannot be copied.
+	 * @return DOMNode|false The copied node or false, if it cannot be copied.
 	 */
-	public function importNode (DOMNode $node, bool $deep = false): DOMNode|bool {}
+	public function importNode (DOMNode $node, bool $deep = false): DOMNode|int {}
 
 	/**
 	 * Load XML from a file
@@ -793,9 +1057,9 @@ class DOMDocument extends DOMNode implements DOMParentNode {
 	 * @link http://www.php.net/manual/en/domdocument.save.php
 	 * @param string $filename 
 	 * @param int $options [optional] 
-	 * @return int|bool Returns the number of bytes written or false if an error occurred.
+	 * @return int|false Returns the number of bytes written or false if an error occurred.
 	 */
-	public function save (string $filename, int $options = null): int|bool {}
+	public function save (string $filename, int $options = null): int {}
 
 	/**
 	 * Load HTML from a string
@@ -821,26 +1085,26 @@ class DOMDocument extends DOMNode implements DOMParentNode {
 	 * Dumps the internal document into a string using HTML formatting
 	 * @link http://www.php.net/manual/en/domdocument.savehtml.php
 	 * @param DOMNode|null $node [optional] 
-	 * @return string|bool Returns the HTML, or false if an error occurred.
+	 * @return string|false Returns the HTML, or false if an error occurred.
 	 */
-	public function saveHTML (?DOMNode $node = null): string|bool {}
+	public function saveHTML (?DOMNode $node = null): string|int {}
 
 	/**
 	 * Dumps the internal document into a file using HTML formatting
 	 * @link http://www.php.net/manual/en/domdocument.savehtmlfile.php
 	 * @param string $filename 
-	 * @return int|bool Returns the number of bytes written or false if an error occurred.
+	 * @return int|false Returns the number of bytes written or false if an error occurred.
 	 */
-	public function saveHTMLFile (string $filename): int|bool {}
+	public function saveHTMLFile (string $filename): int {}
 
 	/**
 	 * Dumps the internal XML tree back into a string
 	 * @link http://www.php.net/manual/en/domdocument.savexml.php
 	 * @param DOMNode|null $node [optional] 
 	 * @param int $options [optional] 
-	 * @return string|bool Returns the XML, or false if an error occurred.
+	 * @return string|false Returns the XML, or false if an error occurred.
 	 */
-	public function saveXML (?DOMNode $node = null, int $options = null): string|bool {}
+	public function saveXML (?DOMNode $node = null, int $options = null): string|int {}
 
 	/**
 	 * Validates a document based on a schema. Only XML Schema 1.0 is supported.
@@ -888,22 +1152,25 @@ class DOMDocument extends DOMNode implements DOMParentNode {
 	 * Substitutes XIncludes in a DOMDocument Object
 	 * @link http://www.php.net/manual/en/domdocument.xinclude.php
 	 * @param int $options [optional] 
-	 * @return int|bool Returns the number of XIncludes in the document, -1 if some processing failed,
+	 * @return int|false Returns the number of XIncludes in the document, -1 if some processing failed,
 	 * or false if there were no substitutions.
 	 */
-	public function xinclude (int $options = null): int|bool {}
+	public function xinclude (int $options = null): int {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param DOMNode $node
 	 */
 	public function adoptNode (DOMNode $node) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $nodes [optional]
 	 */
 	public function append (...$nodes): void {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $nodes [optional]
 	 */
 	public function prepend (...$nodes): void {}
@@ -912,9 +1179,9 @@ class DOMDocument extends DOMNode implements DOMParentNode {
 	 * Adds new child at the end of the children
 	 * @link http://www.php.net/manual/en/domnode.appendchild.php
 	 * @param DOMNode $node 
-	 * @return DOMNode|bool The node added or false on error.
+	 * @return DOMNode|false The node added or false on error.
 	 */
-	public function appendChild (DOMNode $node): DOMNode|bool {}
+	public function appendChild (DOMNode $node): DOMNode|int {}
 
 	/**
 	 * Canonicalize nodes to a string
@@ -924,9 +1191,9 @@ class DOMDocument extends DOMNode implements DOMParentNode {
 	 * @param bool $withComments [optional] Retain comments in output.
 	 * @param array|null $xpath [optional] An array of xpaths to filter the nodes by.
 	 * @param array|null $nsPrefixes [optional] An array of namespace prefixes to filter the nodes by.
-	 * @return string|bool Returns canonicalized nodes as a string or false on failure
+	 * @return string|false Returns canonicalized nodes as a string or false on failure
 	 */
-	public function C14N (bool $exclusive = false, bool $withComments = false, ?array $xpath = null, ?array $nsPrefixes = null): string|bool {}
+	public function C14N (bool $exclusive = false, bool $withComments = false, ?array $xpath = null, ?array $nsPrefixes = null): string|int {}
 
 	/**
 	 * Canonicalize nodes to a file
@@ -937,17 +1204,17 @@ class DOMDocument extends DOMNode implements DOMParentNode {
 	 * @param bool $withComments [optional] Retain comments in output.
 	 * @param array|null $xpath [optional] An array of xpaths to filter the nodes by.
 	 * @param array|null $nsPrefixes [optional] An array of namespace prefixes to filter the nodes by.
-	 * @return int|bool Number of bytes written or false on failure
+	 * @return int|false Number of bytes written or false on failure
 	 */
-	public function C14NFile (string $uri, bool $exclusive = false, bool $withComments = false, ?array $xpath = null, ?array $nsPrefixes = null): int|bool {}
+	public function C14NFile (string $uri, bool $exclusive = false, bool $withComments = false, ?array $xpath = null, ?array $nsPrefixes = null): int {}
 
 	/**
 	 * Clones a node
 	 * @link http://www.php.net/manual/en/domnode.clonenode.php
 	 * @param bool $deep [optional] 
-	 * @return DOMNode|bool The cloned node.
+	 * @return DOMNode|false The cloned node.
 	 */
-	public function cloneNode (bool $deep = false): DOMNode|bool {}
+	public function cloneNode (bool $deep = false): DOMNode|int {}
 
 	/**
 	 * Get line number for a node
@@ -982,9 +1249,9 @@ class DOMDocument extends DOMNode implements DOMParentNode {
 	 * @link http://www.php.net/manual/en/domnode.insertbefore.php
 	 * @param DOMNode $node 
 	 * @param DOMNode|null $child [optional] 
-	 * @return DOMNode|bool The inserted node or false on error.
+	 * @return DOMNode|false The inserted node or false on error.
 	 */
-	public function insertBefore (DOMNode $node, ?DOMNode $child = null): DOMNode|bool {}
+	public function insertBefore (DOMNode $node, ?DOMNode $child = null): DOMNode|int {}
 
 	/**
 	 * Checks if the specified namespaceURI is the default namespace or not
@@ -1039,18 +1306,18 @@ class DOMDocument extends DOMNode implements DOMParentNode {
 	 * Removes child from list of children
 	 * @link http://www.php.net/manual/en/domnode.removechild.php
 	 * @param DOMNode $child 
-	 * @return DOMNode|bool If the child could be removed the function returns the old child or false on error.
+	 * @return DOMNode|false If the child could be removed the function returns the old child or false on error.
 	 */
-	public function removeChild (DOMNode $child): DOMNode|bool {}
+	public function removeChild (DOMNode $child): DOMNode|int {}
 
 	/**
 	 * Replaces a child
 	 * @link http://www.php.net/manual/en/domnode.replacechild.php
 	 * @param DOMNode $node 
 	 * @param DOMNode $child 
-	 * @return DOMNode|bool The old node or false if an error occur.
+	 * @return DOMNode|false The old node or false if an error occur.
 	 */
-	public function replaceChild (DOMNode $node, DOMNode $child): DOMNode|bool {}
+	public function replaceChild (DOMNode $node, DOMNode $child): DOMNode|int {}
 
 }
 
@@ -1058,8 +1325,14 @@ class DOMDocument extends DOMNode implements DOMParentNode {
  * @link http://www.php.net/manual/en/class.domnodelist.php
  */
 class DOMNodeList implements IteratorAggregate, Traversable, Countable {
-	public $length;
 
+	/**
+	 * The number of nodes in the list. The range of valid child node 
+	 * indices is 0 to length - 1 inclusive.
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.domnodelist.php#domnodelist.props.length
+	 */
+	public readonly int $length;
 
 	/**
 	 * Get number of nodes in the list
@@ -1069,6 +1342,9 @@ class DOMNodeList implements IteratorAggregate, Traversable, Countable {
 	 */
 	public function count (): int {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getIterator (): Iterator {}
 
 	/**
@@ -1087,8 +1363,14 @@ class DOMNodeList implements IteratorAggregate, Traversable, Countable {
  * @link http://www.php.net/manual/en/class.domnamednodemap.php
  */
 class DOMNamedNodeMap implements IteratorAggregate, Traversable, Countable {
-	public $length;
 
+	/**
+	 * The number of nodes in the map. The range of valid child node 
+	 * indices is 0 to length - 1 inclusive.
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.domnamednodemap.php#domnamednodemap.props.length
+	 */
+	public readonly int $length;
 
 	/**
 	 * Retrieves a node specified by name
@@ -1127,6 +1409,9 @@ class DOMNamedNodeMap implements IteratorAggregate, Traversable, Countable {
 	 */
 	public function count (): int {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getIterator (): Iterator {}
 
 }
@@ -1137,46 +1422,53 @@ class DOMNamedNodeMap implements IteratorAggregate, Traversable, Countable {
  * @link http://www.php.net/manual/en/class.domcharacterdata.php
  */
 class DOMCharacterData extends DOMNode implements DOMChildNode {
-	public $nodeName;
-	public $nodeValue;
-	public $nodeType;
-	public $parentNode;
-	public $childNodes;
-	public $firstChild;
-	public $lastChild;
-	public $previousSibling;
-	public $nextSibling;
-	public $attributes;
-	public $ownerDocument;
-	public $namespaceURI;
-	public $prefix;
-	public $localName;
-	public $baseURI;
-	public $textContent;
-	public $data;
-	public $length;
-	public $previousElementSibling;
-	public $nextElementSibling;
 
+	/**
+	 * The contents of the node.
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.domcharacterdata.php#domcharacterdata.props.data
+	 */
+	public string $data;
+
+	/**
+	 * The length of the contents.
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.domcharacterdata.php#domcharacterdata.props.length
+	 */
+	public readonly int $length;
+
+	/**
+	 * The previous sibling element or null.
+	 * @var DOMElement|null
+	 * @link http://www.php.net/manual/en/class.domcharacterdata.php#domcharacterdata.props.previouselementsibling
+	 */
+	public readonly ?DOMElement $previousElementSibling;
+
+	/**
+	 * The next sibling element or null.
+	 * @var DOMElement|null
+	 * @link http://www.php.net/manual/en/class.domcharacterdata.php#domcharacterdata.props.nextelementsibling
+	 */
+	public readonly ?DOMElement $nextElementSibling;
 
 	/**
 	 * Append the string to the end of the character data of the node
 	 * @link http://www.php.net/manual/en/domcharacterdata.appenddata.php
 	 * @param string $data 
-	 * @return bool Always returns true.
+	 * @return true Always returns true.
 	 */
-	public function appendData (string $data): bool {}
+	public function appendData (string $data): int {}
 
 	/**
 	 * Extracts a range of data from the node
 	 * @link http://www.php.net/manual/en/domcharacterdata.substringdata.php
 	 * @param int $offset 
 	 * @param int $count 
-	 * @return string|bool The specified substring. If the sum of offset 
+	 * @return string|false The specified substring. If the sum of offset 
 	 * and count exceeds the length, then all 16-bit units 
 	 * to the end of the data are returned.
 	 */
-	public function substringData (int $offset, int $count): string|bool {}
+	public function substringData (int $offset, int $count): string|int {}
 
 	/**
 	 * Insert a string at the specified 16-bit unit offset
@@ -1207,18 +1499,24 @@ class DOMCharacterData extends DOMNode implements DOMChildNode {
 	public function replaceData (int $offset, int $count, string $data): bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $nodes [optional]
 	 */
 	public function replaceWith (...$nodes): void {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function remove (): void {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $nodes [optional]
 	 */
 	public function before (...$nodes): void {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $nodes [optional]
 	 */
 	public function after (...$nodes): void {}
@@ -1227,9 +1525,9 @@ class DOMCharacterData extends DOMNode implements DOMChildNode {
 	 * Adds new child at the end of the children
 	 * @link http://www.php.net/manual/en/domnode.appendchild.php
 	 * @param DOMNode $node 
-	 * @return DOMNode|bool The node added or false on error.
+	 * @return DOMNode|false The node added or false on error.
 	 */
-	public function appendChild (DOMNode $node): DOMNode|bool {}
+	public function appendChild (DOMNode $node): DOMNode|int {}
 
 	/**
 	 * Canonicalize nodes to a string
@@ -1239,9 +1537,9 @@ class DOMCharacterData extends DOMNode implements DOMChildNode {
 	 * @param bool $withComments [optional] Retain comments in output.
 	 * @param array|null $xpath [optional] An array of xpaths to filter the nodes by.
 	 * @param array|null $nsPrefixes [optional] An array of namespace prefixes to filter the nodes by.
-	 * @return string|bool Returns canonicalized nodes as a string or false on failure
+	 * @return string|false Returns canonicalized nodes as a string or false on failure
 	 */
-	public function C14N (bool $exclusive = false, bool $withComments = false, ?array $xpath = null, ?array $nsPrefixes = null): string|bool {}
+	public function C14N (bool $exclusive = false, bool $withComments = false, ?array $xpath = null, ?array $nsPrefixes = null): string|int {}
 
 	/**
 	 * Canonicalize nodes to a file
@@ -1252,17 +1550,17 @@ class DOMCharacterData extends DOMNode implements DOMChildNode {
 	 * @param bool $withComments [optional] Retain comments in output.
 	 * @param array|null $xpath [optional] An array of xpaths to filter the nodes by.
 	 * @param array|null $nsPrefixes [optional] An array of namespace prefixes to filter the nodes by.
-	 * @return int|bool Number of bytes written or false on failure
+	 * @return int|false Number of bytes written or false on failure
 	 */
-	public function C14NFile (string $uri, bool $exclusive = false, bool $withComments = false, ?array $xpath = null, ?array $nsPrefixes = null): int|bool {}
+	public function C14NFile (string $uri, bool $exclusive = false, bool $withComments = false, ?array $xpath = null, ?array $nsPrefixes = null): int {}
 
 	/**
 	 * Clones a node
 	 * @link http://www.php.net/manual/en/domnode.clonenode.php
 	 * @param bool $deep [optional] 
-	 * @return DOMNode|bool The cloned node.
+	 * @return DOMNode|false The cloned node.
 	 */
-	public function cloneNode (bool $deep = false): DOMNode|bool {}
+	public function cloneNode (bool $deep = false): DOMNode|int {}
 
 	/**
 	 * Get line number for a node
@@ -1297,9 +1595,9 @@ class DOMCharacterData extends DOMNode implements DOMChildNode {
 	 * @link http://www.php.net/manual/en/domnode.insertbefore.php
 	 * @param DOMNode $node 
 	 * @param DOMNode|null $child [optional] 
-	 * @return DOMNode|bool The inserted node or false on error.
+	 * @return DOMNode|false The inserted node or false on error.
 	 */
-	public function insertBefore (DOMNode $node, ?DOMNode $child = null): DOMNode|bool {}
+	public function insertBefore (DOMNode $node, ?DOMNode $child = null): DOMNode|int {}
 
 	/**
 	 * Checks if the specified namespaceURI is the default namespace or not
@@ -1354,18 +1652,18 @@ class DOMCharacterData extends DOMNode implements DOMChildNode {
 	 * Removes child from list of children
 	 * @link http://www.php.net/manual/en/domnode.removechild.php
 	 * @param DOMNode $child 
-	 * @return DOMNode|bool If the child could be removed the function returns the old child or false on error.
+	 * @return DOMNode|false If the child could be removed the function returns the old child or false on error.
 	 */
-	public function removeChild (DOMNode $child): DOMNode|bool {}
+	public function removeChild (DOMNode $child): DOMNode|int {}
 
 	/**
 	 * Replaces a child
 	 * @link http://www.php.net/manual/en/domnode.replacechild.php
 	 * @param DOMNode $node 
 	 * @param DOMNode $child 
-	 * @return DOMNode|bool The old node or false if an error occur.
+	 * @return DOMNode|false The old node or false if an error occur.
 	 */
-	public function replaceChild (DOMNode $node, DOMNode $child): DOMNode|bool {}
+	public function replaceChild (DOMNode $node, DOMNode $child): DOMNode|int {}
 
 }
 
@@ -1375,28 +1673,41 @@ class DOMCharacterData extends DOMNode implements DOMChildNode {
  * @link http://www.php.net/manual/en/class.domattr.php
  */
 class DOMAttr extends DOMNode  {
-	public $nodeName;
-	public $nodeValue;
-	public $nodeType;
-	public $parentNode;
-	public $childNodes;
-	public $firstChild;
-	public $lastChild;
-	public $previousSibling;
-	public $nextSibling;
-	public $attributes;
-	public $ownerDocument;
-	public $namespaceURI;
-	public $prefix;
-	public $localName;
-	public $baseURI;
-	public $textContent;
-	public $name;
-	public $specified;
-	public $value;
-	public $ownerElement;
-	public $schemaTypeInfo;
 
+	/**
+	 * The name of the attribute.
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.domattr.php#domattr.props.name
+	 */
+	public readonly string $name;
+
+	/**
+	 * Not implemented yet, always is true.
+	 * @var bool
+	 * @link http://www.php.net/manual/en/class.domattr.php#domattr.props.specified
+	 */
+	public readonly bool $specified;
+
+	/**
+	 * The value of the attribute.
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.domattr.php#domattr.props.value
+	 */
+	public string $value;
+
+	/**
+	 * The element which contains the attribute or null.
+	 * @var DOMElement|null
+	 * @link http://www.php.net/manual/en/class.domattr.php#domattr.props.ownerelement
+	 */
+	public readonly ?DOMElement $ownerElement;
+
+	/**
+	 * Not implemented yet, always is null.
+	 * @var mixed
+	 * @link http://www.php.net/manual/en/class.domattr.php#domattr.props.schematypeinfo
+	 */
+	public readonly mixed $schemaTypeInfo;
 
 	/**
 	 * Creates a new DOMAttr object
@@ -1405,7 +1716,7 @@ class DOMAttr extends DOMNode  {
 	 * @param string $value [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $name, string $value = ""): string {}
+	public function __construct (string $name, string $value = '""'): string {}
 
 	/**
 	 * Checks if attribute is a defined ID
@@ -1418,9 +1729,9 @@ class DOMAttr extends DOMNode  {
 	 * Adds new child at the end of the children
 	 * @link http://www.php.net/manual/en/domnode.appendchild.php
 	 * @param DOMNode $node 
-	 * @return DOMNode|bool The node added or false on error.
+	 * @return DOMNode|false The node added or false on error.
 	 */
-	public function appendChild (DOMNode $node): DOMNode|bool {}
+	public function appendChild (DOMNode $node): DOMNode|int {}
 
 	/**
 	 * Canonicalize nodes to a string
@@ -1430,9 +1741,9 @@ class DOMAttr extends DOMNode  {
 	 * @param bool $withComments [optional] Retain comments in output.
 	 * @param array|null $xpath [optional] An array of xpaths to filter the nodes by.
 	 * @param array|null $nsPrefixes [optional] An array of namespace prefixes to filter the nodes by.
-	 * @return string|bool Returns canonicalized nodes as a string or false on failure
+	 * @return string|false Returns canonicalized nodes as a string or false on failure
 	 */
-	public function C14N (bool $exclusive = false, bool $withComments = false, ?array $xpath = null, ?array $nsPrefixes = null): string|bool {}
+	public function C14N (bool $exclusive = false, bool $withComments = false, ?array $xpath = null, ?array $nsPrefixes = null): string|int {}
 
 	/**
 	 * Canonicalize nodes to a file
@@ -1443,17 +1754,17 @@ class DOMAttr extends DOMNode  {
 	 * @param bool $withComments [optional] Retain comments in output.
 	 * @param array|null $xpath [optional] An array of xpaths to filter the nodes by.
 	 * @param array|null $nsPrefixes [optional] An array of namespace prefixes to filter the nodes by.
-	 * @return int|bool Number of bytes written or false on failure
+	 * @return int|false Number of bytes written or false on failure
 	 */
-	public function C14NFile (string $uri, bool $exclusive = false, bool $withComments = false, ?array $xpath = null, ?array $nsPrefixes = null): int|bool {}
+	public function C14NFile (string $uri, bool $exclusive = false, bool $withComments = false, ?array $xpath = null, ?array $nsPrefixes = null): int {}
 
 	/**
 	 * Clones a node
 	 * @link http://www.php.net/manual/en/domnode.clonenode.php
 	 * @param bool $deep [optional] 
-	 * @return DOMNode|bool The cloned node.
+	 * @return DOMNode|false The cloned node.
 	 */
-	public function cloneNode (bool $deep = false): DOMNode|bool {}
+	public function cloneNode (bool $deep = false): DOMNode|int {}
 
 	/**
 	 * Get line number for a node
@@ -1488,9 +1799,9 @@ class DOMAttr extends DOMNode  {
 	 * @link http://www.php.net/manual/en/domnode.insertbefore.php
 	 * @param DOMNode $node 
 	 * @param DOMNode|null $child [optional] 
-	 * @return DOMNode|bool The inserted node or false on error.
+	 * @return DOMNode|false The inserted node or false on error.
 	 */
-	public function insertBefore (DOMNode $node, ?DOMNode $child = null): DOMNode|bool {}
+	public function insertBefore (DOMNode $node, ?DOMNode $child = null): DOMNode|int {}
 
 	/**
 	 * Checks if the specified namespaceURI is the default namespace or not
@@ -1545,18 +1856,18 @@ class DOMAttr extends DOMNode  {
 	 * Removes child from list of children
 	 * @link http://www.php.net/manual/en/domnode.removechild.php
 	 * @param DOMNode $child 
-	 * @return DOMNode|bool If the child could be removed the function returns the old child or false on error.
+	 * @return DOMNode|false If the child could be removed the function returns the old child or false on error.
 	 */
-	public function removeChild (DOMNode $child): DOMNode|bool {}
+	public function removeChild (DOMNode $child): DOMNode|int {}
 
 	/**
 	 * Replaces a child
 	 * @link http://www.php.net/manual/en/domnode.replacechild.php
 	 * @param DOMNode $node 
 	 * @param DOMNode $child 
-	 * @return DOMNode|bool The old node or false if an error occur.
+	 * @return DOMNode|false The old node or false if an error occur.
 	 */
-	public function replaceChild (DOMNode $node, DOMNode $child): DOMNode|bool {}
+	public function replaceChild (DOMNode $node, DOMNode $child): DOMNode|int {}
 
 }
 
@@ -1564,30 +1875,55 @@ class DOMAttr extends DOMNode  {
  * @link http://www.php.net/manual/en/class.domelement.php
  */
 class DOMElement extends DOMNode implements DOMParentNode, DOMChildNode {
-	public $nodeName;
-	public $nodeValue;
-	public $nodeType;
-	public $parentNode;
-	public $childNodes;
-	public $firstChild;
-	public $lastChild;
-	public $previousSibling;
-	public $nextSibling;
-	public $attributes;
-	public $ownerDocument;
-	public $namespaceURI;
-	public $prefix;
-	public $localName;
-	public $baseURI;
-	public $textContent;
-	public $tagName;
-	public $schemaTypeInfo;
-	public $firstElementChild;
-	public $lastElementChild;
-	public $childElementCount;
-	public $previousElementSibling;
-	public $nextElementSibling;
 
+	/**
+	 * The element name
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.domelement.php#domelement.props.tagname
+	 */
+	public readonly string $tagName;
+
+	/**
+	 * Not implemented yet, always return null
+	 * @var mixed
+	 * @link http://www.php.net/manual/en/class.domelement.php#domelement.props.schematypeinfo
+	 */
+	public readonly mixed $schemaTypeInfo;
+
+	/**
+	 * First child element or null.
+	 * @var DOMElement|null
+	 * @link http://www.php.net/manual/en/class.domelement.php#domelement.props.firstelementchild
+	 */
+	public readonly ?DOMElement $firstElementChild;
+
+	/**
+	 * Last child element or null.
+	 * @var DOMElement|null
+	 * @link http://www.php.net/manual/en/class.domelement.php#domelement.props.lastelementchild
+	 */
+	public readonly ?DOMElement $lastElementChild;
+
+	/**
+	 * The number of child elements.
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.domelement.php#domelement.props.childelementcount
+	 */
+	public readonly int $childElementCount;
+
+	/**
+	 * The previous sibling element or null.
+	 * @var DOMElement|null
+	 * @link http://www.php.net/manual/en/class.domelement.php#domelement.props.previouselementsibling
+	 */
+	public readonly ?DOMElement $previousElementSibling;
+
+	/**
+	 * The next sibling element or null.
+	 * @var DOMElement|null
+	 * @link http://www.php.net/manual/en/class.domelement.php#domelement.props.nextelementsibling
+	 */
+	public readonly ?DOMElement $nextElementSibling;
 
 	/**
 	 * Creates a new DOMElement object
@@ -1597,7 +1933,7 @@ class DOMElement extends DOMNode implements DOMParentNode, DOMChildNode {
 	 * @param string $namespace [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $qualifiedName, ?string $value = null, string $namespace = ""): string {}
+	public function __construct (string $qualifiedName, ?string $value = null, string $namespace = '""'): string {}
 
 	/**
 	 * Returns value of attribute
@@ -1623,12 +1959,12 @@ class DOMElement extends DOMNode implements DOMParentNode, DOMChildNode {
 	 * Returns attribute node
 	 * @link http://www.php.net/manual/en/domelement.getattributenode.php
 	 * @param string $qualifiedName 
-	 * @return DOMAttr|DOMNameSpaceNode|bool The attribute node. Note that for XML namespace declarations
+	 * @return DOMAttr|DOMNameSpaceNode|false The attribute node. Note that for XML namespace declarations
 	 * (xmlns and xmlns:&#42; attributes) an 
 	 * instance of DOMNameSpaceNode is returned instead of a
 	 * DOMAttr.
 	 */
-	public function getAttributeNode (string $qualifiedName): DOMAttr|DOMNameSpaceNode|bool {}
+	public function getAttributeNode (string $qualifiedName): DOMAttr|DOMNameSpaceNode|int {}
 
 	/**
 	 * Returns attribute node
@@ -1700,9 +2036,9 @@ class DOMElement extends DOMNode implements DOMParentNode, DOMChildNode {
 	 * Removes attribute
 	 * @link http://www.php.net/manual/en/domelement.removeattributenode.php
 	 * @param DOMAttr $attr 
-	 * @return DOMAttr|bool Returns true on success or false on failure.
+	 * @return DOMAttr|false Returns true on success or false on failure.
 	 */
-	public function removeAttributeNode (DOMAttr $attr): DOMAttr|bool {}
+	public function removeAttributeNode (DOMAttr $attr): DOMAttr|int {}
 
 	/**
 	 * Adds new or modifies existing attribute
@@ -1727,17 +2063,17 @@ class DOMElement extends DOMNode implements DOMParentNode, DOMChildNode {
 	 * Adds new attribute node to element
 	 * @link http://www.php.net/manual/en/domelement.setattributenode.php
 	 * @param DOMAttr $attr 
-	 * @return DOMAttr|null|bool Returns old node if the attribute has been replaced or null.
+	 * @return DOMAttr|null|false Returns old node if the attribute has been replaced or null.
 	 */
-	public function setAttributeNode (DOMAttr $attr): DOMAttr|null|bool {}
+	public function setAttributeNode (DOMAttr $attr): DOMAttr|null|int {}
 
 	/**
 	 * Adds new attribute node to element
 	 * @link http://www.php.net/manual/en/domelement.setattributenodens.php
 	 * @param DOMAttr $attr 
-	 * @return DOMAttr|null|bool Returns the old node if the attribute has been replaced.
+	 * @return DOMAttr|null|false Returns the old node if the attribute has been replaced.
 	 */
-	public function setAttributeNodeNS (DOMAttr $attr): DOMAttr|null|bool {}
+	public function setAttributeNodeNS (DOMAttr $attr): DOMAttr|null|int {}
 
 	/**
 	 * Declares the attribute specified by name to be of type ID
@@ -1767,29 +2103,37 @@ class DOMElement extends DOMNode implements DOMParentNode, DOMChildNode {
 	 */
 	public function setIdAttributeNode (DOMAttr $attr, bool $isId): void {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function remove (): void {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $nodes [optional]
 	 */
 	public function before (...$nodes): void {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $nodes [optional]
 	 */
 	public function after (...$nodes): void {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $nodes [optional]
 	 */
 	public function replaceWith (...$nodes): void {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $nodes [optional]
 	 */
 	public function append (...$nodes): void {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $nodes [optional]
 	 */
 	public function prepend (...$nodes): void {}
@@ -1798,9 +2142,9 @@ class DOMElement extends DOMNode implements DOMParentNode, DOMChildNode {
 	 * Adds new child at the end of the children
 	 * @link http://www.php.net/manual/en/domnode.appendchild.php
 	 * @param DOMNode $node 
-	 * @return DOMNode|bool The node added or false on error.
+	 * @return DOMNode|false The node added or false on error.
 	 */
-	public function appendChild (DOMNode $node): DOMNode|bool {}
+	public function appendChild (DOMNode $node): DOMNode|int {}
 
 	/**
 	 * Canonicalize nodes to a string
@@ -1810,9 +2154,9 @@ class DOMElement extends DOMNode implements DOMParentNode, DOMChildNode {
 	 * @param bool $withComments [optional] Retain comments in output.
 	 * @param array|null $xpath [optional] An array of xpaths to filter the nodes by.
 	 * @param array|null $nsPrefixes [optional] An array of namespace prefixes to filter the nodes by.
-	 * @return string|bool Returns canonicalized nodes as a string or false on failure
+	 * @return string|false Returns canonicalized nodes as a string or false on failure
 	 */
-	public function C14N (bool $exclusive = false, bool $withComments = false, ?array $xpath = null, ?array $nsPrefixes = null): string|bool {}
+	public function C14N (bool $exclusive = false, bool $withComments = false, ?array $xpath = null, ?array $nsPrefixes = null): string|int {}
 
 	/**
 	 * Canonicalize nodes to a file
@@ -1823,17 +2167,17 @@ class DOMElement extends DOMNode implements DOMParentNode, DOMChildNode {
 	 * @param bool $withComments [optional] Retain comments in output.
 	 * @param array|null $xpath [optional] An array of xpaths to filter the nodes by.
 	 * @param array|null $nsPrefixes [optional] An array of namespace prefixes to filter the nodes by.
-	 * @return int|bool Number of bytes written or false on failure
+	 * @return int|false Number of bytes written or false on failure
 	 */
-	public function C14NFile (string $uri, bool $exclusive = false, bool $withComments = false, ?array $xpath = null, ?array $nsPrefixes = null): int|bool {}
+	public function C14NFile (string $uri, bool $exclusive = false, bool $withComments = false, ?array $xpath = null, ?array $nsPrefixes = null): int {}
 
 	/**
 	 * Clones a node
 	 * @link http://www.php.net/manual/en/domnode.clonenode.php
 	 * @param bool $deep [optional] 
-	 * @return DOMNode|bool The cloned node.
+	 * @return DOMNode|false The cloned node.
 	 */
-	public function cloneNode (bool $deep = false): DOMNode|bool {}
+	public function cloneNode (bool $deep = false): DOMNode|int {}
 
 	/**
 	 * Get line number for a node
@@ -1868,9 +2212,9 @@ class DOMElement extends DOMNode implements DOMParentNode, DOMChildNode {
 	 * @link http://www.php.net/manual/en/domnode.insertbefore.php
 	 * @param DOMNode $node 
 	 * @param DOMNode|null $child [optional] 
-	 * @return DOMNode|bool The inserted node or false on error.
+	 * @return DOMNode|false The inserted node or false on error.
 	 */
-	public function insertBefore (DOMNode $node, ?DOMNode $child = null): DOMNode|bool {}
+	public function insertBefore (DOMNode $node, ?DOMNode $child = null): DOMNode|int {}
 
 	/**
 	 * Checks if the specified namespaceURI is the default namespace or not
@@ -1925,18 +2269,18 @@ class DOMElement extends DOMNode implements DOMParentNode, DOMChildNode {
 	 * Removes child from list of children
 	 * @link http://www.php.net/manual/en/domnode.removechild.php
 	 * @param DOMNode $child 
-	 * @return DOMNode|bool If the child could be removed the function returns the old child or false on error.
+	 * @return DOMNode|false If the child could be removed the function returns the old child or false on error.
 	 */
-	public function removeChild (DOMNode $child): DOMNode|bool {}
+	public function removeChild (DOMNode $child): DOMNode|int {}
 
 	/**
 	 * Replaces a child
 	 * @link http://www.php.net/manual/en/domnode.replacechild.php
 	 * @param DOMNode $node 
 	 * @param DOMNode $child 
-	 * @return DOMNode|bool The old node or false if an error occur.
+	 * @return DOMNode|false The old node or false if an error occur.
 	 */
-	public function replaceChild (DOMNode $node, DOMNode $child): DOMNode|bool {}
+	public function replaceChild (DOMNode $node, DOMNode $child): DOMNode|int {}
 
 }
 
@@ -1948,28 +2292,14 @@ class DOMElement extends DOMNode implements DOMParentNode, DOMChildNode {
  * @link http://www.php.net/manual/en/class.domtext.php
  */
 class DOMText extends DOMCharacterData implements DOMChildNode {
-	public $nodeName;
-	public $nodeValue;
-	public $nodeType;
-	public $parentNode;
-	public $childNodes;
-	public $firstChild;
-	public $lastChild;
-	public $previousSibling;
-	public $nextSibling;
-	public $attributes;
-	public $ownerDocument;
-	public $namespaceURI;
-	public $prefix;
-	public $localName;
-	public $baseURI;
-	public $textContent;
-	public $data;
-	public $length;
-	public $previousElementSibling;
-	public $nextElementSibling;
-	public $wholeText;
 
+	/**
+	 * Holds all the text of logically-adjacent (not separated by Element, 
+	 * Comment or Processing Instruction) Text nodes.
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.domtext.php#domtext.props.wholetext
+	 */
+	public readonly string $wholeText;
 
 	/**
 	 * Creates a new DOMText object
@@ -1977,7 +2307,7 @@ class DOMText extends DOMCharacterData implements DOMChildNode {
 	 * @param string $data [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $data = ""): string {}
+	public function __construct (string $data = '""'): string {}
 
 	/**
 	 * Indicates whether this text node contains whitespace
@@ -1998,29 +2328,29 @@ class DOMText extends DOMCharacterData implements DOMChildNode {
 	 * Breaks this node into two nodes at the specified offset
 	 * @link http://www.php.net/manual/en/domtext.splittext.php
 	 * @param int $offset 
-	 * @return DOMText|bool The new node of the same type, which contains all the content at and after the 
+	 * @return DOMText|false The new node of the same type, which contains all the content at and after the 
 	 * offset.
 	 */
-	public function splitText (int $offset): DOMText|bool {}
+	public function splitText (int $offset): DOMText|int {}
 
 	/**
 	 * Append the string to the end of the character data of the node
 	 * @link http://www.php.net/manual/en/domcharacterdata.appenddata.php
 	 * @param string $data 
-	 * @return bool Always returns true.
+	 * @return true Always returns true.
 	 */
-	public function appendData (string $data): bool {}
+	public function appendData (string $data): int {}
 
 	/**
 	 * Extracts a range of data from the node
 	 * @link http://www.php.net/manual/en/domcharacterdata.substringdata.php
 	 * @param int $offset 
 	 * @param int $count 
-	 * @return string|bool The specified substring. If the sum of offset 
+	 * @return string|false The specified substring. If the sum of offset 
 	 * and count exceeds the length, then all 16-bit units 
 	 * to the end of the data are returned.
 	 */
-	public function substringData (int $offset, int $count): string|bool {}
+	public function substringData (int $offset, int $count): string|int {}
 
 	/**
 	 * Insert a string at the specified 16-bit unit offset
@@ -2051,18 +2381,24 @@ class DOMText extends DOMCharacterData implements DOMChildNode {
 	public function replaceData (int $offset, int $count, string $data): bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $nodes [optional]
 	 */
 	public function replaceWith (...$nodes): void {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function remove (): void {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $nodes [optional]
 	 */
 	public function before (...$nodes): void {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $nodes [optional]
 	 */
 	public function after (...$nodes): void {}
@@ -2071,9 +2407,9 @@ class DOMText extends DOMCharacterData implements DOMChildNode {
 	 * Adds new child at the end of the children
 	 * @link http://www.php.net/manual/en/domnode.appendchild.php
 	 * @param DOMNode $node 
-	 * @return DOMNode|bool The node added or false on error.
+	 * @return DOMNode|false The node added or false on error.
 	 */
-	public function appendChild (DOMNode $node): DOMNode|bool {}
+	public function appendChild (DOMNode $node): DOMNode|int {}
 
 	/**
 	 * Canonicalize nodes to a string
@@ -2083,9 +2419,9 @@ class DOMText extends DOMCharacterData implements DOMChildNode {
 	 * @param bool $withComments [optional] Retain comments in output.
 	 * @param array|null $xpath [optional] An array of xpaths to filter the nodes by.
 	 * @param array|null $nsPrefixes [optional] An array of namespace prefixes to filter the nodes by.
-	 * @return string|bool Returns canonicalized nodes as a string or false on failure
+	 * @return string|false Returns canonicalized nodes as a string or false on failure
 	 */
-	public function C14N (bool $exclusive = false, bool $withComments = false, ?array $xpath = null, ?array $nsPrefixes = null): string|bool {}
+	public function C14N (bool $exclusive = false, bool $withComments = false, ?array $xpath = null, ?array $nsPrefixes = null): string|int {}
 
 	/**
 	 * Canonicalize nodes to a file
@@ -2096,17 +2432,17 @@ class DOMText extends DOMCharacterData implements DOMChildNode {
 	 * @param bool $withComments [optional] Retain comments in output.
 	 * @param array|null $xpath [optional] An array of xpaths to filter the nodes by.
 	 * @param array|null $nsPrefixes [optional] An array of namespace prefixes to filter the nodes by.
-	 * @return int|bool Number of bytes written or false on failure
+	 * @return int|false Number of bytes written or false on failure
 	 */
-	public function C14NFile (string $uri, bool $exclusive = false, bool $withComments = false, ?array $xpath = null, ?array $nsPrefixes = null): int|bool {}
+	public function C14NFile (string $uri, bool $exclusive = false, bool $withComments = false, ?array $xpath = null, ?array $nsPrefixes = null): int {}
 
 	/**
 	 * Clones a node
 	 * @link http://www.php.net/manual/en/domnode.clonenode.php
 	 * @param bool $deep [optional] 
-	 * @return DOMNode|bool The cloned node.
+	 * @return DOMNode|false The cloned node.
 	 */
-	public function cloneNode (bool $deep = false): DOMNode|bool {}
+	public function cloneNode (bool $deep = false): DOMNode|int {}
 
 	/**
 	 * Get line number for a node
@@ -2141,9 +2477,9 @@ class DOMText extends DOMCharacterData implements DOMChildNode {
 	 * @link http://www.php.net/manual/en/domnode.insertbefore.php
 	 * @param DOMNode $node 
 	 * @param DOMNode|null $child [optional] 
-	 * @return DOMNode|bool The inserted node or false on error.
+	 * @return DOMNode|false The inserted node or false on error.
 	 */
-	public function insertBefore (DOMNode $node, ?DOMNode $child = null): DOMNode|bool {}
+	public function insertBefore (DOMNode $node, ?DOMNode $child = null): DOMNode|int {}
 
 	/**
 	 * Checks if the specified namespaceURI is the default namespace or not
@@ -2198,18 +2534,18 @@ class DOMText extends DOMCharacterData implements DOMChildNode {
 	 * Removes child from list of children
 	 * @link http://www.php.net/manual/en/domnode.removechild.php
 	 * @param DOMNode $child 
-	 * @return DOMNode|bool If the child could be removed the function returns the old child or false on error.
+	 * @return DOMNode|false If the child could be removed the function returns the old child or false on error.
 	 */
-	public function removeChild (DOMNode $child): DOMNode|bool {}
+	public function removeChild (DOMNode $child): DOMNode|int {}
 
 	/**
 	 * Replaces a child
 	 * @link http://www.php.net/manual/en/domnode.replacechild.php
 	 * @param DOMNode $node 
 	 * @param DOMNode $child 
-	 * @return DOMNode|bool The old node or false if an error occur.
+	 * @return DOMNode|false The old node or false if an error occur.
 	 */
-	public function replaceChild (DOMNode $node, DOMNode $child): DOMNode|bool {}
+	public function replaceChild (DOMNode $node, DOMNode $child): DOMNode|int {}
 
 }
 
@@ -2219,27 +2555,6 @@ class DOMText extends DOMCharacterData implements DOMChildNode {
  * @link http://www.php.net/manual/en/class.domcomment.php
  */
 class DOMComment extends DOMCharacterData implements DOMChildNode {
-	public $nodeName;
-	public $nodeValue;
-	public $nodeType;
-	public $parentNode;
-	public $childNodes;
-	public $firstChild;
-	public $lastChild;
-	public $previousSibling;
-	public $nextSibling;
-	public $attributes;
-	public $ownerDocument;
-	public $namespaceURI;
-	public $prefix;
-	public $localName;
-	public $baseURI;
-	public $textContent;
-	public $data;
-	public $length;
-	public $previousElementSibling;
-	public $nextElementSibling;
-
 
 	/**
 	 * Creates a new DOMComment object
@@ -2247,26 +2562,26 @@ class DOMComment extends DOMCharacterData implements DOMChildNode {
 	 * @param string $data [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $data = ""): string {}
+	public function __construct (string $data = '""'): string {}
 
 	/**
 	 * Append the string to the end of the character data of the node
 	 * @link http://www.php.net/manual/en/domcharacterdata.appenddata.php
 	 * @param string $data 
-	 * @return bool Always returns true.
+	 * @return true Always returns true.
 	 */
-	public function appendData (string $data): bool {}
+	public function appendData (string $data): int {}
 
 	/**
 	 * Extracts a range of data from the node
 	 * @link http://www.php.net/manual/en/domcharacterdata.substringdata.php
 	 * @param int $offset 
 	 * @param int $count 
-	 * @return string|bool The specified substring. If the sum of offset 
+	 * @return string|false The specified substring. If the sum of offset 
 	 * and count exceeds the length, then all 16-bit units 
 	 * to the end of the data are returned.
 	 */
-	public function substringData (int $offset, int $count): string|bool {}
+	public function substringData (int $offset, int $count): string|int {}
 
 	/**
 	 * Insert a string at the specified 16-bit unit offset
@@ -2297,18 +2612,24 @@ class DOMComment extends DOMCharacterData implements DOMChildNode {
 	public function replaceData (int $offset, int $count, string $data): bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $nodes [optional]
 	 */
 	public function replaceWith (...$nodes): void {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function remove (): void {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $nodes [optional]
 	 */
 	public function before (...$nodes): void {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $nodes [optional]
 	 */
 	public function after (...$nodes): void {}
@@ -2317,9 +2638,9 @@ class DOMComment extends DOMCharacterData implements DOMChildNode {
 	 * Adds new child at the end of the children
 	 * @link http://www.php.net/manual/en/domnode.appendchild.php
 	 * @param DOMNode $node 
-	 * @return DOMNode|bool The node added or false on error.
+	 * @return DOMNode|false The node added or false on error.
 	 */
-	public function appendChild (DOMNode $node): DOMNode|bool {}
+	public function appendChild (DOMNode $node): DOMNode|int {}
 
 	/**
 	 * Canonicalize nodes to a string
@@ -2329,9 +2650,9 @@ class DOMComment extends DOMCharacterData implements DOMChildNode {
 	 * @param bool $withComments [optional] Retain comments in output.
 	 * @param array|null $xpath [optional] An array of xpaths to filter the nodes by.
 	 * @param array|null $nsPrefixes [optional] An array of namespace prefixes to filter the nodes by.
-	 * @return string|bool Returns canonicalized nodes as a string or false on failure
+	 * @return string|false Returns canonicalized nodes as a string or false on failure
 	 */
-	public function C14N (bool $exclusive = false, bool $withComments = false, ?array $xpath = null, ?array $nsPrefixes = null): string|bool {}
+	public function C14N (bool $exclusive = false, bool $withComments = false, ?array $xpath = null, ?array $nsPrefixes = null): string|int {}
 
 	/**
 	 * Canonicalize nodes to a file
@@ -2342,17 +2663,17 @@ class DOMComment extends DOMCharacterData implements DOMChildNode {
 	 * @param bool $withComments [optional] Retain comments in output.
 	 * @param array|null $xpath [optional] An array of xpaths to filter the nodes by.
 	 * @param array|null $nsPrefixes [optional] An array of namespace prefixes to filter the nodes by.
-	 * @return int|bool Number of bytes written or false on failure
+	 * @return int|false Number of bytes written or false on failure
 	 */
-	public function C14NFile (string $uri, bool $exclusive = false, bool $withComments = false, ?array $xpath = null, ?array $nsPrefixes = null): int|bool {}
+	public function C14NFile (string $uri, bool $exclusive = false, bool $withComments = false, ?array $xpath = null, ?array $nsPrefixes = null): int {}
 
 	/**
 	 * Clones a node
 	 * @link http://www.php.net/manual/en/domnode.clonenode.php
 	 * @param bool $deep [optional] 
-	 * @return DOMNode|bool The cloned node.
+	 * @return DOMNode|false The cloned node.
 	 */
-	public function cloneNode (bool $deep = false): DOMNode|bool {}
+	public function cloneNode (bool $deep = false): DOMNode|int {}
 
 	/**
 	 * Get line number for a node
@@ -2387,9 +2708,9 @@ class DOMComment extends DOMCharacterData implements DOMChildNode {
 	 * @link http://www.php.net/manual/en/domnode.insertbefore.php
 	 * @param DOMNode $node 
 	 * @param DOMNode|null $child [optional] 
-	 * @return DOMNode|bool The inserted node or false on error.
+	 * @return DOMNode|false The inserted node or false on error.
 	 */
-	public function insertBefore (DOMNode $node, ?DOMNode $child = null): DOMNode|bool {}
+	public function insertBefore (DOMNode $node, ?DOMNode $child = null): DOMNode|int {}
 
 	/**
 	 * Checks if the specified namespaceURI is the default namespace or not
@@ -2444,18 +2765,18 @@ class DOMComment extends DOMCharacterData implements DOMChildNode {
 	 * Removes child from list of children
 	 * @link http://www.php.net/manual/en/domnode.removechild.php
 	 * @param DOMNode $child 
-	 * @return DOMNode|bool If the child could be removed the function returns the old child or false on error.
+	 * @return DOMNode|false If the child could be removed the function returns the old child or false on error.
 	 */
-	public function removeChild (DOMNode $child): DOMNode|bool {}
+	public function removeChild (DOMNode $child): DOMNode|int {}
 
 	/**
 	 * Replaces a child
 	 * @link http://www.php.net/manual/en/domnode.replacechild.php
 	 * @param DOMNode $node 
 	 * @param DOMNode $child 
-	 * @return DOMNode|bool The old node or false if an error occur.
+	 * @return DOMNode|false The old node or false if an error occur.
 	 */
-	public function replaceChild (DOMNode $node, DOMNode $child): DOMNode|bool {}
+	public function replaceChild (DOMNode $node, DOMNode $child): DOMNode|int {}
 
 }
 
@@ -2466,28 +2787,6 @@ class DOMComment extends DOMCharacterData implements DOMChildNode {
  * @link http://www.php.net/manual/en/class.domcdatasection.php
  */
 class DOMCdataSection extends DOMText implements DOMChildNode {
-	public $nodeName;
-	public $nodeValue;
-	public $nodeType;
-	public $parentNode;
-	public $childNodes;
-	public $firstChild;
-	public $lastChild;
-	public $previousSibling;
-	public $nextSibling;
-	public $attributes;
-	public $ownerDocument;
-	public $namespaceURI;
-	public $prefix;
-	public $localName;
-	public $baseURI;
-	public $textContent;
-	public $data;
-	public $length;
-	public $previousElementSibling;
-	public $nextElementSibling;
-	public $wholeText;
-
 
 	/**
 	 * Constructs a new DOMCdataSection object
@@ -2516,29 +2815,29 @@ class DOMCdataSection extends DOMText implements DOMChildNode {
 	 * Breaks this node into two nodes at the specified offset
 	 * @link http://www.php.net/manual/en/domtext.splittext.php
 	 * @param int $offset 
-	 * @return DOMText|bool The new node of the same type, which contains all the content at and after the 
+	 * @return DOMText|false The new node of the same type, which contains all the content at and after the 
 	 * offset.
 	 */
-	public function splitText (int $offset): DOMText|bool {}
+	public function splitText (int $offset): DOMText|int {}
 
 	/**
 	 * Append the string to the end of the character data of the node
 	 * @link http://www.php.net/manual/en/domcharacterdata.appenddata.php
 	 * @param string $data 
-	 * @return bool Always returns true.
+	 * @return true Always returns true.
 	 */
-	public function appendData (string $data): bool {}
+	public function appendData (string $data): int {}
 
 	/**
 	 * Extracts a range of data from the node
 	 * @link http://www.php.net/manual/en/domcharacterdata.substringdata.php
 	 * @param int $offset 
 	 * @param int $count 
-	 * @return string|bool The specified substring. If the sum of offset 
+	 * @return string|false The specified substring. If the sum of offset 
 	 * and count exceeds the length, then all 16-bit units 
 	 * to the end of the data are returned.
 	 */
-	public function substringData (int $offset, int $count): string|bool {}
+	public function substringData (int $offset, int $count): string|int {}
 
 	/**
 	 * Insert a string at the specified 16-bit unit offset
@@ -2569,18 +2868,24 @@ class DOMCdataSection extends DOMText implements DOMChildNode {
 	public function replaceData (int $offset, int $count, string $data): bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $nodes [optional]
 	 */
 	public function replaceWith (...$nodes): void {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function remove (): void {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $nodes [optional]
 	 */
 	public function before (...$nodes): void {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $nodes [optional]
 	 */
 	public function after (...$nodes): void {}
@@ -2589,9 +2894,9 @@ class DOMCdataSection extends DOMText implements DOMChildNode {
 	 * Adds new child at the end of the children
 	 * @link http://www.php.net/manual/en/domnode.appendchild.php
 	 * @param DOMNode $node 
-	 * @return DOMNode|bool The node added or false on error.
+	 * @return DOMNode|false The node added or false on error.
 	 */
-	public function appendChild (DOMNode $node): DOMNode|bool {}
+	public function appendChild (DOMNode $node): DOMNode|int {}
 
 	/**
 	 * Canonicalize nodes to a string
@@ -2601,9 +2906,9 @@ class DOMCdataSection extends DOMText implements DOMChildNode {
 	 * @param bool $withComments [optional] Retain comments in output.
 	 * @param array|null $xpath [optional] An array of xpaths to filter the nodes by.
 	 * @param array|null $nsPrefixes [optional] An array of namespace prefixes to filter the nodes by.
-	 * @return string|bool Returns canonicalized nodes as a string or false on failure
+	 * @return string|false Returns canonicalized nodes as a string or false on failure
 	 */
-	public function C14N (bool $exclusive = false, bool $withComments = false, ?array $xpath = null, ?array $nsPrefixes = null): string|bool {}
+	public function C14N (bool $exclusive = false, bool $withComments = false, ?array $xpath = null, ?array $nsPrefixes = null): string|int {}
 
 	/**
 	 * Canonicalize nodes to a file
@@ -2614,17 +2919,17 @@ class DOMCdataSection extends DOMText implements DOMChildNode {
 	 * @param bool $withComments [optional] Retain comments in output.
 	 * @param array|null $xpath [optional] An array of xpaths to filter the nodes by.
 	 * @param array|null $nsPrefixes [optional] An array of namespace prefixes to filter the nodes by.
-	 * @return int|bool Number of bytes written or false on failure
+	 * @return int|false Number of bytes written or false on failure
 	 */
-	public function C14NFile (string $uri, bool $exclusive = false, bool $withComments = false, ?array $xpath = null, ?array $nsPrefixes = null): int|bool {}
+	public function C14NFile (string $uri, bool $exclusive = false, bool $withComments = false, ?array $xpath = null, ?array $nsPrefixes = null): int {}
 
 	/**
 	 * Clones a node
 	 * @link http://www.php.net/manual/en/domnode.clonenode.php
 	 * @param bool $deep [optional] 
-	 * @return DOMNode|bool The cloned node.
+	 * @return DOMNode|false The cloned node.
 	 */
-	public function cloneNode (bool $deep = false): DOMNode|bool {}
+	public function cloneNode (bool $deep = false): DOMNode|int {}
 
 	/**
 	 * Get line number for a node
@@ -2659,9 +2964,9 @@ class DOMCdataSection extends DOMText implements DOMChildNode {
 	 * @link http://www.php.net/manual/en/domnode.insertbefore.php
 	 * @param DOMNode $node 
 	 * @param DOMNode|null $child [optional] 
-	 * @return DOMNode|bool The inserted node or false on error.
+	 * @return DOMNode|false The inserted node or false on error.
 	 */
-	public function insertBefore (DOMNode $node, ?DOMNode $child = null): DOMNode|bool {}
+	public function insertBefore (DOMNode $node, ?DOMNode $child = null): DOMNode|int {}
 
 	/**
 	 * Checks if the specified namespaceURI is the default namespace or not
@@ -2716,18 +3021,18 @@ class DOMCdataSection extends DOMText implements DOMChildNode {
 	 * Removes child from list of children
 	 * @link http://www.php.net/manual/en/domnode.removechild.php
 	 * @param DOMNode $child 
-	 * @return DOMNode|bool If the child could be removed the function returns the old child or false on error.
+	 * @return DOMNode|false If the child could be removed the function returns the old child or false on error.
 	 */
-	public function removeChild (DOMNode $child): DOMNode|bool {}
+	public function removeChild (DOMNode $child): DOMNode|int {}
 
 	/**
 	 * Replaces a child
 	 * @link http://www.php.net/manual/en/domnode.replacechild.php
 	 * @param DOMNode $node 
 	 * @param DOMNode $child 
-	 * @return DOMNode|bool The old node or false if an error occur.
+	 * @return DOMNode|false The old node or false if an error occur.
 	 */
-	public function replaceChild (DOMNode $node, DOMNode $child): DOMNode|bool {}
+	public function replaceChild (DOMNode $node, DOMNode $child): DOMNode|int {}
 
 }
 
@@ -2737,37 +3042,61 @@ class DOMCdataSection extends DOMText implements DOMChildNode {
  * @link http://www.php.net/manual/en/class.domdocumenttype.php
  */
 class DOMDocumentType extends DOMNode  {
-	public $nodeName;
-	public $nodeValue;
-	public $nodeType;
-	public $parentNode;
-	public $childNodes;
-	public $firstChild;
-	public $lastChild;
-	public $previousSibling;
-	public $nextSibling;
-	public $attributes;
-	public $ownerDocument;
-	public $namespaceURI;
-	public $prefix;
-	public $localName;
-	public $baseURI;
-	public $textContent;
-	public $name;
-	public $entities;
-	public $notations;
-	public $publicId;
-	public $systemId;
-	public $internalSubset;
 
+	/**
+	 * The name of DTD; i.e., the name immediately following the
+	 * DOCTYPE keyword.
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.domdocumenttype.php#domdocumenttype.props.name
+	 */
+	public readonly string $name;
+
+	/**
+	 * A DOMNamedNodeMap containing the general 
+	 * entities, both external and internal, declared in the DTD.
+	 * @var DOMNamedNodeMap
+	 * @link http://www.php.net/manual/en/class.domdocumenttype.php#domdocumenttype.props.entities
+	 */
+	public readonly DOMNamedNodeMap $entities;
+
+	/**
+	 * A DOMNamedNodeMap containing the notations
+	 * declared in the DTD.
+	 * @var DOMNamedNodeMap
+	 * @link http://www.php.net/manual/en/class.domdocumenttype.php#domdocumenttype.props.notations
+	 */
+	public readonly DOMNamedNodeMap $notations;
+
+	/**
+	 * The public identifier of the external subset.
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.domdocumenttype.php#domdocumenttype.props.publicid
+	 */
+	public readonly string $publicId;
+
+	/**
+	 * The system identifier of the external subset. This may be an
+	 * absolute URI or not.
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.domdocumenttype.php#domdocumenttype.props.systemid
+	 */
+	public readonly string $systemId;
+
+	/**
+	 * The internal subset as a string, or null if there is none. This
+	 * does not contain the delimiting square brackets.
+	 * @var string|null
+	 * @link http://www.php.net/manual/en/class.domdocumenttype.php#domdocumenttype.props.internalsubset
+	 */
+	public readonly ?string $internalSubset;
 
 	/**
 	 * Adds new child at the end of the children
 	 * @link http://www.php.net/manual/en/domnode.appendchild.php
 	 * @param DOMNode $node 
-	 * @return DOMNode|bool The node added or false on error.
+	 * @return DOMNode|false The node added or false on error.
 	 */
-	public function appendChild (DOMNode $node): DOMNode|bool {}
+	public function appendChild (DOMNode $node): DOMNode|int {}
 
 	/**
 	 * Canonicalize nodes to a string
@@ -2777,9 +3106,9 @@ class DOMDocumentType extends DOMNode  {
 	 * @param bool $withComments [optional] Retain comments in output.
 	 * @param array|null $xpath [optional] An array of xpaths to filter the nodes by.
 	 * @param array|null $nsPrefixes [optional] An array of namespace prefixes to filter the nodes by.
-	 * @return string|bool Returns canonicalized nodes as a string or false on failure
+	 * @return string|false Returns canonicalized nodes as a string or false on failure
 	 */
-	public function C14N (bool $exclusive = false, bool $withComments = false, ?array $xpath = null, ?array $nsPrefixes = null): string|bool {}
+	public function C14N (bool $exclusive = false, bool $withComments = false, ?array $xpath = null, ?array $nsPrefixes = null): string|int {}
 
 	/**
 	 * Canonicalize nodes to a file
@@ -2790,17 +3119,17 @@ class DOMDocumentType extends DOMNode  {
 	 * @param bool $withComments [optional] Retain comments in output.
 	 * @param array|null $xpath [optional] An array of xpaths to filter the nodes by.
 	 * @param array|null $nsPrefixes [optional] An array of namespace prefixes to filter the nodes by.
-	 * @return int|bool Number of bytes written or false on failure
+	 * @return int|false Number of bytes written or false on failure
 	 */
-	public function C14NFile (string $uri, bool $exclusive = false, bool $withComments = false, ?array $xpath = null, ?array $nsPrefixes = null): int|bool {}
+	public function C14NFile (string $uri, bool $exclusive = false, bool $withComments = false, ?array $xpath = null, ?array $nsPrefixes = null): int {}
 
 	/**
 	 * Clones a node
 	 * @link http://www.php.net/manual/en/domnode.clonenode.php
 	 * @param bool $deep [optional] 
-	 * @return DOMNode|bool The cloned node.
+	 * @return DOMNode|false The cloned node.
 	 */
-	public function cloneNode (bool $deep = false): DOMNode|bool {}
+	public function cloneNode (bool $deep = false): DOMNode|int {}
 
 	/**
 	 * Get line number for a node
@@ -2835,9 +3164,9 @@ class DOMDocumentType extends DOMNode  {
 	 * @link http://www.php.net/manual/en/domnode.insertbefore.php
 	 * @param DOMNode $node 
 	 * @param DOMNode|null $child [optional] 
-	 * @return DOMNode|bool The inserted node or false on error.
+	 * @return DOMNode|false The inserted node or false on error.
 	 */
-	public function insertBefore (DOMNode $node, ?DOMNode $child = null): DOMNode|bool {}
+	public function insertBefore (DOMNode $node, ?DOMNode $child = null): DOMNode|int {}
 
 	/**
 	 * Checks if the specified namespaceURI is the default namespace or not
@@ -2892,18 +3221,18 @@ class DOMDocumentType extends DOMNode  {
 	 * Removes child from list of children
 	 * @link http://www.php.net/manual/en/domnode.removechild.php
 	 * @param DOMNode $child 
-	 * @return DOMNode|bool If the child could be removed the function returns the old child or false on error.
+	 * @return DOMNode|false If the child could be removed the function returns the old child or false on error.
 	 */
-	public function removeChild (DOMNode $child): DOMNode|bool {}
+	public function removeChild (DOMNode $child): DOMNode|int {}
 
 	/**
 	 * Replaces a child
 	 * @link http://www.php.net/manual/en/domnode.replacechild.php
 	 * @param DOMNode $node 
 	 * @param DOMNode $child 
-	 * @return DOMNode|bool The old node or false if an error occur.
+	 * @return DOMNode|false The old node or false if an error occur.
 	 */
-	public function replaceChild (DOMNode $node, DOMNode $child): DOMNode|bool {}
+	public function replaceChild (DOMNode $node, DOMNode $child): DOMNode|int {}
 
 }
 
@@ -2911,33 +3240,18 @@ class DOMDocumentType extends DOMNode  {
  * @link http://www.php.net/manual/en/class.domnotation.php
  */
 class DOMNotation extends DOMNode  {
-	public $nodeName;
-	public $nodeValue;
-	public $nodeType;
-	public $parentNode;
-	public $childNodes;
-	public $firstChild;
-	public $lastChild;
-	public $previousSibling;
-	public $nextSibling;
-	public $attributes;
-	public $ownerDocument;
-	public $namespaceURI;
-	public $prefix;
-	public $localName;
-	public $baseURI;
-	public $textContent;
-	public $publicId;
-	public $systemId;
 
+	public readonly string $publicId;
+
+	public readonly string $systemId;
 
 	/**
 	 * Adds new child at the end of the children
 	 * @link http://www.php.net/manual/en/domnode.appendchild.php
 	 * @param DOMNode $node 
-	 * @return DOMNode|bool The node added or false on error.
+	 * @return DOMNode|false The node added or false on error.
 	 */
-	public function appendChild (DOMNode $node): DOMNode|bool {}
+	public function appendChild (DOMNode $node): DOMNode|int {}
 
 	/**
 	 * Canonicalize nodes to a string
@@ -2947,9 +3261,9 @@ class DOMNotation extends DOMNode  {
 	 * @param bool $withComments [optional] Retain comments in output.
 	 * @param array|null $xpath [optional] An array of xpaths to filter the nodes by.
 	 * @param array|null $nsPrefixes [optional] An array of namespace prefixes to filter the nodes by.
-	 * @return string|bool Returns canonicalized nodes as a string or false on failure
+	 * @return string|false Returns canonicalized nodes as a string or false on failure
 	 */
-	public function C14N (bool $exclusive = false, bool $withComments = false, ?array $xpath = null, ?array $nsPrefixes = null): string|bool {}
+	public function C14N (bool $exclusive = false, bool $withComments = false, ?array $xpath = null, ?array $nsPrefixes = null): string|int {}
 
 	/**
 	 * Canonicalize nodes to a file
@@ -2960,17 +3274,17 @@ class DOMNotation extends DOMNode  {
 	 * @param bool $withComments [optional] Retain comments in output.
 	 * @param array|null $xpath [optional] An array of xpaths to filter the nodes by.
 	 * @param array|null $nsPrefixes [optional] An array of namespace prefixes to filter the nodes by.
-	 * @return int|bool Number of bytes written or false on failure
+	 * @return int|false Number of bytes written or false on failure
 	 */
-	public function C14NFile (string $uri, bool $exclusive = false, bool $withComments = false, ?array $xpath = null, ?array $nsPrefixes = null): int|bool {}
+	public function C14NFile (string $uri, bool $exclusive = false, bool $withComments = false, ?array $xpath = null, ?array $nsPrefixes = null): int {}
 
 	/**
 	 * Clones a node
 	 * @link http://www.php.net/manual/en/domnode.clonenode.php
 	 * @param bool $deep [optional] 
-	 * @return DOMNode|bool The cloned node.
+	 * @return DOMNode|false The cloned node.
 	 */
-	public function cloneNode (bool $deep = false): DOMNode|bool {}
+	public function cloneNode (bool $deep = false): DOMNode|int {}
 
 	/**
 	 * Get line number for a node
@@ -3005,9 +3319,9 @@ class DOMNotation extends DOMNode  {
 	 * @link http://www.php.net/manual/en/domnode.insertbefore.php
 	 * @param DOMNode $node 
 	 * @param DOMNode|null $child [optional] 
-	 * @return DOMNode|bool The inserted node or false on error.
+	 * @return DOMNode|false The inserted node or false on error.
 	 */
-	public function insertBefore (DOMNode $node, ?DOMNode $child = null): DOMNode|bool {}
+	public function insertBefore (DOMNode $node, ?DOMNode $child = null): DOMNode|int {}
 
 	/**
 	 * Checks if the specified namespaceURI is the default namespace or not
@@ -3062,18 +3376,18 @@ class DOMNotation extends DOMNode  {
 	 * Removes child from list of children
 	 * @link http://www.php.net/manual/en/domnode.removechild.php
 	 * @param DOMNode $child 
-	 * @return DOMNode|bool If the child could be removed the function returns the old child or false on error.
+	 * @return DOMNode|false If the child could be removed the function returns the old child or false on error.
 	 */
-	public function removeChild (DOMNode $child): DOMNode|bool {}
+	public function removeChild (DOMNode $child): DOMNode|int {}
 
 	/**
 	 * Replaces a child
 	 * @link http://www.php.net/manual/en/domnode.replacechild.php
 	 * @param DOMNode $node 
 	 * @param DOMNode $child 
-	 * @return DOMNode|bool The old node or false if an error occur.
+	 * @return DOMNode|false The old node or false if an error occur.
 	 */
-	public function replaceChild (DOMNode $node, DOMNode $child): DOMNode|bool {}
+	public function replaceChild (DOMNode $node, DOMNode $child): DOMNode|int {}
 
 }
 
@@ -3082,37 +3396,66 @@ class DOMNotation extends DOMNode  {
  * @link http://www.php.net/manual/en/class.domentity.php
  */
 class DOMEntity extends DOMNode  {
-	public $nodeName;
-	public $nodeValue;
-	public $nodeType;
-	public $parentNode;
-	public $childNodes;
-	public $firstChild;
-	public $lastChild;
-	public $previousSibling;
-	public $nextSibling;
-	public $attributes;
-	public $ownerDocument;
-	public $namespaceURI;
-	public $prefix;
-	public $localName;
-	public $baseURI;
-	public $textContent;
-	public $publicId;
-	public $systemId;
-	public $notationName;
-	public $actualEncoding;
-	public $encoding;
-	public $version;
 
+	/**
+	 * The public identifier associated with the entity if specified, and
+	 * null otherwise.
+	 * @var string|null
+	 * @link http://www.php.net/manual/en/class.domentity.php#domentity.props.publicid
+	 */
+	public readonly ?string $publicId;
+
+	/**
+	 * The system identifier associated with the entity if specified, and
+	 * null otherwise. This may be an absolute URI or not.
+	 * @var string|null
+	 * @link http://www.php.net/manual/en/class.domentity.php#domentity.props.systemid
+	 */
+	public readonly ?string $systemId;
+
+	/**
+	 * For unparsed entities, the name of the notation for the entity. For
+	 * parsed entities, this is null.
+	 * @var string|null
+	 * @link http://www.php.net/manual/en/class.domentity.php#domentity.props.notationname
+	 */
+	public readonly ?string $notationName;
+
+	/**
+	 * An attribute specifying the encoding used for this entity at the
+	 * time of parsing, when it is an external parsed entity. This is
+	 * null if it is an entity from the internal subset or if it is not
+	 * known.
+	 * @var string|null
+	 * @link http://www.php.net/manual/en/class.domentity.php#domentity.props.actualencoding
+	 */
+	public readonly ?string $actualEncoding;
+
+	/**
+	 * An attribute specifying, as part of the text declaration, the
+	 * encoding of this entity, when it is an external parsed entity. This
+	 * is null otherwise.
+	 * @var string|null
+	 * @link http://www.php.net/manual/en/class.domentity.php#domentity.props.encoding
+	 */
+	public readonly ?string $encoding;
+
+	/**
+	 * An attribute specifying, as part of the text declaration, the
+	 * version number of this entity, when it is an external parsed
+	 * entity. This is null otherwise.
+	 * @var string|null
+	 * @link http://www.php.net/manual/en/class.domentity.php#domentity.props.version
+	 */
+	public readonly ?string $version;
 
 	/**
 	 * Adds new child at the end of the children
 	 * @link http://www.php.net/manual/en/domnode.appendchild.php
 	 * @param DOMNode $node 
-	 * @return DOMNode|bool The node added or false on error.
+	 * @return DOMNode|false The node added or false on error.
 	 */
-	public function appendChild (DOMNode $node): DOMNode|bool {}
+	public function appendChild (DOMNode $node): DOMNode|int {}
 
 	/**
 	 * Canonicalize nodes to a string
@@ -3122,9 +3465,9 @@ class DOMEntity extends DOMNode  {
 	 * @param bool $withComments [optional] Retain comments in output.
 	 * @param array|null $xpath [optional] An array of xpaths to filter the nodes by.
 	 * @param array|null $nsPrefixes [optional] An array of namespace prefixes to filter the nodes by.
-	 * @return string|bool Returns canonicalized nodes as a string or false on failure
+	 * @return string|false Returns canonicalized nodes as a string or false on failure
 	 */
-	public function C14N (bool $exclusive = false, bool $withComments = false, ?array $xpath = null, ?array $nsPrefixes = null): string|bool {}
+	public function C14N (bool $exclusive = false, bool $withComments = false, ?array $xpath = null, ?array $nsPrefixes = null): string|int {}
 
 	/**
 	 * Canonicalize nodes to a file
@@ -3135,17 +3478,17 @@ class DOMEntity extends DOMNode  {
 	 * @param bool $withComments [optional] Retain comments in output.
 	 * @param array|null $xpath [optional] An array of xpaths to filter the nodes by.
 	 * @param array|null $nsPrefixes [optional] An array of namespace prefixes to filter the nodes by.
-	 * @return int|bool Number of bytes written or false on failure
+	 * @return int|false Number of bytes written or false on failure
 	 */
-	public function C14NFile (string $uri, bool $exclusive = false, bool $withComments = false, ?array $xpath = null, ?array $nsPrefixes = null): int|bool {}
+	public function C14NFile (string $uri, bool $exclusive = false, bool $withComments = false, ?array $xpath = null, ?array $nsPrefixes = null): int {}
 
 	/**
 	 * Clones a node
 	 * @link http://www.php.net/manual/en/domnode.clonenode.php
 	 * @param bool $deep [optional] 
-	 * @return DOMNode|bool The cloned node.
+	 * @return DOMNode|false The cloned node.
 	 */
-	public function cloneNode (bool $deep = false): DOMNode|bool {}
+	public function cloneNode (bool $deep = false): DOMNode|int {}
 
 	/**
 	 * Get line number for a node
@@ -3180,9 +3523,9 @@ class DOMEntity extends DOMNode  {
 	 * @link http://www.php.net/manual/en/domnode.insertbefore.php
 	 * @param DOMNode $node 
 	 * @param DOMNode|null $child [optional] 
-	 * @return DOMNode|bool The inserted node or false on error.
+	 * @return DOMNode|false The inserted node or false on error.
 	 */
-	public function insertBefore (DOMNode $node, ?DOMNode $child = null): DOMNode|bool {}
+	public function insertBefore (DOMNode $node, ?DOMNode $child = null): DOMNode|int {}
 
 	/**
 	 * Checks if the specified namespaceURI is the default namespace or not
@@ -3237,18 +3580,18 @@ class DOMEntity extends DOMNode  {
 	 * Removes child from list of children
 	 * @link http://www.php.net/manual/en/domnode.removechild.php
 	 * @param DOMNode $child 
-	 * @return DOMNode|bool If the child could be removed the function returns the old child or false on error.
+	 * @return DOMNode|false If the child could be removed the function returns the old child or false on error.
 	 */
-	public function removeChild (DOMNode $child): DOMNode|bool {}
+	public function removeChild (DOMNode $child): DOMNode|int {}
 
 	/**
 	 * Replaces a child
 	 * @link http://www.php.net/manual/en/domnode.replacechild.php
 	 * @param DOMNode $node 
 	 * @param DOMNode $child 
-	 * @return DOMNode|bool The old node or false if an error occur.
+	 * @return DOMNode|false The old node or false if an error occur.
 	 */
-	public function replaceChild (DOMNode $node, DOMNode $child): DOMNode|bool {}
+	public function replaceChild (DOMNode $node, DOMNode $child): DOMNode|int {}
 
 }
 
@@ -3256,23 +3599,6 @@ class DOMEntity extends DOMNode  {
  * @link http://www.php.net/manual/en/class.domentityreference.php
  */
 class DOMEntityReference extends DOMNode  {
-	public $nodeName;
-	public $nodeValue;
-	public $nodeType;
-	public $parentNode;
-	public $childNodes;
-	public $firstChild;
-	public $lastChild;
-	public $previousSibling;
-	public $nextSibling;
-	public $attributes;
-	public $ownerDocument;
-	public $namespaceURI;
-	public $prefix;
-	public $localName;
-	public $baseURI;
-	public $textContent;
-
 
 	/**
 	 * Creates a new DOMEntityReference object
@@ -3286,9 +3612,9 @@ class DOMEntityReference extends DOMNode  {
 	 * Adds new child at the end of the children
 	 * @link http://www.php.net/manual/en/domnode.appendchild.php
 	 * @param DOMNode $node 
-	 * @return DOMNode|bool The node added or false on error.
+	 * @return DOMNode|false The node added or false on error.
 	 */
-	public function appendChild (DOMNode $node): DOMNode|bool {}
+	public function appendChild (DOMNode $node): DOMNode|int {}
 
 	/**
 	 * Canonicalize nodes to a string
@@ -3298,9 +3624,9 @@ class DOMEntityReference extends DOMNode  {
 	 * @param bool $withComments [optional] Retain comments in output.
 	 * @param array|null $xpath [optional] An array of xpaths to filter the nodes by.
 	 * @param array|null $nsPrefixes [optional] An array of namespace prefixes to filter the nodes by.
-	 * @return string|bool Returns canonicalized nodes as a string or false on failure
+	 * @return string|false Returns canonicalized nodes as a string or false on failure
 	 */
-	public function C14N (bool $exclusive = false, bool $withComments = false, ?array $xpath = null, ?array $nsPrefixes = null): string|bool {}
+	public function C14N (bool $exclusive = false, bool $withComments = false, ?array $xpath = null, ?array $nsPrefixes = null): string|int {}
 
 	/**
 	 * Canonicalize nodes to a file
@@ -3311,17 +3637,17 @@ class DOMEntityReference extends DOMNode  {
 	 * @param bool $withComments [optional] Retain comments in output.
 	 * @param array|null $xpath [optional] An array of xpaths to filter the nodes by.
 	 * @param array|null $nsPrefixes [optional] An array of namespace prefixes to filter the nodes by.
-	 * @return int|bool Number of bytes written or false on failure
+	 * @return int|false Number of bytes written or false on failure
 	 */
-	public function C14NFile (string $uri, bool $exclusive = false, bool $withComments = false, ?array $xpath = null, ?array $nsPrefixes = null): int|bool {}
+	public function C14NFile (string $uri, bool $exclusive = false, bool $withComments = false, ?array $xpath = null, ?array $nsPrefixes = null): int {}
 
 	/**
 	 * Clones a node
 	 * @link http://www.php.net/manual/en/domnode.clonenode.php
 	 * @param bool $deep [optional] 
-	 * @return DOMNode|bool The cloned node.
+	 * @return DOMNode|false The cloned node.
 	 */
-	public function cloneNode (bool $deep = false): DOMNode|bool {}
+	public function cloneNode (bool $deep = false): DOMNode|int {}
 
 	/**
 	 * Get line number for a node
@@ -3356,9 +3682,9 @@ class DOMEntityReference extends DOMNode  {
 	 * @link http://www.php.net/manual/en/domnode.insertbefore.php
 	 * @param DOMNode $node 
 	 * @param DOMNode|null $child [optional] 
-	 * @return DOMNode|bool The inserted node or false on error.
+	 * @return DOMNode|false The inserted node or false on error.
 	 */
-	public function insertBefore (DOMNode $node, ?DOMNode $child = null): DOMNode|bool {}
+	public function insertBefore (DOMNode $node, ?DOMNode $child = null): DOMNode|int {}
 
 	/**
 	 * Checks if the specified namespaceURI is the default namespace or not
@@ -3413,18 +3739,18 @@ class DOMEntityReference extends DOMNode  {
 	 * Removes child from list of children
 	 * @link http://www.php.net/manual/en/domnode.removechild.php
 	 * @param DOMNode $child 
-	 * @return DOMNode|bool If the child could be removed the function returns the old child or false on error.
+	 * @return DOMNode|false If the child could be removed the function returns the old child or false on error.
 	 */
-	public function removeChild (DOMNode $child): DOMNode|bool {}
+	public function removeChild (DOMNode $child): DOMNode|int {}
 
 	/**
 	 * Replaces a child
 	 * @link http://www.php.net/manual/en/domnode.replacechild.php
 	 * @param DOMNode $node 
 	 * @param DOMNode $child 
-	 * @return DOMNode|bool The old node or false if an error occur.
+	 * @return DOMNode|false The old node or false if an error occur.
 	 */
-	public function replaceChild (DOMNode $node, DOMNode $child): DOMNode|bool {}
+	public function replaceChild (DOMNode $node, DOMNode $child): DOMNode|int {}
 
 }
 
@@ -3432,25 +3758,10 @@ class DOMEntityReference extends DOMNode  {
  * @link http://www.php.net/manual/en/class.domprocessinginstruction.php
  */
 class DOMProcessingInstruction extends DOMNode  {
-	public $nodeName;
-	public $nodeValue;
-	public $nodeType;
-	public $parentNode;
-	public $childNodes;
-	public $firstChild;
-	public $lastChild;
-	public $previousSibling;
-	public $nextSibling;
-	public $attributes;
-	public $ownerDocument;
-	public $namespaceURI;
-	public $prefix;
-	public $localName;
-	public $baseURI;
-	public $textContent;
-	public $target;
-	public $data;
 
+	public readonly string $target;
+
+	public string $data;
 
 	/**
 	 * Creates a new DOMProcessingInstruction object
@@ -3459,15 +3770,15 @@ class DOMProcessingInstruction extends DOMNode  {
 	 * @param string $value [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $name, string $value = ""): string {}
+	public function __construct (string $name, string $value = '""'): string {}
 
 	/**
 	 * Adds new child at the end of the children
 	 * @link http://www.php.net/manual/en/domnode.appendchild.php
 	 * @param DOMNode $node 
-	 * @return DOMNode|bool The node added or false on error.
+	 * @return DOMNode|false The node added or false on error.
 	 */
-	public function appendChild (DOMNode $node): DOMNode|bool {}
+	public function appendChild (DOMNode $node): DOMNode|int {}
 
 	/**
 	 * Canonicalize nodes to a string
@@ -3477,9 +3788,9 @@ class DOMProcessingInstruction extends DOMNode  {
 	 * @param bool $withComments [optional] Retain comments in output.
 	 * @param array|null $xpath [optional] An array of xpaths to filter the nodes by.
 	 * @param array|null $nsPrefixes [optional] An array of namespace prefixes to filter the nodes by.
-	 * @return string|bool Returns canonicalized nodes as a string or false on failure
+	 * @return string|false Returns canonicalized nodes as a string or false on failure
 	 */
-	public function C14N (bool $exclusive = false, bool $withComments = false, ?array $xpath = null, ?array $nsPrefixes = null): string|bool {}
+	public function C14N (bool $exclusive = false, bool $withComments = false, ?array $xpath = null, ?array $nsPrefixes = null): string|int {}
 
 	/**
 	 * Canonicalize nodes to a file
@@ -3490,17 +3801,17 @@ class DOMProcessingInstruction extends DOMNode  {
 	 * @param bool $withComments [optional] Retain comments in output.
 	 * @param array|null $xpath [optional] An array of xpaths to filter the nodes by.
 	 * @param array|null $nsPrefixes [optional] An array of namespace prefixes to filter the nodes by.
-	 * @return int|bool Number of bytes written or false on failure
+	 * @return int|false Number of bytes written or false on failure
 	 */
-	public function C14NFile (string $uri, bool $exclusive = false, bool $withComments = false, ?array $xpath = null, ?array $nsPrefixes = null): int|bool {}
+	public function C14NFile (string $uri, bool $exclusive = false, bool $withComments = false, ?array $xpath = null, ?array $nsPrefixes = null): int {}
 
 	/**
 	 * Clones a node
 	 * @link http://www.php.net/manual/en/domnode.clonenode.php
 	 * @param bool $deep [optional] 
-	 * @return DOMNode|bool The cloned node.
+	 * @return DOMNode|false The cloned node.
 	 */
-	public function cloneNode (bool $deep = false): DOMNode|bool {}
+	public function cloneNode (bool $deep = false): DOMNode|int {}
 
 	/**
 	 * Get line number for a node
@@ -3535,9 +3846,9 @@ class DOMProcessingInstruction extends DOMNode  {
 	 * @link http://www.php.net/manual/en/domnode.insertbefore.php
 	 * @param DOMNode $node 
 	 * @param DOMNode|null $child [optional] 
-	 * @return DOMNode|bool The inserted node or false on error.
+	 * @return DOMNode|false The inserted node or false on error.
 	 */
-	public function insertBefore (DOMNode $node, ?DOMNode $child = null): DOMNode|bool {}
+	public function insertBefore (DOMNode $node, ?DOMNode $child = null): DOMNode|int {}
 
 	/**
 	 * Checks if the specified namespaceURI is the default namespace or not
@@ -3592,18 +3903,18 @@ class DOMProcessingInstruction extends DOMNode  {
 	 * Removes child from list of children
 	 * @link http://www.php.net/manual/en/domnode.removechild.php
 	 * @param DOMNode $child 
-	 * @return DOMNode|bool If the child could be removed the function returns the old child or false on error.
+	 * @return DOMNode|false If the child could be removed the function returns the old child or false on error.
 	 */
-	public function removeChild (DOMNode $child): DOMNode|bool {}
+	public function removeChild (DOMNode $child): DOMNode|int {}
 
 	/**
 	 * Replaces a child
 	 * @link http://www.php.net/manual/en/domnode.replacechild.php
 	 * @param DOMNode $node 
 	 * @param DOMNode $child 
-	 * @return DOMNode|bool The old node or false if an error occur.
+	 * @return DOMNode|false The old node or false if an error occur.
 	 */
-	public function replaceChild (DOMNode $node, DOMNode $child): DOMNode|bool {}
+	public function replaceChild (DOMNode $node, DOMNode $child): DOMNode|int {}
 
 }
 
@@ -3612,9 +3923,15 @@ class DOMProcessingInstruction extends DOMNode  {
  * @link http://www.php.net/manual/en/class.domxpath.php
  */
 class DOMXPath  {
-	public $document;
-	public $registerNodeNamespaces;
 
+	public readonly DOMDocument $document;
+
+	/**
+	 * When set to true, namespaces in the node are registered.
+	 * @var bool
+	 * @link http://www.php.net/manual/en/class.domxpath.php#domxpath.props.registernodenamespaces
+	 */
+	public bool $registerNodeNamespaces;
 
 	/**
 	 * Creates a new DOMXPath object

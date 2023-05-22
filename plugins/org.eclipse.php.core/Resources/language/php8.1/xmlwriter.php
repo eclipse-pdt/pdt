@@ -223,7 +223,7 @@ class XMLWriter  {
 	 * @param string|null $standalone [optional] 
 	 * @return bool Returns true on success or false on failure.
 	 */
-	public function startDocument (?string $version = "1.0", ?string $encoding = null, ?string $standalone = null): bool {}
+	public function startDocument (?string $version = '"1.0"', ?string $encoding = null, ?string $standalone = null): bool {}
 
 	/**
 	 * End current document
@@ -369,20 +369,20 @@ class XMLWriter  {
  * Create new xmlwriter using source uri for output
  * @link http://www.php.net/manual/en/xmlwriter.openuri.php
  * @param string $uri 
- * @return XMLWriter|bool Object-oriented style: Returns true on success or false on failure.
+ * @return XMLWriter|false Object-oriented style: Returns true on success or false on failure.
  * <p>Procedural style: Returns a new XMLWriter instance for later use with the
  * xmlwriter functions on success, or false on failure.</p>
  */
-function xmlwriter_open_uri (string $uri): XMLWriter|bool {}
+function xmlwriter_open_uri (string $uri): XMLWriter|int {}
 
 /**
  * Create new xmlwriter using memory for string output
  * @link http://www.php.net/manual/en/xmlwriter.openmemory.php
- * @return XMLWriter|bool Object-oriented style: Returns true on success or false on failure.
+ * @return XMLWriter|false Object-oriented style: Returns true on success or false on failure.
  * <p>Procedural style: Returns a new XMLWriter for later use with the
  * xmlwriter functions on success, or false on failure.</p>
  */
-function xmlwriter_open_memory (): XMLWriter|bool {}
+function xmlwriter_open_memory (): XMLWriter|int {}
 
 /**
  * Toggle indentation on/off
@@ -605,7 +605,7 @@ function xmlwriter_write_raw (XMLWriter $writer, string $content): bool {}
  * @param string|null $standalone [optional] 
  * @return bool Returns true on success or false on failure.
  */
-function xmlwriter_start_document (XMLWriter $writer, ?string $version = "1.0", ?string $encoding = null, ?string $standalone = null): bool {}
+function xmlwriter_start_document (XMLWriter $writer, ?string $version = '"1.0"', ?string $encoding = null, ?string $standalone = null): bool {}
 
 /**
  * End current document

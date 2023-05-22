@@ -88,17 +88,17 @@ function posix_setegid (int $group_id): bool {}
 /**
  * Return the group set of the current process
  * @link http://www.php.net/manual/en/function.posix-getgroups.php
- * @return array|bool Returns an array of integers containing the numeric group ids of the group
+ * @return array|false Returns an array of integers containing the numeric group ids of the group
  * set of the current process, or false on failure.
  */
-function posix_getgroups (): array|bool {}
+function posix_getgroups (): array|int {}
 
 /**
  * Return login name
  * @link http://www.php.net/manual/en/function.posix-getlogin.php
- * @return string|bool Returns the login name of the user, as a string, or false on failure.
+ * @return string|false Returns the login name of the user, as a string, or false on failure.
  */
-function posix_getlogin (): string|bool {}
+function posix_getlogin (): string|int {}
 
 /**
  * Return the current process group identifier
@@ -127,22 +127,22 @@ function posix_setpgid (int $process_id, int $process_group_id): bool {}
  * Get process group id for job control
  * @link http://www.php.net/manual/en/function.posix-getpgid.php
  * @param int $process_id 
- * @return int|bool Returns the identifier, as an int.
+ * @return int|false Returns the identifier, as an int.
  */
-function posix_getpgid (int $process_id): int|bool {}
+function posix_getpgid (int $process_id): int {}
 
 /**
  * Get the current sid of the process
  * @link http://www.php.net/manual/en/function.posix-getsid.php
  * @param int $process_id 
- * @return int|bool Returns the identifier, as an int, or false on failure.
+ * @return int|false Returns the identifier, as an int, or false on failure.
  */
-function posix_getsid (int $process_id): int|bool {}
+function posix_getsid (int $process_id): int {}
 
 /**
  * Get system name
  * @link http://www.php.net/manual/en/function.posix-uname.php
- * @return array|bool Returns a hash of strings with information about the
+ * @return array|false Returns a hash of strings with information about the
  * system. The indices of the hash are
  * <p>
  * <br>
@@ -164,12 +164,12 @@ function posix_getsid (int $process_id): int|bool {}
  * libc.</p>
  * <p>The function returns false on failure.</p>
  */
-function posix_uname (): array|bool {}
+function posix_uname (): array|int {}
 
 /**
  * Get process times
  * @link http://www.php.net/manual/en/function.posix-times.php
- * @return array|bool Returns a hash of strings with information about the current
+ * @return array|false Returns a hash of strings with information about the current
  * process CPU usage. The indices of the hash are:
  * <p>
  * <br>
@@ -186,25 +186,25 @@ function posix_uname (): array|bool {}
  * </p>
  * The function returns false on failure.
  */
-function posix_times (): array|bool {}
+function posix_times (): array|int {}
 
 /**
  * Get path name of controlling terminal
  * @link http://www.php.net/manual/en/function.posix-ctermid.php
- * @return string|bool Upon successful completion, returns string of the pathname to 
+ * @return string|false Upon successful completion, returns string of the pathname to 
  * the current controlling terminal. Otherwise false is returned and errno
  * is set, which can be checked with posix_get_last_error.
  */
-function posix_ctermid (): string|bool {}
+function posix_ctermid (): string|int {}
 
 /**
  * Determine terminal device name
  * @link http://www.php.net/manual/en/function.posix-ttyname.php
  * @param resource|int $file_descriptor 
- * @return string|bool On success, returns a string of the absolute path of the
+ * @return string|false On success, returns a string of the absolute path of the
  * file_descriptor. On failure, returns false
  */
-function posix_ttyname (resource|int $file_descriptor): string|bool {}
+function posix_ttyname ($file_descriptor): string|int {}
 
 /**
  * Determine if a file descriptor is an interactive terminal
@@ -213,16 +213,16 @@ function posix_ttyname (resource|int $file_descriptor): string|bool {}
  * @return bool Returns true if file_descriptor is an open descriptor connected
  * to a terminal and false otherwise.
  */
-function posix_isatty (resource|int $file_descriptor): bool {}
+function posix_isatty ($file_descriptor): bool {}
 
 /**
  * Pathname of current directory
  * @link http://www.php.net/manual/en/function.posix-getcwd.php
- * @return string|bool Returns a string of the absolute pathname on success. 
+ * @return string|false Returns a string of the absolute pathname on success. 
  * On error, returns false and sets errno which can be checked with
  * posix_get_last_error.
  */
-function posix_getcwd (): string|bool {}
+function posix_getcwd (): string|int {}
 
 /**
  * Create a fifo special file (a named pipe)
@@ -257,7 +257,7 @@ function posix_access (string $filename, int $flags = null): bool {}
  * Return info about a group by name
  * @link http://www.php.net/manual/en/function.posix-getgrnam.php
  * @param string $name 
- * @return array|bool Returns an array on success, or false on failure.
+ * @return array|false Returns an array on success, or false on failure.
  * The array elements returned are:
  * <table>
  * The group information array
@@ -300,13 +300,13 @@ function posix_access (string $filename, int $flags = null): bool {}
  * </table>
  * </table>
  */
-function posix_getgrnam (string $name): array|bool {}
+function posix_getgrnam (string $name): array|int {}
 
 /**
  * Return info about a group by group id
  * @link http://www.php.net/manual/en/function.posix-getgrgid.php
  * @param int $group_id 
- * @return array|bool The array elements returned are:
+ * @return array|false The array elements returned are:
  * <table>
  * The group information array
  * <table>
@@ -349,13 +349,13 @@ function posix_getgrnam (string $name): array|bool {}
  * </table>
  * The function returns false on failure.
  */
-function posix_getgrgid (int $group_id): array|bool {}
+function posix_getgrgid (int $group_id): array|int {}
 
 /**
  * Return info about a user by username
  * @link http://www.php.net/manual/en/function.posix-getpwnam.php
  * @param string $username 
- * @return array|bool On success an array with the following elements is returned, else 
+ * @return array|false On success an array with the following elements is returned, else 
  * false is returned:
  * <table>
  * The user information array
@@ -425,13 +425,13 @@ function posix_getgrgid (int $group_id): array|bool {}
  * </table>
  * </table>
  */
-function posix_getpwnam (string $username): array|bool {}
+function posix_getpwnam (string $username): array|int {}
 
 /**
  * Return info about a user by user id
  * @link http://www.php.net/manual/en/function.posix-getpwuid.php
  * @param int $user_id 
- * @return array|bool Returns an associative array with the following elements:
+ * @return array|false Returns an associative array with the following elements:
  * <table>
  * The user information array
  * <table>
@@ -501,12 +501,12 @@ function posix_getpwnam (string $username): array|bool {}
  * </table>
  * The function returns false on failure.
  */
-function posix_getpwuid (int $user_id): array|bool {}
+function posix_getpwuid (int $user_id): array|int {}
 
 /**
  * Return info about system resource limits
  * @link http://www.php.net/manual/en/function.posix-getrlimit.php
- * @return array|bool Returns an associative array of elements for each
+ * @return array|false Returns an associative array of elements for each
  * limit that is defined. Each limit has a soft and a hard limit.
  * <table>
  * List of possible limits returned
@@ -588,7 +588,7 @@ function posix_getpwuid (int $user_id): array|bool {}
  * </table>
  * The function returns false on failure.
  */
-function posix_getrlimit (): array|bool {}
+function posix_getrlimit (): array|int {}
 
 /**
  * Set system resource limits

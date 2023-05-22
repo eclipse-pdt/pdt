@@ -24,7 +24,7 @@ function pcntl_fork (): int {}
  * child which exited, -1 on error or zero if WNOHANG was used and no
  * child was available
  */
-function pcntl_waitpid (int $process_id, int &$status, int $flags = null, array &$resource_usage = []): int {}
+function pcntl_waitpid (int $process_id, int &$status, int $flags = null, array &$resource_usage = '[]'): int {}
 
 /**
  * Waits on or returns the status of a forked child
@@ -36,7 +36,7 @@ function pcntl_waitpid (int $process_id, int &$status, int $flags = null, array 
  * child which exited, -1 on error or zero if WNOHANG was provided as an
  * option (on wait3-available systems) and no child was available.
  */
-function pcntl_wait (int &$status, int $flags = null, array &$resource_usage = []): int {}
+function pcntl_wait (int &$status, int $flags = null, array &$resource_usage = '[]'): int {}
 
 /**
  * Installs a signal handler
@@ -93,6 +93,7 @@ function pcntl_wifexited (int $status): bool {}
 function pcntl_wifstopped (int $status): bool {}
 
 /**
+ * {@inheritdoc}
  * @param int $status
  */
 function pcntl_wifcontinued (int $status): bool {}
@@ -141,7 +142,7 @@ function pcntl_wstopsig (int $status): int|false {}
  * @param array $env_vars [optional] 
  * @return bool Returns false.
  */
-function pcntl_exec (string $path, array $args = [], array $env_vars = []): bool {}
+function pcntl_exec (string $path, array $args = '[]', array $env_vars = '[]'): bool {}
 
 /**
  * Set an alarm clock for delivery of a signal

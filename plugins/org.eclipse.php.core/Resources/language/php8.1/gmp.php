@@ -48,7 +48,7 @@ function gmp_init (int|string $num, int $base = null): GMP {}
  * @param int $flags [optional] 
  * @return GMP Returns a GMP number.
  */
-function gmp_import (string $data, int $word_size = 1, int $flags = GMP_MSW_FIRST | GMP_NATIVE_ENDIAN): GMP {}
+function gmp_import (string $data, int $word_size = 1, int $flags = 'GMP_MSW_FIRST | GMP_NATIVE_ENDIAN'): GMP {}
 
 /**
  * Export to a binary string
@@ -58,7 +58,7 @@ function gmp_import (string $data, int $word_size = 1, int $flags = GMP_MSW_FIRS
  * @param int $flags [optional] 
  * @return string Returns a string.
  */
-function gmp_export (GMP|int|string $num, int $word_size = 1, int $flags = GMP_MSW_FIRST | GMP_NATIVE_ENDIAN): string {}
+function gmp_export (GMP|int|string $num, int $word_size = 1, int $flags = 'GMP_MSW_FIRST | GMP_NATIVE_ENDIAN'): string {}
 
 /**
  * Convert GMP number to integer
@@ -310,9 +310,9 @@ function gmp_lcm (GMP|int|string $num1, GMP|int|string $num2): GMP {}
  * @link http://www.php.net/manual/en/function.gmp-invert.php
  * @param GMP|int|string $num1 
  * @param GMP|int|string $num2 
- * @return GMP|bool A GMP number on success or false if an inverse does not exist.
+ * @return GMP|false A GMP number on success or false if an inverse does not exist.
  */
-function gmp_invert (GMP|int|string $num1, GMP|int|string $num2): GMP|bool {}
+function gmp_invert (GMP|int|string $num1, GMP|int|string $num2): GMP|int {}
 
 /**
  * Jacobi symbol

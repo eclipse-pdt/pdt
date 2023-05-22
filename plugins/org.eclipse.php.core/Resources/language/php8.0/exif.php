@@ -6,10 +6,10 @@
  * Get the header name for an index
  * @link http://www.php.net/manual/en/function.exif-tagname.php
  * @param int $index 
- * @return string|bool Returns the header name, or false if index is
+ * @return string|false Returns the header name, or false if index is
  * not a defined EXIF tag id.
  */
-function exif_tagname (int $index): string|bool {}
+function exif_tagname (int $index): string|int {}
 
 /**
  * Reads the EXIF headers from an image file
@@ -18,12 +18,12 @@ function exif_tagname (int $index): string|bool {}
  * @param string|null $required_sections [optional] 
  * @param bool $as_arrays [optional] 
  * @param bool $read_thumbnail [optional] 
- * @return array|bool It returns an associative array where the array indexes are 
+ * @return array|false It returns an associative array where the array indexes are 
  * the header names and the array values are the values associated with 
  * those headers. If no data can be returned, 
  * exif_read_data will return false.
  */
-function exif_read_data (resource|string $file, ?string $required_sections = null, bool $as_arrays = false, bool $read_thumbnail = false): array|bool {}
+function exif_read_data ($file, ?string $required_sections = null, bool $as_arrays = false, bool $read_thumbnail = false): array|int {}
 
 /**
  * Retrieve the embedded thumbnail of an image
@@ -32,16 +32,16 @@ function exif_read_data (resource|string $file, ?string $required_sections = nul
  * @param int $width [optional] 
  * @param int $height [optional] 
  * @param int $image_type [optional] 
- * @return string|bool Returns the embedded thumbnail, or false if the image contains no 
+ * @return string|false Returns the embedded thumbnail, or false if the image contains no 
  * thumbnail.
  */
-function exif_thumbnail (resource|string $file, int &$width = null, int &$height = null, int &$image_type = null): string|bool {}
+function exif_thumbnail ($file, int &$width = null, int &$height = null, int &$image_type = null): string|int {}
 
 /**
  * Determine the type of an image
  * @link http://www.php.net/manual/en/function.exif-imagetype.php
  * @param string $filename 
- * @return int|bool When a correct signature is found, the appropriate constant value will be
+ * @return int|false When a correct signature is found, the appropriate constant value will be
  * returned otherwise the return value is false. The return value is the
  * same value that getimagesize returns in index 2 but
  * exif_imagetype is much faster.
@@ -134,7 +134,7 @@ function exif_thumbnail (resource|string $file, int &$width = null, int &$height
  * and return false if it is unable to read enough bytes from the file to
  * determine the image type.</p>
  */
-function exif_imagetype (string $filename): int|bool {}
+function exif_imagetype (string $filename): int {}
 
 
 /**

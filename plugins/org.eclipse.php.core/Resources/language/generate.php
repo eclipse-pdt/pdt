@@ -16,8 +16,95 @@ if (version_compare(phpversion(), "5.0.0") < 0) {
 
 define('DOCBOOK_NS', 'http://docbook.org/ns/docbook');
 define('PHPDOC_NS', 'http://php.net/ns/phpdoc');
+$typeTransforms = [
+    'GdFont' => [
+        'since' => '8.1.0',
+        'previous' => 'int',
+        'phpdoc' => false
+    ],
+    'IMAP\Connection' => [
+        'since' => '8.1.0',
+        'previous' => 'resource',
+        'phpdoc' => false
+    ],
+    'LDAP\Connection' => [
+        'since' => '8.1.0',
+        'previous' => 'resource',
+        'phpdoc' => false
+    ],
+    'LDAP\ResultEntry' => [
+        'since' => '8.1.0',
+        'previous' => 'resource',
+        'phpdoc' => false
+    ],
+    'LDAP\Result' => [
+        'since' => '8.1.0',
+        'previous' => 'resource',
+        'phpdoc' => false
+    ],
+    'PgSql\Connection' => [
+        'since' => '8.1.0',
+        'previous' => 'resource',
+        'phpdoc' => false
+    ],
+    'PgSql\Result' => [
+        'since' => '8.1.0',
+        'previous' => 'resource',
+        'phpdoc' => false
+    ],
+    'PgSql\Lob' => [
+        'since' => '8.1.0',
+        'previous' => 'resource',
+        'phpdoc' => false
+    ],
 
+    'PSpell\Dictionary' => [
+        'since' => '8.1.0',
+        'previous' => 'resource',
+        'phpdoc' => false
+    ],
+    'PSpell\Config' => [
+        'since' => '8.1.0',
+        'previous' => 'resource',
+        'phpdoc' => false
+    ],
+    'FTP\Connection' => [
+        'since' => '8.1.0',
+        'previous' => 'resource',
+        'phpdoc' => false
+    ],
+    'true' => [
+        'since' => '8.2.0',
+        'previous' => 'int',
+        'phpdoc' => true
+    ],
+    'false' => [
+        'since' => '8.2.0',
+        'previous' => 'int',
+        'phpdoc' => true
+    ],
+    'never' => [
+        'since' => '8.1.0',
+        'previous' => 'mixed',
+        'phpdoc' => true
+    ],
+    'resource' => [
+        'since' => null,
+        'phpdoc' => true,
+        'previous' => null
+    ],
+    'MagickWand' => [
+        'since' => null,
+        'phpdoc' => true,
+        'previous' => null
+    ],
+    'integer' => [
+        'since' => null,
+        'phpdoc' => true,
+        'previous' => null
+    ]
 
+];
 /**
  * Hack to rewrite some PHPDoc return type(s) for a given function or method.
  * Necessary to overcome some limitations from the official PHP documentation.
@@ -42,6 +129,14 @@ function rewrite_phpdoc_return_types($funckey, $returnTypes)
         }
     }
     return $returnTypes;
+}
+
+if (! function_exists('enum_exists')) {
+
+    function enum_exists()
+    {
+        return false;
+    }
 }
 
 $splitFiles = true;
@@ -76,7 +171,7 @@ for ($i = 0; $i < count($argv); ++ $i) {
     }
 }
 
-if ((string) $phpdocDir === '' || !is_file($phpdocDir)) {
+if ((string) $phpdocDir === '' || ! is_file($phpdocDir)) {
     show_help();
 }
 if ((string) $phpDir === '') {
@@ -89,8 +184,6 @@ $manualXML->load($phpdocDir);
 $functionsDoc = parse_phpdoc_functions($manualXML);
 $classesDoc = parse_phpdoc_classes($manualXML);
 $constantsDoc = parse_phpdoc_constants($manualXML);
-
-
 
 $processedFunctions = array();
 $processedClasses = array();
@@ -147,7 +240,6 @@ foreach ($intClasses as $intClass) {
         } else {
             print_class(new ReflectionClass($intClass));
         }
-        
     }
 }
 if (version_compare(phpversion(), "5.4.0") >= 0) {
@@ -217,6 +309,23 @@ function make_funckey_from_str($name)
     return $name;
 }
 
+function check_initializer($value)
+{
+    if ($value === null) {
+        return null;
+    }
+    if (defined($value)) {
+        if (strpos($value, '::') !== false) {
+            return '\\' . $value;
+        }
+        return $value;
+    }
+    if (!is_numeric($value)) {
+        return var_export($value, true);
+    }
+    return $value;
+}
+
 /**
  * Returns a PHP type suited to be checked by class_exists() or
  * suited to be displayed as a function type hint or as a PHPDoc type.
@@ -224,27 +333,152 @@ function make_funckey_from_str($name)
  *
  * @param string $name
  *            PHP identifier to transform
- * @param string $addTypePrefix
- *            prefix to add to the resulting type
  * @param boolean $isInPhpdoc
  *            should the result be suited to be inserted in a PHPDoc or not
- * @param boolean $returnRealType
- *            should the result be suited to be used by class_exists() or not
  * @return string formatted PHP type
  */
-function build_php_type($name, $addTypePrefix = '', $isInPhpdoc = false, $returnRealType = false)
+function build_php_type($name, bool $isInPhpdoc = false, bool $real = false)
 {
-    if (substr($name, 0, 1) === '?') {
-        $name = substr($name, 1);
-        if ($returnRealType) {
-            return "{$addTypePrefix}{$name}";
-        }
-        if ($isInPhpdoc) {
-            return "{$addTypePrefix}{$name}|null";
-        }
-        return "?{$addTypePrefix}{$name}";
+    if ($name == null || $name == '') {
+        return null;
     }
-    return "{$addTypePrefix}{$name}";
+
+    $nullable = false;
+    if ($name[0] === '?') {
+        $nullable = true;
+        $name = substr($name, 1);
+    }
+    global $currentNamespace;
+    $parsed = parse_php_type($name);
+
+    try {
+        $parsed = php_prefix_when_necessary($parsed, $currentNamespace != '' ? '\\' : '', $real);
+        $name = print_php_type($parsed);
+        if ($nullable) {
+            return $isInPhpdoc ? $name . '|null' : '?' . $name;
+        }
+
+        return $name;
+    } catch (\InvalidArgumentException $e) {
+        return null;
+    }
+}
+
+function print_php_type($parsed)
+{
+    $list = [];
+    foreach ($parsed['parts'] as $v) {
+        if (! is_string($v)) {
+            $v = print_php_type($v);
+            if ($v) {
+                $list[] = '(' . $v . ')';
+            }
+
+        } else {
+            $list[] = $v;
+        }
+    }
+    $list = array_unique($list);
+    if (count($list) == 0) {
+        return null;
+    }
+    return implode($parsed['join'], $list);
+}
+
+function php_type_transform($name, bool $real): ?string {
+    global $typeTransforms;
+    if (!isset($typeTransforms[$name])) {
+        return $name;
+    }
+    if ($typeTransforms[$name]['since'] == null || version_compare(phpversion(), $typeTransforms[$name]['since']) < 0) {
+        if (!$typeTransforms[$name]['phpdoc'] || $real) {
+            if ($typeTransforms[$name]['previous'] == null) {
+                throw new \InvalidArgumentException();
+            } else {
+                return php_type_transform($typeTransforms[$name]['previous'], $real);
+            }
+        }
+    }
+
+    return $name;
+}
+
+function php_prefix_when_necessary(array $parsed, string $addTypePrefix, bool $real)
+{
+    global $typeTransforms;
+
+    $list = [];
+    foreach ($parsed['parts'] as $k => $v) {
+        if (is_string($v)) {
+            $v = php_type_transform($v, $real);
+            if ($v[0] == '\\') {
+                // ignore
+            } elseif (strpos($v, '\\') !== false) {
+                $v = $addTypePrefix . $v;
+            } elseif (class_exists($addTypePrefix . $v) || interface_exists($addTypePrefix . $v) || enum_exists($addTypePrefix . $v)) {
+                $v = $addTypePrefix . $v;
+            }
+            $list[] = $v;
+        } else {
+            $v = php_prefix_when_necessary($v, $addTypePrefix, $real);
+            if ($v) {
+                $list [] =$v;
+            }
+        }
+    }
+    $parsed['parts'] = $list;
+
+    return $parsed;
+}
+
+function parse_php_type(string $name): array
+{
+    $group = 0;
+    $buffer = '';
+    $res = [
+        'join' => '|',
+        'parts' => []
+    ];
+
+    foreach (mb_str_split($name) as $char) {
+        switch ($char) {
+            case '(':
+                if ($group > 0) {
+                    $buffer .= $char;
+                }
+                $group ++;
+                break;
+            case ')':
+                $group --;
+                if ($group > 0) {
+                    $buffer .= $char;
+                } else {
+                    $res['parts'][] = parse_php_type(trim($buffer));
+                    $buffer = '';
+                }
+                break;
+            case '|':
+            case '&':
+                if ($group == 0) {
+                    $res['join'] = $char;
+                    if ($buffer) {
+                        $res['parts'][] = $buffer;
+                        $buffer = '';
+                    }
+                } else {
+                    $buffer .= $char;
+                }
+                break;
+            case ' ':
+                break;
+            default:
+                $buffer .= $char;
+        }
+    }
+    if ($buffer) {
+        $res['parts'][] = $buffer;
+    }
+    return $res;
 }
 
 /**
@@ -278,30 +512,6 @@ function clean_php_identifier($name, $isInPhpdoc = false, $removeDollars = false
     }
     if ($removeDollars) {
         $name = str_replace('$', '', $name);
-    }
-    return $name;
-}
-
-/**
- * Creates valid type hint identifier
- *
- * @param $name string
- *            type hint identifier
- * @return string valid type hint identifier
- * @see https://docs.phpdoc.org/guides/types.html#primitives
- * @see http://php.net/manual/en/functions.arguments.php
- */
-function clean_php_type_hint($name)
-{
-    switch (strtolower($name)) {
-        case "boolean":
-        case "true":
-        case "false":
-            $name = "bool";
-            break;
-        case "integer":
-            $name = "int";
-            break;
     }
     return $name;
 }
@@ -380,68 +590,55 @@ function parse_tags_content($regExpOpenTag, $regExpCloseTag, $text)
     return array();
 }
 
-function parse_phpdoc_type(?DOMElement $type, bool $nest = false): ?string {
+function parse_phpdoc_type(?DOMElement $type, bool $nest = false): ?string
+{
+    if ($type == null) {
+        return null;
+    }
+    if ($type->hasAttribute('class')) {
 
-  if ($type == null) {
-    return null;
-  }
-  if ($type->hasAttribute('class')) {
-    
-    $parts = [];
-    foreach ($type->getElementsByTagName('type') as $sub) {
-      $parts[] = parse_phpdoc_type($sub, true);
-    }
+        $parts = [];
+        foreach ($type->getElementsByTagName('type') as $sub) {
+            $parts[] = parse_phpdoc_type($sub, true);
+        }
 
-    if (count($parts) == 1) {
-      return $parts[0];
-    } elseif (count($parts) == 2 && !$nest && $parts[1] == 'null') {
-      return '?' . $parts[0];
+        if (count($parts) == 1) {
+            return $parts[0];
+        } elseif (count($parts) == 2 && ! $nest && $parts[1] == 'null') {
+            return '?' . $parts[0];
+        }
+        $res = implode($type->getAttribute('class') == 'union' ? '|' : '&', $parts);
+        if ($nest) {
+            return '(' . $res . ')';
+        }
+        return $res;
     }
-    $res = implode($type->getAttribute('class') == 'union' ? '|' : '&' , $parts);
-    if ($nest) {
-      return '(' . $res . ')';
-    }
-    return $res;
-  }
-  return (string) fallback_phpdoc_type($type->nodeValue);
-  
+    return (string) $type->nodeValue;
 }
 
-function fallback_phpdoc_type($type) {
-  if ($type == 'true' || $type == 'false') {
-    if (version_compare(phpversion(), "8.2.0") < 0) {
-      return 'bool';
-    }
-  }
-  if ($type == 'never') {
-    if (version_compare(phpversion(), "8.1.0") < 0) {
-      return 'void';
-    }
-  }
-  return $type;
-}
+
 
 function prepare_xpath(DOMDocument $dom): DOMXPath
 {
-  $search = new DOMXpath($dom);
-  $search->registerNamespace('docbook', DOCBOOK_NS);
-  $search->registerNamespace('phpdoc', PHPDOC_NS);
-  
-  return $search;
+    $search = new DOMXpath($dom);
+    $search->registerNamespace('docbook', DOCBOOK_NS);
+    $search->registerNamespace('phpdoc', PHPDOC_NS);
+
+    return $search;
 }
 
 function collect_parts(DOMNodeList $list): array
 {
-  $res = [];
-  foreach ($list as $el) {
-    $str = $el->ownerDocument->saveXML($el);
-    $chunk = substr($str, strlen($el->tagName) + 2, strlen($str) - 5 - 2*strlen($el->tagName));
-    if (strpos($chunk, 'xmlns') === 0) {
-      $chunk = substr($chunk, strpos($chunk, '>'));
+    $res = [];
+    foreach ($list as $el) {
+        $str = $el->ownerDocument->saveXML($el);
+        $chunk = substr($str, strlen($el->tagName) + 2, strlen($str) - 5 - 2 * strlen($el->tagName));
+        if (strpos($chunk, 'xmlns') === 0) {
+            $chunk = substr($chunk, strpos($chunk, '>'));
+        }
+        $res[] = xml_to_phpdoc(trim($chunk));
     }
-    $res[] = xml_to_phpdoc(trim($chunk));
-  }
-  return $res;
+    return $res;
 }
 
 /**
@@ -452,161 +649,135 @@ function collect_parts(DOMNodeList $list): array
  */
 function parse_phpdoc_functions(DOMDocument $dom)
 {
-    
-
     $functionsDoc = array();
     $aliases = [];
     $search = prepare_xpath($dom);
-    
-    
+
     foreach ($search->query('//docbook:refentry') as $xml) {
-        
-        $refnameDiv =  $xml->getElementsByTagName('refnamediv')->item(0);
+
+        $refnameDiv = $xml->getElementsByTagName('refnamediv')->item(0);
         foreach ($refnameDiv->getElementsByTagName('refname') as $refXML) {
-          $refname = $refXML->nodeValue;
-        
-        
-        
-          $refname = strtolower($refname);
-          
-         
-          $id = $xml->getAttribute('xml:id');
-          $deprecatedQuery = $search->query('docbook:refsynopsisdiv//docbook:emphasis[text()=\'DEPRECATED\']', $xml);
-          
-         
-          $functionDoc = [
-            'id' => $id,
-            'quickref' => trim($refnameDiv->getElementsByTagName('refpurpose')->item(0)->nodeValue) ,
-            'deprecated' => $deprecatedQuery->count() > 0
-          ];
+            $refname = $refXML->nodeValue;
 
-      
-          foreach ($search->query('docbook:refsect1', $xml) as $sec) {
-            
-            if ($sec->getAttribute('role') == 'description') {
-  
-              $methodInfo = null;
+            $refname = strtolower($refname);
 
-              if($sec->getElementsByTagName('methodsynopsis')->count()) {
-                $methodInfo = $sec->getElementsByTagName('methodsynopsis');
-              } else if ($sec->getElementsByTagName('constructorsynopsis')->count()) {
-                $methodInfo = $sec->getElementsByTagName('constructorsynopsis');
-              }
-              if (!$methodInfo) {
-                $aliased = $search->query('docbook:simpara/docbook:function', $sec);
-                if ($aliased->count()) {
-                  $aliases[$refname] = $functionDoc;
-                  $aliases[$refname]['alias'] = strtolower($aliased->item(0)->nodeValue);
+            $id = $xml->getAttribute('xml:id');
+            $deprecatedQuery = $search->query('docbook:refsynopsisdiv//docbook:emphasis[text()=\'DEPRECATED\']', $xml);
+
+            $functionDoc = [
+                'id' => $id,
+                'quickref' => trim($refnameDiv->getElementsByTagName('refpurpose')->item(0)->nodeValue),
+                'deprecated' => $deprecatedQuery->count() > 0
+            ];
+
+            foreach ($search->query('docbook:refsect1', $xml) as $sec) {
+
+                if ($sec->getAttribute('role') == 'description') {
+
+                    $methodInfo = null;
+
+                    if ($sec->getElementsByTagName('methodsynopsis')->count()) {
+                        $methodInfo = $sec->getElementsByTagName('methodsynopsis');
+                    } else if ($sec->getElementsByTagName('constructorsynopsis')->count()) {
+                        $methodInfo = $sec->getElementsByTagName('constructorsynopsis');
+                    }
+                    if (! $methodInfo) {
+                        $aliased = $search->query('docbook:simpara/docbook:function', $sec);
+                        if ($aliased->count()) {
+                            $aliases[$refname] = $functionDoc;
+                            $aliases[$refname]['alias'] = strtolower($aliased->item(0)->nodeValue);
+                        }
+
+                        continue;
+                    }
+                    $functionsDoc[$refname] = $functionDoc;
+
+                    if ($methodInfo->count() == 1) {
+                        $methodInfo = $methodInfo->item(0);
+                    } elseif ($methodInfo->count() > 1) {
+                        $correct = null;
+
+                        foreach ($methodInfo as $el) {
+
+                            if (strtolower($el->getElementsByTagName('methodname')->item(0)->nodeValue) == $refname) {
+                                $correct = $el;
+
+                                break;
+                            }
+                        }
+                        $methodInfo = $correct ?? $methodInfo->item(0);
+                    }
+
+                    $methodName = $methodInfo->getElementsByTagName('methodname')->item(0)->nodeValue;
+                    if (strpos((string) $methodName, '::') !== false) {
+                        list ($functionsDoc[$refname]['classname'], $functionsDoc[$refname]['methodname']) = explode('::', $methodName);
+                    } else {
+                        $functionsDoc[$refname]['classname'] = null;
+                        $functionsDoc[$refname]['methodname'] = $methodName;
+                    }
+
+                    $returnType = $methodInfo->getElementsByTagName('type');
+                    if ($returnType->count()) {
+                        $functionsDoc[$refname]['returntype'] = parse_phpdoc_type($returnType->item(0));
+                    } elseif ($methodInfo->tagName != 'constructorsynopsis') {
+                        $functionsDoc[$refname]['returntype'] = 'void';
+                    }
+
+                    $functionsDoc[$refname]['parameters'] = [];
+                    if ($methodInfo->getElementsByTagName('void')->count() == 0) {
+                        foreach ($search->query('docbook:methodparam', $methodInfo) as $param) {
+                            $paramName = $param->getElementsByTagName('parameter')->item(0);
+                            $paramInitializer = $param->getElementsByTagName('initializer');
+                            $paramDef = [
+                                'name' => $paramName->nodeValue,
+                                'type' => parse_phpdoc_type($param->getElementsByTagName('type')->item(0)),
+                                'isoptional' => $param->getAttribute('choice') == 'opt',
+                                'isreference' => $paramName->getAttribute('role') == 'reference',
+                                'isvariadic' => $param->getAttribute('rep') == 'repeat',
+                                'initializer' => check_initializer($paramInitializer->count() ? $paramInitializer->item(0)->nodeValue : null)
+                            ];
+                            $functionsDoc[$refname]['parameters'][$paramDef['name']] = $paramDef;
+                        }
+                    }
                 }
-                
-                 continue;
-              }
-              $functionsDoc[$refname] = $functionDoc;
-              
-              if ($methodInfo->count() == 1) {
-                $methodInfo = $methodInfo->item(0);
-              } elseif ($methodInfo->count() > 1) {
-                $correct = null;
-               
-                foreach ($methodInfo as $el) {
-                  
-                  if (strtolower($el->getElementsByTagName('methodname')->item(0)->nodeValue) == $refname ) {
-                    $correct = $el;
-                   
-                    break;
-                  }
+
+                if ($sec->getAttribute('role') == 'parameters') {
+                    $list = $search->query('docbook:variablelist/docbook:varlistentry', $sec);
+                    if ($list->count() == 0) {
+                        $list = $search->query('*/docbook:variablelist/docbook:varlistentry', $sec);
+                    }
+                    foreach ($search->query('docbook:variablelist/docbook:varlistentry', $sec) as $var) {
+                        if ($search->query('docbook:term/docbook:parameter', $var)->item(0) == null) {
+                            continue;
+                        }
+
+                        $paramName = $search->query('docbook:term/docbook:parameter', $var)->item(0)->nodeValue;
+                        if (! isset($functionsDoc[$refname]['parameters'][$paramName])) {
+                            continue;
+                        }
+                        $doc = $search->query('docbook:listitem//docbook:para', $var);
+                        if ($doc->count() == 0) {
+                            $doc = $search->query('docbook:listitem//docbook:simpara', $var);
+                        }
+
+                        $functionsDoc[$refname]['parameters'][$paramName]['paramdoc'] = xml_para_to_phpdoc($doc);
+                    }
                 }
-                $methodInfo = $correct ?? $methodInfo->item(0);
-              }
-             
-             
-              
-             
-       
-                $methodName = $methodInfo->getElementsByTagName('methodname')->item(0)->nodeValue;
-                if (strpos((string)$methodName, '::') !== false) {
-                  list($functionsDoc[$refname]['classname'],$functionsDoc[$refname]['methodname']) = explode('::', $methodName);
-                } else {
-                  $functionsDoc[$refname]['classname'] = null;
-                  $functionsDoc[$refname]['methodname'] = $methodName;
+                if ($sec->getAttribute('role') == 'returnvalues') {
+                    $doc = $search->query('.//docbook:para', $sec);
+                    if ($doc->count() == 0) {
+                        $doc = $search->query('.//docbook:simpara', $sec);
+                    }
+
+                    $functionsDoc[$refname]['returndoc'] = xml_para_to_phpdoc($doc);
                 }
-                
-                
-                
-                
-                $returnType = $methodInfo->getElementsByTagName('type');
-                if ($returnType->count()) {
-                  $functionsDoc[$refname]['returntype'] = parse_phpdoc_type($returnType->item(0));
-                } elseif($methodInfo->tagName != 'constructorsynopsis') {
-                  $functionsDoc[$refname]['returntype'] = 'void';
-                }
-              
-                $functionsDoc[$refname]['parameters'] = [];
-                if ($methodInfo->getElementsByTagName('void')->count() == 0) {
-                  foreach ($search->query('docbook:methodparam', $methodInfo) as $param) {
-                    $paramName = $param->getElementsByTagName('parameter')->item(0);
-                    $paramInitializer = $param->getElementsByTagName('initializer');
-                    $paramDef = [
-                      'name' => $paramName->nodeValue,
-                      'type' => parse_phpdoc_type($param->getElementsByTagName('type')->item(0)),
-                      'isoptional' => $param->getAttribute('choice') == 'opt',
-                      'isreference' => $paramName->getAttribute('role') == 'reference',
-                      'isvariadic' => $param->getAttribute('rep') == 'repeat',
-                      'initializer' => $paramInitializer->count() ? $paramInitializer->item(0)->nodeValue : null
-                    ];
-                    $functionsDoc[$refname]['parameters'][$paramDef['name']] = $paramDef;
-                  }
-                }
-         
-              }
-              
-            
-            if ($sec->getAttribute('role') == 'parameters') {
-              $list = $search->query('docbook:variablelist/docbook:varlistentry', $sec);
-              if ($list->count() == 0) {
-                $list = $search->query('*/docbook:variablelist/docbook:varlistentry', $sec);
-              }
-              foreach ($search->query('docbook:variablelist/docbook:varlistentry', $sec) as $var) {
-                if ($search->query('docbook:term/docbook:parameter', $var)->item(0) == null) {
-                  continue;
-                }
-                
-                $paramName = $search->query('docbook:term/docbook:parameter', $var)->item(0)->nodeValue;
-                if (!isset($functionsDoc[$refname]['parameters'][$paramName])) {
-                  continue;
-                }
-                $doc = $search->query('docbook:listitem//docbook:para', $var);
-                if ($doc->count() ==0) {
-                  $doc = $search->query('docbook:listitem//docbook:simpara', $var);
-                }
-                
-                
-                $functionsDoc[$refname]['parameters'][$paramName]['paramdoc'] =  xml_para_to_phpdoc($doc);
-              }
-             
-         
             }
-            if ($sec->getAttribute('role') == 'returnvalues') {
-              $doc = $search->query('.//docbook:para', $sec);
-              if ($doc->count() ==0) {
-                $doc = $search->query('.//docbook:simpara', $sec);
-              }
-
-              
-              
-              $functionsDoc[$refname]['returndoc'] = xml_para_to_phpdoc($doc);
-            }
-           
-            
-          }
         }
-    
-    }
-    
-    foreach ($aliases as $name => $target){
-      $functionsDoc[$name] = array_merge($functionsDoc[$target['alias']], $target);
     }
 
+    foreach ($aliases as $name => $target) {
+        $functionsDoc[$name] = array_merge($functionsDoc[$target['alias']], $target);
+    }
 
     return $functionsDoc;
 }
@@ -626,90 +797,107 @@ function parse_phpdoc_classes(DOMDocument $dom)
     $classesDoc = array();
 
     foreach ($search->query('//docbook:varlistentry[@xml:id]') as $fieldDoc) {
-      $id = $fieldDoc->getAttribute('xml:id');
-      
-      $doc = xml_para_to_phpdoc($search->query('.//docbook:listitem/docbook:para', $fieldDoc));
-      $deprecated = $search->query('.//docbook:listitem/docbook:warning/docbook:emphasis[text()=\'DEPRECATED\']', $fieldDoc)->count() > 0;
-      $term = $fieldDoc->getElementsByTagName('term')->item(0);
-      if ($term->getElementsByTagName('varname')->count() == 0) {
-        continue;
-      }
-      
-      $fields_doc[$id] = [
-        'doc' => $doc,
-        'const' => $term->getElementsByTagName('varname')->count() == 0,
-        'name' => $term->getElementsByTagName('varname')->item(0)->nodeValue,
-        'deprecated' => $deprecated
-      ];
-    }
-    
+        $id = $fieldDoc->getAttribute('xml:id');
 
-    
-    foreach ( $search->query('//phpdoc:classref|//phpdoc:exceptionref') as $xml) {
-
-      $id = $xml->getAttribute('xml:id');
-
-      $class = $xml->getElementsByTagName('titleabbrev')->item(0)->nodeValue;
-      $refname = strtolower($class);
-      $classesDoc[$refname] = [
-        'id' => $id,
-        'name' => $class,
-        'fields' => []
-      ];
-      
-      foreach ($search->query('docbook:partintro/docbook:section', $xml) as $sec) {
-        if (strpos($sec->getAttribute('xml:id'), '.intro')) {
-          $classesDoc[$refname]['doc'] = xml_para_to_phpdoc($search->query('.//docbook:para', $sec));
+        $doc = xml_para_to_phpdoc($search->query('.//docbook:listitem/docbook:para', $fieldDoc));
+        $deprecated = $search->query('.//docbook:listitem/docbook:warning/docbook:emphasis[text()=\'DEPRECATED\']', $fieldDoc)->count() > 0;
+        $term = $fieldDoc->getElementsByTagName('term')->item(0);
+        if ($term->getElementsByTagName('varname')->count() == 0) {
+            continue;
         }
-      }
-      
-      $fields_doc[$refname] = [];
-      foreach ($search->query('.//docbook:fieldsynopsis', $xml) as $field) {
-        $varname = $field->getElementsByTagName('varname')->item(0);
-        $initializer = $field->getElementsByTagName('initializer');
-        $fieldName = $varname->nodeValue;
-        $fieldId = $varname->getAttribute('linkend');
-       
-        //$deprecatedQuery = $search->query('docbook:refsynopsisdiv//docbook:emphasis[text()=\'DEPRECATED\']', $xml);
-        $fieldDef = [
-          'name' => $fieldName,
-          'type' => parse_phpdoc_type($field->getElementsByTagName('type')->item(0)),
-          'initializer' => $initializer->count() ? $initializer->item(0)->nodeValue : null,
-          'deprecated' => $deprecated,
-          'modifiers' => []
+
+        $fields_doc[$id] = [
+            'doc' => $doc,
+            'const' => $term->getElementsByTagName('varname')->count() == 0,
+            'name' => $term->getElementsByTagName('varname')->item(0)->nodeValue,
+            'deprecated' => $deprecated
         ];
-        foreach ($field->getElementsByTagName('modifier') as $mod) {
-          $fieldDef['modifiers'][] = $mod->nodeValue;
-        }
-        if (in_array('private', $fieldDef['modifiers'])) {
-          continue;
-        }
-        if (in_array('const', $fieldDef['modifiers'])) {
-          continue; // skip constants
-        }
-        //$fields_doc[$refname][$fieldId] = $fieldDef;
-        if (!isset($fields_doc[$fieldId])) {
-          // sometimes description is in different place
-          $desc = $search->query("//docbook:refentry[@xml:id='$fieldId']/docbook:refnamediv/docbook:refpurpose");
-          if ($desc->count()) {
-            $fields_doc[$fieldId] = [
-              'doc' => $desc->item(0)->nodeValue,
-              'deprecated' => false
-            ];
-          } else {
-            $fields_doc[$fieldId] = [
-              'doc' => null,
-              'deprecated' => false
-            ];
-          }
-          
-        }
-        $classesDoc[$refname]['fields'][$fieldName] = array_merge($fields_doc[$fieldId], $fieldDef);
-      }
-     
-   
     }
+
+    foreach ($search->query('//phpdoc:classref|//phpdoc:exceptionref') as $xml) {
+
+        $id = $xml->getAttribute('xml:id');
+
+        $class = $xml->getElementsByTagName('titleabbrev')->item(0)->nodeValue;
+        $refname = strtolower($class);
+        $classesDoc[$refname] = [
+            'id' => $id,
+            'name' => $class,
+            'fields' => []
+        ];
+
+        foreach ($search->query('docbook:partintro/docbook:section', $xml) as $sec) {
+            if (strpos($sec->getAttribute('xml:id'), '.intro')) {
+                $classesDoc[$refname]['doc'] = xml_para_to_phpdoc($search->query('.//docbook:para', $sec));
+            }
+        }
+
+        $fields_doc[$refname] = [];
+        foreach ($search->query('.//docbook:fieldsynopsis', $xml) as $field) {
+            $varname = $field->getElementsByTagName('varname')->item(0);
+            $initializer = $field->getElementsByTagName('initializer');
+            $fieldName = $varname->nodeValue;
+
+            if (strpos($fieldName, '->') !== false) {
+                $fieldName = explode('->', $fieldName)[1];
+            }
+            if (strpos($fieldName, '::') !== false) {
+                $fieldName = explode('::', $fieldName)[1];
+            }
+            $fieldId = $varname->getAttribute('linkend');
+
+            // $deprecatedQuery = $search->query('docbook:refsynopsisdiv//docbook:emphasis[text()=\'DEPRECATED\']', $xml);
+            $fieldDef = [
+                'name' => $fieldName,
+                'type' => parse_phpdoc_type($field->getElementsByTagName('type')->item(0)),
+                'initializer' => check_initializer($initializer->count() ? $initializer->item(0)->nodeValue : null),
+                'deprecated' => $deprecated,
+                'modifiers' => []
+            ];
+            foreach ($field->getElementsByTagName('modifier') as $mod) {
+                $fieldDef['modifiers'][] = $mod->nodeValue;
+            }
+            if (in_array('private', $fieldDef['modifiers'])) {
+                continue;
+            }
+            if (in_array('const', $fieldDef['modifiers'])) {
+                continue; // skip constants
+            }
+            $fieldDef['modifier'] = clean_php_field_modifiers($fieldDef['modifiers']);
+            // $fields_doc[$refname][$fieldId] = $fieldDef;
+            if (! isset($fields_doc[$fieldId])) {
+                // sometimes description is in different place
+                $desc = $search->query("//docbook:refentry[@xml:id='$fieldId']/docbook:refnamediv/docbook:refpurpose");
+                if ($desc->count()) {
+                    $fields_doc[$fieldId] = [
+                        'doc' => $desc->item(0)->nodeValue,
+                        'deprecated' => false
+                    ];
+                } else {
+                    $fields_doc[$fieldId] = [
+                        'doc' => null,
+                        'deprecated' => false
+                    ];
+                }
+            }
+            $classesDoc[$refname]['fields'][$fieldName] = array_merge($fields_doc[$fieldId], $fieldDef);
+        }
+    }
+
     return $classesDoc;
+}
+
+function clean_php_field_modifiers(array $modifiers)
+{
+    $filtered = [];
+    foreach ($modifiers as $mod) {
+        if ($mod == 'readonly' && version_compare(phpversion(), "8.1.0") < 0) {
+            continue;
+        }
+        $filtered[] = $mod;
+    }
+
+    return implode(' ', $filtered);
 }
 
 /**
@@ -724,62 +912,57 @@ function parse_phpdoc_constants(DOMDocument $dom)
     $search = prepare_xpath($dom);
     $constantsDoc = array();
     foreach ($search->query('//docbook:varlistentry') as $xml) {
-      $term = $xml->getElementsByTagName('term')->item(0);
-      if ($term == null) {
-        continue;
-      }
-      if ($term->getElementsByTagName('constant')->count() == 0) {
-        continue;
-      }
-      $id = $xml->getAttribute('xml:id');
-      if (!$id) {
-        continue;
-      }
-      $name = $term->getElementsByTagName('constant')->item(0)->nodeValue;
-      $type = parse_phpdoc_type($term->getElementsByTagName('type')->item(0));
-      $deprecated = $search->query('.//docbook:listitem/docbook:warning/docbook:emphasis[text()=\'DEPRECATED\']', $xml)->count() > 0;
-      $doc = $search->query('.//docbook:listitem//docbook:para', $xml);
-      if ($doc->count() ==0) {
-        $doc = $search->query('.//docbook:listitem//docbook:simpara', $xml);
-      }
-      $doc = xml_para_to_phpdoc($doc);
-      $linkend = $search->query('.//docbook:link[@linkend]', $xml);
-      if ($linkend->count()) {
-        $prevId = $id;
-        $id = $linkend->item(0)->getAttribute('linkend');
-        $targetLink = $search->query('//docbook:appendix[@xml:id=\'' . $id . '\']//docbook:constant[text()=\'' . $name . '\']')->item(0);
-        if ($targetLink && $targetLink->parentNode->tagName == 'entry') {
-          $doc = $targetLink->parentNode->nextElementSibling->nodeValue;
-          
+        $term = $xml->getElementsByTagName('term')->item(0);
+        if ($term == null) {
+            continue;
         }
-      } else {
-        $tmp = $xml;
-        $names = [];
-        while ($tmp instanceof DOMElement) {
-          
-          if ($tmp->tagName == 'appendix' || $tmp->tagName == 'section' || $tmp->tagName == 'phpdoc:exceptionref' || $tmp->tagName == 'phpdoc:classref' || $tmp->tagName == 'sect1') {
-            
-            if ($tmp->getAttribute('xml:id')) {
-              $id = $tmp->getAttribute('xml:id');
-              break;
-              
+        if ($term->getElementsByTagName('constant')->count() == 0) {
+            continue;
+        }
+        $id = $xml->getAttribute('xml:id');
+        if (! $id) {
+            continue;
+        }
+        $name = $term->getElementsByTagName('constant')->item(0)->nodeValue;
+        $type = parse_phpdoc_type($term->getElementsByTagName('type')->item(0));
+        $deprecated = $search->query('.//docbook:listitem/docbook:warning/docbook:emphasis[text()=\'DEPRECATED\']', $xml)->count() > 0;
+        $doc = $search->query('.//docbook:listitem//docbook:para', $xml);
+        if ($doc->count() == 0) {
+            $doc = $search->query('.//docbook:listitem//docbook:simpara', $xml);
+        }
+        $doc = xml_para_to_phpdoc($doc);
+        $linkend = $search->query('.//docbook:link[@linkend]', $xml);
+        if ($linkend->count()) {
+            $prevId = $id;
+            $id = $linkend->item(0)->getAttribute('linkend');
+            $targetLink = $search->query('//docbook:appendix[@xml:id=\'' . $id . '\']//docbook:constant[text()=\'' . $name . '\']')->item(0);
+            if ($targetLink && $targetLink->parentNode->tagName == 'entry') {
+                $doc = $targetLink->parentNode->nextElementSibling->nodeValue;
             }
-          }
-   
-          $tmp = $tmp->parentNode;
+        } else {
+            $tmp = $xml;
+            $names = [];
+            while ($tmp instanceof DOMElement) {
+
+                if ($tmp->tagName == 'appendix' || $tmp->tagName == 'section' || $tmp->tagName == 'phpdoc:exceptionref' || $tmp->tagName == 'phpdoc:classref' || $tmp->tagName == 'sect1') {
+
+                    if ($tmp->getAttribute('xml:id')) {
+                        $id = $tmp->getAttribute('xml:id');
+                        break;
+                    }
+                }
+
+                $tmp = $tmp->parentNode;
+            }
         }
-        
-      }
-      $constantsDoc[$name] = [
-        'id' => $id,
-        'doc' => $doc,
-        'deprecated' => $deprecated,
-        'type' => $type
-      ];
-      
+        $constantsDoc[$name] = [
+            'id' => $id,
+            'doc' => $doc,
+            'deprecated' => $deprecated,
+            'type' => $type
+        ];
     }
-    
-   
+
     return $constantsDoc;
 }
 
@@ -853,7 +1036,6 @@ function print_class($classRef, $tabs = 0)
     $classRefName = $classRef->getName();
     $className = strtolower($classRefName);
     $processedClasses[$className] = true;
-    
 
     print "\n";
     if ($handleNamespaces) {
@@ -872,12 +1054,12 @@ function print_class($classRef, $tabs = 0)
         $lastBackslashIdx = false;
     }
     print_doccomment($classRef, $tabs);
-   
+
     if (version_compare(phpversion(), "8.0.0") >= 0) {
         foreach ($classRef->getAttributes() as $attr) {
             print_tabs($tabs);
             print '#[';
-            print $attr->getName();
+            print build_php_type($attr->getName(), false, true);
             if (count($attr->getArguments())) {
                 print '(';
                 foreach ($attr->getArguments() as $arg) {
@@ -893,7 +1075,7 @@ function print_class($classRef, $tabs = 0)
     print_tabs($tabs);
     if ($classRef->isFinal())
         print "final ";
-    if (version_compare(phpversion(), "8.2.0") >= 0 && $classRef->isReadOnly())  {
+    if (version_compare(phpversion(), "8.2.0") >= 0 && $classRef->isReadOnly()) {
         print 'readonly ';
     }
     if (! $classRef->isInterface() && $classRef->isAbstract())
@@ -947,36 +1129,73 @@ function print_class($classRef, $tabs = 0)
 
     // process properties
     $propertiesRef = $classRef->getProperties();
-    if (count($propertiesRef) > 0) {
-        foreach ($propertiesRef as $propertyRef) {
-            print_property($propertyRef, $tabs + 1);
-            $printedFields[$propertyRef->getName()] = true;
-        }
-        print "\n";
-    }
-
-    if ($className == "DomDocument") {
-        echo "DomDocument";
+    $classfieldsDoc = [];
+    if (isset($classesDoc[$className]['fields'])) {
+        $classfieldsDoc = $classesDoc[$className]['fields'];
     }
 
     global $fields_doc;
-    if (isset($fields_doc[$className]) && $fields_doc[$className]) {
-        $fields = $fields_doc[$className];
-        foreach ($fields as $field) {
+    if (count($classfieldsDoc) || count($propertiesRef)) {
+        foreach ($propertiesRef as $propertyRef) {
+            if ($propertyRef->getDeclaringClass()->getName() != $classRef->getName()) {
+                unset($classfieldsDoc[$propertyRef->getName()]);
+                continue;
+            }
+            if (! isset($classfieldsDoc[$propertyRef->getName()])) {
+                $classfieldsDoc[$propertyRef->getName()] = [
+                    'name' => $propertyRef->getName(),
+                    'type' => null,
+                    'doc' => null,
+                    'modifier' => null,
+                    'deprecated' => false,
+                    'initializer' => null,
+                    'id' => null
+                ];
+            }
+            if (! $classfieldsDoc[$propertyRef->getName()]['doc']) {
+                $classfieldsDoc[$propertyRef->getName()]['doc'] = $propertyRef->getDocComment();
+            }
+            if (! $classfieldsDoc[$propertyRef->getName()]['type'] && $propertyRef->getType()) {
+                $classfieldsDoc[$propertyRef->getName()]['type'] = build_php_type($propertyRef->getType()->__toString(), false, false);
+            }
+            if (! $classfieldsDoc[$propertyRef->getName()] && $propertyRef->hasDefaultValue()) {
+                $classfieldsDoc[$propertyRef->getName()]['initializer'] = var_export($propertyRef->getDefaultValue(), true);
+            }
+            if (! $classfieldsDoc[$propertyRef->getName()]['modifier']) {
+                $mods = [];
+                if ($propertyRef->isPublic()) {
+                    $mods[] = 'public';
+                }
+                if ($propertyRef->isProtected()) {
+                    $mods[] = 'protected';
+                }
+                if (is_callable([
+                    $propertyRef,
+                    'isReadOnly'
+                ]) && $propertyRef->isReadOnly()) {
+                    $mods[] = 'readonly';
+                }
+                if ($propertyRef->isStatic()) {
+                    $mods[] = 'static';
+                }
+                $classfieldsDoc[$propertyRef->getName()]['modifier'] = clean_php_field_modifiers($mods);
+            }
+        }
+        foreach ($classfieldsDoc as $field) {
             if (! key_exists($field['name'], $printedFields) && isset($field['modifier']) && trim($field['modifier']) !== '') {
 
                 // print doc here
                 print("\n");
-                $doc = $field['doc'];
+                $doc = $field['doc'] ?? '{@inheritdoc}';
                 if ($doc) {
                     print_tabs($tabs + 1);
                     print "/**\n";
                     print_tabs($tabs + 1);
                     print " * " . newline_to_phpdoc($doc, $tabs + 1) . "\n";
                     print_tabs($tabs + 1);
-             
-                    print " * @var " . clean_php_identifier($field['type'], true) . "\n";
-                   
+
+                    print " * @var " . build_php_type($field['type'], true, false) . "\n";
+
                     if ($field['deprecated'] == true) {
                         print_tabs($tabs + 1);
                         print " * @deprecated " . "\n";
@@ -999,6 +1218,9 @@ function print_class($classRef, $tabs = 0)
                     $field['modifier']
                 ));
                 print " ";
+                if ($field['type']) {
+                    print build_php_type($field['type'], false, true) . ' ';
+                }
                 print "\${$field['name']};\n";
             }
         }
@@ -1022,24 +1244,6 @@ function print_class($classRef, $tabs = 0)
     }
     print_tabs($tabs);
     print "}\n";
-}
-
-/**
- * Prints ReflectionProperty in format of PHP code
- *
- * @param $propertyRef ReflectionProperty
- *            object
- * @param $tabs integer
- *            [optional] number of tabs for indentation
- */
-function print_property($propertyRef, $tabs = 0)
-{
-    print_doccomment($propertyRef, $tabs);
-    print_tabs($tabs);
-    print_modifiers($propertyRef, array(
-        "abstract"
-    ));
-    print "\${$propertyRef->getName()};\n";
 }
 
 function print_function($functionRef, $tabs = 0, $isMethod = false)
@@ -1083,7 +1287,7 @@ function print_function($functionRef, $tabs = 0, $isMethod = false)
     } else {
         print "{$functionRef->getName()} (";
     }
-    
+
     $parameters = isset($functionsDoc[$funckey]['parameters']) ? $functionsDoc[$funckey]['parameters'] : null;
 
     if ($parameters) {
@@ -1092,13 +1296,18 @@ function print_function($functionRef, $tabs = 0, $isMethod = false)
         print_parameters_ref($functionRef->getParameters());
     }
     print ')';
-    if (!empty($functionsDoc[$funckey]['returntype'])) {
-      print ': ' . $functionsDoc[$funckey]['returntype'];
-    } elseif ($functionRef->getReturnType() != null) {
-        print ': ' . $functionRef->getReturnType()->__toString();
+    $type = null;
+    if (! empty($functionsDoc[$funckey]['returntype'])) {
+        $type = build_php_type($functionsDoc[$funckey]['returntype'], false, true);
+    }
+    if (!$type && $functionRef->getReturnType() != null) {
+        $type = build_php_type($functionRef->getReturnType()->__toString(), false, true);
+    }
+    if ($type) {
+        print ': ' . $type;
     }
     if ($functionRef instanceof ReflectionMethod && $functionRef->isAbstract()) {
-        print "\n";
+        print ";\n";
     } else {
         print " {}\n";
     }
@@ -1115,15 +1324,12 @@ function print_parameters($parameters)
     global $addGlobalNSPrefix;
     $i = 0;
     foreach ($parameters as $parameter) {
-      
+
         if ($parameter['name'] != "...") {
             if ($i ++ > 0) {
                 print ", ";
             }
-            $type = $parameter['type'];
-            if ($type) {
-                $type = clean_php_type_hint($type);
-            }
+            $type = build_php_type($parameter['type'], false, true);
             // http://php.net/manual/en/functions.arguments.php
             if ($type) {
                 print $type . ' ';
@@ -1131,18 +1337,15 @@ function print_parameters($parameters)
             if (isset($parameter['isreference']) && $parameter['isreference']) {
                 print "&";
             }
-            if (!isset($parameter['name'])) {
-        
-              
-            }
-            if ($parameter['isvariadic']) {
-              print '...';
+            if (! isset($parameter['name'])) {}
+            if ($parameter['isvariadic'] && $i == count($parameters)) {
+                print '...';
             }
             print "\${$parameter['name']}";
-            
+
             if (isset($parameter['isoptional']) && $parameter['isoptional']) {
                 if (isset($parameter['initializer']) && $parameter['initializer']) {
-                  print ' = ' . $parameter['initializer'];
+                    print ' = ' . $parameter['initializer'];
                 } elseif (isset($parameter['defaultvalue']) && $parameter['defaultvalue']) {
                     $value = $parameter['defaultvalue'];
                     if (! is_numeric($value)) {
@@ -1171,34 +1374,33 @@ function print_parameters_ref($paramsRef)
         if ($i ++ > 0) {
             print ", ";
         }
-        
-        
+
         if ($paramRef->getType() != null) {
-            print $paramRef->getType()->__toString() . ' ';
+            print build_php_type($paramRef->getType()->__toString(), false, true) . ' ';
         }
-        
+
         $name = $paramRef->getName() ? $paramRef->getName() : "var" . ($i + 1);
         if ($name != "...") {
-           
+
             if ($paramRef->isPassedByReference()) {
                 print "&";
             }
-            if (version_compare(phpversion(), "5.6.0") >= 0 && $paramRef->isVariadic()) {
+            if (version_compare(phpversion(), "5.6.0") >= 0 && $paramRef->isVariadic() && count($paramsRef) == $i) {
                 print "...\${$name}";
                 // variadic parameters do not support default values
                 continue;
             }
             print "\${$name}";
-            if ($paramRef->allowsNull()) {
-                print " = null";
-            } elseif ($paramRef->isDefaultValueAvailable() || $paramRef->isOptional()) {
-                $value = "null";
+            if ($paramRef->isDefaultValueAvailable() || $paramRef->isOptional()) {
+                $value = null;
                 if ($paramRef->isDefaultValueAvailable()) {
                     $value = $paramRef->getDefaultValue();
                 }
                 $value = var_export($value, true);
-                
+
                 print " = {$value}";
+            } elseif ($paramRef->allowsNull()) {
+                print " = null";
             }
         }
     }
@@ -1228,7 +1430,7 @@ function print_constant($name, $value = null, $tabs = 0)
     if ($value === null) {
         try {
             $value = @constant($name);
-        } catch(Throwable $e) {}
+        } catch (Throwable $e) {}
     }
     $value = escape_const_value($value);
 
@@ -1247,12 +1449,12 @@ function print_constant($name, $value = null, $tabs = 0)
             print " * @link " . make_url($id) . "\n";
         }
         if ($type) {
-          print_tabs($tabs);
-          print " * @var " . $type . "\n";
+            print_tabs($tabs);
+            print " * @var " . $type . "\n";
         }
         if ($deprecated) {
-          print_tabs($tabs);
-          print " * @deprecated\n";
+            print_tabs($tabs);
+            print " * @deprecated\n";
         }
         print_tabs($tabs);
         print " */\n";
@@ -1266,7 +1468,7 @@ function escape_const_value($value)
     if (is_resource($value)) {
         $value = "\"${value}\"";
     } elseif (is_array($value)) {
-       $value = var_export($value, true);
+        $value = var_export($value, true);
     } elseif (! is_numeric($value) && ! is_bool($value) && $value !== null) {
         if ($value === '\\') {
             $value = '"' . addcslashes($value, "\\\"\r\n\t") . '"';
@@ -1294,30 +1496,30 @@ function escape_const_value($value)
 function print_class_constants($refname, $constants, $tabs = 0)
 {
     global $constantsDoc;
-    
+
     foreach ($constants as $name => $value) {
-        if(isset($constantsDoc[$refname . '::' . $name])) {
-          
-          if ($constantsDoc[$refname . '::' . $name]['type'] || $constantsDoc[$refname . '::' . $name]['doc'] || $constantsDoc[$refname . '::' . $name]['deprecated']) {
-            print_tabs($tabs);
-            print "/**\n";
-            
-            if ( $constantsDoc[$refname . '::' . $name]['doc']) {
-              print_tabs($tabs);
-              print " * " . newline_to_phpdoc( $constantsDoc[$refname . '::' . $name]['doc'], $tabs) . "\n";
+        if (isset($constantsDoc[$refname . '::' . $name])) {
+
+            if ($constantsDoc[$refname . '::' . $name]['type'] || $constantsDoc[$refname . '::' . $name]['doc'] || $constantsDoc[$refname . '::' . $name]['deprecated']) {
+                print_tabs($tabs);
+                print "/**\n";
+
+                if ($constantsDoc[$refname . '::' . $name]['doc']) {
+                    print_tabs($tabs);
+                    print " * " . newline_to_phpdoc($constantsDoc[$refname . '::' . $name]['doc'], $tabs) . "\n";
+                }
+                if ($constantsDoc[$refname . '::' . $name]['type']) {
+                    print_tabs($tabs);
+                    print " * @var " . $constantsDoc[$refname . '::' . $name]['type'] . "\n";
+                }
+                if ($constantsDoc[$refname . '::' . $name]['deprecated']) {
+                    print_tabs($tabs);
+                    print " * @deprecated\n";
+                }
             }
-            if ( $constantsDoc[$refname . '::' . $name]['type']) {
-              print_tabs($tabs);
-              print " * @var " . $constantsDoc[$refname . '::' . $name]['type'] . "\n";
-            }
-            if ( $constantsDoc[$refname . '::' . $name]['deprecated']) {
-              print_tabs($tabs);
-              print " * @deprecated\n";
-            }
-          }
-        }  
+        }
         $value = escape_const_value($value);
-        
+
         print_tabs($tabs);
         print "const {$name} = {$value};\n";
     }
@@ -1364,20 +1566,20 @@ function make_url($id)
  * @param $tabs integer
  *            [optional] number of tabs for indentation
  */
-function print_doccomment($ref, $tabs = 0)
+function print_doccomment($ref, $tabs = 0, array $docs = [])
 {
     global $functionsDoc;
     global $classesDoc;
     global $addGlobalNSPrefix;
 
     $docComment = $ref->getDocComment();
-    
+
     if ($docComment) {
         print_tabs($tabs);
         print "{$docComment}\n";
     } elseif ($ref instanceof ReflectionClass) {
         $refname = strtolower($ref->getName());
-        
+
         if (isset($classesDoc[$refname]) && $classesDoc[$refname]) {
             print_tabs($tabs);
             print "/**\n";
@@ -1397,7 +1599,7 @@ function print_doccomment($ref, $tabs = 0)
         }
     } elseif ($ref instanceof ReflectionFunctionAbstract) {
         $funckey = make_funckey_from_ref($ref);
-       
+
         $returntype = isset($functionsDoc[$funckey]['returntype']) ? $functionsDoc[$funckey]['returntype'] : null;
         $desc = isset($functionsDoc[$funckey]['quickref']) ? $functionsDoc[$funckey]['quickref'] : null;
         $deprecated = isset($functionsDoc[$funckey]['deprecated']) ? $functionsDoc[$funckey]['deprecated'] : null;
@@ -1405,7 +1607,7 @@ function print_doccomment($ref, $tabs = 0)
 
         $paramsRef = $ref->getParameters();
         $parameters = isset($functionsDoc[$funckey]['parameters']) ? $functionsDoc[$funckey]['parameters'] : null;
-
+        $desc = $desc ?? '{@inheritdoc}';
         if ($desc || count($paramsRef) > 0 || $parameters || $returntype) {
             print_tabs($tabs);
             print "/**\n";
@@ -1421,10 +1623,9 @@ function print_doccomment($ref, $tabs = 0)
             if ($parameters) {
                 foreach ($parameters as $parameter) {
                     print_tabs($tabs);
-                    
-                    if (clean_php_identifier($parameter['type'], true) === $parameter['type']) {
-                        $realType = build_php_type($parameter['type'], $addGlobalNSPrefix, true, true);
-                        $printType = build_php_type($parameter['type'], $addGlobalNSPrefix === '\\' && class_exists($realType) ? '\\' : '', true);
+
+                    if ($parameter['type']) {
+                        $printType = build_php_type($parameter['type'], true, false) ?? 'mixed';
                         print " * @param {$printType} \${$parameter['name']}";
                     } else {
                         print " * @param mixed \${$parameter['name']}";
@@ -1442,14 +1643,13 @@ function print_doccomment($ref, $tabs = 0)
                     print_tabs($tabs);
                     $name = $paramRef->getName() ? $paramRef->getName() : "var" . ++ $i;
                     print " * @param";
-                    if ($className = get_parameter_classname($paramRef)) {
-                        if ($paramRef->getType()) {
-                          print ' ' . $paramRef->getType()->__toString();
-                        }
-                        
+
+                    if ($paramRef->getType()) {
+                        print ' ' . build_php_type($paramRef->getType()->__toString(), true, false) ?? 'mixed';
                     } else {
-                        print " mixed";
+                        print ' mixed';
                     }
+
                     print " \${$name}";
                     if ($paramRef->isOptional()) {
                         print " [optional]";
@@ -1460,9 +1660,8 @@ function print_doccomment($ref, $tabs = 0)
             if ($returntype) {
                 print_tabs($tabs);
                 $returntype = rewrite_phpdoc_return_types($funckey, $returntype);
-                if (clean_php_identifier($returntype, true) === $returntype) {
-                    $realType = build_php_type($returntype, $addGlobalNSPrefix, true, true);
-                    $printType = build_php_type($returntype, $addGlobalNSPrefix === '\\' && class_exists($realType) ? '\\' : '', true);
+                if ($returntype) {
+                    $printType = build_php_type($returntype, true, false);
                     print " * @return {$printType} {$returndoc}\n";
                 } else {
                     print " * @return mixed {$returndoc}\n";
@@ -1480,18 +1679,19 @@ function print_doccomment($ref, $tabs = 0)
     }
 }
 
-function xml_para_to_phpdoc(?DOMNodeList $list): ?string {
-  if ($list == null) {
-    return null;
-  }
-  $row = 0;
-  $parts = [];
-  $par = $list->count() > 0 && $list->item(0)->tagName != 'simpara';
-  foreach (collect_parts($list) as $el) {
-    $parts[] = $row++ == 0 || !$par ? $el : '<p>' . $el . '</p>';
-  }
+function xml_para_to_phpdoc(?DOMNodeList $list): ?string
+{
+    if ($list == null) {
+        return null;
+    }
+    $row = 0;
+    $parts = [];
+    $par = $list->count() > 0 && $list->item(0)->tagName != 'simpara';
+    foreach (collect_parts($list) as $el) {
+        $parts[] = $row ++ == 0 || ! $par ? $el : '<p>' . $el . '</p>';
+    }
 
-  return implode("\n", $parts);
+    return implode("\n", $parts);
 }
 
 /**
@@ -1545,20 +1745,6 @@ function newline_to_phpdoc($str, $tabs = 0)
 function print_tabs($tabs)
 {
     print str_repeat("\t", $tabs);
-}
-
-/**
- * Returns class name from given parameter reference, this method is a workaround
- * for the case when exception is thrown from getClass() when such classname does not exist.
- */
-function get_parameter_classname(ReflectionParameter $paramRef)
-{
-    if ($paramRef->getType() != null) {
-        return  $paramRef->getType()->__toString();
-    
-    }
-    
-    return null;
 }
 
 /**
@@ -1651,45 +1837,6 @@ function strip_tags_special($str)
     return $str;
 }
 
-function load_entities()
-{
-    global $phpdocDir;
-    $result = array();
-    $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($phpdocDir));
-    foreach ($iterator as $file) {
-        if (! $file->isFile() || ! in_array($file->getExtension(), array(
-            "xml",
-            "ent"
-        ))) {
-            continue;
-        }
-        preg_match_all('/<!ENTITY\s+([a-z0-9.]+)\s+\'(.*?)\'>/i', file_get_contents($file->getPathname()), $matches);
-        if ($matches) {
-            foreach ($matches[1] as $k => $v) {
-                $result[$v] = $matches[2][$k];
-            }
-        }
-    }
-    $result['false'] = 'false';
-    $result['true'] = 'true';
-    $result['return.void'] = '';
-    $result['return.success'] = 'Returns true on success or false on failure';
-
-    $names = array();
-    foreach (array_keys($result) as $v) {
-        $names[] = '&' . $v . ';';
-    }
-
-    // XXX: fill nested values
-    for ($i = 0; $i < 80; $i ++) {
-        array_map(function ($val) use ($names, $result) {
-            return str_replace($names, array_values($result), $val);
-        }, $result);
-    }
-
-    return $result;
-}
-
 function open_namespace($namespace)
 {
     global $handleNamespaces;
@@ -1755,21 +1902,6 @@ function close_namespace($removeEnglobingNamespaceDeclaration = false)
     }
 }
 
-function load_xml($str)
-{
-    static $entities_names = null, $entities_values = null;
-    if (null === $entities_names) {
-        $entities = load_entities();
-        $entities_values = array_values($entities);
-        $entities_names = array();
-        foreach (array_keys($entities) as $v) {
-            $entities_names[] = '&' . $v . ';';
-        }
-    }
-
-    return str_replace($entities_names, $entities_values, file_get_contents($str));
-}
-
 /**
  * Prints usage help to the screen, and exits from program
  */
@@ -1778,13 +1910,12 @@ function show_help()
     global $argv0;
 
     die(<<<EOF
-USAGE: {$argv0} [options] <phpdocDir> [<phpDir>]
-
-Where:
-  -help       Show this help.
-  -nosplit    Do not split output to different files.
-  <manual.xml> Compiled version of http://svn.php.net/repository/phpdoc/en/trunk, use doc-base/configure.php
-  <phpDir>    The output directory. If not specified we'll use ./php<php-version>
-EOF
-);
+    USAGE: {$argv0} [options] <phpdocDir> [<phpDir>]
+    
+    Where:
+      -help       Show this help.
+      -nosplit    Do not split output to different files.
+      <manual.xml> Compiled version of http://svn.php.net/repository/phpdoc/en/trunk, use doc-base/configure.php
+      <phpDir>    The output directory. If not specified we'll use ./php<php-version>
+    EOF);
 }

@@ -7,11 +7,6 @@
  * @link http://www.php.net/manual/en/class.sodiumexception.php
  */
 class SodiumException extends Exception implements Throwable, Stringable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-
 
 	/**
 	 * Construct the exception
@@ -21,8 +16,11 @@ class SodiumException extends Exception implements Throwable, Stringable {
 	 * @param Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -482,7 +480,7 @@ function sodium_crypto_kx_server_session_keys (string $server_key_pair, string $
  * @return string The cryptographic hash as raw bytes. If a hex-encoded output is desired,
  * the result can be passed to sodium_bin2hex.
  */
-function sodium_crypto_generichash (string $message, string $key = "", int $length = SODIUM_CRYPTO_GENERICHASH_BYTES): string {}
+function sodium_crypto_generichash (string $message, string $key = '""', int $length = SODIUM_CRYPTO_GENERICHASH_BYTES): string {}
 
 /**
  * Generate a random generichash key
@@ -498,7 +496,7 @@ function sodium_crypto_generichash_keygen (): string {}
  * @param int $length [optional] The expected output length of the hash function.
  * @return string Returns a hash state, serialized as a raw binary string.
  */
-function sodium_crypto_generichash_init (string $key = "", int $length = SODIUM_CRYPTO_GENERICHASH_BYTES): string {}
+function sodium_crypto_generichash_init (string $key = '""', int $length = SODIUM_CRYPTO_GENERICHASH_BYTES): string {}
 
 /**
  * Add message to a hash
@@ -696,7 +694,7 @@ function sodium_crypto_secretstream_xchacha20poly1305_init_push (string $key): a
  * (i.e. re-keying or indicating the final chunk in a stream).
  * @return string Returns the encrypted ciphertext.
  */
-function sodium_crypto_secretstream_xchacha20poly1305_push (string &$state, string $message, string $additional_data = "", int $tag = SODIUM_CRYPTO_SECRETSTREAM_XCHACHA20POLY1305_TAG_MESSAGE): string {}
+function sodium_crypto_secretstream_xchacha20poly1305_push (string &$state, string $message, string $additional_data = '""', int $tag = SODIUM_CRYPTO_SECRETSTREAM_XCHACHA20POLY1305_TAG_MESSAGE): string {}
 
 /**
  * Initialize a secretstream context for decryption
@@ -753,7 +751,7 @@ function sodium_crypto_secretstream_xchacha20poly1305_init_pull (string $header,
  * "forget" the key used to encrypt this message and the previous ones, and derive a new secret key.
  * </p></p>
  */
-function sodium_crypto_secretstream_xchacha20poly1305_pull (string &$state, string $ciphertext, string $additional_data = ""): array|false {}
+function sodium_crypto_secretstream_xchacha20poly1305_pull (string &$state, string $ciphertext, string $additional_data = '""'): array|false {}
 
 /**
  * Explicitly rotate the key in the secretstream state
@@ -1026,7 +1024,7 @@ function sodium_bin2hex (string $string): string {}
  * @param string $ignore [optional] Optional string argument for characters to ignore.
  * @return string Returns the binary representation of the given string data.
  */
-function sodium_hex2bin (string $string, string $ignore = ""): string {}
+function sodium_hex2bin (string $string, string $ignore = '""'): string {}
 
 /**
  * Encodes a raw binary string with base64.
@@ -1057,7 +1055,7 @@ function sodium_bin2base64 (string $string, int $id): string {}
  * @param string $ignore [optional] Characters to ignore when decoding (e.g. whitespace characters).
  * @return string Decoded string.
  */
-function sodium_base642bin (string $string, int $id, string $ignore = ""): string {}
+function sodium_base642bin (string $string, int $id, string $ignore = '""'): string {}
 
 /**
  * Alias of sodium_crypto_box_publickey_from_secretkey

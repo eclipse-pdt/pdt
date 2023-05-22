@@ -16,10 +16,10 @@ final class SysvSemaphore  {
  * @param int $max_acquire [optional] 
  * @param int $permissions [optional] 
  * @param bool $auto_release [optional] 
- * @return SysvSemaphore|bool Returns a positive semaphore identifier on success, or false on
+ * @return SysvSemaphore|false Returns a positive semaphore identifier on success, or false on
  * error.
  */
-function sem_get (int $key, int $max_acquire = 1, int $permissions = 0666, bool $auto_release = true): SysvSemaphore|bool {}
+function sem_get (int $key, int $max_acquire = 1, int $permissions = 0666, bool $auto_release = true): SysvSemaphore|int {}
 
 /**
  * Acquire a semaphore

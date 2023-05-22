@@ -9,13 +9,51 @@
  * @link http://www.php.net/manual/en/class.libxmlerror.php
  */
 class LibXMLError  {
-	public $level;
-	public $code;
-	public $column;
-	public $message;
-	public $file;
-	public $line;
 
+	/**
+	 * the severity of the error (one of the following constants:
+	 * LIBXML_ERR_WARNING,
+	 * LIBXML_ERR_ERROR or
+	 * LIBXML_ERR_FATAL)
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.libxmlerror.php#libxmlerror.props.level
+	 */
+	public int $level;
+
+	/**
+	 * The error's code.
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.libxmlerror.php#libxmlerror.props.code
+	 */
+	public int $code;
+
+	/**
+	 * The column where the error occurred.
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.libxmlerror.php#libxmlerror.props.column
+	 */
+	public int $column;
+
+	/**
+	 * The error message, if any.
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.libxmlerror.php#libxmlerror.props.message
+	 */
+	public string $message;
+
+	/**
+	 * The filename, or empty if the XML was loaded from a string.
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.libxmlerror.php#libxmlerror.props.file
+	 */
+	public string $file;
+
+	/**
+	 * The line where the error occurred.
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.libxmlerror.php#libxmlerror.props.line
+	 */
+	public int $line;
 }
 
 /**
@@ -24,7 +62,7 @@ class LibXMLError  {
  * @param resource $context 
  * @return void No value is returned.
  */
-function libxml_set_streams_context (resource $context): void {}
+function libxml_set_streams_context ($context): void {}
 
 /**
  * Disable libxml errors and allow user to fetch error information as needed
@@ -38,10 +76,10 @@ function libxml_use_internal_errors (?bool $use_errors = null): bool {}
 /**
  * Retrieve last error from libxml
  * @link http://www.php.net/manual/en/function.libxml-get-last-error.php
- * @return LibXMLError|bool Returns a LibXMLError object if there is any error in the
+ * @return LibXMLError|false Returns a LibXMLError object if there is any error in the
  * buffer, false otherwise.
  */
-function libxml_get_last_error (): LibXMLError|bool {}
+function libxml_get_last_error (): LibXMLError|int {}
 
 /**
  * Retrieve array of errors

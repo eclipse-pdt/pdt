@@ -20,14 +20,14 @@ interface SessionHandlerInterface  {
 	 * @param string $name The session name.
 	 * @return bool The return value (usually true on success, false on failure). Note this value is returned internally to PHP for processing.
 	 */
-	abstract public function open (string $path, string $name): bool
+	abstract public function open (string $path, string $name): bool;
 
 	/**
 	 * Close the session
 	 * @link http://www.php.net/manual/en/sessionhandlerinterface.close.php
 	 * @return bool The return value (usually true on success, false on failure). Note this value is returned internally to PHP for processing.
 	 */
-	abstract public function close (): bool
+	abstract public function close (): bool;
 
 	/**
 	 * Read session data
@@ -35,7 +35,7 @@ interface SessionHandlerInterface  {
 	 * @param string $id The session id.
 	 * @return string|false Returns an encoded string of the read data. If nothing was read, it must return false. Note this value is returned internally to PHP for processing.
 	 */
-	abstract public function read (string $id): string|false
+	abstract public function read (string $id): string|false;
 
 	/**
 	 * Write session data
@@ -45,7 +45,7 @@ interface SessionHandlerInterface  {
 	 * string and passing it as this parameter. Please note sessions use an alternative serialization method.
 	 * @return bool The return value (usually true on success, false on failure). Note this value is returned internally to PHP for processing.
 	 */
-	abstract public function write (string $id, string $data): bool
+	abstract public function write (string $id, string $data): bool;
 
 	/**
 	 * Destroy a session
@@ -53,7 +53,7 @@ interface SessionHandlerInterface  {
 	 * @param string $id 
 	 * @return bool The return value (usually true on success, false on failure). Note this value is returned internally to PHP for processing.
 	 */
-	abstract public function destroy (string $id): bool
+	abstract public function destroy (string $id): bool;
 
 	/**
 	 * Cleanup old sessions
@@ -62,7 +62,7 @@ interface SessionHandlerInterface  {
 	 * @return int|false Returns the number of deleted sessions on success, or false on failure.
 	 * Note this value is returned internally to PHP for processing.
 	 */
-	abstract public function gc (int $max_lifetime): int|false
+	abstract public function gc (int $max_lifetime): int|false;
 
 }
 
@@ -83,7 +83,7 @@ interface SessionIdInterface  {
 	 * @return string The new session ID.
 	 * Note that this value is returned internally to PHP for processing.
 	 */
-	abstract public function create_sid (): string
+	abstract public function create_sid (): string;
 
 }
 
@@ -105,7 +105,7 @@ interface SessionUpdateTimestampHandlerInterface  {
 	 * @return bool Returns true for valid ID, false otherwise.
 	 * Note that this value is returned internally to PHP for processing.
 	 */
-	abstract public function validateId (string $id): bool
+	abstract public function validateId (string $id): bool;
 
 	/**
 	 * Update timestamp
@@ -115,7 +115,7 @@ interface SessionUpdateTimestampHandlerInterface  {
 	 * @return bool Returns true if the timestamp was updated, false otherwise.
 	 * Note that this value is returned internally to PHP for processing.
 	 */
-	abstract public function updateTimestamp (string $id, string $data): bool
+	abstract public function updateTimestamp (string $id, string $data): bool;
 
 }
 
@@ -262,7 +262,7 @@ function session_id (?string $id = null): string|false {}
  * session, it omits collision check.
  * On failure, false is returned.
  */
-function session_create_id (string $prefix = ""): string|false {}
+function session_create_id (string $prefix = '""'): string|false {}
 
 /**
  * Update the current session id with a newly generated one
@@ -449,7 +449,7 @@ function session_set_cookie_params (int $lifetime_or_options, ?string $path = nu
  * @return bool This function returns true if a session was successfully started,
  * otherwise false.
  */
-function session_start (array $options = []): bool {}
+function session_start (array $options = '[]'): bool {}
 
 
 /**

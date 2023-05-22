@@ -17,6 +17,9 @@ class GearmanClient  {
 	 */
 	public function __construct (): void {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __destruct () {}
 
 	/**
@@ -40,6 +43,9 @@ class GearmanClient  {
 	 */
 	public function getErrno (): int {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function options (): int {}
 
 	/**
@@ -88,7 +94,7 @@ class GearmanClient  {
 	 * @param int $port [optional] 
 	 * @return bool Returns true on success or false on failure.
 	 */
-	public function addServer (string $host = 127.0.0.1, int $port = 4730): bool {}
+	public function addServer (string $host = '127.0.0.1', int $port = 4730): bool {}
 
 	/**
 	 * Add a list of job servers to the client
@@ -96,7 +102,7 @@ class GearmanClient  {
 	 * @param string $servers [optional] 
 	 * @return bool Returns true on success or false on failure.
 	 */
-	public function addServers (string $servers = 127.0.0.1:4730): bool {}
+	public function addServers (string $servers = '127.0.0.1:4730'): bool {}
 
 	/**
 	 * Wait for I/O activity on all connections in a client
@@ -193,6 +199,7 @@ class GearmanClient  {
 	public function jobStatus (string $job_handle): array {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param string $unique_key
 	 */
 	public function jobStatusByUniqueKey (string $unique_key): array {}
@@ -373,6 +380,9 @@ class GearmanClient  {
 	 */
 	public function setContext (string $context): bool {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function enableExceptionHandler (): bool {}
 
 }
@@ -490,6 +500,9 @@ class GearmanWorker  {
 	 */
 	public function __construct (): void {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __destruct () {}
 
 	/**
@@ -574,7 +587,7 @@ class GearmanWorker  {
 	 * @param int $port [optional] 
 	 * @return bool Returns true on success or false on failure.
 	 */
-	public function addServer (string $host = 127.0.0.1, int $port = 4730): bool {}
+	public function addServer (string $host = '127.0.0.1', int $port = 4730): bool {}
 
 	/**
 	 * Add job servers
@@ -615,6 +628,9 @@ class GearmanWorker  {
 	 */
 	public function unregisterAll (): bool {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function grabJob (): GearmanWorker|false {}
 
 	/**
@@ -636,6 +652,7 @@ class GearmanWorker  {
 	public function work (): bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param string $data
 	 */
 	public function ping (string $data): bool {}
@@ -647,6 +664,9 @@ class GearmanWorker  {
  */
 class GearmanJob  {
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __destruct () {}
 
 	/**
@@ -753,11 +773,13 @@ class GearmanJob  {
  * @link http://www.php.net/manual/en/class.gearmanexception.php
  */
 final class GearmanException extends Exception implements Throwable, Stringable {
-	protected $message;
-	protected $file;
-	protected $line;
-	public $code;
 
+	/**
+	 * The exception code
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.gearmanexception.php#gearmanexception.props.code
+	 */
+	protected int $code;
 
 	/**
 	 * Construct the exception
@@ -767,8 +789,11 @@ final class GearmanException extends Exception implements Throwable, Stringable 
 	 * @param Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -833,69 +858,92 @@ final class GearmanException extends Exception implements Throwable, Stringable 
 
 }
 
+/**
+ * {@inheritdoc}
+ */
 function gearman_version (): string {}
 
+/**
+ * {@inheritdoc}
+ */
 function gearman_bugreport (): string {}
 
 /**
+ * {@inheritdoc}
  * @param int $verbose
  */
 function gearman_verbose_name (int $verbose): ?string {}
 
+/**
+ * {@inheritdoc}
+ */
 function gearman_client_create (): GearmanClient|false {}
 
+/**
+ * {@inheritdoc}
+ */
 function gearman_worker_create (): GearmanWorker|false {}
 
 /**
+ * {@inheritdoc}
  * @param GearmanClient $obj
  */
 function gearman_client_return_code (GearmanClient $obj): ?int {}
 
 /**
+ * {@inheritdoc}
  * @param GearmanClient $obj
  */
 function gearman_client_error (GearmanClient $obj): string|false|null {}
 
 /**
+ * {@inheritdoc}
  * @param GearmanClient $obj
  */
 function gearman_client_get_errno (GearmanClient $obj): ?int {}
 
 /**
+ * {@inheritdoc}
  * @param GearmanClient $obj
  */
 function gearman_client_options (GearmanClient $obj): ?int {}
 
 /**
+ * {@inheritdoc}
  * @param GearmanClient $obj
  * @param int $option
  */
 function gearman_client_set_options (GearmanClient $obj, int $option): bool {}
 
 /**
+ * {@inheritdoc}
  * @param GearmanClient $obj
  * @param int $option
  */
 function gearman_client_add_options (GearmanClient $obj, int $option): bool {}
 
 /**
+ * {@inheritdoc}
  * @param GearmanClient $obj
  * @param int $option
  */
 function gearman_client_remove_options (GearmanClient $obj, int $option): bool {}
 
 /**
+ * {@inheritdoc}
  * @param GearmanClient $obj
  */
 function gearman_client_timeout (GearmanClient $obj): ?int {}
 
 /**
+ * {@inheritdoc}
  * @param GearmanClient $obj
  * @param int $timeout
  */
 function gearman_client_set_timeout (GearmanClient $obj, int $timeout): bool {}
 
 /**
+ * {@inheritdoc}
  * @param GearmanClient $obj
  * @param string $host [optional]
  * @param int $port [optional]
@@ -904,6 +952,7 @@ function gearman_client_set_timeout (GearmanClient $obj, int $timeout): bool {}
 function gearman_client_add_server (GearmanClient $obj, string $host = NULL, int $port = 0, bool $setupExceptionHandler = true): bool {}
 
 /**
+ * {@inheritdoc}
  * @param GearmanClient $obj
  * @param string $servers [optional]
  * @param bool $setupExceptionHandler [optional]
@@ -911,245 +960,282 @@ function gearman_client_add_server (GearmanClient $obj, string $host = NULL, int
 function gearman_client_add_servers (GearmanClient $obj, string $servers = NULL, bool $setupExceptionHandler = true): bool {}
 
 /**
+ * {@inheritdoc}
  * @param GearmanClient $obj
  */
 function gearman_client_wait (GearmanClient $obj): bool {}
 
 /**
+ * {@inheritdoc}
  * @param GearmanClient $obj
  * @param string $function
  * @param string $workload
- * @param ?string $unique [optional]
+ * @param string|null $unique [optional]
  */
-function gearman_client_do_normal (GearmanClient $obj, string $function, string $workload, ?string $unique = null): string {}
+function gearman_client_do_normal (GearmanClient $obj, string $function, string $workload, ?string $unique = NULL): string {}
 
 /**
+ * {@inheritdoc}
  * @param GearmanClient $obj
  * @param string $function
  * @param string $workload
- * @param ?string $unique [optional]
+ * @param string|null $unique [optional]
  */
-function gearman_client_do_high (GearmanClient $obj, string $function, string $workload, ?string $unique = null): string {}
+function gearman_client_do_high (GearmanClient $obj, string $function, string $workload, ?string $unique = NULL): string {}
 
 /**
+ * {@inheritdoc}
  * @param GearmanClient $obj
  * @param string $function
  * @param string $workload
- * @param ?string $unique [optional]
+ * @param string|null $unique [optional]
  */
-function gearman_client_do_low (GearmanClient $obj, string $function, string $workload, ?string $unique = null): string {}
+function gearman_client_do_low (GearmanClient $obj, string $function, string $workload, ?string $unique = NULL): string {}
 
 /**
+ * {@inheritdoc}
  * @param GearmanClient $obj
  * @param string $function
  * @param string $workload
- * @param ?string $unique [optional]
+ * @param string|null $unique [optional]
  */
-function gearman_client_do_background (GearmanClient $obj, string $function, string $workload, ?string $unique = null): string {}
+function gearman_client_do_background (GearmanClient $obj, string $function, string $workload, ?string $unique = NULL): string {}
 
 /**
+ * {@inheritdoc}
  * @param GearmanClient $obj
  * @param string $function
  * @param string $workload
- * @param ?string $unique [optional]
+ * @param string|null $unique [optional]
  */
-function gearman_client_do_high_background (GearmanClient $obj, string $function, string $workload, ?string $unique = null): string {}
+function gearman_client_do_high_background (GearmanClient $obj, string $function, string $workload, ?string $unique = NULL): string {}
 
 /**
+ * {@inheritdoc}
  * @param GearmanClient $obj
  * @param string $function
  * @param string $workload
- * @param ?string $unique [optional]
+ * @param string|null $unique [optional]
  */
-function gearman_client_do_low_background (GearmanClient $obj, string $function, string $workload, ?string $unique = null): string {}
+function gearman_client_do_low_background (GearmanClient $obj, string $function, string $workload, ?string $unique = NULL): string {}
 
 /**
+ * {@inheritdoc}
  * @param GearmanClient $obj
  */
 function gearman_client_do_job_handle (GearmanClient $obj): string {}
 
 /**
+ * {@inheritdoc}
  * @param GearmanClient $obj
  */
 function gearman_client_do_status (GearmanClient $obj): array {}
 
 /**
+ * {@inheritdoc}
  * @param GearmanClient $obj
  * @param string $job_handle
  */
 function gearman_client_job_status (GearmanClient $obj, string $job_handle): array {}
 
 /**
+ * {@inheritdoc}
  * @param GearmanClient $obj
  * @param string $unique_key
  */
 function gearman_client_job_status_by_unique_key (GearmanClient $obj, string $unique_key): array {}
 
 /**
+ * {@inheritdoc}
  * @param GearmanClient $obj
  * @param string $workload
  */
 function gearman_client_ping (GearmanClient $obj, string $workload): bool {}
 
 /**
+ * {@inheritdoc}
  * @param GearmanClient $obj
  * @param string $function_name
  * @param string|int|float $workload
  * @param mixed $context [optional]
- * @param ?string $unique_key [optional]
+ * @param string|null $unique_key [optional]
  */
-function gearman_client_add_task (GearmanClient $obj, string $function_name, string|int|float $workload, mixed $context = null, ?string $unique_key = null): GearmanTask|false {}
+function gearman_client_add_task (GearmanClient $obj, string $function_name, string|int|float $workload, mixed $context = NULL, ?string $unique_key = NULL): GearmanTask|false {}
 
 /**
+ * {@inheritdoc}
  * @param GearmanClient $obj
  * @param string $function_name
  * @param string|int|float $workload
  * @param mixed $context [optional]
- * @param ?string $unique_key [optional]
+ * @param string|null $unique_key [optional]
  */
-function gearman_client_add_task_high (GearmanClient $obj, string $function_name, string|int|float $workload, mixed $context = null, ?string $unique_key = null): GearmanTask|false {}
+function gearman_client_add_task_high (GearmanClient $obj, string $function_name, string|int|float $workload, mixed $context = NULL, ?string $unique_key = NULL): GearmanTask|false {}
 
 /**
+ * {@inheritdoc}
  * @param GearmanClient $obj
  * @param string $function_name
  * @param string|int|float $workload
  * @param mixed $context [optional]
- * @param ?string $unique_key [optional]
+ * @param string|null $unique_key [optional]
  */
-function gearman_client_add_task_low (GearmanClient $obj, string $function_name, string|int|float $workload, mixed $context = null, ?string $unique_key = null): GearmanTask|false {}
+function gearman_client_add_task_low (GearmanClient $obj, string $function_name, string|int|float $workload, mixed $context = NULL, ?string $unique_key = NULL): GearmanTask|false {}
 
 /**
+ * {@inheritdoc}
  * @param GearmanClient $obj
  * @param string $function_name
  * @param string|int|float $workload
  * @param mixed $context [optional]
- * @param ?string $unique_key [optional]
+ * @param string|null $unique_key [optional]
  */
-function gearman_client_add_task_background (GearmanClient $obj, string $function_name, string|int|float $workload, mixed $context = null, ?string $unique_key = null): GearmanTask|false {}
+function gearman_client_add_task_background (GearmanClient $obj, string $function_name, string|int|float $workload, mixed $context = NULL, ?string $unique_key = NULL): GearmanTask|false {}
 
 /**
+ * {@inheritdoc}
  * @param GearmanClient $obj
  * @param string $function_name
  * @param string|int|float $workload
  * @param mixed $context [optional]
- * @param ?string $unique_key [optional]
+ * @param string|null $unique_key [optional]
  */
-function gearman_client_add_task_high_background (GearmanClient $obj, string $function_name, string|int|float $workload, mixed $context = null, ?string $unique_key = null): GearmanTask|false {}
+function gearman_client_add_task_high_background (GearmanClient $obj, string $function_name, string|int|float $workload, mixed $context = NULL, ?string $unique_key = NULL): GearmanTask|false {}
 
 /**
+ * {@inheritdoc}
  * @param GearmanClient $obj
  * @param string $function_name
  * @param string|int|float $workload
  * @param mixed $context [optional]
- * @param ?string $unique_key [optional]
+ * @param string|null $unique_key [optional]
  */
-function gearman_client_add_task_low_background (GearmanClient $obj, string $function_name, string|int|float $workload, mixed $context = null, ?string $unique_key = null): GearmanTask|false {}
+function gearman_client_add_task_low_background (GearmanClient $obj, string $function_name, string|int|float $workload, mixed $context = NULL, ?string $unique_key = NULL): GearmanTask|false {}
 
 /**
+ * {@inheritdoc}
  * @param GearmanClient $obj
  */
 function gearman_client_run_tasks (GearmanClient $obj): bool {}
 
 /**
+ * {@inheritdoc}
  * @param GearmanClient $obj
  * @param string $job_handle
  * @param mixed $context [optional]
  */
-function gearman_client_add_task_status (GearmanClient $obj, string $job_handle, mixed $context = null): GearmanTask {}
+function gearman_client_add_task_status (GearmanClient $obj, string $job_handle, mixed $context = NULL): GearmanTask {}
 
 /**
+ * {@inheritdoc}
  * @param GearmanClient $obj
  * @param callable $function
  */
 function gearman_client_set_workload_callback (GearmanClient $obj, callable $function): bool {}
 
 /**
+ * {@inheritdoc}
  * @param GearmanClient $obj
  * @param callable $function
  */
 function gearman_client_set_created_callback (GearmanClient $obj, callable $function): bool {}
 
 /**
+ * {@inheritdoc}
  * @param GearmanClient $obj
  * @param callable $function
  */
 function gearman_client_set_data_callback (GearmanClient $obj, callable $function): bool {}
 
 /**
+ * {@inheritdoc}
  * @param GearmanClient $obj
  * @param callable $function
  */
 function gearman_client_set_warning_callback (GearmanClient $obj, callable $function): bool {}
 
 /**
+ * {@inheritdoc}
  * @param GearmanClient $obj
  * @param callable $function
  */
 function gearman_client_set_status_callback (GearmanClient $obj, callable $function): bool {}
 
 /**
+ * {@inheritdoc}
  * @param GearmanClient $obj
  * @param callable $function
  */
 function gearman_client_set_complete_callback (GearmanClient $obj, callable $function): bool {}
 
 /**
+ * {@inheritdoc}
  * @param GearmanClient $obj
  * @param callable $function
  */
 function gearman_client_set_exception_callback (GearmanClient $obj, callable $function): bool {}
 
 /**
+ * {@inheritdoc}
  * @param GearmanClient $obj
  * @param callable $function
  */
 function gearman_client_set_fail_callback (GearmanClient $obj, callable $function): bool {}
 
 /**
+ * {@inheritdoc}
  * @param GearmanClient $obj
  */
 function gearman_client_clear_callbacks (GearmanClient $obj): bool {}
 
 /**
+ * {@inheritdoc}
  * @param GearmanClient $obj
  */
 function gearman_client_context (GearmanClient $obj): string {}
 
 /**
+ * {@inheritdoc}
  * @param GearmanClient $obj
  * @param string $data
  */
 function gearman_client_set_context (GearmanClient $obj, string $data): bool {}
 
 /**
+ * {@inheritdoc}
  * @param GearmanClient $obj
  */
 function gearman_client_enable_exception_handler (GearmanClient $obj): bool {}
 
 /**
+ * {@inheritdoc}
  * @param GearmanJob $obj
  */
 function gearman_job_return_code (GearmanJob $obj): ?int {}
 
 /**
+ * {@inheritdoc}
  * @param GearmanJob $obj
  * @param int $gearman_return_t
  */
 function gearman_job_set_return (GearmanJob $obj, int $gearman_return_t): ?bool {}
 
 /**
+ * {@inheritdoc}
  * @param GearmanJob $obj
  * @param string $data
  */
 function gearman_job_send_data (GearmanJob $obj, string $data): ?bool {}
 
 /**
+ * {@inheritdoc}
  * @param GearmanJob $obj
  * @param string $warning
  */
 function gearman_job_send_warning (GearmanJob $obj, string $warning): bool {}
 
 /**
+ * {@inheritdoc}
  * @param GearmanJob $obj
  * @param int $numerator
  * @param int $denominator
@@ -1157,18 +1243,21 @@ function gearman_job_send_warning (GearmanJob $obj, string $warning): bool {}
 function gearman_job_send_status (GearmanJob $obj, int $numerator, int $denominator): bool {}
 
 /**
+ * {@inheritdoc}
  * @param GearmanJob $obj
  * @param string $result
  */
 function gearman_job_send_complete (GearmanJob $obj, string $result): bool {}
 
 /**
+ * {@inheritdoc}
  * @param GearmanJob $obj
  * @param string $exception
  */
 function gearman_job_send_exception (GearmanJob $obj, string $exception): bool {}
 
 /**
+ * {@inheritdoc}
  * @param GearmanJob $obj
  */
 function gearman_job_send_fail (GearmanJob $obj): bool {}
@@ -1182,143 +1271,170 @@ function gearman_job_send_fail (GearmanJob $obj): bool {}
 function gearman_job_handle (GearmanJob $obj): string {}
 
 /**
+ * {@inheritdoc}
  * @param GearmanJob $obj
  */
 function gearman_job_function_name (GearmanJob $obj): string|bool {}
 
 /**
+ * {@inheritdoc}
  * @param GearmanJob $obj
  */
 function gearman_job_unique (GearmanJob $obj): string|bool {}
 
 /**
+ * {@inheritdoc}
  * @param GearmanJob $obj
  */
 function gearman_job_workload (GearmanJob $obj): string {}
 
 /**
+ * {@inheritdoc}
  * @param GearmanJob $obj
  */
 function gearman_job_workload_size (GearmanJob $obj): ?int {}
 
 /**
+ * {@inheritdoc}
  * @param GearmanTask $obj
  */
 function gearman_task_return_code (GearmanTask $obj): ?int {}
 
 /**
+ * {@inheritdoc}
  * @param GearmanTask $obj
  */
 function gearman_task_function_name (GearmanTask $obj): string|bool|null {}
 
 /**
+ * {@inheritdoc}
  * @param GearmanTask $obj
  */
 function gearman_task_unique (GearmanTask $obj): string|bool|null {}
 
 /**
+ * {@inheritdoc}
  * @param GearmanTask $obj
  */
 function gearman_task_job_handle (GearmanTask $obj): string|bool|null {}
 
 /**
+ * {@inheritdoc}
  * @param GearmanTask $obj
  */
 function gearman_task_is_known (GearmanTask $obj): ?bool {}
 
 /**
+ * {@inheritdoc}
  * @param GearmanTask $obj
  */
 function gearman_task_is_running (GearmanTask $obj): ?bool {}
 
 /**
+ * {@inheritdoc}
  * @param GearmanTask $obj
  */
 function gearman_task_numerator (GearmanTask $obj): int|bool|null {}
 
 /**
+ * {@inheritdoc}
  * @param GearmanTask $obj
  */
 function gearman_task_denominator (GearmanTask $obj): int|bool|null {}
 
 /**
+ * {@inheritdoc}
  * @param GearmanTask $obj
  */
 function gearman_task_data (GearmanTask $obj): string|bool|null {}
 
 /**
+ * {@inheritdoc}
  * @param GearmanTask $obj
  */
 function gearman_task_data_size (GearmanTask $obj): int|false {}
 
 /**
+ * {@inheritdoc}
  * @param GearmanTask $obj
  * @param string $data
  */
 function gearman_task_send_workload (GearmanTask $obj, string $data): int|false {}
 
 /**
+ * {@inheritdoc}
  * @param GearmanTask $obj
  * @param int $data_len
  */
 function gearman_task_recv_data (GearmanTask $obj, int $data_len): array|bool {}
 
 /**
+ * {@inheritdoc}
  * @param GearmanWorker $obj
  */
 function gearman_worker_return_code (GearmanWorker $obj): ?int {}
 
 /**
+ * {@inheritdoc}
  * @param GearmanWorker $obj
  */
 function gearman_worker_error (GearmanWorker $obj): string|false {}
 
 /**
+ * {@inheritdoc}
  * @param GearmanWorker $obj
  */
 function gearman_worker_errno (GearmanWorker $obj): int|false {}
 
 /**
+ * {@inheritdoc}
  * @param GearmanWorker $obj
  */
 function gearman_worker_options (GearmanWorker $obj): ?int {}
 
 /**
+ * {@inheritdoc}
  * @param GearmanWorker $obj
  * @param int $option
  */
 function gearman_worker_set_options (GearmanWorker $obj, int $option): ?bool {}
 
 /**
+ * {@inheritdoc}
  * @param GearmanWorker $obj
  * @param int $option
  */
 function gearman_worker_add_options (GearmanWorker $obj, int $option): ?bool {}
 
 /**
+ * {@inheritdoc}
  * @param GearmanWorker $obj
  * @param int $option
  */
 function gearman_worker_remove_options (GearmanWorker $obj, int $option): ?bool {}
 
 /**
+ * {@inheritdoc}
  * @param GearmanWorker $obj
  */
 function gearman_worker_timeout (GearmanWorker $obj): ?int {}
 
 /**
+ * {@inheritdoc}
  * @param GearmanWorker $obj
  * @param int $timeout
  */
 function gearman_worker_set_timeout (GearmanWorker $obj, int $timeout): bool {}
 
 /**
+ * {@inheritdoc}
  * @param GearmanWorker $obj
  * @param string $id
  */
 function gearman_worker_set_id (GearmanWorker $obj, string $id): bool {}
 
 /**
+ * {@inheritdoc}
  * @param GearmanWorker $obj
  * @param string $host [optional]
  * @param int $port [optional]
@@ -1326,17 +1442,20 @@ function gearman_worker_set_id (GearmanWorker $obj, string $id): bool {}
 function gearman_worker_add_server (GearmanWorker $obj, string $host = NULL, int $port = 0): bool {}
 
 /**
+ * {@inheritdoc}
  * @param GearmanWorker $obj
  * @param string $servers [optional]
  */
 function gearman_worker_add_servers (GearmanWorker $obj, string $servers = NULL): bool {}
 
 /**
+ * {@inheritdoc}
  * @param GearmanWorker $obj
  */
 function gearman_worker_wait (GearmanWorker $obj): bool {}
 
 /**
+ * {@inheritdoc}
  * @param GearmanWorker $obj
  * @param string $function_name
  * @param int $timeout [optional]
@@ -1344,36 +1463,42 @@ function gearman_worker_wait (GearmanWorker $obj): bool {}
 function gearman_worker_register (GearmanWorker $obj, string $function_name, int $timeout = 0): bool {}
 
 /**
+ * {@inheritdoc}
  * @param GearmanWorker $obj
  * @param string $function_name
  */
 function gearman_worker_unregister (GearmanWorker $obj, string $function_name): bool {}
 
 /**
+ * {@inheritdoc}
  * @param GearmanWorker $obj
  */
 function gearman_worker_unregister_all (GearmanWorker $obj): bool {}
 
 /**
+ * {@inheritdoc}
  * @param GearmanWorker $obj
  */
 function gearman_worker_grab_job (GearmanWorker $obj): GearmanWorker|false {}
 
 /**
+ * {@inheritdoc}
  * @param GearmanWorker $obj
  * @param string $function_name
  * @param callable $function
  * @param mixed $context [optional]
  * @param int $timeout [optional]
  */
-function gearman_worker_add_function (GearmanWorker $obj, string $function_name, callable $function, mixed $context = null, int $timeout = 0): bool {}
+function gearman_worker_add_function (GearmanWorker $obj, string $function_name, callable $function, mixed $context = NULL, int $timeout = 0): bool {}
 
 /**
+ * {@inheritdoc}
  * @param GearmanWorker $obj
  */
 function gearman_worker_work (GearmanWorker $obj): bool {}
 
 /**
+ * {@inheritdoc}
  * @param GearmanWorker $obj
  * @param string $data
  */

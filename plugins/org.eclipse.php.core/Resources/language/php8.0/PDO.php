@@ -10,12 +10,14 @@
  * @link http://www.php.net/manual/en/class.pdoexception.php
  */
 class PDOException extends RuntimeException implements Stringable, Throwable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-	public $errorInfo;
 
+	/**
+	 * Corresponds to PDO::errorInfo or
+	 * PDOStatement::errorInfo
+	 * @var array|null
+	 * @link http://www.php.net/manual/en/class.pdoexception.php#pdoexception.props.errorinfo
+	 */
+	public ?array $errorInfo;
 
 	/**
 	 * Construct the exception
@@ -25,8 +27,11 @@ class PDOException extends RuntimeException implements Stringable, Throwable {
 	 * @param Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -800,7 +805,7 @@ class PDO  {
 	 * Execute an SQL statement and return the number of affected rows
 	 * @link http://www.php.net/manual/en/pdo.exec.php
 	 * @param string $statement 
-	 * @return int|bool PDO::exec returns the number of rows that were modified
+	 * @return int|false PDO::exec returns the number of rows that were modified
 	 * or deleted by the SQL statement you issued. If no rows were affected, 
 	 * PDO::exec returns 0.
 	 * <p>The following example incorrectly relies on the return value of
@@ -812,7 +817,7 @@ class PDO  {
 	 * ?&gt;</code>
 	 * </pre></p>
 	 */
-	public function exec (string $statement): int|bool {}
+	public function exec (string $statement): int {}
 
 	/**
 	 * Retrieve a database connection attribute
@@ -842,7 +847,7 @@ class PDO  {
 	 * Returns the ID of the last inserted row or sequence value
 	 * @link http://www.php.net/manual/en/pdo.lastinsertid.php
 	 * @param string|null $name [optional] 
-	 * @return string|bool If a sequence name was not specified for the name
+	 * @return string|false If a sequence name was not specified for the name
 	 * parameter, PDO::lastInsertId returns a
 	 * string representing the row ID of the last row that was inserted into
 	 * the database.
@@ -854,14 +859,14 @@ class PDO  {
 	 * PDO::lastInsertId triggers an
 	 * IM001 SQLSTATE.</p>
 	 */
-	public function lastInsertId (?string $name = null): string|bool {}
+	public function lastInsertId (?string $name = null): string|int {}
 
 	/**
 	 * Prepares a statement for execution and returns a statement object
 	 * @link http://www.php.net/manual/en/pdo.prepare.php
 	 * @param string $query 
 	 * @param array $options [optional] 
-	 * @return PDOStatement|bool If the database server successfully prepares the statement,
+	 * @return PDOStatement|false If the database server successfully prepares the statement,
 	 * PDO::prepare returns a
 	 * PDOStatement object.
 	 * If the database server cannot successfully prepare the statement,
@@ -870,27 +875,27 @@ class PDO  {
 	 * <p>Emulated prepared statements does not communicate with the database server
 	 * so PDO::prepare does not check the statement.</p>
 	 */
-	public function prepare (string $query, array $options = []): PDOStatement|bool {}
+	public function prepare (string $query, array $options = '[]'): PDOStatement|int {}
 
 	/**
 	 * Prepares and executes an SQL statement without placeholders
 	 * @link http://www.php.net/manual/en/pdo.query.php
 	 * @param string $query 
 	 * @param int|null $fetchMode [optional] 
-	 * @return PDOStatement|bool Returns a PDOStatement object or false on failure.
+	 * @return PDOStatement|false Returns a PDOStatement object or false on failure.
 	 */
-	public function query (string $query, ?int $fetchMode = null): PDOStatement|bool {}
+	public function query (string $query, ?int $fetchMode = null): PDOStatement|int {}
 
 	/**
 	 * Quotes a string for use in a query
 	 * @link http://www.php.net/manual/en/pdo.quote.php
 	 * @param string $string 
 	 * @param int $type [optional] 
-	 * @return string|bool Returns a quoted string that is theoretically safe to pass into an
+	 * @return string|false Returns a quoted string that is theoretically safe to pass into an
 	 * SQL statement. Returns false if the driver does not support quoting in
 	 * this way.
 	 */
-	public function quote (string $string, int $type = PDO::PARAM_STR): string|bool {}
+	public function quote (string $string, int $type = \PDO::PARAM_STR): string|int {}
 
 	/**
 	 * Rolls back a transaction
@@ -916,8 +921,13 @@ class PDO  {
  * @link http://www.php.net/manual/en/class.pdostatement.php
  */
 class PDOStatement implements IteratorAggregate, Traversable {
-	public $queryString;
 
+	/**
+	 * Used query string.
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.pdostatement.php#pdostatement.props.querystring
+	 */
+	public string $queryString;
 
 	/**
 	 * Bind a column to a PHP variable
@@ -929,7 +939,7 @@ class PDOStatement implements IteratorAggregate, Traversable {
 	 * @param mixed $driverOptions [optional] 
 	 * @return bool Returns true on success or false on failure.
 	 */
-	public function bindColumn (string|int $column, mixed &$var, int $type = PDO::PARAM_STR, int $maxLength = null, mixed $driverOptions = null): bool {}
+	public function bindColumn (string|int $column, mixed &$var, int $type = \PDO::PARAM_STR, int $maxLength = null, mixed $driverOptions = null): bool {}
 
 	/**
 	 * Binds a parameter to the specified variable name
@@ -941,7 +951,7 @@ class PDOStatement implements IteratorAggregate, Traversable {
 	 * @param mixed $driverOptions [optional] 
 	 * @return bool Returns true on success or false on failure.
 	 */
-	public function bindParam (string|int $param, mixed &$var, int $type = PDO::PARAM_STR, int $maxLength = null, mixed $driverOptions = null): bool {}
+	public function bindParam (string|int $param, mixed &$var, int $type = \PDO::PARAM_STR, int $maxLength = null, mixed $driverOptions = null): bool {}
 
 	/**
 	 * Binds a value to a parameter
@@ -951,7 +961,7 @@ class PDOStatement implements IteratorAggregate, Traversable {
 	 * @param int $type [optional] 
 	 * @return bool Returns true on success or false on failure.
 	 */
-	public function bindValue (string|int $param, mixed $value, int $type = PDO::PARAM_STR): bool {}
+	public function bindValue (string|int $param, mixed $value, int $type = \PDO::PARAM_STR): bool {}
 
 	/**
 	 * Closes the cursor, enabling the statement to be executed again
@@ -1030,7 +1040,7 @@ class PDOStatement implements IteratorAggregate, Traversable {
 	 * @return mixed The return value of this function on success depends on the fetch type. In
 	 * all cases, false is returned on failure or if there are no more rows.
 	 */
-	public function fetch (int $mode = PDO::FETCH_DEFAULT, int $cursorOrientation = PDO::FETCH_ORI_NEXT, int $cursorOffset = null): mixed {}
+	public function fetch (int $mode = \PDO::FETCH_DEFAULT, int $cursorOrientation = \PDO::FETCH_ORI_NEXT, int $cursorOffset = null): mixed {}
 
 	/**
 	 * Fetches the remaining rows from a result set
@@ -1048,7 +1058,7 @@ class PDOStatement implements IteratorAggregate, Traversable {
 	 * ORDER BY clauses in SQL to restrict results before retrieving and
 	 * processing them with PHP.</p>
 	 */
-	public function fetchAll (int $mode = PDO::FETCH_DEFAULT): array {}
+	public function fetchAll (int $mode = \PDO::FETCH_DEFAULT): array {}
 
 	/**
 	 * Returns a single column from the next row of a result set
@@ -1066,10 +1076,10 @@ class PDOStatement implements IteratorAggregate, Traversable {
 	 * @link http://www.php.net/manual/en/pdostatement.fetchobject.php
 	 * @param string|null $class [optional] 
 	 * @param array $constructorArgs [optional] 
-	 * @return object|bool Returns an instance of the required class with property names that
+	 * @return object|false Returns an instance of the required class with property names that
 	 * correspond to the column names or false on failure.
 	 */
-	public function fetchObject (?string $class = "stdClass", array $constructorArgs = []): object|bool {}
+	public function fetchObject (?string $class = '"stdClass"', array $constructorArgs = '[]'): object|int {}
 
 	/**
 	 * Retrieve a statement attribute
@@ -1083,12 +1093,12 @@ class PDOStatement implements IteratorAggregate, Traversable {
 	 * Returns metadata for a column in a result set
 	 * @link http://www.php.net/manual/en/pdostatement.getcolumnmeta.php
 	 * @param int $column 
-	 * @return array|bool Returns an associative array containing the following values representing
+	 * @return array|false Returns an associative array containing the following values representing
 	 * the metadata for a single column:
 	 * <p>Returns false if the requested column does not exist in the result set,
 	 * or if no result set exists.</p>
 	 */
-	public function getColumnMeta (int $column): array|bool {}
+	public function getColumnMeta (int $column): array|int {}
 
 	/**
 	 * Advances to the next rowset in a multi-rowset statement handle

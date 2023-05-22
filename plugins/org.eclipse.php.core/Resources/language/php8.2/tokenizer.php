@@ -10,11 +10,34 @@
  * @link http://www.php.net/manual/en/class.phptoken.php
  */
 class PhpToken implements Stringable {
-	public $id;
-	public $text;
-	public $line;
-	public $pos;
 
+	/**
+	 * One of the T_&#42; constants, or an ASCII codepoint representing a single-char token.
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.phptoken.php#phptoken.props.id
+	 */
+	public int $id;
+
+	/**
+	 * The textual content of the token.
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.phptoken.php#phptoken.props.text
+	 */
+	public string $text;
+
+	/**
+	 * The starting line number (1-based) of the token.
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.phptoken.php#phptoken.props.line
+	 */
+	public int $line;
+
+	/**
+	 * The starting position (0-based) in the tokenized string (the number of bytes).
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.phptoken.php#phptoken.props.pos
+	 */
+	public int $pos;
 
 	/**
 	 * Splits given source into PHP tokens, represented by PhpToken objects.

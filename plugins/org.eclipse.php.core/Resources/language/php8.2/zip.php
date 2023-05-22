@@ -343,13 +343,51 @@ class ZipArchive implements Countable {
 	 * @var string
 	const LIBZIP_VERSION = "1.9.2";
 
-	public $lastId;
-	public $status;
-	public $statusSys;
-	public $numFiles;
-	public $filename;
-	public $comment;
 
+	/**
+	 * Index value of last added entry (file or directory).
+	 * Available as of PHP 8.0.0 and PECL zip 1.18.0.
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.ziparchive.php#ziparchive.props.lastid
+	 */
+	public readonly int $lastId;
+
+	/**
+	 * Status of the Zip Archive.
+	 * Available for closed archive, as of PHP 8.0.0 and PECL zip 1.18.0.
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.ziparchive.php#ziparchive.props.status
+	 */
+	public readonly int $status;
+
+	/**
+	 * System status of the Zip Archive.
+	 * Available for closed archive, as of PHP 8.0.0 and PECL zip 1.18.0.
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.ziparchive.php#ziparchive.props.statussys
+	 */
+	public readonly int $statusSys;
+
+	/**
+	 * Number of files in archive
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.ziparchive.php#ziparchive.props.numfiles
+	 */
+	public readonly int $numFiles;
+
+	/**
+	 * File name in the file system
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.ziparchive.php#ziparchive.props.filename
+	 */
+	public readonly string $filename;
+
+	/**
+	 * Comment for the archive
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.ziparchive.php#ziparchive.props.comment
+	 */
+	public readonly string $comment;
 
 	/**
 	 * Open a ZIP file archive
@@ -442,7 +480,7 @@ class ZipArchive implements Countable {
 	 * @param int $flags [optional] 
 	 * @return bool Returns true on success or false on failure.
 	 */
-	public function addFromString (string $name, string $content, int $flags = ZipArchive::FL_OVERWRITE): bool {}
+	public function addFromString (string $name, string $content, int $flags = \ZipArchive::FL_OVERWRITE): bool {}
 
 	/**
 	 * Adds a file to a ZIP archive from the given path
@@ -454,7 +492,7 @@ class ZipArchive implements Countable {
 	 * @param int $flags [optional] 
 	 * @return bool Returns true on success or false on failure.
 	 */
-	public function addFile (string $filepath, string $entryname = "", int $start = null, int $length = null, int $flags = ZipArchive::FL_OVERWRITE): bool {}
+	public function addFile (string $filepath, string $entryname = '""', int $start = null, int $length = null, int $flags = \ZipArchive::FL_OVERWRITE): bool {}
 
 	/**
 	 * Replace file in ZIP archive with a given path
@@ -572,7 +610,7 @@ class ZipArchive implements Countable {
 	 * <p>Password used for encryption.</p>
 	 * @return array|false An array of added files on success or false on failure
 	 */
-	public function addGlob (string $pattern, int $flags = null, array $options = []): array|false {}
+	public function addGlob (string $pattern, int $flags = null, array $options = '[]'): array|false {}
 
 	/**
 	 * Add files from a directory by PCRE pattern
@@ -582,7 +620,7 @@ class ZipArchive implements Countable {
 	 * @param array $options [optional] An associative array of options accepted by ZipArchive::addGlob.
 	 * @return array|false An array of added files on success or false on failure
 	 */
-	public function addPattern (string $pattern, string $path = ".", array $options = []): array|false {}
+	public function addPattern (string $pattern, string $path = '"."', array $options = '[]'): array|false {}
 
 	/**
 	 * Renames an entry defined by its index
@@ -792,7 +830,7 @@ class ZipArchive implements Countable {
 	 * @param int $flags [optional] 
 	 * @return resource|false Returns a file pointer (resource) on success or false on failure.
 	 */
-	public function getStreamIndex (int $index, int $flags = null): resource|false {}
+	public function getStreamIndex (int $index, int $flags = null) {}
 
 	/**
 	 * Get a file handler to the entry defined by its name (read only)
@@ -801,7 +839,7 @@ class ZipArchive implements Countable {
 	 * @param int $flags [optional] 
 	 * @return resource|false Returns a file pointer (resource) on success or false on failure.
 	 */
-	public function getStreamName (string $name, int $flags = null): resource|false {}
+	public function getStreamName (string $name, int $flags = null) {}
 
 	/**
 	 * Get a file handler to the entry defined by its name (read only)
@@ -809,7 +847,7 @@ class ZipArchive implements Countable {
 	 * @param string $name 
 	 * @return resource|false Returns a file pointer (resource) on success or false on failure.
 	 */
-	public function getStream (string $name): resource|false {}
+	public function getStream (string $name) {}
 
 	/**
 	 * Set the external attributes of an entry defined by its name
@@ -942,7 +980,7 @@ class ZipArchive implements Countable {
  * does not exist or in case of other error.
  * @deprecated 1
  */
-function zip_open (string $filename): resource|int|false {}
+function zip_open (string $filename) {}
 
 /**
  * Close a ZIP file archive
@@ -951,7 +989,7 @@ function zip_open (string $filename): resource|int|false {}
  * @return void No value is returned.
  * @deprecated 1
  */
-function zip_close (resource $zip): void {}
+function zip_close ($zip): void {}
 
 /**
  * Read next entry in a ZIP file archive
@@ -963,7 +1001,7 @@ function zip_close (resource $zip): void {}
  * occurred.
  * @deprecated 1
  */
-function zip_read (resource $zip): resource|false {}
+function zip_read ($zip) {}
 
 /**
  * Open a directory entry for reading
@@ -978,7 +1016,7 @@ function zip_read (resource $zip): resource|false {}
  * reading or closing the directory entry.</p>
  * @deprecated 1
  */
-function zip_entry_open (resource $zip_dp, resource $zip_entry, string $mode = "rb"): bool {}
+function zip_entry_open ($zip_dp, $zip_entry, string $mode = '"rb"'): bool {}
 
 /**
  * Close a directory entry
@@ -987,7 +1025,7 @@ function zip_entry_open (resource $zip_dp, resource $zip_entry, string $mode = "
  * @return bool Returns true on success or false on failure.
  * @deprecated 1
  */
-function zip_entry_close (resource $zip_entry): bool {}
+function zip_entry_close ($zip_entry): bool {}
 
 /**
  * Read from an open directory entry
@@ -997,7 +1035,7 @@ function zip_entry_close (resource $zip_entry): bool {}
  * @return string|false Returns the data read, empty string on end of a file, or false on error.
  * @deprecated 1
  */
-function zip_entry_read (resource $zip_entry, int $len = 1024): string|false {}
+function zip_entry_read ($zip_entry, int $len = 1024): string|false {}
 
 /**
  * Retrieve the name of a directory entry
@@ -1006,7 +1044,7 @@ function zip_entry_read (resource $zip_entry, int $len = 1024): string|false {}
  * @return string|false The name of the directory entry, or false on failure.
  * @deprecated 1
  */
-function zip_entry_name (resource $zip_entry): string|false {}
+function zip_entry_name ($zip_entry): string|false {}
 
 /**
  * Retrieve the compressed size of a directory entry
@@ -1015,7 +1053,7 @@ function zip_entry_name (resource $zip_entry): string|false {}
  * @return int|false The compressed size, or false on failure.
  * @deprecated 1
  */
-function zip_entry_compressedsize (resource $zip_entry): int|false {}
+function zip_entry_compressedsize ($zip_entry): int|false {}
 
 /**
  * Retrieve the actual file size of a directory entry
@@ -1024,7 +1062,7 @@ function zip_entry_compressedsize (resource $zip_entry): int|false {}
  * @return int|false The size of the directory entry, or false on failure.
  * @deprecated 1
  */
-function zip_entry_filesize (resource $zip_entry): int|false {}
+function zip_entry_filesize ($zip_entry): int|false {}
 
 /**
  * Retrieve the compression method of a directory entry
@@ -1033,6 +1071,6 @@ function zip_entry_filesize (resource $zip_entry): int|false {}
  * @return string|false The compression method, or false on failure.
  * @deprecated 1
  */
-function zip_entry_compressionmethod (resource $zip_entry): string|false {}
+function zip_entry_compressionmethod ($zip_entry): string|false {}
 
 // End of zip v.1.21.1

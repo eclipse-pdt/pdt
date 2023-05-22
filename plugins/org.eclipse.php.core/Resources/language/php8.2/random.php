@@ -26,7 +26,7 @@ interface Engine  {
 	 * @link http://www.php.net/manual/en/random-engine.generate.php
 	 * @return string A non-empty string containing random bytes.
 	 */
-	abstract public function generate (): string
+	abstract public function generate (): string;
 
 }
 
@@ -41,7 +41,7 @@ interface CryptoSafeEngine extends \Random\Engine {
 	 * @link http://www.php.net/manual/en/random-engine.generate.php
 	 * @return string A non-empty string containing random bytes.
 	 */
-	abstract public function generate (): string
+	abstract public function generate (): string;
 
 }
 
@@ -50,22 +50,20 @@ interface CryptoSafeEngine extends \Random\Engine {
  * @link http://www.php.net/manual/en/class.random-randomerror.php
  */
 class RandomError extends \Error implements \Throwable, \Stringable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-
 
 	/**
 	 * Construct the error object
 	 * @link http://www.php.net/manual/en/error.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -106,10 +104,10 @@ class RandomError extends \Error implements \Throwable, \Stringable {
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/error.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -132,22 +130,20 @@ class RandomError extends \Error implements \Throwable, \Stringable {
  * @link http://www.php.net/manual/en/class.random-brokenrandomengineerror.php
  */
 class BrokenRandomEngineError extends \Random\RandomError implements \Stringable, \Throwable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-
 
 	/**
 	 * Construct the error object
 	 * @link http://www.php.net/manual/en/error.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -188,10 +184,10 @@ class BrokenRandomEngineError extends \Random\RandomError implements \Stringable
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/error.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -214,22 +210,20 @@ class BrokenRandomEngineError extends \Random\RandomError implements \Stringable
  * @link http://www.php.net/manual/en/class.random-randomexception.php
  */
 class RandomException extends \Exception implements \Throwable, \Stringable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-
 
 	/**
 	 * Construct the exception
 	 * @link http://www.php.net/manual/en/exception.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -273,10 +267,10 @@ class RandomException extends \Exception implements \Throwable, \Stringable {
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -556,17 +550,22 @@ namespace Random {
  * @link http://www.php.net/manual/en/class.random-randomizer.php
  */
 final class Randomizer  {
-	public readonly $engine;
 
+	/**
+	 * The low-level source of randomness for the Random\Randomizer’s methods.
+	 * @var \Random\Engine
+	 * @link http://www.php.net/manual/en/class.random-randomizer.php#random\randomizer.props.engine
+	 */
+	public readonly \Random\Engine $engine;
 
 	/**
 	 * Constructs a new Randomizer
 	 * @link http://www.php.net/manual/en/random-randomizer.construct.php
-	 * @param Random\Engine|null $engine [optional] The Random\Engine to use to generate randomness.
+	 * @param \Random\Engine|null $engine [optional] The Random\Engine to use to generate randomness.
 	 * <p>If engine is omitted or null, a new Random\Engine\Secure object will be used.</p>
-	 * @return Random\Engine|null 
+	 * @return \Random\Engine|null 
 	 */
-	public function __construct (?Random\Engine $engine = null): ?Random\Engine {}
+	public function __construct (?\Random\Engine $engine = null): ?\Random\Engine {}
 
 	/**
 	 * Get a positive integer
@@ -683,7 +682,7 @@ function srand (int $seed = null, int $mode = MT_RAND_MT19937): void {}
  * @return int A pseudo random value between min
  * (or 0) and max (or getrandmax, inclusive).
  */
-function rand (int $min = 'null', int $max = 'null'): int {}
+function rand (int $min = NULL, int $max = NULL): int {}
 
 /**
  * Generate a random value via the Mersenne Twister Random Number Generator
@@ -694,7 +693,7 @@ function rand (int $min = 'null', int $max = 'null'): int {}
  * and max (or mt_getrandmax, inclusive),
  * or false if max is less than min.
  */
-function mt_rand (int $min = 'null', int $max = 'null'): int {}
+function mt_rand (int $min = NULL, int $max = NULL): int {}
 
 /**
  * Show largest possible random value

@@ -20,14 +20,14 @@
  * <p>Private members of objects have the class name prepended to the member
  * name; protected members have a '&#42;' prepended to the member name.
  * These prepended values have null bytes on either side.</p>
- * @return string|bool Returns a string containing a byte-stream representation of
+ * @return string|false Returns a string containing a byte-stream representation of
  * value that can be stored anywhere.
  * <p>Note that this is a binary string which can include any byte value, and needs
  * to be stored and handled as such. For example,
  * igbinary_serialize output should generally be stored in a BLOB
  * field in a database, rather than a CHAR or TEXT field.</p>
  */
-function igbinary_serialize (mixed $value): string|bool {}
+function igbinary_serialize (mixed $value): string|int {}
 
 /**
  * Creates a PHP value from a stored representation from igbinary_serialize

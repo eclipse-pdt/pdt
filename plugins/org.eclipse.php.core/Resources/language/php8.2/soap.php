@@ -9,43 +9,6 @@
  * @link http://www.php.net/manual/en/class.soapclient.php
  */
 class SoapClient  {
-	private $uri;
-	private $style;
-	private $use;
-	private $location;
-	private $trace;
-	private $compression;
-	private $sdl;
-	private $typemap;
-	private $httpsocket;
-	private $httpurl;
-	private $_login;
-	private $_password;
-	private $_use_digest;
-	private $_digest;
-	private $_proxy_host;
-	private $_proxy_port;
-	private $_proxy_login;
-	private $_proxy_password;
-	private $_exceptions;
-	private $_encoding;
-	private $_classmap;
-	private $_features;
-	private $_connection_timeout;
-	private $_stream_context;
-	private $_user_agent;
-	private $_keep_alive;
-	private $_ssl_method;
-	private $_soap_version;
-	private $_use_proxy;
-	private $_cookies;
-	private $__default_headers;
-	private $__soap_fault;
-	private $__last_request;
-	private $__last_response;
-	private $__last_request_headers;
-	private $__last_response_headers;
-
 
 	/**
 	 * SoapClient constructor
@@ -54,7 +17,7 @@ class SoapClient  {
 	 * @param array $options [optional] 
 	 * @return string|null 
 	 */
-	public function __construct (?string $wsdl, array $options = []): ?string {}
+	public function __construct (?string $wsdl, array $options = '[]'): ?string {}
 
 	/**
 	 * Calls a SOAP function (deprecated)
@@ -183,13 +146,18 @@ class SoapClient  {
  * @link http://www.php.net/manual/en/class.soapvar.php
  */
 class SoapVar  {
-	public $enc_type;
-	public $enc_value;
-	public $enc_stype;
-	public $enc_ns;
-	public $enc_name;
-	public $enc_namens;
 
+	public int $enc_type;
+
+	public mixed $enc_value;
+
+	public ?string $enc_stype;
+
+	public ?string $enc_ns;
+
+	public ?string $enc_name;
+
+	public ?string $enc_namens;
 
 	/**
 	 * SoapVar constructor
@@ -213,8 +181,6 @@ class SoapVar  {
  * @link http://www.php.net/manual/en/class.soapserver.php
  */
 class SoapServer  {
-	private $__soap_fault;
-
 
 	/**
 	 * SoapServer constructor
@@ -223,7 +189,7 @@ class SoapServer  {
 	 * @param array $options [optional] 
 	 * @return string|null 
 	 */
-	public function __construct (?string $wsdl, array $options = []): ?string {}
+	public function __construct (?string $wsdl, array $options = '[]'): ?string {}
 
 	/**
 	 * Issue SoapServer fault indicating an error
@@ -235,7 +201,7 @@ class SoapServer  {
 	 * @param string $name [optional] 
 	 * @return void No value is returned.
 	 */
-	public function fault (string $code, string $string, string $actor = "", mixed $details = null, string $name = ""): void {}
+	public function fault (string $code, string $string, string $actor = '""', mixed $details = null, string $name = '""'): void {}
 
 	/**
 	 * Add a SOAP header to the response
@@ -300,18 +266,20 @@ class SoapServer  {
  * @link http://www.php.net/manual/en/class.soapfault.php
  */
 class SoapFault extends Exception implements Stringable, Throwable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-	public $faultstring;
-	public $faultcode;
-	public $faultcodens;
-	public $faultactor;
-	public $detail;
-	public $_name;
-	public $headerfault;
 
+	public string $faultstring;
+
+	public ?string $faultcode;
+
+	public ?string $faultcodens;
+
+	public ?string $faultactor;
+
+	public mixed $detail;
+
+	public ?string $_name;
+
+	public mixed $headerfault;
 
 	/**
 	 * SoapFault constructor
@@ -333,6 +301,9 @@ class SoapFault extends Exception implements Stringable, Throwable {
 	 */
 	public function __toString (): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -395,9 +366,10 @@ class SoapFault extends Exception implements Stringable, Throwable {
  * @link http://www.php.net/manual/en/class.soapparam.php
  */
 class SoapParam  {
-	public $param_name;
-	public $param_data;
 
+	public string $param_name;
+
+	public mixed $param_data;
 
 	/**
 	 * SoapParam constructor
@@ -415,12 +387,16 @@ class SoapParam  {
  * @link http://www.php.net/manual/en/class.soapheader.php
  */
 class SoapHeader  {
-	public $namespace;
-	public $name;
-	public $data;
-	public $mustUnderstand;
-	public $actor;
 
+	public string $namespace;
+
+	public string $name;
+
+	public mixed $data;
+
+	public bool $mustUnderstand;
+
+	public string|int|null $actor;
 
 	/**
 	 * SoapHeader constructor

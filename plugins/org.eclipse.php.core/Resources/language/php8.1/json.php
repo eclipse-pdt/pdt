@@ -16,7 +16,7 @@ interface JsonSerializable  {
 	 * @return mixed Returns data which can be serialized by json_encode,
 	 * which is a value of any type other than a resource.
 	 */
-	abstract public function jsonSerialize (): mixed
+	abstract public function jsonSerialize (): mixed;
 
 }
 
@@ -28,11 +28,6 @@ interface JsonSerializable  {
  * @link http://www.php.net/manual/en/class.jsonexception.php
  */
 class JsonException extends Exception implements Throwable, Stringable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-
 
 	/**
 	 * Construct the exception
@@ -42,8 +37,11 @@ class JsonException extends Exception implements Throwable, Stringable {
 	 * @param Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -114,9 +112,9 @@ class JsonException extends Exception implements Throwable, Stringable {
  * @param mixed $value 
  * @param int $flags [optional] 
  * @param int $depth [optional] 
- * @return string|bool Returns a JSON encoded string on success or false on failure.
+ * @return string|false Returns a JSON encoded string on success or false on failure.
  */
-function json_encode (mixed $value, int $flags = null, int $depth = 512): string|bool {}
+function json_encode (mixed $value, int $flags = null, int $depth = 512): string|int {}
 
 /**
  * Decodes a JSON string

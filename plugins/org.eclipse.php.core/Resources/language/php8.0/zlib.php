@@ -21,27 +21,27 @@ final class DeflateContext  {
  * @link http://www.php.net/manual/en/function.ob-gzhandler.php
  * @param string $data 
  * @param int $flags 
- * @return string|bool 
+ * @return string|false 
  */
-function ob_gzhandler (string $data, int $flags): string|bool {}
+function ob_gzhandler (string $data, int $flags): string|int {}
 
 /**
  * Returns the coding type used for output compression
  * @link http://www.php.net/manual/en/function.zlib-get-coding-type.php
- * @return string|bool Possible return values are gzip, deflate,
+ * @return string|false Possible return values are gzip, deflate,
  * or false.
  */
-function zlib_get_coding_type (): string|bool {}
+function zlib_get_coding_type (): string|int {}
 
 /**
  * Read entire gz-file into an array
  * @link http://www.php.net/manual/en/function.gzfile.php
  * @param string $filename 
  * @param int $use_include_path [optional] 
- * @return array|bool An array containing the file, one line per cell, empty lines included, and with newlines still attached,
+ * @return array|false An array containing the file, one line per cell, empty lines included, and with newlines still attached,
  * or false on failure.
  */
-function gzfile (string $filename, int $use_include_path = null): array|bool {}
+function gzfile (string $filename, int $use_include_path = null): array|int {}
 
 /**
  * Open gz-file
@@ -49,22 +49,22 @@ function gzfile (string $filename, int $use_include_path = null): array|bool {}
  * @param string $filename 
  * @param string $mode 
  * @param int $use_include_path [optional] 
- * @return resource|bool Returns a file pointer to the file opened, after that, everything you read
+ * @return resource|false Returns a file pointer to the file opened, after that, everything you read
  * from this file descriptor will be transparently decompressed and what you 
  * write gets compressed.
  * <p>If the open fails, the function returns false.</p>
  */
-function gzopen (string $filename, string $mode, int $use_include_path = null): resource|bool {}
+function gzopen (string $filename, string $mode, int $use_include_path = null) {}
 
 /**
  * Output a gz-file
  * @link http://www.php.net/manual/en/function.readgzfile.php
  * @param string $filename 
  * @param int $use_include_path [optional] 
- * @return int|bool Returns the number of (uncompressed) bytes read from the file on success,
+ * @return int|false Returns the number of (uncompressed) bytes read from the file on success,
  * or false on failure
  */
-function readgzfile (string $filename, int $use_include_path = null): int|bool {}
+function readgzfile (string $filename, int $use_include_path = null): int {}
 
 /**
  * Compress data with the specified encoding
@@ -74,18 +74,18 @@ function readgzfile (string $filename, int $use_include_path = null): int|bool {
  * ZLIB_ENCODING_DEFLATE or
  * ZLIB_ENCODING_GZIP.
  * @param int $level [optional] 
- * @return string|bool 
+ * @return string|false 
  */
-function zlib_encode (string $data, int $encoding, int $level = -1): string|bool {}
+function zlib_encode (string $data, int $encoding, int $level = -1): string|int {}
 
 /**
  * Uncompress any raw/gzip/zlib encoded data
  * @link http://www.php.net/manual/en/function.zlib-decode.php
  * @param string $data 
  * @param int $max_length [optional] 
- * @return string|bool Returns the uncompressed data, or false on failure.
+ * @return string|false Returns the uncompressed data, or false on failure.
  */
-function zlib_decode (string $data, int $max_length = null): string|bool {}
+function zlib_decode (string $data, int $max_length = null): string|int {}
 
 /**
  * Deflate a string
@@ -93,9 +93,9 @@ function zlib_decode (string $data, int $max_length = null): string|bool {}
  * @param string $data 
  * @param int $level [optional] 
  * @param int $encoding [optional] 
- * @return string|bool The deflated string or false if an error occurred.
+ * @return string|false The deflated string or false if an error occurred.
  */
-function gzdeflate (string $data, int $level = -1, int $encoding = ZLIB_ENCODING_RAW): string|bool {}
+function gzdeflate (string $data, int $level = -1, int $encoding = ZLIB_ENCODING_RAW): string|int {}
 
 /**
  * Create a gzip compressed string
@@ -103,9 +103,9 @@ function gzdeflate (string $data, int $level = -1, int $encoding = ZLIB_ENCODING
  * @param string $data 
  * @param int $level [optional] 
  * @param int $encoding [optional] 
- * @return string|bool The encoded string, or false if an error occurred.
+ * @return string|false The encoded string, or false if an error occurred.
  */
-function gzencode (string $data, int $level = -1, int $encoding = ZLIB_ENCODING_GZIP): string|bool {}
+function gzencode (string $data, int $level = -1, int $encoding = ZLIB_ENCODING_GZIP): string|int {}
 
 /**
  * Compress a string
@@ -113,42 +113,42 @@ function gzencode (string $data, int $level = -1, int $encoding = ZLIB_ENCODING_
  * @param string $data 
  * @param int $level [optional] 
  * @param int $encoding [optional] 
- * @return string|bool The compressed string or false if an error occurred.
+ * @return string|false The compressed string or false if an error occurred.
  */
-function gzcompress (string $data, int $level = -1, int $encoding = ZLIB_ENCODING_DEFLATE): string|bool {}
+function gzcompress (string $data, int $level = -1, int $encoding = ZLIB_ENCODING_DEFLATE): string|int {}
 
 /**
  * Inflate a deflated string
  * @link http://www.php.net/manual/en/function.gzinflate.php
  * @param string $data 
  * @param int $max_length [optional] 
- * @return string|bool The original uncompressed data or false on error.
+ * @return string|false The original uncompressed data or false on error.
  * <p>The function will return an error if the uncompressed data is more than
  * 32768 times the length of the compressed input data 
  * or, unless max_length is 0, more than the optional parameter max_length.</p>
  */
-function gzinflate (string $data, int $max_length = null): string|bool {}
+function gzinflate (string $data, int $max_length = null): string|int {}
 
 /**
  * Decodes a gzip compressed string
  * @link http://www.php.net/manual/en/function.gzdecode.php
  * @param string $data 
  * @param int $max_length [optional] 
- * @return string|bool The decoded string, or or false on failure.
+ * @return string|false The decoded string, or or false on failure.
  */
-function gzdecode (string $data, int $max_length = null): string|bool {}
+function gzdecode (string $data, int $max_length = null): string|int {}
 
 /**
  * Uncompress a compressed string
  * @link http://www.php.net/manual/en/function.gzuncompress.php
  * @param string $data 
  * @param int $max_length [optional] 
- * @return string|bool The original uncompressed data or false on error.
+ * @return string|false The original uncompressed data or false on error.
  * <p>The function will return an error if the uncompressed data is more than
  * 32768 times the length of the compressed input data 
  * or more than the optional parameter max_length.</p>
  */
-function gzuncompress (string $data, int $max_length = null): string|bool {}
+function gzuncompress (string $data, int $max_length = null): string|int {}
 
 /**
  * Binary-safe gz-file write
@@ -156,10 +156,10 @@ function gzuncompress (string $data, int $max_length = null): string|bool {}
  * @param resource $stream 
  * @param string $data 
  * @param int|null $length [optional] 
- * @return int|bool Returns the number of (uncompressed) bytes written to the given gz-file 
+ * @return int|false Returns the number of (uncompressed) bytes written to the given gz-file 
  * stream, or false on failure.
  */
-function gzwrite (resource $stream, string $data, ?int $length = null): int|bool {}
+function gzwrite ($stream, string $data, ?int $length = null): int {}
 
 /**
  * Alias of gzwrite
@@ -167,10 +167,10 @@ function gzwrite (resource $stream, string $data, ?int $length = null): int|bool
  * @param resource $stream 
  * @param string $data 
  * @param int|null $length [optional] 
- * @return int|bool Returns the number of (uncompressed) bytes written to the given gz-file 
+ * @return int|false Returns the number of (uncompressed) bytes written to the given gz-file 
  * stream, or false on failure.
  */
-function gzputs (resource $stream, string $data, ?int $length = null): int|bool {}
+function gzputs ($stream, string $data, ?int $length = null): int {}
 
 /**
  * Rewind the position of a gz-file pointer
@@ -178,7 +178,7 @@ function gzputs (resource $stream, string $data, ?int $length = null): int|bool 
  * @param resource $stream 
  * @return bool Returns true on success or false on failure.
  */
-function gzrewind (resource $stream): bool {}
+function gzrewind ($stream): bool {}
 
 /**
  * Close an open gz-file pointer
@@ -186,7 +186,7 @@ function gzrewind (resource $stream): bool {}
  * @param resource $stream 
  * @return bool Returns true on success or false on failure.
  */
-function gzclose (resource $stream): bool {}
+function gzclose ($stream): bool {}
 
 /**
  * Test for EOF on a gz-file pointer
@@ -195,15 +195,15 @@ function gzclose (resource $stream): bool {}
  * @return bool Returns true if the gz-file pointer is at EOF or an error occurs;
  * otherwise returns false.
  */
-function gzeof (resource $stream): bool {}
+function gzeof ($stream): bool {}
 
 /**
  * Get character from gz-file pointer
  * @link http://www.php.net/manual/en/function.gzgetc.php
  * @param resource $stream 
- * @return string|bool The uncompressed character or false on EOF (unlike gzeof).
+ * @return string|false The uncompressed character or false on EOF (unlike gzeof).
  */
-function gzgetc (resource $stream): string|bool {}
+function gzgetc ($stream): string|int {}
 
 /**
  * Output all remaining data on a gz-file pointer
@@ -212,7 +212,7 @@ function gzgetc (resource $stream): string|bool {}
  * @return int The number of uncompressed characters read from gz
  * and passed through to the input.
  */
-function gzpassthru (resource $stream): int {}
+function gzpassthru ($stream): int {}
 
 /**
  * Seek on a gz-file pointer
@@ -223,33 +223,33 @@ function gzpassthru (resource $stream): int {}
  * @return int Upon success, returns 0; otherwise, returns -1. Note that seeking
  * past EOF is not considered an error.
  */
-function gzseek (resource $stream, int $offset, int $whence = SEEK_SET): int {}
+function gzseek ($stream, int $offset, int $whence = SEEK_SET): int {}
 
 /**
  * Tell gz-file pointer read/write position
  * @link http://www.php.net/manual/en/function.gztell.php
  * @param resource $stream 
- * @return int|bool The position of the file pointer or false if an error occurs.
+ * @return int|false The position of the file pointer or false if an error occurs.
  */
-function gztell (resource $stream): int|bool {}
+function gztell ($stream): int {}
 
 /**
  * Binary-safe gz-file read
  * @link http://www.php.net/manual/en/function.gzread.php
  * @param resource $stream 
  * @param int $length 
- * @return string|bool The data that have been read, or false on failure.
+ * @return string|false The data that have been read, or false on failure.
  */
-function gzread (resource $stream, int $length): string|bool {}
+function gzread ($stream, int $length): string|int {}
 
 /**
  * Get line from file pointer
  * @link http://www.php.net/manual/en/function.gzgets.php
  * @param resource $stream 
  * @param int|null $length [optional] 
- * @return string|bool The uncompressed string, or false on error.
+ * @return string|false The uncompressed string, or false on error.
  */
-function gzgets (resource $stream, ?int $length = null): string|bool {}
+function gzgets ($stream, ?int $length = null): string|int {}
 
 /**
  * Initialize an incremental deflate context
@@ -304,10 +304,10 @@ function gzgets (resource $stream, ?int $length = null): string|bool {}
  * ZLIB_DEFAULT_STRATEGY (the default).</p>
  * <p>A string or an array of strings
  * of the preset dictionary (default: no preset dictionary).</p>
- * @return DeflateContext|bool Returns a deflate context resource (zlib.deflate) on
+ * @return DeflateContext|false Returns a deflate context resource (zlib.deflate) on
  * success, or false on failure.
  */
-function deflate_init (int $encoding, array $options = []): DeflateContext|bool {}
+function deflate_init (int $encoding, array $options = '[]'): DeflateContext|int {}
 
 /**
  * Incrementally deflate data
@@ -323,9 +323,9 @@ function deflate_init (int $encoding, array $options = []): DeflateContext|bool 
  * maximize compression, and ZLIB_FINISH to terminate
  * with the last chunk of data. See the zlib manual for a
  * detailed description of these constants.
- * @return string|bool Returns a chunk of compressed data, or false on failure.
+ * @return string|false Returns a chunk of compressed data, or false on failure.
  */
-function deflate_add (DeflateContext $context, string $data, int $flush_mode = ZLIB_SYNC_FLUSH): string|bool {}
+function deflate_add (DeflateContext $context, string $data, int $flush_mode = ZLIB_SYNC_FLUSH): string|int {}
 
 /**
  * Initialize an incremental inflate context
@@ -372,10 +372,10 @@ function deflate_add (DeflateContext $context, string $data, int $flush_mode = Z
  * ZLIB_DEFAULT_STRATEGY (the default).</p>
  * <p>A string or an array of strings
  * of the preset dictionary (default: no preset dictionary).</p>
- * @return InflateContext|bool Returns an inflate context resource (zlib.inflate) on
+ * @return InflateContext|false Returns an inflate context resource (zlib.inflate) on
  * success, or false on failure.
  */
-function inflate_init (int $encoding, array $options = []): InflateContext|bool {}
+function inflate_init (int $encoding, array $options = '[]'): InflateContext|int {}
 
 /**
  * Incrementally inflate encoded data
@@ -391,9 +391,9 @@ function inflate_init (int $encoding, array $options = []): InflateContext|bool 
  * maximize compression, and ZLIB_FINISH to terminate
  * with the last chunk of data. See the zlib manual for a
  * detailed description of these constants.
- * @return string|bool Returns a chunk of uncompressed data, or false on failure.
+ * @return string|false Returns a chunk of uncompressed data, or false on failure.
  */
-function inflate_add (InflateContext $context, string $data, int $flush_mode = ZLIB_SYNC_FLUSH): string|bool {}
+function inflate_add (InflateContext $context, string $data, int $flush_mode = ZLIB_SYNC_FLUSH): string|int {}
 
 /**
  * Get decompression status

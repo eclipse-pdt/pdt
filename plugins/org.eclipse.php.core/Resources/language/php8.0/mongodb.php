@@ -24,7 +24,7 @@ interface Serializable extends \MongoDB\BSON\Type {
 	 * @return array|object An array or stdClass to be serialized as
 	 * a BSON array or document.
 	 */
-	abstract public function bsonSerialize (): array|object
+	abstract public function bsonSerialize (): array|object;
 
 }
 
@@ -42,7 +42,7 @@ interface Unserializable  {
 	 * @param array $data Properties within the BSON array or document.
 	 * @return void The return value from this method is ignored.
 	 */
-	abstract public function bsonUnserialize (array $data): void
+	abstract public function bsonUnserialize (array $data): void;
 
 }
 
@@ -58,21 +58,21 @@ interface BinaryInterface extends \Stringable {
 	 * @link http://www.php.net/manual/en/mongodb-bson-binaryinterface.getdata.php
 	 * @return string Returns the BinaryInterface's data.
 	 */
-	abstract public function getData (): string
+	abstract public function getData (): string;
 
 	/**
 	 * Returns the BinaryInterface's type
 	 * @link http://www.php.net/manual/en/mongodb-bson-binaryinterface.gettype.php
 	 * @return int Returns the BinaryInterface's type.
 	 */
-	abstract public function getType (): int
+	abstract public function getType (): int;
 
 	/**
 	 * Returns the BinaryInterface's data
 	 * @link http://www.php.net/manual/en/mongodb-bson-binaryinterface.tostring.php
 	 * @return string Returns the BinaryInterface's data.
 	 */
-	abstract public function __toString (): string
+	abstract public function __toString (): string;
 
 }
 
@@ -89,7 +89,7 @@ interface Decimal128Interface extends \Stringable {
 	 * @link http://www.php.net/manual/en/mongodb-bson-decimal128interface.tostring.php
 	 * @return string Returns the string representation of this Decimal128Interface.
 	 */
-	abstract public function __toString (): string
+	abstract public function __toString (): string;
 
 }
 
@@ -106,21 +106,21 @@ interface JavascriptInterface extends \Stringable {
 	 * @link http://www.php.net/manual/en/mongodb-bson-javascriptinterface.getcode.php
 	 * @return string Returns the JavascriptInterface's code.
 	 */
-	abstract public function getCode (): string
+	abstract public function getCode (): string;
 
 	/**
 	 * Returns the JavascriptInterface's scope document
 	 * @link http://www.php.net/manual/en/mongodb-bson-javascriptinterface.getscope.php
 	 * @return object|null Returns the JavascriptInterface's scope document.
 	 */
-	abstract public function getScope (): ?object
+	abstract public function getScope (): ?object;
 
 	/**
 	 * Returns the JavascriptInterface's code
 	 * @link http://www.php.net/manual/en/mongodb-bson-javascriptinterface.tostring.php
 	 * @return string Returns the JavascriptInterface's code.
 	 */
-	abstract public function __toString (): string
+	abstract public function __toString (): string;
 
 }
 
@@ -153,14 +153,14 @@ interface ObjectIdInterface extends \Stringable {
 	 * @link http://www.php.net/manual/en/mongodb-bson-objectidinterface.gettimestamp.php
 	 * @return int Returns the timestamp component of this ObjectIdInterface.
 	 */
-	abstract public function getTimestamp (): int
+	abstract public function getTimestamp (): int;
 
 	/**
 	 * Returns the hexidecimal representation of this ObjectIdInterface
 	 * @link http://www.php.net/manual/en/mongodb-bson-objectidinterface.tostring.php
 	 * @return string Returns the hexidecimal representation of this ObjectIdInterface.
 	 */
-	abstract public function __toString (): string
+	abstract public function __toString (): string;
 
 }
 
@@ -176,21 +176,21 @@ interface RegexInterface extends \Stringable {
 	 * @link http://www.php.net/manual/en/mongodb-bson-regexinterface.getpattern.php
 	 * @return string Returns the RegexInterface's pattern.
 	 */
-	abstract public function getPattern (): string
+	abstract public function getPattern (): string;
 
 	/**
 	 * Returns the RegexInterface's flags
 	 * @link http://www.php.net/manual/en/mongodb-bson-regexinterface.getflags.php
 	 * @return string Returns the RegexInterface's flags.
 	 */
-	abstract public function getFlags (): string
+	abstract public function getFlags (): string;
 
 	/**
 	 * Returns the string representation of this RegexInterface
 	 * @link http://www.php.net/manual/en/mongodb-bson-regexinterface.tostring.php
 	 * @return string Returns the string representation of this RegexInterface.
 	 */
-	abstract public function __toString (): string
+	abstract public function __toString (): string;
 
 }
 
@@ -207,21 +207,21 @@ interface TimestampInterface extends \Stringable {
 	 * @link http://www.php.net/manual/en/mongodb-bson-timestampinterface.gettimestamp.php
 	 * @return int Returns the timestamp component of this TimestampInterface.
 	 */
-	abstract public function getTimestamp (): int
+	abstract public function getTimestamp (): int;
 
 	/**
 	 * Returns the increment component of this TimestampInterface
 	 * @link http://www.php.net/manual/en/mongodb-bson-timestampinterface.getincrement.php
 	 * @return int Returns the increment component of this TimestampInterface.
 	 */
-	abstract public function getIncrement (): int
+	abstract public function getIncrement (): int;
 
 	/**
 	 * Returns the string representation of this TimestampInterface
 	 * @link http://www.php.net/manual/en/mongodb-bson-timestampinterface.tostring.php
 	 * @return string Returns the string representation of this TimestampInterface.
 	 */
-	abstract public function __toString (): string
+	abstract public function __toString (): string;
 
 }
 
@@ -240,14 +240,14 @@ interface UTCDateTimeInterface extends \Stringable {
 	 * UTCDateTimeInterface. The returned DateTime should use
 	 * the UTC time zone.
 	 */
-	abstract public function toDateTime (): DateTime
+	abstract public function toDateTime (): \DateTime;
 
 	/**
 	 * Returns the string representation of this UTCDateTimeInterface
 	 * @link http://www.php.net/manual/en/mongodb-bson-utcdatetimeinterface.tostring.php
 	 * @return string Returns the string representation of this UTCDateTimeInterface.
 	 */
-	abstract public function __toString (): string
+	abstract public function __toString (): string;
 
 }
 
@@ -296,7 +296,7 @@ final class Binary implements \Stringable, \MongoDB\BSON\BinaryInterface, \JsonS
 	 * @param int $type [optional] Unsigned 8-bit integer denoting the data's type. Defaults to MongoDB\BSON\Binary::TYPE_GENERIC if not specified.
 	 * @return string 
 	 */
-	final public function __construct (string $data, int $type = MongoDB\BSON\Binary::TYPE_GENERIC): string {}
+	final public function __construct (string $data, int $type = \MongoDB\BSON\Binary::TYPE_GENERIC): string {}
 
 	/**
 	 * Returns the Binary's data
@@ -313,9 +313,10 @@ final class Binary implements \Stringable, \MongoDB\BSON\BinaryInterface, \JsonS
 	final public function getType (): int {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array $properties
 	 */
-	final public static function __set_state (array $properties): MongoDB\BSON\Binary {}
+	final public static function __set_state (array $properties): \MongoDB\BSON\Binary {}
 
 	/**
 	 * Returns the Binary's data
@@ -341,10 +342,14 @@ final class Binary implements \Stringable, \MongoDB\BSON\BinaryInterface, \JsonS
 	final public function unserialize (string $serialized): void {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array $data
 	 */
 	final public function __unserialize (array $data): void {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	final public function __serialize (): array {}
 
 	/**
@@ -398,10 +403,14 @@ final class DBPointer implements \Stringable, \JsonSerializable, \MongoDB\BSON\T
 	final public function unserialize (string $serialized): void {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array $data
 	 */
 	final public function __unserialize (array $data): void {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	final public function __serialize (): array {}
 
 	/**
@@ -445,9 +454,10 @@ final class Decimal128 implements \Stringable, \MongoDB\BSON\Decimal128Interface
 	final public function __toString (): string {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array $properties
 	 */
-	final public static function __set_state (array $properties): MongoDB\BSON\Decimal128 {}
+	final public static function __set_state (array $properties): \MongoDB\BSON\Decimal128 {}
 
 	/**
 	 * Serialize a Decimal128
@@ -466,10 +476,14 @@ final class Decimal128 implements \Stringable, \MongoDB\BSON\Decimal128Interface
 	final public function unserialize (string $serialized): void {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array $data
 	 */
 	final public function __unserialize (array $data): void {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	final public function __serialize (): array {}
 
 	/**
@@ -529,10 +543,14 @@ final class Int64 implements \Stringable, \JsonSerializable, \MongoDB\BSON\Type,
 	final public function unserialize (string $serialized): void {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array $data
 	 */
 	final public function __unserialize (array $data): void {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	final public function __serialize (): array {}
 
 	/**
@@ -564,9 +582,10 @@ final class Javascript implements \Stringable, \MongoDB\BSON\JavascriptInterface
 	final public function __construct (string $code, array|object|null $scope = null): string {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array $properties
 	 */
-	final public static function __set_state (array $properties): MongoDB\BSON\Javascript {}
+	final public static function __set_state (array $properties): \MongoDB\BSON\Javascript {}
 
 	/**
 	 * Returns the Javascript's code
@@ -606,10 +625,14 @@ final class Javascript implements \Stringable, \MongoDB\BSON\JavascriptInterface
 	final public function unserialize (string $serialized): void {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array $data
 	 */
 	final public function __unserialize (array $data): void {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	final public function __serialize (): array {}
 
 	/**
@@ -631,9 +654,10 @@ final class Javascript implements \Stringable, \MongoDB\BSON\JavascriptInterface
 final class MaxKey implements \MongoDB\BSON\MaxKeyInterface, \JsonSerializable, \MongoDB\BSON\Type, \Serializable {
 
 	/**
+	 * {@inheritdoc}
 	 * @param array $properties
 	 */
-	final public static function __set_state (array $properties): MongoDB\BSON\MaxKey {}
+	final public static function __set_state (array $properties): \MongoDB\BSON\MaxKey {}
 
 	/**
 	 * Serialize a MaxKey
@@ -652,10 +676,14 @@ final class MaxKey implements \MongoDB\BSON\MaxKeyInterface, \JsonSerializable, 
 	final public function unserialize (string $serialized): void {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array $data
 	 */
 	final public function __unserialize (array $data): void {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	final public function __serialize (): array {}
 
 	/**
@@ -677,9 +705,10 @@ final class MaxKey implements \MongoDB\BSON\MaxKeyInterface, \JsonSerializable, 
 final class MinKey implements \MongoDB\BSON\MinKeyInterface, \JsonSerializable, \MongoDB\BSON\Type, \Serializable {
 
 	/**
+	 * {@inheritdoc}
 	 * @param array $properties
 	 */
-	final public static function __set_state (array $properties): MongoDB\BSON\MinKey {}
+	final public static function __set_state (array $properties): \MongoDB\BSON\MinKey {}
 
 	/**
 	 * Serialize a MinKey
@@ -698,10 +727,14 @@ final class MinKey implements \MongoDB\BSON\MinKeyInterface, \JsonSerializable, 
 	final public function unserialize (string $serialized): void {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array $data
 	 */
 	final public function __unserialize (array $data): void {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	final public function __serialize (): array {}
 
 	/**
@@ -754,9 +787,10 @@ final class ObjectId implements \Stringable, \MongoDB\BSON\ObjectIdInterface, \J
 	final public function __toString (): string {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array $properties
 	 */
-	final public static function __set_state (array $properties): MongoDB\BSON\ObjectId {}
+	final public static function __set_state (array $properties): \MongoDB\BSON\ObjectId {}
 
 	/**
 	 * Serialize an ObjectId
@@ -775,10 +809,14 @@ final class ObjectId implements \Stringable, \MongoDB\BSON\ObjectIdInterface, \J
 	final public function unserialize (string $serialized): void {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array $data
 	 */
 	final public function __unserialize (array $data): void {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	final public function __serialize (): array {}
 
 	/**
@@ -815,7 +853,7 @@ interface Persistable extends \MongoDB\BSON\Serializable, \MongoDB\BSON\Type, \M
 	 * @return array|object An array or stdClass to be serialized as
 	 * a BSON array or document.
 	 */
-	abstract public function bsonSerialize (): array|object
+	abstract public function bsonSerialize (): array|object;
 
 	/**
 	 * Constructs the object from a BSON array or document
@@ -823,7 +861,7 @@ interface Persistable extends \MongoDB\BSON\Serializable, \MongoDB\BSON\Type, \M
 	 * @param array $data Properties within the BSON array or document.
 	 * @return void The return value from this method is ignored.
 	 */
-	abstract public function bsonUnserialize (array $data): void
+	abstract public function bsonUnserialize (array $data): void;
 
 }
 
@@ -843,7 +881,7 @@ final class Regex implements \Stringable, \MongoDB\BSON\RegexInterface, \JsonSer
 	 * alphabetically.
 	 * @return string 
 	 */
-	final public function __construct (string $pattern, string $flags = ""): string {}
+	final public function __construct (string $pattern, string $flags = '""'): string {}
 
 	/**
 	 * Returns the Regex's pattern
@@ -867,9 +905,10 @@ final class Regex implements \Stringable, \MongoDB\BSON\RegexInterface, \JsonSer
 	final public function __toString (): string {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array $properties
 	 */
-	final public static function __set_state (array $properties): MongoDB\BSON\Regex {}
+	final public static function __set_state (array $properties): \MongoDB\BSON\Regex {}
 
 	/**
 	 * Serialize a Regex
@@ -888,10 +927,14 @@ final class Regex implements \Stringable, \MongoDB\BSON\RegexInterface, \JsonSer
 	final public function unserialize (string $serialized): void {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array $data
 	 */
 	final public function __unserialize (array $data): void {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	final public function __serialize (): array {}
 
 	/**
@@ -945,10 +988,14 @@ final class Symbol implements \Stringable, \JsonSerializable, \MongoDB\BSON\Type
 	final public function unserialize (string $serialized): void {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array $data
 	 */
 	final public function __unserialize (array $data): void {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	final public function __serialize (): array {}
 
 	/**
@@ -1003,9 +1050,10 @@ final class Timestamp implements \Stringable, \MongoDB\BSON\TimestampInterface, 
 	final public function __toString (): string {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array $properties
 	 */
-	final public static function __set_state (array $properties): MongoDB\BSON\Timestamp {}
+	final public static function __set_state (array $properties): \MongoDB\BSON\Timestamp {}
 
 	/**
 	 * Serialize a Timestamp
@@ -1024,10 +1072,14 @@ final class Timestamp implements \Stringable, \MongoDB\BSON\TimestampInterface, 
 	final public function unserialize (string $serialized): void {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array $data
 	 */
 	final public function __unserialize (array $data): void {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	final public function __serialize (): array {}
 
 	/**
@@ -1081,10 +1133,14 @@ final class Undefined implements \Stringable, \JsonSerializable, \MongoDB\BSON\T
 	final public function unserialize (string $serialized): void {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array $data
 	 */
 	final public function __unserialize (array $data): void {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	final public function __serialize (): array {}
 
 	/**
@@ -1110,16 +1166,16 @@ final class UTCDateTime implements \Stringable, \MongoDB\BSON\UTCDateTimeInterfa
 	/**
 	 * Construct a new UTCDateTime
 	 * @link http://www.php.net/manual/en/mongodb-bson-utcdatetime.construct.php
-	 * @param int|float|string|DateTimeInterface|null $milliseconds [optional] Number of milliseconds since the Unix epoch (Jan 1, 1970). Negative values
+	 * @param int|float|string|\DateTimeInterface|null $milliseconds [optional] Number of milliseconds since the Unix epoch (Jan 1, 1970). Negative values
 	 * represent dates before 1970. This value may be provided as a 64-bit
 	 * int. For compatibility on 32-bit systems, this parameter
 	 * may also be provided as a float or string.
 	 * <p>If the argument is a DateTimeInterface, the number
 	 * of milliseconds since the Unix epoch will be derived from that value.</p>
 	 * <p>If this argument is null, the current time will be used by default.</p>
-	 * @return int|float|string|DateTimeInterface|null 
+	 * @return int|float|string|\DateTimeInterface|null 
 	 */
-	final public function __construct (int|float|string|DateTimeInterface|null $milliseconds = null): int|float|string|DateTimeInterface|null {}
+	final public function __construct (int|float|string|\DateTimeInterface|null $milliseconds = null): int|float|string|\DateTimeInterface|null {}
 
 	/**
 	 * Returns the DateTime representation of this UTCDateTime
@@ -1128,7 +1184,7 @@ final class UTCDateTime implements \Stringable, \MongoDB\BSON\UTCDateTimeInterfa
 	 * UTCDateTime. The returned DateTime will use the UTC
 	 * time zone.
 	 */
-	final public function toDateTime (): DateTime {}
+	final public function toDateTime (): \DateTime {}
 
 	/**
 	 * Returns the string representation of this UTCDateTime
@@ -1138,9 +1194,10 @@ final class UTCDateTime implements \Stringable, \MongoDB\BSON\UTCDateTimeInterfa
 	final public function __toString (): string {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array $properties
 	 */
-	final public static function __set_state (array $properties): MongoDB\BSON\UTCDateTime {}
+	final public static function __set_state (array $properties): \MongoDB\BSON\UTCDateTime {}
 
 	/**
 	 * Serialize a UTCDateTime
@@ -1159,10 +1216,14 @@ final class UTCDateTime implements \Stringable, \MongoDB\BSON\UTCDateTimeInterfa
 	final public function unserialize (string $serialized): void {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array $data
 	 */
 	final public function __unserialize (array $data): void {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	final public function __serialize (): array {}
 
 	/**
@@ -1195,7 +1256,7 @@ interface CursorInterface extends \Traversable {
 	 * @link http://www.php.net/manual/en/mongodb-driver-cursorinterface.getid.php
 	 * @return \MongoDB\Driver\CursorId Returns the MongoDB\Driver\CursorId for this cursor.
 	 */
-	abstract public function getId (): MongoDB\Driver\CursorId
+	abstract public function getId (): \MongoDB\Driver\CursorId;
 
 	/**
 	 * Returns the server associated with this cursor
@@ -1203,7 +1264,7 @@ interface CursorInterface extends \Traversable {
 	 * @return \MongoDB\Driver\Server Returns the MongoDB\Driver\Server associated with this
 	 * cursor.
 	 */
-	abstract public function getServer (): MongoDB\Driver\Server
+	abstract public function getServer (): \MongoDB\Driver\Server;
 
 	/**
 	 * Checks if the cursor may have additional results
@@ -1211,7 +1272,7 @@ interface CursorInterface extends \Traversable {
 	 * @return bool Returns true if additional results are not available, and false
 	 * otherwise.
 	 */
-	abstract public function isDead (): bool
+	abstract public function isDead (): bool;
 
 	/**
 	 * Sets a type map to use for BSON unserialization
@@ -1219,14 +1280,14 @@ interface CursorInterface extends \Traversable {
 	 * @param array $typemap 
 	 * @return void No value is returned.
 	 */
-	abstract public function setTypeMap (array $typemap): void
+	abstract public function setTypeMap (array $typemap): void;
 
 	/**
 	 * Returns an array containing all results for this cursor
 	 * @link http://www.php.net/manual/en/mongodb-driver-cursorinterface.toarray.php
 	 * @return array Returns an array containing all results for this cursor.
 	 */
-	abstract public function toArray (): array
+	abstract public function toArray (): array;
 
 }
 
@@ -1523,6 +1584,9 @@ final class BulkWrite implements \Countable {
 	 */
 	public function update (array|object $filter, array|object $newObj, ?array $updateOptions = null): void {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	final public function __wakeup (): void {}
 
 }
@@ -1669,7 +1733,7 @@ final class ClientEncryption  {
 	 * @return object|null Returns the previous version of the key document, or null if no document
 	 * matched.
 	 */
-	final public function addKeyAltName (MongoDB\BSON\Binary $keyId, string $keyAltName): ?object {}
+	final public function addKeyAltName (\MongoDB\BSON\Binary $keyId, string $keyAltName): ?object {}
 
 	/**
 	 * Creates a key document
@@ -1969,7 +2033,7 @@ final class ClientEncryption  {
 	 * @return \MongoDB\BSON\Binary Returns the identifier of the new key as a
 	 * MongoDB\BSON\Binary object with subtype 4 (UUID).
 	 */
-	final public function createDataKey (string $kmsProvider, ?array $options = null): MongoDB\BSON\Binary {}
+	final public function createDataKey (string $kmsProvider, ?array $options = null): \MongoDB\BSON\Binary {}
 
 	/**
 	 * Decrypt a value
@@ -1979,7 +2043,7 @@ final class ClientEncryption  {
 	 * @return mixed Returns the decrypted value as it was passed to
 	 * MongoDB\Driver\ClientEncryption::encrypt.
 	 */
-	final public function decrypt (MongoDB\BSON\Binary $value): mixed {}
+	final public function decrypt (\MongoDB\BSON\Binary $value): mixed {}
 
 	/**
 	 * Deletes a key document
@@ -1989,7 +2053,7 @@ final class ClientEncryption  {
 	 * @return object Returns the result of the internal deleteOne operation on
 	 * the key vault collection.
 	 */
-	final public function deleteKey (MongoDB\BSON\Binary $keyId): object {}
+	final public function deleteKey (\MongoDB\BSON\Binary $keyId): object {}
 
 	/**
 	 * Encrypt a value
@@ -2107,7 +2171,7 @@ final class ClientEncryption  {
 	 * @return \MongoDB\BSON\Binary Returns the encrypted value as
 	 * MongoDB\BSON\Binary object with subtype 6.
 	 */
-	final public function encrypt (mixed $value, ?array $options = null): MongoDB\BSON\Binary {}
+	final public function encrypt (mixed $value, ?array $options = null): \MongoDB\BSON\Binary {}
 
 	/**
 	 * Gets a key document
@@ -2116,7 +2180,7 @@ final class ClientEncryption  {
 	 * (UUID) identifying the key document.
 	 * @return object|null Returns the key document, or null if no document matched.
 	 */
-	final public function getKey (MongoDB\BSON\Binary $keyId): ?object {}
+	final public function getKey (\MongoDB\BSON\Binary $keyId): ?object {}
 
 	/**
 	 * Gets a key document by an alternate name
@@ -2131,7 +2195,7 @@ final class ClientEncryption  {
 	 * @link http://www.php.net/manual/en/mongodb-driver-clientencryption.getkeys.php
 	 * @return \MongoDB\Driver\Cursor >Returns MongoDB\Driver\Cursor on success.
 	 */
-	final public function getKeys (): MongoDB\Driver\Cursor {}
+	final public function getKeys (): \MongoDB\Driver\Cursor {}
 
 	/**
 	 * Removes an alternate name from a key document
@@ -2142,7 +2206,7 @@ final class ClientEncryption  {
 	 * @return object|null Returns the previous version of the key document, or null if no document
 	 * matched.
 	 */
-	final public function removeKeyAltName (MongoDB\BSON\Binary $keyId, string $keyAltName): ?object {}
+	final public function removeKeyAltName (\MongoDB\BSON\Binary $keyId, string $keyAltName): ?object {}
 
 	/**
 	 * Rewraps data keys
@@ -2437,6 +2501,9 @@ final class ClientEncryption  {
 	 */
 	final public function rewrapManyDataKey (array|object $filter, ?array $options = null): object {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	final public function __wakeup (): void {}
 
 }
@@ -2485,6 +2552,9 @@ final class Command  {
 	 */
 	final public function __construct (array|object $document, ?array $commandOptions = null): array|object {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	final public function __wakeup (): void {}
 
 }
@@ -2519,7 +2589,7 @@ final class Cursor implements \Iterator, \Traversable, \MongoDB\Driver\CursorInt
 	 * @link http://www.php.net/manual/en/mongodb-driver-cursor.getid.php
 	 * @return \MongoDB\Driver\CursorId Returns the MongoDB\Driver\CursorId for this cursor.
 	 */
-	final public function getId (): MongoDB\Driver\CursorId {}
+	final public function getId (): \MongoDB\Driver\CursorId {}
 
 	/**
 	 * Returns the server associated with this cursor
@@ -2527,7 +2597,7 @@ final class Cursor implements \Iterator, \Traversable, \MongoDB\Driver\CursorInt
 	 * @return \MongoDB\Driver\Server Returns the MongoDB\Driver\Server associated with this
 	 * cursor.
 	 */
-	final public function getServer (): MongoDB\Driver\Server {}
+	final public function getServer (): \MongoDB\Driver\Server {}
 
 	/**
 	 * Checks if the cursor is exhausted or may have additional results
@@ -2580,6 +2650,9 @@ final class Cursor implements \Iterator, \Traversable, \MongoDB\Driver\CursorInt
 	 */
 	public function valid (): bool {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	final public function __wakeup (): void {}
 
 }
@@ -2600,9 +2673,10 @@ final class CursorId implements \Stringable, \Serializable {
 	final private function __construct (): void {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array $properties
 	 */
-	final public static function __set_state (array $properties): MongoDB\Driver\CursorId {}
+	final public static function __set_state (array $properties): \MongoDB\Driver\CursorId {}
 
 	/**
 	 * String representation of the cursor ID
@@ -2628,10 +2702,14 @@ final class CursorId implements \Stringable, \Serializable {
 	final public function unserialize (string $serialized): void {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array $data
 	 */
 	final public function __unserialize (array $data): void {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	final public function __serialize (): array {}
 
 }
@@ -4118,10 +4196,10 @@ final class Manager  {
 	/**
 	 * Registers a monitoring event subscriber with this Manager
 	 * @link http://www.php.net/manual/en/mongodb-driver-manager.addsubscriber.php
-	 * @param MongoDB\Driver\Monitoring\Subscriber $subscriber A monitoring event subscriber to register with this Manager.
+	 * @param \MongoDB\Driver\Monitoring\Subscriber $subscriber A monitoring event subscriber to register with this Manager.
 	 * @return void No value is returned.
 	 */
-	final public function addSubscriber (MongoDB\Driver\Monitoring\Subscriber $subscriber): void {}
+	final public function addSubscriber (\MongoDB\Driver\Monitoring\Subscriber $subscriber): void {}
 
 	/**
 	 * Create a new ClientEncryption object
@@ -4229,14 +4307,14 @@ final class Manager  {
 	 * <p>A document containing the TLS configuration for one or more KMS providers. Supported providers include "aws", "azure", "gcp", and "kmip". All providers support the following options:</p>
 	 * @return \MongoDB\Driver\ClientEncryption Returns a new MongoDB\Driver\ClientEncryption instance.
 	 */
-	final public function createClientEncryption (array $options): MongoDB\Driver\ClientEncryption {}
+	final public function createClientEncryption (array $options): \MongoDB\Driver\ClientEncryption {}
 
 	/**
 	 * Execute one or more write operations
 	 * @link http://www.php.net/manual/en/mongodb-driver-manager.executebulkwrite.php
 	 * @param string $namespace A fully qualified namespace (e.g. "databaseName.collectionName").
 	 * @param \MongoDB\Driver\BulkWrite $bulk The write(s) to execute.
-	 * @param array|MongoDB\Driver\WriteConcern|null $options [optional] <table>
+	 * @param array|\MongoDB\Driver\WriteConcern|null $options [optional] <table>
 	 * options
 	 * <table>
 	 * <tr valign="top">
@@ -4268,14 +4346,14 @@ final class Manager  {
 	 * <p>A write concern to apply to the operation.</p>
 	 * @return \MongoDB\Driver\WriteResult >Returns MongoDB\Driver\WriteResult on success.
 	 */
-	final public function executeBulkWrite (string $namespace, MongoDB\Driver\BulkWrite $bulk, array|MongoDB\Driver\WriteConcern|null $options = null): MongoDB\Driver\WriteResult {}
+	final public function executeBulkWrite (string $namespace, \MongoDB\Driver\BulkWrite $bulk, array|\MongoDB\Driver\WriteConcern|null $options = null): \MongoDB\Driver\WriteResult {}
 
 	/**
 	 * Execute a database command
 	 * @link http://www.php.net/manual/en/mongodb-driver-manager.executecommand.php
 	 * @param string $db The name of the database on which to execute the command.
 	 * @param \MongoDB\Driver\Command $command The command to execute.
-	 * @param array|MongoDB\Driver\ReadPreference|null $options [optional] <table>
+	 * @param array|\MongoDB\Driver\ReadPreference|null $options [optional] <table>
 	 * options
 	 * <table>
 	 * <tr valign="top">
@@ -4342,14 +4420,14 @@ final class Manager  {
 	 * MongoDB\Driver\Session::startTransaction.</p>
 	 * @return \MongoDB\Driver\Cursor >Returns MongoDB\Driver\Cursor on success.
 	 */
-	final public function executeCommand (string $db, MongoDB\Driver\Command $command, array|MongoDB\Driver\ReadPreference|null $options = null): MongoDB\Driver\Cursor {}
+	final public function executeCommand (string $db, \MongoDB\Driver\Command $command, array|\MongoDB\Driver\ReadPreference|null $options = null): \MongoDB\Driver\Cursor {}
 
 	/**
 	 * Execute a database query
 	 * @link http://www.php.net/manual/en/mongodb-driver-manager.executequery.php
 	 * @param string $namespace A fully qualified namespace (e.g. "databaseName.collectionName").
 	 * @param \MongoDB\Driver\Query $query The query to execute.
-	 * @param array|MongoDB\Driver\ReadPreference|null $options [optional] <table>
+	 * @param array|\MongoDB\Driver\ReadPreference|null $options [optional] <table>
 	 * options
 	 * <table>
 	 * <tr valign="top">
@@ -4381,7 +4459,7 @@ final class Manager  {
 	 * <p>A session to associate with the operation.</p>
 	 * @return \MongoDB\Driver\Cursor >Returns MongoDB\Driver\Cursor on success.
 	 */
-	final public function executeQuery (string $namespace, MongoDB\Driver\Query $query, array|MongoDB\Driver\ReadPreference|null $options = null): MongoDB\Driver\Cursor {}
+	final public function executeQuery (string $namespace, \MongoDB\Driver\Query $query, array|\MongoDB\Driver\ReadPreference|null $options = null): \MongoDB\Driver\Cursor {}
 
 	/**
 	 * Execute a database command that reads
@@ -4445,7 +4523,7 @@ final class Manager  {
 	 * MongoDB\Driver\Session::startTransaction.</p>
 	 * @return \MongoDB\Driver\Cursor >Returns MongoDB\Driver\Cursor on success.
 	 */
-	final public function executeReadCommand (string $db, MongoDB\Driver\Command $command, ?array $options = null): MongoDB\Driver\Cursor {}
+	final public function executeReadCommand (string $db, \MongoDB\Driver\Command $command, ?array $options = null): \MongoDB\Driver\Cursor {}
 
 	/**
 	 * Execute a database command that reads and writes
@@ -4509,7 +4587,7 @@ final class Manager  {
 	 * MongoDB\Driver\Session::startTransaction.</p>
 	 * @return \MongoDB\Driver\Cursor >Returns MongoDB\Driver\Cursor on success.
 	 */
-	final public function executeReadWriteCommand (string $db, MongoDB\Driver\Command $command, ?array $options = null): MongoDB\Driver\Cursor {}
+	final public function executeReadWriteCommand (string $db, \MongoDB\Driver\Command $command, ?array $options = null): \MongoDB\Driver\Cursor {}
 
 	/**
 	 * Execute a database command that writes
@@ -4555,7 +4633,7 @@ final class Manager  {
 	 * MongoDB\Driver\Session::startTransaction.</p>
 	 * @return \MongoDB\Driver\Cursor >Returns MongoDB\Driver\Cursor on success.
 	 */
-	final public function executeWriteCommand (string $db, MongoDB\Driver\Command $command, ?array $options = null): MongoDB\Driver\Cursor {}
+	final public function executeWriteCommand (string $db, \MongoDB\Driver\Command $command, ?array $options = null): \MongoDB\Driver\Cursor {}
 
 	/**
 	 * Return the encryptedFieldsMap auto encryption option for the Manager
@@ -4570,14 +4648,14 @@ final class Manager  {
 	 * @link http://www.php.net/manual/en/mongodb-driver-manager.getreadconcern.php
 	 * @return \MongoDB\Driver\ReadConcern The MongoDB\Driver\ReadConcern for the Manager.
 	 */
-	final public function getReadConcern (): MongoDB\Driver\ReadConcern {}
+	final public function getReadConcern (): \MongoDB\Driver\ReadConcern {}
 
 	/**
 	 * Return the ReadPreference for the Manager
 	 * @link http://www.php.net/manual/en/mongodb-driver-manager.getreadpreference.php
 	 * @return \MongoDB\Driver\ReadPreference The MongoDB\Driver\ReadPreference for the Manager.
 	 */
-	final public function getReadPreference (): MongoDB\Driver\ReadPreference {}
+	final public function getReadPreference (): \MongoDB\Driver\ReadPreference {}
 
 	/**
 	 * Return the servers to which this manager is connected
@@ -4592,15 +4670,15 @@ final class Manager  {
 	 * @link http://www.php.net/manual/en/mongodb-driver-manager.getwriteconcern.php
 	 * @return \MongoDB\Driver\WriteConcern The MongoDB\Driver\WriteConcern for the Manager.
 	 */
-	final public function getWriteConcern (): MongoDB\Driver\WriteConcern {}
+	final public function getWriteConcern (): \MongoDB\Driver\WriteConcern {}
 
 	/**
 	 * Unregisters a monitoring event subscriber with this Manager
 	 * @link http://www.php.net/manual/en/mongodb-driver-manager.removesubscriber.php
-	 * @param MongoDB\Driver\Monitoring\Subscriber $subscriber A monitoring event subscriber to unregister with this Manager.
+	 * @param \MongoDB\Driver\Monitoring\Subscriber $subscriber A monitoring event subscriber to unregister with this Manager.
 	 * @return void No value is returned.
 	 */
-	final public function removeSubscriber (MongoDB\Driver\Monitoring\Subscriber $subscriber): void {}
+	final public function removeSubscriber (\MongoDB\Driver\Monitoring\Subscriber $subscriber): void {}
 
 	/**
 	 * Select a server matching a read preference
@@ -4610,7 +4688,7 @@ final class Manager  {
 	 * @return \MongoDB\Driver\Server Returns a MongoDB\Driver\Server matching the read
 	 * preference.
 	 */
-	final public function selectServer (?MongoDB\Driver\ReadPreference $readPreference = null): MongoDB\Driver\Server {}
+	final public function selectServer (?\MongoDB\Driver\ReadPreference $readPreference = null): \MongoDB\Driver\Server {}
 
 	/**
 	 * Start a new client session for use with this client
@@ -4835,8 +4913,11 @@ final class Manager  {
 	 * in the MongoDB manual for more information.</p>
 	 * @return \MongoDB\Driver\Session Returns a MongoDB\Driver\Session.
 	 */
-	final public function startSession (?array $options = null): MongoDB\Driver\Session {}
+	final public function startSession (?array $options = null): \MongoDB\Driver\Session {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	final public function __wakeup (): void {}
 
 }
@@ -5361,6 +5442,9 @@ final class Query  {
 	 */
 	final public function __construct (array|object $filter, ?array $queryOptions = null): array|object {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	final public function __wakeup (): void {}
 
 }
@@ -5471,9 +5555,10 @@ final class ReadConcern implements \MongoDB\BSON\Serializable, \MongoDB\BSON\Typ
 	final public function isDefault (): bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array $properties
 	 */
-	final public static function __set_state (array $properties): MongoDB\Driver\ReadConcern {}
+	final public static function __set_state (array $properties): \MongoDB\Driver\ReadConcern {}
 
 	/**
 	 * Returns an object for BSON serialization
@@ -5499,10 +5584,14 @@ final class ReadConcern implements \MongoDB\BSON\Serializable, \MongoDB\BSON\Typ
 	final public function unserialize (string $serialized): void {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array $data
 	 */
 	final public function __unserialize (array $data): void {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	final public function __serialize (): array {}
 
 }
@@ -5768,9 +5857,10 @@ final class ReadPreference implements \MongoDB\BSON\Serializable, \MongoDB\BSON\
 	final public function getTagSets (): array {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array $properties
 	 */
-	final public static function __set_state (array $properties): MongoDB\Driver\ReadPreference {}
+	final public static function __set_state (array $properties): \MongoDB\Driver\ReadPreference {}
 
 	/**
 	 * Returns an object for BSON serialization
@@ -5796,10 +5886,14 @@ final class ReadPreference implements \MongoDB\BSON\Serializable, \MongoDB\BSON\
 	final public function unserialize (string $serialized): void {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array $data
 	 */
 	final public function __unserialize (array $data): void {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	final public function __serialize (): array {}
 
 }
@@ -5855,7 +5949,7 @@ final class Server  {
 	 * @link http://www.php.net/manual/en/mongodb-driver-server.executebulkwrite.php
 	 * @param string $namespace A fully qualified namespace (e.g. "databaseName.collectionName").
 	 * @param \MongoDB\Driver\BulkWrite $bulk The write(s) to execute.
-	 * @param array|MongoDB\Driver\WriteConcern|null $options [optional] <table>
+	 * @param array|\MongoDB\Driver\WriteConcern|null $options [optional] <table>
 	 * options
 	 * <table>
 	 * <tr valign="top">
@@ -5887,14 +5981,14 @@ final class Server  {
 	 * <p>A write concern to apply to the operation.</p>
 	 * @return \MongoDB\Driver\WriteResult >Returns MongoDB\Driver\WriteResult on success.
 	 */
-	final public function executeBulkWrite (string $namespace, MongoDB\Driver\BulkWrite $bulk, array|MongoDB\Driver\WriteConcern|null $options = null): MongoDB\Driver\WriteResult {}
+	final public function executeBulkWrite (string $namespace, \MongoDB\Driver\BulkWrite $bulk, array|\MongoDB\Driver\WriteConcern|null $options = null): \MongoDB\Driver\WriteResult {}
 
 	/**
 	 * Execute a database command on this server
 	 * @link http://www.php.net/manual/en/mongodb-driver-server.executecommand.php
 	 * @param string $db The name of the database on which to execute the command.
 	 * @param \MongoDB\Driver\Command $command The command to execute.
-	 * @param array|MongoDB\Driver\ReadPreference|null $options [optional] <table>
+	 * @param array|\MongoDB\Driver\ReadPreference|null $options [optional] <table>
 	 * options
 	 * <table>
 	 * <tr valign="top">
@@ -5961,14 +6055,14 @@ final class Server  {
 	 * MongoDB\Driver\Session::startTransaction.</p>
 	 * @return \MongoDB\Driver\Cursor >Returns MongoDB\Driver\Cursor on success.
 	 */
-	final public function executeCommand (string $db, MongoDB\Driver\Command $command, array|MongoDB\Driver\ReadPreference|null $options = null): MongoDB\Driver\Cursor {}
+	final public function executeCommand (string $db, \MongoDB\Driver\Command $command, array|\MongoDB\Driver\ReadPreference|null $options = null): \MongoDB\Driver\Cursor {}
 
 	/**
 	 * Execute a database query on this server
 	 * @link http://www.php.net/manual/en/mongodb-driver-server.executequery.php
 	 * @param string $namespace A fully qualified namespace (e.g. "databaseName.collectionName").
 	 * @param \MongoDB\Driver\Query $query The query to execute.
-	 * @param array|MongoDB\Driver\ReadPreference|null $options [optional] <table>
+	 * @param array|\MongoDB\Driver\ReadPreference|null $options [optional] <table>
 	 * options
 	 * <table>
 	 * <tr valign="top">
@@ -6000,7 +6094,7 @@ final class Server  {
 	 * <p>A session to associate with the operation.</p>
 	 * @return \MongoDB\Driver\Cursor >Returns MongoDB\Driver\Cursor on success.
 	 */
-	final public function executeQuery (string $namespace, MongoDB\Driver\Query $query, array|MongoDB\Driver\ReadPreference|null $options = null): MongoDB\Driver\Cursor {}
+	final public function executeQuery (string $namespace, \MongoDB\Driver\Query $query, array|\MongoDB\Driver\ReadPreference|null $options = null): \MongoDB\Driver\Cursor {}
 
 	/**
 	 * Execute a database command that reads on this server
@@ -6064,7 +6158,7 @@ final class Server  {
 	 * MongoDB\Driver\Session::startTransaction.</p>
 	 * @return \MongoDB\Driver\Cursor >Returns MongoDB\Driver\Cursor on success.
 	 */
-	final public function executeReadCommand (string $db, MongoDB\Driver\Command $command, ?array $options = null): MongoDB\Driver\Cursor {}
+	final public function executeReadCommand (string $db, \MongoDB\Driver\Command $command, ?array $options = null): \MongoDB\Driver\Cursor {}
 
 	/**
 	 * Execute a database command that reads and writes on this server
@@ -6128,7 +6222,7 @@ final class Server  {
 	 * MongoDB\Driver\Session::startTransaction.</p>
 	 * @return \MongoDB\Driver\Cursor >Returns MongoDB\Driver\Cursor on success.
 	 */
-	final public function executeReadWriteCommand (string $db, MongoDB\Driver\Command $command, ?array $options = null): MongoDB\Driver\Cursor {}
+	final public function executeReadWriteCommand (string $db, \MongoDB\Driver\Command $command, ?array $options = null): \MongoDB\Driver\Cursor {}
 
 	/**
 	 * Execute a database command that writes on this server
@@ -6174,7 +6268,7 @@ final class Server  {
 	 * MongoDB\Driver\Session::startTransaction.</p>
 	 * @return \MongoDB\Driver\Cursor >Returns MongoDB\Driver\Cursor on success.
 	 */
-	final public function executeWriteCommand (string $db, MongoDB\Driver\Command $command, ?array $options = null): MongoDB\Driver\Cursor {}
+	final public function executeWriteCommand (string $db, \MongoDB\Driver\Command $command, ?array $options = null): \MongoDB\Driver\Cursor {}
 
 	/**
 	 * Returns the hostname of this server
@@ -6196,7 +6290,7 @@ final class Server  {
 	 * @return integer|null Returns the latency of this server in milliseconds, or null if no latency
 	 * has been measured (e.g. client is connected to a load balancer).
 	 */
-	final public function getLatency (): ?integer {}
+	final public function getLatency (): ?int {}
 
 	/**
 	 * Returns the port on which this server is listening
@@ -6211,7 +6305,7 @@ final class Server  {
 	 * @return \MongoDB\Driver\ServerDescription Returns a MongoDB\Driver\ServerDescription for this
 	 * server.
 	 */
-	final public function getServerDescription (): MongoDB\Driver\ServerDescription {}
+	final public function getServerDescription (): \MongoDB\Driver\ServerDescription {}
 
 	/**
 	 * Returns an array of tags describing this server in a replica set
@@ -6268,6 +6362,9 @@ final class Server  {
 	 */
 	final public function isSecondary (): bool {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	final public function __wakeup (): void {}
 
 }
@@ -6301,9 +6398,10 @@ final class ServerApi implements \MongoDB\BSON\Serializable, \MongoDB\BSON\Type,
 	final public function __construct (string $version, ?bool $strict = null, ?bool $deprecationErrors = null): string {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array $properties
 	 */
-	final public static function __set_state (array $properties): MongoDB\Driver\ServerApi {}
+	final public static function __set_state (array $properties): \MongoDB\Driver\ServerApi {}
 
 	/**
 	 * Returns an object for BSON serialization
@@ -6329,10 +6427,14 @@ final class ServerApi implements \MongoDB\BSON\Serializable, \MongoDB\BSON\Type,
 	final public function unserialize (string $serialized): void {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array $data
 	 */
 	final public function __unserialize (array $data): void {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	final public function __serialize (): array {}
 
 }
@@ -6381,6 +6483,9 @@ final class ServerDescription  {
 	const TYPE_LOAD_BALANCER = "LoadBalancer";
 
 
+	/**
+	 * {@inheritdoc}
+	 */
 	final private function __construct () {}
 
 	/**
@@ -6425,6 +6530,9 @@ final class ServerDescription  {
 	 */
 	final public function getType (): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	final public function __wakeup (): void {}
 
 }
@@ -6458,6 +6566,9 @@ final class TopologyDescription  {
 	const TYPE_LOAD_BALANCED = "LoadBalanced";
 
 
+	/**
+	 * {@inheritdoc}
+	 */
 	final private function __construct () {}
 
 	/**
@@ -6483,7 +6594,7 @@ final class TopologyDescription  {
 	 * readPreference is specified, a server matching the
 	 * specified read preference.
 	 */
-	final public function hasReadableServer (?MongoDB\Driver\ReadPreference $readPreference = null): bool {}
+	final public function hasReadableServer (?\MongoDB\Driver\ReadPreference $readPreference = null): bool {}
 
 	/**
 	 * Returns whether the topology has a writable server
@@ -6492,6 +6603,9 @@ final class TopologyDescription  {
 	 */
 	final public function hasWritableServer (): bool {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	final public function __wakeup (): void {}
 
 }
@@ -6549,13 +6663,13 @@ final class Session  {
 	/**
 	 * Advances the operation time for this session
 	 * @link http://www.php.net/manual/en/mongodb-driver-session.advanceoperationtime.php
-	 * @param MongoDB\BSON\TimestampInterface $operationTime The operation time is a logical timestamp. Typically, this value will be
+	 * @param \MongoDB\BSON\TimestampInterface $operationTime The operation time is a logical timestamp. Typically, this value will be
 	 * obtained by calling
 	 * MongoDB\Driver\Session::getOperationTime on
 	 * another session object.
 	 * @return void No value is returned.
 	 */
-	final public function advanceOperationTime (MongoDB\BSON\TimestampInterface $operationTime): void {}
+	final public function advanceOperationTime (\MongoDB\BSON\TimestampInterface $operationTime): void {}
 
 	/**
 	 * Commits a transaction
@@ -6592,7 +6706,7 @@ final class Session  {
 	 * @return \MongoDB\BSON\Timestamp|null Returns the operation time for this session, or null if the session has no
 	 * operation time.
 	 */
-	final public function getOperationTime (): ?MongoDB\BSON\Timestamp {}
+	final public function getOperationTime (): ?\MongoDB\BSON\Timestamp {}
 
 	/**
 	 * Returns the server to which this session is pinned
@@ -6600,7 +6714,7 @@ final class Session  {
 	 * @return \MongoDB\Driver\Server|null Returns the MongoDB\Driver\Server to which this
 	 * session is pinned, or null if the session is not pinned to any server.
 	 */
-	final public function getServer (): ?MongoDB\Driver\Server {}
+	final public function getServer (): ?\MongoDB\Driver\Server {}
 
 	/**
 	 * Returns options for the currently running transaction
@@ -6710,6 +6824,9 @@ final class Session  {
 	 */
 	final public function startTransaction (?array $options = null): void {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	final public function __wakeup (): void {}
 
 }
@@ -6855,9 +6972,10 @@ final class WriteConcern implements \MongoDB\BSON\Serializable, \MongoDB\BSON\Ty
 	final public function isDefault (): bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array $properties
 	 */
-	final public static function __set_state (array $properties): MongoDB\Driver\WriteConcern {}
+	final public static function __set_state (array $properties): \MongoDB\Driver\WriteConcern {}
 
 	/**
 	 * Returns an object for BSON serialization
@@ -6883,10 +7001,14 @@ final class WriteConcern implements \MongoDB\BSON\Serializable, \MongoDB\BSON\Ty
 	final public function unserialize (string $serialized): void {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array $data
 	 */
 	final public function __unserialize (array $data): void {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	final public function __serialize (): array {}
 
 }
@@ -6899,6 +7021,9 @@ final class WriteConcern implements \MongoDB\BSON\Serializable, \MongoDB\BSON\Ty
  */
 final class WriteConcernError  {
 
+	/**
+	 * {@inheritdoc}
+	 */
 	final private function __construct () {}
 
 	/**
@@ -6923,6 +7048,9 @@ final class WriteConcernError  {
 	 */
 	final public function getMessage (): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	final public function __wakeup (): void {}
 
 }
@@ -6935,6 +7063,9 @@ final class WriteConcernError  {
  */
 final class WriteError  {
 
+	/**
+	 * {@inheritdoc}
+	 */
 	final private function __construct () {}
 
 	/**
@@ -6968,6 +7099,9 @@ final class WriteError  {
 	 */
 	final public function getMessage (): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	final public function __wakeup (): void {}
 
 }
@@ -6981,6 +7115,9 @@ final class WriteError  {
  */
 final class WriteResult  {
 
+	/**
+	 * {@inheritdoc}
+	 */
 	final private function __construct () {}
 
 	/**
@@ -7031,7 +7168,7 @@ final class WriteResult  {
 	 * @return \MongoDB\Driver\Server Returns the MongoDB\Driver\Server associated with this
 	 * write result.
 	 */
-	final public function getServer (): MongoDB\Driver\Server {}
+	final public function getServer (): \MongoDB\Driver\Server {}
 
 	/**
 	 * Returns an array of identifiers for upserted documents
@@ -7050,7 +7187,7 @@ final class WriteResult  {
 	 * concern error was encountered during the write operation, and null
 	 * otherwise.
 	 */
-	final public function getWriteConcernError (): ?MongoDB\Driver\WriteConcernError {}
+	final public function getWriteConcernError (): ?\MongoDB\Driver\WriteConcernError {}
 
 	/**
 	 * Returns any write errors that occurred
@@ -7068,6 +7205,9 @@ final class WriteResult  {
 	 */
 	final public function isAcknowledged (): bool {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	final public function __wakeup (): void {}
 
 }
@@ -7090,7 +7230,7 @@ interface Exception extends \Throwable, \Stringable {
 	 * @link http://www.php.net/manual/en/throwable.getmessage.php
 	 * @return string Returns the message associated with the thrown object.
 	 */
-	abstract public function getMessage (): string
+	abstract public function getMessage (): string;
 
 	/**
 	 * Gets the exception code
@@ -7100,21 +7240,21 @@ interface Exception extends \Throwable, \Stringable {
 	 * Exception descendants (for example as
 	 * string in PDOException).
 	 */
-	abstract public function getCode (): int
+	abstract public function getCode (): int;
 
 	/**
 	 * Gets the file in which the object was created
 	 * @link http://www.php.net/manual/en/throwable.getfile.php
 	 * @return string Returns the filename in which the thrown object was created.
 	 */
-	abstract public function getFile (): string
+	abstract public function getFile (): string;
 
 	/**
 	 * Gets the line on which the object was instantiated
 	 * @link http://www.php.net/manual/en/throwable.getline.php
 	 * @return int Returns the line number where the thrown object was instantiated.
 	 */
-	abstract public function getLine (): int
+	abstract public function getLine (): int;
 
 	/**
 	 * Gets the stack trace
@@ -7122,29 +7262,29 @@ interface Exception extends \Throwable, \Stringable {
 	 * @return array Returns the stack trace as an array in the same format as
 	 * debug_backtrace.
 	 */
-	abstract public function getTrace (): array
+	abstract public function getTrace (): array;
 
 	/**
 	 * Returns the previous Throwable
 	 * @link http://www.php.net/manual/en/throwable.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available, or
+	 * @return \Throwable|null Returns the previous Throwable if available, or
 	 * null otherwise.
 	 */
-	abstract public function getPrevious (): ?Throwable
+	abstract public function getPrevious (): ?\Throwable;
 
 	/**
 	 * Gets the stack trace as a string
 	 * @link http://www.php.net/manual/en/throwable.gettraceasstring.php
 	 * @return string Returns the stack trace as a string.
 	 */
-	abstract public function getTraceAsString (): string
+	abstract public function getTraceAsString (): string;
 
 	/**
 	 * Gets a string representation of the object
 	 * @link http://www.php.net/manual/en/stringable.tostring.php
 	 * @return string Returns the string representation of the object.
 	 */
-	abstract public function __toString (): string
+	abstract public function __toString (): string;
 
 }
 
@@ -7154,12 +7294,20 @@ interface Exception extends \Throwable, \Stringable {
  * @link http://www.php.net/manual/en/class.mongodb-driver-exception-runtimeexception.php
  */
 class RuntimeException extends \RuntimeException implements \Stringable, \Throwable, \MongoDB\Driver\Exception\Exception {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-	protected $errorLabels;
 
+	/**
+	 * Contains an array of error labels to go with an exception. For example,
+	 * error labels can be used to detect whether a transaction can be retried
+	 * safely if the TransientTransactionError label is
+	 * present. The existence of a specific error label should be tested for
+	 * with the
+	 * MongoDB\Driver\Exception\RuntimeException::hasErrorLabel,
+	 * instead of interpreting this errorLabels property
+	 * manually.
+	 * @var array|null
+	 * @link http://www.php.net/manual/en/class.mongodb-driver-exception-runtimeexception.php#mongodb\driver\exception\runtimeexception.props.errorlabels
+	 */
+	protected ?array $errorLabels;
 
 	/**
 	 * Returns whether an error label is associated with an exception
@@ -7175,11 +7323,14 @@ class RuntimeException extends \RuntimeException implements \Stringable, \Throwa
 	 * @link http://www.php.net/manual/en/exception.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -7223,10 +7374,10 @@ class RuntimeException extends \RuntimeException implements \Stringable, \Throwa
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -7249,12 +7400,6 @@ class RuntimeException extends \RuntimeException implements \Stringable, \Throwa
  * @link http://www.php.net/manual/en/class.mongodb-driver-exception-serverexception.php
  */
 class ServerException extends \MongoDB\Driver\Exception\RuntimeException implements \MongoDB\Driver\Exception\Exception, \Throwable, \Stringable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-	protected $errorLabels;
-
 
 	/**
 	 * Returns whether an error label is associated with an exception
@@ -7270,11 +7415,14 @@ class ServerException extends \MongoDB\Driver\Exception\RuntimeException impleme
 	 * @link http://www.php.net/manual/en/exception.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -7318,10 +7466,10 @@ class ServerException extends \MongoDB\Driver\Exception\RuntimeException impleme
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -7345,12 +7493,6 @@ class ServerException extends \MongoDB\Driver\Exception\RuntimeException impleme
  * @link http://www.php.net/manual/en/class.mongodb-driver-exception-connectionexception.php
  */
 class ConnectionException extends \MongoDB\Driver\Exception\RuntimeException implements \MongoDB\Driver\Exception\Exception, \Throwable, \Stringable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-	protected $errorLabels;
-
 
 	/**
 	 * Returns whether an error label is associated with an exception
@@ -7366,11 +7508,14 @@ class ConnectionException extends \MongoDB\Driver\Exception\RuntimeException imp
 	 * @link http://www.php.net/manual/en/exception.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -7414,10 +7559,10 @@ class ConnectionException extends \MongoDB\Driver\Exception\RuntimeException imp
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -7441,13 +7586,14 @@ class ConnectionException extends \MongoDB\Driver\Exception\RuntimeException imp
  * @link http://www.php.net/manual/en/class.mongodb-driver-exception-writeexception.php
  */
 abstract class WriteException extends \MongoDB\Driver\Exception\ServerException implements \Stringable, \Throwable, \MongoDB\Driver\Exception\Exception {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-	protected $errorLabels;
-	protected $writeResult;
 
+	/**
+	 * The MongoDB\Driver\WriteResult associated with
+	 * the failed write operation.
+	 * @var \MongoDB\Driver\WriteResult
+	 * @link http://www.php.net/manual/en/class.mongodb-driver-exception-writeexception.php#mongodb\driver\exception\writeexception.props.writeresult
+	 */
+	protected \MongoDB\Driver\WriteResult $writeResult;
 
 	/**
 	 * Returns the WriteResult for the failed write operation
@@ -7455,7 +7601,7 @@ abstract class WriteException extends \MongoDB\Driver\Exception\ServerException 
 	 * @return \MongoDB\Driver\WriteResult The MongoDB\Driver\WriteResult for the failed write
 	 * operation.
 	 */
-	final public function getWriteResult (): MongoDB\Driver\WriteResult {}
+	final public function getWriteResult (): \MongoDB\Driver\WriteResult {}
 
 	/**
 	 * Returns whether an error label is associated with an exception
@@ -7471,11 +7617,14 @@ abstract class WriteException extends \MongoDB\Driver\Exception\ServerException 
 	 * @link http://www.php.net/manual/en/exception.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -7519,10 +7668,10 @@ abstract class WriteException extends \MongoDB\Driver\Exception\ServerException 
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -7545,12 +7694,6 @@ abstract class WriteException extends \MongoDB\Driver\Exception\ServerException 
  * @link http://www.php.net/manual/en/class.mongodb-driver-exception-authenticationexception.php
  */
 class AuthenticationException extends \MongoDB\Driver\Exception\ConnectionException implements \Stringable, \Throwable, \MongoDB\Driver\Exception\Exception {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-	protected $errorLabels;
-
 
 	/**
 	 * Returns whether an error label is associated with an exception
@@ -7566,11 +7709,14 @@ class AuthenticationException extends \MongoDB\Driver\Exception\ConnectionExcept
 	 * @link http://www.php.net/manual/en/exception.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -7614,10 +7760,10 @@ class AuthenticationException extends \MongoDB\Driver\Exception\ConnectionExcept
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -7640,13 +7786,6 @@ class AuthenticationException extends \MongoDB\Driver\Exception\ConnectionExcept
  * @link http://www.php.net/manual/en/class.mongodb-driver-exception-bulkwriteexception.php
  */
 class BulkWriteException extends \MongoDB\Driver\Exception\WriteException implements \MongoDB\Driver\Exception\Exception, \Throwable, \Stringable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-	protected $errorLabels;
-	protected $writeResult;
-
 
 	/**
 	 * Returns the WriteResult for the failed write operation
@@ -7654,7 +7793,7 @@ class BulkWriteException extends \MongoDB\Driver\Exception\WriteException implem
 	 * @return \MongoDB\Driver\WriteResult The MongoDB\Driver\WriteResult for the failed write
 	 * operation.
 	 */
-	final public function getWriteResult (): MongoDB\Driver\WriteResult {}
+	final public function getWriteResult (): \MongoDB\Driver\WriteResult {}
 
 	/**
 	 * Returns whether an error label is associated with an exception
@@ -7670,11 +7809,14 @@ class BulkWriteException extends \MongoDB\Driver\Exception\WriteException implem
 	 * @link http://www.php.net/manual/en/exception.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -7718,10 +7860,10 @@ class BulkWriteException extends \MongoDB\Driver\Exception\WriteException implem
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -7744,13 +7886,13 @@ class BulkWriteException extends \MongoDB\Driver\Exception\WriteException implem
  * @link http://www.php.net/manual/en/class.mongodb-driver-exception-commandexception.php
  */
 class CommandException extends \MongoDB\Driver\Exception\ServerException implements \Stringable, \Throwable, \MongoDB\Driver\Exception\Exception {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-	protected $errorLabels;
-	protected $resultDocument;
 
+	/**
+	 * The result document associated with the failed command.
+	 * @var object
+	 * @link http://www.php.net/manual/en/class.mongodb-driver-exception-commandexception.php#mongodb\driver\exception\commandexception.props.resultdocument
+	 */
+	protected object $resultDocument;
 
 	/**
 	 * Returns the result document for the failed command
@@ -7773,11 +7915,14 @@ class CommandException extends \MongoDB\Driver\Exception\ServerException impleme
 	 * @link http://www.php.net/manual/en/exception.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -7821,10 +7966,10 @@ class CommandException extends \MongoDB\Driver\Exception\ServerException impleme
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -7851,12 +7996,6 @@ class CommandException extends \MongoDB\Driver\Exception\ServerException impleme
  * @link http://www.php.net/manual/en/class.mongodb-driver-exception-connectiontimeoutexception.php
  */
 final class ConnectionTimeoutException extends \MongoDB\Driver\Exception\ConnectionException implements \Stringable, \Throwable, \MongoDB\Driver\Exception\Exception {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-	protected $errorLabels;
-
 
 	/**
 	 * Returns whether an error label is associated with an exception
@@ -7872,11 +8011,14 @@ final class ConnectionTimeoutException extends \MongoDB\Driver\Exception\Connect
 	 * @link http://www.php.net/manual/en/exception.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -7920,10 +8062,10 @@ final class ConnectionTimeoutException extends \MongoDB\Driver\Exception\Connect
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -7946,12 +8088,6 @@ final class ConnectionTimeoutException extends \MongoDB\Driver\Exception\Connect
  * @link http://www.php.net/manual/en/class.mongodb-driver-exception-encryptionexception.php
  */
 class EncryptionException extends \MongoDB\Driver\Exception\RuntimeException implements \MongoDB\Driver\Exception\Exception, \Throwable, \Stringable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-	protected $errorLabels;
-
 
 	/**
 	 * Returns whether an error label is associated with an exception
@@ -7967,11 +8103,14 @@ class EncryptionException extends \MongoDB\Driver\Exception\RuntimeException imp
 	 * @link http://www.php.net/manual/en/exception.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -8015,10 +8154,10 @@ class EncryptionException extends \MongoDB\Driver\Exception\RuntimeException imp
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -8043,12 +8182,6 @@ class EncryptionException extends \MongoDB\Driver\Exception\RuntimeException imp
  * @link http://www.php.net/manual/en/class.mongodb-driver-exception-executiontimeoutexception.php
  */
 final class ExecutionTimeoutException extends \MongoDB\Driver\Exception\ServerException implements \Stringable, \Throwable, \MongoDB\Driver\Exception\Exception {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-	protected $errorLabels;
-
 
 	/**
 	 * Returns whether an error label is associated with an exception
@@ -8064,11 +8197,14 @@ final class ExecutionTimeoutException extends \MongoDB\Driver\Exception\ServerEx
 	 * @link http://www.php.net/manual/en/exception.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -8112,10 +8248,10 @@ final class ExecutionTimeoutException extends \MongoDB\Driver\Exception\ServerEx
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -8139,22 +8275,20 @@ final class ExecutionTimeoutException extends \MongoDB\Driver\Exception\ServerEx
  * @link http://www.php.net/manual/en/class.mongodb-driver-exception-invalidargumentexception.php
  */
 class InvalidArgumentException extends \InvalidArgumentException implements \Throwable, \Stringable, \MongoDB\Driver\Exception\Exception {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-
 
 	/**
 	 * Construct the exception
 	 * @link http://www.php.net/manual/en/exception.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -8198,10 +8332,10 @@ class InvalidArgumentException extends \InvalidArgumentException implements \Thr
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -8224,22 +8358,20 @@ class InvalidArgumentException extends \InvalidArgumentException implements \Thr
  * @link http://www.php.net/manual/en/class.mongodb-driver-exception-logicexception.php
  */
 class LogicException extends \LogicException implements \Stringable, \Throwable, \MongoDB\Driver\Exception\Exception {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-
 
 	/**
 	 * Construct the exception
 	 * @link http://www.php.net/manual/en/exception.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -8283,10 +8415,10 @@ class LogicException extends \LogicException implements \Stringable, \Throwable,
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -8309,12 +8441,6 @@ class LogicException extends \LogicException implements \Stringable, \Throwable,
  * @link http://www.php.net/manual/en/class.mongodb-driver-exception-sslconnectionexception.php
  */
 final class SSLConnectionException extends \MongoDB\Driver\Exception\ConnectionException implements \Stringable, \Throwable, \MongoDB\Driver\Exception\Exception {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-	protected $errorLabels;
-
 
 	/**
 	 * Returns whether an error label is associated with an exception
@@ -8330,11 +8456,14 @@ final class SSLConnectionException extends \MongoDB\Driver\Exception\ConnectionE
 	 * @link http://www.php.net/manual/en/exception.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -8378,10 +8507,10 @@ final class SSLConnectionException extends \MongoDB\Driver\Exception\ConnectionE
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -8405,22 +8534,20 @@ final class SSLConnectionException extends \MongoDB\Driver\Exception\ConnectionE
  * @link http://www.php.net/manual/en/class.mongodb-driver-exception-unexpectedvalueexception.php
  */
 class UnexpectedValueException extends \UnexpectedValueException implements \Throwable, \Stringable, \MongoDB\Driver\Exception\Exception {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-
 
 	/**
 	 * Construct the exception
 	 * @link http://www.php.net/manual/en/exception.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -8464,10 +8591,10 @@ class UnexpectedValueException extends \UnexpectedValueException implements \Thr
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -8515,7 +8642,7 @@ interface CommandSubscriber extends \MongoDB\Driver\Monitoring\Subscriber {
 	 * @param \MongoDB\Driver\Monitoring\CommandStartedEvent $event An event object encapsulating information about the started command.
 	 * @return void No value is returned.
 	 */
-	abstract public function commandStarted (MongoDB\Driver\Monitoring\CommandStartedEvent $event): void
+	abstract public function commandStarted (\MongoDB\Driver\Monitoring\CommandStartedEvent $event): void;
 
 	/**
 	 * Notification method for a successful command
@@ -8523,7 +8650,7 @@ interface CommandSubscriber extends \MongoDB\Driver\Monitoring\Subscriber {
 	 * @param \MongoDB\Driver\Monitoring\CommandSucceededEvent $event An event object encapsulating information about the successful command.
 	 * @return void No value is returned.
 	 */
-	abstract public function commandSucceeded (MongoDB\Driver\Monitoring\CommandSucceededEvent $event): void
+	abstract public function commandSucceeded (\MongoDB\Driver\Monitoring\CommandSucceededEvent $event): void;
 
 	/**
 	 * Notification method for a failed command
@@ -8531,7 +8658,7 @@ interface CommandSubscriber extends \MongoDB\Driver\Monitoring\Subscriber {
 	 * @param \MongoDB\Driver\Monitoring\CommandFailedEvent $event An event object encapsulating information about the failed command.
 	 * @return void No value is returned.
 	 */
-	abstract public function commandFailed (MongoDB\Driver\Monitoring\CommandFailedEvent $event): void
+	abstract public function commandFailed (\MongoDB\Driver\Monitoring\CommandFailedEvent $event): void;
 
 }
 
@@ -8542,6 +8669,9 @@ interface CommandSubscriber extends \MongoDB\Driver\Monitoring\Subscriber {
  */
 final class CommandFailedEvent  {
 
+	/**
+	 * {@inheritdoc}
+	 */
 	final private function __construct () {}
 
 	/**
@@ -8563,7 +8693,7 @@ final class CommandFailedEvent  {
 	 * @link http://www.php.net/manual/en/mongodb-driver-monitoring-commandfailedevent.geterror.php
 	 * @return \Exception Returns the Exception associated with the failed command.
 	 */
-	final public function getError (): Exception {}
+	final public function getError (): \Exception {}
 
 	/**
 	 * Returns the command's operation ID
@@ -8593,7 +8723,7 @@ final class CommandFailedEvent  {
 	 * @return \MongoDB\Driver\Server Returns the MongoDB\Driver\Server on which the command
 	 * was executed.
 	 */
-	final public function getServer (): MongoDB\Driver\Server {}
+	final public function getServer (): \MongoDB\Driver\Server {}
 
 	/**
 	 * Returns the load balancer service ID for the command
@@ -8601,7 +8731,7 @@ final class CommandFailedEvent  {
 	 * @return \MongoDB\BSON\ObjectId|null Returns the load balancer service ID, or null if the driver is not
 	 * connected to a load balancer.
 	 */
-	final public function getServiceId (): ?MongoDB\BSON\ObjectId {}
+	final public function getServiceId (): ?\MongoDB\BSON\ObjectId {}
 
 	/**
 	 * Returns the server connection ID for the command
@@ -8610,6 +8740,9 @@ final class CommandFailedEvent  {
 	 */
 	final public function getServerConnectionId (): ?int {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	final public function __wakeup (): void {}
 
 }
@@ -8621,6 +8754,9 @@ final class CommandFailedEvent  {
  */
 final class CommandStartedEvent  {
 
+	/**
+	 * {@inheritdoc}
+	 */
 	final private function __construct () {}
 
 	/**
@@ -8664,7 +8800,7 @@ final class CommandStartedEvent  {
 	 * @return \MongoDB\Driver\Server Returns the MongoDB\Driver\Server on which the command
 	 * was executed.
 	 */
-	final public function getServer (): MongoDB\Driver\Server {}
+	final public function getServer (): \MongoDB\Driver\Server {}
 
 	/**
 	 * Returns the load balancer service ID for the command
@@ -8672,7 +8808,7 @@ final class CommandStartedEvent  {
 	 * @return \MongoDB\BSON\ObjectId|null Returns the load balancer service ID, or null if the driver is not
 	 * connected to a load balancer.
 	 */
-	final public function getServiceId (): ?MongoDB\BSON\ObjectId {}
+	final public function getServiceId (): ?\MongoDB\BSON\ObjectId {}
 
 	/**
 	 * Returns the server connection ID for the command
@@ -8681,6 +8817,9 @@ final class CommandStartedEvent  {
 	 */
 	final public function getServerConnectionId (): ?int {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	final public function __wakeup (): void {}
 
 }
@@ -8692,6 +8831,9 @@ final class CommandStartedEvent  {
  */
 final class CommandSucceededEvent  {
 
+	/**
+	 * {@inheritdoc}
+	 */
 	final private function __construct () {}
 
 	/**
@@ -8736,7 +8878,7 @@ final class CommandSucceededEvent  {
 	 * @return \MongoDB\Driver\Server Returns the MongoDB\Driver\Server on which the command
 	 * was executed.
 	 */
-	final public function getServer (): MongoDB\Driver\Server {}
+	final public function getServer (): \MongoDB\Driver\Server {}
 
 	/**
 	 * Returns the load balancer service ID for the command
@@ -8744,7 +8886,7 @@ final class CommandSucceededEvent  {
 	 * @return \MongoDB\BSON\ObjectId|null Returns the load balancer service ID, or null if the driver is not
 	 * connected to a load balancer.
 	 */
-	final public function getServiceId (): ?MongoDB\BSON\ObjectId {}
+	final public function getServiceId (): ?\MongoDB\BSON\ObjectId {}
 
 	/**
 	 * Returns the server connection ID for the command
@@ -8753,6 +8895,9 @@ final class CommandSucceededEvent  {
 	 */
 	final public function getServerConnectionId (): ?int {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	final public function __wakeup (): void {}
 
 }
@@ -8774,7 +8919,7 @@ interface SDAMSubscriber extends \MongoDB\Driver\Monitoring\Subscriber {
 	 * description.
 	 * @return void No value is returned.
 	 */
-	abstract public function serverChanged (MongoDB\Driver\Monitoring\ServerChangedEvent $event): void
+	abstract public function serverChanged (\MongoDB\Driver\Monitoring\ServerChangedEvent $event): void;
 
 	/**
 	 * Notification method for closing a server
@@ -8782,7 +8927,7 @@ interface SDAMSubscriber extends \MongoDB\Driver\Monitoring\Subscriber {
 	 * @param \MongoDB\Driver\Monitoring\ServerClosedEvent $event An event object encapsulating information about the closed server.
 	 * @return void No value is returned.
 	 */
-	abstract public function serverClosed (MongoDB\Driver\Monitoring\ServerClosedEvent $event): void
+	abstract public function serverClosed (\MongoDB\Driver\Monitoring\ServerClosedEvent $event): void;
 
 	/**
 	 * Notification method for opening a server
@@ -8790,7 +8935,7 @@ interface SDAMSubscriber extends \MongoDB\Driver\Monitoring\Subscriber {
 	 * @param \MongoDB\Driver\Monitoring\ServerOpeningEvent $event An event object encapsulating information about the opened server.
 	 * @return void No value is returned.
 	 */
-	abstract public function serverOpening (MongoDB\Driver\Monitoring\ServerOpeningEvent $event): void
+	abstract public function serverOpening (\MongoDB\Driver\Monitoring\ServerOpeningEvent $event): void;
 
 	/**
 	 * Notification method for a failed server heartbeat
@@ -8799,7 +8944,7 @@ interface SDAMSubscriber extends \MongoDB\Driver\Monitoring\Subscriber {
 	 * heartbeat.
 	 * @return void No value is returned.
 	 */
-	abstract public function serverHeartbeatFailed (MongoDB\Driver\Monitoring\ServerHeartbeatFailedEvent $event): void
+	abstract public function serverHeartbeatFailed (\MongoDB\Driver\Monitoring\ServerHeartbeatFailedEvent $event): void;
 
 	/**
 	 * Notification method for a started server heartbeat
@@ -8808,7 +8953,7 @@ interface SDAMSubscriber extends \MongoDB\Driver\Monitoring\Subscriber {
 	 * heartbeat.
 	 * @return void No value is returned.
 	 */
-	abstract public function serverHeartbeatStarted (MongoDB\Driver\Monitoring\ServerHeartbeatStartedEvent $event): void
+	abstract public function serverHeartbeatStarted (\MongoDB\Driver\Monitoring\ServerHeartbeatStartedEvent $event): void;
 
 	/**
 	 * Notification method for a successful server heartbeat
@@ -8817,7 +8962,7 @@ interface SDAMSubscriber extends \MongoDB\Driver\Monitoring\Subscriber {
 	 * heartbeat.
 	 * @return void No value is returned.
 	 */
-	abstract public function serverHeartbeatSucceeded (MongoDB\Driver\Monitoring\ServerHeartbeatSucceededEvent $event): void
+	abstract public function serverHeartbeatSucceeded (\MongoDB\Driver\Monitoring\ServerHeartbeatSucceededEvent $event): void;
 
 	/**
 	 * Notification method for a topology description change
@@ -8826,7 +8971,7 @@ interface SDAMSubscriber extends \MongoDB\Driver\Monitoring\Subscriber {
 	 * description.
 	 * @return void No value is returned.
 	 */
-	abstract public function topologyChanged (MongoDB\Driver\Monitoring\TopologyChangedEvent $event): void
+	abstract public function topologyChanged (\MongoDB\Driver\Monitoring\TopologyChangedEvent $event): void;
 
 	/**
 	 * Notification method for closing the topology
@@ -8834,7 +8979,7 @@ interface SDAMSubscriber extends \MongoDB\Driver\Monitoring\Subscriber {
 	 * @param \MongoDB\Driver\Monitoring\TopologyClosedEvent $event An event object encapsulating information about the closed topology.
 	 * @return void No value is returned.
 	 */
-	abstract public function topologyClosed (MongoDB\Driver\Monitoring\TopologyClosedEvent $event): void
+	abstract public function topologyClosed (\MongoDB\Driver\Monitoring\TopologyClosedEvent $event): void;
 
 	/**
 	 * Notification method for opening the topology
@@ -8842,7 +8987,7 @@ interface SDAMSubscriber extends \MongoDB\Driver\Monitoring\Subscriber {
 	 * @param \MongoDB\Driver\Monitoring\TopologyOpeningEvent $event An event object encapsulating information about the opened topology.
 	 * @return void No value is returned.
 	 */
-	abstract public function topologyOpening (MongoDB\Driver\Monitoring\TopologyOpeningEvent $event): void
+	abstract public function topologyOpening (\MongoDB\Driver\Monitoring\TopologyOpeningEvent $event): void;
 
 }
 
@@ -8853,6 +8998,9 @@ interface SDAMSubscriber extends \MongoDB\Driver\Monitoring\Subscriber {
  */
 final class ServerChangedEvent  {
 
+	/**
+	 * {@inheritdoc}
+	 */
 	final private function __construct () {}
 
 	/**
@@ -8875,7 +9023,7 @@ final class ServerChangedEvent  {
 	 * @return \MongoDB\Driver\ServerDescription Returns the new MongoDB\Driver\ServerDescription
 	 * for the server.
 	 */
-	final public function getNewDescription (): MongoDB\Driver\ServerDescription {}
+	final public function getNewDescription (): \MongoDB\Driver\ServerDescription {}
 
 	/**
 	 * Returns the previous description for the server
@@ -8883,15 +9031,18 @@ final class ServerChangedEvent  {
 	 * @return \MongoDB\Driver\ServerDescription Returns the previous MongoDB\Driver\ServerDescription
 	 * for the server.
 	 */
-	final public function getPreviousDescription (): MongoDB\Driver\ServerDescription {}
+	final public function getPreviousDescription (): \MongoDB\Driver\ServerDescription {}
 
 	/**
 	 * Returns the topology ID associated with this server
 	 * @link http://www.php.net/manual/en/mongodb-driver-monitoring-serverchangedevent.gettopologyid.php
 	 * @return \MongoDB\BSON\ObjectId Returns the topology ID.
 	 */
-	final public function getTopologyId (): MongoDB\BSON\ObjectId {}
+	final public function getTopologyId (): \MongoDB\BSON\ObjectId {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	final public function __wakeup (): void {}
 
 }
@@ -8903,6 +9054,9 @@ final class ServerChangedEvent  {
  */
 final class ServerClosedEvent  {
 
+	/**
+	 * {@inheritdoc}
+	 */
 	final private function __construct () {}
 
 	/**
@@ -8924,8 +9078,11 @@ final class ServerClosedEvent  {
 	 * @link http://www.php.net/manual/en/mongodb-driver-monitoring-serverclosedevent.gettopologyid.php
 	 * @return \MongoDB\BSON\ObjectId Returns the topology ID.
 	 */
-	final public function getTopologyId (): MongoDB\BSON\ObjectId {}
+	final public function getTopologyId (): \MongoDB\BSON\ObjectId {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	final public function __wakeup (): void {}
 
 }
@@ -8937,6 +9094,9 @@ final class ServerClosedEvent  {
  */
 final class ServerHeartbeatFailedEvent  {
 
+	/**
+	 * {@inheritdoc}
+	 */
 	final private function __construct () {}
 
 	/**
@@ -8952,7 +9112,7 @@ final class ServerHeartbeatFailedEvent  {
 	 * @return \Exception Returns the Exception associated with the failed
 	 * heartbeat.
 	 */
-	final public function getError (): Exception {}
+	final public function getError (): \Exception {}
 
 	/**
 	 * Returns the port on which this server is listening
@@ -8975,6 +9135,9 @@ final class ServerHeartbeatFailedEvent  {
 	 */
 	final public function isAwaited (): bool {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	final public function __wakeup (): void {}
 
 }
@@ -8986,6 +9149,9 @@ final class ServerHeartbeatFailedEvent  {
  */
 final class ServerHeartbeatStartedEvent  {
 
+	/**
+	 * {@inheritdoc}
+	 */
 	final private function __construct () {}
 
 	/**
@@ -9009,6 +9175,9 @@ final class ServerHeartbeatStartedEvent  {
 	 */
 	final public function isAwaited (): bool {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	final public function __wakeup (): void {}
 
 }
@@ -9020,6 +9189,9 @@ final class ServerHeartbeatStartedEvent  {
  */
 final class ServerHeartbeatSucceededEvent  {
 
+	/**
+	 * {@inheritdoc}
+	 */
 	final private function __construct () {}
 
 	/**
@@ -9058,6 +9230,9 @@ final class ServerHeartbeatSucceededEvent  {
 	 */
 	final public function isAwaited (): bool {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	final public function __wakeup (): void {}
 
 }
@@ -9069,6 +9244,9 @@ final class ServerHeartbeatSucceededEvent  {
  */
 final class ServerOpeningEvent  {
 
+	/**
+	 * {@inheritdoc}
+	 */
 	final private function __construct () {}
 
 	/**
@@ -9090,8 +9268,11 @@ final class ServerOpeningEvent  {
 	 * @link http://www.php.net/manual/en/mongodb-driver-monitoring-serveropeningevent.gettopologyid.php
 	 * @return \MongoDB\BSON\ObjectId Returns the topology ID.
 	 */
-	final public function getTopologyId (): MongoDB\BSON\ObjectId {}
+	final public function getTopologyId (): \MongoDB\BSON\ObjectId {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	final public function __wakeup (): void {}
 
 }
@@ -9103,6 +9284,9 @@ final class ServerOpeningEvent  {
  */
 final class TopologyChangedEvent  {
 
+	/**
+	 * {@inheritdoc}
+	 */
 	final private function __construct () {}
 
 	/**
@@ -9111,7 +9295,7 @@ final class TopologyChangedEvent  {
 	 * @return \MongoDB\Driver\TopologyDescription Returns the new MongoDB\Driver\TopologyDescription
 	 * for the topology.
 	 */
-	final public function getNewDescription (): MongoDB\Driver\TopologyDescription {}
+	final public function getNewDescription (): \MongoDB\Driver\TopologyDescription {}
 
 	/**
 	 * Returns the previous description for the topology
@@ -9119,15 +9303,18 @@ final class TopologyChangedEvent  {
 	 * @return \MongoDB\Driver\TopologyDescription Returns the previous MongoDB\Driver\TopologyDescription
 	 * for the topology.
 	 */
-	final public function getPreviousDescription (): MongoDB\Driver\TopologyDescription {}
+	final public function getPreviousDescription (): \MongoDB\Driver\TopologyDescription {}
 
 	/**
 	 * Returns the topology ID
 	 * @link http://www.php.net/manual/en/mongodb-driver-monitoring-topologychangedevent.gettopologyid.php
 	 * @return \MongoDB\BSON\ObjectId Returns the topology ID.
 	 */
-	final public function getTopologyId (): MongoDB\BSON\ObjectId {}
+	final public function getTopologyId (): \MongoDB\BSON\ObjectId {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	final public function __wakeup (): void {}
 
 }
@@ -9139,6 +9326,9 @@ final class TopologyChangedEvent  {
  */
 final class TopologyClosedEvent  {
 
+	/**
+	 * {@inheritdoc}
+	 */
 	final private function __construct () {}
 
 	/**
@@ -9146,8 +9336,11 @@ final class TopologyClosedEvent  {
 	 * @link http://www.php.net/manual/en/mongodb-driver-monitoring-topologyclosedevent.gettopologyid.php
 	 * @return \MongoDB\BSON\ObjectId Returns the topology ID.
 	 */
-	final public function getTopologyId (): MongoDB\BSON\ObjectId {}
+	final public function getTopologyId (): \MongoDB\BSON\ObjectId {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	final public function __wakeup (): void {}
 
 }
@@ -9159,6 +9352,9 @@ final class TopologyClosedEvent  {
  */
 final class TopologyOpeningEvent  {
 
+	/**
+	 * {@inheritdoc}
+	 */
 	final private function __construct () {}
 
 	/**
@@ -9166,8 +9362,11 @@ final class TopologyOpeningEvent  {
 	 * @link http://www.php.net/manual/en/mongodb-driver-monitoring-topologyopeningevent.gettopologyid.php
 	 * @return \MongoDB\BSON\ObjectId Returns the topology ID.
 	 */
-	final public function getTopologyId (): MongoDB\BSON\ObjectId {}
+	final public function getTopologyId (): \MongoDB\BSON\ObjectId {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	final public function __wakeup (): void {}
 
 }
@@ -9217,7 +9416,7 @@ function toJSON (string $bson): string {}
  * @param array $typeMap [optional] Type map configuration.
  * @return array|object The unserialized PHP value.
  */
-function toPHP (string $bson, array $typeMap = array()): array|object {}
+function toPHP (string $bson, array $typeMap = 'array()'): array|object {}
 
 /**
  * Returns the Relaxed Extended JSON representation of a BSON value
@@ -9236,18 +9435,18 @@ namespace mongodb\driver\monitoring {
 /**
  * Registers a monitoring event subscriber globally
  * @link http://www.php.net/manual/en/function.mongodb.driver.monitoring.addsubscriber.php
- * @param MongoDB\Driver\Monitoring\Subscriber $subscriber A monitoring event subscriber to register globally.
+ * @param \MongoDB\Driver\Monitoring\Subscriber $subscriber A monitoring event subscriber to register globally.
  * @return void No value is returned.
  */
-function addSubscriber (MongoDB\Driver\Monitoring\Subscriber $subscriber): void {}
+function addSubscriber (\MongoDB\Driver\Monitoring\Subscriber $subscriber): void {}
 
 /**
  * Unregisters a monitoring event subscriber globally
  * @link http://www.php.net/manual/en/function.mongodb.driver.monitoring.removesubscriber.php
- * @param MongoDB\Driver\Monitoring\Subscriber $subscriber A monitoring event subscriber to unregister globally.
+ * @param \MongoDB\Driver\Monitoring\Subscriber $subscriber A monitoring event subscriber to unregister globally.
  * @return void No value is returned.
  */
-function removeSubscriber (MongoDB\Driver\Monitoring\Subscriber $subscriber): void {}
+function removeSubscriber (\MongoDB\Driver\Monitoring\Subscriber $subscriber): void {}
 
 
 }

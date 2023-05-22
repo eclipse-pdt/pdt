@@ -9,7 +9,7 @@
  * @param array $connectionInfo [optional] 
  * @return resource A connection resource. If a connection cannot be successfully opened, false is returned.
  */
-function sqlsrv_connect (string $serverName, array $connectionInfo = null): resource {}
+function sqlsrv_connect (string $serverName, array $connectionInfo = null) {}
 
 /**
  * Closes an open connection and releases resourses associated with the connection
@@ -17,7 +17,7 @@ function sqlsrv_connect (string $serverName, array $connectionInfo = null): reso
  * @param resource $conn 
  * @return bool Returns true on success or false on failure.
  */
-function sqlsrv_close (resource $conn): bool {}
+function sqlsrv_close ($conn): bool {}
 
 /**
  * Commits a transaction that was begun with sqlsrv_begin_transaction
@@ -25,7 +25,7 @@ function sqlsrv_close (resource $conn): bool {}
  * @param resource $conn 
  * @return bool Returns true on success or false on failure.
  */
-function sqlsrv_commit (resource $conn): bool {}
+function sqlsrv_commit ($conn): bool {}
 
 /**
  * Begins a database transaction
@@ -33,7 +33,7 @@ function sqlsrv_commit (resource $conn): bool {}
  * @param resource $conn 
  * @return bool Returns true on success or false on failure.
  */
-function sqlsrv_begin_transaction (resource $conn): bool {}
+function sqlsrv_begin_transaction ($conn): bool {}
 
 /**
  * Rolls back a transaction that was begun with 
@@ -42,7 +42,7 @@ function sqlsrv_begin_transaction (resource $conn): bool {}
  * @param resource $conn 
  * @return bool Returns true on success or false on failure.
  */
-function sqlsrv_rollback (resource $conn): bool {}
+function sqlsrv_rollback ($conn): bool {}
 
 /**
  * Returns error and warning information about the last SQLSRV operation performed
@@ -111,7 +111,7 @@ function sqlsrv_get_config (string $setting): mixed {}
  * @param array $options [optional] 
  * @return mixed Returns a statement resource on success and false if an error occurred.
  */
-function sqlsrv_prepare (resource $conn, string $sql, array $params = null, array $options = null): mixed {}
+function sqlsrv_prepare ($conn, string $sql, array $params = null, array $options = null): mixed {}
 
 /**
  * Executes a statement prepared with sqlsrv_prepare
@@ -119,7 +119,7 @@ function sqlsrv_prepare (resource $conn, string $sql, array $params = null, arra
  * @param resource $stmt 
  * @return bool Returns true on success or false on failure.
  */
-function sqlsrv_execute (resource $stmt): bool {}
+function sqlsrv_execute ($stmt): bool {}
 
 /**
  * Prepares and executes a query
@@ -130,7 +130,7 @@ function sqlsrv_execute (resource $stmt): bool {}
  * @param array $options [optional] 
  * @return mixed Returns a statement resource on success and false if an error occurred.
  */
-function sqlsrv_query (resource $conn, string $sql, array $params = null, array $options = null): mixed {}
+function sqlsrv_query ($conn, string $sql, array $params = null, array $options = null): mixed {}
 
 /**
  * Makes the next row in a result set available for reading
@@ -141,7 +141,7 @@ function sqlsrv_query (resource $conn, string $sql, array $params = null, array 
  * @return mixed Returns true if the next row of a result set was successfully retrieved, 
  * false if an error occurs, and null if there are no more rows in the result set.
  */
-function sqlsrv_fetch (resource $stmt, int $row = null, int $offset = null): mixed {}
+function sqlsrv_fetch ($stmt, int $row = null, int $offset = null): mixed {}
 
 /**
  * Gets field data from the currently selected row
@@ -151,7 +151,7 @@ function sqlsrv_fetch (resource $stmt, int $row = null, int $offset = null): mix
  * @param int $getAsType [optional] 
  * @return mixed Returns data from the specified field on success. Returns false otherwise.
  */
-function sqlsrv_get_field (resource $stmt, int $fieldIndex, int $getAsType = null): mixed {}
+function sqlsrv_get_field ($stmt, int $fieldIndex, int $getAsType = null): mixed {}
 
 /**
  * Returns a row as an array
@@ -163,7 +163,7 @@ function sqlsrv_get_field (resource $stmt, int $fieldIndex, int $getAsType = nul
  * @return array Returns an array on success, null if there are no more rows to return, and 
  * false if an error occurs.
  */
-function sqlsrv_fetch_array (resource $stmt, int $fetchType = null, int $row = null, int $offset = null): array {}
+function sqlsrv_fetch_array ($stmt, int $fetchType = null, int $row = null, int $offset = null): array {}
 
 /**
  * Retrieves the next row of data in a result set as an object
@@ -176,7 +176,7 @@ function sqlsrv_fetch_array (resource $stmt, int $fetchType = null, int $row = n
  * @return mixed Returns an object on success, null if there are no more rows to return, 
  * and false if an error occurs or if the specified class does not exist.
  */
-function sqlsrv_fetch_object (resource $stmt, string $className = null, array $ctorParams = null, int $row = null, int $offset = null): mixed {}
+function sqlsrv_fetch_object ($stmt, string $className = null, array $ctorParams = null, int $row = null, int $offset = null): mixed {}
 
 /**
  * Indicates whether the specified statement has rows
@@ -185,7 +185,7 @@ function sqlsrv_fetch_object (resource $stmt, string $className = null, array $c
  * @return bool Returns true if the specified statement has rows and false if the statement 
  * does not have rows or if an error occurred.
  */
-function sqlsrv_has_rows (resource $stmt): bool {}
+function sqlsrv_has_rows ($stmt): bool {}
 
 /**
  * Retrieves the number of fields (columns) on a statement
@@ -193,7 +193,7 @@ function sqlsrv_has_rows (resource $stmt): bool {}
  * @param resource $stmt 
  * @return mixed Returns the number of fields on success. Returns false otherwise.
  */
-function sqlsrv_num_fields (resource $stmt): mixed {}
+function sqlsrv_num_fields ($stmt): mixed {}
 
 /**
  * Makes the next result of the specified statement active
@@ -202,7 +202,7 @@ function sqlsrv_num_fields (resource $stmt): mixed {}
  * @return mixed Returns true if the next result was successfully retrieved, false if an error 
  * occurred, and null if there are no more results to retrieve.
  */
-function sqlsrv_next_result (resource $stmt): mixed {}
+function sqlsrv_next_result ($stmt): mixed {}
 
 /**
  * Retrieves the number of rows in a result set
@@ -211,7 +211,7 @@ function sqlsrv_next_result (resource $stmt): mixed {}
  * @return mixed Returns the number of rows retrieved on success and false if an error occurred. 
  * If a forward cursor (the default) or dynamic cursor is used, false is returned.
  */
-function sqlsrv_num_rows (resource $stmt): mixed {}
+function sqlsrv_num_rows ($stmt): mixed {}
 
 /**
  * Returns the number of rows modified by the last INSERT, UPDATE, or 
@@ -222,14 +222,16 @@ function sqlsrv_num_rows (resource $stmt): mixed {}
  * If no rows were affected, 0 is returned. If the number of affected rows cannot 
  * be determined, -1 is returned. If an error occurred, false is returned.
  */
-function sqlsrv_rows_affected (resource $stmt): int|false {}
+function sqlsrv_rows_affected ($stmt): int|false {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $encoding
  */
 function SQLSRV_PHPTYPE_STREAM ($encoding = null) {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $encoding
  */
 function SQLSRV_PHPTYPE_STRING ($encoding = null) {}
@@ -266,7 +268,7 @@ function SQLSRV_PHPTYPE_STRING ($encoding = null) {}
  * </table>
  * </table>
  */
-function sqlsrv_client_info (resource $conn): array {}
+function sqlsrv_client_info ($conn): array {}
 
 /**
  * Returns information about the server
@@ -291,7 +293,7 @@ function sqlsrv_client_info (resource $conn): array {}
  * </table>
  * </table>
  */
-function sqlsrv_server_info (resource $conn): array {}
+function sqlsrv_server_info ($conn): array {}
 
 /**
  * Cancels a statement
@@ -299,7 +301,7 @@ function sqlsrv_server_info (resource $conn): array {}
  * @param resource $stmt 
  * @return bool Returns true on success or false on failure.
  */
-function sqlsrv_cancel (resource $stmt): bool {}
+function sqlsrv_cancel ($stmt): bool {}
 
 /**
  * Frees all resources for the specified statement
@@ -307,7 +309,7 @@ function sqlsrv_cancel (resource $stmt): bool {}
  * @param resource $stmt 
  * @return bool Returns true on success or false on failure.
  */
-function sqlsrv_free_stmt (resource $stmt): bool {}
+function sqlsrv_free_stmt ($stmt): bool {}
 
 /**
  * Retrieves metadata for the fields of a statement prepared by 
@@ -354,7 +356,7 @@ function sqlsrv_free_stmt (resource $stmt): bool {}
  * For more information, see sqlsrv_field_metadata 
  * in the Microsoft SQLSRV documentation.
  */
-function sqlsrv_field_metadata (resource $stmt): mixed {}
+function sqlsrv_field_metadata ($stmt): mixed {}
 
 /**
  * Sends data from parameter streams to the server
@@ -362,46 +364,54 @@ function sqlsrv_field_metadata (resource $stmt): mixed {}
  * @param resource $stmt 
  * @return bool Returns true if there is more data to send and false if there is not.
  */
-function sqlsrv_send_stream_data (resource $stmt): bool {}
+function sqlsrv_send_stream_data ($stmt): bool {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $size
  */
 function SQLSRV_SQLTYPE_BINARY ($size = null) {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $size
  */
 function SQLSRV_SQLTYPE_CHAR ($size = null) {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $precision
  * @param mixed $scale
  */
 function SQLSRV_SQLTYPE_DECIMAL ($precision = null, $scale = null) {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $size
  */
 function SQLSRV_SQLTYPE_NCHAR ($size = null) {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $precision
  * @param mixed $scale
  */
 function SQLSRV_SQLTYPE_NUMERIC ($precision = null, $scale = null) {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $size
  */
 function SQLSRV_SQLTYPE_NVARCHAR ($size = null) {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $size
  */
 function SQLSRV_SQLTYPE_VARBINARY ($size = null) {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $size
  */
 function SQLSRV_SQLTYPE_VARCHAR ($size = null) {}

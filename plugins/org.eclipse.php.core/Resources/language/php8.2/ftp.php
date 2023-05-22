@@ -185,7 +185,7 @@ function ftp_systype (FTP\Connection $ftp): string|false {}
  * @param int $offset [optional] 
  * @return bool Returns true on success or false on failure.
  */
-function ftp_fget (FTP\Connection $ftp, resource $stream, string $remote_filename, int $mode = FTP_BINARY, int $offset = null): bool {}
+function ftp_fget (FTP\Connection $ftp, $stream, string $remote_filename, int $mode = FTP_BINARY, int $offset = null): bool {}
 
 /**
  * Retrieves a file from the FTP server and writes it to an open file (non-blocking)
@@ -198,7 +198,7 @@ function ftp_fget (FTP\Connection $ftp, resource $stream, string $remote_filenam
  * @return int Returns FTP_FAILED or FTP_FINISHED
  * or FTP_MOREDATA.
  */
-function ftp_nb_fget (FTP\Connection $ftp, resource $stream, string $remote_filename, int $mode = FTP_BINARY, int $offset = null): int {}
+function ftp_nb_fget (FTP\Connection $ftp, $stream, string $remote_filename, int $mode = FTP_BINARY, int $offset = null): int {}
 
 /**
  * Turns passive mode on or off
@@ -253,7 +253,7 @@ function ftp_nb_continue (FTP\Connection $ftp): int {}
  * @param int $offset [optional] 
  * @return bool Returns true on success or false on failure.
  */
-function ftp_fput (FTP\Connection $ftp, string $remote_filename, resource $stream, int $mode = FTP_BINARY, int $offset = null): bool {}
+function ftp_fput (FTP\Connection $ftp, string $remote_filename, $stream, int $mode = FTP_BINARY, int $offset = null): bool {}
 
 /**
  * Stores a file from an open file to the FTP server (non-blocking)
@@ -266,7 +266,7 @@ function ftp_fput (FTP\Connection $ftp, string $remote_filename, resource $strea
  * @return int Returns FTP_FAILED or FTP_FINISHED
  * or FTP_MOREDATA.
  */
-function ftp_nb_fput (FTP\Connection $ftp, string $remote_filename, resource $stream, int $mode = FTP_BINARY, int $offset = null): int {}
+function ftp_nb_fput (FTP\Connection $ftp, string $remote_filename, $stream, int $mode = FTP_BINARY, int $offset = null): int {}
 
 /**
  * Uploads a file to the FTP server

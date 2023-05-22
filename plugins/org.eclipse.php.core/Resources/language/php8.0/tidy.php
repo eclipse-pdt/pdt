@@ -9,6 +9,20 @@
 class tidy  {
 
 	/**
+	 * Return warnings and errors which occurred parsing the specified document
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.tidy.php#tidy.props.errorbuffer
+	 */
+	public string $errorBuffer;
+
+	/**
+	 * The HTML representation of the node, including the surrounding tags.
+	 * @var string|null
+	 * @link http://www.php.net/manual/en/class.tidy.php#tidy.props.value
+	 */
+	public ?string $value;
+
+	/**
 	 * Constructs a new tidy object
 	 * @link http://www.php.net/manual/en/tidy.construct.php
 	 * @param string|null $filename [optional] 
@@ -68,9 +82,9 @@ class tidy  {
 	 * @param string $string 
 	 * @param array|string|null $config [optional] 
 	 * @param string|null $encoding [optional] 
-	 * @return string|bool Returns the repaired string, or false on failure.
+	 * @return string|false Returns the repaired string, or false on failure.
 	 */
-	public static function repairString (string $string, array|string|null $config = null, ?string $encoding = null): string|bool {}
+	public static function repairString (string $string, array|string|null $config = null, ?string $encoding = null): string|int {}
 
 	/**
 	 * Repair a file and return it as a string
@@ -79,9 +93,9 @@ class tidy  {
 	 * @param array|string|null $config [optional] 
 	 * @param string|null $encoding [optional] 
 	 * @param bool $useIncludePath [optional] 
-	 * @return string|bool Returns the repaired contents as a string, or false on failure.
+	 * @return string|false Returns the repaired contents as a string, or false on failure.
 	 */
-	public static function repairFile (string $filename, array|string|null $config = null, ?string $encoding = null, bool $useIncludePath = false): string|bool {}
+	public static function repairFile (string $filename, array|string|null $config = null, ?string $encoding = null, bool $useIncludePath = false): string|int {}
 
 	/**
 	 * Run configured diagnostics on parsed and repaired markup
@@ -127,10 +141,10 @@ class tidy  {
 	 * Returns the documentation for the given option name
 	 * @link http://www.php.net/manual/en/tidy.getoptdoc.php
 	 * @param string $option 
-	 * @return string|bool Returns a string if the option exists and has documentation available, or
+	 * @return string|false Returns a string if the option exists and has documentation available, or
 	 * false otherwise.
 	 */
-	public function getOptDoc (string $option): string|bool {}
+	public function getOptDoc (string $option): string|int {}
 
 	/**
 	 * Indicates if the document is a XHTML document
@@ -189,6 +203,71 @@ class tidy  {
  * @link http://www.php.net/manual/en/class.tidynode.php
  */
 final class tidyNode  {
+
+	/**
+	 * The HTML representation of the node, including the surrounding tags.
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.tidynode.php#tidynode.props.value
+	 */
+	public string $value;
+
+	/**
+	 * The name of the HTML node
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.tidynode.php#tidynode.props.name
+	 */
+	public string $name;
+
+	/**
+	 * The type of the node (one of the nodetype constants, e.g. TIDY_NODETYPE_PHP)
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.tidynode.php#tidynode.props.type
+	 */
+	public int $type;
+
+	/**
+	 * The line number at which the tags is located in the file
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.tidynode.php#tidynode.props.line
+	 */
+	public int $line;
+
+	/**
+	 * The column number at which the tags is located in the file
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.tidynode.php#tidynode.props.column
+	 */
+	public int $column;
+
+	/**
+	 * Indicates if the node is a proprietary tag
+	 * @var bool
+	 * @link http://www.php.net/manual/en/class.tidynode.php#tidynode.props.proprietary
+	 */
+	public bool $proprietary;
+
+	/**
+	 * The ID of the node (one of the tag constants, e.g. TIDY_TAG_FRAME)
+	 * @var int|null
+	 * @link http://www.php.net/manual/en/class.tidynode.php#tidynode.props.id
+	 */
+	public ?int $id;
+
+	/**
+	 * An array of string, representing
+	 * the attributes names (as keys) of the current node.
+	 * @var array|null
+	 * @link http://www.php.net/manual/en/class.tidynode.php#tidynode.props.attribute
+	 */
+	public ?array $attribute;
+
+	/**
+	 * An array of tidyNode, representing
+	 * the children of the current node.
+	 * @var array|null
+	 * @link http://www.php.net/manual/en/class.tidynode.php#tidynode.props.child
+	 */
+	public ?array $child;
 
 	/**
 	 * Private constructor to disallow direct instantiation
@@ -268,20 +347,20 @@ final class tidyNode  {
  * @param string $string 
  * @param array|string|null $config [optional] 
  * @param string|null $encoding [optional] 
- * @return tidy|bool tidy::parseString returns true on success.
+ * @return tidy|false tidy::parseString returns true on success.
  * tidy_parse_string returns a new tidy
  * instance on success.
  * Both, the method and the function return false on failure.
  */
-function tidy_parse_string (string $string, array|string|null $config = null, ?string $encoding = null): tidy|bool {}
+function tidy_parse_string (string $string, array|string|null $config = null, ?string $encoding = null): tidy|int {}
 
 /**
  * Return warnings and errors which occurred parsing the specified document
  * @link http://www.php.net/manual/en/tidy.props.errorbuffer.php
  * @param tidy $tidy 
- * @return string|bool Returns the error buffer as a string, or false if the buffer is empty.
+ * @return string|false Returns the error buffer as a string, or false if the buffer is empty.
  */
-function tidy_get_error_buffer (tidy $tidy): string|bool {}
+function tidy_get_error_buffer (tidy $tidy): string|int {}
 
 /**
  * Return a string representing the parsed tidy markup
@@ -298,12 +377,12 @@ function tidy_get_output (tidy $tidy): string {}
  * @param array|string|null $config [optional] 
  * @param string|null $encoding [optional] 
  * @param bool $useIncludePath [optional] 
- * @return tidy|bool tidy::parseFile returns true on success.
+ * @return tidy|false tidy::parseFile returns true on success.
  * tidy_parse_file returns a new tidy
  * instance on success.
  * Both, the method and the function return false on failure.
  */
-function tidy_parse_file (string $filename, array|string|null $config = null, ?string $encoding = null, bool $useIncludePath = false): tidy|bool {}
+function tidy_parse_file (string $filename, array|string|null $config = null, ?string $encoding = null, bool $useIncludePath = false): tidy|int {}
 
 /**
  * Execute configured cleanup and repair operations on parsed markup
@@ -319,9 +398,9 @@ function tidy_clean_repair (tidy $tidy): bool {}
  * @param string $string 
  * @param array|string|null $config [optional] 
  * @param string|null $encoding [optional] 
- * @return string|bool Returns the repaired string, or false on failure.
+ * @return string|false Returns the repaired string, or false on failure.
  */
-function tidy_repair_string (string $string, array|string|null $config = null, ?string $encoding = null): string|bool {}
+function tidy_repair_string (string $string, array|string|null $config = null, ?string $encoding = null): string|int {}
 
 /**
  * Repair a file and return it as a string
@@ -330,9 +409,9 @@ function tidy_repair_string (string $string, array|string|null $config = null, ?
  * @param array|string|null $config [optional] 
  * @param string|null $encoding [optional] 
  * @param bool $useIncludePath [optional] 
- * @return string|bool Returns the repaired contents as a string, or false on failure.
+ * @return string|false Returns the repaired contents as a string, or false on failure.
  */
-function tidy_repair_file (string $filename, array|string|null $config = null, ?string $encoding = null, bool $useIncludePath = false): string|bool {}
+function tidy_repair_file (string $filename, array|string|null $config = null, ?string $encoding = null, bool $useIncludePath = false): string|int {}
 
 /**
  * Run configured diagnostics on parsed and repaired markup
@@ -355,10 +434,10 @@ function tidy_get_release (): string {}
  * @link http://www.php.net/manual/en/tidy.getoptdoc.php
  * @param tidy $tidy 
  * @param string $option 
- * @return string|bool Returns a string if the option exists and has documentation available, or
+ * @return string|false Returns a string if the option exists and has documentation available, or
  * false otherwise.
  */
-function tidy_get_opt_doc (tidy $tidy, string $option): string|bool {}
+function tidy_get_opt_doc (tidy $tidy, string $option): string|int {}
 
 /**
  * Get current Tidy configuration

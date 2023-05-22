@@ -54,7 +54,7 @@ function gzfile (string $filename, int $use_include_path = null): array|false {}
  * write gets compressed.
  * <p>If the open fails, the function returns false.</p>
  */
-function gzopen (string $filename, string $mode, int $use_include_path = null): resource|false {}
+function gzopen (string $filename, string $mode, int $use_include_path = null) {}
 
 /**
  * Output a gz-file
@@ -159,7 +159,7 @@ function gzuncompress (string $data, int $max_length = null): string|false {}
  * @return int|false Returns the number of (uncompressed) bytes written to the given gz-file 
  * stream, or false on failure.
  */
-function gzwrite (resource $stream, string $data, ?int $length = null): int|false {}
+function gzwrite ($stream, string $data, ?int $length = null): int|false {}
 
 /**
  * Alias of gzwrite
@@ -170,7 +170,7 @@ function gzwrite (resource $stream, string $data, ?int $length = null): int|fals
  * @return int|false Returns the number of (uncompressed) bytes written to the given gz-file 
  * stream, or false on failure.
  */
-function gzputs (resource $stream, string $data, ?int $length = null): int|false {}
+function gzputs ($stream, string $data, ?int $length = null): int|false {}
 
 /**
  * Rewind the position of a gz-file pointer
@@ -178,7 +178,7 @@ function gzputs (resource $stream, string $data, ?int $length = null): int|false
  * @param resource $stream 
  * @return bool Returns true on success or false on failure.
  */
-function gzrewind (resource $stream): bool {}
+function gzrewind ($stream): bool {}
 
 /**
  * Close an open gz-file pointer
@@ -186,7 +186,7 @@ function gzrewind (resource $stream): bool {}
  * @param resource $stream 
  * @return bool Returns true on success or false on failure.
  */
-function gzclose (resource $stream): bool {}
+function gzclose ($stream): bool {}
 
 /**
  * Test for EOF on a gz-file pointer
@@ -195,7 +195,7 @@ function gzclose (resource $stream): bool {}
  * @return bool Returns true if the gz-file pointer is at EOF or an error occurs;
  * otherwise returns false.
  */
-function gzeof (resource $stream): bool {}
+function gzeof ($stream): bool {}
 
 /**
  * Get character from gz-file pointer
@@ -203,7 +203,7 @@ function gzeof (resource $stream): bool {}
  * @param resource $stream 
  * @return string|false The uncompressed character or false on EOF (unlike gzeof).
  */
-function gzgetc (resource $stream): string|false {}
+function gzgetc ($stream): string|false {}
 
 /**
  * Output all remaining data on a gz-file pointer
@@ -212,7 +212,7 @@ function gzgetc (resource $stream): string|false {}
  * @return int The number of uncompressed characters read from gz
  * and passed through to the input.
  */
-function gzpassthru (resource $stream): int {}
+function gzpassthru ($stream): int {}
 
 /**
  * Seek on a gz-file pointer
@@ -223,7 +223,7 @@ function gzpassthru (resource $stream): int {}
  * @return int Upon success, returns 0; otherwise, returns -1. Note that seeking
  * past EOF is not considered an error.
  */
-function gzseek (resource $stream, int $offset, int $whence = SEEK_SET): int {}
+function gzseek ($stream, int $offset, int $whence = SEEK_SET): int {}
 
 /**
  * Tell gz-file pointer read/write position
@@ -231,7 +231,7 @@ function gzseek (resource $stream, int $offset, int $whence = SEEK_SET): int {}
  * @param resource $stream 
  * @return int|false The position of the file pointer or false if an error occurs.
  */
-function gztell (resource $stream): int|false {}
+function gztell ($stream): int|false {}
 
 /**
  * Binary-safe gz-file read
@@ -240,7 +240,7 @@ function gztell (resource $stream): int|false {}
  * @param int $length 
  * @return string|false The data that have been read, or false on failure.
  */
-function gzread (resource $stream, int $length): string|false {}
+function gzread ($stream, int $length): string|false {}
 
 /**
  * Get line from file pointer
@@ -249,7 +249,7 @@ function gzread (resource $stream, int $length): string|false {}
  * @param int|null $length [optional] 
  * @return string|false The uncompressed string, or false on error.
  */
-function gzgets (resource $stream, ?int $length = null): string|false {}
+function gzgets ($stream, ?int $length = null): string|false {}
 
 /**
  * Initialize an incremental deflate context
@@ -307,7 +307,7 @@ function gzgets (resource $stream, ?int $length = null): string|false {}
  * @return DeflateContext|false Returns a deflate context resource (zlib.deflate) on
  * success, or false on failure.
  */
-function deflate_init (int $encoding, array $options = []): DeflateContext|false {}
+function deflate_init (int $encoding, array $options = '[]'): DeflateContext|false {}
 
 /**
  * Incrementally deflate data
@@ -375,7 +375,7 @@ function deflate_add (DeflateContext $context, string $data, int $flush_mode = Z
  * @return InflateContext|false Returns an inflate context resource (zlib.inflate) on
  * success, or false on failure.
  */
-function inflate_init (int $encoding, array $options = []): InflateContext|false {}
+function inflate_init (int $encoding, array $options = '[]'): InflateContext|false {}
 
 /**
  * Incrementally inflate encoded data

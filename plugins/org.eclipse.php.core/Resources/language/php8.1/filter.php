@@ -41,7 +41,7 @@ function filter_var (mixed $value, int $filter = FILTER_DEFAULT, array|int $opti
  * @param int $type 
  * @param array|int $options [optional] 
  * @param bool $add_empty [optional] 
- * @return array|bool|null An array containing the values of the requested variables on success.
+ * @return array|false|null An array containing the values of the requested variables on success.
  * If the input array designated by type is not populated,
  * the function returns null if the FILTER_NULL_ON_FAILURE
  * flag is not given, or false otherwise. For other failures, false is returned.
@@ -51,7 +51,7 @@ function filter_var (mixed $value, int $filter = FILTER_DEFAULT, array|int $opti
  * fails. If the add_empty parameter is false, no array
  * element will be added for unset variables.</p>
  */
-function filter_input_array (int $type, array|int $options = FILTER_DEFAULT, bool $add_empty = true): array|bool|null {}
+function filter_input_array (int $type, array|int $options = FILTER_DEFAULT, bool $add_empty = true): array|int|null {}
 
 /**
  * Gets multiple variables and optionally filters them
@@ -59,11 +59,11 @@ function filter_input_array (int $type, array|int $options = FILTER_DEFAULT, boo
  * @param array $array 
  * @param array|int $options [optional] 
  * @param bool $add_empty [optional] 
- * @return array|bool|null An array containing the values of the requested variables on success, or false 
+ * @return array|false|null An array containing the values of the requested variables on success, or false 
  * on failure. An array value will be false if the filter fails, or null if 
  * the variable is not set.
  */
-function filter_var_array (array $array, array|int $options = FILTER_DEFAULT, bool $add_empty = true): array|bool|null {}
+function filter_var_array (array $array, array|int $options = FILTER_DEFAULT, bool $add_empty = true): array|int|null {}
 
 /**
  * Returns a list of all supported filters
@@ -78,9 +78,9 @@ function filter_list (): array {}
  * Returns the filter ID belonging to a named filter
  * @link http://www.php.net/manual/en/function.filter-id.php
  * @param string $name 
- * @return int|bool ID of a filter on success or false if filter doesn't exist.
+ * @return int|false ID of a filter on success or false if filter doesn't exist.
  */
-function filter_id (string $name): int|bool {}
+function filter_id (string $name): int {}
 
 
 /**

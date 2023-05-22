@@ -24,9 +24,9 @@ class finfo  {
 	 * @param string $filename 
 	 * @param int $flags [optional] 
 	 * @param resource|null $context [optional] 
-	 * @return string|bool 
+	 * @return string|false 
 	 */
-	public function file (string $filename, int $flags = FILEINFO_NONE, ?resource $context = null): string|bool {}
+	public function file (string $filename, int $flags = FILEINFO_NONE, $context = null): string|int {}
 
 	/**
 	 * Alias of finfo_buffer()
@@ -34,9 +34,9 @@ class finfo  {
 	 * @param string $string 
 	 * @param int $flags [optional] 
 	 * @param resource|null $context [optional] 
-	 * @return string|bool 
+	 * @return string|false 
 	 */
-	public function buffer (string $string, int $flags = FILEINFO_NONE, ?resource $context = null): string|bool {}
+	public function buffer (string $string, int $flags = FILEINFO_NONE, $context = null): string|int {}
 
 	/**
 	 * Alias of finfo_set_flags()
@@ -53,10 +53,10 @@ class finfo  {
  * @link http://www.php.net/manual/en/function.finfo-open.php
  * @param int $flags [optional] 
  * @param string|null $magic_database [optional] 
- * @return finfo|bool (Procedural style only)
+ * @return finfo|false (Procedural style only)
  * Returns an finfo instance on success, or false on failure.
  */
-function finfo_open (int $flags = FILEINFO_NONE, ?string $magic_database = null): finfo|bool {}
+function finfo_open (int $flags = FILEINFO_NONE, ?string $magic_database = null): finfo|int {}
 
 /**
  * Close finfo instance
@@ -82,10 +82,10 @@ function finfo_set_flags (finfo $finfo, int $flags): bool {}
  * @param string $filename 
  * @param int $flags [optional] 
  * @param resource|null $context [optional] 
- * @return string|bool Returns a textual description of the contents of the
+ * @return string|false Returns a textual description of the contents of the
  * filename argument, or false if an error occurred.
  */
-function finfo_file (finfo $finfo, string $filename, int $flags = FILEINFO_NONE, ?resource $context = null): string|bool {}
+function finfo_file (finfo $finfo, string $filename, int $flags = FILEINFO_NONE, $context = null): string|int {}
 
 /**
  * Return information about a string buffer
@@ -94,20 +94,20 @@ function finfo_file (finfo $finfo, string $filename, int $flags = FILEINFO_NONE,
  * @param string $string 
  * @param int $flags [optional] 
  * @param resource|null $context [optional] 
- * @return string|bool Returns a textual description of the string
+ * @return string|false Returns a textual description of the string
  * argument, or false if an error occurred.
  */
-function finfo_buffer (finfo $finfo, string $string, int $flags = FILEINFO_NONE, ?resource $context = null): string|bool {}
+function finfo_buffer (finfo $finfo, string $string, int $flags = FILEINFO_NONE, $context = null): string|int {}
 
 /**
  * Detect MIME Content-type for a file
  * @link http://www.php.net/manual/en/function.mime-content-type.php
  * @param resource|string $filename 
- * @return string|bool Returns the content type in MIME format, like 
+ * @return string|false Returns the content type in MIME format, like 
  * text/plain or application/octet-stream,
  * or false on failure.
  */
-function mime_content_type (resource|string $filename): string|bool {}
+function mime_content_type ($filename): string|int {}
 
 
 /**

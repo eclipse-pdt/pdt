@@ -11,7 +11,7 @@ interface Hashable  {
 	 * @link http://www.php.net/manual/en/ds-hashable.hash.php
 	 * @return mixed A scalar value to be used as this object's hash value.
 	 */
-	abstract public function hash (): mixed
+	abstract public function hash (): mixed;
 
 	/**
 	 * Determines whether an object is equal to the current instance
@@ -20,7 +20,7 @@ interface Hashable  {
 	 * the same class.
 	 * @return bool true if equal, false otherwise.
 	 */
-	abstract public function equals (object $obj): bool
+	abstract public function equals (object $obj): bool;
 
 }
 
@@ -31,36 +31,36 @@ interface Collection extends \IteratorAggregate, \Traversable, \Countable, \Json
 	 * @link http://www.php.net/manual/en/ds-collection.clear.php
 	 * @return void No value is returned.
 	 */
-	abstract public function clear (): void
+	abstract public function clear (): void;
 
 	/**
 	 * Returns a shallow copy of the collection
 	 * @link http://www.php.net/manual/en/ds-collection.copy.php
-	 * @return Ds\Collection Returns a shallow copy of the collection.
+	 * @return \Ds\Collection Returns a shallow copy of the collection.
 	 */
-	abstract public function copy (): Ds\Collection
+	abstract public function copy (): \Ds\Collection;
 
 	/**
 	 * Returns whether the collection is empty
 	 * @link http://www.php.net/manual/en/ds-collection.isempty.php
 	 * @return bool Returns true if the collection is empty, false otherwise.
 	 */
-	abstract public function isEmpty (): bool
+	abstract public function isEmpty (): bool;
 
 	/**
 	 * Converts the collection to an array
 	 * @link http://www.php.net/manual/en/ds-collection.toarray.php
 	 * @return array An array containing all the values in the same order as the collection.
 	 */
-	abstract public function toArray (): array
+	abstract public function toArray (): array;
 
 	/**
 	 * Retrieve an external iterator
 	 * @link http://www.php.net/manual/en/iteratoraggregate.getiterator.php
-	 * @return Traversable An instance of an object implementing Iterator or
+	 * @return \Traversable An instance of an object implementing Iterator or
 	 * Traversable
 	 */
-	abstract public function getIterator (): Traversable
+	abstract public function getIterator (): \Traversable;
 
 	/**
 	 * Count elements of an object
@@ -68,7 +68,7 @@ interface Collection extends \IteratorAggregate, \Traversable, \Countable, \Json
 	 * @return int The custom count as an int.
 	 * <p>The return value is cast to an int.</p>
 	 */
-	abstract public function count (): int
+	abstract public function count (): int;
 
 	/**
 	 * Specify data which should be serialized to JSON
@@ -76,7 +76,7 @@ interface Collection extends \IteratorAggregate, \Traversable, \Countable, \Json
 	 * @return mixed Returns data which can be serialized by json_encode,
 	 * which is a value of any type other than a resource.
 	 */
-	abstract public function jsonSerialize (): mixed
+	abstract public function jsonSerialize (): mixed;
 
 }
 
@@ -90,14 +90,14 @@ interface Sequence extends \Ds\Collection, \JsonSerializable, \Countable, \Trave
 	 * current capacity.</p>
 	 * @return void No value is returned.
 	 */
-	abstract public function allocate (int $capacity): void
+	abstract public function allocate (int $capacity): void;
 
 	/**
 	 * Returns the current capacity
 	 * @link http://www.php.net/manual/en/ds-sequence.capacity.php
 	 * @return int The current capacity.
 	 */
-	abstract public function capacity (): int
+	abstract public function capacity (): int;
 
 	/**
 	 * Determines if the sequence contains given values
@@ -106,7 +106,7 @@ interface Sequence extends \Ds\Collection, \JsonSerializable, \Countable, \Trave
 	 * @return bool false if any of the provided values are not in the
 	 * sequence, true otherwise.
 	 */
-	abstract public function contains (mixed ...$values): bool
+	abstract public function contains (mixed ...$values): bool;
 
 	/**
 	 * Creates a new sequence using a callable to
@@ -119,11 +119,11 @@ interface Sequence extends \Ds\Collection, \JsonSerializable, \Countable, \Trave
 	 * <p>If a callback is not provided, only values which are true
 	 * (see converting to boolean)
 	 * will be included.</p>
-	 * @return Ds\Sequence A new sequence containing all the values for which
+	 * @return \Ds\Sequence A new sequence containing all the values for which
 	 * either the callback returned true, or all values that
 	 * convert to true if a callback was not provided.
 	 */
-	abstract public function filter (callable $callback = null): Ds\Sequence
+	abstract public function filter (callable $callback = null): \Ds\Sequence;
 
 	/**
 	 * Attempts to find a value's index
@@ -132,14 +132,14 @@ interface Sequence extends \Ds\Collection, \JsonSerializable, \Countable, \Trave
 	 * @return mixed The index of the value, or false if not found.
 	 * <p>Values will be compared by value and by type.</p>
 	 */
-	abstract public function find (mixed $value): mixed
+	abstract public function find (mixed $value): mixed;
 
 	/**
 	 * Returns the first value in the sequence
 	 * @link http://www.php.net/manual/en/ds-sequence.first.php
 	 * @return mixed The first value in the sequence.
 	 */
-	abstract public function first (): mixed
+	abstract public function first (): mixed;
 
 	/**
 	 * Returns the value at a given index
@@ -147,7 +147,7 @@ interface Sequence extends \Ds\Collection, \JsonSerializable, \Countable, \Trave
 	 * @param int $index The index to access, starting at 0.
 	 * @return mixed The value at the requested index.
 	 */
-	abstract public function get (int $index): mixed
+	abstract public function get (int $index): mixed;
 
 	/**
 	 * Inserts values at a given index
@@ -157,7 +157,7 @@ interface Sequence extends \Ds\Collection, \JsonSerializable, \Countable, \Trave
 	 * @param mixed $values The value or values to insert.
 	 * @return void No value is returned.
 	 */
-	abstract public function insert (int $index, mixed ...$values): void
+	abstract public function insert (int $index, mixed ...$values): void;
 
 	/**
 	 * Joins all values together as a string
@@ -165,14 +165,14 @@ interface Sequence extends \Ds\Collection, \JsonSerializable, \Countable, \Trave
 	 * @param string $glue [optional] An optional string to separate each value.
 	 * @return string All values of the sequence joined together as a string.
 	 */
-	abstract public function join (string $glue = null): string
+	abstract public function join (string $glue = null): string;
 
 	/**
 	 * Returns the last value
 	 * @link http://www.php.net/manual/en/ds-sequence.last.php
 	 * @return mixed The last value in the sequence.
 	 */
-	abstract public function last (): mixed
+	abstract public function last (): mixed;
 
 	/**
 	 * Returns the result of applying a callback to each value
@@ -182,28 +182,28 @@ interface Sequence extends \Ds\Collection, \JsonSerializable, \Countable, \Trave
 	 * mixedvalue
 	 * <p>A callable to apply to each value in the sequence.</p>
 	 * <p>The callable should return what the new value will be in the new sequence.</p>
-	 * @return Ds\Sequence The result of applying a callback to each value in
+	 * @return \Ds\Sequence The result of applying a callback to each value in
 	 * the sequence.
 	 * <p>The values of the current instance won't be affected.</p>
 	 */
-	abstract public function map (callable $callback): Ds\Sequence
+	abstract public function map (callable $callback): \Ds\Sequence;
 
 	/**
 	 * Returns the result of adding all given values to the sequence
 	 * @link http://www.php.net/manual/en/ds-sequence.merge.php
 	 * @param mixed $values A traversable object or an array.
-	 * @return Ds\Sequence The result of adding all given values to the sequence,
+	 * @return \Ds\Sequence The result of adding all given values to the sequence,
 	 * effectively the same as adding the values to a copy, then returning that copy.
 	 * <p>The current instance won't be affected.</p>
 	 */
-	abstract public function merge (mixed $values): Ds\Sequence
+	abstract public function merge (mixed $values): \Ds\Sequence;
 
 	/**
 	 * Removes and returns the last value
 	 * @link http://www.php.net/manual/en/ds-sequence.pop.php
 	 * @return mixed The removed last value.
 	 */
-	abstract public function pop (): mixed
+	abstract public function pop (): mixed;
 
 	/**
 	 * Adds values to the end of the sequence
@@ -211,7 +211,7 @@ interface Sequence extends \Ds\Collection, \JsonSerializable, \Countable, \Trave
 	 * @param mixed $values The values to add.
 	 * @return void No value is returned.
 	 */
-	abstract public function push (mixed ...$values): void
+	abstract public function push (mixed ...$values): void;
 
 	/**
 	 * Reduces the sequence to a single value using a callback function
@@ -222,7 +222,7 @@ interface Sequence extends \Ds\Collection, \JsonSerializable, \Countable, \Trave
 	 * @param mixed $initial [optional] The initial value of the carry value. Can be null.
 	 * @return mixed The return value of the final callback.
 	 */
-	abstract public function reduce (callable $callback, mixed $initial = null): mixed
+	abstract public function reduce (callable $callback, mixed $initial = null): mixed;
 
 	/**
 	 * Removes and returns a value by index
@@ -230,14 +230,14 @@ interface Sequence extends \Ds\Collection, \JsonSerializable, \Countable, \Trave
 	 * @param int $index The index of the value to remove.
 	 * @return mixed The value that was removed.
 	 */
-	abstract public function remove (int $index): mixed
+	abstract public function remove (int $index): mixed;
 
 	/**
 	 * Reverses the sequence in-place
 	 * @link http://www.php.net/manual/en/ds-sequence.reverse.php
 	 * @return void No value is returned.
 	 */
-	abstract public function reverse (): void
+	abstract public function reverse (): void;
 
 	/**
 	 * Rotates the sequence by a given number of rotations
@@ -245,7 +245,7 @@ interface Sequence extends \Ds\Collection, \JsonSerializable, \Countable, \Trave
 	 * @param int $rotations The number of times the sequence should be rotated.
 	 * @return void No value is returned.. The sequence of the current instance will be rotated.
 	 */
-	abstract public function rotate (int $rotations): void
+	abstract public function rotate (int $rotations): void;
 
 	/**
 	 * Updates a value at a given index
@@ -254,14 +254,14 @@ interface Sequence extends \Ds\Collection, \JsonSerializable, \Countable, \Trave
 	 * @param mixed $value The new value.
 	 * @return void No value is returned.
 	 */
-	abstract public function set (int $index, mixed $value): void
+	abstract public function set (int $index, mixed $value): void;
 
 	/**
 	 * Removes and returns the first value
 	 * @link http://www.php.net/manual/en/ds-sequence.shift.php
 	 * @return mixed The first value, which was removed.
 	 */
-	abstract public function shift (): mixed
+	abstract public function shift (): mixed;
 
 	/**
 	 * Returns a sub-sequence of a given range
@@ -278,9 +278,9 @@ interface Sequence extends \Ds\Collection, \JsonSerializable, \Countable, \Trave
 	 * If a length is not provided, the resulting sequence
 	 * will contain all values between the index and the
 	 * end of the sequence.
-	 * @return Ds\Sequence A sub-sequence of the given range.
+	 * @return \Ds\Sequence A sub-sequence of the given range.
 	 */
-	abstract public function slice (int $index, int $length = null): Ds\Sequence
+	abstract public function slice (int $index, int $length = null): \Ds\Sequence;
 
 	/**
 	 * Sorts the sequence in-place
@@ -294,7 +294,7 @@ interface Sequence extends \Ds\Collection, \JsonSerializable, \Countable, \Trave
 	 * integer value of 0, which will compare such values as equal.</p>
 	 * @return void No value is returned.
 	 */
-	abstract public function sort (callable $comparator = null): void
+	abstract public function sort (callable $comparator = null): void;
 
 	/**
 	 * Adds values to the front of the sequence
@@ -308,43 +308,43 @@ interface Sequence extends \Ds\Collection, \JsonSerializable, \Countable, \Trave
 	 * passed.</p>
 	 * @return void No value is returned.
 	 */
-	abstract public function unshift (mixed $values = null): void
+	abstract public function unshift (mixed $values = null): void;
 
 	/**
 	 * Removes all values
 	 * @link http://www.php.net/manual/en/ds-collection.clear.php
 	 * @return void No value is returned.
 	 */
-	abstract public function clear (): void
+	abstract public function clear (): void;
 
 	/**
 	 * Returns a shallow copy of the collection
 	 * @link http://www.php.net/manual/en/ds-collection.copy.php
-	 * @return Ds\Collection Returns a shallow copy of the collection.
+	 * @return \Ds\Collection Returns a shallow copy of the collection.
 	 */
-	abstract public function copy (): Ds\Collection
+	abstract public function copy (): \Ds\Collection;
 
 	/**
 	 * Returns whether the collection is empty
 	 * @link http://www.php.net/manual/en/ds-collection.isempty.php
 	 * @return bool Returns true if the collection is empty, false otherwise.
 	 */
-	abstract public function isEmpty (): bool
+	abstract public function isEmpty (): bool;
 
 	/**
 	 * Converts the collection to an array
 	 * @link http://www.php.net/manual/en/ds-collection.toarray.php
 	 * @return array An array containing all the values in the same order as the collection.
 	 */
-	abstract public function toArray (): array
+	abstract public function toArray (): array;
 
 	/**
 	 * Retrieve an external iterator
 	 * @link http://www.php.net/manual/en/iteratoraggregate.getiterator.php
-	 * @return Traversable An instance of an object implementing Iterator or
+	 * @return \Traversable An instance of an object implementing Iterator or
 	 * Traversable
 	 */
-	abstract public function getIterator (): Traversable
+	abstract public function getIterator (): \Traversable;
 
 	/**
 	 * Count elements of an object
@@ -352,7 +352,7 @@ interface Sequence extends \Ds\Collection, \JsonSerializable, \Countable, \Trave
 	 * @return int The custom count as an int.
 	 * <p>The return value is cast to an int.</p>
 	 */
-	abstract public function count (): int
+	abstract public function count (): int;
 
 	/**
 	 * Specify data which should be serialized to JSON
@@ -360,7 +360,7 @@ interface Sequence extends \Ds\Collection, \JsonSerializable, \Countable, \Trave
 	 * @return mixed Returns data which can be serialized by json_encode,
 	 * which is a value of any type other than a resource.
 	 */
-	abstract public function jsonSerialize (): mixed
+	abstract public function jsonSerialize (): mixed;
 
 	/**
 	 * Whether an offset exists
@@ -369,7 +369,7 @@ interface Sequence extends \Ds\Collection, \JsonSerializable, \Countable, \Trave
 	 * @return bool Returns true on success or false on failure.
 	 * <p>The return value will be casted to bool if non-boolean was returned.</p>
 	 */
-	abstract public function offsetExists (mixed $offset): bool
+	abstract public function offsetExists (mixed $offset): bool;
 
 	/**
 	 * Offset to retrieve
@@ -377,7 +377,7 @@ interface Sequence extends \Ds\Collection, \JsonSerializable, \Countable, \Trave
 	 * @param mixed $offset 
 	 * @return mixed Can return all value types.
 	 */
-	abstract public function offsetGet (mixed $offset): mixed
+	abstract public function offsetGet (mixed $offset): mixed;
 
 	/**
 	 * Assign a value to the specified offset
@@ -386,7 +386,7 @@ interface Sequence extends \Ds\Collection, \JsonSerializable, \Countable, \Trave
 	 * @param mixed $value 
 	 * @return void No value is returned.
 	 */
-	abstract public function offsetSet (mixed $offset, mixed $value): void
+	abstract public function offsetSet (mixed $offset, mixed $value): void;
 
 	/**
 	 * Unset an offset
@@ -394,7 +394,7 @@ interface Sequence extends \Ds\Collection, \JsonSerializable, \Countable, \Trave
 	 * @param mixed $offset 
 	 * @return void No value is returned.
 	 */
-	abstract public function offsetUnset (mixed $offset): void
+	abstract public function offsetUnset (mixed $offset): void;
 
 }
 
@@ -410,7 +410,10 @@ final class Vector implements \Ds\Sequence, \ArrayAccess, \IteratorAggregate, \T
 	 */
 	public function __construct (mixed $values = null): mixed {}
 
-	public function getIterator (): Traversable {}
+	/**
+	 * {@inheritdoc}
+	 */
+	public function getIterator (): \Traversable {}
 
 	/**
 	 * Allocates enough memory for a required capacity
@@ -465,7 +468,7 @@ final class Vector implements \Ds\Sequence, \ArrayAccess, \IteratorAggregate, \T
 	 * either the callback returned true, or all values that
 	 * convert to true if a callback was not provided.
 	 */
-	public function filter (callable $callback = null): Ds\Vector {}
+	public function filter (callable $callback = null): \Ds\Vector {}
 
 	/**
 	 * Attempts to find a value's index
@@ -528,7 +531,7 @@ final class Vector implements \Ds\Sequence, \ArrayAccess, \IteratorAggregate, \T
 	 * the vector.
 	 * <p>The values of the current instance won't be affected.</p>
 	 */
-	public function map (callable $callback): Ds\Vector {}
+	public function map (callable $callback): \Ds\Vector {}
 
 	/**
 	 * Returns the result of adding all given values to the vector
@@ -538,25 +541,29 @@ final class Vector implements \Ds\Sequence, \ArrayAccess, \IteratorAggregate, \T
 	 * effectively the same as adding the values to a copy, then returning that copy.
 	 * <p>The current instance won't be affected.</p>
 	 */
-	public function merge (mixed $values): Ds\Vector {}
+	public function merge (mixed $values): \Ds\Vector {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $offset
 	 */
 	public function offsetExists ($offset = null): bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $offset
 	 */
 	public function offsetGet (mixed $offset = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $offset
 	 * @param mixed $value
 	 */
 	public function offsetSet (mixed $offset = null, mixed $value = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $offset
 	 */
 	public function offsetUnset (mixed $offset = null) {}
@@ -611,7 +618,7 @@ final class Vector implements \Ds\Sequence, \ArrayAccess, \IteratorAggregate, \T
 	 * </p>
 	 * <p>The current instance is not affected.</p>
 	 */
-	public function reversed (): Ds\Vector {}
+	public function reversed (): \Ds\Vector {}
 
 	/**
 	 * Rotates the vector by a given number of rotations
@@ -654,7 +661,7 @@ final class Vector implements \Ds\Sequence, \ArrayAccess, \IteratorAggregate, \T
 	 * end of the vector.
 	 * @return \Ds\Vector A sub-vector of the given range.
 	 */
-	public function slice (int $index, int $length = null): Ds\Vector {}
+	public function slice (int $index, int $length = null): \Ds\Vector {}
 
 	/**
 	 * Sorts the vector in-place
@@ -682,7 +689,7 @@ final class Vector implements \Ds\Sequence, \ArrayAccess, \IteratorAggregate, \T
 	 * integer value of 0, which will compare such values as equal.</p>
 	 * @return \Ds\Vector Returns a sorted copy of the vector.
 	 */
-	public function sorted (callable $comparator = null): Ds\Vector {}
+	public function sorted (callable $comparator = null): \Ds\Vector {}
 
 	/**
 	 * Returns the sum of all values in the vector
@@ -718,8 +725,11 @@ final class Vector implements \Ds\Sequence, \ArrayAccess, \IteratorAggregate, \T
 	 * @link http://www.php.net/manual/en/ds-vector.copy.php
 	 * @return \Ds\Vector Returns a shallow copy of the vector.
 	 */
-	public function copy (): Ds\Vector {}
+	public function copy (): \Ds\Vector {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function count (): int {}
 
 	/**
@@ -729,6 +739,9 @@ final class Vector implements \Ds\Sequence, \ArrayAccess, \IteratorAggregate, \T
 	 */
 	public function isEmpty (): bool {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function jsonSerialize () {}
 
 	/**
@@ -752,7 +765,10 @@ final class Deque implements \Ds\Sequence, \ArrayAccess, \IteratorAggregate, \Tr
 	 */
 	public function __construct (mixed $values = null): mixed {}
 
-	public function getIterator (): Traversable {}
+	/**
+	 * {@inheritdoc}
+	 */
+	public function getIterator (): \Traversable {}
 
 	/**
 	 * Removes all values from the deque
@@ -766,8 +782,11 @@ final class Deque implements \Ds\Sequence, \ArrayAccess, \IteratorAggregate, \Tr
 	 * @link http://www.php.net/manual/en/ds-deque.copy.php
 	 * @return \Ds\Deque A shallow copy of the deque.
 	 */
-	public function copy (): Ds\Deque {}
+	public function copy (): \Ds\Deque {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function count (): int {}
 
 	/**
@@ -777,6 +796,9 @@ final class Deque implements \Ds\Sequence, \ArrayAccess, \IteratorAggregate, \Tr
 	 */
 	public function isEmpty (): bool {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function jsonSerialize () {}
 
 	/**
@@ -840,7 +862,7 @@ final class Deque implements \Ds\Sequence, \ArrayAccess, \IteratorAggregate, \Tr
 	 * either the callback returned true, or all values that
 	 * convert to true if a callback was not provided.
 	 */
-	public function filter (callable $callback = null): Ds\Deque {}
+	public function filter (callable $callback = null): \Ds\Deque {}
 
 	/**
 	 * Attempts to find a value's index
@@ -903,7 +925,7 @@ final class Deque implements \Ds\Sequence, \ArrayAccess, \IteratorAggregate, \Tr
 	 * the deque.
 	 * <p>The values of the current instance won't be affected.</p>
 	 */
-	public function map (callable $callback): Ds\Deque {}
+	public function map (callable $callback): \Ds\Deque {}
 
 	/**
 	 * Returns the result of adding all given values to the deque
@@ -913,25 +935,29 @@ final class Deque implements \Ds\Sequence, \ArrayAccess, \IteratorAggregate, \Tr
 	 * effectively the same as adding the values to a copy, then returning that copy.
 	 * <p>The current instance won't be affected.</p>
 	 */
-	public function merge (mixed $values): Ds\Deque {}
+	public function merge (mixed $values): \Ds\Deque {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $offset
 	 */
 	public function offsetExists ($offset = null): bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $offset
 	 */
 	public function offsetGet (mixed $offset = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $offset
 	 * @param mixed $value
 	 */
 	public function offsetSet (mixed $offset = null, mixed $value = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $offset
 	 */
 	public function offsetUnset (mixed $offset = null) {}
@@ -986,7 +1012,7 @@ final class Deque implements \Ds\Sequence, \ArrayAccess, \IteratorAggregate, \Tr
 	 * </p>
 	 * <p>The current instance is not affected.</p>
 	 */
-	public function reversed (): Ds\Deque {}
+	public function reversed (): \Ds\Deque {}
 
 	/**
 	 * Rotates the deque by a given number of rotations
@@ -1029,7 +1055,7 @@ final class Deque implements \Ds\Sequence, \ArrayAccess, \IteratorAggregate, \Tr
 	 * end of the deque.
 	 * @return \Ds\Deque A sub-deque of the given range.
 	 */
-	public function slice (int $index, int $length = null): Ds\Deque {}
+	public function slice (int $index, int $length = null): \Ds\Deque {}
 
 	/**
 	 * Sorts the deque in-place
@@ -1057,7 +1083,7 @@ final class Deque implements \Ds\Sequence, \ArrayAccess, \IteratorAggregate, \Tr
 	 * integer value of 0, which will compare such values as equal.</p>
 	 * @return \Ds\Deque Returns a sorted copy of the deque.
 	 */
-	public function sorted (callable $comparator = null): Ds\Deque {}
+	public function sorted (callable $comparator = null): \Ds\Deque {}
 
 	/**
 	 * Returns the sum of all values in the deque
@@ -1132,25 +1158,32 @@ final class Stack implements \Ds\Collection, \JsonSerializable, \Countable, \Tra
 	 */
 	public function push (mixed ...$values): void {}
 
-	public function getIterator (): Traversable {}
+	/**
+	 * {@inheritdoc}
+	 */
+	public function getIterator (): \Traversable {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $offset
 	 */
 	public function offsetExists ($offset = null): bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $offset
 	 */
 	public function offsetGet (mixed $offset = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $offset
 	 * @param mixed $value
 	 */
 	public function offsetSet (mixed $offset = null, mixed $value = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $offset
 	 */
 	public function offsetUnset (mixed $offset = null) {}
@@ -1167,8 +1200,11 @@ final class Stack implements \Ds\Collection, \JsonSerializable, \Countable, \Tra
 	 * @link http://www.php.net/manual/en/ds-stack.copy.php
 	 * @return \Ds\Stack Returns a shallow copy of the stack.
 	 */
-	public function copy (): Ds\Stack {}
+	public function copy (): \Ds\Stack {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function count (): int {}
 
 	/**
@@ -1178,6 +1214,9 @@ final class Stack implements \Ds\Collection, \JsonSerializable, \Countable, \Tra
 	 */
 	public function isEmpty (): bool {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function jsonSerialize () {}
 
 	/**
@@ -1241,25 +1280,32 @@ final class Queue implements \Ds\Collection, \JsonSerializable, \Countable, \Tra
 	 */
 	public function push (mixed ...$values): void {}
 
-	public function getIterator (): Traversable {}
+	/**
+	 * {@inheritdoc}
+	 */
+	public function getIterator (): \Traversable {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $offset
 	 */
 	public function offsetExists ($offset = null): bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $offset
 	 */
 	public function offsetGet (mixed $offset = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $offset
 	 * @param mixed $value
 	 */
 	public function offsetSet (mixed $offset = null, mixed $value = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $offset
 	 */
 	public function offsetUnset (mixed $offset = null) {}
@@ -1276,8 +1322,11 @@ final class Queue implements \Ds\Collection, \JsonSerializable, \Countable, \Tra
 	 * @link http://www.php.net/manual/en/ds-queue.copy.php
 	 * @return \Ds\Queue Returns a shallow copy of the queue.
 	 */
-	public function copy (): Ds\Queue {}
+	public function copy (): \Ds\Queue {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function count (): int {}
 
 	/**
@@ -1287,6 +1336,9 @@ final class Queue implements \Ds\Collection, \JsonSerializable, \Countable, \Tra
 	 */
 	public function isEmpty (): bool {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function jsonSerialize () {}
 
 	/**
@@ -1348,7 +1400,7 @@ final class Map implements \Ds\Collection, \JsonSerializable, \Countable, \Trave
 	 * @return \Ds\Map The result of removing all keys from the current instance that are
 	 * present in a given map.
 	 */
-	public function diff (Ds\Map $map): Ds\Map {}
+	public function diff (\Ds\Map $map): \Ds\Map {}
 
 	/**
 	 * Creates a new map using a callable to determine which pairs to include
@@ -1365,14 +1417,14 @@ final class Map implements \Ds\Collection, \JsonSerializable, \Countable, \Trave
 	 * either the callback returned true, or all values that
 	 * convert to true if a callback was not provided.
 	 */
-	public function filter (callable $callback = null): Ds\Map {}
+	public function filter (callable $callback = null): \Ds\Map {}
 
 	/**
 	 * Returns the first pair in the map
 	 * @link http://www.php.net/manual/en/ds-map.first.php
 	 * @return \Ds\Pair The first pair in the map.
 	 */
-	public function first (): Ds\Pair {}
+	public function first (): \Ds\Pair {}
 
 	/**
 	 * Returns the value for a given key
@@ -1406,14 +1458,14 @@ final class Map implements \Ds\Collection, \JsonSerializable, \Countable, \Trave
 	 * @param \Ds\Map $map The other map, containing the keys to intersect with.
 	 * @return \Ds\Map The key intersection of the current instance and another map.
 	 */
-	public function intersect (Ds\Map $map): Ds\Map {}
+	public function intersect (\Ds\Map $map): \Ds\Map {}
 
 	/**
 	 * Returns a set of the map's keys
 	 * @link http://www.php.net/manual/en/ds-map.keys.php
 	 * @return \Ds\Set A Ds\Set containing all the keys of the map.
 	 */
-	public function keys (): Ds\Set {}
+	public function keys (): \Ds\Set {}
 
 	/**
 	 * Sorts the map in-place by key
@@ -1441,14 +1493,14 @@ final class Map implements \Ds\Collection, \JsonSerializable, \Countable, \Trave
 	 * integer value of 0, which will compare such values as equal.</p>
 	 * @return \Ds\Map Returns a copy of the map, sorted by key.
 	 */
-	public function ksorted (callable $comparator = null): Ds\Map {}
+	public function ksorted (callable $comparator = null): \Ds\Map {}
 
 	/**
 	 * Returns the last pair of the map
 	 * @link http://www.php.net/manual/en/ds-map.last.php
 	 * @return \Ds\Pair The last pair of the map.
 	 */
-	public function last (): Ds\Pair {}
+	public function last (): \Ds\Pair {}
 
 	/**
 	 * Returns the result of applying a callback to each value
@@ -1464,7 +1516,7 @@ final class Map implements \Ds\Collection, \JsonSerializable, \Countable, \Trave
 	 * the map.
 	 * <p>The keys and values of the current instance won't be affected.</p>
 	 */
-	public function map (callable $callback): Ds\Map {}
+	public function map (callable $callback): \Ds\Map {}
 
 	/**
 	 * Returns the result of adding all given associations
@@ -1474,14 +1526,14 @@ final class Map implements \Ds\Collection, \JsonSerializable, \Countable, \Trave
 	 * object or array with their corresponding values, combined with the current instance.
 	 * <p>The current instance won't be affected.</p>
 	 */
-	public function merge (mixed $values): Ds\Map {}
+	public function merge (mixed $values): \Ds\Map {}
 
 	/**
 	 * Returns a sequence containing all the pairs of the map
 	 * @link http://www.php.net/manual/en/ds-map.pairs.php
-	 * @return Ds\Sequence Ds\Sequence containing all the pairs of the map.
+	 * @return \Ds\Sequence Ds\Sequence containing all the pairs of the map.
 	 */
-	public function pairs (): Ds\Sequence {}
+	public function pairs (): \Ds\Sequence {}
 
 	/**
 	 * Associates a key with a value
@@ -1538,7 +1590,7 @@ final class Map implements \Ds\Collection, \JsonSerializable, \Countable, \Trave
 	 * </p>
 	 * <p>The current instance is not affected.</p>
 	 */
-	public function reversed (): Ds\Map {}
+	public function reversed (): \Ds\Map {}
 
 	/**
 	 * Returns the pair at a given positional index
@@ -1546,7 +1598,7 @@ final class Map implements \Ds\Collection, \JsonSerializable, \Countable, \Trave
 	 * @param int $position The zero-based positional index to return.
 	 * @return \Ds\Pair Returns the Ds\Pair at the given position.
 	 */
-	public function skip (int $position): Ds\Pair {}
+	public function skip (int $position): \Ds\Pair {}
 
 	/**
 	 * Returns a subset of the map defined by a starting index and length
@@ -1565,7 +1617,7 @@ final class Map implements \Ds\Collection, \JsonSerializable, \Countable, \Trave
 	 * end of the map.
 	 * @return \Ds\Map A subset of the map defined by a starting index and length.
 	 */
-	public function slice (int $index, int $length = null): Ds\Map {}
+	public function slice (int $index, int $length = null): \Ds\Map {}
 
 	/**
 	 * Sorts the map in-place by value
@@ -1593,7 +1645,7 @@ final class Map implements \Ds\Collection, \JsonSerializable, \Countable, \Trave
 	 * integer value of 0, which will compare such values as equal.</p>
 	 * @return \Ds\Map Returns a copy of the map, sorted by value.
 	 */
-	public function sorted (callable $comparator = null): Ds\Map {}
+	public function sorted (callable $comparator = null): \Ds\Map {}
 
 	/**
 	 * Returns the sum of all values in the map
@@ -1609,14 +1661,14 @@ final class Map implements \Ds\Collection, \JsonSerializable, \Countable, \Trave
 	 * @param \Ds\Map $map The other map, to combine with the current instance.
 	 * @return \Ds\Map A new map containing all the pairs of the current instance as well as another map.
 	 */
-	public function union (Ds\Map $map): Ds\Map {}
+	public function union (\Ds\Map $map): \Ds\Map {}
 
 	/**
 	 * Returns a sequence of the map's values
 	 * @link http://www.php.net/manual/en/ds-map.values.php
-	 * @return Ds\Sequence A Ds\Sequence containing all the values of the map.
+	 * @return \Ds\Sequence A Ds\Sequence containing all the values of the map.
 	 */
-	public function values (): Ds\Sequence {}
+	public function values (): \Ds\Sequence {}
 
 	/**
 	 * Creates a new map using keys of either the current instance or of another map, but not of both
@@ -1625,27 +1677,34 @@ final class Map implements \Ds\Collection, \JsonSerializable, \Countable, \Trave
 	 * @return \Ds\Map A new map containing keys in the current instance as well as another map,
 	 * but not in both.
 	 */
-	public function xor (Ds\Map $map): Ds\Map {}
-
-	public function getIterator (): Traversable {}
+	public function xor (\Ds\Map $map): \Ds\Map {}
 
 	/**
+	 * {@inheritdoc}
+	 */
+	public function getIterator (): \Traversable {}
+
+	/**
+	 * {@inheritdoc}
 	 * @param mixed $offset
 	 */
 	public function offsetExists ($offset = null): bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $offset
 	 */
 	public function offsetGet (mixed $offset = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $offset
 	 * @param mixed $value
 	 */
 	public function offsetSet (mixed $offset = null, mixed $value = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $offset
 	 */
 	public function offsetUnset (mixed $offset = null) {}
@@ -1662,8 +1721,11 @@ final class Map implements \Ds\Collection, \JsonSerializable, \Countable, \Trave
 	 * @link http://www.php.net/manual/en/ds-map.copy.php
 	 * @return \Ds\Map Returns a shallow copy of the map.
 	 */
-	public function copy (): Ds\Map {}
+	public function copy (): \Ds\Map {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function count (): int {}
 
 	/**
@@ -1673,6 +1735,9 @@ final class Map implements \Ds\Collection, \JsonSerializable, \Countable, \Trave
 	 */
 	public function isEmpty (): bool {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function jsonSerialize () {}
 
 	/**
@@ -1694,7 +1759,7 @@ final class Set implements \Ds\Collection, \JsonSerializable, \Countable, \Trave
 	 * @param mixed $values [optional] A traversable object or an array to use for the initial values.
 	 * @return mixed 
 	 */
-	public function __construct (mixed $values = []): mixed {}
+	public function __construct (mixed $values = '[]'): mixed {}
 
 	/**
 	 * Adds values to the set
@@ -1737,7 +1802,7 @@ final class Set implements \Ds\Collection, \JsonSerializable, \Countable, \Trave
 	 * @param \Ds\Set $set Set containing the values to exclude.
 	 * @return \Ds\Set A new set containing all values that were not in the other set.
 	 */
-	public function diff (Ds\Set $set): Ds\Set {}
+	public function diff (\Ds\Set $set): \Ds\Set {}
 
 	/**
 	 * Creates a new set using a callable to
@@ -1754,7 +1819,7 @@ final class Set implements \Ds\Collection, \JsonSerializable, \Countable, \Trave
 	 * either the callback returned true, or all values that
 	 * convert to true if a callback was not provided.
 	 */
-	public function filter (callable $callback = null): Ds\Set {}
+	public function filter (callable $callback = null): \Ds\Set {}
 
 	/**
 	 * Returns the first value in the set
@@ -1777,7 +1842,7 @@ final class Set implements \Ds\Collection, \JsonSerializable, \Countable, \Trave
 	 * @param \Ds\Set $set The other set.
 	 * @return \Ds\Set The intersection of the current instance and another set.
 	 */
-	public function intersect (Ds\Set $set): Ds\Set {}
+	public function intersect (\Ds\Set $set): \Ds\Set {}
 
 	/**
 	 * Joins all values together as a string
@@ -1795,9 +1860,10 @@ final class Set implements \Ds\Collection, \JsonSerializable, \Countable, \Trave
 	public function last (): mixed {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param callable $callback
 	 */
-	public function map (callable $callback): Ds\Set {}
+	public function map (callable $callback): \Ds\Set {}
 
 	/**
 	 * Returns the result of adding all given values to the set
@@ -1807,7 +1873,7 @@ final class Set implements \Ds\Collection, \JsonSerializable, \Countable, \Trave
 	 * effectively the same as adding the values to a copy, then returning that copy.
 	 * <p>The current instance won't be affected.</p>
 	 */
-	public function merge (mixed $values): Ds\Set {}
+	public function merge (mixed $values): \Ds\Set {}
 
 	/**
 	 * Reduces the set to a single value using a callback function
@@ -1844,7 +1910,7 @@ final class Set implements \Ds\Collection, \JsonSerializable, \Countable, \Trave
 	 * </p>
 	 * <p>The current instance is not affected.</p>
 	 */
-	public function reversed (): Ds\Set {}
+	public function reversed (): \Ds\Set {}
 
 	/**
 	 * Returns a sub-set of a given range
@@ -1863,7 +1929,7 @@ final class Set implements \Ds\Collection, \JsonSerializable, \Countable, \Trave
 	 * end of the set.
 	 * @return \Ds\Set A sub-set of the given range.
 	 */
-	public function slice (int $index, int $length = null): Ds\Set {}
+	public function slice (int $index, int $length = null): \Ds\Set {}
 
 	/**
 	 * Sorts the set in-place
@@ -1891,7 +1957,7 @@ final class Set implements \Ds\Collection, \JsonSerializable, \Countable, \Trave
 	 * integer value of 0, which will compare such values as equal.</p>
 	 * @return \Ds\Set Returns a sorted copy of the set.
 	 */
-	public function sorted (callable $comparator = null): Ds\Set {}
+	public function sorted (callable $comparator = null): \Ds\Set {}
 
 	/**
 	 * Returns the sum of all values in the set
@@ -1907,7 +1973,7 @@ final class Set implements \Ds\Collection, \JsonSerializable, \Countable, \Trave
 	 * @param \Ds\Set $set The other set, to combine with the current instance.
 	 * @return \Ds\Set A new set containing all the values of the current instance as well as another set.
 	 */
-	public function union (Ds\Set $set): Ds\Set {}
+	public function union (\Ds\Set $set): \Ds\Set {}
 
 	/**
 	 * Creates a new set using values in either the current instance or in another set, but not in both
@@ -1916,27 +1982,34 @@ final class Set implements \Ds\Collection, \JsonSerializable, \Countable, \Trave
 	 * @return \Ds\Set A new set containing values in the current instance as well as another set,
 	 * but not in both.
 	 */
-	public function xor (Ds\Set $set): Ds\Set {}
-
-	public function getIterator (): Traversable {}
+	public function xor (\Ds\Set $set): \Ds\Set {}
 
 	/**
+	 * {@inheritdoc}
+	 */
+	public function getIterator (): \Traversable {}
+
+	/**
+	 * {@inheritdoc}
 	 * @param mixed $offset
 	 */
 	public function offsetExists ($offset = null): bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $offset
 	 */
 	public function offsetGet (mixed $offset = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $offset
 	 * @param mixed $value
 	 */
 	public function offsetSet (mixed $offset = null, mixed $value = null) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param mixed $offset
 	 */
 	public function offsetUnset (mixed $offset = null) {}
@@ -1953,8 +2026,11 @@ final class Set implements \Ds\Collection, \JsonSerializable, \Countable, \Trave
 	 * @link http://www.php.net/manual/en/ds-set.copy.php
 	 * @return \Ds\Set Returns a shallow copy of the set.
 	 */
-	public function copy (): Ds\Set {}
+	public function copy (): \Ds\Set {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function count (): int {}
 
 	/**
@@ -1964,6 +2040,9 @@ final class Set implements \Ds\Collection, \JsonSerializable, \Countable, \Trave
 	 */
 	public function isEmpty (): bool {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function jsonSerialize () {}
 
 	/**
@@ -2026,7 +2105,10 @@ final class PriorityQueue implements \Ds\Collection, \JsonSerializable, \Countab
 	 */
 	public function push (mixed $value, int $priority): void {}
 
-	public function getIterator (): Traversable {}
+	/**
+	 * {@inheritdoc}
+	 */
+	public function getIterator (): \Traversable {}
 
 	/**
 	 * Removes all values
@@ -2040,8 +2122,11 @@ final class PriorityQueue implements \Ds\Collection, \JsonSerializable, \Countab
 	 * @link http://www.php.net/manual/en/ds-priorityqueue.copy.php
 	 * @return \Ds\PriorityQueue Returns a shallow copy of the queue.
 	 */
-	public function copy (): Ds\PriorityQueue {}
+	public function copy (): \Ds\PriorityQueue {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function count (): int {}
 
 	/**
@@ -2051,6 +2136,9 @@ final class PriorityQueue implements \Ds\Collection, \JsonSerializable, \Countab
 	 */
 	public function isEmpty (): bool {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function jsonSerialize () {}
 
 	/**
@@ -2063,9 +2151,10 @@ final class PriorityQueue implements \Ds\Collection, \JsonSerializable, \Countab
 }
 
 final class Pair implements \JsonSerializable {
-	public $key;
-	public $value;
 
+	public $key;
+
+	public $value;
 
 	/**
 	 * Creates a new instance
@@ -2081,8 +2170,11 @@ final class Pair implements \JsonSerializable {
 	 * @link http://www.php.net/manual/en/ds-pair.copy.php
 	 * @return \Ds\Pair Returns a shallow copy of the pair.
 	 */
-	public function copy (): Ds\Pair {}
+	public function copy (): \Ds\Pair {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function jsonSerialize () {}
 
 	/**

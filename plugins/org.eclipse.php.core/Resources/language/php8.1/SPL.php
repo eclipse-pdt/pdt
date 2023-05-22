@@ -8,11 +8,6 @@
  * @link http://www.php.net/manual/en/class.logicexception.php
  */
 class LogicException extends Exception implements Throwable, Stringable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-
 
 	/**
 	 * Construct the exception
@@ -22,8 +17,11 @@ class LogicException extends Exception implements Throwable, Stringable {
 	 * @param Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -94,11 +92,6 @@ class LogicException extends Exception implements Throwable, Stringable {
  * @link http://www.php.net/manual/en/class.badfunctioncallexception.php
  */
 class BadFunctionCallException extends LogicException implements Stringable, Throwable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-
 
 	/**
 	 * Construct the exception
@@ -108,8 +101,11 @@ class BadFunctionCallException extends LogicException implements Stringable, Thr
 	 * @param Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -180,11 +176,6 @@ class BadFunctionCallException extends LogicException implements Stringable, Thr
  * @link http://www.php.net/manual/en/class.badmethodcallexception.php
  */
 class BadMethodCallException extends BadFunctionCallException implements Throwable, Stringable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-
 
 	/**
 	 * Construct the exception
@@ -194,8 +185,11 @@ class BadMethodCallException extends BadFunctionCallException implements Throwab
 	 * @param Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -265,11 +259,6 @@ class BadMethodCallException extends BadFunctionCallException implements Throwab
  * @link http://www.php.net/manual/en/class.domainexception.php
  */
 class DomainException extends LogicException implements Stringable, Throwable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-
 
 	/**
 	 * Construct the exception
@@ -279,8 +268,11 @@ class DomainException extends LogicException implements Stringable, Throwable {
 	 * @param Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -350,11 +342,6 @@ class DomainException extends LogicException implements Stringable, Throwable {
  * @link http://www.php.net/manual/en/class.invalidargumentexception.php
  */
 class InvalidArgumentException extends LogicException implements Stringable, Throwable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-
 
 	/**
 	 * Construct the exception
@@ -364,8 +351,11 @@ class InvalidArgumentException extends LogicException implements Stringable, Thr
 	 * @param Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -435,11 +425,6 @@ class InvalidArgumentException extends LogicException implements Stringable, Thr
  * @link http://www.php.net/manual/en/class.lengthexception.php
  */
 class LengthException extends LogicException implements Stringable, Throwable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-
 
 	/**
 	 * Construct the exception
@@ -449,8 +434,11 @@ class LengthException extends LogicException implements Stringable, Throwable {
 	 * @param Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -521,11 +509,6 @@ class LengthException extends LogicException implements Stringable, Throwable {
  * @link http://www.php.net/manual/en/class.outofrangeexception.php
  */
 class OutOfRangeException extends LogicException implements Stringable, Throwable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-
 
 	/**
 	 * Construct the exception
@@ -535,8 +518,11 @@ class OutOfRangeException extends LogicException implements Stringable, Throwabl
 	 * @param Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -606,11 +592,6 @@ class OutOfRangeException extends LogicException implements Stringable, Throwabl
  * @link http://www.php.net/manual/en/class.runtimeexception.php
  */
 class RuntimeException extends Exception implements Throwable, Stringable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-
 
 	/**
 	 * Construct the exception
@@ -620,8 +601,11 @@ class RuntimeException extends Exception implements Throwable, Stringable {
 	 * @param Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -692,11 +676,6 @@ class RuntimeException extends Exception implements Throwable, Stringable {
  * @link http://www.php.net/manual/en/class.outofboundsexception.php
  */
 class OutOfBoundsException extends RuntimeException implements Stringable, Throwable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-
 
 	/**
 	 * Construct the exception
@@ -706,8 +685,11 @@ class OutOfBoundsException extends RuntimeException implements Stringable, Throw
 	 * @param Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -777,11 +759,6 @@ class OutOfBoundsException extends RuntimeException implements Stringable, Throw
  * @link http://www.php.net/manual/en/class.overflowexception.php
  */
 class OverflowException extends RuntimeException implements Stringable, Throwable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-
 
 	/**
 	 * Construct the exception
@@ -791,8 +768,11 @@ class OverflowException extends RuntimeException implements Stringable, Throwabl
 	 * @param Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -865,11 +845,6 @@ class OverflowException extends RuntimeException implements Stringable, Throwabl
  * @link http://www.php.net/manual/en/class.rangeexception.php
  */
 class RangeException extends RuntimeException implements Stringable, Throwable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-
 
 	/**
 	 * Construct the exception
@@ -879,8 +854,11 @@ class RangeException extends RuntimeException implements Stringable, Throwable {
 	 * @param Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -951,11 +929,6 @@ class RangeException extends RuntimeException implements Stringable, Throwable {
  * @link http://www.php.net/manual/en/class.underflowexception.php
  */
 class UnderflowException extends RuntimeException implements Stringable, Throwable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-
 
 	/**
 	 * Construct the exception
@@ -965,8 +938,11 @@ class UnderflowException extends RuntimeException implements Stringable, Throwab
 	 * @param Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -1039,11 +1015,6 @@ class UnderflowException extends RuntimeException implements Stringable, Throwab
  * @link http://www.php.net/manual/en/class.unexpectedvalueexception.php
  */
 class UnexpectedValueException extends RuntimeException implements Stringable, Throwable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-
 
 	/**
 	 * Construct the exception
@@ -1053,8 +1024,11 @@ class UnexpectedValueException extends RuntimeException implements Stringable, T
 	 * @param Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -1131,35 +1105,35 @@ interface RecursiveIterator extends Iterator, Traversable {
 	 * @link http://www.php.net/manual/en/recursiveiterator.haschildren.php
 	 * @return bool Returns true if the current entry can be iterated over, otherwise returns false.
 	 */
-	abstract public function hasChildren (): bool
+	abstract public function hasChildren (): bool;
 
 	/**
 	 * Returns an iterator for the current entry
 	 * @link http://www.php.net/manual/en/recursiveiterator.getchildren.php
 	 * @return RecursiveIterator|null Returns an iterator for the current entry if it exists, or null otherwise.
 	 */
-	abstract public function getChildren (): ?RecursiveIterator
+	abstract public function getChildren (): ?RecursiveIterator;
 
 	/**
 	 * Return the current element
 	 * @link http://www.php.net/manual/en/iterator.current.php
 	 * @return mixed Can return any type.
 	 */
-	abstract public function current (): mixed
+	abstract public function current (): mixed;
 
 	/**
 	 * Move forward to next element
 	 * @link http://www.php.net/manual/en/iterator.next.php
 	 * @return void Any returned value is ignored.
 	 */
-	abstract public function next (): void
+	abstract public function next (): void;
 
 	/**
 	 * Return the key of the current element
 	 * @link http://www.php.net/manual/en/iterator.key.php
 	 * @return mixed Returns scalar on success, or null on failure.
 	 */
-	abstract public function key (): mixed
+	abstract public function key (): mixed;
 
 	/**
 	 * Checks if current position is valid
@@ -1167,14 +1141,14 @@ interface RecursiveIterator extends Iterator, Traversable {
 	 * @return bool The return value will be casted to bool and then evaluated.
 	 * Returns true on success or false on failure.
 	 */
-	abstract public function valid (): bool
+	abstract public function valid (): bool;
 
 	/**
 	 * Rewind the Iterator to the first element
 	 * @link http://www.php.net/manual/en/iterator.rewind.php
 	 * @return void Any returned value is ignored.
 	 */
-	abstract public function rewind (): void
+	abstract public function rewind (): void;
 
 }
 
@@ -1190,28 +1164,28 @@ interface OuterIterator extends Iterator, Traversable {
 	 * @link http://www.php.net/manual/en/outeriterator.getinneriterator.php
 	 * @return Iterator|null Returns the inner iterator for the current entry if it exists, or null otherwise.
 	 */
-	abstract public function getInnerIterator (): ?Iterator
+	abstract public function getInnerIterator (): ?Iterator;
 
 	/**
 	 * Return the current element
 	 * @link http://www.php.net/manual/en/iterator.current.php
 	 * @return mixed Can return any type.
 	 */
-	abstract public function current (): mixed
+	abstract public function current (): mixed;
 
 	/**
 	 * Move forward to next element
 	 * @link http://www.php.net/manual/en/iterator.next.php
 	 * @return void Any returned value is ignored.
 	 */
-	abstract public function next (): void
+	abstract public function next (): void;
 
 	/**
 	 * Return the key of the current element
 	 * @link http://www.php.net/manual/en/iterator.key.php
 	 * @return mixed Returns scalar on success, or null on failure.
 	 */
-	abstract public function key (): mixed
+	abstract public function key (): mixed;
 
 	/**
 	 * Checks if current position is valid
@@ -1219,14 +1193,14 @@ interface OuterIterator extends Iterator, Traversable {
 	 * @return bool The return value will be casted to bool and then evaluated.
 	 * Returns true on success or false on failure.
 	 */
-	abstract public function valid (): bool
+	abstract public function valid (): bool;
 
 	/**
 	 * Rewind the Iterator to the first element
 	 * @link http://www.php.net/manual/en/iterator.rewind.php
 	 * @return void Any returned value is ignored.
 	 */
-	abstract public function rewind (): void
+	abstract public function rewind (): void;
 
 }
 
@@ -1249,7 +1223,7 @@ class RecursiveIteratorIterator implements OuterIterator, Traversable, Iterator 
 	 * @param int $flags [optional] 
 	 * @return Traversable 
 	 */
-	public function __construct (Traversable $iterator, int $mode = RecursiveIteratorIterator::LEAVES_ONLY, int $flags = null): Traversable {}
+	public function __construct (Traversable $iterator, int $mode = \RecursiveIteratorIterator::LEAVES_ONLY, int $flags = null): Traversable {}
 
 	/**
 	 * Rewind the iterator to the first element of the top level inner iterator
@@ -1368,9 +1342,9 @@ class RecursiveIteratorIterator implements OuterIterator, Traversable, Iterator 
 	/**
 	 * Get max depth
 	 * @link http://www.php.net/manual/en/recursiveiteratoriterator.getmaxdepth.php
-	 * @return int|bool The maximum accepted depth, or false if any depth is allowed.
+	 * @return int|false The maximum accepted depth, or false if any depth is allowed.
 	 */
-	public function getMaxDepth (): int|bool {}
+	public function getMaxDepth (): int {}
 
 }
 
@@ -1451,7 +1425,7 @@ abstract class FilterIterator extends IteratorIterator implements Iterator, Trav
 	 * @link http://www.php.net/manual/en/filteriterator.accept.php
 	 * @return bool true if the current element is acceptable, otherwise false.
 	 */
-	abstract public function accept (): bool
+	abstract public function accept (): bool;
 
 	/**
 	 * Construct a filterIterator
@@ -1540,7 +1514,7 @@ abstract class RecursiveFilterIterator extends FilterIterator implements OuterIt
 	 * @link http://www.php.net/manual/en/filteriterator.accept.php
 	 * @return bool true if the current element is acceptable, otherwise false.
 	 */
-	abstract public function accept (): bool
+	abstract public function accept (): bool;
 
 	/**
 	 * Rewind the iterator
@@ -1830,28 +1804,28 @@ interface SeekableIterator extends Iterator, Traversable {
 	 * @param int $offset 
 	 * @return void No value is returned.
 	 */
-	abstract public function seek (int $offset): void
+	abstract public function seek (int $offset): void;
 
 	/**
 	 * Return the current element
 	 * @link http://www.php.net/manual/en/iterator.current.php
 	 * @return mixed Can return any type.
 	 */
-	abstract public function current (): mixed
+	abstract public function current (): mixed;
 
 	/**
 	 * Move forward to next element
 	 * @link http://www.php.net/manual/en/iterator.next.php
 	 * @return void Any returned value is ignored.
 	 */
-	abstract public function next (): void
+	abstract public function next (): void;
 
 	/**
 	 * Return the key of the current element
 	 * @link http://www.php.net/manual/en/iterator.key.php
 	 * @return mixed Returns scalar on success, or null on failure.
 	 */
-	abstract public function key (): mixed
+	abstract public function key (): mixed;
 
 	/**
 	 * Checks if current position is valid
@@ -1859,14 +1833,14 @@ interface SeekableIterator extends Iterator, Traversable {
 	 * @return bool The return value will be casted to bool and then evaluated.
 	 * Returns true on success or false on failure.
 	 */
-	abstract public function valid (): bool
+	abstract public function valid (): bool;
 
 	/**
 	 * Rewind the Iterator to the first element
 	 * @link http://www.php.net/manual/en/iterator.rewind.php
 	 * @return void Any returned value is ignored.
 	 */
-	abstract public function rewind (): void
+	abstract public function rewind (): void;
 
 }
 
@@ -1981,7 +1955,7 @@ class CachingIterator extends IteratorIterator implements Stringable, Iterator, 
 	 * @param int $flags [optional] 
 	 * @return Iterator 
 	 */
-	public function __construct (Iterator $iterator, int $flags = CachingIterator::CALL_TOSTRING): Iterator {}
+	public function __construct (Iterator $iterator, int $flags = \CachingIterator::CALL_TOSTRING): Iterator {}
 
 	/**
 	 * Rewind the iterator
@@ -2123,7 +2097,7 @@ class RecursiveCachingIterator extends CachingIterator implements Countable, Arr
 	 * @param int $flags [optional] 
 	 * @return Iterator 
 	 */
-	public function __construct (Iterator $iterator, int $flags = RecursiveCachingIterator::CALL_TOSTRING): Iterator {}
+	public function __construct (Iterator $iterator, int $flags = \RecursiveCachingIterator::CALL_TOSTRING): Iterator {}
 
 	/**
 	 * Check whether the current element of the inner iterator has children
@@ -2487,8 +2461,8 @@ class RegexIterator extends FilterIterator implements OuterIterator, Traversable
 	 * (see preg_replace; Not fully implemented yet)
 	const REPLACE = 4;
 
-	public $replacement;
 
+	public ?string $replacement;
 
 	/**
 	 * Create a new RegexIterator
@@ -2500,7 +2474,7 @@ class RegexIterator extends FilterIterator implements OuterIterator, Traversable
 	 * @param int $pregFlags [optional] 
 	 * @return Iterator 
 	 */
-	public function __construct (Iterator $iterator, string $pattern, int $mode = RegexIterator::MATCH, int $flags = null, int $pregFlags = null): Iterator {}
+	public function __construct (Iterator $iterator, string $pattern, int $mode = \RegexIterator::MATCH, int $flags = null, int $pregFlags = null): Iterator {}
 
 	/**
 	 * Get accept status
@@ -2618,8 +2592,6 @@ class RecursiveRegexIterator extends RegexIterator implements Iterator, Traversa
 	const SPLIT = 3;
 	const REPLACE = 4;
 
-	public $replacement;
-
 
 	/**
 	 * Creates a new RecursiveRegexIterator
@@ -2631,8 +2603,11 @@ class RecursiveRegexIterator extends RegexIterator implements Iterator, Traversa
 	 * @param int $pregFlags [optional] 
 	 * @return RecursiveIterator 
 	 */
-	public function __construct (RecursiveIterator $iterator, string $pattern, int $mode = RecursiveRegexIterator::MATCH, int $flags = null, int $pregFlags = null): RecursiveIterator {}
+	public function __construct (RecursiveIterator $iterator, string $pattern, int $mode = \RecursiveRegexIterator::MATCH, int $flags = null, int $pregFlags = null): RecursiveIterator {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function accept () {}
 
 	/**
@@ -2775,9 +2750,9 @@ class EmptyIterator implements Iterator, Traversable {
 	/**
 	 * The valid() method
 	 * @link http://www.php.net/manual/en/emptyiterator.valid.php
-	 * @return bool false
+	 * @return false false
 	 */
-	public function valid (): bool {}
+	public function valid (): int {}
 
 	/**
 	 * The rewind() method
@@ -2816,7 +2791,7 @@ class RecursiveTreeIterator extends RecursiveIteratorIterator implements Iterato
 	 * @param int $mode [optional] 
 	 * @return RecursiveIterator|IteratorAggregate 
 	 */
-	public function __construct (RecursiveIterator|IteratorAggregate $iterator, int $flags = RecursiveTreeIterator::BYPASS_KEY, int $cachingIteratorFlags = CachingIterator::CATCH_GET_CHILD, int $mode = RecursiveTreeIterator::SELF_FIRST): RecursiveIterator|IteratorAggregate {}
+	public function __construct (RecursiveIterator|IteratorAggregate $iterator, int $flags = \RecursiveTreeIterator::BYPASS_KEY, int $cachingIteratorFlags = \CachingIterator::CATCH_GET_CHILD, int $mode = \RecursiveTreeIterator::SELF_FIRST): RecursiveIterator|IteratorAggregate {}
 
 	/**
 	 * Get the key of the current element
@@ -2973,9 +2948,9 @@ class RecursiveTreeIterator extends RecursiveIteratorIterator implements Iterato
 	/**
 	 * Get max depth
 	 * @link http://www.php.net/manual/en/recursiveiteratoriterator.getmaxdepth.php
-	 * @return int|bool The maximum accepted depth, or false if any depth is allowed.
+	 * @return int|false The maximum accepted depth, or false if any depth is allowed.
 	 */
-	public function getMaxDepth (): int|bool {}
+	public function getMaxDepth (): int {}
 
 }
 
@@ -3000,7 +2975,7 @@ class ArrayObject implements IteratorAggregate, Traversable, ArrayAccess, Serial
 	 * @param string $iteratorClass [optional] 
 	 * @return array|object 
 	 */
-	public function __construct (array|object $array = [], int $flags = null, string $iteratorClass = ArrayIterator::class): array|object {}
+	public function __construct (array|object $array = '[]', int $flags = null, string $iteratorClass = 'ArrayIterator::class'): array|object {}
 
 	/**
 	 * Returns whether the requested index exists
@@ -3101,9 +3076,9 @@ class ArrayObject implements IteratorAggregate, Traversable, ArrayAccess, Serial
 	 * SORT_STRING or
 	 * SORT_NATURAL to sort strings case-insensitively
 	 * </p></p>
-	 * @return bool Always returns true.
+	 * @return true Always returns true.
 	 */
-	public function asort (int $flags = SORT_REGULAR): bool {}
+	public function asort (int $flags = SORT_REGULAR): int {}
 
 	/**
 	 * Sort the entries by key
@@ -3132,39 +3107,39 @@ class ArrayObject implements IteratorAggregate, Traversable, ArrayAccess, Serial
 	 * SORT_STRING or
 	 * SORT_NATURAL to sort strings case-insensitively
 	 * </p></p>
-	 * @return bool Always returns true.
+	 * @return true Always returns true.
 	 */
-	public function ksort (int $flags = SORT_REGULAR): bool {}
+	public function ksort (int $flags = SORT_REGULAR): int {}
 
 	/**
 	 * Sort the entries with a user-defined comparison function and maintain key association
 	 * @link http://www.php.net/manual/en/arrayobject.uasort.php
 	 * @param callable $callback 
-	 * @return bool Always returns true.
+	 * @return true Always returns true.
 	 */
-	public function uasort (callable $callback): bool {}
+	public function uasort (callable $callback): int {}
 
 	/**
 	 * Sort the entries by keys using a user-defined comparison function
 	 * @link http://www.php.net/manual/en/arrayobject.uksort.php
 	 * @param callable $callback 
-	 * @return bool Always returns true.
+	 * @return true Always returns true.
 	 */
-	public function uksort (callable $callback): bool {}
+	public function uksort (callable $callback): int {}
 
 	/**
 	 * Sort entries using a "natural order" algorithm
 	 * @link http://www.php.net/manual/en/arrayobject.natsort.php
-	 * @return bool No value is returned.
+	 * @return true No value is returned.
 	 */
-	public function natsort (): bool {}
+	public function natsort (): int {}
 
 	/**
 	 * Sort an array using a case insensitive "natural order" algorithm
 	 * @link http://www.php.net/manual/en/arrayobject.natcasesort.php
-	 * @return bool No value is returned.
+	 * @return true No value is returned.
 	 */
-	public function natcasesort (): bool {}
+	public function natcasesort (): int {}
 
 	/**
 	 * Unserialize an ArrayObject
@@ -3181,9 +3156,13 @@ class ArrayObject implements IteratorAggregate, Traversable, ArrayAccess, Serial
 	 */
 	public function serialize (): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __serialize () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array $data
 	 */
 	public function __unserialize (array $data) {}
@@ -3218,6 +3197,9 @@ class ArrayObject implements IteratorAggregate, Traversable, ArrayAccess, Serial
 	 */
 	public function getIteratorClass (): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __debugInfo () {}
 
 }
@@ -3247,7 +3229,7 @@ class ArrayIterator implements SeekableIterator, Traversable, Iterator, ArrayAcc
 	 * @param int $flags [optional] 
 	 * @return array|object 
 	 */
-	public function __construct (array|object $array = [], int $flags = null): array|object {}
+	public function __construct (array|object $array = '[]', int $flags = null): array|object {}
 
 	/**
 	 * Check if offset exists
@@ -3348,9 +3330,9 @@ class ArrayIterator implements SeekableIterator, Traversable, Iterator, ArrayAcc
 	 * SORT_STRING or
 	 * SORT_NATURAL to sort strings case-insensitively
 	 * </p></p>
-	 * @return bool Always returns true.
+	 * @return true Always returns true.
 	 */
-	public function asort (int $flags = SORT_REGULAR): bool {}
+	public function asort (int $flags = SORT_REGULAR): int {}
 
 	/**
 	 * Sort entries by keys
@@ -3379,39 +3361,39 @@ class ArrayIterator implements SeekableIterator, Traversable, Iterator, ArrayAcc
 	 * SORT_STRING or
 	 * SORT_NATURAL to sort strings case-insensitively
 	 * </p></p>
-	 * @return bool Always returns true.
+	 * @return true Always returns true.
 	 */
-	public function ksort (int $flags = SORT_REGULAR): bool {}
+	public function ksort (int $flags = SORT_REGULAR): int {}
 
 	/**
 	 * Sort with a user-defined comparison function and maintain index association
 	 * @link http://www.php.net/manual/en/arrayiterator.uasort.php
 	 * @param callable $callback 
-	 * @return bool Always returns true.
+	 * @return true Always returns true.
 	 */
-	public function uasort (callable $callback): bool {}
+	public function uasort (callable $callback): int {}
 
 	/**
 	 * Sort by keys using a user-defined comparison function
 	 * @link http://www.php.net/manual/en/arrayiterator.uksort.php
 	 * @param callable $callback 
-	 * @return bool Always returns true.
+	 * @return true Always returns true.
 	 */
-	public function uksort (callable $callback): bool {}
+	public function uksort (callable $callback): int {}
 
 	/**
 	 * Sort entries naturally
 	 * @link http://www.php.net/manual/en/arrayiterator.natsort.php
-	 * @return bool Always returns true.
+	 * @return true Always returns true.
 	 */
-	public function natsort (): bool {}
+	public function natsort (): int {}
 
 	/**
 	 * Sort entries naturally, case insensitive
 	 * @link http://www.php.net/manual/en/arrayiterator.natcasesort.php
-	 * @return bool Always returns true.
+	 * @return true Always returns true.
 	 */
-	public function natcasesort (): bool {}
+	public function natcasesort (): int {}
 
 	/**
 	 * Unserialize
@@ -3428,9 +3410,13 @@ class ArrayIterator implements SeekableIterator, Traversable, Iterator, ArrayAcc
 	 */
 	public function serialize (): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __serialize () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array $data
 	 */
 	public function __unserialize (array $data) {}
@@ -3478,6 +3464,9 @@ class ArrayIterator implements SeekableIterator, Traversable, Iterator, ArrayAcc
 	 */
 	public function seek (int $offset): void {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __debugInfo () {}
 
 }
@@ -3518,7 +3507,7 @@ class RecursiveArrayIterator extends ArrayIterator implements Countable, Seriali
 	 * @param int $flags [optional] 
 	 * @return array|object 
 	 */
-	public function __construct (array|object $array = [], int $flags = null): array|object {}
+	public function __construct (array|object $array = '[]', int $flags = null): array|object {}
 
 	/**
 	 * Check if offset exists
@@ -3619,9 +3608,9 @@ class RecursiveArrayIterator extends ArrayIterator implements Countable, Seriali
 	 * SORT_STRING or
 	 * SORT_NATURAL to sort strings case-insensitively
 	 * </p></p>
-	 * @return bool Always returns true.
+	 * @return true Always returns true.
 	 */
-	public function asort (int $flags = SORT_REGULAR): bool {}
+	public function asort (int $flags = SORT_REGULAR): int {}
 
 	/**
 	 * Sort entries by keys
@@ -3650,39 +3639,39 @@ class RecursiveArrayIterator extends ArrayIterator implements Countable, Seriali
 	 * SORT_STRING or
 	 * SORT_NATURAL to sort strings case-insensitively
 	 * </p></p>
-	 * @return bool Always returns true.
+	 * @return true Always returns true.
 	 */
-	public function ksort (int $flags = SORT_REGULAR): bool {}
+	public function ksort (int $flags = SORT_REGULAR): int {}
 
 	/**
 	 * Sort with a user-defined comparison function and maintain index association
 	 * @link http://www.php.net/manual/en/arrayiterator.uasort.php
 	 * @param callable $callback 
-	 * @return bool Always returns true.
+	 * @return true Always returns true.
 	 */
-	public function uasort (callable $callback): bool {}
+	public function uasort (callable $callback): int {}
 
 	/**
 	 * Sort by keys using a user-defined comparison function
 	 * @link http://www.php.net/manual/en/arrayiterator.uksort.php
 	 * @param callable $callback 
-	 * @return bool Always returns true.
+	 * @return true Always returns true.
 	 */
-	public function uksort (callable $callback): bool {}
+	public function uksort (callable $callback): int {}
 
 	/**
 	 * Sort entries naturally
 	 * @link http://www.php.net/manual/en/arrayiterator.natsort.php
-	 * @return bool Always returns true.
+	 * @return true Always returns true.
 	 */
-	public function natsort (): bool {}
+	public function natsort (): int {}
 
 	/**
 	 * Sort entries naturally, case insensitive
 	 * @link http://www.php.net/manual/en/arrayiterator.natcasesort.php
-	 * @return bool Always returns true.
+	 * @return true Always returns true.
 	 */
-	public function natcasesort (): bool {}
+	public function natcasesort (): int {}
 
 	/**
 	 * Unserialize
@@ -3699,9 +3688,13 @@ class RecursiveArrayIterator extends ArrayIterator implements Countable, Seriali
 	 */
 	public function serialize (): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __serialize () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array $data
 	 */
 	public function __unserialize (array $data) {}
@@ -3749,6 +3742,9 @@ class RecursiveArrayIterator extends ArrayIterator implements Countable, Seriali
 	 */
 	public function seek (int $offset): void {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __debugInfo () {}
 
 }
@@ -3796,7 +3792,7 @@ class SplFileInfo implements Stringable {
 	 * @param string $suffix [optional] 
 	 * @return string Returns the base name without path information.
 	 */
-	public function getBasename (string $suffix = ""): string {}
+	public function getBasename (string $suffix = '""'): string {}
 
 	/**
 	 * Gets the path to the file
@@ -3808,68 +3804,68 @@ class SplFileInfo implements Stringable {
 	/**
 	 * Gets file permissions
 	 * @link http://www.php.net/manual/en/splfileinfo.getperms.php
-	 * @return int|bool Returns the file permissions on success, or false on failure.
+	 * @return int|false Returns the file permissions on success, or false on failure.
 	 */
-	public function getPerms (): int|bool {}
+	public function getPerms (): int {}
 
 	/**
 	 * Gets the inode for the file
 	 * @link http://www.php.net/manual/en/splfileinfo.getinode.php
-	 * @return int|bool Returns the inode number for the filesystem object on success, or false on failure.
+	 * @return int|false Returns the inode number for the filesystem object on success, or false on failure.
 	 */
-	public function getInode (): int|bool {}
+	public function getInode (): int {}
 
 	/**
 	 * Gets file size
 	 * @link http://www.php.net/manual/en/splfileinfo.getsize.php
-	 * @return int|bool The filesize in bytes on success, or false on failure.
+	 * @return int|false The filesize in bytes on success, or false on failure.
 	 */
-	public function getSize (): int|bool {}
+	public function getSize (): int {}
 
 	/**
 	 * Gets the owner of the file
 	 * @link http://www.php.net/manual/en/splfileinfo.getowner.php
-	 * @return int|bool The owner id in numerical format on success, or false on failure.
+	 * @return int|false The owner id in numerical format on success, or false on failure.
 	 */
-	public function getOwner (): int|bool {}
+	public function getOwner (): int {}
 
 	/**
 	 * Gets the file group
 	 * @link http://www.php.net/manual/en/splfileinfo.getgroup.php
-	 * @return int|bool The group id in numerical format on success, or false on failure.
+	 * @return int|false The group id in numerical format on success, or false on failure.
 	 */
-	public function getGroup (): int|bool {}
+	public function getGroup (): int {}
 
 	/**
 	 * Gets last access time of the file
 	 * @link http://www.php.net/manual/en/splfileinfo.getatime.php
-	 * @return int|bool Returns the time the file was last accessed on success, or false on failure.
+	 * @return int|false Returns the time the file was last accessed on success, or false on failure.
 	 */
-	public function getATime (): int|bool {}
+	public function getATime (): int {}
 
 	/**
 	 * Gets the last modified time
 	 * @link http://www.php.net/manual/en/splfileinfo.getmtime.php
-	 * @return int|bool Returns the last modified time for the file, in a Unix timestamp on success, or false on failure.
+	 * @return int|false Returns the last modified time for the file, in a Unix timestamp on success, or false on failure.
 	 */
-	public function getMTime (): int|bool {}
+	public function getMTime (): int {}
 
 	/**
 	 * Gets the inode change time
 	 * @link http://www.php.net/manual/en/splfileinfo.getctime.php
-	 * @return int|bool The last change time, in a Unix timestamp on success, or false on failure.
+	 * @return int|false The last change time, in a Unix timestamp on success, or false on failure.
 	 */
-	public function getCTime (): int|bool {}
+	public function getCTime (): int {}
 
 	/**
 	 * Gets file type
 	 * @link http://www.php.net/manual/en/splfileinfo.gettype.php
-	 * @return string|bool A string representing the type of the entry.
+	 * @return string|false A string representing the type of the entry.
 	 * May be one of file, link,
 	 * dir, block, fifo,
 	 * char, socket, or unknown, or false on failure.
 	 */
-	public function getType (): string|bool {}
+	public function getType (): string|int {}
 
 	/**
 	 * Tells if the entry is writable
@@ -3916,16 +3912,16 @@ class SplFileInfo implements Stringable {
 	/**
 	 * Gets the target of a link
 	 * @link http://www.php.net/manual/en/splfileinfo.getlinktarget.php
-	 * @return string|bool Returns the target of the filesystem link on success, or false on failure.
+	 * @return string|false Returns the target of the filesystem link on success, or false on failure.
 	 */
-	public function getLinkTarget (): string|bool {}
+	public function getLinkTarget (): string|int {}
 
 	/**
 	 * Gets absolute path to file
 	 * @link http://www.php.net/manual/en/splfileinfo.getrealpath.php
-	 * @return string|bool Returns the path to the file, or false if the file does not exist.
+	 * @return string|false Returns the path to the file, or false if the file does not exist.
 	 */
-	public function getRealPath (): string|bool {}
+	public function getRealPath (): string|int {}
 
 	/**
 	 * Gets an SplFileInfo object for the file
@@ -3951,7 +3947,7 @@ class SplFileInfo implements Stringable {
 	 * @param resource|null $context [optional] 
 	 * @return SplFileObject The opened file as an SplFileObject object.
 	 */
-	public function openFile (string $mode = "r", bool $useIncludePath = false, ?resource $context = null): SplFileObject {}
+	public function openFile (string $mode = '"r"', bool $useIncludePath = false, $context = null): SplFileObject {}
 
 	/**
 	 * Sets the class used with SplFileInfo::openFile
@@ -3959,7 +3955,7 @@ class SplFileInfo implements Stringable {
 	 * @param string $class [optional] 
 	 * @return void No value is returned.
 	 */
-	public function setFileClass (string $class = SplFileObject::class): void {}
+	public function setFileClass (string $class = 'SplFileObject::class'): void {}
 
 	/**
 	 * Sets the class used with SplFileInfo::getFileInfo and SplFileInfo::getPathInfo
@@ -3967,7 +3963,7 @@ class SplFileInfo implements Stringable {
 	 * @param string $class [optional] 
 	 * @return void No value is returned.
 	 */
-	public function setInfoClass (string $class = SplFileInfo::class): void {}
+	public function setInfoClass (string $class = 'SplFileInfo::class'): void {}
 
 	/**
 	 * Returns the path to the file as a string
@@ -3976,8 +3972,14 @@ class SplFileInfo implements Stringable {
 	 */
 	public function __toString (): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __debugInfo () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	final public function _bad_state_ex () {}
 
 }
@@ -4018,7 +4020,7 @@ class DirectoryIterator extends SplFileInfo implements Stringable, SeekableItera
 	 * @param string $suffix [optional] 
 	 * @return string The base name of the current DirectoryIterator item.
 	 */
-	public function getBasename (string $suffix = ""): string {}
+	public function getBasename (string $suffix = '""'): string {}
 
 	/**
 	 * Determine if current DirectoryIterator item is '.' or '..'
@@ -4095,68 +4097,68 @@ class DirectoryIterator extends SplFileInfo implements Stringable, SeekableItera
 	/**
 	 * Gets file permissions
 	 * @link http://www.php.net/manual/en/splfileinfo.getperms.php
-	 * @return int|bool Returns the file permissions on success, or false on failure.
+	 * @return int|false Returns the file permissions on success, or false on failure.
 	 */
-	public function getPerms (): int|bool {}
+	public function getPerms (): int {}
 
 	/**
 	 * Gets the inode for the file
 	 * @link http://www.php.net/manual/en/splfileinfo.getinode.php
-	 * @return int|bool Returns the inode number for the filesystem object on success, or false on failure.
+	 * @return int|false Returns the inode number for the filesystem object on success, or false on failure.
 	 */
-	public function getInode (): int|bool {}
+	public function getInode (): int {}
 
 	/**
 	 * Gets file size
 	 * @link http://www.php.net/manual/en/splfileinfo.getsize.php
-	 * @return int|bool The filesize in bytes on success, or false on failure.
+	 * @return int|false The filesize in bytes on success, or false on failure.
 	 */
-	public function getSize (): int|bool {}
+	public function getSize (): int {}
 
 	/**
 	 * Gets the owner of the file
 	 * @link http://www.php.net/manual/en/splfileinfo.getowner.php
-	 * @return int|bool The owner id in numerical format on success, or false on failure.
+	 * @return int|false The owner id in numerical format on success, or false on failure.
 	 */
-	public function getOwner (): int|bool {}
+	public function getOwner (): int {}
 
 	/**
 	 * Gets the file group
 	 * @link http://www.php.net/manual/en/splfileinfo.getgroup.php
-	 * @return int|bool The group id in numerical format on success, or false on failure.
+	 * @return int|false The group id in numerical format on success, or false on failure.
 	 */
-	public function getGroup (): int|bool {}
+	public function getGroup (): int {}
 
 	/**
 	 * Gets last access time of the file
 	 * @link http://www.php.net/manual/en/splfileinfo.getatime.php
-	 * @return int|bool Returns the time the file was last accessed on success, or false on failure.
+	 * @return int|false Returns the time the file was last accessed on success, or false on failure.
 	 */
-	public function getATime (): int|bool {}
+	public function getATime (): int {}
 
 	/**
 	 * Gets the last modified time
 	 * @link http://www.php.net/manual/en/splfileinfo.getmtime.php
-	 * @return int|bool Returns the last modified time for the file, in a Unix timestamp on success, or false on failure.
+	 * @return int|false Returns the last modified time for the file, in a Unix timestamp on success, or false on failure.
 	 */
-	public function getMTime (): int|bool {}
+	public function getMTime (): int {}
 
 	/**
 	 * Gets the inode change time
 	 * @link http://www.php.net/manual/en/splfileinfo.getctime.php
-	 * @return int|bool The last change time, in a Unix timestamp on success, or false on failure.
+	 * @return int|false The last change time, in a Unix timestamp on success, or false on failure.
 	 */
-	public function getCTime (): int|bool {}
+	public function getCTime (): int {}
 
 	/**
 	 * Gets file type
 	 * @link http://www.php.net/manual/en/splfileinfo.gettype.php
-	 * @return string|bool A string representing the type of the entry.
+	 * @return string|false A string representing the type of the entry.
 	 * May be one of file, link,
 	 * dir, block, fifo,
 	 * char, socket, or unknown, or false on failure.
 	 */
-	public function getType (): string|bool {}
+	public function getType (): string|int {}
 
 	/**
 	 * Tells if the entry is writable
@@ -4203,16 +4205,16 @@ class DirectoryIterator extends SplFileInfo implements Stringable, SeekableItera
 	/**
 	 * Gets the target of a link
 	 * @link http://www.php.net/manual/en/splfileinfo.getlinktarget.php
-	 * @return string|bool Returns the target of the filesystem link on success, or false on failure.
+	 * @return string|false Returns the target of the filesystem link on success, or false on failure.
 	 */
-	public function getLinkTarget (): string|bool {}
+	public function getLinkTarget (): string|int {}
 
 	/**
 	 * Gets absolute path to file
 	 * @link http://www.php.net/manual/en/splfileinfo.getrealpath.php
-	 * @return string|bool Returns the path to the file, or false if the file does not exist.
+	 * @return string|false Returns the path to the file, or false if the file does not exist.
 	 */
-	public function getRealPath (): string|bool {}
+	public function getRealPath (): string|int {}
 
 	/**
 	 * Gets an SplFileInfo object for the file
@@ -4238,7 +4240,7 @@ class DirectoryIterator extends SplFileInfo implements Stringable, SeekableItera
 	 * @param resource|null $context [optional] 
 	 * @return SplFileObject The opened file as an SplFileObject object.
 	 */
-	public function openFile (string $mode = "r", bool $useIncludePath = false, ?resource $context = null): SplFileObject {}
+	public function openFile (string $mode = '"r"', bool $useIncludePath = false, $context = null): SplFileObject {}
 
 	/**
 	 * Sets the class used with SplFileInfo::openFile
@@ -4246,7 +4248,7 @@ class DirectoryIterator extends SplFileInfo implements Stringable, SeekableItera
 	 * @param string $class [optional] 
 	 * @return void No value is returned.
 	 */
-	public function setFileClass (string $class = SplFileObject::class): void {}
+	public function setFileClass (string $class = 'SplFileObject::class'): void {}
 
 	/**
 	 * Sets the class used with SplFileInfo::getFileInfo and SplFileInfo::getPathInfo
@@ -4254,10 +4256,16 @@ class DirectoryIterator extends SplFileInfo implements Stringable, SeekableItera
 	 * @param string $class [optional] 
 	 * @return void No value is returned.
 	 */
-	public function setInfoClass (string $class = SplFileInfo::class): void {}
+	public function setInfoClass (string $class = 'SplFileInfo::class'): void {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __debugInfo () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	final public function _bad_state_ex () {}
 
 }
@@ -4314,7 +4322,7 @@ class FilesystemIterator extends DirectoryIterator implements Iterator, Traversa
 	 * @param int $flags [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $directory, int $flags = FilesystemIterator::KEY_AS_PATHNAME | FilesystemIterator::CURRENT_AS_FILEINFO | FilesystemIterator::SKIP_DOTS): string {}
+	public function __construct (string $directory, int $flags = 'FilesystemIterator::KEY_AS_PATHNAME | FilesystemIterator::CURRENT_AS_FILEINFO | FilesystemIterator::SKIP_DOTS'): string {}
 
 	/**
 	 * Rewinds back to the beginning
@@ -4375,7 +4383,7 @@ class FilesystemIterator extends DirectoryIterator implements Iterator, Traversa
 	 * @param string $suffix [optional] 
 	 * @return string The base name of the current DirectoryIterator item.
 	 */
-	public function getBasename (string $suffix = ""): string {}
+	public function getBasename (string $suffix = '""'): string {}
 
 	/**
 	 * Determine if current DirectoryIterator item is '.' or '..'
@@ -4431,68 +4439,68 @@ class FilesystemIterator extends DirectoryIterator implements Iterator, Traversa
 	/**
 	 * Gets file permissions
 	 * @link http://www.php.net/manual/en/splfileinfo.getperms.php
-	 * @return int|bool Returns the file permissions on success, or false on failure.
+	 * @return int|false Returns the file permissions on success, or false on failure.
 	 */
-	public function getPerms (): int|bool {}
+	public function getPerms (): int {}
 
 	/**
 	 * Gets the inode for the file
 	 * @link http://www.php.net/manual/en/splfileinfo.getinode.php
-	 * @return int|bool Returns the inode number for the filesystem object on success, or false on failure.
+	 * @return int|false Returns the inode number for the filesystem object on success, or false on failure.
 	 */
-	public function getInode (): int|bool {}
+	public function getInode (): int {}
 
 	/**
 	 * Gets file size
 	 * @link http://www.php.net/manual/en/splfileinfo.getsize.php
-	 * @return int|bool The filesize in bytes on success, or false on failure.
+	 * @return int|false The filesize in bytes on success, or false on failure.
 	 */
-	public function getSize (): int|bool {}
+	public function getSize (): int {}
 
 	/**
 	 * Gets the owner of the file
 	 * @link http://www.php.net/manual/en/splfileinfo.getowner.php
-	 * @return int|bool The owner id in numerical format on success, or false on failure.
+	 * @return int|false The owner id in numerical format on success, or false on failure.
 	 */
-	public function getOwner (): int|bool {}
+	public function getOwner (): int {}
 
 	/**
 	 * Gets the file group
 	 * @link http://www.php.net/manual/en/splfileinfo.getgroup.php
-	 * @return int|bool The group id in numerical format on success, or false on failure.
+	 * @return int|false The group id in numerical format on success, or false on failure.
 	 */
-	public function getGroup (): int|bool {}
+	public function getGroup (): int {}
 
 	/**
 	 * Gets last access time of the file
 	 * @link http://www.php.net/manual/en/splfileinfo.getatime.php
-	 * @return int|bool Returns the time the file was last accessed on success, or false on failure.
+	 * @return int|false Returns the time the file was last accessed on success, or false on failure.
 	 */
-	public function getATime (): int|bool {}
+	public function getATime (): int {}
 
 	/**
 	 * Gets the last modified time
 	 * @link http://www.php.net/manual/en/splfileinfo.getmtime.php
-	 * @return int|bool Returns the last modified time for the file, in a Unix timestamp on success, or false on failure.
+	 * @return int|false Returns the last modified time for the file, in a Unix timestamp on success, or false on failure.
 	 */
-	public function getMTime (): int|bool {}
+	public function getMTime (): int {}
 
 	/**
 	 * Gets the inode change time
 	 * @link http://www.php.net/manual/en/splfileinfo.getctime.php
-	 * @return int|bool The last change time, in a Unix timestamp on success, or false on failure.
+	 * @return int|false The last change time, in a Unix timestamp on success, or false on failure.
 	 */
-	public function getCTime (): int|bool {}
+	public function getCTime (): int {}
 
 	/**
 	 * Gets file type
 	 * @link http://www.php.net/manual/en/splfileinfo.gettype.php
-	 * @return string|bool A string representing the type of the entry.
+	 * @return string|false A string representing the type of the entry.
 	 * May be one of file, link,
 	 * dir, block, fifo,
 	 * char, socket, or unknown, or false on failure.
 	 */
-	public function getType (): string|bool {}
+	public function getType (): string|int {}
 
 	/**
 	 * Tells if the entry is writable
@@ -4539,16 +4547,16 @@ class FilesystemIterator extends DirectoryIterator implements Iterator, Traversa
 	/**
 	 * Gets the target of a link
 	 * @link http://www.php.net/manual/en/splfileinfo.getlinktarget.php
-	 * @return string|bool Returns the target of the filesystem link on success, or false on failure.
+	 * @return string|false Returns the target of the filesystem link on success, or false on failure.
 	 */
-	public function getLinkTarget (): string|bool {}
+	public function getLinkTarget (): string|int {}
 
 	/**
 	 * Gets absolute path to file
 	 * @link http://www.php.net/manual/en/splfileinfo.getrealpath.php
-	 * @return string|bool Returns the path to the file, or false if the file does not exist.
+	 * @return string|false Returns the path to the file, or false if the file does not exist.
 	 */
-	public function getRealPath (): string|bool {}
+	public function getRealPath (): string|int {}
 
 	/**
 	 * Gets an SplFileInfo object for the file
@@ -4574,7 +4582,7 @@ class FilesystemIterator extends DirectoryIterator implements Iterator, Traversa
 	 * @param resource|null $context [optional] 
 	 * @return SplFileObject The opened file as an SplFileObject object.
 	 */
-	public function openFile (string $mode = "r", bool $useIncludePath = false, ?resource $context = null): SplFileObject {}
+	public function openFile (string $mode = '"r"', bool $useIncludePath = false, $context = null): SplFileObject {}
 
 	/**
 	 * Sets the class used with SplFileInfo::openFile
@@ -4582,7 +4590,7 @@ class FilesystemIterator extends DirectoryIterator implements Iterator, Traversa
 	 * @param string $class [optional] 
 	 * @return void No value is returned.
 	 */
-	public function setFileClass (string $class = SplFileObject::class): void {}
+	public function setFileClass (string $class = 'SplFileObject::class'): void {}
 
 	/**
 	 * Sets the class used with SplFileInfo::getFileInfo and SplFileInfo::getPathInfo
@@ -4590,10 +4598,16 @@ class FilesystemIterator extends DirectoryIterator implements Iterator, Traversa
 	 * @param string $class [optional] 
 	 * @return void No value is returned.
 	 */
-	public function setInfoClass (string $class = SplFileInfo::class): void {}
+	public function setInfoClass (string $class = 'SplFileInfo::class'): void {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __debugInfo () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	final public function _bad_state_ex () {}
 
 }
@@ -4625,7 +4639,7 @@ class RecursiveDirectoryIterator extends FilesystemIterator implements Stringabl
 	 * @param int $flags [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $directory, int $flags = FilesystemIterator::KEY_AS_PATHNAME | FilesystemIterator::CURRENT_AS_FILEINFO): string {}
+	public function __construct (string $directory, int $flags = 'FilesystemIterator::KEY_AS_PATHNAME | FilesystemIterator::CURRENT_AS_FILEINFO'): string {}
 
 	/**
 	 * Returns whether current entry is a directory and not '.' or '..'
@@ -4717,7 +4731,7 @@ class RecursiveDirectoryIterator extends FilesystemIterator implements Stringabl
 	 * @param string $suffix [optional] 
 	 * @return string The base name of the current DirectoryIterator item.
 	 */
-	public function getBasename (string $suffix = ""): string {}
+	public function getBasename (string $suffix = '""'): string {}
 
 	/**
 	 * Determine if current DirectoryIterator item is '.' or '..'
@@ -4773,68 +4787,68 @@ class RecursiveDirectoryIterator extends FilesystemIterator implements Stringabl
 	/**
 	 * Gets file permissions
 	 * @link http://www.php.net/manual/en/splfileinfo.getperms.php
-	 * @return int|bool Returns the file permissions on success, or false on failure.
+	 * @return int|false Returns the file permissions on success, or false on failure.
 	 */
-	public function getPerms (): int|bool {}
+	public function getPerms (): int {}
 
 	/**
 	 * Gets the inode for the file
 	 * @link http://www.php.net/manual/en/splfileinfo.getinode.php
-	 * @return int|bool Returns the inode number for the filesystem object on success, or false on failure.
+	 * @return int|false Returns the inode number for the filesystem object on success, or false on failure.
 	 */
-	public function getInode (): int|bool {}
+	public function getInode (): int {}
 
 	/**
 	 * Gets file size
 	 * @link http://www.php.net/manual/en/splfileinfo.getsize.php
-	 * @return int|bool The filesize in bytes on success, or false on failure.
+	 * @return int|false The filesize in bytes on success, or false on failure.
 	 */
-	public function getSize (): int|bool {}
+	public function getSize (): int {}
 
 	/**
 	 * Gets the owner of the file
 	 * @link http://www.php.net/manual/en/splfileinfo.getowner.php
-	 * @return int|bool The owner id in numerical format on success, or false on failure.
+	 * @return int|false The owner id in numerical format on success, or false on failure.
 	 */
-	public function getOwner (): int|bool {}
+	public function getOwner (): int {}
 
 	/**
 	 * Gets the file group
 	 * @link http://www.php.net/manual/en/splfileinfo.getgroup.php
-	 * @return int|bool The group id in numerical format on success, or false on failure.
+	 * @return int|false The group id in numerical format on success, or false on failure.
 	 */
-	public function getGroup (): int|bool {}
+	public function getGroup (): int {}
 
 	/**
 	 * Gets last access time of the file
 	 * @link http://www.php.net/manual/en/splfileinfo.getatime.php
-	 * @return int|bool Returns the time the file was last accessed on success, or false on failure.
+	 * @return int|false Returns the time the file was last accessed on success, or false on failure.
 	 */
-	public function getATime (): int|bool {}
+	public function getATime (): int {}
 
 	/**
 	 * Gets the last modified time
 	 * @link http://www.php.net/manual/en/splfileinfo.getmtime.php
-	 * @return int|bool Returns the last modified time for the file, in a Unix timestamp on success, or false on failure.
+	 * @return int|false Returns the last modified time for the file, in a Unix timestamp on success, or false on failure.
 	 */
-	public function getMTime (): int|bool {}
+	public function getMTime (): int {}
 
 	/**
 	 * Gets the inode change time
 	 * @link http://www.php.net/manual/en/splfileinfo.getctime.php
-	 * @return int|bool The last change time, in a Unix timestamp on success, or false on failure.
+	 * @return int|false The last change time, in a Unix timestamp on success, or false on failure.
 	 */
-	public function getCTime (): int|bool {}
+	public function getCTime (): int {}
 
 	/**
 	 * Gets file type
 	 * @link http://www.php.net/manual/en/splfileinfo.gettype.php
-	 * @return string|bool A string representing the type of the entry.
+	 * @return string|false A string representing the type of the entry.
 	 * May be one of file, link,
 	 * dir, block, fifo,
 	 * char, socket, or unknown, or false on failure.
 	 */
-	public function getType (): string|bool {}
+	public function getType (): string|int {}
 
 	/**
 	 * Tells if the entry is writable
@@ -4881,16 +4895,16 @@ class RecursiveDirectoryIterator extends FilesystemIterator implements Stringabl
 	/**
 	 * Gets the target of a link
 	 * @link http://www.php.net/manual/en/splfileinfo.getlinktarget.php
-	 * @return string|bool Returns the target of the filesystem link on success, or false on failure.
+	 * @return string|false Returns the target of the filesystem link on success, or false on failure.
 	 */
-	public function getLinkTarget (): string|bool {}
+	public function getLinkTarget (): string|int {}
 
 	/**
 	 * Gets absolute path to file
 	 * @link http://www.php.net/manual/en/splfileinfo.getrealpath.php
-	 * @return string|bool Returns the path to the file, or false if the file does not exist.
+	 * @return string|false Returns the path to the file, or false if the file does not exist.
 	 */
-	public function getRealPath (): string|bool {}
+	public function getRealPath (): string|int {}
 
 	/**
 	 * Gets an SplFileInfo object for the file
@@ -4916,7 +4930,7 @@ class RecursiveDirectoryIterator extends FilesystemIterator implements Stringabl
 	 * @param resource|null $context [optional] 
 	 * @return SplFileObject The opened file as an SplFileObject object.
 	 */
-	public function openFile (string $mode = "r", bool $useIncludePath = false, ?resource $context = null): SplFileObject {}
+	public function openFile (string $mode = '"r"', bool $useIncludePath = false, $context = null): SplFileObject {}
 
 	/**
 	 * Sets the class used with SplFileInfo::openFile
@@ -4924,7 +4938,7 @@ class RecursiveDirectoryIterator extends FilesystemIterator implements Stringabl
 	 * @param string $class [optional] 
 	 * @return void No value is returned.
 	 */
-	public function setFileClass (string $class = SplFileObject::class): void {}
+	public function setFileClass (string $class = 'SplFileObject::class'): void {}
 
 	/**
 	 * Sets the class used with SplFileInfo::getFileInfo and SplFileInfo::getPathInfo
@@ -4932,10 +4946,16 @@ class RecursiveDirectoryIterator extends FilesystemIterator implements Stringabl
 	 * @param string $class [optional] 
 	 * @return void No value is returned.
 	 */
-	public function setInfoClass (string $class = SplFileInfo::class): void {}
+	public function setInfoClass (string $class = 'SplFileInfo::class'): void {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __debugInfo () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	final public function _bad_state_ex () {}
 
 }
@@ -4967,7 +4987,7 @@ class GlobIterator extends FilesystemIterator implements Stringable, SeekableIte
 	 * @param int $flags [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $pattern, int $flags = FilesystemIterator::KEY_AS_PATHNAME | FilesystemIterator::CURRENT_AS_FILEINFO): string {}
+	public function __construct (string $pattern, int $flags = 'FilesystemIterator::KEY_AS_PATHNAME | FilesystemIterator::CURRENT_AS_FILEINFO'): string {}
 
 	/**
 	 * Get the number of directories and files
@@ -5036,7 +5056,7 @@ class GlobIterator extends FilesystemIterator implements Stringable, SeekableIte
 	 * @param string $suffix [optional] 
 	 * @return string The base name of the current DirectoryIterator item.
 	 */
-	public function getBasename (string $suffix = ""): string {}
+	public function getBasename (string $suffix = '""'): string {}
 
 	/**
 	 * Determine if current DirectoryIterator item is '.' or '..'
@@ -5092,68 +5112,68 @@ class GlobIterator extends FilesystemIterator implements Stringable, SeekableIte
 	/**
 	 * Gets file permissions
 	 * @link http://www.php.net/manual/en/splfileinfo.getperms.php
-	 * @return int|bool Returns the file permissions on success, or false on failure.
+	 * @return int|false Returns the file permissions on success, or false on failure.
 	 */
-	public function getPerms (): int|bool {}
+	public function getPerms (): int {}
 
 	/**
 	 * Gets the inode for the file
 	 * @link http://www.php.net/manual/en/splfileinfo.getinode.php
-	 * @return int|bool Returns the inode number for the filesystem object on success, or false on failure.
+	 * @return int|false Returns the inode number for the filesystem object on success, or false on failure.
 	 */
-	public function getInode (): int|bool {}
+	public function getInode (): int {}
 
 	/**
 	 * Gets file size
 	 * @link http://www.php.net/manual/en/splfileinfo.getsize.php
-	 * @return int|bool The filesize in bytes on success, or false on failure.
+	 * @return int|false The filesize in bytes on success, or false on failure.
 	 */
-	public function getSize (): int|bool {}
+	public function getSize (): int {}
 
 	/**
 	 * Gets the owner of the file
 	 * @link http://www.php.net/manual/en/splfileinfo.getowner.php
-	 * @return int|bool The owner id in numerical format on success, or false on failure.
+	 * @return int|false The owner id in numerical format on success, or false on failure.
 	 */
-	public function getOwner (): int|bool {}
+	public function getOwner (): int {}
 
 	/**
 	 * Gets the file group
 	 * @link http://www.php.net/manual/en/splfileinfo.getgroup.php
-	 * @return int|bool The group id in numerical format on success, or false on failure.
+	 * @return int|false The group id in numerical format on success, or false on failure.
 	 */
-	public function getGroup (): int|bool {}
+	public function getGroup (): int {}
 
 	/**
 	 * Gets last access time of the file
 	 * @link http://www.php.net/manual/en/splfileinfo.getatime.php
-	 * @return int|bool Returns the time the file was last accessed on success, or false on failure.
+	 * @return int|false Returns the time the file was last accessed on success, or false on failure.
 	 */
-	public function getATime (): int|bool {}
+	public function getATime (): int {}
 
 	/**
 	 * Gets the last modified time
 	 * @link http://www.php.net/manual/en/splfileinfo.getmtime.php
-	 * @return int|bool Returns the last modified time for the file, in a Unix timestamp on success, or false on failure.
+	 * @return int|false Returns the last modified time for the file, in a Unix timestamp on success, or false on failure.
 	 */
-	public function getMTime (): int|bool {}
+	public function getMTime (): int {}
 
 	/**
 	 * Gets the inode change time
 	 * @link http://www.php.net/manual/en/splfileinfo.getctime.php
-	 * @return int|bool The last change time, in a Unix timestamp on success, or false on failure.
+	 * @return int|false The last change time, in a Unix timestamp on success, or false on failure.
 	 */
-	public function getCTime (): int|bool {}
+	public function getCTime (): int {}
 
 	/**
 	 * Gets file type
 	 * @link http://www.php.net/manual/en/splfileinfo.gettype.php
-	 * @return string|bool A string representing the type of the entry.
+	 * @return string|false A string representing the type of the entry.
 	 * May be one of file, link,
 	 * dir, block, fifo,
 	 * char, socket, or unknown, or false on failure.
 	 */
-	public function getType (): string|bool {}
+	public function getType (): string|int {}
 
 	/**
 	 * Tells if the entry is writable
@@ -5200,16 +5220,16 @@ class GlobIterator extends FilesystemIterator implements Stringable, SeekableIte
 	/**
 	 * Gets the target of a link
 	 * @link http://www.php.net/manual/en/splfileinfo.getlinktarget.php
-	 * @return string|bool Returns the target of the filesystem link on success, or false on failure.
+	 * @return string|false Returns the target of the filesystem link on success, or false on failure.
 	 */
-	public function getLinkTarget (): string|bool {}
+	public function getLinkTarget (): string|int {}
 
 	/**
 	 * Gets absolute path to file
 	 * @link http://www.php.net/manual/en/splfileinfo.getrealpath.php
-	 * @return string|bool Returns the path to the file, or false if the file does not exist.
+	 * @return string|false Returns the path to the file, or false if the file does not exist.
 	 */
-	public function getRealPath (): string|bool {}
+	public function getRealPath (): string|int {}
 
 	/**
 	 * Gets an SplFileInfo object for the file
@@ -5235,7 +5255,7 @@ class GlobIterator extends FilesystemIterator implements Stringable, SeekableIte
 	 * @param resource|null $context [optional] 
 	 * @return SplFileObject The opened file as an SplFileObject object.
 	 */
-	public function openFile (string $mode = "r", bool $useIncludePath = false, ?resource $context = null): SplFileObject {}
+	public function openFile (string $mode = '"r"', bool $useIncludePath = false, $context = null): SplFileObject {}
 
 	/**
 	 * Sets the class used with SplFileInfo::openFile
@@ -5243,7 +5263,7 @@ class GlobIterator extends FilesystemIterator implements Stringable, SeekableIte
 	 * @param string $class [optional] 
 	 * @return void No value is returned.
 	 */
-	public function setFileClass (string $class = SplFileObject::class): void {}
+	public function setFileClass (string $class = 'SplFileObject::class'): void {}
 
 	/**
 	 * Sets the class used with SplFileInfo::getFileInfo and SplFileInfo::getPathInfo
@@ -5251,10 +5271,16 @@ class GlobIterator extends FilesystemIterator implements Stringable, SeekableIte
 	 * @param string $class [optional] 
 	 * @return void No value is returned.
 	 */
-	public function setInfoClass (string $class = SplFileInfo::class): void {}
+	public function setInfoClass (string $class = 'SplFileInfo::class'): void {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __debugInfo () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	final public function _bad_state_ex () {}
 
 }
@@ -5287,7 +5313,7 @@ class SplFileObject extends SplFileInfo implements Stringable, RecursiveIterator
 	 * @param resource|null $context [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $filename, string $mode = "r", bool $useIncludePath = false, ?resource $context = null): string {}
+	public function __construct (string $filename, string $mode = '"r"', bool $useIncludePath = false, $context = null): string {}
 
 	/**
 	 * Rewind the file to the first line
@@ -5321,9 +5347,9 @@ class SplFileObject extends SplFileInfo implements Stringable, RecursiveIterator
 	 * Read from file
 	 * @link http://www.php.net/manual/en/splfileobject.fread.php
 	 * @param int $length The number of bytes to read.
-	 * @return string|bool Returns the string read from the file or false on failure.
+	 * @return string|false Returns the string read from the file or false on failure.
 	 */
-	public function fread (int $length): string|bool {}
+	public function fread (int $length): string|int {}
 
 	/**
 	 * Gets line from file and parse as CSV fields
@@ -5331,12 +5357,12 @@ class SplFileObject extends SplFileInfo implements Stringable, RecursiveIterator
 	 * @param string $separator [optional] 
 	 * @param string $enclosure [optional] 
 	 * @param string $escape [optional] 
-	 * @return array|bool Returns an indexed array containing the fields read, or false on error.
+	 * @return array|false Returns an indexed array containing the fields read, or false on error.
 	 * <p>A blank line in a CSV file will be returned as an array
 	 * comprising a single null field unless using SplFileObject::SKIP_EMPTY | SplFileObject::DROP_NEW_LINE, 
 	 * in which case empty lines are skipped.</p>
 	 */
-	public function fgetcsv (string $separator = ",", string $enclosure = "\"", string $escape = "\\"): array|bool {}
+	public function fgetcsv (string $separator = '","', string $enclosure = '"\\""', string $escape = '"\\\\"'): array|int {}
 
 	/**
 	 * Write a field array as a CSV line
@@ -5351,12 +5377,12 @@ class SplFileObject extends SplFileInfo implements Stringable, RecursiveIterator
 	 * An empty string ("") disables the proprietary escape mechanism.
 	 * @param string $eol [optional] The optional eol parameter sets
 	 * a custom End of Line sequence.
-	 * @return int|bool Returns the length of the written string or false on failure.
+	 * @return int|false Returns the length of the written string or false on failure.
 	 * <p>Returns false, and does not write the CSV line to the file, if the
 	 * separator or enclosure
 	 * parameter is not a single character.</p>
 	 */
-	public function fputcsv (array $fields, string $separator = ",", string $enclosure = "\"", string $escape = "\\", string $eol = "\n"): int|bool {}
+	public function fputcsv (array $fields, string $separator = '","', string $enclosure = '"\\""', string $escape = '"\\\\"', string $eol = '"\\n"'): int {}
 
 	/**
 	 * Set the delimiter, enclosure and escape character for CSV
@@ -5366,7 +5392,7 @@ class SplFileObject extends SplFileInfo implements Stringable, RecursiveIterator
 	 * @param string $escape [optional] 
 	 * @return void No value is returned.
 	 */
-	public function setCsvControl (string $separator = ",", string $enclosure = "\"", string $escape = "\\"): void {}
+	public function setCsvControl (string $separator = '","', string $enclosure = '"\\""', string $escape = '"\\\\"'): void {}
 
 	/**
 	 * Get the delimiter, enclosure and escape character for CSV
@@ -5394,9 +5420,9 @@ class SplFileObject extends SplFileInfo implements Stringable, RecursiveIterator
 	/**
 	 * Return current file position
 	 * @link http://www.php.net/manual/en/splfileobject.ftell.php
-	 * @return int|bool Returns the position of the file pointer as an integer, or false on error.
+	 * @return int|false Returns the position of the file pointer as an integer, or false on error.
 	 */
-	public function ftell (): int|bool {}
+	public function ftell (): int {}
 
 	/**
 	 * Seek to a position
@@ -5411,9 +5437,9 @@ class SplFileObject extends SplFileInfo implements Stringable, RecursiveIterator
 	/**
 	 * Gets character from file
 	 * @link http://www.php.net/manual/en/splfileobject.fgetc.php
-	 * @return string|bool Returns a string containing a single character read from the file or false on EOF.
+	 * @return string|false Returns a string containing a single character read from the file or false on EOF.
 	 */
-	public function fgetc (): string|bool {}
+	public function fgetc (): string|int {}
 
 	/**
 	 * Output all remaining data on a file pointer
@@ -5440,9 +5466,9 @@ class SplFileObject extends SplFileInfo implements Stringable, RecursiveIterator
 	 * @link http://www.php.net/manual/en/splfileobject.fwrite.php
 	 * @param string $data 
 	 * @param int $length [optional] 
-	 * @return int|bool Returns the number of bytes written, or false on error.
+	 * @return int|false Returns the number of bytes written, or false on error.
 	 */
-	public function fwrite (string $data, int $length = null): int|bool {}
+	public function fwrite (string $data, int $length = null): int {}
 
 	/**
 	 * Gets information about the file
@@ -5463,10 +5489,10 @@ class SplFileObject extends SplFileInfo implements Stringable, RecursiveIterator
 	/**
 	 * Retrieve current line of file
 	 * @link http://www.php.net/manual/en/splfileobject.current.php
-	 * @return string|array|bool Retrieves the current line of the file. If the SplFileObject::READ_CSV flag is set, this method returns an array containing the current line parsed as CSV data.
+	 * @return string|array|false Retrieves the current line of the file. If the SplFileObject::READ_CSV flag is set, this method returns an array containing the current line parsed as CSV data.
 	 * If the end of the file is reached, false is returned.
 	 */
-	public function current (): string|array|bool {}
+	public function current (): string|array|int {}
 
 	/**
 	 * Get line number
@@ -5516,9 +5542,9 @@ class SplFileObject extends SplFileInfo implements Stringable, RecursiveIterator
 	/**
 	 * SplFileObject does not have children
 	 * @link http://www.php.net/manual/en/splfileobject.haschildren.php
-	 * @return bool Returns false
+	 * @return false Returns false
 	 */
-	public function hasChildren (): bool {}
+	public function hasChildren (): int {}
 
 	/**
 	 * No purpose
@@ -5535,8 +5561,14 @@ class SplFileObject extends SplFileInfo implements Stringable, RecursiveIterator
 	 */
 	public function seek (int $line): void {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getCurrentLine () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __toString (): string {}
 
 	/**
@@ -5567,7 +5599,7 @@ class SplFileObject extends SplFileInfo implements Stringable, RecursiveIterator
 	 * @param string $suffix [optional] 
 	 * @return string Returns the base name without path information.
 	 */
-	public function getBasename (string $suffix = ""): string {}
+	public function getBasename (string $suffix = '""'): string {}
 
 	/**
 	 * Gets the path to the file
@@ -5579,68 +5611,68 @@ class SplFileObject extends SplFileInfo implements Stringable, RecursiveIterator
 	/**
 	 * Gets file permissions
 	 * @link http://www.php.net/manual/en/splfileinfo.getperms.php
-	 * @return int|bool Returns the file permissions on success, or false on failure.
+	 * @return int|false Returns the file permissions on success, or false on failure.
 	 */
-	public function getPerms (): int|bool {}
+	public function getPerms (): int {}
 
 	/**
 	 * Gets the inode for the file
 	 * @link http://www.php.net/manual/en/splfileinfo.getinode.php
-	 * @return int|bool Returns the inode number for the filesystem object on success, or false on failure.
+	 * @return int|false Returns the inode number for the filesystem object on success, or false on failure.
 	 */
-	public function getInode (): int|bool {}
+	public function getInode (): int {}
 
 	/**
 	 * Gets file size
 	 * @link http://www.php.net/manual/en/splfileinfo.getsize.php
-	 * @return int|bool The filesize in bytes on success, or false on failure.
+	 * @return int|false The filesize in bytes on success, or false on failure.
 	 */
-	public function getSize (): int|bool {}
+	public function getSize (): int {}
 
 	/**
 	 * Gets the owner of the file
 	 * @link http://www.php.net/manual/en/splfileinfo.getowner.php
-	 * @return int|bool The owner id in numerical format on success, or false on failure.
+	 * @return int|false The owner id in numerical format on success, or false on failure.
 	 */
-	public function getOwner (): int|bool {}
+	public function getOwner (): int {}
 
 	/**
 	 * Gets the file group
 	 * @link http://www.php.net/manual/en/splfileinfo.getgroup.php
-	 * @return int|bool The group id in numerical format on success, or false on failure.
+	 * @return int|false The group id in numerical format on success, or false on failure.
 	 */
-	public function getGroup (): int|bool {}
+	public function getGroup (): int {}
 
 	/**
 	 * Gets last access time of the file
 	 * @link http://www.php.net/manual/en/splfileinfo.getatime.php
-	 * @return int|bool Returns the time the file was last accessed on success, or false on failure.
+	 * @return int|false Returns the time the file was last accessed on success, or false on failure.
 	 */
-	public function getATime (): int|bool {}
+	public function getATime (): int {}
 
 	/**
 	 * Gets the last modified time
 	 * @link http://www.php.net/manual/en/splfileinfo.getmtime.php
-	 * @return int|bool Returns the last modified time for the file, in a Unix timestamp on success, or false on failure.
+	 * @return int|false Returns the last modified time for the file, in a Unix timestamp on success, or false on failure.
 	 */
-	public function getMTime (): int|bool {}
+	public function getMTime (): int {}
 
 	/**
 	 * Gets the inode change time
 	 * @link http://www.php.net/manual/en/splfileinfo.getctime.php
-	 * @return int|bool The last change time, in a Unix timestamp on success, or false on failure.
+	 * @return int|false The last change time, in a Unix timestamp on success, or false on failure.
 	 */
-	public function getCTime (): int|bool {}
+	public function getCTime (): int {}
 
 	/**
 	 * Gets file type
 	 * @link http://www.php.net/manual/en/splfileinfo.gettype.php
-	 * @return string|bool A string representing the type of the entry.
+	 * @return string|false A string representing the type of the entry.
 	 * May be one of file, link,
 	 * dir, block, fifo,
 	 * char, socket, or unknown, or false on failure.
 	 */
-	public function getType (): string|bool {}
+	public function getType (): string|int {}
 
 	/**
 	 * Tells if the entry is writable
@@ -5687,16 +5719,16 @@ class SplFileObject extends SplFileInfo implements Stringable, RecursiveIterator
 	/**
 	 * Gets the target of a link
 	 * @link http://www.php.net/manual/en/splfileinfo.getlinktarget.php
-	 * @return string|bool Returns the target of the filesystem link on success, or false on failure.
+	 * @return string|false Returns the target of the filesystem link on success, or false on failure.
 	 */
-	public function getLinkTarget (): string|bool {}
+	public function getLinkTarget (): string|int {}
 
 	/**
 	 * Gets absolute path to file
 	 * @link http://www.php.net/manual/en/splfileinfo.getrealpath.php
-	 * @return string|bool Returns the path to the file, or false if the file does not exist.
+	 * @return string|false Returns the path to the file, or false if the file does not exist.
 	 */
-	public function getRealPath (): string|bool {}
+	public function getRealPath (): string|int {}
 
 	/**
 	 * Gets an SplFileInfo object for the file
@@ -5722,7 +5754,7 @@ class SplFileObject extends SplFileInfo implements Stringable, RecursiveIterator
 	 * @param resource|null $context [optional] 
 	 * @return SplFileObject The opened file as an SplFileObject object.
 	 */
-	public function openFile (string $mode = "r", bool $useIncludePath = false, ?resource $context = null): SplFileObject {}
+	public function openFile (string $mode = '"r"', bool $useIncludePath = false, $context = null): SplFileObject {}
 
 	/**
 	 * Sets the class used with SplFileInfo::openFile
@@ -5730,7 +5762,7 @@ class SplFileObject extends SplFileInfo implements Stringable, RecursiveIterator
 	 * @param string $class [optional] 
 	 * @return void No value is returned.
 	 */
-	public function setFileClass (string $class = SplFileObject::class): void {}
+	public function setFileClass (string $class = 'SplFileObject::class'): void {}
 
 	/**
 	 * Sets the class used with SplFileInfo::getFileInfo and SplFileInfo::getPathInfo
@@ -5738,10 +5770,16 @@ class SplFileObject extends SplFileInfo implements Stringable, RecursiveIterator
 	 * @param string $class [optional] 
 	 * @return void No value is returned.
 	 */
-	public function setInfoClass (string $class = SplFileInfo::class): void {}
+	public function setInfoClass (string $class = 'SplFileInfo::class'): void {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __debugInfo () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	final public function _bad_state_ex () {}
 
 }
@@ -5763,7 +5801,7 @@ class SplTempFileObject extends SplFileObject implements SeekableIterator, Itera
 	 * @param int $maxMemory [optional] 
 	 * @return int 
 	 */
-	public function __construct (int $maxMemory = 2 * 1024 * 1024): int {}
+	public function __construct (int $maxMemory = '2 * 1024 * 1024'): int {}
 
 	/**
 	 * Rewind the file to the first line
@@ -5797,9 +5835,9 @@ class SplTempFileObject extends SplFileObject implements SeekableIterator, Itera
 	 * Read from file
 	 * @link http://www.php.net/manual/en/splfileobject.fread.php
 	 * @param int $length The number of bytes to read.
-	 * @return string|bool Returns the string read from the file or false on failure.
+	 * @return string|false Returns the string read from the file or false on failure.
 	 */
-	public function fread (int $length): string|bool {}
+	public function fread (int $length): string|int {}
 
 	/**
 	 * Gets line from file and parse as CSV fields
@@ -5807,12 +5845,12 @@ class SplTempFileObject extends SplFileObject implements SeekableIterator, Itera
 	 * @param string $separator [optional] 
 	 * @param string $enclosure [optional] 
 	 * @param string $escape [optional] 
-	 * @return array|bool Returns an indexed array containing the fields read, or false on error.
+	 * @return array|false Returns an indexed array containing the fields read, or false on error.
 	 * <p>A blank line in a CSV file will be returned as an array
 	 * comprising a single null field unless using SplFileObject::SKIP_EMPTY | SplFileObject::DROP_NEW_LINE, 
 	 * in which case empty lines are skipped.</p>
 	 */
-	public function fgetcsv (string $separator = ",", string $enclosure = "\"", string $escape = "\\"): array|bool {}
+	public function fgetcsv (string $separator = '","', string $enclosure = '"\\""', string $escape = '"\\\\"'): array|int {}
 
 	/**
 	 * Write a field array as a CSV line
@@ -5827,12 +5865,12 @@ class SplTempFileObject extends SplFileObject implements SeekableIterator, Itera
 	 * An empty string ("") disables the proprietary escape mechanism.
 	 * @param string $eol [optional] The optional eol parameter sets
 	 * a custom End of Line sequence.
-	 * @return int|bool Returns the length of the written string or false on failure.
+	 * @return int|false Returns the length of the written string or false on failure.
 	 * <p>Returns false, and does not write the CSV line to the file, if the
 	 * separator or enclosure
 	 * parameter is not a single character.</p>
 	 */
-	public function fputcsv (array $fields, string $separator = ",", string $enclosure = "\"", string $escape = "\\", string $eol = "\n"): int|bool {}
+	public function fputcsv (array $fields, string $separator = '","', string $enclosure = '"\\""', string $escape = '"\\\\"', string $eol = '"\\n"'): int {}
 
 	/**
 	 * Set the delimiter, enclosure and escape character for CSV
@@ -5842,7 +5880,7 @@ class SplTempFileObject extends SplFileObject implements SeekableIterator, Itera
 	 * @param string $escape [optional] 
 	 * @return void No value is returned.
 	 */
-	public function setCsvControl (string $separator = ",", string $enclosure = "\"", string $escape = "\\"): void {}
+	public function setCsvControl (string $separator = '","', string $enclosure = '"\\""', string $escape = '"\\\\"'): void {}
 
 	/**
 	 * Get the delimiter, enclosure and escape character for CSV
@@ -5870,9 +5908,9 @@ class SplTempFileObject extends SplFileObject implements SeekableIterator, Itera
 	/**
 	 * Return current file position
 	 * @link http://www.php.net/manual/en/splfileobject.ftell.php
-	 * @return int|bool Returns the position of the file pointer as an integer, or false on error.
+	 * @return int|false Returns the position of the file pointer as an integer, or false on error.
 	 */
-	public function ftell (): int|bool {}
+	public function ftell (): int {}
 
 	/**
 	 * Seek to a position
@@ -5887,9 +5925,9 @@ class SplTempFileObject extends SplFileObject implements SeekableIterator, Itera
 	/**
 	 * Gets character from file
 	 * @link http://www.php.net/manual/en/splfileobject.fgetc.php
-	 * @return string|bool Returns a string containing a single character read from the file or false on EOF.
+	 * @return string|false Returns a string containing a single character read from the file or false on EOF.
 	 */
-	public function fgetc (): string|bool {}
+	public function fgetc (): string|int {}
 
 	/**
 	 * Output all remaining data on a file pointer
@@ -5916,9 +5954,9 @@ class SplTempFileObject extends SplFileObject implements SeekableIterator, Itera
 	 * @link http://www.php.net/manual/en/splfileobject.fwrite.php
 	 * @param string $data 
 	 * @param int $length [optional] 
-	 * @return int|bool Returns the number of bytes written, or false on error.
+	 * @return int|false Returns the number of bytes written, or false on error.
 	 */
-	public function fwrite (string $data, int $length = null): int|bool {}
+	public function fwrite (string $data, int $length = null): int {}
 
 	/**
 	 * Gets information about the file
@@ -5939,10 +5977,10 @@ class SplTempFileObject extends SplFileObject implements SeekableIterator, Itera
 	/**
 	 * Retrieve current line of file
 	 * @link http://www.php.net/manual/en/splfileobject.current.php
-	 * @return string|array|bool Retrieves the current line of the file. If the SplFileObject::READ_CSV flag is set, this method returns an array containing the current line parsed as CSV data.
+	 * @return string|array|false Retrieves the current line of the file. If the SplFileObject::READ_CSV flag is set, this method returns an array containing the current line parsed as CSV data.
 	 * If the end of the file is reached, false is returned.
 	 */
-	public function current (): string|array|bool {}
+	public function current (): string|array|int {}
 
 	/**
 	 * Get line number
@@ -5992,9 +6030,9 @@ class SplTempFileObject extends SplFileObject implements SeekableIterator, Itera
 	/**
 	 * SplFileObject does not have children
 	 * @link http://www.php.net/manual/en/splfileobject.haschildren.php
-	 * @return bool Returns false
+	 * @return false Returns false
 	 */
-	public function hasChildren (): bool {}
+	public function hasChildren (): int {}
 
 	/**
 	 * No purpose
@@ -6011,8 +6049,14 @@ class SplTempFileObject extends SplFileObject implements SeekableIterator, Itera
 	 */
 	public function seek (int $line): void {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getCurrentLine () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __toString (): string {}
 
 	/**
@@ -6043,7 +6087,7 @@ class SplTempFileObject extends SplFileObject implements SeekableIterator, Itera
 	 * @param string $suffix [optional] 
 	 * @return string Returns the base name without path information.
 	 */
-	public function getBasename (string $suffix = ""): string {}
+	public function getBasename (string $suffix = '""'): string {}
 
 	/**
 	 * Gets the path to the file
@@ -6055,68 +6099,68 @@ class SplTempFileObject extends SplFileObject implements SeekableIterator, Itera
 	/**
 	 * Gets file permissions
 	 * @link http://www.php.net/manual/en/splfileinfo.getperms.php
-	 * @return int|bool Returns the file permissions on success, or false on failure.
+	 * @return int|false Returns the file permissions on success, or false on failure.
 	 */
-	public function getPerms (): int|bool {}
+	public function getPerms (): int {}
 
 	/**
 	 * Gets the inode for the file
 	 * @link http://www.php.net/manual/en/splfileinfo.getinode.php
-	 * @return int|bool Returns the inode number for the filesystem object on success, or false on failure.
+	 * @return int|false Returns the inode number for the filesystem object on success, or false on failure.
 	 */
-	public function getInode (): int|bool {}
+	public function getInode (): int {}
 
 	/**
 	 * Gets file size
 	 * @link http://www.php.net/manual/en/splfileinfo.getsize.php
-	 * @return int|bool The filesize in bytes on success, or false on failure.
+	 * @return int|false The filesize in bytes on success, or false on failure.
 	 */
-	public function getSize (): int|bool {}
+	public function getSize (): int {}
 
 	/**
 	 * Gets the owner of the file
 	 * @link http://www.php.net/manual/en/splfileinfo.getowner.php
-	 * @return int|bool The owner id in numerical format on success, or false on failure.
+	 * @return int|false The owner id in numerical format on success, or false on failure.
 	 */
-	public function getOwner (): int|bool {}
+	public function getOwner (): int {}
 
 	/**
 	 * Gets the file group
 	 * @link http://www.php.net/manual/en/splfileinfo.getgroup.php
-	 * @return int|bool The group id in numerical format on success, or false on failure.
+	 * @return int|false The group id in numerical format on success, or false on failure.
 	 */
-	public function getGroup (): int|bool {}
+	public function getGroup (): int {}
 
 	/**
 	 * Gets last access time of the file
 	 * @link http://www.php.net/manual/en/splfileinfo.getatime.php
-	 * @return int|bool Returns the time the file was last accessed on success, or false on failure.
+	 * @return int|false Returns the time the file was last accessed on success, or false on failure.
 	 */
-	public function getATime (): int|bool {}
+	public function getATime (): int {}
 
 	/**
 	 * Gets the last modified time
 	 * @link http://www.php.net/manual/en/splfileinfo.getmtime.php
-	 * @return int|bool Returns the last modified time for the file, in a Unix timestamp on success, or false on failure.
+	 * @return int|false Returns the last modified time for the file, in a Unix timestamp on success, or false on failure.
 	 */
-	public function getMTime (): int|bool {}
+	public function getMTime (): int {}
 
 	/**
 	 * Gets the inode change time
 	 * @link http://www.php.net/manual/en/splfileinfo.getctime.php
-	 * @return int|bool The last change time, in a Unix timestamp on success, or false on failure.
+	 * @return int|false The last change time, in a Unix timestamp on success, or false on failure.
 	 */
-	public function getCTime (): int|bool {}
+	public function getCTime (): int {}
 
 	/**
 	 * Gets file type
 	 * @link http://www.php.net/manual/en/splfileinfo.gettype.php
-	 * @return string|bool A string representing the type of the entry.
+	 * @return string|false A string representing the type of the entry.
 	 * May be one of file, link,
 	 * dir, block, fifo,
 	 * char, socket, or unknown, or false on failure.
 	 */
-	public function getType (): string|bool {}
+	public function getType (): string|int {}
 
 	/**
 	 * Tells if the entry is writable
@@ -6163,16 +6207,16 @@ class SplTempFileObject extends SplFileObject implements SeekableIterator, Itera
 	/**
 	 * Gets the target of a link
 	 * @link http://www.php.net/manual/en/splfileinfo.getlinktarget.php
-	 * @return string|bool Returns the target of the filesystem link on success, or false on failure.
+	 * @return string|false Returns the target of the filesystem link on success, or false on failure.
 	 */
-	public function getLinkTarget (): string|bool {}
+	public function getLinkTarget (): string|int {}
 
 	/**
 	 * Gets absolute path to file
 	 * @link http://www.php.net/manual/en/splfileinfo.getrealpath.php
-	 * @return string|bool Returns the path to the file, or false if the file does not exist.
+	 * @return string|false Returns the path to the file, or false if the file does not exist.
 	 */
-	public function getRealPath (): string|bool {}
+	public function getRealPath (): string|int {}
 
 	/**
 	 * Gets an SplFileInfo object for the file
@@ -6198,7 +6242,7 @@ class SplTempFileObject extends SplFileObject implements SeekableIterator, Itera
 	 * @param resource|null $context [optional] 
 	 * @return SplFileObject The opened file as an SplFileObject object.
 	 */
-	public function openFile (string $mode = "r", bool $useIncludePath = false, ?resource $context = null): SplFileObject {}
+	public function openFile (string $mode = '"r"', bool $useIncludePath = false, $context = null): SplFileObject {}
 
 	/**
 	 * Sets the class used with SplFileInfo::openFile
@@ -6206,7 +6250,7 @@ class SplTempFileObject extends SplFileObject implements SeekableIterator, Itera
 	 * @param string $class [optional] 
 	 * @return void No value is returned.
 	 */
-	public function setFileClass (string $class = SplFileObject::class): void {}
+	public function setFileClass (string $class = 'SplFileObject::class'): void {}
 
 	/**
 	 * Sets the class used with SplFileInfo::getFileInfo and SplFileInfo::getPathInfo
@@ -6214,10 +6258,16 @@ class SplTempFileObject extends SplFileObject implements SeekableIterator, Itera
 	 * @param string $class [optional] 
 	 * @return void No value is returned.
 	 */
-	public function setInfoClass (string $class = SplFileInfo::class): void {}
+	public function setInfoClass (string $class = 'SplFileInfo::class'): void {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __debugInfo () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	final public function _bad_state_ex () {}
 
 }
@@ -6294,6 +6344,9 @@ class SplDoublyLinkedList implements Iterator, Traversable, Countable, ArrayAcce
 	 */
 	public function bottom (): mixed {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __debugInfo () {}
 
 	/**
@@ -6415,9 +6468,13 @@ class SplDoublyLinkedList implements Iterator, Traversable, Countable, ArrayAcce
 	 */
 	public function serialize (): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __serialize () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array $data
 	 */
 	public function __unserialize (array $data) {}
@@ -6504,6 +6561,9 @@ class SplQueue extends SplDoublyLinkedList implements Serializable, ArrayAccess,
 	 */
 	public function bottom (): mixed {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __debugInfo () {}
 
 	/**
@@ -6625,9 +6685,13 @@ class SplQueue extends SplDoublyLinkedList implements Serializable, ArrayAccess,
 	 */
 	public function serialize (): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __serialize () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array $data
 	 */
 	public function __unserialize (array $data) {}
@@ -6699,6 +6763,9 @@ class SplStack extends SplDoublyLinkedList implements Serializable, ArrayAccess,
 	 */
 	public function bottom (): mixed {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __debugInfo () {}
 
 	/**
@@ -6820,9 +6887,13 @@ class SplStack extends SplDoublyLinkedList implements Serializable, ArrayAccess,
 	 */
 	public function serialize (): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __serialize () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array $data
 	 */
 	public function __unserialize (array $data) {}
@@ -6846,9 +6917,9 @@ abstract class SplHeap implements Iterator, Traversable, Countable {
 	 * Inserts an element in the heap by sifting it up
 	 * @link http://www.php.net/manual/en/splheap.insert.php
 	 * @param mixed $value 
-	 * @return bool Always returns true.
+	 * @return true Always returns true.
 	 */
-	public function insert (mixed $value): bool {}
+	public function insert (mixed $value): int {}
 
 	/**
 	 * Peeks at the node from the top of the heap
@@ -6921,7 +6992,7 @@ abstract class SplHeap implements Iterator, Traversable, Countable {
 	 * @return int Result of the comparison, positive integer if value1 is greater than value2, 0 if they are equal, negative integer otherwise.
 	 * <p>Having multiple elements with the same value in a Heap is not recommended. They will end up in an arbitrary relative position.</p>
 	 */
-	abstract protected function compare (mixed $value1, mixed $value2): int
+	abstract protected function compare (mixed $value1, mixed $value2): int;
 
 	/**
 	 * Tells if the heap is in a corrupted state
@@ -6930,6 +7001,9 @@ abstract class SplHeap implements Iterator, Traversable, Countable {
 	 */
 	public function isCorrupted (): bool {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __debugInfo () {}
 
 }
@@ -6961,9 +7035,9 @@ class SplMinHeap extends SplHeap implements Countable, Traversable, Iterator {
 	 * Inserts an element in the heap by sifting it up
 	 * @link http://www.php.net/manual/en/splheap.insert.php
 	 * @param mixed $value 
-	 * @return bool Always returns true.
+	 * @return true Always returns true.
 	 */
-	public function insert (mixed $value): bool {}
+	public function insert (mixed $value): int {}
 
 	/**
 	 * Peeks at the node from the top of the heap
@@ -7035,6 +7109,9 @@ class SplMinHeap extends SplHeap implements Countable, Traversable, Iterator {
 	 */
 	public function isCorrupted (): bool {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __debugInfo () {}
 
 }
@@ -7066,9 +7143,9 @@ class SplMaxHeap extends SplHeap implements Countable, Traversable, Iterator {
 	 * Inserts an element in the heap by sifting it up
 	 * @link http://www.php.net/manual/en/splheap.insert.php
 	 * @param mixed $value 
-	 * @return bool Always returns true.
+	 * @return true Always returns true.
 	 */
-	public function insert (mixed $value): bool {}
+	public function insert (mixed $value): int {}
 
 	/**
 	 * Peeks at the node from the top of the heap
@@ -7140,6 +7217,9 @@ class SplMaxHeap extends SplHeap implements Countable, Traversable, Iterator {
 	 */
 	public function isCorrupted (): bool {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __debugInfo () {}
 
 }
@@ -7266,6 +7346,9 @@ class SplPriorityQueue implements Iterator, Traversable, Countable {
 	 */
 	public function getExtractFlags (): int {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __debugInfo () {}
 
 }
@@ -7367,8 +7450,14 @@ class SplFixedArray implements IteratorAggregate, Traversable, ArrayAccess, Coun
 	 */
 	public function offsetUnset (int $index): void {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getIterator (): Iterator {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function jsonSerialize (): array {}
 
 }
@@ -7386,7 +7475,7 @@ interface SplObserver  {
 	 * @param SplSubject $subject 
 	 * @return void No value is returned.
 	 */
-	abstract public function update (SplSubject $subject): void
+	abstract public function update (SplSubject $subject): void;
 
 }
 
@@ -7403,7 +7492,7 @@ interface SplSubject  {
 	 * @param SplObserver $observer 
 	 * @return void No value is returned.
 	 */
-	abstract public function attach (SplObserver $observer): void
+	abstract public function attach (SplObserver $observer): void;
 
 	/**
 	 * Detach an observer
@@ -7411,14 +7500,14 @@ interface SplSubject  {
 	 * @param SplObserver $observer 
 	 * @return void No value is returned.
 	 */
-	abstract public function detach (SplObserver $observer): void
+	abstract public function detach (SplObserver $observer): void;
 
 	/**
 	 * Notify an observer
 	 * @link http://www.php.net/manual/en/splsubject.notify.php
 	 * @return void No value is returned.
 	 */
-	abstract public function notify (): void
+	abstract public function notify (): void;
 
 }
 
@@ -7594,13 +7683,20 @@ class SplObjectStorage implements Countable, Iterator, Traversable, Serializable
 	 */
 	public function getHash (object $object): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __serialize () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array $data
 	 */
 	public function __unserialize (array $data) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __debugInfo () {}
 
 }
@@ -7630,7 +7726,7 @@ class MultipleIterator implements Iterator, Traversable {
 	 * @param int $flags [optional] 
 	 * @return int 
 	 */
-	public function __construct (int $flags = MultipleIterator::MIT_NEED_ALL | MultipleIterator::MIT_KEYS_NUMERIC): int {}
+	public function __construct (int $flags = 'MultipleIterator::MIT_NEED_ALL | MultipleIterator::MIT_KEYS_NUMERIC'): int {}
 
 	/**
 	 * Gets the flag information
@@ -7715,6 +7811,9 @@ class MultipleIterator implements Iterator, Traversable {
 	 */
 	public function next (): void {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __debugInfo () {}
 
 }
@@ -7724,27 +7823,27 @@ class MultipleIterator implements Iterator, Traversable {
  * @link http://www.php.net/manual/en/function.class-implements.php
  * @param object|string $object_or_class 
  * @param bool $autoload [optional] 
- * @return array|bool An array on success, or false when the given class doesn't exist.
+ * @return array|false An array on success, or false when the given class doesn't exist.
  */
-function class_implements (object|string $object_or_class, bool $autoload = true): array|bool {}
+function class_implements (object|string $object_or_class, bool $autoload = true): array|int {}
 
 /**
  * Return the parent classes of the given class
  * @link http://www.php.net/manual/en/function.class-parents.php
  * @param object|string $object_or_class 
  * @param bool $autoload [optional] 
- * @return array|bool An array on success, or false when the given class doesn't exist.
+ * @return array|false An array on success, or false when the given class doesn't exist.
  */
-function class_parents (object|string $object_or_class, bool $autoload = true): array|bool {}
+function class_parents (object|string $object_or_class, bool $autoload = true): array|int {}
 
 /**
  * Return the traits used by the given class
  * @link http://www.php.net/manual/en/function.class-uses.php
  * @param object|string $object_or_class 
  * @param bool $autoload [optional] 
- * @return array|bool An array on success, or false when the given class doesn't exist.
+ * @return array|false An array on success, or false when the given class doesn't exist.
  */
-function class_uses (object|string $object_or_class, bool $autoload = true): array|bool {}
+function class_uses (object|string $object_or_class, bool $autoload = true): array|int {}
 
 /**
  * Default implementation for __autoload()

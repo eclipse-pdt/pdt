@@ -16,11 +16,11 @@ final class Shmop  {
  * @param string $mode 
  * @param int $permissions 
  * @param int $size 
- * @return Shmop|bool On success shmop_open will return a Shmop instance that you can
+ * @return Shmop|false On success shmop_open will return a Shmop instance that you can
  * use to access the shared memory segment you've created. false is
  * returned on failure.
  */
-function shmop_open (int $key, string $mode, int $permissions, int $size): Shmop|bool {}
+function shmop_open (int $key, string $mode, int $permissions, int $size): Shmop|int {}
 
 /**
  * Read data from shared memory block

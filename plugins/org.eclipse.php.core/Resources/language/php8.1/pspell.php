@@ -32,9 +32,9 @@ namespace {
  * @param string $jargon [optional] 
  * @param string $encoding [optional] 
  * @param int $mode [optional] 
- * @return PSpell\Dictionary|bool Returns an PSpell\Dictionary instance on success, or false on failure.
+ * @return PSpell\Dictionary|false Returns an PSpell\Dictionary instance on success, or false on failure.
  */
-function pspell_new (string $language, string $spelling = "", string $jargon = "", string $encoding = "", int $mode = null): PSpell\Dictionary|bool {}
+function pspell_new (string $language, string $spelling = '""', string $jargon = '""', string $encoding = '""', int $mode = null): PSpell\Dictionary|int {}
 
 /**
  * Load a new dictionary with personal wordlist
@@ -45,17 +45,17 @@ function pspell_new (string $language, string $spelling = "", string $jargon = "
  * @param string $jargon [optional] 
  * @param string $encoding [optional] 
  * @param int $mode [optional] 
- * @return PSpell\Dictionary|bool Returns an PSpell\Dictionary instance on success, or false on failure.
+ * @return PSpell\Dictionary|false Returns an PSpell\Dictionary instance on success, or false on failure.
  */
-function pspell_new_personal (string $filename, string $language, string $spelling = "", string $jargon = "", string $encoding = "", int $mode = null): PSpell\Dictionary|bool {}
+function pspell_new_personal (string $filename, string $language, string $spelling = '""', string $jargon = '""', string $encoding = '""', int $mode = null): PSpell\Dictionary|int {}
 
 /**
  * Load a new dictionary with settings based on a given config
  * @link http://www.php.net/manual/en/function.pspell-new-config.php
  * @param PSpell\Config $config 
- * @return PSpell\Dictionary|bool Returns an PSpell\Dictionary instance on success, or false on failure
+ * @return PSpell\Dictionary|false Returns an PSpell\Dictionary instance on success, or false on failure
  */
-function pspell_new_config (PSpell\Config $config): PSpell\Dictionary|bool {}
+function pspell_new_config (PSpell\Config $config): PSpell\Dictionary|int {}
 
 /**
  * Check a word
@@ -71,9 +71,9 @@ function pspell_check (PSpell\Dictionary $dictionary, string $word): bool {}
  * @link http://www.php.net/manual/en/function.pspell-suggest.php
  * @param PSpell\Dictionary $dictionary 
  * @param string $word 
- * @return array|bool Returns an array of possible spellings.
+ * @return array|false Returns an array of possible spellings.
  */
-function pspell_suggest (PSpell\Dictionary $dictionary, string $word): array|bool {}
+function pspell_suggest (PSpell\Dictionary $dictionary, string $word): array|int {}
 
 /**
  * Store a replacement pair for a word
@@ -128,7 +128,7 @@ function pspell_save_wordlist (PSpell\Dictionary $dictionary): bool {}
  * @param string $encoding [optional] 
  * @return PSpell\Config Returns an PSpell\Config instance.
  */
-function pspell_config_create (string $language, string $spelling = "", string $jargon = "", string $encoding = ""): PSpell\Config {}
+function pspell_config_create (string $language, string $spelling = '""', string $jargon = '""', string $encoding = '""'): PSpell\Config {}
 
 /**
  * Consider run-together words as valid compounds

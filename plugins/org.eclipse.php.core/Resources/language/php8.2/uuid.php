@@ -3,52 +3,62 @@
 // Start of uuid v.1.2.0
 
 /**
+ * {@inheritdoc}
  * @param int $uuid_type [optional]
  */
 function uuid_create (int $uuid_type = 0): string {}
 
 /**
+ * {@inheritdoc}
  * @param string $uuid
  */
 function uuid_is_valid (string $uuid): bool {}
 
 /**
+ * {@inheritdoc}
  * @param string $uuid1
  * @param string $uuid2
  */
 function uuid_compare (string $uuid1, string $uuid2): int {}
 
 /**
+ * {@inheritdoc}
  * @param string $uuid
  */
 function uuid_is_null (string $uuid): bool {}
 
 /**
+ * {@inheritdoc}
  * @param string $uuid
  */
 function uuid_type (string $uuid): int {}
 
 /**
+ * {@inheritdoc}
  * @param string $uuid
  */
 function uuid_variant (string $uuid): int {}
 
 /**
+ * {@inheritdoc}
  * @param string $uuid
  */
 function uuid_time (string $uuid): int {}
 
 /**
+ * {@inheritdoc}
  * @param string $uuid
  */
 function uuid_mac (string $uuid): string {}
 
 /**
+ * {@inheritdoc}
  * @param string $uuid
  */
 function uuid_parse (string $uuid): string {}
 
 /**
+ * {@inheritdoc}
  * @param string $uuid
  */
 function uuid_unparse (string $uuid): string {}

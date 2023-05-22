@@ -6,70 +6,87 @@ namespace {
 
 
 abstract class RdKafka  {
-	private $error_cb;
-	private $dr_cb;
 
-
+	/**
+	 * {@inheritdoc}
+	 */
 	private function __construct () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param string $broker_list
 	 */
 	public function addBrokers (string $broker_list) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param bool $all_topics
-	 * @param ?RdKafka\Topic $only_topic
+	 * @param RdKafka\Topic|null $only_topic
 	 * @param int $timeout_ms
 	 */
 	public function getMetadata (bool $all_topics, ?RdKafka\Topic $only_topic = null, int $timeout_ms) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getOutQLen () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param bool $all_topics
-	 * @param ?RdKafka\Topic $only_topic
+	 * @param RdKafka\Topic|null $only_topic
 	 * @param int $timeout_ms
 	 * @deprecated 
 	 */
 	public function metadata (bool $all_topics, ?RdKafka\Topic $only_topic = null, int $timeout_ms) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param int $level
 	 * @deprecated 
 	 */
 	public function setLogLevel (int $level) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param string $topic_name
-	 * @param ?RdKafka\TopicConf $topic_conf [optional]
+	 * @param RdKafka\TopicConf|null $topic_conf [optional]
 	 */
-	public function newTopic (string $topic_name, ?RdKafka\TopicConf $topic_conf = null) {}
+	public function newTopic (string $topic_name, ?RdKafka\TopicConf $topic_conf = NULL) {}
 
+	/**
+	 * {@inheritdoc}
+	 * @deprecated 
+	 */
 	public function outqLen () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param int $timeout_ms
 	 */
 	public function poll (int $timeout_ms) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param int $timeout_ms
 	 */
 	public function flush (int $timeout_ms) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param int $purge_flags
 	 */
 	public function purge (int $purge_flags) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param int $logger
 	 * @deprecated 
 	 */
 	public function setLogger (int $logger) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param string $topic
 	 * @param int $partition
 	 * @param int $low
@@ -79,17 +96,20 @@ abstract class RdKafka  {
 	public function queryWatermarkOffsets (string $topic, int $partition, int &$low, int &$high, int $timeout_ms) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array $topic_partitions
 	 * @param int $timeout_ms
 	 */
 	public function offsetsForTimes (array $topic_partitions, int $timeout_ms) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array $topic_partitions
 	 */
 	public function pausePartitions (array $topic_partitions) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array $topic_partitions
 	 */
 	public function resumePartitions (array $topic_partitions) {}
@@ -105,70 +125,91 @@ namespace RdKafka {
 class Consumer extends \RdKafka  {
 
 	/**
-	 * @param ?RdKafka\Conf $conf [optional]
+	 * {@inheritdoc}
+	 * @param \RdKafka\Conf|null $conf [optional]
 	 */
-	public function __construct (?RdKafka\Conf $conf = null) {}
+	public function __construct (?\RdKafka\Conf $conf = NULL) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function newQueue () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param string $broker_list
 	 */
 	public function addBrokers (string $broker_list) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param bool $all_topics
-	 * @param ?RdKafka\Topic $only_topic
+	 * @param \RdKafka\Topic|null $only_topic
 	 * @param int $timeout_ms
 	 */
-	public function getMetadata (bool $all_topics, ?RdKafka\Topic $only_topic = null, int $timeout_ms) {}
+	public function getMetadata (bool $all_topics, ?\RdKafka\Topic $only_topic = null, int $timeout_ms) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getOutQLen () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param bool $all_topics
-	 * @param ?RdKafka\Topic $only_topic
+	 * @param \RdKafka\Topic|null $only_topic
 	 * @param int $timeout_ms
 	 * @deprecated 
 	 */
-	public function metadata (bool $all_topics, ?RdKafka\Topic $only_topic = null, int $timeout_ms) {}
+	public function metadata (bool $all_topics, ?\RdKafka\Topic $only_topic = null, int $timeout_ms) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param int $level
 	 * @deprecated 
 	 */
 	public function setLogLevel (int $level) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param string $topic_name
-	 * @param ?RdKafka\TopicConf $topic_conf [optional]
+	 * @param \RdKafka\TopicConf|null $topic_conf [optional]
 	 */
-	public function newTopic (string $topic_name, ?RdKafka\TopicConf $topic_conf = null) {}
+	public function newTopic (string $topic_name, ?\RdKafka\TopicConf $topic_conf = NULL) {}
 
+	/**
+	 * {@inheritdoc}
+	 * @deprecated 
+	 */
 	public function outqLen () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param int $timeout_ms
 	 */
 	public function poll (int $timeout_ms) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param int $timeout_ms
 	 */
 	public function flush (int $timeout_ms) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param int $purge_flags
 	 */
 	public function purge (int $purge_flags) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param int $logger
 	 * @deprecated 
 	 */
 	public function setLogger (int $logger) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param string $topic
 	 * @param int $partition
 	 * @param int $low
@@ -178,17 +219,20 @@ class Consumer extends \RdKafka  {
 	public function queryWatermarkOffsets (string $topic, int $partition, int &$low, int &$high, int $timeout_ms) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array $topic_partitions
 	 * @param int $timeout_ms
 	 */
 	public function offsetsForTimes (array $topic_partitions, int $timeout_ms) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array $topic_partitions
 	 */
 	public function pausePartitions (array $topic_partitions) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array $topic_partitions
 	 */
 	public function resumePartitions (array $topic_partitions) {}
@@ -198,85 +242,109 @@ class Consumer extends \RdKafka  {
 class Producer extends \RdKafka  {
 
 	/**
-	 * @param ?RdKafka\Conf $conf [optional]
+	 * {@inheritdoc}
+	 * @param \RdKafka\Conf|null $conf [optional]
 	 */
-	public function __construct (?RdKafka\Conf $conf = null) {}
+	public function __construct (?\RdKafka\Conf $conf = NULL) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param int $timeout_ms
 	 */
 	public function initTransactions (int $timeout_ms) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function beginTransaction () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param int $timeout_ms
 	 */
 	public function commitTransaction (int $timeout_ms) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param int $timeout_ms
 	 */
 	public function abortTransaction (int $timeout_ms) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param string $broker_list
 	 */
 	public function addBrokers (string $broker_list) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param bool $all_topics
-	 * @param ?RdKafka\Topic $only_topic
+	 * @param \RdKafka\Topic|null $only_topic
 	 * @param int $timeout_ms
 	 */
-	public function getMetadata (bool $all_topics, ?RdKafka\Topic $only_topic = null, int $timeout_ms) {}
+	public function getMetadata (bool $all_topics, ?\RdKafka\Topic $only_topic = null, int $timeout_ms) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getOutQLen () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param bool $all_topics
-	 * @param ?RdKafka\Topic $only_topic
+	 * @param \RdKafka\Topic|null $only_topic
 	 * @param int $timeout_ms
 	 * @deprecated 
 	 */
-	public function metadata (bool $all_topics, ?RdKafka\Topic $only_topic = null, int $timeout_ms) {}
+	public function metadata (bool $all_topics, ?\RdKafka\Topic $only_topic = null, int $timeout_ms) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param int $level
 	 * @deprecated 
 	 */
 	public function setLogLevel (int $level) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param string $topic_name
-	 * @param ?RdKafka\TopicConf $topic_conf [optional]
+	 * @param \RdKafka\TopicConf|null $topic_conf [optional]
 	 */
-	public function newTopic (string $topic_name, ?RdKafka\TopicConf $topic_conf = null) {}
+	public function newTopic (string $topic_name, ?\RdKafka\TopicConf $topic_conf = NULL) {}
 
+	/**
+	 * {@inheritdoc}
+	 * @deprecated 
+	 */
 	public function outqLen () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param int $timeout_ms
 	 */
 	public function poll (int $timeout_ms) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param int $timeout_ms
 	 */
 	public function flush (int $timeout_ms) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param int $purge_flags
 	 */
 	public function purge (int $purge_flags) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param int $logger
 	 * @deprecated 
 	 */
 	public function setLogger (int $logger) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param string $topic
 	 * @param int $partition
 	 * @param int $low
@@ -286,17 +354,20 @@ class Producer extends \RdKafka  {
 	public function queryWatermarkOffsets (string $topic, int $partition, int &$low, int &$high, int $timeout_ms) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array $topic_partitions
 	 * @param int $timeout_ms
 	 */
 	public function offsetsForTimes (array $topic_partitions, int $timeout_ms) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array $topic_partitions
 	 */
 	public function pausePartitions (array $topic_partitions) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array $topic_partitions
 	 */
 	public function resumePartitions (array $topic_partitions) {}
@@ -304,22 +375,20 @@ class Producer extends \RdKafka  {
 }
 
 class Exception extends \Exception implements \Throwable, \Stringable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-
 
 	/**
 	 * Construct the exception
 	 * @link http://www.php.net/manual/en/exception.construct.php
 	 * @param string $message [optional] 
 	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
+	 * @param \Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -363,10 +432,10 @@ class Exception extends \Exception implements \Throwable, \Stringable {
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -386,53 +455,68 @@ class Exception extends \Exception implements \Throwable, \Stringable {
 
 class Conf  {
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __construct () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function dump () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param string $name
 	 * @param string $value
 	 */
 	public function set (string $name, string $value) {}
 
 	/**
-	 * @param RdKafka\TopicConf $topic_conf
+	 * {@inheritdoc}
+	 * @param \RdKafka\TopicConf $topic_conf
 	 * @deprecated 
 	 */
-	public function setDefaultTopicConf (RdKafka\TopicConf $topic_conf) {}
+	public function setDefaultTopicConf (\RdKafka\TopicConf $topic_conf) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param callable $callback
 	 */
 	public function setErrorCb (callable $callback) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param callable $callback
 	 */
 	public function setDrMsgCb (callable $callback) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param callable $callback
 	 */
 	public function setStatsCb (callable $callback) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param callable $callback
 	 */
 	public function setRebalanceCb (callable $callback) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param callable $callback
 	 */
 	public function setConsumeCb (callable $callback) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param callable $callback
 	 */
 	public function setOffsetCommitCb (callable $callback) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param callable $callback
 	 */
 	public function setLogCb (callable $callback) {}
@@ -441,17 +525,25 @@ class Conf  {
 
 class TopicConf  {
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __construct () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function dump () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param string $name
 	 * @param string $value
 	 */
 	public function set (string $name, string $value) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param int $partitioner
 	 */
 	public function setPartitioner (int $partitioner) {}
@@ -459,17 +551,9 @@ class TopicConf  {
 }
 
 class KafkaErrorException extends \RdKafka\Exception implements \Stringable, \Throwable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-	private $error_string;
-	private $isFatal;
-	private $isRetriable;
-	private $transactionRequiresAbort;
-
 
 	/**
+	 * {@inheritdoc}
 	 * @param string $message
 	 * @param int $code
 	 * @param string $error_string
@@ -479,14 +563,29 @@ class KafkaErrorException extends \RdKafka\Exception implements \Stringable, \Th
 	 */
 	public function __construct (string $message, int $code, string $error_string, bool $isFatal, bool $isRetriable, bool $transactionRequiresAbort) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getErrorString () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function isFatal () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function isRetriable () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function transactionRequiresAbort () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -530,10 +629,10 @@ class KafkaErrorException extends \RdKafka\Exception implements \Stringable, \Th
 	/**
 	 * Returns previous Throwable
 	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
+	 * @return \Throwable|null Returns the previous Throwable if available 
 	 * or null otherwise.
 	 */
-	final public function getPrevious (): ?Throwable {}
+	final public function getPrevious (): ?\Throwable {}
 
 	/**
 	 * Gets the stack trace as a string
@@ -552,74 +651,93 @@ class KafkaErrorException extends \RdKafka\Exception implements \Stringable, \Th
 }
 
 class KafkaConsumer  {
-	private $error_cb;
-	private $rebalance_cb;
-	private $dr_msg_cb;
-
 
 	/**
-	 * @param RdKafka\Conf $conf
+	 * {@inheritdoc}
+	 * @param \RdKafka\Conf $conf
 	 */
-	public function __construct (RdKafka\Conf $conf) {}
+	public function __construct (\RdKafka\Conf $conf) {}
 
 	/**
-	 * @param ?array $topic_partitions [optional]
+	 * {@inheritdoc}
+	 * @param array|null $topic_partitions [optional]
 	 */
-	public function assign (?array $topic_partitions = null) {}
+	public function assign (?array $topic_partitions = NULL) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getAssignment () {}
 
 	/**
-	 * @param RdKafka\Message|array|null $message_or_offsets [optional]
+	 * {@inheritdoc}
+	 * @param \RdKafka\Message|array|null $message_or_offsets [optional]
 	 */
-	public function commit (RdKafka\Message|array|null $message_or_offsets = null) {}
+	public function commit (\RdKafka\Message|array|null $message_or_offsets = NULL) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function close () {}
 
 	/**
-	 * @param RdKafka\Message|array|null $message_or_offsets [optional]
+	 * {@inheritdoc}
+	 * @param \RdKafka\Message|array|null $message_or_offsets [optional]
 	 */
-	public function commitAsync (RdKafka\Message|array|null $message_or_offsets = null) {}
+	public function commitAsync (\RdKafka\Message|array|null $message_or_offsets = NULL) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param int $timeout_ms
 	 */
 	public function consume (int $timeout_ms) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array $topics
 	 */
 	public function subscribe (array $topics) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getSubscription () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function unsubscribe () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param bool $all_topics
-	 * @param ?RdKafka\Topic $only_topic
+	 * @param \RdKafka\Topic|null $only_topic
 	 * @param int $timeout_ms
 	 */
-	public function getMetadata (bool $all_topics, ?RdKafka\Topic $only_topic = null, int $timeout_ms) {}
+	public function getMetadata (bool $all_topics, ?\RdKafka\Topic $only_topic = null, int $timeout_ms) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param string $topic_name
-	 * @param ?RdKafka\TopicConf $topic_conf [optional]
+	 * @param \RdKafka\TopicConf|null $topic_conf [optional]
 	 */
-	public function newTopic (string $topic_name, ?RdKafka\TopicConf $topic_conf = null) {}
+	public function newTopic (string $topic_name, ?\RdKafka\TopicConf $topic_conf = NULL) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array $topic_partitions
 	 * @param int $timeout_ms
 	 */
 	public function getCommittedOffsets (array $topic_partitions, int $timeout_ms) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array $topic_partitions
 	 */
 	public function getOffsetPositions (array $topic_partitions) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param string $topic
 	 * @param int $partition
 	 * @param int $low
@@ -629,17 +747,20 @@ class KafkaConsumer  {
 	public function queryWatermarkOffsets (string $topic, int $partition, int &$low, int &$high, int $timeout_ms) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array $topic_partitions
 	 * @param int $timeout_ms
 	 */
 	public function offsetsForTimes (array $topic_partitions, int $timeout_ms) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array $topic_partitions
 	 */
 	public function pausePartitions (array $topic_partitions) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param array $topic_partitions
 	 */
 	public function resumePartitions (array $topic_partitions) {}
@@ -647,30 +768,54 @@ class KafkaConsumer  {
 }
 
 class Message  {
-	public $err;
-	public $topic_name;
-	public $timestamp;
-	public $partition;
-	public $payload;
-	public $len;
-	public $key;
-	public $offset;
-	public $headers;
-	public $opaque;
 
+	public int $err;
 
+	public ?string $topic_name;
+
+	public ?int $timestamp;
+
+	public int $partition;
+
+	public ?string $payload;
+
+	public ?int $len;
+
+	public ?string $key;
+
+	public int $offset;
+
+	public array $headers;
+
+	public ?string $opaque;
+
+	/**
+	 * {@inheritdoc}
+	 */
 	public function errstr () {}
 
 }
 
 class Metadata  {
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getOrigBrokerId () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getOrigBrokerName () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getBrokers () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getTopics () {}
 
 }
@@ -683,50 +828,101 @@ namespace RdKafka\Metadata {
 
 class Topic  {
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getTopic () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getErr () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getPartitions () {}
 
 }
 
 class Broker  {
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getId () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getHost () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getPort () {}
 
 }
 
 class Partition  {
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getId () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getErr () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getLeader () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getReplicas () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getIsrs () {}
 
 }
 
 class Collection implements \Countable, \Iterator, \Traversable {
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function count () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function current () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function key () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function next () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function rewind () {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function valid () {}
 
 }
@@ -740,42 +936,62 @@ namespace RdKafka {
 class TopicPartition  {
 
 	/**
+	 * {@inheritdoc}
 	 * @param string $topic
 	 * @param int $partition
 	 * @param int $offset [optional]
 	 */
 	public function __construct (string $topic, int $partition, int $offset = 0) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getTopic () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param string $topic_name
 	 */
 	public function setTopic (string $topic_name) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getPartition () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param int $partition
 	 */
 	public function setPartition (int $partition) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getOffset () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param int $offset
 	 */
 	public function setOffset (int $offset) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getErr () {}
 
 }
 
 class Queue  {
 
+	/**
+	 * {@inheritdoc}
+	 */
 	private function __construct () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param int $timeout_ms
 	 */
 	public function consume (int $timeout_ms) {}
@@ -784,22 +1000,30 @@ class Queue  {
 
 abstract class Topic  {
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getName () {}
 
 }
 
 class ConsumerTopic extends \RdKafka\Topic  {
 
+	/**
+	 * {@inheritdoc}
+	 */
 	private function __construct () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param int $partition
 	 * @param int $offset
-	 * @param RdKafka\Queue $queue
+	 * @param \RdKafka\Queue $queue
 	 */
-	public function consumeQueueStart (int $partition, int $offset, RdKafka\Queue $queue) {}
+	public function consumeQueueStart (int $partition, int $offset, \RdKafka\Queue $queue) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param int $partition
 	 * @param int $timeout_ms
 	 * @param callable $callback
@@ -807,23 +1031,27 @@ class ConsumerTopic extends \RdKafka\Topic  {
 	public function consumeCallback (int $partition, int $timeout_ms, callable $callback) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param int $partition
 	 * @param int $offset
 	 */
 	public function consumeStart (int $partition, int $offset) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param int $partition
 	 */
 	public function consumeStop (int $partition) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param int $partition
 	 * @param int $timeout_ms
 	 */
 	public function consume (int $partition, int $timeout_ms) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param int $partition
 	 * @param int $timeout_ms
 	 * @param int $batch_size
@@ -831,53 +1059,72 @@ class ConsumerTopic extends \RdKafka\Topic  {
 	public function consumeBatch (int $partition, int $timeout_ms, int $batch_size) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param int $partition
 	 * @param int $offset
 	 */
 	public function offsetStore (int $partition, int $offset) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getName () {}
 
 }
 
 class KafkaConsumerTopic extends \RdKafka\Topic  {
 
+	/**
+	 * {@inheritdoc}
+	 */
 	private function __construct () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param int $partition
 	 * @param int $offset
 	 */
 	public function offsetStore (int $partition, int $offset) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getName () {}
 
 }
 
 class ProducerTopic extends \RdKafka\Topic  {
 
+	/**
+	 * {@inheritdoc}
+	 */
 	private function __construct () {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param int $partition
 	 * @param int $msgflags
-	 * @param ?string $payload [optional]
-	 * @param ?string $key [optional]
-	 * @param ?string $msg_opaque [optional]
+	 * @param string|null $payload [optional]
+	 * @param string|null $key [optional]
+	 * @param string|null $msg_opaque [optional]
 	 */
-	public function produce (int $partition, int $msgflags, ?string $payload = null, ?string $key = null, ?string $msg_opaque = null) {}
+	public function produce (int $partition, int $msgflags, ?string $payload = NULL, ?string $key = NULL, ?string $msg_opaque = NULL) {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param int $partition
 	 * @param int $msgflags
-	 * @param ?string $payload [optional]
-	 * @param ?string $key [optional]
-	 * @param ?array $headers [optional]
-	 * @param ?int $timestamp_ms [optional]
-	 * @param ?string $msg_opaque [optional]
+	 * @param string|null $payload [optional]
+	 * @param string|null $key [optional]
+	 * @param array|null $headers [optional]
+	 * @param int|null $timestamp_ms [optional]
+	 * @param string|null $msg_opaque [optional]
 	 */
-	public function producev (int $partition, int $msgflags, ?string $payload = null, ?string $key = null, ?array $headers = null, ?int $timestamp_ms = null, ?string $msg_opaque = null) {}
+	public function producev (int $partition, int $msgflags, ?string $payload = NULL, ?string $key = NULL, ?array $headers = NULL, ?int $timestamp_ms = NULL, ?string $msg_opaque = NULL) {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getName () {}
 
 }
@@ -888,31 +1135,45 @@ class ProducerTopic extends \RdKafka\Topic  {
 
 namespace {
 
+/**
+ * {@inheritdoc}
+ */
 function rd_kafka_get_err_descs (): array {}
 
 /**
+ * {@inheritdoc}
  * @param int $err
  */
 function rd_kafka_err2name (int $err): ?string {}
 
 /**
+ * {@inheritdoc}
  * @param int $err
  */
 function rd_kafka_err2str (int $err): ?string {}
 
 /**
+ * {@inheritdoc}
  * @param int $errnox
  * @deprecated 
  */
 function rd_kafka_errno2err (int $errnox): int {}
 
+/**
+ * {@inheritdoc}
+ * @deprecated 
+ */
 function rd_kafka_errno (): int {}
 
 /**
+ * {@inheritdoc}
  * @param int $cnt
  */
 function rd_kafka_offset_tail (int $cnt): int {}
 
+/**
+ * {@inheritdoc}
+ */
 function rd_kafka_thread_cnt (): int {}
 
 define ('RD_KAFKA_CONSUMER', 1);

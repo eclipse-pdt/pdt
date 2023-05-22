@@ -24,16 +24,16 @@ function xml_parser_create (?string $encoding = null): XMLParser {}
  * @param string $separator [optional] 
  * @return XMLParser Returns a new XMLParser instance.
  */
-function xml_parser_create_ns (?string $encoding = null, string $separator = ":"): XMLParser {}
+function xml_parser_create_ns (?string $encoding = null, string $separator = '":"'): XMLParser {}
 
 /**
  * Use XML Parser within an object
  * @link http://www.php.net/manual/en/function.xml-set-object.php
  * @param XMLParser $parser 
  * @param object $object 
- * @return bool Always returns true.
+ * @return true Always returns true.
  */
-function xml_set_object (XMLParser $parser, object $object): bool {}
+function xml_set_object (XMLParser $parser, object $object): int {}
 
 /**
  * Set up start and end element handlers
@@ -41,81 +41,81 @@ function xml_set_object (XMLParser $parser, object $object): bool {}
  * @param XMLParser $parser 
  * @param callable $start_handler 
  * @param callable $end_handler 
- * @return bool Always returns true.
+ * @return true Always returns true.
  */
-function xml_set_element_handler (XMLParser $parser, callable $start_handler, callable $end_handler): bool {}
+function xml_set_element_handler (XMLParser $parser, callable $start_handler, callable $end_handler): int {}
 
 /**
  * Set up character data handler
  * @link http://www.php.net/manual/en/function.xml-set-character-data-handler.php
  * @param XMLParser $parser 
  * @param callable $handler 
- * @return bool Always returns true.
+ * @return true Always returns true.
  */
-function xml_set_character_data_handler (XMLParser $parser, callable $handler): bool {}
+function xml_set_character_data_handler (XMLParser $parser, callable $handler): int {}
 
 /**
  * Set up processing instruction (PI) handler
  * @link http://www.php.net/manual/en/function.xml-set-processing-instruction-handler.php
  * @param XMLParser $parser 
  * @param callable $handler 
- * @return bool Always returns true.
+ * @return true Always returns true.
  */
-function xml_set_processing_instruction_handler (XMLParser $parser, callable $handler): bool {}
+function xml_set_processing_instruction_handler (XMLParser $parser, callable $handler): int {}
 
 /**
  * Set up default handler
  * @link http://www.php.net/manual/en/function.xml-set-default-handler.php
  * @param XMLParser $parser 
  * @param callable $handler 
- * @return bool Always returns true.
+ * @return true Always returns true.
  */
-function xml_set_default_handler (XMLParser $parser, callable $handler): bool {}
+function xml_set_default_handler (XMLParser $parser, callable $handler): int {}
 
 /**
  * Set up unparsed entity declaration handler
  * @link http://www.php.net/manual/en/function.xml-set-unparsed-entity-decl-handler.php
  * @param XMLParser $parser 
  * @param callable $handler 
- * @return bool Always returns true.
+ * @return true Always returns true.
  */
-function xml_set_unparsed_entity_decl_handler (XMLParser $parser, callable $handler): bool {}
+function xml_set_unparsed_entity_decl_handler (XMLParser $parser, callable $handler): int {}
 
 /**
  * Set up notation declaration handler
  * @link http://www.php.net/manual/en/function.xml-set-notation-decl-handler.php
  * @param XMLParser $parser 
  * @param callable $handler 
- * @return bool Always returns true.
+ * @return true Always returns true.
  */
-function xml_set_notation_decl_handler (XMLParser $parser, callable $handler): bool {}
+function xml_set_notation_decl_handler (XMLParser $parser, callable $handler): int {}
 
 /**
  * Set up external entity reference handler
  * @link http://www.php.net/manual/en/function.xml-set-external-entity-ref-handler.php
  * @param XMLParser $parser 
  * @param callable $handler 
- * @return bool Always returns true.
+ * @return true Always returns true.
  */
-function xml_set_external_entity_ref_handler (XMLParser $parser, callable $handler): bool {}
+function xml_set_external_entity_ref_handler (XMLParser $parser, callable $handler): int {}
 
 /**
  * Set up start namespace declaration handler
  * @link http://www.php.net/manual/en/function.xml-set-start-namespace-decl-handler.php
  * @param XMLParser $parser 
  * @param callable $handler 
- * @return bool Always returns true.
+ * @return true Always returns true.
  */
-function xml_set_start_namespace_decl_handler (XMLParser $parser, callable $handler): bool {}
+function xml_set_start_namespace_decl_handler (XMLParser $parser, callable $handler): int {}
 
 /**
  * Set up end namespace declaration handler
  * @link http://www.php.net/manual/en/function.xml-set-end-namespace-decl-handler.php
  * @param XMLParser $parser 
  * @param callable $handler 
- * @return bool Always returns true.
+ * @return true Always returns true.
  */
-function xml_set_end_namespace_decl_handler (XMLParser $parser, callable $handler): bool {}
+function xml_set_end_namespace_decl_handler (XMLParser $parser, callable $handler): int {}
 
 /**
  * Start parsing an XML document

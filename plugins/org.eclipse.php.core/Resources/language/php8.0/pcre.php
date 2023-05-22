@@ -10,10 +10,10 @@
  * @param array $matches [optional] 
  * @param int $flags [optional] 
  * @param int $offset [optional] 
- * @return int|bool preg_match returns 1 if the pattern
+ * @return int|false preg_match returns 1 if the pattern
  * matches given subject, 0 if it does not, or false on failure.
  */
-function preg_match (string $pattern, string $subject, array &$matches = null, int $flags = null, int $offset = null): int|bool {}
+function preg_match (string $pattern, string $subject, array &$matches = null, int $flags = null, int $offset = null): int {}
 
 /**
  * Perform a global regular expression match
@@ -23,9 +23,9 @@ function preg_match (string $pattern, string $subject, array &$matches = null, i
  * @param array $matches [optional] 
  * @param int $flags [optional] 
  * @param int $offset [optional] 
- * @return int|bool Returns the number of full pattern matches (which might be zero), or false on failure.
+ * @return int|false Returns the number of full pattern matches (which might be zero), or false on failure.
  */
-function preg_match_all (string $pattern, string $subject, array &$matches = null, int $flags = null, int $offset = null): int|bool {}
+function preg_match_all (string $pattern, string $subject, array &$matches = null, int $flags = null, int $offset = null): int {}
 
 /**
  * Perform a regular expression search and replace
@@ -100,10 +100,10 @@ function preg_replace_callback_array (array $pattern, string|array $subject, int
  * @param string $subject 
  * @param int $limit [optional] 
  * @param int $flags [optional] 
- * @return array|bool Returns an array containing substrings of subject
+ * @return array|false Returns an array containing substrings of subject
  * split along boundaries matched by pattern, or false on failure.
  */
-function preg_split (string $pattern, string $subject, int $limit = -1, int $flags = null): array|bool {}
+function preg_split (string $pattern, string $subject, int $limit = -1, int $flags = null): array|int {}
 
 /**
  * Quote regular expression characters
@@ -120,10 +120,10 @@ function preg_quote (string $str, ?string $delimiter = null): string {}
  * @param string $pattern 
  * @param array $array 
  * @param int $flags [optional] 
- * @return array|bool Returns an array indexed using the keys from the
+ * @return array|false Returns an array indexed using the keys from the
  * array array, or false on failure.
  */
-function preg_grep (string $pattern, array $array, int $flags = null): array|bool {}
+function preg_grep (string $pattern, array $array, int $flags = null): array|int {}
 
 /**
  * Returns the error code of the last PCRE regex execution

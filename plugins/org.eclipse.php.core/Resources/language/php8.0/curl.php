@@ -31,10 +31,27 @@ final class CurlShareHandle  {
  * @link http://www.php.net/manual/en/class.curlfile.php
  */
 class CURLFile  {
-	public $name;
-	public $mime;
-	public $postname;
 
+	/**
+	 * Name of the file to be uploaded.
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.curlfile.php#curlfile.props.name
+	 */
+	public string $name;
+
+	/**
+	 * MIME type of the file (default is application/octet-stream).
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.curlfile.php#curlfile.props.mime
+	 */
+	public string $mime;
+
+	/**
+	 * The name of the file in the upload data (defaults to the name property).
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.curlfile.php#curlfile.props.postname
+	 */
+	public string $postname;
 
 	/**
 	 * Create a CURLFile object
@@ -97,9 +114,9 @@ function curl_close (CurlHandle $handle): void {}
  * Copy a cURL handle along with all of its preferences
  * @link http://www.php.net/manual/en/function.curl-copy-handle.php
  * @param CurlHandle $handle 
- * @return CurlHandle|bool Returns a new cURL handle, or false on failure.
+ * @return CurlHandle|false Returns a new cURL handle, or false on failure.
  */
-function curl_copy_handle (CurlHandle $handle): CurlHandle|bool {}
+function curl_copy_handle (CurlHandle $handle): CurlHandle|int {}
 
 /**
  * Return the last error number
@@ -125,9 +142,9 @@ function curl_error (CurlHandle $handle): string {}
  * @param CurlHandle $handle A cURL handle returned by
  * curl_init.
  * @param string $string The string to be encoded.
- * @return string|bool Returns escaped string or false on failure.
+ * @return string|false Returns escaped string or false on failure.
  */
-function curl_escape (CurlHandle $handle, string $string): string|bool {}
+function curl_escape (CurlHandle $handle, string $string): string|int {}
 
 /**
  * Decodes the given URL encoded string
@@ -135,9 +152,9 @@ function curl_escape (CurlHandle $handle, string $string): string|bool {}
  * @param CurlHandle $handle A cURL handle returned by
  * curl_init.
  * @param string $string The URL encoded string to be decoded.
- * @return string|bool Returns decoded string or false on failure.
+ * @return string|false Returns decoded string or false on failure.
  */
-function curl_unescape (CurlHandle $handle, string $string): string|bool {}
+function curl_unescape (CurlHandle $handle, string $string): string|int {}
 
 /**
  * Set an option for the cURL multi handle
@@ -350,9 +367,9 @@ function curl_getinfo (CurlHandle $handle, ?int $option = null): mixed {}
  * Initialize a cURL session
  * @link http://www.php.net/manual/en/function.curl-init.php
  * @param string|null $url [optional] 
- * @return CurlHandle|bool Returns a cURL handle on success, false on errors.
+ * @return CurlHandle|false Returns a cURL handle on success, false on errors.
  */
-function curl_init (?string $url = null): CurlHandle|bool {}
+function curl_init (?string $url = null): CurlHandle|int {}
 
 /**
  * Add a normal cURL handle to a cURL multi handle
@@ -406,7 +423,7 @@ function curl_multi_getcontent (CurlHandle $handle): ?string {}
  * @link http://www.php.net/manual/en/function.curl-multi-info-read.php
  * @param CurlMultiHandle $multi_handle 
  * @param int $queued_messages [optional] 
- * @return array|bool On success, returns an associative array for the message, false on failure.
+ * @return array|false On success, returns an associative array for the message, false on failure.
  * <p><table>
  * Contents of the returned array
  * <table>
@@ -431,7 +448,7 @@ function curl_multi_getcontent (CurlHandle $handle): ?string {}
  * </table>
  * </table></p>
  */
-function curl_multi_info_read (CurlMultiHandle $multi_handle, int &$queued_messages = null): array|bool {}
+function curl_multi_info_read (CurlMultiHandle $multi_handle, int &$queued_messages = null): array|int {}
 
 /**
  * Returns a new cURL multi handle
@@ -610,7 +627,7 @@ function curl_strerror (int $error_code): ?string {}
 /**
  * Gets cURL version information
  * @link http://www.php.net/manual/en/function.curl-version.php
- * @return array|bool Returns an associative array with the following elements: 
+ * @return array|false Returns an associative array with the following elements: 
  * <table>
  * <tr valign="top">
  * <td>Key</td>
@@ -653,7 +670,7 @@ function curl_strerror (int $error_code): ?string {}
  * </tr>
  * </table>
  */
-function curl_version (): array|bool {}
+function curl_version (): array|int {}
 
 
 /**

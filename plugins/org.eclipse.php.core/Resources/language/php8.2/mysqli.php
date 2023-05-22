@@ -7,12 +7,13 @@
  * @link http://www.php.net/manual/en/class.mysqli_sql_exception.php
  */
 final class mysqli_sql_exception extends RuntimeException implements Stringable, Throwable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-	protected $sqlstate;
 
+	/**
+	 * The sql state with the error.
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.mysqli_sql_exception.php#mysqli_sql_exception.props.sqlstate
+	 */
+	protected string $sqlstate;
 
 	/**
 	 * Returns the SQLSTATE error code
@@ -29,8 +30,11 @@ final class mysqli_sql_exception extends RuntimeException implements Stringable,
 	 * @param Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -102,11 +106,34 @@ final class mysqli_sql_exception extends RuntimeException implements Stringable,
  * @link http://www.php.net/manual/en/class.mysqli_driver.php
  */
 final class mysqli_driver  {
-	public $client_info;
-	public $client_version;
-	public $driver_version;
-	public $report_mode;
 
+	/**
+	 * The Client API header version
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.mysqli_driver.php#mysqli_driver.props.client_info
+	 */
+	public readonly string $client_info;
+
+	/**
+	 * The Client version
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.mysqli_driver.php#mysqli_driver.props.client_version
+	 */
+	public readonly int $client_version;
+
+	/**
+	 * The MySQLi Driver version
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.mysqli_driver.php#mysqli_driver.props.driver_version
+	 */
+	public readonly int $driver_version;
+
+	/**
+	 * Sets mysqli error reporting mode
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.mysqli_driver.php#mysqli_driver.props.report_mode
+	 */
+	public int $report_mode;
 }
 
 /**
@@ -114,25 +141,132 @@ final class mysqli_driver  {
  * @link http://www.php.net/manual/en/class.mysqli.php
  */
 class mysqli  {
-	public $affected_rows;
-	public $client_info;
-	public $client_version;
-	public $connect_errno;
-	public $connect_error;
-	public $errno;
-	public $error;
-	public $error_list;
-	public $field_count;
-	public $host_info;
-	public $info;
-	public $insert_id;
-	public $server_info;
-	public $server_version;
-	public $sqlstate;
-	public $protocol_version;
-	public $thread_id;
-	public $warning_count;
 
+	/**
+	 * Gets the number of affected rows in a previous MySQL operation
+	 * @var int|string
+	 * @link http://www.php.net/manual/en/class.mysqli.php#mysqli.props.affected_rows
+	 */
+	public int|string $affected_rows;
+
+	/**
+	 * Get MySQL client info
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.mysqli.php#mysqli.props.client_info
+	 */
+	public string $client_info;
+
+	/**
+	 * Returns the MySQL client version as an integer
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.mysqli.php#mysqli.props.client_version
+	 */
+	public int $client_version;
+
+	/**
+	 * Returns the error code from last connect call
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.mysqli.php#mysqli.props.connect_errno
+	 */
+	public int $connect_errno;
+
+	/**
+	 * Returns a description of the last connection error
+	 * @var string|null
+	 * @link http://www.php.net/manual/en/class.mysqli.php#mysqli.props.connect_error
+	 */
+	public ?string $connect_error;
+
+	/**
+	 * Returns the error code for the most recent function call
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.mysqli.php#mysqli.props.errno
+	 */
+	public int $errno;
+
+	/**
+	 * Returns a string description of the last error
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.mysqli.php#mysqli.props.error
+	 */
+	public string $error;
+
+	/**
+	 * Returns a list of errors from the last command executed
+	 * @var array
+	 * @link http://www.php.net/manual/en/class.mysqli.php#mysqli.props.error_list
+	 */
+	public array $error_list;
+
+	/**
+	 * Returns the number of columns for the most recent query
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.mysqli.php#mysqli.props.field_count
+	 */
+	public int $field_count;
+
+	/**
+	 * Returns a string representing the type of connection used
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.mysqli.php#mysqli.props.host_info
+	 */
+	public string $host_info;
+
+	/**
+	 * Retrieves information about the most recently executed query
+	 * @var string|null
+	 * @link http://www.php.net/manual/en/class.mysqli.php#mysqli.props.info
+	 */
+	public ?string $info;
+
+	/**
+	 * Returns the value generated for an AUTO_INCREMENT column by the last query
+	 * @var int|string
+	 * @link http://www.php.net/manual/en/class.mysqli.php#mysqli.props.insert_id
+	 */
+	public int|string $insert_id;
+
+	/**
+	 * Returns the version of the MySQL server
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.mysqli.php#mysqli.props.server_info
+	 */
+	public string $server_info;
+
+	/**
+	 * Returns the version of the MySQL server as an integer
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.mysqli.php#mysqli.props.server_version
+	 */
+	public int $server_version;
+
+	/**
+	 * Returns the SQLSTATE error from previous MySQL operation
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.mysqli.php#mysqli.props.sqlstate
+	 */
+	public string $sqlstate;
+
+	/**
+	 * Returns the version of the MySQL protocol used
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.mysqli.php#mysqli.props.protocol_version
+	 */
+	public int $protocol_version;
+
+	/**
+	 * Returns the thread ID for the current connection
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.mysqli.php#mysqli.props.thread_id
+	 */
+	public int $thread_id;
+
+	/**
+	 * Returns the number of warnings from the last query for the given link
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.mysqli.php#mysqli.props.warning_count
+	 */
+	public int $warning_count;
 
 	/**
 	 * Open a new connection to the MySQL server
@@ -421,6 +555,7 @@ class mysqli  {
 	public function reap_async_query (): mysqli_result|bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param string $string
 	 */
 	public function escape_string (string $string) {}
@@ -484,6 +619,7 @@ class mysqli  {
 	public function options (int $option, string|int $value): bool {}
 
 	/**
+	 * {@inheritdoc}
 	 * @param int $option
 	 * @param mixed $value
 	 */
@@ -566,10 +702,27 @@ class mysqli  {
  * @link http://www.php.net/manual/en/class.mysqli_warning.php
  */
 final class mysqli_warning  {
-	public $message;
-	public $sqlstate;
-	public $errno;
 
+	/**
+	 * Message string
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.mysqli_warning.php#mysqli_warning.props.message
+	 */
+	public string $message;
+
+	/**
+	 * SQL state
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.mysqli_warning.php#mysqli_warning.props.sqlstate
+	 */
+	public string $sqlstate;
+
+	/**
+	 * Error number
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.mysqli_warning.php#mysqli_warning.props.errno
+	 */
+	public int $errno;
 
 	/**
 	 * Private constructor to disallow direct instantiation
@@ -592,12 +745,43 @@ final class mysqli_warning  {
  * @link http://www.php.net/manual/en/class.mysqli_result.php
  */
 class mysqli_result implements IteratorAggregate, Traversable {
-	public $current_field;
-	public $field_count;
-	public $lengths;
-	public $num_rows;
-	public $type;
 
+	/**
+	 * Get current field offset of a result pointer
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.mysqli_result.php#mysqli_result.props.current_field
+	 */
+	public int $current_field;
+
+	/**
+	 * Gets the number of fields in the result set
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.mysqli_result.php#mysqli_result.props.field_count
+	 */
+	public int $field_count;
+
+	/**
+	 * Returns the lengths of the columns of the current row in the result set
+	 * @var array|null
+	 * @link http://www.php.net/manual/en/class.mysqli_result.php#mysqli_result.props.lengths
+	 */
+	public ?array $lengths;
+
+	/**
+	 * Gets the number of rows in the result set
+	 * @var int|string
+	 * @link http://www.php.net/manual/en/class.mysqli_result.php#mysqli_result.props.num_rows
+	 */
+	public int|string $num_rows;
+
+	/**
+	 * Stores whether the result is buffered or unbuffered as an int
+	 * (MYSQLI_STORE_RESULT or
+	 * MYSQLI_USE_RESULT, respectively).
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.mysqli_result.php#mysqli_result.props.type
+	 */
+	public int $type;
 
 	/**
 	 * Constructs a mysqli_result object
@@ -871,7 +1055,7 @@ class mysqli_result implements IteratorAggregate, Traversable {
 	 * represents the name of the result set's column, null if there
 	 * are no more rows in the result set, or false on failure.
 	 */
-	public function fetch_object (string $class = "stdClass", array $constructor_args = []): object|null|false {}
+	public function fetch_object (string $class = '"stdClass"', array $constructor_args = '[]'): object|null|false {}
 
 	/**
 	 * Fetch the next row of a result set as an enumerated array
@@ -921,17 +1105,78 @@ class mysqli_result implements IteratorAggregate, Traversable {
  * @link http://www.php.net/manual/en/class.mysqli_stmt.php
  */
 class mysqli_stmt  {
-	public $affected_rows;
-	public $insert_id;
-	public $num_rows;
-	public $param_count;
-	public $field_count;
-	public $errno;
-	public $error;
-	public $error_list;
-	public $sqlstate;
-	public $id;
 
+	/**
+	 * Returns the total number of rows changed, deleted, inserted, or
+	 * matched by the last statement executed
+	 * 
+	 * @var int|string
+	 * @link http://www.php.net/manual/en/class.mysqli_stmt.php#mysqli_stmt.props.affected_rows
+	 */
+	public int|string $affected_rows;
+
+	/**
+	 * Get the ID generated from the previous INSERT operation
+	 * @var int|string
+	 * @link http://www.php.net/manual/en/class.mysqli_stmt.php#mysqli_stmt.props.insert_id
+	 */
+	public int|string $insert_id;
+
+	/**
+	 * Returns the number of rows fetched from the server
+	 * @var int|string
+	 * @link http://www.php.net/manual/en/class.mysqli_stmt.php#mysqli_stmt.props.num_rows
+	 */
+	public int|string $num_rows;
+
+	/**
+	 * Returns the number of parameters for the given statement
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.mysqli_stmt.php#mysqli_stmt.props.param_count
+	 */
+	public int $param_count;
+
+	/**
+	 * Returns the number of columns in the given statement
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.mysqli_stmt.php#mysqli_stmt.props.field_count
+	 */
+	public int $field_count;
+
+	/**
+	 * Returns the error code for the most recent statement call
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.mysqli_stmt.php#mysqli_stmt.props.errno
+	 */
+	public int $errno;
+
+	/**
+	 * Returns a string description for last statement error
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.mysqli_stmt.php#mysqli_stmt.props.error
+	 */
+	public string $error;
+
+	/**
+	 * Returns a list of errors from the last statement executed
+	 * @var array
+	 * @link http://www.php.net/manual/en/class.mysqli_stmt.php#mysqli_stmt.props.error_list
+	 */
+	public array $error_list;
+
+	/**
+	 * Returns SQLSTATE error from previous statement operation
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.mysqli_stmt.php#mysqli_stmt.props.sqlstate
+	 */
+	public string $sqlstate;
+
+	/**
+	 * Stores the statement ID.
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.mysqli_stmt.php#mysqli_stmt.props.id
+	 */
+	public int $id;
 
 	/**
 	 * Constructs a new mysqli_stmt object
@@ -1265,10 +1510,11 @@ function mysqli_error_list (mysqli $mysql): array {}
 function mysqli_stmt_execute (mysqli_stmt $statement, ?array $params = null): bool {}
 
 /**
+ * {@inheritdoc}
  * @param mysqli_stmt $statement
- * @param ?array $params [optional]
+ * @param array|null $params [optional]
  */
-function mysqli_execute (mysqli_stmt $statement, ?array $params = null): bool {}
+function mysqli_execute (mysqli_stmt $statement, ?array $params = NULL): bool {}
 
 /**
  * Prepares, binds parameters, and executes SQL statement
@@ -1532,7 +1778,7 @@ function mysqli_fetch_assoc (mysqli_result $result): array|null|false {}
  * represents the name of the result set's column, null if there
  * are no more rows in the result set, or false on failure.
  */
-function mysqli_fetch_object (mysqli_result $result, string $class = "stdClass", array $constructor_args = []): object|null|false {}
+function mysqli_fetch_object (mysqli_result $result, string $class = '"stdClass"', array $constructor_args = '[]'): object|null|false {}
 
 /**
  * Fetch the next row of a result set as an enumerated array
@@ -1830,6 +2076,7 @@ function mysqli_num_rows (mysqli_result $result): int|string {}
 function mysqli_options (mysqli $mysql, int $option, string|int $value): bool {}
 
 /**
+ * {@inheritdoc}
  * @param mysqli $mysql
  * @param int $option
  * @param mixed $value
@@ -1913,6 +2160,7 @@ function mysqli_real_connect (mysqli $mysql, ?string $hostname = null, ?string $
 function mysqli_real_escape_string (mysqli $mysql, string $string): string {}
 
 /**
+ * {@inheritdoc}
  * @param mysqli $mysql
  * @param string $string
  */

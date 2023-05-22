@@ -9,9 +9,9 @@
  * @param int $port [optional] 
  * @param array $methods [optional] 
  * @param array $callbacks [optional] 
- * @return resource|bool Returns a resource on success, or false on error.
+ * @return resource|false Returns a resource on success, or false on error.
  */
-function ssh2_connect (string $host, int $port = 22, array $methods = null, array $callbacks = null): resource|bool {}
+function ssh2_connect (string $host, int $port = 22, array $methods = null, array $callbacks = null) {}
 
 /**
  * Close a connection to a remote SSH server
@@ -20,7 +20,7 @@ function ssh2_connect (string $host, int $port = 22, array $methods = null, arra
  * ssh2_connect.
  * @return bool Returns true on success or false on failure.
  */
-function ssh2_disconnect (resource $session): bool {}
+function ssh2_disconnect ($session): bool {}
 
 /**
  * Return list of negotiated methods
@@ -28,7 +28,7 @@ function ssh2_disconnect (resource $session): bool {}
  * @param resource $session 
  * @return array 
  */
-function ssh2_methods_negotiated (resource $session): array {}
+function ssh2_methods_negotiated ($session): array {}
 
 /**
  * Retrieve fingerprint of remote server
@@ -37,7 +37,7 @@ function ssh2_methods_negotiated (resource $session): array {}
  * @param int $flags [optional] 
  * @return string Returns the hostkey hash as a string.
  */
-function ssh2_fingerprint (resource $session, int $flags = SSH2_FINGERPRINT_MD5 | SSH2_FINGERPRINT_HEX): string {}
+function ssh2_fingerprint ($session, int $flags = 'SSH2_FINGERPRINT_MD5 | SSH2_FINGERPRINT_HEX'): string {}
 
 /**
  * Authenticate as "none"
@@ -47,7 +47,7 @@ function ssh2_fingerprint (resource $session, int $flags = SSH2_FINGERPRINT_MD5 
  * @return mixed Returns true if the server does accept "none" as an authentication
  * method, or an array of accepted authentication methods on failure.
  */
-function ssh2_auth_none (resource $session, string $username): mixed {}
+function ssh2_auth_none ($session, string $username): mixed {}
 
 /**
  * Authenticate over SSH using a plain password
@@ -57,7 +57,7 @@ function ssh2_auth_none (resource $session, string $username): mixed {}
  * @param string $password 
  * @return bool Returns true on success or false on failure.
  */
-function ssh2_auth_password (resource $session, string $username, string $password): bool {}
+function ssh2_auth_password ($session, string $username, string $password): bool {}
 
 /**
  * Authenticate using a public key
@@ -69,16 +69,17 @@ function ssh2_auth_password (resource $session, string $username, string $passwo
  * @param string $passphrase [optional] 
  * @return bool Returns true on success or false on failure.
  */
-function ssh2_auth_pubkey_file (resource $session, string $username, string $pubkeyfile, string $privkeyfile, string $passphrase = null): bool {}
+function ssh2_auth_pubkey_file ($session, string $username, string $pubkeyfile, string $privkeyfile, string $passphrase = null): bool {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $session
  * @param mixed $username
  * @param mixed $pubkey
  * @param mixed $privkey
  * @param mixed $passphrase [optional]
  */
-function ssh2_auth_pubkey ($session = null, $username = null, $pubkey = null, $privkey = null, $passphrase = null) {}
+function ssh2_auth_pubkey ($session = null, $username = null, $pubkey = null, $privkey = null, $passphrase = NULL) {}
 
 /**
  * Authenticate using a public hostkey
@@ -92,7 +93,7 @@ function ssh2_auth_pubkey ($session = null, $username = null, $pubkey = null, $p
  * @param string $local_username [optional] 
  * @return bool Returns true on success or false on failure.
  */
-function ssh2_auth_hostbased_file (resource $session, string $username, string $hostname, string $pubkeyfile, string $privkeyfile, string $passphrase = null, string $local_username = null): bool {}
+function ssh2_auth_hostbased_file ($session, string $username, string $hostname, string $pubkeyfile, string $privkeyfile, string $passphrase = null, string $local_username = null): bool {}
 
 /**
  * Bind a port on the remote server and listen for connections
@@ -101,17 +102,17 @@ function ssh2_auth_hostbased_file (resource $session, string $username, string $
  * @param int $port The port of the remote server.
  * @param string $host [optional] 
  * @param int $max_connections [optional] 
- * @return resource|bool Returns an SSH2 Listener, or false on failure.
+ * @return resource|false Returns an SSH2 Listener, or false on failure.
  */
-function ssh2_forward_listen (resource $session, int $port, string $host = null, int $max_connections = 16): resource|bool {}
+function ssh2_forward_listen ($session, int $port, string $host = null, int $max_connections = 16) {}
 
 /**
  * Accept a connection created by a listener
  * @link http://www.php.net/manual/en/function.ssh2-forward-accept.php
  * @param resource $listener 
- * @return resource|bool Returns a stream resource, or false on failure.
+ * @return resource|false Returns a stream resource, or false on failure.
  */
-function ssh2_forward_accept (resource $listener): resource|bool {}
+function ssh2_forward_accept ($listener) {}
 
 /**
  * Request an interactive shell
@@ -122,9 +123,9 @@ function ssh2_forward_accept (resource $listener): resource|bool {}
  * @param int $width [optional] 
  * @param int $height [optional] 
  * @param int $width_height_type [optional] 
- * @return resource|bool Returns a stream resource on success, or false on failure.
+ * @return resource|false Returns a stream resource on success, or false on failure.
  */
-function ssh2_shell (resource $session, string $termtype = "vanilla", ?array $env = null, int $width = 80, int $height = 25, int $width_height_type = SSH2_TERM_UNIT_CHARS): resource|bool {}
+function ssh2_shell ($session, string $termtype = '"vanilla"', ?array $env = null, int $width = 80, int $height = 25, int $width_height_type = SSH2_TERM_UNIT_CHARS) {}
 
 /**
  * Execute a command on a remote server
@@ -136,9 +137,9 @@ function ssh2_shell (resource $session, string $termtype = "vanilla", ?array $en
  * @param int $width [optional] 
  * @param int $height [optional] 
  * @param int $width_height_type [optional] 
- * @return resource|bool Returns a stream on success or false on failure.
+ * @return resource|false Returns a stream on success or false on failure.
  */
-function ssh2_exec (resource $session, string $command, string $pty = null, array $env = null, int $width = 80, int $height = 25, int $width_height_type = SSH2_TERM_UNIT_CHARS): resource|bool {}
+function ssh2_exec ($session, string $command, string $pty = null, array $env = null, int $width = 80, int $height = 25, int $width_height_type = SSH2_TERM_UNIT_CHARS) {}
 
 /**
  * Open a tunnel through a remote server
@@ -148,7 +149,7 @@ function ssh2_exec (resource $session, string $command, string $pty = null, arra
  * @param int $port 
  * @return resource 
  */
-function ssh2_tunnel (resource $session, string $host, int $port): resource {}
+function ssh2_tunnel ($session, string $host, int $port) {}
 
 /**
  * Request a file via SCP
@@ -158,7 +159,7 @@ function ssh2_tunnel (resource $session, string $host, int $port): resource {}
  * @param string $local_file 
  * @return bool Returns true on success or false on failure.
  */
-function ssh2_scp_recv (resource $session, string $remote_file, string $local_file): bool {}
+function ssh2_scp_recv ($session, string $remote_file, string $local_file): bool {}
 
 /**
  * Send a file via SCP
@@ -169,7 +170,7 @@ function ssh2_scp_recv (resource $session, string $remote_file, string $local_fi
  * @param int $create_mode [optional] 
  * @return bool Returns true on success or false on failure.
  */
-function ssh2_scp_send (resource $session, string $local_file, string $remote_file, int $create_mode = 0644): bool {}
+function ssh2_scp_send ($session, string $local_file, string $remote_file, int $create_mode = 0644): bool {}
 
 /**
  * Fetch an extended data stream
@@ -178,7 +179,7 @@ function ssh2_scp_send (resource $session, string $local_file, string $remote_fi
  * @param int $streamid 
  * @return resource Returns the requested stream resource.
  */
-function ssh2_fetch_stream (resource $channel, int $streamid): resource {}
+function ssh2_fetch_stream ($channel, int $streamid) {}
 
 /**
  * Poll the channels/listeners/streams for events
@@ -201,9 +202,10 @@ function ssh2_poll (array &$desc, int $timeout = 30): int {}
  * or ssh2_connect.
  * @return bool Returns true on success or false on failure.
  */
-function ssh2_send_eof (resource $channel): bool {}
+function ssh2_send_eof ($channel): bool {}
 
 /**
+ * {@inheritdoc}
  * @param mixed $session
  * @param mixed $width
  * @param mixed $height
@@ -214,12 +216,12 @@ function ssh2_shell_resize ($session = null, $width = null, $height = null) {}
  * Initialize SFTP subsystem
  * @link http://www.php.net/manual/en/function.ssh2-sftp.php
  * @param resource $session 
- * @return resource|bool This method returns an SSH2 SFTP resource for use with
+ * @return resource|false This method returns an SSH2 SFTP resource for use with
  * all other ssh2_sftp_&#42;() methods and the
  * ssh2.sftp:// fopen wrapper,
  * or false on failure.
  */
-function ssh2_sftp (resource $session): resource|bool {}
+function ssh2_sftp ($session) {}
 
 /**
  * Rename a remote file
@@ -229,7 +231,7 @@ function ssh2_sftp (resource $session): resource|bool {}
  * @param string $to 
  * @return bool Returns true on success or false on failure.
  */
-function ssh2_sftp_rename (resource $sftp, string $from, string $to): bool {}
+function ssh2_sftp_rename ($sftp, string $from, string $to): bool {}
 
 /**
  * Delete a file
@@ -238,7 +240,7 @@ function ssh2_sftp_rename (resource $sftp, string $from, string $to): bool {}
  * @param string $filename 
  * @return bool Returns true on success or false on failure.
  */
-function ssh2_sftp_unlink (resource $sftp, string $filename): bool {}
+function ssh2_sftp_unlink ($sftp, string $filename): bool {}
 
 /**
  * Create a directory
@@ -249,7 +251,7 @@ function ssh2_sftp_unlink (resource $sftp, string $filename): bool {}
  * @param bool $recursive [optional] 
  * @return bool Returns true on success or false on failure.
  */
-function ssh2_sftp_mkdir (resource $sftp, string $dirname, int $mode = 0777, bool $recursive = false): bool {}
+function ssh2_sftp_mkdir ($sftp, string $dirname, int $mode = 0777, bool $recursive = false): bool {}
 
 /**
  * Remove a directory
@@ -258,7 +260,7 @@ function ssh2_sftp_mkdir (resource $sftp, string $dirname, int $mode = 0777, boo
  * @param string $dirname 
  * @return bool Returns true on success or false on failure.
  */
-function ssh2_sftp_rmdir (resource $sftp, string $dirname): bool {}
+function ssh2_sftp_rmdir ($sftp, string $dirname): bool {}
 
 /**
  * Changes file mode
@@ -268,7 +270,7 @@ function ssh2_sftp_rmdir (resource $sftp, string $dirname): bool {}
  * @param int $mode 
  * @return bool Returns true on success or false on failure.
  */
-function ssh2_sftp_chmod (resource $sftp, string $filename, int $mode): bool {}
+function ssh2_sftp_chmod ($sftp, string $filename, int $mode): bool {}
 
 /**
  * Stat a file on a remote filesystem
@@ -278,7 +280,7 @@ function ssh2_sftp_chmod (resource $sftp, string $filename, int $mode): bool {}
  * @return array See the documentation for stat for details on the
  * values which may be returned.
  */
-function ssh2_sftp_stat (resource $sftp, string $path): array {}
+function ssh2_sftp_stat ($sftp, string $path): array {}
 
 /**
  * Stat a symbolic link
@@ -288,7 +290,7 @@ function ssh2_sftp_stat (resource $sftp, string $path): array {}
  * @return array See the documentation for stat for details on the
  * values which may be returned.
  */
-function ssh2_sftp_lstat (resource $sftp, string $path): array {}
+function ssh2_sftp_lstat ($sftp, string $path): array {}
 
 /**
  * Create a symlink
@@ -298,7 +300,7 @@ function ssh2_sftp_lstat (resource $sftp, string $path): array {}
  * @param string $link 
  * @return bool Returns true on success or false on failure.
  */
-function ssh2_sftp_symlink (resource $sftp, string $target, string $link): bool {}
+function ssh2_sftp_symlink ($sftp, string $target, string $link): bool {}
 
 /**
  * Return the target of a symbolic link
@@ -307,7 +309,7 @@ function ssh2_sftp_symlink (resource $sftp, string $target, string $link): bool 
  * @param string $link 
  * @return string Returns the target of the symbolic link.
  */
-function ssh2_sftp_readlink (resource $sftp, string $link): string {}
+function ssh2_sftp_readlink ($sftp, string $link): string {}
 
 /**
  * Resolve the realpath of a provided path string
@@ -316,16 +318,16 @@ function ssh2_sftp_readlink (resource $sftp, string $link): string {}
  * @param string $filename 
  * @return string Returns the real path as a string.
  */
-function ssh2_sftp_realpath (resource $sftp, string $filename): string {}
+function ssh2_sftp_realpath ($sftp, string $filename): string {}
 
 /**
  * Initialize Publickey subsystem
  * @link http://www.php.net/manual/en/function.ssh2-publickey-init.php
  * @param resource $session 
- * @return resource|bool Returns an SSH2 Publickey Subsystem resource for use
+ * @return resource|false Returns an SSH2 Publickey Subsystem resource for use
  * with all other ssh2_publickey_&#42;() methods or false on failure.
  */
-function ssh2_publickey_init (resource $session): resource|bool {}
+function ssh2_publickey_init ($session) {}
 
 /**
  * Add an authorized publickey
@@ -337,7 +339,7 @@ function ssh2_publickey_init (resource $session): resource|bool {}
  * @param array $attributes [optional] 
  * @return bool Returns true on success or false on failure.
  */
-function ssh2_publickey_add (resource $pkey, string $algoname, string $blob, bool $overwrite = false, array $attributes = null): bool {}
+function ssh2_publickey_add ($pkey, string $algoname, string $blob, bool $overwrite = false, array $attributes = null): bool {}
 
 /**
  * Remove an authorized publickey
@@ -347,7 +349,7 @@ function ssh2_publickey_add (resource $pkey, string $algoname, string $blob, boo
  * @param string $blob 
  * @return bool Returns true on success or false on failure.
  */
-function ssh2_publickey_remove (resource $pkey, string $algoname, string $blob): bool {}
+function ssh2_publickey_remove ($pkey, string $algoname, string $blob): bool {}
 
 /**
  * List currently authorized publickeys
@@ -382,7 +384,7 @@ function ssh2_publickey_remove (resource $pkey, string $algoname, string $blob):
  * </table>
  * </table></p>
  */
-function ssh2_publickey_list (resource $pkey): array {}
+function ssh2_publickey_list ($pkey): array {}
 
 /**
  * Authenticate over SSH using the ssh agent
@@ -391,7 +393,7 @@ function ssh2_publickey_list (resource $pkey): array {}
  * @param string $username 
  * @return bool Returns true on success or false on failure.
  */
-function ssh2_auth_agent (resource $session, string $username): bool {}
+function ssh2_auth_agent ($session, string $username): bool {}
 
 
 /**

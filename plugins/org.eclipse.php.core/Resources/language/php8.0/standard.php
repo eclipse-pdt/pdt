@@ -14,9 +14,18 @@ final class __PHP_Incomplete_Class  {
  * @link http://www.php.net/manual/en/class.php_user_filter.php
  */
 class php_user_filter  {
-	public $filtername;
-	public $params;
 
+	/**
+	 * Name of the filter registered by
+	 * stream_filter_append.
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.php_user_filter.php#php_user_filter.props.filtername
+	 */
+	public string $filtername;
+
+	public mixed $params;
+
+	public  $stream;
 
 	/**
 	 * Called when applying the filter
@@ -62,7 +71,7 @@ class php_user_filter  {
 	 * </tr>
 	 * </table>
 	 */
-	public function filter (resource $in, resource $out, int &$consumed, bool $closing): int {}
+	public function filter ($in, $out, int &$consumed, bool $closing): int {}
 
 	/**
 	 * Called when creating the filter
@@ -89,6 +98,22 @@ class php_user_filter  {
 class Directory  {
 
 	/**
+	 * The directory that was opened.
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.directory.php#directory.props.path
+	 */
+	public string $path;
+
+	/**
+	 * Can be used with other directory functions such as
+	 * readdir, rewinddir and
+	 * closedir.
+	 * @var resource
+	 * @link http://www.php.net/manual/en/class.directory.php#directory.props.handle
+	 */
+	public  $handle;
+
+	/**
 	 * Close directory handle
 	 * @link http://www.php.net/manual/en/directory.close.php
 	 * @return void 
@@ -105,9 +130,9 @@ class Directory  {
 	/**
 	 * Read entry from directory handle
 	 * @link http://www.php.net/manual/en/directory.read.php
-	 * @return string|bool 
+	 * @return string|false 
 	 */
-	public function read (): string|bool {}
+	public function read (): string|int {}
 
 }
 
@@ -117,11 +142,6 @@ class Directory  {
  * @link http://www.php.net/manual/en/class.assertionerror.php
  */
 class AssertionError extends Error implements Throwable, Stringable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-
 
 	/**
 	 * Construct the error object
@@ -131,8 +151,11 @@ class AssertionError extends Error implements Throwable, Stringable {
 	 * @param Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -256,25 +279,25 @@ function ob_end_clean (): bool {}
 /**
  * Flush the output buffer, return it as a string and turn off output buffering
  * @link http://www.php.net/manual/en/function.ob-get-flush.php
- * @return string|bool Returns the output buffer or false if no buffering is active.
+ * @return string|false Returns the output buffer or false if no buffering is active.
  */
-function ob_get_flush (): string|bool {}
+function ob_get_flush (): string|int {}
 
 /**
  * Get current buffer contents and delete current output buffer
  * @link http://www.php.net/manual/en/function.ob-get-clean.php
- * @return string|bool Returns the contents of the output buffer and end output buffering.
+ * @return string|false Returns the contents of the output buffer and end output buffering.
  * If output buffering isn't active then false is returned.
  */
-function ob_get_clean (): string|bool {}
+function ob_get_clean (): string|int {}
 
 /**
  * Return the contents of the output buffer
  * @link http://www.php.net/manual/en/function.ob-get-contents.php
- * @return string|bool This will return the contents of the output buffer or false, if output
+ * @return string|false This will return the contents of the output buffer or false, if output
  * buffering isn't active.
  */
-function ob_get_contents (): string|bool {}
+function ob_get_contents (): string|int {}
 
 /**
  * Return the nesting level of the output buffering mechanism
@@ -287,10 +310,10 @@ function ob_get_level (): int {}
 /**
  * Return the length of the output buffer
  * @link http://www.php.net/manual/en/function.ob-get-length.php
- * @return int|bool Returns the length of the output buffer contents, in bytes, or false if no
+ * @return int|false Returns the length of the output buffer contents, in bytes, or false if no
  * buffering is active.
  */
-function ob_get_length (): int|bool {}
+function ob_get_length (): int {}
 
 /**
  * List all output handlers in use
@@ -408,6 +431,7 @@ function output_add_rewrite_var (string $name, string $value): bool {}
 function stream_wrapper_register (string $protocol, string $class, int $flags = null): bool {}
 
 /**
+ * {@inheritdoc}
  * @param string $protocol
  * @param string $class
  * @param int $flags [optional]
@@ -444,18 +468,18 @@ function array_push (array &$array, mixed ...$values): int {}
  * @link http://www.php.net/manual/en/function.krsort.php
  * @param array $array 
  * @param int $flags [optional] 
- * @return bool Always returns true.
+ * @return true Always returns true.
  */
-function krsort (array &$array, int $flags = SORT_REGULAR): bool {}
+function krsort (array &$array, int $flags = SORT_REGULAR): int {}
 
 /**
  * Sort an array by key in ascending order
  * @link http://www.php.net/manual/en/function.ksort.php
  * @param array $array 
  * @param int $flags [optional] 
- * @return bool Always returns true.
+ * @return true Always returns true.
  */
-function ksort (array &$array, int $flags = SORT_REGULAR): bool {}
+function ksort (array &$array, int $flags = SORT_REGULAR): int {}
 
 /**
  * Counts all elements in an array or in a Countable object
@@ -489,80 +513,80 @@ function sizeof (Countable|array $value, int $mode = COUNT_NORMAL): int {}
  * Sort an array using a "natural order" algorithm
  * @link http://www.php.net/manual/en/function.natsort.php
  * @param array $array 
- * @return bool Always returns true.
+ * @return true Always returns true.
  */
-function natsort (array &$array): bool {}
+function natsort (array &$array): int {}
 
 /**
  * Sort an array using a case insensitive "natural order" algorithm
  * @link http://www.php.net/manual/en/function.natcasesort.php
  * @param array $array 
- * @return bool Always returns true.
+ * @return true Always returns true.
  */
-function natcasesort (array &$array): bool {}
+function natcasesort (array &$array): int {}
 
 /**
  * Sort an array in ascending order and maintain index association
  * @link http://www.php.net/manual/en/function.asort.php
  * @param array $array 
  * @param int $flags [optional] 
- * @return bool Always returns true.
+ * @return true Always returns true.
  */
-function asort (array &$array, int $flags = SORT_REGULAR): bool {}
+function asort (array &$array, int $flags = SORT_REGULAR): int {}
 
 /**
  * Sort an array in descending order and maintain index association
  * @link http://www.php.net/manual/en/function.arsort.php
  * @param array $array 
  * @param int $flags [optional] 
- * @return bool Always returns true.
+ * @return true Always returns true.
  */
-function arsort (array &$array, int $flags = SORT_REGULAR): bool {}
+function arsort (array &$array, int $flags = SORT_REGULAR): int {}
 
 /**
  * Sort an array in ascending order
  * @link http://www.php.net/manual/en/function.sort.php
  * @param array $array 
  * @param int $flags [optional] 
- * @return bool Always returns true.
+ * @return true Always returns true.
  */
-function sort (array &$array, int $flags = SORT_REGULAR): bool {}
+function sort (array &$array, int $flags = SORT_REGULAR): int {}
 
 /**
  * Sort an array in descending order
  * @link http://www.php.net/manual/en/function.rsort.php
  * @param array $array 
  * @param int $flags [optional] 
- * @return bool Always returns true.
+ * @return true Always returns true.
  */
-function rsort (array &$array, int $flags = SORT_REGULAR): bool {}
+function rsort (array &$array, int $flags = SORT_REGULAR): int {}
 
 /**
  * Sort an array by values using a user-defined comparison function
  * @link http://www.php.net/manual/en/function.usort.php
  * @param array $array 
  * @param callable $callback 
- * @return bool Always returns true.
+ * @return true Always returns true.
  */
-function usort (array &$array, callable $callback): bool {}
+function usort (array &$array, callable $callback): int {}
 
 /**
  * Sort an array with a user-defined comparison function and maintain index association
  * @link http://www.php.net/manual/en/function.uasort.php
  * @param array $array 
  * @param callable $callback 
- * @return bool Always returns true.
+ * @return true Always returns true.
  */
-function uasort (array &$array, callable $callback): bool {}
+function uasort (array &$array, callable $callback): int {}
 
 /**
  * Sort an array by keys using a user-defined comparison function
  * @link http://www.php.net/manual/en/function.uksort.php
  * @param array $array 
  * @param callable $callback 
- * @return bool Always returns true.
+ * @return true Always returns true.
  */
-function uksort (array &$array, callable $callback): bool {}
+function uksort (array &$array, callable $callback): int {}
 
 /**
  * Set the internal pointer of an array to its last element
@@ -695,14 +719,14 @@ function in_array (mixed $needle, array $haystack, bool $strict = false): bool {
  * @param mixed $needle 
  * @param array $haystack 
  * @param bool $strict [optional] 
- * @return int|string|bool Returns the key for needle if it is found in the
+ * @return int|string|false Returns the key for needle if it is found in the
  * array, false otherwise.
  * <p>If needle is found in haystack
  * more than once, the first matching key is returned. To return the keys for
  * all matching values, use array_keys with the optional
  * search_value parameter instead.</p>
  */
-function array_search (mixed $needle, array $haystack, bool $strict = false): int|string|bool {}
+function array_search (mixed $needle, array $haystack, bool $strict = false): int|string {}
 
 /**
  * Import variables into the current symbol table from an array
@@ -713,7 +737,7 @@ function array_search (mixed $needle, array $haystack, bool $strict = false): in
  * @return int Returns the number of variables successfully imported into the symbol
  * table.
  */
-function extract (array &$array, int $flags = EXTR_OVERWRITE, string $prefix = ""): int {}
+function extract (array &$array, int $flags = EXTR_OVERWRITE, string $prefix = '""'): int {}
 
 /**
  * Create array containing variables and their values
@@ -758,9 +782,9 @@ function range (string|int|float $start, string|int|float $end, int|float $step 
  * Shuffle an array
  * @link http://www.php.net/manual/en/function.shuffle.php
  * @param array $array 
- * @return bool Always returns true.
+ * @return true Always returns true.
  */
-function shuffle (array &$array): bool {}
+function shuffle (array &$array): int {}
 
 /**
  * Pop the element off the end of array
@@ -799,7 +823,7 @@ function array_unshift (array &$array, mixed ...$values): int {}
  * @param mixed $replacement [optional] 
  * @return array Returns an array consisting of the extracted elements.
  */
-function array_splice (array &$array, int $offset, ?int $length = null, mixed $replacement = []): array {}
+function array_splice (array &$array, int $offset, ?int $length = null, mixed $replacement = '[]'): array {}
 
 /**
  * Extract a slice of the array
@@ -974,7 +998,7 @@ function array_intersect_key (array $array, array ...$arrays): array {}
  * @return array Returns the values of array whose keys exist
  * in all the arguments.
  */
-function array_intersect_ukey (array $array, array ...$arrays, callable $key_compare_func): array {}
+function array_intersect_ukey (array $array, array $arrays, callable $key_compare_func): array {}
 
 /**
  * Computes the intersection of arrays
@@ -995,7 +1019,7 @@ function array_intersect (array $array, array ...$arrays): array {}
  * @return array Returns an array containing all the values of array
  * that are present in all the arguments.
  */
-function array_uintersect (array $array, array ...$arrays, callable $value_compare_func): array {}
+function array_uintersect (array $array, array $arrays, callable $value_compare_func): array {}
 
 /**
  * Computes the intersection of arrays with additional index check
@@ -1016,7 +1040,7 @@ function array_intersect_assoc (array $array, array ...$arrays): array {}
  * @return array Returns an array containing all the values of
  * array that are present in all the arguments.
  */
-function array_uintersect_assoc (array $array, array ...$arrays, callable $value_compare_func): array {}
+function array_uintersect_assoc (array $array, array $arrays, callable $value_compare_func): array {}
 
 /**
  * Computes the intersection of arrays with additional index check, compares indexes by a callback function
@@ -1027,7 +1051,7 @@ function array_uintersect_assoc (array $array, array ...$arrays, callable $value
  * @return array Returns the values of array whose values exist
  * in all of the arguments.
  */
-function array_intersect_uassoc (array $array, array ...$arrays, callable $key_compare_func): array {}
+function array_intersect_uassoc (array $array, array $arrays, callable $key_compare_func): array {}
 
 /**
  * Computes the intersection of arrays with additional index check, compares data and indexes by separate callback functions
@@ -1039,7 +1063,7 @@ function array_intersect_uassoc (array $array, array ...$arrays, callable $key_c
  * @return array Returns an array containing all the values of
  * array1 that are present in all the arguments.
  */
-function array_uintersect_uassoc (array $array1, array ...$arrays, callable $value_compare_func, callable $key_compare_func): array {}
+function array_uintersect_uassoc (array $array1, array $arrays, callable $value_compare_func, callable $key_compare_func): array {}
 
 /**
  * Computes the difference of arrays using keys for comparison
@@ -1061,7 +1085,7 @@ function array_diff_key (array $array, array ...$arrays): array {}
  * @return array Returns an array containing all the entries from
  * array that are not present in any of the other arrays.
  */
-function array_diff_ukey (array $array, array ...$arrays, callable $key_compare_func): array {}
+function array_diff_ukey (array $array, array $arrays, callable $key_compare_func): array {}
 
 /**
  * Computes the difference of arrays
@@ -1083,7 +1107,7 @@ function array_diff (array $array, array ...$arrays): array {}
  * @return array Returns an array containing all the values of array
  * that are not present in any of the other arguments.
  */
-function array_udiff (array $array, array ...$arrays, callable $value_compare_func): array {}
+function array_udiff (array $array, array $arrays, callable $value_compare_func): array {}
 
 /**
  * Computes the difference of arrays with additional index check
@@ -1104,7 +1128,7 @@ function array_diff_assoc (array $array, array ...$arrays): array {}
  * @return array Returns an array containing all the entries from
  * array that are not present in any of the other arrays.
  */
-function array_diff_uassoc (array $array, array ...$arrays, callable $key_compare_func): array {}
+function array_diff_uassoc (array $array, array $arrays, callable $key_compare_func): array {}
 
 /**
  * Computes the difference of arrays with additional index check, compares data by a callback function
@@ -1122,7 +1146,7 @@ function array_diff_uassoc (array $array, array ...$arrays, callable $key_compar
  * array_diff_assoc which uses internal function for
  * comparison.
  */
-function array_udiff_assoc (array $array, array ...$arrays, callable $value_compare_func): array {}
+function array_udiff_assoc (array $array, array $arrays, callable $value_compare_func): array {}
 
 /**
  * Computes the difference of arrays with additional index check, compares data and indexes by a callback function
@@ -1135,7 +1159,7 @@ function array_udiff_assoc (array $array, array ...$arrays, callable $value_comp
  * array that are not present in any of the other
  * arguments.
  */
-function array_udiff_uassoc (array $array, array ...$arrays, callable $value_compare_func, callable $key_compare_func): array {}
+function array_udiff_uassoc (array $array, array $arrays, callable $value_compare_func, callable $key_compare_func): array {}
 
 /**
  * Sort multiple or multi-dimensional arrays
@@ -1274,10 +1298,10 @@ function base64_encode (string $string): string {}
  * @link http://www.php.net/manual/en/function.base64-decode.php
  * @param string $string 
  * @param bool $strict [optional] 
- * @return string|bool Returns the decoded data or false on failure. The returned data may be
+ * @return string|false Returns the decoded data or false on failure. The returned data may be
  * binary.
  */
-function base64_decode (string $string, bool $strict = false): string|bool {}
+function base64_decode (string $string, bool $strict = false): string|int {}
 
 /**
  * Returns the value of a constant
@@ -1291,31 +1315,31 @@ function constant (string $name): mixed {}
  * Converts a string containing an (IPv4) Internet Protocol dotted address into a long integer
  * @link http://www.php.net/manual/en/function.ip2long.php
  * @param string $ip 
- * @return int|bool Returns the long integer or false if ip
+ * @return int|false Returns the long integer or false if ip
  * is invalid.
  */
-function ip2long (string $ip): int|bool {}
+function ip2long (string $ip): int {}
 
 /**
  * Converts a long integer address into a string in (IPv4) Internet standard dotted format
  * @link http://www.php.net/manual/en/function.long2ip.php
  * @param int $ip 
- * @return string|bool Returns the Internet IP address as a string, or false on failure.
+ * @return string|false Returns the Internet IP address as a string, or false on failure.
  */
-function long2ip (int $ip): string|bool {}
+function long2ip (int $ip): string|int {}
 
 /**
  * Gets the value of an environment variable
  * @link http://www.php.net/manual/en/function.getenv.php
  * @param string $varname 
  * @param bool $local_only [optional] 
- * @return string|bool Returns the value of the environment variable
+ * @return string|false Returns the value of the environment variable
  * varname, or false if the environment
  * variable varname does not exist.
  * If varname is omitted, all environment variables are
  * returned as associative array.
  */
-function getenv (string $varname, bool $local_only = false): string|bool {}
+function getenv (string $varname, bool $local_only = false): string|int {}
 
 /**
  * Sets the value of an environment variable
@@ -1331,11 +1355,11 @@ function putenv (string $assignment): bool {}
  * @param string $short_options 
  * @param array $long_options [optional] 
  * @param int $rest_index [optional] 
- * @return array|bool This function will return an array of option / argument pairs, or false on failure.
+ * @return array|false This function will return an array of option / argument pairs, or false on failure.
  * <p>The parsing of options will end at the first non-option found, anything
  * that follows is discarded.</p>
  */
-function getopt (string $short_options, array $long_options = [], int &$rest_index = null): array|bool {}
+function getopt (string $short_options, array $long_options = '[]', int &$rest_index = null): array|int {}
 
 /**
  * Flush system output buffer
@@ -1404,10 +1428,10 @@ function get_current_user (): string {}
  * Gets the value of a PHP configuration option
  * @link http://www.php.net/manual/en/function.get-cfg-var.php
  * @param string $option 
- * @return string|array|bool Returns the current value of the PHP configuration variable specified by
+ * @return string|array|false Returns the current value of the PHP configuration variable specified by
  * option, or false if an error occurs.
  */
-function get_cfg_var (string $option): string|array|bool {}
+function get_cfg_var (string $option): string|array|int {}
 
 /**
  * Send an error message to the defined error handling routines
@@ -1534,18 +1558,18 @@ function highlight_string (string $string, bool $return = false): string|bool {}
  * Gets the value of a configuration option
  * @link http://www.php.net/manual/en/function.ini-get.php
  * @param string $option 
- * @return string|bool Returns the value of the configuration option as a string on success, or an
+ * @return string|false Returns the value of the configuration option as a string on success, or an
  * empty string for null values. Returns false if the
  * configuration option doesn't exist.
  */
-function ini_get (string $option): string|bool {}
+function ini_get (string $option): string|int {}
 
 /**
  * Gets all configuration options
  * @link http://www.php.net/manual/en/function.ini-get-all.php
  * @param string|null $extension [optional] 
  * @param bool $details [optional] 
- * @return array|bool Returns an associative array with directive name as the array key.
+ * @return array|false Returns an associative array with directive name as the array key.
  * Returns false and raises an E_WARNING level error
  * if the extension doesn't exist.
  * <p>When details is true (default) the array will
@@ -1560,25 +1584,25 @@ function ini_get (string $option): string|bool {}
  * <p>It's possible for a directive to have multiple access levels, which is
  * why access shows the appropriate bitmask values.</p>
  */
-function ini_get_all (?string $extension = null, bool $details = true): array|bool {}
+function ini_get_all (?string $extension = null, bool $details = true): array|int {}
 
 /**
  * Sets the value of a configuration option
  * @link http://www.php.net/manual/en/function.ini-set.php
  * @param string $option 
  * @param string|int|float|bool|null $value 
- * @return string|bool Returns the old value on success, false on failure.
+ * @return string|false Returns the old value on success, false on failure.
  */
-function ini_set (string $option, string|int|float|bool|null $value): string|bool {}
+function ini_set (string $option, string|int|float|bool|null $value): string|int {}
 
 /**
  * Alias of ini_set
  * @link http://www.php.net/manual/en/function.ini-alter.php
  * @param string $option 
  * @param string|int|float|bool|null $value 
- * @return string|bool Returns the old value on success, false on failure.
+ * @return string|false Returns the old value on success, false on failure.
  */
-function ini_alter (string $option, string|int|float|bool|null $value): string|bool {}
+function ini_alter (string $option, string|int|float|bool|null $value): string|int {}
 
 /**
  * Restores the value of a configuration option
@@ -1592,17 +1616,17 @@ function ini_restore (string $option): void {}
  * Sets the include_path configuration option
  * @link http://www.php.net/manual/en/function.set-include-path.php
  * @param string $include_path 
- * @return string|bool Returns the old include_path on
+ * @return string|false Returns the old include_path on
  * success or false on failure.
  */
-function set_include_path (string $include_path): string|bool {}
+function set_include_path (string $include_path): string|int {}
 
 /**
  * Gets the current include_path configuration option
  * @link http://www.php.net/manual/en/function.get-include-path.php
- * @return string|bool Returns the path, as a string, or false on failure.
+ * @return string|false Returns the path, as a string, or false on failure.
  */
-function get_include_path (): string|bool {}
+function get_include_path (): string|int {}
 
 /**
  * Prints human-readable information about a variable
@@ -1647,35 +1671,35 @@ function ignore_user_abort (?bool $enable = null): int {}
  * @link http://www.php.net/manual/en/function.getservbyname.php
  * @param string $service 
  * @param string $protocol 
- * @return int|bool Returns the port number, or false if service or
+ * @return int|false Returns the port number, or false if service or
  * protocol is not found.
  */
-function getservbyname (string $service, string $protocol): int|bool {}
+function getservbyname (string $service, string $protocol): int {}
 
 /**
  * Get Internet service which corresponds to port and protocol
  * @link http://www.php.net/manual/en/function.getservbyport.php
  * @param int $port 
  * @param string $protocol 
- * @return string|bool Returns the Internet service name as a string, or false on failure.
+ * @return string|false Returns the Internet service name as a string, or false on failure.
  */
-function getservbyport (int $port, string $protocol): string|bool {}
+function getservbyport (int $port, string $protocol): string|int {}
 
 /**
  * Get protocol number associated with protocol name
  * @link http://www.php.net/manual/en/function.getprotobyname.php
  * @param string $protocol 
- * @return int|bool Returns the protocol number, or false on failure.
+ * @return int|false Returns the protocol number, or false on failure.
  */
-function getprotobyname (string $protocol): int|bool {}
+function getprotobyname (string $protocol): int {}
 
 /**
  * Get protocol name associated with protocol number
  * @link http://www.php.net/manual/en/function.getprotobynumber.php
  * @param int $protocol 
- * @return string|bool Returns the protocol name as a string, or false on failure.
+ * @return string|false Returns the protocol name as a string, or false on failure.
  */
-function getprotobynumber (int $protocol): string|bool {}
+function getprotobynumber (int $protocol): string|int {}
 
 /**
  * Register a function for execution on each tick
@@ -1725,10 +1749,10 @@ function move_uploaded_file (string $from, string $to): bool {}
  * @param string $filename 
  * @param bool $process_sections [optional] 
  * @param int $scanner_mode [optional] 
- * @return array|bool The settings are returned as an associative array on success,
+ * @return array|false The settings are returned as an associative array on success,
  * and false on failure.
  */
-function parse_ini_file (string $filename, bool $process_sections = false, int $scanner_mode = INI_SCANNER_NORMAL): array|bool {}
+function parse_ini_file (string $filename, bool $process_sections = false, int $scanner_mode = INI_SCANNER_NORMAL): array|int {}
 
 /**
  * Parse a configuration string
@@ -1736,25 +1760,25 @@ function parse_ini_file (string $filename, bool $process_sections = false, int $
  * @param string $ini_string 
  * @param bool $process_sections [optional] 
  * @param int $scanner_mode [optional] 
- * @return array|bool The settings are returned as an associative array on success,
+ * @return array|false The settings are returned as an associative array on success,
  * and false on failure.
  */
-function parse_ini_string (string $ini_string, bool $process_sections = false, int $scanner_mode = INI_SCANNER_NORMAL): array|bool {}
+function parse_ini_string (string $ini_string, bool $process_sections = false, int $scanner_mode = INI_SCANNER_NORMAL): array|int {}
 
 /**
  * Gets system load average
  * @link http://www.php.net/manual/en/function.sys-getloadavg.php
- * @return array|bool Returns an array with three samples (last 1, 5 and 15
+ * @return array|false Returns an array with three samples (last 1, 5 and 15
  * minutes).
  */
-function sys_getloadavg (): array|bool {}
+function sys_getloadavg (): array|int {}
 
 /**
  * Tells what the user's browser is capable of
  * @link http://www.php.net/manual/en/function.get-browser.php
  * @param string|null $user_agent [optional] 
  * @param bool $return_array [optional] 
- * @return object|array|bool The information is returned in an object or an array which will contain
+ * @return object|array|false The information is returned in an object or an array which will contain
  * various data elements representing, for instance, the browser's major and
  * minor version numbers and ID string; true/false values for features
  * such as frames, JavaScript, and cookies; and so forth.
@@ -1767,7 +1791,7 @@ function sys_getloadavg (): array|bool {}
  * browscap configuration setting in 
  * php.ini has not been set.</p>
  */
-function get_browser (?string $user_agent = null, bool $return_array = false): object|array|bool {}
+function get_browser (?string $user_agent = null, bool $return_array = false): object|array|int {}
 
 /**
  * Calculates the crc32 polynomial of a string
@@ -1792,7 +1816,7 @@ function crypt (string $string, string $salt): string {}
  * @link http://www.php.net/manual/en/function.strptime.php
  * @param string $timestamp 
  * @param string $format 
- * @return array|bool Returns an array or false on failure.
+ * @return array|false Returns an array or false on failure.
  * <p><table>
  * The following parameters are returned in the array
  * <table>
@@ -1841,24 +1865,24 @@ function crypt (string $string, string $salt): string {}
  * </table></p>
  * @deprecated 1
  */
-function strptime (string $timestamp, string $format): array|bool {}
+function strptime (string $timestamp, string $format): array|int {}
 
 /**
  * Gets the host name
  * @link http://www.php.net/manual/en/function.gethostname.php
- * @return string|bool Returns a string with the hostname on success, otherwise false is 
+ * @return string|false Returns a string with the hostname on success, otherwise false is 
  * returned.
  */
-function gethostname (): string|bool {}
+function gethostname (): string|int {}
 
 /**
  * Get the Internet host name corresponding to a given IP address
  * @link http://www.php.net/manual/en/function.gethostbyaddr.php
  * @param string $ip 
- * @return string|bool Returns the host name on success, the unmodified ip
+ * @return string|false Returns the host name on success, the unmodified ip
  * on failure, or false on malformed input.
  */
-function gethostbyaddr (string $ip): string|bool {}
+function gethostbyaddr (string $ip): string|int {}
 
 /**
  * Get the IPv4 address corresponding to a given Internet host name
@@ -1874,12 +1898,13 @@ function gethostbyname (string $hostname): string {}
  * name
  * @link http://www.php.net/manual/en/function.gethostbynamel.php
  * @param string $hostname 
- * @return array|bool Returns an array of IPv4 addresses or false if
+ * @return array|false Returns an array of IPv4 addresses or false if
  * hostname could not be resolved.
  */
-function gethostbynamel (string $hostname): array|bool {}
+function gethostbynamel (string $hostname): array|int {}
 
 /**
+ * {@inheritdoc}
  * @param string $hostname
  * @param string $type [optional]
  */
@@ -1893,7 +1918,7 @@ function dns_check_record (string $hostname, string $type = 'MX'): bool {}
  * @return bool Returns true if any records are found; returns false if no records
  * were found or if an error occurred.
  */
-function checkdnsrr (string $hostname, string $type = "MX"): bool {}
+function checkdnsrr (string $hostname, string $type = '"MX"'): bool {}
 
 /**
  * Fetch DNS Resource Records associated with a hostname
@@ -1903,7 +1928,7 @@ function checkdnsrr (string $hostname, string $type = "MX"): bool {}
  * @param array $authoritative_name_servers [optional] 
  * @param array $additional_records [optional] 
  * @param bool $raw [optional] 
- * @return array|bool This function returns an array of associative arrays,
+ * @return array|false This function returns an array of associative arrays,
  * or false on failure. Each associative array contains
  * at minimum the following keys:
  * <table>
@@ -2076,14 +2101,15 @@ function checkdnsrr (string $hostname, string $type = "MX"): bool {}
  * </table>
  * </table></p>
  */
-function dns_get_record (string $hostname, int $type = DNS_ANY, array &$authoritative_name_servers = null, array &$additional_records = null, bool $raw = false): array|bool {}
+function dns_get_record (string $hostname, int $type = DNS_ANY, array &$authoritative_name_servers = null, array &$additional_records = null, bool $raw = false): array|int {}
 
 /**
+ * {@inheritdoc}
  * @param string $hostname
  * @param mixed $hosts
  * @param mixed $weights [optional]
  */
-function dns_get_mx (string $hostname, &$hosts = null, &$weights = null): bool {}
+function dns_get_mx (string $hostname, &$hosts = null, &$weights = NULL): bool {}
 
 /**
  * Get MX records corresponding to a given Internet host name
@@ -2099,7 +2125,7 @@ function getmxrr (string $hostname, array &$hosts, array &$weights = null): bool
 /**
  * Get network interfaces
  * @link http://www.php.net/manual/en/function.net-get-interfaces.php
- * @return array|bool Returns an associative array where the key is the name of the interface and
+ * @return array|false Returns an associative array where the key is the name of the interface and
  * the value an associative array of interface attributes,
  * or false on failure.
  * <p>Each interface associative array contains:
@@ -2179,7 +2205,7 @@ function getmxrr (string $hostname, array &$hosts, array &$weights = null): bool
  * </table>
  * </table></p>
  */
-function net_get_interfaces (): array|bool {}
+function net_get_interfaces (): array|int {}
 
 /**
  * Convert a pathname and a project identifier to a System V IPC key
@@ -2195,13 +2221,13 @@ function ftok (string $filename, string $project_id): int {}
  * Get the system's high resolution time
  * @link http://www.php.net/manual/en/function.hrtime.php
  * @param bool $as_number [optional] 
- * @return array|int|float|bool Returns an array of integers in the form [seconds, nanoseconds], if the
+ * @return array|int|float|false Returns an array of integers in the form [seconds, nanoseconds], if the
  * parameter as_number is false. Otherwise the nanoseconds
  * are returned as int (64bit platforms) or float
  * (32bit platforms).
  * Returns false on failure.
  */
-function hrtime (bool $as_number = false): array|int|float|bool {}
+function hrtime (bool $as_number = false): array|int|float {}
 
 /**
  * Combined linear congruential generator
@@ -2224,46 +2250,46 @@ function md5 (string $string, bool $binary = false): string {}
  * @link http://www.php.net/manual/en/function.md5-file.php
  * @param string $filename 
  * @param bool $binary [optional] 
- * @return string|bool Returns a string on success, false otherwise.
+ * @return string|false Returns a string on success, false otherwise.
  */
-function md5_file (string $filename, bool $binary = false): string|bool {}
+function md5_file (string $filename, bool $binary = false): string|int {}
 
 /**
  * Gets PHP script owner's UID
  * @link http://www.php.net/manual/en/function.getmyuid.php
- * @return int|bool Returns the user ID of the current script, or false on error.
+ * @return int|false Returns the user ID of the current script, or false on error.
  */
-function getmyuid (): int|bool {}
+function getmyuid (): int {}
 
 /**
  * Get PHP script owner's GID
  * @link http://www.php.net/manual/en/function.getmygid.php
- * @return int|bool Returns the group ID of the current script, or false on error.
+ * @return int|false Returns the group ID of the current script, or false on error.
  */
-function getmygid (): int|bool {}
+function getmygid (): int {}
 
 /**
  * Gets PHP's process ID
  * @link http://www.php.net/manual/en/function.getmypid.php
- * @return int|bool Returns the current PHP process ID, or false on error.
+ * @return int|false Returns the current PHP process ID, or false on error.
  */
-function getmypid (): int|bool {}
+function getmypid (): int {}
 
 /**
  * Gets the inode of the current script
  * @link http://www.php.net/manual/en/function.getmyinode.php
- * @return int|bool Returns the current script's inode as an integer, or false on error.
+ * @return int|false Returns the current script's inode as an integer, or false on error.
  */
-function getmyinode (): int|bool {}
+function getmyinode (): int {}
 
 /**
  * Gets time of last page modification
  * @link http://www.php.net/manual/en/function.getlastmod.php
- * @return int|bool Returns the time of the last modification of the current
+ * @return int|false Returns the time of the last modification of the current
  * page. The value returned is a Unix timestamp, suitable for
  * feeding to date. Returns false on error.
  */
-function getlastmod (): int|bool {}
+function getlastmod (): int {}
 
 /**
  * Calculate the sha1 hash of a string
@@ -2279,9 +2305,9 @@ function sha1 (string $string, bool $binary = false): string {}
  * @link http://www.php.net/manual/en/function.sha1-file.php
  * @param string $filename 
  * @param bool $binary [optional] 
- * @return string|bool Returns a string on success, false otherwise.
+ * @return string|false Returns a string on success, false otherwise.
  */
-function sha1_file (string $filename, bool $binary = false): string|bool {}
+function sha1_file (string $filename, bool $binary = false): string|int {}
 
 /**
  * Open connection to system logger
@@ -2296,37 +2322,37 @@ function openlog (string $prefix, int $flags, int $facility): bool {}
 /**
  * Close connection to system logger
  * @link http://www.php.net/manual/en/function.closelog.php
- * @return bool Always returns true.
+ * @return true Always returns true.
  */
-function closelog (): bool {}
+function closelog (): int {}
 
 /**
  * Generate a system log message
  * @link http://www.php.net/manual/en/function.syslog.php
  * @param int $priority 
  * @param string $message 
- * @return bool Always returns true.
+ * @return true Always returns true.
  */
-function syslog (int $priority, string $message): bool {}
+function syslog (int $priority, string $message): int {}
 
 /**
  * Converts a packed internet address to a human readable representation
  * @link http://www.php.net/manual/en/function.inet-ntop.php
  * @param string $ip 
- * @return string|bool Returns a string representation of the address or false on failure.
+ * @return string|false Returns a string representation of the address or false on failure.
  */
-function inet_ntop (string $ip): string|bool {}
+function inet_ntop (string $ip): string|int {}
 
 /**
  * Converts a human readable IP address to its packed in_addr representation
  * @link http://www.php.net/manual/en/function.inet-pton.php
  * @param string $ip 
- * @return string|bool Returns the in_addr representation of the given
+ * @return string|false Returns the in_addr representation of the given
  * ip, or false if a syntactically invalid
  * ip is given (for example, an IPv4 address
  * without dots or an IPv6 address without colons).
  */
-function inet_pton (string $ip): string|bool {}
+function inet_pton (string $ip): string|int {}
 
 /**
  * Calculate the metaphone key of a string
@@ -2384,7 +2410,7 @@ function setrawcookie (string $name, string $value = null, int $expires_or_optio
  * setcookie successfully runs, it will return true.
  * This does not indicate whether the user accepted the cookie.
  */
-function setcookie (string $name, string $value = "", int $expires_or_options = null, string $path = "", string $domain = "", bool $secure = false, bool $httponly = false): bool {}
+function setcookie (string $name, string $value = '""', int $expires_or_options = null, string $path = '""', string $domain = '""', bool $secure = false, bool $httponly = false): bool {}
 
 /**
  * Get or Set the HTTP response code
@@ -2434,7 +2460,7 @@ function headers_list (): array {}
  * will be returned, unless either the ENT_IGNORE or
  * ENT_SUBSTITUTE flags are set.</p>
  */
-function htmlspecialchars (string $string, int $flags = ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401, ?string $encoding = null, bool $double_encode = true): string {}
+function htmlspecialchars (string $string, int $flags = 'ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401', ?string $encoding = null, bool $double_encode = true): string {}
 
 /**
  * Convert special HTML entities back to characters
@@ -2443,7 +2469,7 @@ function htmlspecialchars (string $string, int $flags = ENT_QUOTES | ENT_SUBSTIT
  * @param int $flags [optional] 
  * @return string Returns the decoded string.
  */
-function htmlspecialchars_decode (string $string, int $flags = ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401): string {}
+function htmlspecialchars_decode (string $string, int $flags = 'ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401'): string {}
 
 /**
  * Convert HTML entities to their corresponding characters
@@ -2453,7 +2479,7 @@ function htmlspecialchars_decode (string $string, int $flags = ENT_QUOTES | ENT_
  * @param string|null $encoding [optional] 
  * @return string Returns the decoded string.
  */
-function html_entity_decode (string $string, int $flags = ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401, ?string $encoding = null): string {}
+function html_entity_decode (string $string, int $flags = 'ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401', ?string $encoding = null): string {}
 
 /**
  * Convert all applicable characters to HTML entities
@@ -2468,7 +2494,7 @@ function html_entity_decode (string $string, int $flags = ENT_QUOTES | ENT_SUBST
  * will be returned, unless either the ENT_IGNORE or
  * ENT_SUBSTITUTE flags are set.</p>
  */
-function htmlentities (string $string, int $flags = ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401, ?string $encoding = null, bool $double_encode = true): string {}
+function htmlentities (string $string, int $flags = 'ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401', ?string $encoding = null, bool $double_encode = true): string {}
 
 /**
  * Returns the translation table used by htmlspecialchars and htmlentities
@@ -2479,7 +2505,7 @@ function htmlentities (string $string, int $flags = ENT_QUOTES | ENT_SUBSTITUTE 
  * @return array Returns the translation table as an array, with the original characters
  * as keys and entities as values.
  */
-function get_html_translation_table (int $table = HTML_SPECIALCHARS, int $flags = ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401, string $encoding = "UTF-8"): array {}
+function get_html_translation_table (int $table = HTML_SPECIALCHARS, int $flags = 'ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401', string $encoding = '"UTF-8"'): array {}
 
 /**
  * Checks if assertion is false
@@ -2511,9 +2537,9 @@ function bin2hex (string $string): string {}
  * Decodes a hexadecimally encoded binary string
  * @link http://www.php.net/manual/en/function.hex2bin.php
  * @param string $string Hexadecimal representation of data.
- * @return string|bool Returns the binary representation of the given data or false on failure.
+ * @return string|false Returns the binary representation of the given data or false on failure.
  */
-function hex2bin (string $string): string|bool {}
+function hex2bin (string $string): string|int {}
 
 /**
  * Finds the length of the initial segment of a string consisting
@@ -2550,10 +2576,10 @@ function strcspn (string $string, string $characters, int $offset = null, ?int $
  * Query language and locale information
  * @link http://www.php.net/manual/en/function.nl-langinfo.php
  * @param int $item 
- * @return string|bool Returns the element as a string, or false if item
+ * @return string|false Returns the element as a string, or false if item
  * is not valid.
  */
-function nl_langinfo (int $item): string|bool {}
+function nl_langinfo (int $item): string|int {}
 
 /**
  * Locale based string comparison
@@ -2574,7 +2600,7 @@ function strcoll (string $string1, string $string2): int {}
  * @param string $characters [optional] 
  * @return string The trimmed string.
  */
-function trim (string $string, string $characters = " \n\r\t\v\x00"): string {}
+function trim (string $string, string $characters = '" \\n\\r\\t\\v\\x00"'): string {}
 
 /**
  * Strip whitespace (or other characters) from the end of a string
@@ -2583,7 +2609,7 @@ function trim (string $string, string $characters = " \n\r\t\v\x00"): string {}
  * @param string $characters [optional] 
  * @return string Returns the modified string.
  */
-function rtrim (string $string, string $characters = " \n\r\t\v\x00"): string {}
+function rtrim (string $string, string $characters = '" \\n\\r\\t\\v\\x00"'): string {}
 
 /**
  * Alias of rtrim
@@ -2592,7 +2618,7 @@ function rtrim (string $string, string $characters = " \n\r\t\v\x00"): string {}
  * @param string $characters [optional] 
  * @return string Returns the modified string.
  */
-function chop (string $string, string $characters = " \n\r\t\v\x00"): string {}
+function chop (string $string, string $characters = '" \\n\\r\\t\\v\\x00"'): string {}
 
 /**
  * Strip whitespace (or other characters) from the beginning of a string
@@ -2624,7 +2650,7 @@ function chop (string $string, string $characters = " \n\r\t\v\x00"): string {}
  * (0x0B)), a vertical tab.
  * </p>
  */
-function ltrim (string $string, string $characters = " \n\r\t\v\x00"): string {}
+function ltrim (string $string, string $characters = '" \\n\\r\\t\\v\\x00"'): string {}
 
 /**
  * Wraps a string to a given number of characters
@@ -2635,7 +2661,7 @@ function ltrim (string $string, string $characters = " \n\r\t\v\x00"): string {}
  * @param bool $cut_long_words [optional] 
  * @return string Returns the given string wrapped at the specified length.
  */
-function wordwrap (string $string, int $width = 75, string $break = "\n", bool $cut_long_words = false): string {}
+function wordwrap (string $string, int $width = 75, string $break = '"\\n"', bool $cut_long_words = false): string {}
 
 /**
  * Split a string by a string
@@ -2684,9 +2710,9 @@ function join (string $separator, array $array): string {}
  * @link http://www.php.net/manual/en/function.strtok.php
  * @param string $string 
  * @param string $token 
- * @return string|bool A string token, or false if no more tokens are available.
+ * @return string|false A string token, or false if no more tokens are available.
  */
-function strtok (string $string, string $token): string|bool {}
+function strtok (string $string, string $token): string|int {}
 
 /**
  * Make a string uppercase
@@ -2711,7 +2737,7 @@ function strtolower (string $string): string {}
  * @param string $suffix [optional] 
  * @return string Returns the base name of the given path.
  */
-function basename (string $path, string $suffix = ""): string {}
+function basename (string $path, string $suffix = '""'): string {}
 
 /**
  * Returns a parent directory's path
@@ -2768,10 +2794,10 @@ function pathinfo (string $path, int $flags = PATHINFO_ALL): array|string {}
  * @param string $haystack 
  * @param string $needle 
  * @param bool $before_needle [optional] 
- * @return string|bool Returns the matched substring. If needle is not
+ * @return string|false Returns the matched substring. If needle is not
  * found, returns false.
  */
-function stristr (string $haystack, string $needle, bool $before_needle = false): string|bool {}
+function stristr (string $haystack, string $needle, bool $before_needle = false): string|int {}
 
 /**
  * Find the first occurrence of a string
@@ -2779,10 +2805,10 @@ function stristr (string $haystack, string $needle, bool $before_needle = false)
  * @param string $haystack 
  * @param string $needle 
  * @param bool $before_needle [optional] 
- * @return string|bool Returns the portion of string, or false if needle
+ * @return string|false Returns the portion of string, or false if needle
  * is not found.
  */
-function strstr (string $haystack, string $needle, bool $before_needle = false): string|bool {}
+function strstr (string $haystack, string $needle, bool $before_needle = false): string|int {}
 
 /**
  * Alias of strstr
@@ -2790,10 +2816,10 @@ function strstr (string $haystack, string $needle, bool $before_needle = false):
  * @param string $haystack 
  * @param string $needle 
  * @param bool $before_needle [optional] 
- * @return string|bool Returns the portion of string, or false if needle
+ * @return string|false Returns the portion of string, or false if needle
  * is not found.
  */
-function strchr (string $haystack, string $needle, bool $before_needle = false): string|bool {}
+function strchr (string $haystack, string $needle, bool $before_needle = false): string|int {}
 
 /**
  * Find the position of the first occurrence of a substring in a string
@@ -2801,12 +2827,12 @@ function strchr (string $haystack, string $needle, bool $before_needle = false):
  * @param string $haystack 
  * @param string $needle 
  * @param int $offset [optional] 
- * @return int|bool Returns the position of where the needle exists relative to the beginning of
+ * @return int|false Returns the position of where the needle exists relative to the beginning of
  * the haystack string (independent of offset).
  * Also note that string positions start at 0, and not 1.
  * <p>Returns false if the needle was not found.</p>
  */
-function strpos (string $haystack, string $needle, int $offset = null): int|bool {}
+function strpos (string $haystack, string $needle, int $offset = null): int {}
 
 /**
  * Find the position of the first occurrence of a case-insensitive substring in a string
@@ -2814,12 +2840,12 @@ function strpos (string $haystack, string $needle, int $offset = null): int|bool
  * @param string $haystack 
  * @param string $needle 
  * @param int $offset [optional] 
- * @return int|bool Returns the position of where the needle exists relative to the beginning of
+ * @return int|false Returns the position of where the needle exists relative to the beginning of
  * the haystack string (independent of offset).
  * Also note that string positions start at 0, and not 1.
  * <p>Returns false if the needle was not found.</p>
  */
-function stripos (string $haystack, string $needle, int $offset = null): int|bool {}
+function stripos (string $haystack, string $needle, int $offset = null): int {}
 
 /**
  * Find the position of the last occurrence of a substring in a string
@@ -2827,13 +2853,13 @@ function stripos (string $haystack, string $needle, int $offset = null): int|boo
  * @param string $haystack 
  * @param string $needle 
  * @param int $offset [optional] 
- * @return int|bool Returns the position where the needle exists relative to the beginning of
+ * @return int|false Returns the position where the needle exists relative to the beginning of
  * the haystack string (independent of search direction
  * or offset).
  * String positions start at 0, and not 1.
  * <p>Returns false if the needle was not found.</p>
  */
-function strrpos (string $haystack, string $needle, int $offset = null): int|bool {}
+function strrpos (string $haystack, string $needle, int $offset = null): int {}
 
 /**
  * Find the position of the last occurrence of a case-insensitive substring in a string
@@ -2841,23 +2867,23 @@ function strrpos (string $haystack, string $needle, int $offset = null): int|boo
  * @param string $haystack 
  * @param string $needle 
  * @param int $offset [optional] 
- * @return int|bool Returns the position where the needle exists relative to the beginnning of
+ * @return int|false Returns the position where the needle exists relative to the beginnning of
  * the haystack string (independent of search direction
  * or offset).
  * String positions start at 0, and not 1.
  * <p>Returns false if the needle was not found.</p>
  */
-function strripos (string $haystack, string $needle, int $offset = null): int|bool {}
+function strripos (string $haystack, string $needle, int $offset = null): int {}
 
 /**
  * Find the last occurrence of a character in a string
  * @link http://www.php.net/manual/en/function.strrchr.php
  * @param string $haystack 
  * @param string $needle 
- * @return string|bool This function returns the portion of string, or false if
+ * @return string|false This function returns the portion of string, or false if
  * needle is not found.
  */
-function strrchr (string $haystack, string $needle): string|bool {}
+function strrchr (string $haystack, string $needle): string|int {}
 
 /**
  * Determine if a string contains a given substring
@@ -2897,7 +2923,7 @@ function str_ends_with (string $haystack, string $needle): bool {}
  * @param string $separator [optional] 
  * @return string Returns the chunked string.
  */
-function chunk_split (string $string, int $length = 76, string $separator = "\r\n"): string {}
+function chunk_split (string $string, int $length = 76, string $separator = '"\\r\\n"'): string {}
 
 /**
  * Return part of a string
@@ -2970,7 +2996,7 @@ function lcfirst (string $string): string {}
  * @param string $separators [optional] 
  * @return string Returns the modified string.
  */
-function ucwords (string $string, string $separators = " \t\r\n\f\v"): string {}
+function ucwords (string $string, string $separators = '" \\t\\r\\n\\f\\v"'): string {}
 
 /**
  * Translate characters or replace substrings
@@ -3094,7 +3120,7 @@ function strip_tags (string $string, array|string|null $allowed_tags = null): st
  * @param int $category 
  * @param string $locales 
  * @param string $rest 
- * @return string|bool Returns the new current locale, or false if the locale functionality is
+ * @return string|false Returns the new current locale, or false if the locale functionality is
  * not implemented on your platform, the specified locale does not exist or
  * the category name is invalid.
  * <p>An invalid category name also causes a warning message. Category/locale
@@ -3105,7 +3131,7 @@ function strip_tags (string $string, array|string|null $allowed_tags = null): st
  * on the system that PHP is running. It returns exactly
  * what the system setlocale function returns.</p>
  */
-function setlocale (int $category, string $locales, string ...$rest): string|bool {}
+function setlocale (int $category, string $locales, string ...$rest): string|int {}
 
 /**
  * Parses the string into variables
@@ -3125,7 +3151,7 @@ function parse_str (string $string, array &$result): void {}
  * @param string $escape [optional] 
  * @return array Returns an indexed array containing the fields read.
  */
-function str_getcsv (string $string, string $separator = ",", string $enclosure = "\"", string $escape = "\\"): array {}
+function str_getcsv (string $string, string $separator = '","', string $enclosure = '"\\""', string $escape = '"\\\\"'): array {}
 
 /**
  * Repeat a string
@@ -3329,7 +3355,7 @@ function substr_count (string $haystack, string $needle, int $offset = null, ?in
  * @param int $pad_type [optional] 
  * @return string Returns the padded string.
  */
-function str_pad (string $string, int $length, string $pad_string = " ", int $pad_type = STR_PAD_RIGHT): string {}
+function str_pad (string $string, int $length, string $pad_string = '" "', int $pad_type = STR_PAD_RIGHT): string {}
 
 /**
  * Parses input from a string according to a format
@@ -3392,10 +3418,10 @@ function str_split (string $string, int $length = 1): array {}
  * @link http://www.php.net/manual/en/function.strpbrk.php
  * @param string $string 
  * @param string $characters 
- * @return string|bool Returns a string starting from the character found, or false if it is
+ * @return string|false Returns a string starting from the character found, or false if it is
  * not found.
  */
-function strpbrk (string $string, string $characters): string|bool {}
+function strpbrk (string $string, string $characters): string|int {}
 
 /**
  * Binary safe comparison of two strings from an offset, up to length characters
@@ -3440,10 +3466,10 @@ function utf8_decode (string $string): string {}
  * @link http://www.php.net/manual/en/function.opendir.php
  * @param string $directory 
  * @param resource|null $context [optional] 
- * @return resource|bool Returns a directory handle resource on success,
+ * @return resource|false Returns a directory handle resource on success,
  * or false on failure
  */
-function opendir (string $directory, ?resource $context = null): resource|bool {}
+function opendir (string $directory, $context = null) {}
 
 /**
  * Return an instance of the Directory class
@@ -3451,9 +3477,9 @@ function opendir (string $directory, ?resource $context = null): resource|bool {
  * @param string $directory Directory to open
  * @param resource|null $context [optional] >A context stream
  * resource.
- * @return Directory|bool Returns an instance of Directory, or false in case of error.
+ * @return Directory|false Returns an instance of Directory, or false in case of error.
  */
-function dir (string $directory, ?resource $context = null): Directory|bool {}
+function dir (string $directory, $context = null): Directory|int {}
 
 /**
  * Close directory handle
@@ -3461,7 +3487,7 @@ function dir (string $directory, ?resource $context = null): Directory|bool {}
  * @param resource|null $dir_handle [optional] 
  * @return void No value is returned.
  */
-function closedir (?resource $dir_handle = null): void {}
+function closedir ($dir_handle = null): void {}
 
 /**
  * Change directory
@@ -3474,7 +3500,7 @@ function chdir (string $directory): bool {}
 /**
  * Gets the current working directory
  * @link http://www.php.net/manual/en/function.getcwd.php
- * @return string|bool Returns the current working directory on success, or false on
+ * @return string|false Returns the current working directory on success, or false on
  * failure.
  * <p>On some Unix variants, getcwd will return
  * false if any one of the parent directories does not have the
@@ -3482,7 +3508,7 @@ function chdir (string $directory): bool {}
  * does. See chmod for more information on
  * modes and permissions.</p>
  */
-function getcwd (): string|bool {}
+function getcwd (): string|int {}
 
 /**
  * Rewind directory handle
@@ -3490,15 +3516,15 @@ function getcwd (): string|bool {}
  * @param resource|null $dir_handle [optional] 
  * @return void No value is returned.
  */
-function rewinddir (?resource $dir_handle = null): void {}
+function rewinddir ($dir_handle = null): void {}
 
 /**
  * Read entry from directory handle
  * @link http://www.php.net/manual/en/function.readdir.php
  * @param resource|null $dir_handle [optional] 
- * @return string|bool Returns the entry name on success or false on failure.
+ * @return string|false Returns the entry name on success or false on failure.
  */
-function readdir (?resource $dir_handle = null): string|bool {}
+function readdir ($dir_handle = null): string|int {}
 
 /**
  * List files and directories inside the specified path
@@ -3506,24 +3532,24 @@ function readdir (?resource $dir_handle = null): string|bool {}
  * @param string $directory 
  * @param int $sorting_order [optional] 
  * @param resource|null $context [optional] 
- * @return array|bool Returns an array of filenames on success, or false on 
+ * @return array|false Returns an array of filenames on success, or false on 
  * failure. If directory is not a directory, then 
  * boolean false is returned, and an error of level 
  * E_WARNING is generated.
  */
-function scandir (string $directory, int $sorting_order = SCANDIR_SORT_ASCENDING, ?resource $context = null): array|bool {}
+function scandir (string $directory, int $sorting_order = SCANDIR_SORT_ASCENDING, $context = null): array|int {}
 
 /**
  * Find pathnames matching a pattern
  * @link http://www.php.net/manual/en/function.glob.php
  * @param string $pattern 
  * @param int $flags [optional] 
- * @return array|bool Returns an array containing the matched files/directories, an empty array
+ * @return array|false Returns an array containing the matched files/directories, an empty array
  * if no file matched or false on error.
  * <p>On some systems it is impossible to distinguish between empty match and an
  * error.</p>
  */
-function glob (string $pattern, int $flags = null): array|bool {}
+function glob (string $pattern, int $flags = null): array|int {}
 
 /**
  * Execute an external program
@@ -3531,33 +3557,33 @@ function glob (string $pattern, int $flags = null): array|bool {}
  * @param string $command 
  * @param array $output [optional] 
  * @param int $result_code [optional] 
- * @return string|bool The last line from the result of the command. If you need to execute a 
+ * @return string|false The last line from the result of the command. If you need to execute a 
  * command and have all the data from the command passed directly back without 
  * any interference, use the passthru function.
  * <p>Returns false on failure.</p>
  * <p>To get the output of the executed command, be sure to set and use the
  * output parameter.</p>
  */
-function exec (string $command, array &$output = null, int &$result_code = null): string|bool {}
+function exec (string $command, array &$output = null, int &$result_code = null): string|int {}
 
 /**
  * Execute an external program and display the output
  * @link http://www.php.net/manual/en/function.system.php
  * @param string $command 
  * @param int $result_code [optional] 
- * @return string|bool Returns the last line of the command output on success, and false
+ * @return string|false Returns the last line of the command output on success, and false
  * on failure.
  */
-function system (string $command, int &$result_code = null): string|bool {}
+function system (string $command, int &$result_code = null): string|int {}
 
 /**
  * Execute an external program and display raw output
  * @link http://www.php.net/manual/en/function.passthru.php
  * @param string $command 
  * @param int $result_code [optional] 
- * @return bool|null Returns null on success or false on failure.
+ * @return false|null Returns null on success or false on failure.
  */
-function passthru (string $command, int &$result_code = null): ?bool {}
+function passthru (string $command, int &$result_code = null): ?int {}
 
 /**
  * Escape shell metacharacters
@@ -3579,14 +3605,14 @@ function escapeshellarg (string $arg): string {}
  * Execute command via shell and return the complete output as a string
  * @link http://www.php.net/manual/en/function.shell-exec.php
  * @param string $command 
- * @return string|bool|null A string containing the output from the executed command, false if the pipe
+ * @return string|false|null A string containing the output from the executed command, false if the pipe
  * cannot be established or null if an error occurs or the command produces no output.
  * <p>This function can return null both when an error occurs or the program
  * produces no output. It is not possible to detect execution failures using
  * this function. exec should be used when access to the
  * program exit code is required.</p>
  */
-function shell_exec (string $command): string|bool|null {}
+function shell_exec (string $command): string|int|null {}
 
 /**
  * Change the priority of the current process
@@ -3606,14 +3632,14 @@ function proc_nice (int $priority): bool {}
  * @param int $would_block [optional] 
  * @return bool Returns true on success or false on failure.
  */
-function flock (resource $stream, int $operation, int &$would_block = null): bool {}
+function flock ($stream, int $operation, int &$would_block = null): bool {}
 
 /**
  * Extracts all meta tag content attributes from a file and returns an array
  * @link http://www.php.net/manual/en/function.get-meta-tags.php
  * @param string $filename 
  * @param bool $use_include_path [optional] 
- * @return array|bool Returns an array with all the parsed meta tags.
+ * @return array|false Returns an array with all the parsed meta tags.
  * <p>The value of the name property becomes the key, the value of the content
  * property becomes the value of the returned array, so you can easily use
  * standard array functions to traverse it or access single values. 
@@ -3622,7 +3648,7 @@ function flock (resource $stream, int $operation, int &$would_block = null): boo
  * name, only the last one is returned.</p>
  * <p>Returns false on failure.</p>
  */
-function get_meta_tags (string $filename, bool $use_include_path = false): array|bool {}
+function get_meta_tags (string $filename, bool $use_include_path = false): array|int {}
 
 /**
  * Closes process file pointer
@@ -3632,14 +3658,14 @@ function get_meta_tags (string $filename, bool $use_include_path = false): array
  * an error then -1 is returned.
  * <p>If PHP has been compiled with --enable-sigchild, the return value of this function is undefined.</p>
  */
-function pclose (resource $handle): int {}
+function pclose ($handle): int {}
 
 /**
  * Opens process file pointer
  * @link http://www.php.net/manual/en/function.popen.php
  * @param string $command 
  * @param string $mode 
- * @return resource|bool Returns a file pointer identical to that returned by
+ * @return resource|false Returns a file pointer identical to that returned by
  * fopen, except that it is unidirectional (may
  * only be used for reading or writing) and must be closed with
  * pclose. This pointer may be used with
@@ -3650,7 +3676,7 @@ function pclose (resource $handle): int {}
  * command.
  * <p>If an error occurs, returns false.</p>
  */
-function popen (string $command, string $mode): resource|bool {}
+function popen (string $command, string $mode) {}
 
 /**
  * Outputs a file
@@ -3658,10 +3684,10 @@ function popen (string $command, string $mode): resource|bool {}
  * @param string $filename 
  * @param bool $use_include_path [optional] 
  * @param resource|null $context [optional] 
- * @return int|bool Returns the number of bytes read from the file on success,
+ * @return int|false Returns the number of bytes read from the file on success,
  * or false on failure
  */
-function readfile (string $filename, bool $use_include_path = false, ?resource $context = null): int|bool {}
+function readfile (string $filename, bool $use_include_path = false, $context = null): int {}
 
 /**
  * Rewind the position of a file pointer
@@ -3669,7 +3695,7 @@ function readfile (string $filename, bool $use_include_path = false, ?resource $
  * @param resource $stream 
  * @return bool Returns true on success or false on failure.
  */
-function rewind (resource $stream): bool {}
+function rewind ($stream): bool {}
 
 /**
  * Removes directory
@@ -3678,7 +3704,7 @@ function rewind (resource $stream): bool {}
  * @param resource|null $context [optional] 
  * @return bool Returns true on success or false on failure.
  */
-function rmdir (string $directory, ?resource $context = null): bool {}
+function rmdir (string $directory, $context = null): bool {}
 
 /**
  * Changes the current umask
@@ -3695,7 +3721,7 @@ function umask (?int $mask = null): int {}
  * @param resource $stream 
  * @return bool Returns true on success or false on failure.
  */
-function fclose (resource $stream): bool {}
+function fclose ($stream): bool {}
 
 /**
  * Tests for end-of-file on a file pointer
@@ -3704,37 +3730,37 @@ function fclose (resource $stream): bool {}
  * @return bool Returns true if the file pointer is at EOF or an error occurs
  * (including socket timeout); otherwise returns false.
  */
-function feof (resource $stream): bool {}
+function feof ($stream): bool {}
 
 /**
  * Gets character from file pointer
  * @link http://www.php.net/manual/en/function.fgetc.php
  * @param resource $stream 
- * @return string|bool Returns a string containing a single character read from the file pointed
+ * @return string|false Returns a string containing a single character read from the file pointed
  * to by stream. Returns false on EOF.
  */
-function fgetc (resource $stream): string|bool {}
+function fgetc ($stream): string|int {}
 
 /**
  * Gets line from file pointer
  * @link http://www.php.net/manual/en/function.fgets.php
  * @param resource $stream 
  * @param int|null $length [optional] 
- * @return string|bool Returns a string of up to length - 1 bytes read from
+ * @return string|false Returns a string of up to length - 1 bytes read from
  * the file pointed to by stream. If there is no more data 
  * to read in the file pointer, then false is returned.
  * <p>If an error occurs, false is returned.</p>
  */
-function fgets (resource $stream, ?int $length = null): string|bool {}
+function fgets ($stream, ?int $length = null): string|int {}
 
 /**
  * Binary-safe file read
  * @link http://www.php.net/manual/en/function.fread.php
  * @param resource $stream 
  * @param int $length 
- * @return string|bool Returns the read string or false on failure.
+ * @return string|false Returns the read string or false on failure.
  */
-function fread (resource $stream, int $length): string|bool {}
+function fread ($stream, int $length): string|int {}
 
 /**
  * Opens file or URL
@@ -3743,10 +3769,10 @@ function fread (resource $stream, int $length): string|bool {}
  * @param string $mode 
  * @param bool $use_include_path [optional] 
  * @param resource|null $context [optional] 
- * @return resource|bool Returns a file pointer resource on success,
+ * @return resource|false Returns a file pointer resource on success,
  * or false on failure
  */
-function fopen (string $filename, string $mode, bool $use_include_path = false, ?resource $context = null): resource|bool {}
+function fopen (string $filename, string $mode, bool $use_include_path = false, $context = null) {}
 
 /**
  * Parses input from a file according to a format
@@ -3754,7 +3780,7 @@ function fopen (string $filename, string $mode, bool $use_include_path = false, 
  * @param resource $stream 
  * @param string $format 
  * @param mixed $vars 
- * @return array|int|bool|null If only two parameters were passed to this function, the values parsed will be
+ * @return array|int|false|null If only two parameters were passed to this function, the values parsed will be
  * returned as an array. Otherwise, if optional parameters are passed, the
  * function will return the number of assigned values. The optional
  * parameters must be passed by reference.
@@ -3762,7 +3788,7 @@ function fopen (string $filename, string $mode, bool $use_include_path = false, 
  * than there are available within string,
  * null will be returned. On other errors, false will be returned.</p>
  */
-function fscanf (resource $stream, string $format, mixed &...$vars): array|int|bool|null {}
+function fscanf ($stream, string $format, mixed &...$vars): array|int|null {}
 
 /**
  * Output all remaining data on a file pointer
@@ -3771,7 +3797,7 @@ function fscanf (resource $stream, string $format, mixed &...$vars): array|int|b
  * @return int Returns the number of characters read from stream
  * and passed through to the output.
  */
-function fpassthru (resource $stream): int {}
+function fpassthru ($stream): int {}
 
 /**
  * Truncates a file to a given length
@@ -3780,17 +3806,17 @@ function fpassthru (resource $stream): int {}
  * @param int $size 
  * @return bool Returns true on success or false on failure.
  */
-function ftruncate (resource $stream, int $size): bool {}
+function ftruncate ($stream, int $size): bool {}
 
 /**
  * Gets information about a file using an open file pointer
  * @link http://www.php.net/manual/en/function.fstat.php
  * @param resource $stream 
- * @return array|bool Returns an array with the statistics of the file; the format of the array
+ * @return array|false Returns an array with the statistics of the file; the format of the array
  * is described in detail on the stat manual page.
  * Returns false on failure.
  */
-function fstat (resource $stream): array|bool {}
+function fstat ($stream): array|int {}
 
 /**
  * Seeks on a file pointer
@@ -3800,17 +3826,17 @@ function fstat (resource $stream): array|bool {}
  * @param int $whence [optional] 
  * @return int Upon success, returns 0; otherwise, returns -1.
  */
-function fseek (resource $stream, int $offset, int $whence = SEEK_SET): int {}
+function fseek ($stream, int $offset, int $whence = SEEK_SET): int {}
 
 /**
  * Returns the current position of the file read/write pointer
  * @link http://www.php.net/manual/en/function.ftell.php
  * @param resource $stream 
- * @return int|bool Returns the position of the file pointer referenced by
+ * @return int|false Returns the position of the file pointer referenced by
  * stream as an integer; i.e., its offset into the file stream.
  * <p>If an error occurs, returns false.</p>
  */
-function ftell (resource $stream): int|bool {}
+function ftell ($stream): int {}
 
 /**
  * Flushes the output to a file
@@ -3818,7 +3844,7 @@ function ftell (resource $stream): int|bool {}
  * @param resource $stream 
  * @return bool Returns true on success or false on failure.
  */
-function fflush (resource $stream): bool {}
+function fflush ($stream): bool {}
 
 /**
  * Binary-safe file write
@@ -3826,10 +3852,10 @@ function fflush (resource $stream): bool {}
  * @param resource $stream 
  * @param string $data 
  * @param int|null $length [optional] 
- * @return int|bool fwrite returns the number of bytes
+ * @return int|false fwrite returns the number of bytes
  * written, or false on failure.
  */
-function fwrite (resource $stream, string $data, ?int $length = null): int|bool {}
+function fwrite ($stream, string $data, ?int $length = null): int {}
 
 /**
  * Alias of fwrite
@@ -3837,10 +3863,10 @@ function fwrite (resource $stream, string $data, ?int $length = null): int|bool 
  * @param resource $stream 
  * @param string $data 
  * @param int|null $length [optional] 
- * @return int|bool fwrite returns the number of bytes
+ * @return int|false fwrite returns the number of bytes
  * written, or false on failure.
  */
-function fputs (resource $stream, string $data, ?int $length = null): int|bool {}
+function fputs ($stream, string $data, ?int $length = null): int {}
 
 /**
  * Makes directory
@@ -3855,7 +3881,7 @@ function fputs (resource $stream, string $data, ?int $length = null): int|bool {
  * file_exists to check if the directory already exists
  * before trying to create it.</p>
  */
-function mkdir (string $directory, int $permissions = 0777, bool $recursive = false, ?resource $context = null): bool {}
+function mkdir (string $directory, int $permissions = 0777, bool $recursive = false, $context = null): bool {}
 
 /**
  * Renames a file or directory
@@ -3865,7 +3891,7 @@ function mkdir (string $directory, int $permissions = 0777, bool $recursive = fa
  * @param resource|null $context [optional] 
  * @return bool Returns true on success or false on failure.
  */
-function rename (string $from, string $to, ?resource $context = null): bool {}
+function rename (string $from, string $to, $context = null): bool {}
 
 /**
  * Copies file
@@ -3875,25 +3901,25 @@ function rename (string $from, string $to, ?resource $context = null): bool {}
  * @param resource|null $context [optional] 
  * @return bool Returns true on success or false on failure.
  */
-function copy (string $from, string $to, ?resource $context = null): bool {}
+function copy (string $from, string $to, $context = null): bool {}
 
 /**
  * Create file with unique file name
  * @link http://www.php.net/manual/en/function.tempnam.php
  * @param string $directory 
  * @param string $prefix 
- * @return string|bool Returns the new temporary filename (with path), or false on
+ * @return string|false Returns the new temporary filename (with path), or false on
  * failure.
  */
-function tempnam (string $directory, string $prefix): string|bool {}
+function tempnam (string $directory, string $prefix): string|int {}
 
 /**
  * Creates a temporary file
  * @link http://www.php.net/manual/en/function.tmpfile.php
- * @return resource|bool Returns a file handle, similar to the one returned by
+ * @return resource|false Returns a file handle, similar to the one returned by
  * fopen, for the new file or false on failure.
  */
-function tmpfile (): resource|bool {}
+function tmpfile () {}
 
 /**
  * Reads entire file into an array
@@ -3901,13 +3927,13 @@ function tmpfile (): resource|bool {}
  * @param string $filename 
  * @param int $flags [optional] 
  * @param resource|null $context [optional] 
- * @return array|bool Returns the file in an array. Each element of the array corresponds to a
+ * @return array|false Returns the file in an array. Each element of the array corresponds to a
  * line in the file, with the newline still attached. Upon failure,
  * file returns false.
  * <p>Each line in the resulting array will include the line ending, unless
  * FILE_IGNORE_NEW_LINES is used.</p>
  */
-function file (string $filename, int $flags = null, ?resource $context = null): array|bool {}
+function file (string $filename, int $flags = null, $context = null): array|int {}
 
 /**
  * Reads entire file into a string
@@ -3917,9 +3943,9 @@ function file (string $filename, int $flags = null, ?resource $context = null): 
  * @param resource|null $context [optional] 
  * @param int $offset [optional] 
  * @param int|null $length [optional] 
- * @return string|bool The function returns the read data or false on failure.
+ * @return string|false The function returns the read data or false on failure.
  */
-function file_get_contents (string $filename, bool $use_include_path = false, ?resource $context = null, int $offset = null, ?int $length = null): string|bool {}
+function file_get_contents (string $filename, bool $use_include_path = false, $context = null, int $offset = null, ?int $length = null): string|int {}
 
 /**
  * Deletes a file
@@ -3928,7 +3954,7 @@ function file_get_contents (string $filename, bool $use_include_path = false, ?r
  * @param resource|null $context [optional] 
  * @return bool Returns true on success or false on failure.
  */
-function unlink (string $filename, ?resource $context = null): bool {}
+function unlink (string $filename, $context = null): bool {}
 
 /**
  * Write data to a file
@@ -3937,10 +3963,10 @@ function unlink (string $filename, ?resource $context = null): bool {}
  * @param mixed $data 
  * @param int $flags [optional] 
  * @param resource|null $context [optional] 
- * @return int|bool This function returns the number of bytes that were written to the file, or
+ * @return int|false This function returns the number of bytes that were written to the file, or
  * false on failure.
  */
-function file_put_contents (string $filename, mixed $data, int $flags = null, ?resource $context = null): int|bool {}
+function file_put_contents (string $filename, mixed $data, int $flags = null, $context = null): int {}
 
 /**
  * Format line as CSV and write to file pointer
@@ -3951,9 +3977,9 @@ function file_put_contents (string $filename, mixed $data, int $flags = null, ?r
  * @param string $enclosure [optional] 
  * @param string $escape [optional] 
  * @param string $eol [optional] 
- * @return int|bool Returns the length of the written string or false on failure.
+ * @return int|false Returns the length of the written string or false on failure.
  */
-function fputcsv (resource $stream, array $fields, string $separator = ",", string $enclosure = "\"", string $escape = "\\", string $eol = "\n"): int|bool {}
+function fputcsv ($stream, array $fields, string $separator = '","', string $enclosure = '"\\""', string $escape = '"\\\\"', string $eol = '"\\n"'): int {}
 
 /**
  * Gets line from file pointer and parse for CSV fields
@@ -3963,18 +3989,18 @@ function fputcsv (resource $stream, array $fields, string $separator = ",", stri
  * @param string $separator [optional] 
  * @param string $enclosure [optional] 
  * @param string $escape [optional] 
- * @return array|bool Returns an indexed array containing the fields read on success, or false on failure.
+ * @return array|false Returns an indexed array containing the fields read on success, or false on failure.
  * <p>A blank line in a CSV file will be returned as an array
  * comprising a single null field, and will not be treated
  * as an error.</p>
  */
-function fgetcsv (resource $stream, ?int $length = null, string $separator = ",", string $enclosure = "\"", string $escape = "\\"): array|bool {}
+function fgetcsv ($stream, ?int $length = null, string $separator = '","', string $enclosure = '"\\""', string $escape = '"\\\\"'): array|int {}
 
 /**
  * Returns canonicalized absolute pathname
  * @link http://www.php.net/manual/en/function.realpath.php
  * @param string $path 
- * @return string|bool Returns the canonicalized absolute pathname on success. The resulting path 
+ * @return string|false Returns the canonicalized absolute pathname on success. The resulting path 
  * will have no symbolic link, /./ or /../ components. Trailing delimiters,
  * such as \ and /, are also removed.
  * <p>realpath returns false on failure, e.g. if
@@ -3989,7 +4015,7 @@ function fgetcsv (resource $stream, ?int $length = null, string $separator = ","
  * <p>On Windows, junctions and symbolic links to directories are only expanded by
  * one level.</p>
  */
-function realpath (string $path): string|bool {}
+function realpath (string $path): string|int {}
 
 /**
  * Match filename against a pattern
@@ -4012,64 +4038,64 @@ function sys_get_temp_dir (): string {}
  * Gets last access time of file
  * @link http://www.php.net/manual/en/function.fileatime.php
  * @param string $filename 
- * @return int|bool Returns the time the file was last accessed, or false on failure.
+ * @return int|false Returns the time the file was last accessed, or false on failure.
  * The time is returned as a Unix timestamp.
  */
-function fileatime (string $filename): int|bool {}
+function fileatime (string $filename): int {}
 
 /**
  * Gets inode change time of file
  * @link http://www.php.net/manual/en/function.filectime.php
  * @param string $filename 
- * @return int|bool Returns the time the file was last changed, or false on failure.
+ * @return int|false Returns the time the file was last changed, or false on failure.
  * The time is returned as a Unix timestamp.
  */
-function filectime (string $filename): int|bool {}
+function filectime (string $filename): int {}
 
 /**
  * Gets file group
  * @link http://www.php.net/manual/en/function.filegroup.php
  * @param string $filename 
- * @return int|bool Returns the group ID of the file, or false if
+ * @return int|false Returns the group ID of the file, or false if
  * an error occurs. The group ID is returned in numerical format, use
  * posix_getgrgid to resolve it to a group name.
  * Upon failure, false is returned.
  */
-function filegroup (string $filename): int|bool {}
+function filegroup (string $filename): int {}
 
 /**
  * Gets file inode
  * @link http://www.php.net/manual/en/function.fileinode.php
  * @param string $filename 
- * @return int|bool Returns the inode number of the file, or false on failure.
+ * @return int|false Returns the inode number of the file, or false on failure.
  */
-function fileinode (string $filename): int|bool {}
+function fileinode (string $filename): int {}
 
 /**
  * Gets file modification time
  * @link http://www.php.net/manual/en/function.filemtime.php
  * @param string $filename 
- * @return int|bool Returns the time the file was last modified, or false on failure.
+ * @return int|false Returns the time the file was last modified, or false on failure.
  * The time is returned as a Unix timestamp, which is
  * suitable for the date function.
  */
-function filemtime (string $filename): int|bool {}
+function filemtime (string $filename): int {}
 
 /**
  * Gets file owner
  * @link http://www.php.net/manual/en/function.fileowner.php
  * @param string $filename 
- * @return int|bool Returns the user ID of the owner of the file, or false on failure.
+ * @return int|false Returns the user ID of the owner of the file, or false on failure.
  * The user ID is returned in numerical format, use
  * posix_getpwuid to resolve it to a username.
  */
-function fileowner (string $filename): int|bool {}
+function fileowner (string $filename): int {}
 
 /**
  * Gets file permissions
  * @link http://www.php.net/manual/en/function.fileperms.php
  * @param string $filename 
- * @return int|bool Returns the file's permissions as a numeric mode. Lower bits of this mode
+ * @return int|false Returns the file's permissions as a numeric mode. Lower bits of this mode
  * are the same as the permissions expected by chmod,
  * however on most platforms the return value will also include information on
  * the type of file given as filename. The examples
@@ -4083,28 +4109,28 @@ function fileowner (string $filename): int|bool {}
  * return value is required.</p>
  * <p>Returns false on failure.</p>
  */
-function fileperms (string $filename): int|bool {}
+function fileperms (string $filename): int {}
 
 /**
  * Gets file size
  * @link http://www.php.net/manual/en/function.filesize.php
  * @param string $filename 
- * @return int|bool Returns the size of the file in bytes, or false (and generates an error
+ * @return int|false Returns the size of the file in bytes, or false (and generates an error
  * of level E_WARNING) in case of an error.
  */
-function filesize (string $filename): int|bool {}
+function filesize (string $filename): int {}
 
 /**
  * Gets file type
  * @link http://www.php.net/manual/en/function.filetype.php
  * @param string $filename 
- * @return string|bool Returns the type of the file. Possible values are fifo, char,
+ * @return string|false Returns the type of the file. Possible values are fifo, char,
  * dir, block, link, file, socket and unknown.
  * <p>Returns false if an error occurs. filetype will also
  * produce an E_NOTICE message if the stat call fails
  * or if the file type is unknown.</p>
  */
-function filetype (string $filename): string|bool {}
+function filetype (string $filename): string|int {}
 
 /**
  * Checks whether a file or directory exists
@@ -4186,7 +4212,7 @@ function is_link (string $filename): bool {}
  * Gives information about a file
  * @link http://www.php.net/manual/en/function.stat.php
  * @param string $filename 
- * @return array|bool <table>
+ * @return array|false <table>
  * stat and fstat result
  * format
  * <table>
@@ -4321,13 +4347,13 @@ function is_link (string $filename): bool {}
  * 0040755.</p>
  * <p>In case of error, stat returns false.</p>
  */
-function stat (string $filename): array|bool {}
+function stat (string $filename): array|int {}
 
 /**
  * Gives information about a file or symbolic link
  * @link http://www.php.net/manual/en/function.lstat.php
  * @param string $filename 
- * @return array|bool See the manual page for stat for information on
+ * @return array|false See the manual page for stat for information on
  * the structure of the array that lstat returns.
  * This function is identical to the stat function
  * except that if the filename parameter is a symbolic
@@ -4335,7 +4361,7 @@ function stat (string $filename): array|bool {}
  * file pointed to by the symbolic link.
  * <p>On failure, false is returned.</p>
  */
-function lstat (string $filename): array|bool {}
+function lstat (string $filename): array|int {}
 
 /**
  * Changes file owner
@@ -4399,34 +4425,34 @@ function touch (string $filename, ?int $mtime = null, ?int $atime = null): bool 
  * @param string $filename [optional] 
  * @return void No value is returned.
  */
-function clearstatcache (bool $clear_realpath_cache = false, string $filename = ""): void {}
+function clearstatcache (bool $clear_realpath_cache = false, string $filename = '""'): void {}
 
 /**
  * Returns the total size of a filesystem or disk partition
  * @link http://www.php.net/manual/en/function.disk-total-space.php
  * @param string $directory 
- * @return float|bool Returns the total number of bytes as a float
+ * @return float|false Returns the total number of bytes as a float
  * or false on failure.
  */
-function disk_total_space (string $directory): float|bool {}
+function disk_total_space (string $directory): float|int {}
 
 /**
  * Returns available space on filesystem or disk partition
  * @link http://www.php.net/manual/en/function.disk-free-space.php
  * @param string $directory 
- * @return float|bool Returns the number of available bytes as a float
+ * @return float|false Returns the number of available bytes as a float
  * or false on failure.
  */
-function disk_free_space (string $directory): float|bool {}
+function disk_free_space (string $directory): float|int {}
 
 /**
  * Alias of disk_free_space
  * @link http://www.php.net/manual/en/function.diskfreespace.php
  * @param string $directory 
- * @return float|bool Returns the number of available bytes as a float
+ * @return float|false Returns the number of available bytes as a float
  * or false on failure.
  */
-function diskfreespace (string $directory): float|bool {}
+function diskfreespace (string $directory): float|int {}
 
 /**
  * Get realpath cache entries
@@ -4490,7 +4516,7 @@ function vsprintf (string $format, array $values): string {}
  * @param mixed $values 
  * @return int Returns the length of the string written.
  */
-function fprintf (resource $stream, string $format, mixed ...$values): int {}
+function fprintf ($stream, string $format, mixed ...$values): int {}
 
 /**
  * Write a formatted string to a stream
@@ -4500,7 +4526,7 @@ function fprintf (resource $stream, string $format, mixed ...$values): int {}
  * @param array $values 
  * @return int Returns the length of the outputted string.
  */
-function vfprintf (resource $stream, string $format, array $values): int {}
+function vfprintf ($stream, string $format, array $values): int {}
 
 /**
  * Open Internet or Unix domain socket connection
@@ -4510,13 +4536,13 @@ function vfprintf (resource $stream, string $format, array $values): int {}
  * @param int $error_code [optional] 
  * @param string $error_message [optional] 
  * @param float|null $timeout [optional] 
- * @return resource|bool fsockopen returns a file pointer which may be used
+ * @return resource|false fsockopen returns a file pointer which may be used
  * together with the other file functions (such as
  * fgets, fgetss,
  * fwrite, fclose, and
  * feof). If the call fails, it will return false
  */
-function fsockopen (string $hostname, int $port = -1, int &$error_code = null, string &$error_message = null, ?float $timeout = null): resource|bool {}
+function fsockopen (string $hostname, int $port = -1, int &$error_code = null, string &$error_message = null, ?float $timeout = null) {}
 
 /**
  * Open persistent Internet or Unix domain socket connection
@@ -4526,13 +4552,13 @@ function fsockopen (string $hostname, int $port = -1, int &$error_code = null, s
  * @param int $error_code [optional] 
  * @param string $error_message [optional] 
  * @param float|null $timeout [optional] 
- * @return resource|bool pfsockopen returns a file pointer which may be used
+ * @return resource|false pfsockopen returns a file pointer which may be used
  * together with the other file functions (such as
  * fgets, fgetss,
  * fwrite, fclose, and
  * feof), or false on failure.
  */
-function pfsockopen (string $hostname, int $port = -1, int &$error_code = null, string &$error_message = null, ?float $timeout = null): resource|bool {}
+function pfsockopen (string $hostname, int $port = -1, int &$error_code = null, string &$error_message = null, ?float $timeout = null) {}
 
 /**
  * Generate URL-encoded query string
@@ -4543,7 +4569,7 @@ function pfsockopen (string $hostname, int $port = -1, int &$error_code = null, 
  * @param int $encoding_type [optional] 
  * @return string Returns a URL-encoded string.
  */
-function http_build_query (array|object $data, string $numeric_prefix = "", ?string $arg_separator = null, int $encoding_type = PHP_QUERY_RFC1738): string {}
+function http_build_query (array|object $data, string $numeric_prefix = '""', ?string $arg_separator = null, int $encoding_type = PHP_QUERY_RFC1738): string {}
 
 /**
  * Get Mime-Type for image-type returned by getimagesize,
@@ -4642,16 +4668,16 @@ function image_type_to_mime_type (int $image_type): string {}
  * @link http://www.php.net/manual/en/function.image-type-to-extension.php
  * @param int $image_type 
  * @param bool $include_dot [optional] 
- * @return string|bool A string with the extension corresponding to the given image type, or false on failure.
+ * @return string|false A string with the extension corresponding to the given image type, or false on failure.
  */
-function image_type_to_extension (int $image_type, bool $include_dot = true): string|bool {}
+function image_type_to_extension (int $image_type, bool $include_dot = true): string|int {}
 
 /**
  * Get the size of an image
  * @link http://www.php.net/manual/en/function.getimagesize.php
  * @param string $filename 
  * @param array $image_info [optional] 
- * @return array|bool Returns an array with up to 7 elements. Not all image types will include
+ * @return array|false Returns an array with up to 7 elements. Not all image types will include
  * the channels and bits elements.
  * <p>Index 0 and 1 contains respectively the width and the height of the image.</p>
  * <p>Some formats may contain no image or may contain multiple images. In these
@@ -4690,49 +4716,49 @@ function image_type_to_extension (int $image_type, bool $include_dot = true): st
  * animated GIF with a global color table.</p>
  * <p>On failure, false is returned.</p>
  */
-function getimagesize (string $filename, array &$image_info = null): array|bool {}
+function getimagesize (string $filename, array &$image_info = null): array|int {}
 
 /**
  * Get the size of an image from a string
  * @link http://www.php.net/manual/en/function.getimagesizefromstring.php
  * @param string $string The image data, as a string.
  * @param array $image_info [optional] See getimagesize.
- * @return array|bool See getimagesize.
+ * @return array|false See getimagesize.
  */
-function getimagesizefromstring (string $string, array &$image_info = null): array|bool {}
+function getimagesizefromstring (string $string, array &$image_info = null): array|int {}
 
 /**
  * Outputs information about PHP's configuration
  * @link http://www.php.net/manual/en/function.phpinfo.php
  * @param int $flags [optional] 
- * @return bool Always returns true.
+ * @return true Always returns true.
  */
-function phpinfo (int $flags = INFO_ALL): bool {}
+function phpinfo (int $flags = INFO_ALL): int {}
 
 /**
  * Gets the current PHP version
  * @link http://www.php.net/manual/en/function.phpversion.php
  * @param string|null $extension [optional] 
- * @return string|bool Returns the current PHP version as a string.
+ * @return string|false Returns the current PHP version as a string.
  * If a string argument is provided for
  * extension parameter, phpversion
  * returns the version of that extension, or false if there is no version
  * information associated or the extension isn't enabled.
  */
-function phpversion (?string $extension = null): string|bool {}
+function phpversion (?string $extension = null): string|int {}
 
 /**
  * Prints out the credits for PHP
  * @link http://www.php.net/manual/en/function.phpcredits.php
  * @param int $flags [optional] 
- * @return bool Always returns true.
+ * @return true Always returns true.
  */
-function phpcredits (int $flags = CREDITS_ALL): bool {}
+function phpcredits (int $flags = CREDITS_ALL): int {}
 
 /**
  * Returns the type of interface between web server and PHP
  * @link http://www.php.net/manual/en/function.php-sapi-name.php
- * @return string|bool Returns the interface type, as a lowercase string, or false on failure.
+ * @return string|false Returns the interface type, as a lowercase string, or false on failure.
  * <p>Although not exhaustive, the possible return values include 
  * apache, 
  * apache2handler, 
@@ -4742,7 +4768,7 @@ function phpcredits (int $flags = CREDITS_ALL): bool {}
  * litespeed, 
  * phpdbg.</p>
  */
-function php_sapi_name (): string|bool {}
+function php_sapi_name (): string|int {}
 
 /**
  * Returns information about the operating system PHP is running on
@@ -4750,12 +4776,12 @@ function php_sapi_name (): string|bool {}
  * @param string $mode [optional] 
  * @return string Returns the description, as a string.
  */
-function php_uname (string $mode = "a"): string {}
+function php_uname (string $mode = '"a"'): string {}
 
 /**
  * Return a list of .ini files parsed from the additional ini dir
  * @link http://www.php.net/manual/en/function.php-ini-scanned-files.php
- * @return string|bool Returns a comma-separated string of .ini files on success. Each comma is
+ * @return string|false Returns a comma-separated string of .ini files on success. Each comma is
  * followed by a newline. If the configure directive --with-config-file-scan-dir wasn't set and the
  * PHP_INI_SCAN_DIR environment variable isn't set, false
  * is returned. If it was set and the directory was empty, an empty string is
@@ -4764,14 +4790,14 @@ function php_uname (string $mode = "a"): string {}
  * be seen both at compile time and while using
  * php_ini_scanned_files.
  */
-function php_ini_scanned_files (): string|bool {}
+function php_ini_scanned_files (): string|int {}
 
 /**
  * Retrieve a path to the loaded php.ini file
  * @link http://www.php.net/manual/en/function.php-ini-loaded-file.php
- * @return string|bool The loaded php.ini path, or false if one is not loaded.
+ * @return string|false The loaded php.ini path, or false if one is not loaded.
  */
-function php_ini_loaded_file (): string|bool {}
+function php_ini_loaded_file (): string|int {}
 
 /**
  * Embeds binary IPTC data into a JPEG image
@@ -4789,10 +4815,10 @@ function iptcembed (string $iptc_data, string $filename, int $spool = null): str
  * Parse a binary IPTC block into single tags
  * @link http://www.php.net/manual/en/function.iptcparse.php
  * @param string $iptc_block 
- * @return array|bool Returns an array using the tagmarker as an index and the value as the
+ * @return array|false Returns an array using the tagmarker as an index and the value as the
  * value. It returns false on error or if no IPTC data was found.
  */
-function iptcparse (string $iptc_block): array|bool {}
+function iptcparse (string $iptc_block): array|int {}
 
 /**
  * Calculate Levenshtein distance between two strings
@@ -4811,20 +4837,20 @@ function levenshtein (string $string1, string $string2, int $insertion_cost = 1,
  * Returns the target of a symbolic link
  * @link http://www.php.net/manual/en/function.readlink.php
  * @param string $path 
- * @return string|bool Returns the contents of the symbolic link path or false on error.
+ * @return string|false Returns the contents of the symbolic link path or false on error.
  */
-function readlink (string $path): string|bool {}
+function readlink (string $path): string|int {}
 
 /**
  * Gets information about a link
  * @link http://www.php.net/manual/en/function.linkinfo.php
  * @param string $path 
- * @return int|bool linkinfo returns the st_dev field
+ * @return int|false linkinfo returns the st_dev field
  * of the Unix C stat structure returned by the lstat
  * system call. Returns a non-negative integer on success, -1 in case the link was not found, 
  * or false if an open.base_dir violation occurs.
  */
-function linkinfo (string $path): int|bool {}
+function linkinfo (string $path): int {}
 
 /**
  * Creates a symbolic link
@@ -4856,7 +4882,7 @@ function link (string $target, string $link): bool {}
  * <p>It is important to note that just because the mail was accepted for delivery,
  * it does NOT mean the mail will actually reach the intended destination.</p>
  */
-function mail (string $to, string $subject, string $message, array|string $additional_headers = [], string $additional_params = ""): bool {}
+function mail (string $to, string $subject, string $message, array|string $additional_headers = '[]', string $additional_params = '""'): bool {}
 
 /**
  * Absolute value
@@ -5210,7 +5236,7 @@ function base_convert (string $num, int $from_base, int $to_base): string {}
  * @param string|null $thousands_separator [optional] 
  * @return string A formatted version of num.
  */
-function number_format (float $num, int $decimals = null, ?string $decimal_separator = ".", ?string $thousands_separator = ","): string {}
+function number_format (float $num, int $decimals = null, ?string $decimal_separator = '"."', ?string $thousands_separator = '","'): string {}
 
 /**
  * Returns the floating point remainder (modulo) of the division
@@ -5273,11 +5299,11 @@ function gettimeofday (bool $as_float = false): array|float {}
  * Gets the current resource usages
  * @link http://www.php.net/manual/en/function.getrusage.php
  * @param int $mode [optional] 
- * @return array|bool Returns an associative array containing the data returned from the system
+ * @return array|false Returns an associative array containing the data returned from the system
  * call. All entries are accessible by using their documented field names.
  * Returns false on failure.
  */
-function getrusage (int $mode = null): array|bool {}
+function getrusage (int $mode = null): array|int {}
 
 /**
  * Pack data into binary string
@@ -5294,10 +5320,10 @@ function pack (string $format, mixed ...$values): string {}
  * @param string $format 
  * @param string $string 
  * @param int $offset [optional] 
- * @return array|bool Returns an associative array containing unpacked elements of binary
+ * @return array|false Returns an associative array containing unpacked elements of binary
  * string, or false on failure.
  */
-function unpack (string $format, string $string, int $offset = null): array|bool {}
+function unpack (string $format, string $string, int $offset = null): array|int {}
 
 /**
  * Returns information about the given hash
@@ -5336,7 +5362,7 @@ function password_get_info (string $hash): array {}
  * the password_verify function to verify the hash without
  * needing separate storage for the salt or algorithm information.</p>
  */
-function password_hash (string $password, string|int|null $algo, array $options = []): string {}
+function password_hash (string $password, string|int|null $algo, array $options = '[]'): string {}
 
 /**
  * Checks if the given hash matches the given options
@@ -5348,7 +5374,7 @@ function password_hash (string $password, string|int|null $algo, array $options 
  * algo and options, or false
  * otherwise.
  */
-function password_needs_rehash (string $hash, string|int|null $algo, array $options = []): bool {}
+function password_needs_rehash (string $hash, string|int|null $algo, array $options = '[]'): bool {}
 
 /**
  * Verifies that a password matches a hash
@@ -5375,11 +5401,11 @@ function password_algos (): array {}
  * @param string|null $cwd [optional] 
  * @param array|null $env_vars [optional] 
  * @param array|null $options [optional] 
- * @return resource|bool Returns a resource representing the process, which should be freed using
+ * @return resource|false Returns a resource representing the process, which should be freed using
  * proc_close when you are finished with it. On failure
  * returns false.
  */
-function proc_open (array|string $command, array $descriptor_spec, array &$pipes, ?string $cwd = null, ?array $env_vars = null, ?array $options = null): resource|bool {}
+function proc_open (array|string $command, array $descriptor_spec, array &$pipes, ?string $cwd = null, ?array $env_vars = null, ?array $options = null) {}
 
 /**
  * Close a process opened by proc_open and return the exit code of that process
@@ -5389,7 +5415,7 @@ function proc_open (array|string $command, array $descriptor_spec, array &$pipes
  * an error then -1 is returned.
  * <p>If PHP has been compiled with --enable-sigchild, the return value of this function is undefined.</p>
  */
-function proc_close (resource $process): int {}
+function proc_close ($process): int {}
 
 /**
  * Kills a process opened by proc_open
@@ -5398,7 +5424,7 @@ function proc_close (resource $process): int {}
  * @param int $signal [optional] 
  * @return bool Returns the termination status of the process that was run.
  */
-function proc_terminate (resource $process, int $signal = 15): bool {}
+function proc_terminate ($process, int $signal = 15): bool {}
 
 /**
  * Get information about a process opened by proc_open
@@ -5472,7 +5498,7 @@ function proc_terminate (resource $process, int $signal = 15): bool {}
  * </tr>
  * </table></p>
  */
-function proc_get_status (resource $process): array {}
+function proc_get_status ($process): array {}
 
 /**
  * Convert a quoted-printable string to an 8 bit string
@@ -5516,7 +5542,7 @@ function srand (int $seed = null, int $mode = MT_RAND_MT19937): void {}
  * @return int A pseudo random value between min
  * (or 0) and max (or getrandmax, inclusive).
  */
-function rand (int $min = 'null', int $max = 'null'): int {}
+function rand (int $min = NULL, int $max = NULL): int {}
 
 /**
  * Generate a random value via the Mersenne Twister Random Number Generator
@@ -5527,7 +5553,7 @@ function rand (int $min = 'null', int $max = 'null'): int {}
  * and max (or mt_getrandmax, inclusive),
  * or false if max is less than min.
  */
-function mt_rand (int $min = 'null', int $max = 'null'): int {}
+function mt_rand (int $min = NULL, int $max = NULL): int {}
 
 /**
  * Show largest possible random value
@@ -5586,13 +5612,13 @@ function soundex (string $string): string {}
  * @param array|null $except 
  * @param int|null $seconds 
  * @param int|null $microseconds [optional] 
- * @return int|bool On success stream_select returns the number of
+ * @return int|false On success stream_select returns the number of
  * stream resources contained in the modified arrays, which may be zero if
  * the timeout expires before anything interesting happens. On error false
  * is returned and a warning raised (this can happen if the system call is
  * interrupted by an incoming signal).
  */
-function stream_select (?array &$read, ?array &$write, ?array &$except, ?int $seconds, ?int $microseconds = null): int|bool {}
+function stream_select (?array &$read, ?array &$write, ?array &$except, ?int $seconds, ?int $microseconds = null): int {}
 
 /**
  * Creates a stream context
@@ -5601,7 +5627,7 @@ function stream_select (?array &$read, ?array &$write, ?array &$except, ?int $se
  * @param array|null $params [optional] 
  * @return resource A stream context resource.
  */
-function stream_context_create (?array $options = null, ?array $params = null): resource {}
+function stream_context_create (?array $options = null, ?array $params = null) {}
 
 /**
  * Set parameters for a stream/wrapper/context
@@ -5610,7 +5636,7 @@ function stream_context_create (?array $options = null, ?array $params = null): 
  * @param array $params 
  * @return bool Returns true on success or false on failure.
  */
-function stream_context_set_params (resource $context, array $params): bool {}
+function stream_context_set_params ($context, array $params): bool {}
 
 /**
  * Retrieves parameters from a context
@@ -5618,7 +5644,7 @@ function stream_context_set_params (resource $context, array $params): bool {}
  * @param resource $context 
  * @return array Returns an associate array containing all context options and parameters.
  */
-function stream_context_get_params (resource $context): array {}
+function stream_context_get_params ($context): array {}
 
 /**
  * Sets an option for a stream/wrapper/context
@@ -5629,7 +5655,7 @@ function stream_context_get_params (resource $context): array {}
  * @param mixed $value 
  * @return bool Returns true on success or false on failure.
  */
-function stream_context_set_option (resource $stream_or_context, string $wrapper, string $option, mixed $value): bool {}
+function stream_context_set_option ($stream_or_context, string $wrapper, string $option, mixed $value): bool {}
 
 /**
  * Retrieve options for a stream/wrapper/context
@@ -5637,7 +5663,7 @@ function stream_context_set_option (resource $stream_or_context, string $wrapper
  * @param resource $stream_or_context 
  * @return array Returns an associative array with the options.
  */
-function stream_context_get_options (resource $stream_or_context): array {}
+function stream_context_get_options ($stream_or_context): array {}
 
 /**
  * Retrieve the default stream context
@@ -5645,7 +5671,7 @@ function stream_context_get_options (resource $stream_or_context): array {}
  * @param array|null $options [optional] 
  * @return resource A stream context resource.
  */
-function stream_context_get_default (?array $options = null): resource {}
+function stream_context_get_default (?array $options = null) {}
 
 /**
  * Set the default stream context
@@ -5653,7 +5679,7 @@ function stream_context_get_default (?array $options = null): resource {}
  * @param array $options 
  * @return resource Returns the default stream context.
  */
-function stream_context_set_default (array $options): resource {}
+function stream_context_set_default (array $options) {}
 
 /**
  * Attach a filter to a stream
@@ -5668,7 +5694,7 @@ function stream_context_set_default (array $options): resource {}
  * <p>false is returned if stream is not a resource or
  * if filtername cannot be located.</p>
  */
-function stream_filter_prepend (resource $stream, string $filtername, int $read_write = null, mixed $params = null): resource {}
+function stream_filter_prepend ($stream, string $filtername, int $read_write = null, mixed $params = null) {}
 
 /**
  * Attach a filter to a stream
@@ -5683,7 +5709,7 @@ function stream_filter_prepend (resource $stream, string $filtername, int $read_
  * <p>false is returned if stream is not a resource or
  * if filtername cannot be located.</p>
  */
-function stream_filter_append (resource $stream, string $filtername, int $read_write = null, mixed $params = null): resource {}
+function stream_filter_append ($stream, string $filtername, int $read_write = null, mixed $params = null) {}
 
 /**
  * Remove a filter from a stream
@@ -5691,7 +5717,7 @@ function stream_filter_append (resource $stream, string $filtername, int $read_w
  * @param resource $stream_filter 
  * @return bool Returns true on success or false on failure.
  */
-function stream_filter_remove (resource $stream_filter): bool {}
+function stream_filter_remove ($stream_filter): bool {}
 
 /**
  * Open Internet or Unix domain socket connection
@@ -5702,13 +5728,13 @@ function stream_filter_remove (resource $stream_filter): bool {}
  * @param float|null $timeout [optional] 
  * @param int $flags [optional] 
  * @param resource|null $context [optional] 
- * @return resource|bool On success a stream resource is returned which may
+ * @return resource|false On success a stream resource is returned which may
  * be used together with the other file functions (such as
  * fgets, fgetss,
  * fwrite, fclose, and
  * feof), false on failure.
  */
-function stream_socket_client (string $address, int &$error_code = null, string &$error_message = null, ?float $timeout = null, int $flags = STREAM_CLIENT_CONNECT, ?resource $context = null): resource|bool {}
+function stream_socket_client (string $address, int &$error_code = null, string &$error_message = null, ?float $timeout = null, int $flags = STREAM_CLIENT_CONNECT, $context = null) {}
 
 /**
  * Create an Internet or Unix domain server socket
@@ -5718,9 +5744,9 @@ function stream_socket_client (string $address, int &$error_code = null, string 
  * @param string $error_message [optional] 
  * @param int $flags [optional] 
  * @param resource|null $context [optional] 
- * @return resource|bool Returns the created stream, or false on error.
+ * @return resource|false Returns the created stream, or false on error.
  */
-function stream_socket_server (string $address, int &$error_code = null, string &$error_message = null, int $flags = STREAM_SERVER_BIND | STREAM_SERVER_LISTEN, ?resource $context = null): resource|bool {}
+function stream_socket_server (string $address, int &$error_code = null, string &$error_message = null, int $flags = 'STREAM_SERVER_BIND | STREAM_SERVER_LISTEN', $context = null) {}
 
 /**
  * Accept a connection on a socket created by stream_socket_server
@@ -5728,18 +5754,18 @@ function stream_socket_server (string $address, int &$error_code = null, string 
  * @param resource $socket 
  * @param float|null $timeout [optional] 
  * @param string $peer_name [optional] 
- * @return resource|bool Returns a stream to the accepted socket connection or false on failure.
+ * @return resource|false Returns a stream to the accepted socket connection or false on failure.
  */
-function stream_socket_accept (resource $socket, ?float $timeout = null, string &$peer_name = null): resource|bool {}
+function stream_socket_accept ($socket, ?float $timeout = null, string &$peer_name = null) {}
 
 /**
  * Retrieve the name of the local or remote sockets
  * @link http://www.php.net/manual/en/function.stream-socket-get-name.php
  * @param resource $socket 
  * @param bool $remote 
- * @return string|bool The name of the socket, or false on failure.
+ * @return string|false The name of the socket, or false on failure.
  */
-function stream_socket_get_name (resource $socket, bool $remote): string|bool {}
+function stream_socket_get_name ($socket, bool $remote): string|int {}
 
 /**
  * Receives data from a socket, connected or not
@@ -5748,9 +5774,9 @@ function stream_socket_get_name (resource $socket, bool $remote): string|bool {}
  * @param int $length 
  * @param int $flags [optional] 
  * @param string|null $address [optional] 
- * @return string|bool Returns the read data, as a string, or false on failure.
+ * @return string|false Returns the read data, as a string, or false on failure.
  */
-function stream_socket_recvfrom (resource $socket, int $length, int $flags = null, ?string &$address = null): string|bool {}
+function stream_socket_recvfrom ($socket, int $length, int $flags = null, ?string &$address = null): string|int {}
 
 /**
  * Sends a message to a socket, whether it is connected or not
@@ -5759,9 +5785,9 @@ function stream_socket_recvfrom (resource $socket, int $length, int $flags = nul
  * @param string $data 
  * @param int $flags [optional] 
  * @param string $address [optional] 
- * @return int|bool Returns a result code, as an integer, or false on failure.
+ * @return int|false Returns a result code, as an integer, or false on failure.
  */
-function stream_socket_sendto (resource $socket, string $data, int $flags = null, string $address = ""): int|bool {}
+function stream_socket_sendto ($socket, string $data, int $flags = null, string $address = '""'): int {}
 
 /**
  * Turns encryption on/off on an already connected socket
@@ -5774,7 +5800,7 @@ function stream_socket_sendto (resource $socket, string $data, int $flags = null
  * 0 if there isn't enough data and you should try again
  * (only for non-blocking sockets).
  */
-function stream_socket_enable_crypto (resource $stream, bool $enable, ?int $crypto_method = null, ?resource $session_stream = null): int|bool {}
+function stream_socket_enable_crypto ($stream, bool $enable, ?int $crypto_method = null, $session_stream = null): int|bool {}
 
 /**
  * Shutdown a full-duplex connection
@@ -5783,7 +5809,7 @@ function stream_socket_enable_crypto (resource $stream, bool $enable, ?int $cryp
  * @param int $mode 
  * @return bool Returns true on success or false on failure.
  */
-function stream_socket_shutdown (resource $stream, int $mode): bool {}
+function stream_socket_shutdown ($stream, int $mode): bool {}
 
 /**
  * Creates a pair of connected, indistinguishable socket streams
@@ -5791,10 +5817,10 @@ function stream_socket_shutdown (resource $stream, int $mode): bool {}
  * @param int $domain 
  * @param int $type 
  * @param int $protocol 
- * @return array|bool Returns an array with the two socket resources on success, or
+ * @return array|false Returns an array with the two socket resources on success, or
  * false on failure.
  */
-function stream_socket_pair (int $domain, int $type, int $protocol): array|bool {}
+function stream_socket_pair (int $domain, int $type, int $protocol): array|int {}
 
 /**
  * Copies data from one stream to another
@@ -5803,9 +5829,9 @@ function stream_socket_pair (int $domain, int $type, int $protocol): array|bool 
  * @param resource $to 
  * @param int|null $length [optional] 
  * @param int $offset [optional] 
- * @return int|bool Returns the total count of bytes copied, or false on failure.
+ * @return int|false Returns the total count of bytes copied, or false on failure.
  */
-function stream_copy_to_stream (resource $from, resource $to, ?int $length = null, int $offset = null): int|bool {}
+function stream_copy_to_stream ($from, $to, ?int $length = null, int $offset = null): int {}
 
 /**
  * Reads remainder of a stream into a string
@@ -5813,9 +5839,9 @@ function stream_copy_to_stream (resource $from, resource $to, ?int $length = nul
  * @param resource $stream 
  * @param int|null $length [optional] 
  * @param int $offset [optional] 
- * @return string|bool Returns a string or false on failure.
+ * @return string|false Returns a string or false on failure.
  */
-function stream_get_contents (resource $stream, ?int $length = null, int $offset = -1): string|bool {}
+function stream_get_contents ($stream, ?int $length = null, int $offset = -1): string|int {}
 
 /**
  * Tells whether the stream supports locking
@@ -5823,7 +5849,7 @@ function stream_get_contents (resource $stream, ?int $length = null, int $offset
  * @param resource $stream 
  * @return bool Returns true on success or false on failure.
  */
-function stream_supports_lock (resource $stream): bool {}
+function stream_supports_lock ($stream): bool {}
 
 /**
  * Sets write file buffering on the given stream
@@ -5832,7 +5858,7 @@ function stream_supports_lock (resource $stream): bool {}
  * @param int $size 
  * @return int Returns 0 on success, or another value if the request cannot be honored.
  */
-function stream_set_write_buffer (resource $stream, int $size): int {}
+function stream_set_write_buffer ($stream, int $size): int {}
 
 /**
  * Alias of stream_set_write_buffer
@@ -5841,7 +5867,7 @@ function stream_set_write_buffer (resource $stream, int $size): int {}
  * @param int $size 
  * @return int Returns 0 on success, or another value if the request cannot be honored.
  */
-function set_file_buffer (resource $stream, int $size): int {}
+function set_file_buffer ($stream, int $size): int {}
 
 /**
  * Set read file buffering on the given stream
@@ -5854,7 +5880,7 @@ function set_file_buffer (resource $stream, int $size): int {}
  * @return int Returns 0 on success, or another value if the request
  * cannot be honored.
  */
-function stream_set_read_buffer (resource $stream, int $size): int {}
+function stream_set_read_buffer ($stream, int $size): int {}
 
 /**
  * Set blocking/non-blocking mode on a stream
@@ -5863,7 +5889,7 @@ function stream_set_read_buffer (resource $stream, int $size): int {}
  * @param bool $enable 
  * @return bool Returns true on success or false on failure.
  */
-function stream_set_blocking (resource $stream, bool $enable): bool {}
+function stream_set_blocking ($stream, bool $enable): bool {}
 
 /**
  * Alias of stream_set_blocking
@@ -5872,7 +5898,7 @@ function stream_set_blocking (resource $stream, bool $enable): bool {}
  * @param bool $enable 
  * @return bool Returns true on success or false on failure.
  */
-function socket_set_blocking (resource $stream, bool $enable): bool {}
+function socket_set_blocking ($stream, bool $enable): bool {}
 
 /**
  * Retrieves header/meta data from streams/file pointers
@@ -5908,7 +5934,7 @@ function socket_set_blocking (resource $stream, bool $enable): bool {}
  * <p>crypto (array) - the TLS connection metadata for this
  * stream. (Note: Only provided when the resource's stream uses TLS.)</p>
  */
-function stream_get_meta_data (resource $stream): array {}
+function stream_get_meta_data ($stream): array {}
 
 /**
  * Alias of stream_get_meta_data
@@ -5944,7 +5970,7 @@ function stream_get_meta_data (resource $stream): array {}
  * <p>crypto (array) - the TLS connection metadata for this
  * stream. (Note: Only provided when the resource's stream uses TLS.)</p>
  */
-function socket_get_status (resource $stream): array {}
+function socket_get_status ($stream): array {}
 
 /**
  * Gets line from stream resource up to a given delimiter
@@ -5952,18 +5978,18 @@ function socket_get_status (resource $stream): array {}
  * @param resource $stream 
  * @param int $length 
  * @param string $ending [optional] 
- * @return string|bool Returns a string of up to length bytes read from the file
+ * @return string|false Returns a string of up to length bytes read from the file
  * pointed to by stream, or false on failure.
  */
-function stream_get_line (resource $stream, int $length, string $ending = ""): string|bool {}
+function stream_get_line ($stream, int $length, string $ending = '""'): string|int {}
 
 /**
  * Resolve filename against the include path
  * @link http://www.php.net/manual/en/function.stream-resolve-include-path.php
  * @param string $filename 
- * @return string|bool Returns a string containing the resolved absolute filename, or false on failure.
+ * @return string|false Returns a string containing the resolved absolute filename, or false on failure.
  */
-function stream_resolve_include_path (string $filename): string|bool {}
+function stream_resolve_include_path (string $filename): string|int {}
 
 /**
  * Retrieve list of registered streams
@@ -5986,7 +6012,7 @@ function stream_get_transports (): array {}
  * @param resource|string $stream 
  * @return bool Returns true on success or false on failure.
  */
-function stream_is_local (resource|string $stream): bool {}
+function stream_is_local ($stream): bool {}
 
 /**
  * Check if a stream is a TTY
@@ -5994,7 +6020,7 @@ function stream_is_local (resource|string $stream): bool {}
  * @param resource $stream 
  * @return bool Returns true on success or false on failure.
  */
-function stream_isatty (resource $stream): bool {}
+function stream_isatty ($stream): bool {}
 
 /**
  * Set the stream chunk size
@@ -6005,7 +6031,7 @@ function stream_isatty (resource $stream): bool {}
  * <p>Will return false if size is less than 1 or
  * greater than PHP_INT_MAX.</p>
  */
-function stream_set_chunk_size (resource $stream, int $size): int {}
+function stream_set_chunk_size ($stream, int $size): int {}
 
 /**
  * Set timeout period on a stream
@@ -6015,7 +6041,7 @@ function stream_set_chunk_size (resource $stream, int $size): int {}
  * @param int $microseconds [optional] 
  * @return bool Returns true on success or false on failure.
  */
-function stream_set_timeout (resource $stream, int $seconds, int $microseconds = null): bool {}
+function stream_set_timeout ($stream, int $seconds, int $microseconds = null): bool {}
 
 /**
  * Alias of stream_set_timeout
@@ -6025,7 +6051,7 @@ function stream_set_timeout (resource $stream, int $seconds, int $microseconds =
  * @param int $microseconds [optional] 
  * @return bool Returns true on success or false on failure.
  */
-function socket_set_timeout (resource $stream, int $seconds, int $microseconds = null): bool {}
+function socket_set_timeout ($stream, int $seconds, int $microseconds = null): bool {}
 
 /**
  * Get the type of a variable
@@ -6362,14 +6388,14 @@ function is_countable (mixed $value): bool {}
  * <p>This function tries to create unique identifier, but it does not
  * guarantee 100% uniqueness of return value.</p>
  */
-function uniqid (string $prefix = "", bool $more_entropy = false): string {}
+function uniqid (string $prefix = '""', bool $more_entropy = false): string {}
 
 /**
  * Parse a URL and return its components
  * @link http://www.php.net/manual/en/function.parse-url.php
  * @param string $url 
  * @param int $component [optional] 
- * @return int|string|array|null|bool On seriously malformed URLs, parse_url may return
+ * @return int|string|array|null|false On seriously malformed URLs, parse_url may return
  * false.
  * <p>If the component parameter is omitted, an
  * associative array is returned. At least one element will be
@@ -6409,7 +6435,7 @@ function uniqid (string $prefix = "", bool $more_entropy = false): string {}
  * <p>Note that control characters (cf. ctype_cntrl) in the
  * components are replaced with underscores (_).</p>
  */
-function parse_url (string $url, int $component = -1): int|string|array|null|bool {}
+function parse_url (string $url, int $component = -1): int|string|array|null {}
 
 /**
  * URL-encodes string
@@ -6463,10 +6489,10 @@ function rawurldecode (string $string): string {}
  * @param string $url 
  * @param bool $associative [optional] 
  * @param resource|null $context [optional] 
- * @return array|bool Returns an indexed or associative array with the headers, or false on
+ * @return array|false Returns an indexed or associative array with the headers, or false on
  * failure.
  */
-function get_headers (string $url, bool $associative = false, ?resource $context = null): array|bool {}
+function get_headers (string $url, bool $associative = false, $context = null): array|int {}
 
 /**
  * Returns a bucket object from the brigade to operate on
@@ -6490,7 +6516,7 @@ function get_headers (string $url, bool $associative = false, ?resource $context
  * <p>data bucket The current string in the bucket.</p>
  * <p>datalen bucket The length of the string in the bucket.</p>
  */
-function stream_bucket_make_writeable (resource $brigade): ?object {}
+function stream_bucket_make_writeable ($brigade): ?object {}
 
 /**
  * Prepend bucket to brigade
@@ -6500,7 +6526,7 @@ function stream_bucket_make_writeable (resource $brigade): ?object {}
  * @param object $bucket A bucket object.
  * @return void No value is returned.
  */
-function stream_bucket_prepend (resource $brigade, object $bucket): void {}
+function stream_bucket_prepend ($brigade, object $bucket): void {}
 
 /**
  * Append bucket to brigade
@@ -6509,7 +6535,7 @@ function stream_bucket_prepend (resource $brigade, object $bucket): void {}
  * @param object $bucket 
  * @return void 
  */
-function stream_bucket_append (resource $brigade, object $bucket): void {}
+function stream_bucket_append ($brigade, object $bucket): void {}
 
 /**
  * Create a new bucket for use on the current stream
@@ -6518,7 +6544,7 @@ function stream_bucket_append (resource $brigade, object $bucket): void {}
  * @param string $buffer 
  * @return object 
  */
-function stream_bucket_new (resource $stream, string $buffer): object {}
+function stream_bucket_new ($stream, string $buffer): object {}
 
 /**
  * Retrieve list of registered filters
@@ -6551,9 +6577,9 @@ function convert_uuencode (string $string): string {}
  * Decode a uuencoded string
  * @link http://www.php.net/manual/en/function.convert-uudecode.php
  * @param string $string 
- * @return string|bool Returns the decoded data as a string or false on failure.
+ * @return string|false Returns the decoded data as a string or false on failure.
  */
-function convert_uudecode (string $string): string|bool {}
+function convert_uudecode (string $string): string|int {}
 
 /**
  * Dumps information about a variable
@@ -6608,7 +6634,7 @@ function serialize (mixed $value): string {}
  * <p>In case the passed string is not unserializeable, false is returned and
  * E_NOTICE is issued.</p>
  */
-function unserialize (string $data, array $options = []): mixed {}
+function unserialize (string $data, array $options = '[]'): mixed {}
 
 /**
  * Returns the amount of memory allocated to PHP

@@ -44,6 +44,83 @@ class SNMP  {
 
 
 	/**
+	 * Read-only property with remote agent configuration: hostname,
+	 * port, default timeout, default retries count
+	 * @var array
+	 * @link http://www.php.net/manual/en/class.snmp.php#snmp.props.info
+	 */
+	public array $info;
+
+	/**
+	 * Maximum OID per GET/SET/GETBULK request
+	 * @var int|null
+	 * @link http://www.php.net/manual/en/class.snmp.php#snmp.props.max_oids
+	 */
+	public ?int $max_oids;
+
+	/**
+	 * Controls the method how the SNMP values will be returned
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.snmp.php#snmp.props.valueretrieval
+	 */
+	public int $valueretrieval;
+
+	/**
+	 * Value of quick_print within the NET-SNMP library
+	 * <p>Sets the value of quick_print within the NET-SNMP library. When this
+	 * is set (1), the SNMP library will return 'quick printed' values. This
+	 * means that just the value will be printed. When quick_print is not
+	 * enabled (default) the NET-SNMP library prints extra information
+	 * including the type of the value (i.e. IpAddress or OID). Additionally,
+	 * if quick_print is not enabled, the library prints additional hex values
+	 * for all strings of three characters or less.</p>
+	 * @var bool
+	 * @link http://www.php.net/manual/en/class.snmp.php#snmp.props.quick_print
+	 */
+	public bool $quick_print;
+
+	/**
+	 * Controls the way enum values are printed
+	 * <p>Parameter toggles if walk/get etc. should automatically lookup enum values
+	 * in the MIB and return them together with their human readable string.</p>
+	 * @var bool
+	 * @link http://www.php.net/manual/en/class.snmp.php#snmp.props.enum_print
+	 */
+	public bool $enum_print;
+
+	/**
+	 * Controls OID output format
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.snmp.php#snmp.props.oid_output_format
+	 */
+	public int $oid_output_format;
+
+	/**
+	 * Controls disabling check for increasing OID while walking OID tree
+	 * <p>Some SNMP agents are known for returning OIDs out
+	 * of order but can complete the walk anyway. Other agents return OIDs
+	 * that are out of order and can cause SNMP::walk
+	 * to loop indefinitely until memory limit will be reached.
+	 * PHP SNMP library by default performs OID increasing check and stops
+	 * walking on OID tree when it detects possible loop with issuing warning
+	 * about non-increasing OID faced.
+	 * Set oid_increasing_check to false to disable this
+	 * check.</p>
+	 * @var bool
+	 * @link http://www.php.net/manual/en/class.snmp.php#snmp.props.oid_increasing_check
+	 */
+	public bool $oid_increasing_check;
+
+	/**
+	 * Controls which failures will raise SNMPException instead of
+	 * warning. Use bitwise OR'ed SNMP::ERRNO_&#42; constants.
+	 * By default all SNMP exceptions are disabled.
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.snmp.php#snmp.props.exceptions_enabled
+	 */
+	public int $exceptions_enabled;
+
+	/**
 	 * Creates SNMP instance representing session to remote SNMP agent
 	 * @link http://www.php.net/manual/en/snmp.construct.php
 	 * @param int $version SNMP protocol version:
@@ -95,7 +172,7 @@ class SNMP  {
 	 * @param string $contextEngineId [optional] the context EngineID
 	 * @return bool Returns true on success or false on failure.
 	 */
-	public function setSecurity (string $securityLevel, string $authProtocol = "", string $authPassphrase = "", string $privacyProtocol = "", string $privacyPassphrase = "", string $contextName = "", string $contextEngineId = ""): bool {}
+	public function setSecurity (string $securityLevel, string $authProtocol = '""', string $authPassphrase = '""', string $privacyProtocol = '""', string $privacyPassphrase = '""', string $contextName = '""', string $contextEngineId = '""'): bool {}
 
 	/**
 	 * Fetch an SNMP object
@@ -127,13 +204,13 @@ class SNMP  {
 	 * The default is to use this value from SNMP object.
 	 * @param int $nonRepeaters [optional] This specifies the number of supplied variables that should not be iterated over.
 	 * The default is to use this value from SNMP object.
-	 * @return array|bool Returns an associative array of the SNMP object ids and their values on success or false on error.
+	 * @return array|false Returns an associative array of the SNMP object ids and their values on success or false on error.
 	 * When a SNMP error occures SNMP::getErrno and
 	 * SNMP::getError can be used for retrieving error
 	 * number (specific to SNMP extension, see class constants) and error message
 	 * respectively.
 	 */
-	public function walk (array|string $objectId, bool $suffixAsKey = false, int $maxRepetitions = -1, int $nonRepeaters = -1): array|bool {}
+	public function walk (array|string $objectId, bool $suffixAsKey = false, int $maxRepetitions = -1, int $nonRepeaters = -1): array|int {}
 
 	/**
 	 * Set the value of an SNMP object
@@ -189,11 +266,6 @@ class SNMP  {
  * @link http://www.php.net/manual/en/class.snmpexception.php
  */
 class SNMPException extends RuntimeException implements Stringable, Throwable {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-
 
 	/**
 	 * Construct the exception
@@ -203,8 +275,11 @@ class SNMPException extends RuntimeException implements Stringable, Throwable {
 	 * @param Throwable|null $previous [optional] 
 	 * @return string 
 	 */
-	public function __construct (string $message = "", int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '""', int $code = null, ?Throwable $previous = null): string {}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function __wakeup () {}
 
 	/**
@@ -302,10 +377,10 @@ function snmpgetnext (string $hostname, string $community, array|string $object_
  * @param array|string $object_id 
  * @param int $timeout [optional] 
  * @param int $retries [optional] 
- * @return array|bool Returns an array of SNMP object values starting from the
+ * @return array|false Returns an array of SNMP object values starting from the
  * object_id as root or false on error.
  */
-function snmpwalk (string $hostname, string $community, array|string $object_id, int $timeout = -1, int $retries = -1): array|bool {}
+function snmpwalk (string $hostname, string $community, array|string $object_id, int $timeout = -1, int $retries = -1): array|int {}
 
 /**
  * Return all objects including their respective object ID within the specified one
@@ -315,10 +390,10 @@ function snmpwalk (string $hostname, string $community, array|string $object_id,
  * @param array|string $object_id 
  * @param int $timeout [optional] 
  * @param int $retries [optional] 
- * @return array|bool Returns an associative array of the SNMP object ids and their values on success or false on error.
+ * @return array|false Returns an associative array of the SNMP object ids and their values on success or false on error.
  * In case of an error, an E_WARNING message is shown.
  */
-function snmprealwalk (string $hostname, string $community, array|string $object_id, int $timeout = -1, int $retries = -1): array|bool {}
+function snmprealwalk (string $hostname, string $community, array|string $object_id, int $timeout = -1, int $retries = -1): array|int {}
 
 /**
  * Query for a tree of information about a network entity
@@ -328,11 +403,11 @@ function snmprealwalk (string $hostname, string $community, array|string $object
  * @param array|string $object_id 
  * @param int $timeout [optional] 
  * @param int $retries [optional] 
- * @return array|bool Returns an associative array with object ids and their respective
+ * @return array|false Returns an associative array with object ids and their respective
  * object value starting from the object_id
  * as root or false on error.
  */
-function snmpwalkoid (string $hostname, string $community, array|string $object_id, int $timeout = -1, int $retries = -1): array|bool {}
+function snmpwalkoid (string $hostname, string $community, array|string $object_id, int $timeout = -1, int $retries = -1): array|int {}
 
 /**
  * Set the value of an SNMP object
@@ -361,27 +436,28 @@ function snmp_get_quick_print (): bool {}
  * Set the value of enable within the NET-SNMP library
  * @link http://www.php.net/manual/en/function.snmp-set-quick-print.php
  * @param bool $enable 
- * @return bool Always returns true.
+ * @return true Always returns true.
  */
-function snmp_set_quick_print (bool $enable): bool {}
+function snmp_set_quick_print (bool $enable): int {}
 
 /**
  * Return all values that are enums with their enum value instead of the raw integer
  * @link http://www.php.net/manual/en/function.snmp-set-enum-print.php
  * @param bool $enable As the value is interpreted as boolean by the Net-SNMP library, it can only be "0" or "1".
- * @return bool Always returns true.
+ * @return true Always returns true.
  */
-function snmp_set_enum_print (bool $enable): bool {}
+function snmp_set_enum_print (bool $enable): int {}
 
 /**
  * Set the OID output format
  * @link http://www.php.net/manual/en/function.snmp-set-oid-output-format.php
  * @param int $format 
- * @return bool Always returns true.
+ * @return true Always returns true.
  */
-function snmp_set_oid_output_format (int $format): bool {}
+function snmp_set_oid_output_format (int $format): int {}
 
 /**
+ * {@inheritdoc}
  * @param int $format
  */
 function snmp_set_oid_numeric_print (int $format): bool {}
@@ -423,10 +499,10 @@ function snmp2_getnext (string $hostname, string $community, array|string $objec
  * below that object_id are returned.</p>
  * @param int $timeout [optional] The number of microseconds until the first timeout.
  * @param int $retries [optional] The number of times to retry if timeouts occur.
- * @return array|bool Returns an array of SNMP object values starting from the
+ * @return array|false Returns an array of SNMP object values starting from the
  * object_id as root or false on error.
  */
-function snmp2_walk (string $hostname, string $community, array|string $object_id, int $timeout = -1, int $retries = -1): array|bool {}
+function snmp2_walk (string $hostname, string $community, array|string $object_id, int $timeout = -1, int $retries = -1): array|int {}
 
 /**
  * Return all objects including their respective object ID within the specified one
@@ -436,10 +512,10 @@ function snmp2_walk (string $hostname, string $community, array|string $object_i
  * @param array|string $object_id The SNMP object id which precedes the wanted one.
  * @param int $timeout [optional] The number of microseconds until the first timeout.
  * @param int $retries [optional] The number of times to retry if timeouts occur.
- * @return array|bool Returns an associative array of the SNMP object ids and their values on success or false on error.
+ * @return array|false Returns an associative array of the SNMP object ids and their values on success or false on error.
  * In case of an error, an E_WARNING message is shown.
  */
-function snmp2_real_walk (string $hostname, string $community, array|string $object_id, int $timeout = -1, int $retries = -1): array|bool {}
+function snmp2_real_walk (string $hostname, string $community, array|string $object_id, int $timeout = -1, int $retries = -1): array|int {}
 
 /**
  * Set the value of an SNMP object
@@ -527,10 +603,10 @@ function snmp3_getnext (string $hostname, string $security_name, string $securit
  * below that object_id are returned.</p>
  * @param int $timeout [optional] The number of microseconds until the first timeout.
  * @param int $retries [optional] The number of times to retry if timeouts occur.
- * @return array|bool Returns an array of SNMP object values starting from the
+ * @return array|false Returns an array of SNMP object values starting from the
  * object_id as root or false on error.
  */
-function snmp3_walk (string $hostname, string $security_name, string $security_level, string $auth_protocol, string $auth_passphrase, string $privacy_protocol, string $privacy_passphrase, array|string $object_id, int $timeout = -1, int $retries = -1): array|bool {}
+function snmp3_walk (string $hostname, string $security_name, string $security_level, string $auth_protocol, string $auth_passphrase, string $privacy_protocol, string $privacy_passphrase, array|string $object_id, int $timeout = -1, int $retries = -1): array|int {}
 
 /**
  * Return all objects including their respective object ID within the specified one
@@ -547,11 +623,11 @@ function snmp3_walk (string $hostname, string $security_name, string $security_l
  * @param array|string $object_id The SNMP object id.
  * @param int $timeout [optional] The number of microseconds until the first timeout.
  * @param int $retries [optional] The number of times to retry if timeouts occur.
- * @return array|bool Returns an associative array of the
+ * @return array|false Returns an associative array of the
  * SNMP object ids and their values on success or false on error.
  * In case of an error, an E_WARNING message is shown.
  */
-function snmp3_real_walk (string $hostname, string $security_name, string $security_level, string $auth_protocol, string $auth_passphrase, string $privacy_protocol, string $privacy_passphrase, array|string $object_id, int $timeout = -1, int $retries = -1): array|bool {}
+function snmp3_real_walk (string $hostname, string $security_name, string $security_level, string $auth_protocol, string $auth_passphrase, string $privacy_protocol, string $privacy_passphrase, array|string $object_id, int $timeout = -1, int $retries = -1): array|int {}
 
 /**
  * Set the value of an SNMP object
@@ -592,9 +668,9 @@ function snmp3_set (string $hostname, string $security_name, string $security_le
  * Specify the method how the SNMP values will be returned
  * @link http://www.php.net/manual/en/function.snmp-set-valueretrieval.php
  * @param int $method 
- * @return bool Always returns true.
+ * @return true Always returns true.
  */
-function snmp_set_valueretrieval (int $method): bool {}
+function snmp_set_valueretrieval (int $method): int {}
 
 /**
  * Return the method how the SNMP values will be returned

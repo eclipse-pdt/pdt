@@ -223,7 +223,7 @@ class XMLWriter  {
 	 * @param string|null $standalone [optional] 
 	 * @return bool Returns true on success or false on failure.
 	 */
-	public function startDocument (?string $version = "1.0", ?string $encoding = null, ?string $standalone = null): bool {}
+	public function startDocument (?string $version = '"1.0"', ?string $encoding = null, ?string $standalone = null): bool {}
 
 	/**
 	 * End current document
@@ -605,7 +605,7 @@ function xmlwriter_write_raw (XMLWriter $writer, string $content): bool {}
  * @param string|null $standalone [optional] 
  * @return bool Returns true on success or false on failure.
  */
-function xmlwriter_start_document (XMLWriter $writer, ?string $version = "1.0", ?string $encoding = null, ?string $standalone = null): bool {}
+function xmlwriter_start_document (XMLWriter $writer, ?string $version = '"1.0"', ?string $encoding = null, ?string $standalone = null): bool {}
 
 /**
  * End current document
