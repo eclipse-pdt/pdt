@@ -64,7 +64,7 @@ public class PHPIndexingVisitor extends PHPIndexingVisitorExtension {
 	private static final String EXTENSION_POINT = "phpIndexingVisitors"; //$NON-NLS-1$
 	private static final String CLASS_ATTR = "class"; //$NON-NLS-1$
 	public static final String CONSTRUCTOR_NAME = "__construct"; //$NON-NLS-1$
-	public static final String PARAMETER_SEPERATOR = "|"; //$NON-NLS-1$
+	public static final String PARAMETER_SEPERATOR = "@"; //$NON-NLS-1$
 	public static final String NULL_VALUE = "#"; //$NON-NLS-1$
 	public static final String QUALIFIER_SEPERATOR = ";"; //$NON-NLS-1$
 	public static final String RETURN_TYPE_SEPERATOR = ":"; //$NON-NLS-1$
