@@ -38,6 +38,8 @@ public class PHPVariablesInitializerPHP_5 implements IPHPVariablesInitializer {
 		globals.add("$HTTP_POST_VARS"); //$NON-NLS-1$
 		globals.add("$HTTP_SERVER_VARS"); //$NON-NLS-1$
 		globals.add("$HTTP_SESSION_VARS"); //$NON-NLS-1$
+		globals.add("$argc"); //$NON-NLS-1$
+		globals.add("$argv"); //$NON-NLS-1$
 	}
 
 }
