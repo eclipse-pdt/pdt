@@ -54,30 +54,10 @@ public class PHPProjectModuleFactory extends ProjectModuleFactoryDelegate {
 	}
 
 	private String getModuleVersion(PHPVersion phpVersion) {
-		switch (phpVersion) {
-		case PHP5:
-			return "5.0"; //$NON-NLS-1$
-		case PHP5_3:
-			return "5.3"; //$NON-NLS-1$
-		case PHP5_4:
-			return "5.4"; //$NON-NLS-1$
-		case PHP5_5:
-			return "5.5"; //$NON-NLS-1$
-		case PHP5_6:
-			return "5.6"; //$NON-NLS-1$
-		case PHP7_0:
-			return "7.0"; //$NON-NLS-1$
-		case PHP7_1:
-			return "7.1"; //$NON-NLS-1$
-		case PHP7_2:
-			return "7.2"; //$NON-NLS-1$
-		case PHP7_3:
-			return "7.3"; //$NON-NLS-1$
-		case PHP7_4:
-			return "7.4"; //$NON-NLS-1$
-		default:
+		if ( phpVersion == null) {
 			return null;
 		}
+		return phpVersion.getAlias().substring(3);
 	}
 
 	@Override
