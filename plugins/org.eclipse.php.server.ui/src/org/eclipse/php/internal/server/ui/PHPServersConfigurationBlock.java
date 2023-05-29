@@ -172,7 +172,8 @@ public class PHPServersConfigurationBlock implements IPreferenceConfigurationBlo
 	}
 
 	protected Server getServerFromWizard() {
-		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+		Shell shell = this.fMainPreferencePage != null ? this.fMainPreferencePage.getShell()
+				: PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 		NullProgressMonitor monitor = new NullProgressMonitor();
 		Server theServer = null;
 		ServerWizard wizard = new ServerWizard();
@@ -188,7 +189,7 @@ public class PHPServersConfigurationBlock implements IPreferenceConfigurationBlo
 	protected void handleEditServerButtonSelected() {
 		Server server = fServersList.getSelectedElements().get(0);
 		NullProgressMonitor monitor = new NullProgressMonitor();
-		if (ServerEditWizardRunner.runWizard(server) == Window.CANCEL) {
+		if (ServerEditWizardRunner.runWizard(this.fMainPreferencePage.getShell(), server) == Window.CANCEL) {
 			monitor.setCanceled(true);
 			return;
 		}
