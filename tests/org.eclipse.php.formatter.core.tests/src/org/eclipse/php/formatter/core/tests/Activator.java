@@ -15,16 +15,17 @@ package org.eclipse.php.formatter.core.tests;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Plugin;
 import org.eclipse.php.core.tests.TestUtils;
 import org.eclipse.php.core.tests.TestUtils.ColliderType;
+import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.formatter.core.Logger;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
 /**
  * The activator class controls the plug-in life cycle
  */
-public class Activator extends Plugin {
+public class Activator extends AbstractUIPlugin {
 
 	// The plug-in ID
 	public static final String PLUGIN_ID = "org.eclipse.php.formatter.core.tests";
@@ -48,6 +49,7 @@ public class Activator extends Plugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
+		PHPCorePlugin.toolkitInitialized = true;
 		TestUtils.disableColliders(ColliderType.ALL);
 	}
 
