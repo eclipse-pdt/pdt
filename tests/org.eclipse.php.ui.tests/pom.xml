@@ -26,7 +26,7 @@
 					<testClass>org.eclipse.php.ui.tests.AllTests</testClass>
 					<useUIHarness>true</useUIHarness>
 					<useUIThread>false</useUIThread>
-					<argLine>-Xmx512m ${test.vmargs} ${tycho.testArgLine}</argLine>
+					<argLine>-Xmx512m ${test.vmargs} ${tycho.testArgLine} -Dfile.encoding=UTF-8</argLine>
 					<dependencies>
 						<dependency>
 							<type>p2-installable-unit</type>
