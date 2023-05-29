@@ -4,6 +4,8 @@ Test Globals
 <? $a = ''; $GLOBALS['|']; ?>
 --EXPECT--
 field(a)
+field(argc)
+field(argv)
 field(_COOKIE)
 field(_ENV)
 field(_FILES)
