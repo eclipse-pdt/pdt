@@ -70,6 +70,7 @@ jobs:
     - name: Set up JDK ${{ env.JAVA_VERSION }}
       uses: actions/setup-java@v3
       with:
+        distribution: temurin
         java-version: ${{ env.JAVA_VERSION }}
     - name: "Cache: Local Maven Repository"
       uses: actions/cache@v3
