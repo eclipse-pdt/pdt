@@ -23,7 +23,7 @@
 <unit id="org.eclipse.birt.chart.device.swt" version=""/>
 
 <unit id="org.eclipse.wildwebdeveloper.feature.feature.group" version="0.0.0"/>
-<repository location="https://download.eclipse.org/releases/2023-03/"/>
+<repository location="https://download.eclipse.org/releases/2023-06/"/>
 </location>
 
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
@@ -53,7 +53,14 @@
 <unit id="org.eclipse.dltk.core.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.dltk.core.index.lucene.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.dltk.core.tests" version="0.0.0" />
+<unit id="org.eclipse.dltk.mylyn.feature.group" version="0.0.0"/>
 <repository location="https://download.eclipse.org/technology/dltk/updates-nightly/"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.mylyn.commons.sdk.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.mylyn.context.sdk.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.mylyn.sdk_feature.feature.group" version="0.0.0"/>
+<repository location="https://download.eclipse.org/mylyn/releases/latest/"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.wst.jsdt.feature.feature.group" version="0.0.0"/>
@@ -67,4 +74,5 @@
 <repository location="https://download.eclipse.org/cbi/updates/license"/>
 </location>
 </locations>
+<targetJRE path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-17"/>
 </target>

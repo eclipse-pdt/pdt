@@ -3,6 +3,9 @@
    <feature url="features/org.eclipse.php_8.0.0.qualifier.jar" id="org.eclipse.php" version="8.0.0.qualifier">
       <category name="org.eclipse.php.category"/>
    </feature>
+   <feature url="features/org.eclipse.php.mylyn_8.0.0.qualifier.jar" id="org.eclipse.php.mylyn" version="8.0.0.qualifier">
+      <category name="org.eclipse.php.category"/>
+   </feature>
    <feature url="features/org.eclipse.php.composer_8.0.0.qualifier.jar" id="org.eclipse.php.composer" version="8.0.0.qualifier">
       <category name="org.eclipse.php.category"/>
    </feature>
