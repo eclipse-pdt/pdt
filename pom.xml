@@ -144,7 +144,7 @@
 				<artifactId>target-platform-configuration</artifactId>
 				<version>${tycho-version}</version>
 				<configuration>
-					<executionEnvironmentDefaul>JavaSE-17</executionEnvironmentDefaul>
+					<executionEnvironmentDefault>JavaSE-17</executionEnvironmentDefault>
 					<environments>
 						<environment>
 							<os>win32</os>
