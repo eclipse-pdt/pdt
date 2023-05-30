@@ -5,7 +5,7 @@ name: SonarCloud scan
 
 on:
   push:
-    branches: [ master-disabled ]
+    branches: [ master ]
 
 jobs:
   build:
