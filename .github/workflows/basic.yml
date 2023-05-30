@@ -94,7 +94,7 @@ jobs:
         
         xvfb-run --server-args="-screen 0 1600x900x24" mvn \
           --batch-mode --show-version --file pom.xml \
-          $maven_args ${{ github.event.inputs.additional_maven_args }} \
+          ${{ github.event.inputs.additional_maven_args }} \
           verify
     - name: Stage repository
       run: mkdir repository && cp -r dev/org.eclipse.php-repository/target/repository/* repository
