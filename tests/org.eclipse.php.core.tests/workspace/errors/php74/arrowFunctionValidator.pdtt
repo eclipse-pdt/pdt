@@ -1,0 +1,10 @@
+--TEST--
+Bug 551301 - PHP 7.4 Support
+--FILE--
+<?php
+function ($param)  {
+    return fn($param2) => $param . $param2 . $param3;
+};
+
+
+--EXPECT--

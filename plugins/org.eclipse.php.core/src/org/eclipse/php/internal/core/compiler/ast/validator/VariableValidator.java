@@ -297,6 +297,34 @@ public class VariableValidator implements IValidatorExtension {
 		}
 
 		@Override
+		public boolean visit(ArrowFunctionDeclaration decl) throws Exception {
+			Scope prev = current;
+			pushScope(decl.sourceStart(), decl.sourceEnd());
+			for (Entry<String, Variable> v : prev.variables.entrySet()) {
+				current.variables.put(v.getKey(), new ImportedVariable(v.getValue()));
+			}
+			for (Object o : decl.getArguments()) {
+				if (o instanceof FormalParameter) {
+					VariableReference parameterName = ((FormalParameter) o).getParameterName();
+					Variable v = new ImportedVariable(parameterName);
+					v.setInitialized(((FormalParameter) o).start());
+					current.variables.put(parameterName.getName(), v);
+				}
+			}
+
+			if (inClassDecl < depth && prev.contains(THIS_VAR, 0)) { // $NON-NLS-1$
+				current.variables.put(THIS_VAR, prev.variables.get(THIS_VAR)); // $NON-NLS-1$
+			}
+			if (decl.getBody() != null) {
+				decl.getBody().traverse(this);
+			}
+
+			popScope();
+
+			return false;
+		}
+
+		@Override
 		public boolean visit(LambdaFunctionDeclaration decl) throws Exception {
 			Scope prev = current;
 			pushScope(decl.sourceStart(), decl.sourceEnd());
