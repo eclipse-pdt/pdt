@@ -1237,6 +1237,12 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 			ReflectionArrayVariableReference ref = (ReflectionArrayVariableReference) astNode;
 			validateConstantExpression(ref.getExpression(), modifier);
 			validateConstantExpression(ref.getIndex(), modifier);
+		} else if (version.isGreaterThan(PHPVersion.PHP7_0) && astNode instanceof ConditionalExpression) {
+			ConditionalExpression ref = (ConditionalExpression) astNode;
+			validateConstantExpression(ref.getCondition(), modifier);
+			validateConstantExpression(ref.getIfTrue(), modifier);
+			validateConstantExpression(ref.getIfFalse(), modifier);
+
 		} else if ((modifier & ALLOW_NEW) != 0 && version.isGreaterThan(PHPVersion.PHP8_0)
 				&& astNode instanceof ClassInstanceCreation) {
 			ClassInstanceCreation c = (ClassInstanceCreation) astNode;

@@ -1,0 +1,8 @@
+--TEST--
+Allow tenary as constant expression
+--FILE--
+<?php
+function foo($a = Exception::class == 'something' ? true : $c) {}
+?>
+--EXPECT--
+[line=2, start=65, end=67] Constant expression contains invalid operations
