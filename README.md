@@ -7,7 +7,7 @@
 ![master](https://github.com/eclipse/pdt/workflows/Tycho%20build/badge.svg)
 [![Sonarcloud Status](https://sonarcloud.io/api/project_badges/measure?project=eclipse-tools.pdt.main&metric=alert_status)](https://sonarcloud.io/dashboard?id=eclipse-tools.pdt.main)
 [![License](https://img.shields.io/badge/License-EPL%202.0-green.svg)](https://opensource.org/licenses/EPL-2.0)
-<a href="http://marketplace.eclipse.org/marketplace-client-intro?mpc_install=1944539" class="drag" title="Drag to your running Eclipse* workspace. *Requires Eclipse Marketplace Client"><img typeof="foaf:Image" class="img-responsive" src="https://marketplace.eclipse.org/sites/all/themes/solstice/public/images/marketplace/btn-install.png" align="right" height="26" alt="Drag to your running Eclipse* workspace. *Requires Eclipse Marketplace Client" /></a>
+<a href="https://marketplace.eclipse.org/marketplace-client-intro?mpc_install=1944539" class="drag" title="Drag to your running Eclipse* workspace. *Requires Eclipse Marketplace Client"><img typeof="foaf:Image" class="img-responsive" src="https://marketplace.eclipse.org/sites/all/themes/solstice/public/images/marketplace/btn-install.png" align="right" height="26" alt="Drag to your running Eclipse* workspace. *Requires Eclipse Marketplace Client" /></a>
 
 
 The [Eclipse PHP Development Tools](https://www.eclipse.org/pdt/) project delivers a PHP Integrated Development Environment
@@ -25,11 +25,11 @@ developers with PHP capabilities.
 
 __GitHub tracker and pull requests are currently main contribution process.__
 
-* Contribution Quick Guide: https://wiki.eclipse.org/PDT/Contributing#Quick_guide
+* Contribution Quick Guide: https://github.com/eclipse-pdt/pdt/wiki/Contributing
 * Information regarding source code management, builds, coding standards, and more: https://projects.eclipse.org/projects/tools.pdt/developer
-* Main source code repository: https://github.com/eclipse/pdt.git
-* Search for issues: https://github.com/eclipse/pdt/issues
-* Create a new report: https://github.com/eclipse/pdt/issues/new
+* Main source code repository: https://github.com/eclipse-pdt/pdt.git
+* Search for issues: https://github.com/eclipse-pdt/pdt/issues
+* Create a new report: https://github.com/eclipse-pdt/pdt/issues/new
 
 Be sure to search for existing bugs before you create another one. Remember that
 contributions are always welcome!
@@ -39,7 +39,7 @@ contributions are always welcome!
 Before your contribution can be accepted by the project team contributors must
 electronically sign the Eclipse Contributor Agreement (ECA).
 
-* http://www.eclipse.org/legal/ECA.php
+* https://www.eclipse.org/legal/ECA.php
 
 ## Contact
 
