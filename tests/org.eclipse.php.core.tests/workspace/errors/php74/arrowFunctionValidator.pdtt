@@ -8,3 +8,5 @@ function ($param)  {
 
 
 --EXPECT--
+[line=3, start=72, end=79] Variable '$param3' is undefined
+
