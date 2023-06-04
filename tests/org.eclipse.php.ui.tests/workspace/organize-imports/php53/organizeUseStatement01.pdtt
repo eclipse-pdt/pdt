@@ -10,9 +10,11 @@ use Error;
 use name\Foo;
 use name\Foo;
 
-new InvalidArgumentException();
+new ReflectionClass();
 new C();
 new Foo();
+
+
 
 class Foo extends Error {
 }
@@ -30,9 +32,9 @@ namespace name;
 
 use Boo\C;
 use Error;
-use InvalidArgumentException;
+use ReflectionClass;
 
-new InvalidArgumentException();
+new ReflectionClass();
 new C();
 new Foo();
 

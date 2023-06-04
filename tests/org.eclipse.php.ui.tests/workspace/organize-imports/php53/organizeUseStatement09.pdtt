@@ -4,15 +4,15 @@ Bug 517836 - incorrect indentation for braketed namespace
 <?php
 namespace name {
 
-	new InvalidArgumentException();
+	new ReflectionClass();
 }
 ?>
 --EXPECT--
 <?php
 namespace name {
 
-	use InvalidArgumentException;
+	use ReflectionClass;
 
-	new InvalidArgumentException();
+	new ReflectionClass();
 }
 ?>
