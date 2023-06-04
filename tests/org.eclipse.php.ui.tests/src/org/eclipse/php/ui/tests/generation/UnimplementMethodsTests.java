@@ -76,8 +76,7 @@ public class UnimplementMethodsTests {
 		TESTS.put(PHPVersion.PHP5_6, new String[] { "/workspace/generation/unimplement_methods_php56" }); //$NON-NLS-1$
 		TESTS.put(PHPVersion.PHP7_0, new String[] { "/workspace/generation/unimplement_methods_php56", //$NON-NLS-1$
 				"/workspace/generation/unimplement_methods_php7" }); //$NON-NLS-1$
-		TESTS.put(PHPVersion.PHP8_1, new String[] { "/workspace/generation/unimplement_methods_php56", //$NON-NLS-1$
-				"/workspace/generation/unimplement_methods_php7", "/workspace/generation/unimplement_methods_php81" }); //$NON-NLS-1$
+		TESTS.put(PHPVersion.PHP8_1, new String[] { "/workspace/generation/unimplement_methods_php81" }); //$NON-NLS-1$
 	};
 
 	protected static final char SELECTION_CHAR = '|';

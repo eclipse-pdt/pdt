@@ -16,33 +16,33 @@ use Something\Test;
 enum Service implements \ArrayAccess {
 	/**
 	 * {@inheritDoc}
-	 * @see ArrayAccess::offsetExists($offset)
+	 * @see ArrayAccess::offsetExists()
 	 */
-	public function offsetExists() {
+	public function offsetExists(mixed $offset): bool {
 		// TODO Auto-generated method stub
 		
 	}
 	/**
 	 * {@inheritDoc}
-	 * @see ArrayAccess::offsetGet($offset)
+	 * @see ArrayAccess::offsetGet()
 	 */
-	public function offsetGet() {
+	public function offsetGet(mixed $offset): mixed {
 		// TODO Auto-generated method stub
 		
 	}
 	/**
 	 * {@inheritDoc}
-	 * @see ArrayAccess::offsetSet($offset, $value)
+	 * @see ArrayAccess::offsetSet()
 	 */
-	public function offsetSet() {
+	public function offsetSet(mixed $offset, mixed $value): void {
 		// TODO Auto-generated method stub
 		
 	}
 	/**
 	 * {@inheritDoc}
-	 * @see ArrayAccess::offsetUnset($offset)
+	 * @see ArrayAccess::offsetUnset()
 	 */
-	public function offsetUnset() {
+	public function offsetUnset(mixed $offset): void {
 		// TODO Auto-generated method stub
 		
 	}
