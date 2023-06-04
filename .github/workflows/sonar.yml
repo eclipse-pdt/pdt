@@ -6,36 +6,89 @@ name: SonarCloud scan
 on:
   push:
     branches: [ master ]
+    tags-ignore: ['**']
+    paths-ignore:
+      - '**/.project'
+      - '**/.settings/*.prefs'
+      - '.gitignore'
+      - '.actrc'
+      - 'Jenkinsfile'
 
+  workflow_dispatch:
+  # https://github.blog/changelog/2020-07-06-github-actions-manual-triggers-with-workflow_dispatch/
+    inputs:
+      additional_maven_args:
+        description: 'Additional Maven Args'
+        required: false
+        default: ''
+defaults:
+  run:
+    shell: bash
+env:
+  JAVA_VERSION: 17
+  
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+    - name: Show environment variables
+      run: env | sort
     - uses: actions/checkout@v3
       with:
-        # Disabling shallow clone is recommended for improving relevancy of reporting
-        fetch-depth: 0
-    - name: Set up JDK 17
+        fetch-depth: 0 #speedup clone
+    - name: Configure Fast APT Mirror
+      uses: vegardit/fast-apt-mirror.sh@v1
+      
+    - name: "Install: xvfb"
+      run: sudo apt-get install --no-install-recommends -y xvfb
+    
+    - name: "Install: dbus-x11"
+      # prevents: "Failed to execute child process “dbus-launch” (No such file or directory)"
+      run: sudo apt-get install --no-install-recommends -y dbus-x11
+    
+    - name: "Install: at-spi2-core"
+      # prevents: "dbind-WARNING **: 20:17:55.046: AT-SPI: Error retrieving accessibility bus address: org.freedesktop.DBus.Error.ServiceUnknown: The name org.a11y.Bus was not provided by any .service files"
+      # see https://gist.github.com/jeffcogswell/62395900725acef1c0a5a608f7eb7a05
+      run: sudo apt-get install --no-install-recommends -y at-spi2-core
+    
+    - name: "Install: lib-swt-gtk-*-java"
+      # prevents:
+      #  java.lang.UnsatisfiedLinkError: Could not load SWT library. Reasons:
+      #    no swt-pi4-gtk-4956r13 in java.library.path: /usr/java/packages/lib:/usr/lib64:/lib64:/lib:/usr/lib
+      #    no swt-pi4-gtk in java.library.path: /usr/java/packages/lib:/usr/lib64:/lib64:/lib:/usr/lib
+      #    no swt-pi4 in java.library.path: /usr/java/packages/lib:/usr/lib64:/lib64:/lib:/usr/lib
+      run: sudo apt-get install --no-install-recommends -y libswt-gtk-*-java  
+      
+    - name: Set up JDK ${{ env.JAVA_VERSION }}
       uses: actions/setup-java@v3
       with:
-        java-version: '17'
-        distribution: 'temurin'
-        architecture: x64
-    - name: Cache SonarCloud packages
+        distribution: temurin
+        java-version: ${{ env.JAVA_VERSION }}
+    - name: "Cache: Local Maven Repository"
       uses: actions/cache@v3
       with:
-        path: ~/.sonar/cache
-        key: ${{ runner.os }}-sonar
-        restore-keys: ${{ runner.os }}-sonar
-    - name: Cache Maven packages
-      uses: actions/cache@v3
+        path: |
+          ~/.m2/repository
+          !~/.m2/repository/*SNAPSHOT*
+        key: ${{ runner.os }}-mvnrepo-${{ hashFiles('**/pom.xml') }}-${{ hashFiles('dev/org.eclipse.php.target.current/org.eclipse.php.target.current.target') }}
+    - name: "Install: Maven"
+      uses: stCarolas/setup-maven@v4.5 # https://github.com/stCarolas/setup-maven
       with:
-        path: ~/.m2
-        key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-        restore-keys: ${{ runner.os }}-m2
+        maven-version: 3.9.2 
     - name: Build and analyze
       env:
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: xvfb-run -a mvn -Pcoverage -Dsonar.login=$SONAR_TOKEN verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar --file pom.xml
-
+       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        set -eu
+        MAVEN_OPTS+=" -Djava.security.egd=file:/dev/./urandom" # https://stackoverflow.com/questions/58991966/what-java-security-egd-option-is-for/59097932#59097932
+        MAVEN_OPTS+=" -Dorg.slf4j.simpleLogger.showDateTime=true -Dorg.slf4j.simpleLogger.dateTimeFormat=HH:mm:ss,SSS" # https://stackoverflow.com/questions/5120470/how-to-time-the-different-stages-of-maven-execution/49494561#49494561
+        MAVEN_OPTS+=" -Xmx1024m -Djava.awt.headless=true -Djava.net.preferIPv4Stack=true -Dhttps.protocols=TLSv1.2"
+        echo "  -> MAVEN_OPTS: $MAVEN_OPTS"
+        export MAVEN_OPTS
+        
+        xvfb-run --server-args="-screen 0 1600x900x24" mvn \
+          --batch-mode --show-version --file pom.xml \
+          ${{ github.event.inputs.additional_maven_args }} \
+          -Pcoverage -Dsonar.login=$SONAR_TOKEN verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
+          
