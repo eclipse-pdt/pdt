@@ -11,7 +11,7 @@
 
 	<!-- this is the parent POM from which all modules inherit common settings -->
 	<properties>
-		<tycho-version>2.7.5</tycho-version>
+		<tycho-version>3.0.4</tycho-version>
 		<antrun-version>1.8</antrun-version>
 		<maven.test.failure.ignore>true</maven.test.failure.ignore>
 		<test.vmargs>-server</test.vmargs>
@@ -34,7 +34,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<tycho.scmUrl>scm:git:https://github.com/eclipse/pdt.git</tycho.scmUrl>
 		<tycho.testArgLine />
-		<jacoco.version>0.8.5</jacoco.version>
+		<jacoco.version>0.8.10</jacoco.version>
 		<eclipseNext>false</eclipseNext>
 		<p2.mirrorsPrefix>/tools/pdt/updates/8.0/</p2.mirrorsPrefix>
 		<p2.statsURI>https://download.eclipse.org/stats</p2.statsURI>
