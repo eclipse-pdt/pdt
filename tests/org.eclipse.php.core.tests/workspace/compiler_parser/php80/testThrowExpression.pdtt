@@ -19,16 +19,18 @@ throw new \InvalidArgumentException();
 			</ClassInstanceCreation>
 		</ThrowExpression>
 	</EchoStatement>
-	<ThrowStatement start="35" end="73">
-		<ClassInstanceCreation start="41" end="72">
-			<FullyQualifiedReference start="45" end="70" name="\InvalidArgumentException">
-				<NamespaceReference start="45" end="46" name="\" global="true" local="false">
-				</NamespaceReference>
-			</FullyQualifiedReference>
-			<PHPCallArgumentsList start="71" end="71">
-			</PHPCallArgumentsList>
-		</ClassInstanceCreation>
-	</ThrowStatement>
+	<ExpressionStatement start="35" end="73">
+		<ThrowExpression start="35" end="72">
+			<ClassInstanceCreation start="41" end="72">
+				<FullyQualifiedReference start="45" end="70" name="\InvalidArgumentException">
+					<NamespaceReference start="45" end="46" name="\" global="true" local="false">
+					</NamespaceReference>
+				</FullyQualifiedReference>
+				<PHPCallArgumentsList start="71" end="71">
+				</PHPCallArgumentsList>
+			</ClassInstanceCreation>
+		</ThrowExpression>
+	</ExpressionStatement>
 	<EmptyStatement start="74" end="76">
 	</EmptyStatement>
 </ModuleDeclaration>

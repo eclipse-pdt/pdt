@@ -1,0 +1,99 @@
+--TEST--
+Bug #173 - incorrect precedence
+--FILE--
+<?php
+$x = fn (Contact $contact) => $contact->email ? new Destinataire((string) $contact->id, $contact->email) : null;
+?>
+--EXPECT--
+<Program start='0' length='121'>
+	<Statements>
+		<ExpressionStatement start='6' length='112'>
+			<Assignment start='6' length='111' operator='='>
+				<Variable start='6' length='2' isDollared='true'>
+					<Identifier start='7' length='1' name='x'/>
+				</Variable>
+				<Value>
+					<ArrowFunctionDeclaration start='11' length='106' isReference='false'>
+						<FormalParameters>
+							<FormalParameter start='15' length='16' isMandatory='false'>
+								<Type>
+									<NamespaceName start='15' length='7' global='false' current='false'>
+										<Identifier start='15' length='7' name='Contact'/>
+									</NamespaceName>
+								</Type>
+								<ParameterName>
+									<Variable start='23' length='8' isDollared='true'>
+										<Identifier start='24' length='7' name='contact'/>
+									</Variable>
+								</ParameterName>
+								<DefaultValue>
+								</DefaultValue>
+							</FormalParameter>
+						</FormalParameters>
+						<FunctionBody>
+							<ConditionalExpression start='36' length='81' operatorType='0'>
+								<Condition>
+									<FieldAccess start='36' length='15'>
+										<Dispatcher>
+											<Variable start='36' length='8' isDollared='true'>
+												<Identifier start='37' length='7' name='contact'/>
+											</Variable>
+										</Dispatcher>
+										<Property>
+											<Variable start='46' length='5' isDollared='false'>
+												<Identifier start='46' length='5' name='email'/>
+											</Variable>
+										</Property>
+									</FieldAccess>
+								</Condition>
+								<IfTrue>
+									<ClassInstanceCreation start='54' length='56'>
+										<ClassName start='58' length='12'>
+											<NamespaceName start='58' length='12' global='false' current='false'>
+												<Identifier start='58' length='12' name='Destinataire'/>
+											</NamespaceName>
+										</ClassName>
+										<ConstructorParameters>
+											<CastExpression start='71' length='21' castType='string'>
+												<FieldAccess start='80' length='12'>
+													<Dispatcher>
+														<Variable start='80' length='8' isDollared='true'>
+															<Identifier start='81' length='7' name='contact'/>
+														</Variable>
+													</Dispatcher>
+													<Property>
+														<Variable start='90' length='2' isDollared='false'>
+															<Identifier start='90' length='2' name='id'/>
+														</Variable>
+													</Property>
+												</FieldAccess>
+											</CastExpression>
+											<FieldAccess start='94' length='15'>
+												<Dispatcher>
+													<Variable start='94' length='8' isDollared='true'>
+														<Identifier start='95' length='7' name='contact'/>
+													</Variable>
+												</Dispatcher>
+												<Property>
+													<Variable start='104' length='5' isDollared='false'>
+														<Identifier start='104' length='5' name='email'/>
+													</Variable>
+												</Property>
+											</FieldAccess>
+										</ConstructorParameters>
+									</ClassInstanceCreation>
+								</IfTrue>
+								<IfFalse>
+									<Scalar start='113' length='4' type='string' value='null'/>
+								</IfFalse>
+							</ConditionalExpression>
+						</FunctionBody>
+					</ArrowFunctionDeclaration>
+				</Value>
+			</Assignment>
+		</ExpressionStatement>
+		<EmptyStatement start='119' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

@@ -217,6 +217,7 @@ terminal T_COALESCE;
 //php 7.4
 terminal T_COALESCE_EQUAL;
 terminal String T_FN;
+terminal PREC_ARROW_FUNCTION;
 
 /* Non terminals */
 
@@ -360,7 +361,7 @@ non terminal FinallyClause non_empty_finally_clause;
 
 non terminal YieldExpression yield_expr;
 
-
+precedence left PREC_ARROW_FUNCTION;
 precedence left T_INCLUDE, T_INCLUDE_ONCE, T_EVAL, T_REQUIRE, T_REQUIRE_ONCE;
 precedence left T_COMMA;
 precedence left T_LOGICAL_OR;
@@ -368,7 +369,7 @@ precedence left T_LOGICAL_XOR;
 precedence left T_LOGICAL_AND;
 precedence right T_PRINT;
 precedence left T_EQUAL, T_PLUS_EQUAL,T_MINUS_EQUAL,T_MUL_EQUAL,T_DIV_EQUAL,T_CONCAT_EQUAL,T_MOD_EQUAL,T_AND_EQUAL,T_OR_EQUAL,T_XOR_EQUAL,T_SL_EQUAL,T_SR_EQUAL,T_COALESCE_EQUAL;
-precedence left T_QUESTION_MARK,T_SEMICOLON;
+precedence left T_QUESTION_MARK,T_NEKUDOTAIM;
 precedence right T_COALESCE;
 precedence left T_BOOLEAN_OR;
 precedence left T_BOOLEAN_AND;
@@ -2658,7 +2659,7 @@ T_DOUBLE_ARROW expr:expr
 	RESULT = new ArrowFunctionDeclaration(sleft, exprright, parser.ast, paramList,
 		expr, isReference.booleanValue(), false, returnType);
 :}
-
+%prec PREC_ARROW_FUNCTION
 | T_STATIC:modifier T_FN:s is_reference:isReference
 T_OPEN_PARENTHESE parameter_list:paramList T_CLOSE_PARENTHESE return_type:returnType
 T_DOUBLE_ARROW expr:expr

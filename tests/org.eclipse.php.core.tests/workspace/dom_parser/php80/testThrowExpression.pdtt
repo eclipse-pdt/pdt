@@ -21,17 +21,19 @@ throw new \InvalidArgumentException();
 				</ClassInstanceCreation>
 			</ThrowExpression>
 		</EchoStatement>
-		<ThrowStatement start='35' length='38'>
-			<ClassInstanceCreation start='41' length='31'>
-				<ClassName start='45' length='25'>
-					<NamespaceName start='45' length='25' global='true' current='false'>
-						<Identifier start='46' length='24' name='InvalidArgumentException'/>
-					</NamespaceName>
-				</ClassName>
-				<ConstructorParameters>
-				</ConstructorParameters>
-			</ClassInstanceCreation>
-		</ThrowStatement>
+		<ExpressionStatement start='35' length='38'>
+			<ThrowExpression start='35' length='37'>
+				<ClassInstanceCreation start='41' length='31'>
+					<ClassName start='45' length='25'>
+						<NamespaceName start='45' length='25' global='true' current='false'>
+							<Identifier start='46' length='24' name='InvalidArgumentException'/>
+						</NamespaceName>
+					</ClassName>
+					<ConstructorParameters>
+					</ConstructorParameters>
+				</ClassInstanceCreation>
+			</ThrowExpression>
+		</ExpressionStatement>
 		<EmptyStatement start='74' length='2'/>
 	</Statements>
 	<Comments>

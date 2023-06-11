@@ -1,0 +1,63 @@
+--TEST--
+Bug #173 - incorrect precedence
+--FILE--
+<?php
+$x = fn (Contact $contact) => $contact->email ? new Destinataire((string) $contact->id, $contact->email) : null;
+?>
+--EXPECT--
+<ModuleDeclaration start="0" end="122">
+	<ExpressionStatement start="6" end="118">
+		<Assignment start="6" end="117" operator="=">
+			<VariableReference start="6" end="8" name="$x">
+			</VariableReference>
+			<ArrowFunctionDeclaration start="11" end="117" isReference="false">
+				<Arguments>
+					<FormalParameter start="15" end="31" modifiers="" isMandatory="true" parameterType="Contact">
+						<FullyQualifiedReference start="15" end="22" name="Contact">
+						</FullyQualifiedReference>
+						<VariableReference start="23" end="31" name="$contact">
+						</VariableReference>
+					</FormalParameter>
+				</Arguments>
+				<ConditionalExpression start="36" end="117" operatorType="0">
+					<Condition>
+						<FieldAccess start="36" end="51">
+							<VariableReference start="36" end="44" name="$contact">
+							</VariableReference>
+							<SimpleReference start="46" end="51" name="email">
+							</SimpleReference>
+						</FieldAccess>
+					</Condition>
+					<IfTrue>
+						<ClassInstanceCreation start="54" end="110">
+							<FullyQualifiedReference start="58" end="70" name="Destinataire">
+							</FullyQualifiedReference>
+							<PHPCallArgumentsList start="71" end="109">
+								<CastExpression start="71" end="92" type="string">
+									<FieldAccess start="80" end="92">
+										<VariableReference start="80" end="88" name="$contact">
+										</VariableReference>
+										<SimpleReference start="90" end="92" name="id">
+										</SimpleReference>
+									</FieldAccess>
+								</CastExpression>
+								<FieldAccess start="94" end="109">
+									<VariableReference start="94" end="102" name="$contact">
+									</VariableReference>
+									<SimpleReference start="104" end="109" name="email">
+									</SimpleReference>
+								</FieldAccess>
+							</PHPCallArgumentsList>
+						</ClassInstanceCreation>
+					</IfTrue>
+					<IfFalse>
+						<Scalar start="113" end="117" type="string" value="null">
+						</Scalar>
+					</IfFalse>
+				</ConditionalExpression>
+			</ArrowFunctionDeclaration>
+		</Assignment>
+	</ExpressionStatement>
+	<EmptyStatement start="119" end="121">
+	</EmptyStatement>
+</ModuleDeclaration>
