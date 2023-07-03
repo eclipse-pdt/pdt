@@ -942,13 +942,16 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		ISourceElementRequestor.FieldInfo info = new ISourceElementRequestor.FieldInfo();
 		info.modifiers = Modifiers.AccPublic;
 		SimpleReference var = catchClause.getVariable();
-		info.name = var.getName();
-		info.nameSourceEnd = var.sourceEnd() - 1;
-		info.nameSourceStart = var.sourceStart();
-		info.declarationStart = catchClause.sourceStart();
+		if (var != null) {
+			info.name = var.getName();
+			info.nameSourceEnd = var.sourceEnd() - 1;
+			info.nameSourceStart = var.sourceStart();
+			info.declarationStart = catchClause.sourceStart();
 
-		fInfoStack.push(info);
-		fRequestor.enterField(info);
+			fInfoStack.push(info);
+			fRequestor.enterField(info);
+		}
+
 		return true;
 	}
 

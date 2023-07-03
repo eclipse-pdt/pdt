@@ -232,7 +232,9 @@ public class VariableDeclarationSearcher extends ContextFinder {
 		} else if (node instanceof CatchClause) {
 			CatchClause clause = (CatchClause) node;
 			VariableReference varReference = clause.getVariable();
-			getScope().addDeclaration(varReference.getName(), clause);
+			if (varReference != null) {
+				getScope().addDeclaration(varReference.getName(), clause);
+			}
 		} else if (node instanceof ForEachStatement) {
 			ForEachStatement foreachStatement = (ForEachStatement) node;
 
