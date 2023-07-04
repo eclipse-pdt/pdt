@@ -11,6 +11,8 @@ Require-Bundle: org.eclipse.php.core,
  org.eclipse.debug.ui,
  org.eclipse.php.debug.core,
  org.eclipse.php.builtin.server.core,
+ org.eclipse.php.server.core,
+ org.eclipse.php.server.ui,
  org.eclipse.wst.server.core,
  org.eclipse.ui.forms
 Bundle-RequiredExecutionEnvironment: JavaSE-17

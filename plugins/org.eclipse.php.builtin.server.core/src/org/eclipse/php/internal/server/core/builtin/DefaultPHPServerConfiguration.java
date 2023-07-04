@@ -83,7 +83,7 @@ public class DefaultPHPServerConfiguration extends PHPServerConfiguration {
 		if (p != null) {
 			p.setPort(port);
 			isServerDirty = true;
-			firePropertyChangeEvent(MODIFY_PORT_PROPERTY, id, new Integer(port));
+			firePropertyChangeEvent(MODIFY_PORT_PROPERTY, id, Integer.valueOf(port));
 		}
 	}
 
@@ -239,7 +239,6 @@ public class DefaultPHPServerConfiguration extends PHPServerConfiguration {
 
 	@Override
 	public void removeWebModule(int index) {
-
 	}
 
 	@Override

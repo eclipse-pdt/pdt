@@ -46,15 +46,6 @@
    <extension
          point="org.eclipse.wst.server.ui.editorPageSections">
       <section
-            class="org.eclipse.php.internal.server.ui.builtin.editor.DocumentRootEditorSection"
-            id="org.eclipse.php.builtin.server.editor.document.root"
-            insertionId="org.eclipse.wst.server.editor.overview.left"
-            order="0"
-            typeIds="org.eclipse.php.server.builtin">
-      </section>
-         <!--
-      -->
-      <section
             class="org.eclipse.php.internal.server.ui.builtin.editor.ServerPortEditorSection"
             id="org.eclipse.php.builtin.server.editor.port"
             insertionId="org.eclipse.wst.server.editor.overview.right"
@@ -72,6 +63,32 @@
                relative="org.eclipse.ui.console.ConsoleView">
          </view>
       </perspectiveExtension>
+   </extension>
+   <extension
+         point="org.eclipse.php.server.ui.serverTypeDescriptor">
+      <descriptor
+          icon16="icons/full/obj16/server.png"
+          icon32="icons/full/obj32/server.png"
+          iconWizard="icons/full/wizban/server_wiz.png"
+          id="org.eclipse.php.server.builtin.serverTypeDescriptor"
+          serverTypeId="org.eclipse.php.server.builtin">
+       <wizard>
+          <fragment
+                id="org.eclipse.php.server.ui.wizard.BasicCompositeFragmentFactory">
+          </fragment>
+          <fragment
+                id="org.eclipse.php.debug.ui.wizards.DebuggerCompositeFragmentFactory">
+          </fragment>
+       </wizard>
+       <editor>
+          <fragment
+                id="org.eclipse.php.server.ui.wizard.BasicCompositeFragmentFactory">
+          </fragment>
+          <fragment
+                id="org.eclipse.php.debug.ui.wizards.DebuggerCompositeFragmentFactory">
+          </fragment>
+       </editor>
+    </descriptor>
    </extension>
 
 </plugin>

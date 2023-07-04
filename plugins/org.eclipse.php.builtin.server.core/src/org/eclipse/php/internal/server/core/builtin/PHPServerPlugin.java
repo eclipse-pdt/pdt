@@ -14,6 +14,9 @@ package org.eclipse.php.internal.server.core.builtin;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
+import org.eclipse.php.internal.server.core.builtin.configuration.ServerLifecycleListener;
+import org.eclipse.php.internal.server.core.manager.ServersManager;
+import org.eclipse.wst.server.core.ServerCore;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -23,7 +26,7 @@ public class PHPServerPlugin extends Plugin {
 
 	// The plug-in ID
 	public static final String PLUGIN_ID = "org.eclipse.php.server.core"; //$NON-NLS-1$
-
+	
 	// Debug mode identifier
 	public static final boolean isDebugMode;
 
@@ -34,6 +37,8 @@ public class PHPServerPlugin extends Plugin {
 
 	// The shared instance
 	private static PHPServerPlugin plugin;
+	
+	private ServerLifecycleListener listener;
 
 	/**
 	 * The constructor
@@ -50,6 +55,8 @@ public class PHPServerPlugin extends Plugin {
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
+		this.listener = new ServerLifecycleListener();
+		ServerCore.addServerLifecycleListener(this.listener);
 	}
 
 	/*
@@ -59,6 +66,7 @@ public class PHPServerPlugin extends Plugin {
 	 */
 	@Override
 	public void stop(BundleContext context) throws Exception {
+		ServerCore.removeServerLifecycleListener(this.listener);
 		plugin = null;
 		super.stop(context);
 	}

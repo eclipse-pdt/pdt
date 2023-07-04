@@ -19,6 +19,7 @@ import java.util.List;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -28,8 +29,10 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.internal.server.core.Server;
 import org.eclipse.php.internal.server.core.manager.ServersManager;
+import org.eclipse.php.server.core.types.IServerType;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IRuntime;
+import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.ServerPort;
 import org.eclipse.wst.server.core.ServerUtil;
 import org.eclipse.wst.server.core.model.ServerDelegate;
@@ -38,6 +41,8 @@ import org.osgi.framework.Version;
 @SuppressWarnings("restriction")
 public class PHPServer extends ServerDelegate implements IPHPServer, IPHPServerWorkingCopy {
 	private static final IModule[] EMPTY_LIST = new IModule[0];
+	
+	public static final String TYPE_ID = "org.eclipse.php.server.builtin"; //$NON-NLS-1$
 	public static final String PROPERTY_DEBUG = "debug"; //$NON-NLS-1$
 	private static final String DEPLOY_DIR = "htdocs"; //$NON-NLS-1$
 
@@ -77,12 +82,6 @@ public class PHPServer extends ServerDelegate implements IPHPServer, IPHPServerW
 				return new Status(IStatus.ERROR, PHPServerPlugin.PLUGIN_ID, 0, Messages.errorWebModulesOnly, null);
 			}
 
-			// if (module.getProject() != null) {
-			// IStatus status = FacetUtil.verifyFacets(module.getProject(),
-			// getServer());
-			// if (status != null && !status.isOK())
-			// return status;
-			// }
 		}
 		return Status.OK_STATUS;
 	}
@@ -110,44 +109,6 @@ public class PHPServer extends ServerDelegate implements IPHPServer, IPHPServerW
 		if (status == null || !status.isOK()) {
 			throw new CoreException(status);
 		}
-
-		// TODO implement later
-
-		// PHPServerConfiguration config = getPHPServerConfiguration();
-		//
-		// if (add != null) {
-		// int size = add.length;
-		// for (int i = 0; i < size; i++) {
-		// IModule module3 = add[i];
-		// IWebModule module = (IWebModule)
-		// module3.loadAdapter(IWebModule.class, monitor);
-		// String contextRoot = module.getContextRoot();
-		// if (contextRoot != null && !contextRoot.startsWith("/") &&
-		// contextRoot.length() > 0)
-		// contextRoot = "/" + contextRoot;
-		// String docBase = config.getDocBasePrefix() + module3.getName();
-		// WebModule module2 = new WebModule(contextRoot, docBase,
-		// module3.getId());
-		// config.addWebModule(-1, module2);
-		// }
-		// }
-		//
-		// if (remove != null) {
-		// int size2 = remove.length;
-		// for (int j = 0; j < size2; j++) {
-		// IModule module3 = remove[j];
-		// String memento = module3.getId();
-		// List modules = getPHPServerConfiguration().getWebModules();
-		// int size = modules.size();
-		// for (int i = 0; i < size; i++) {
-		// WebModule module = (WebModule) modules.get(i);
-		// if (memento.equals(module.getMemento()))
-		// config.removeWebModule(i);
-		// }
-		// }
-		// }
-		// config.save(config.getFolder(), monitor);
-
 	}
 
 	@Override
@@ -379,5 +340,69 @@ public class PHPServer extends ServerDelegate implements IPHPServer, IPHPServerW
 			return null;
 		}
 	}
-
+	
+	public void registerPHPServer()
+	{
+		
+		Server phpServer = new Server(getServer().getId());
+		setupServer(phpServer);
+		ServersManager.addServer(phpServer);
+		ServersManager.save();
+		
+	}
+	public void updatePHPServer()
+	{
+		Server phpServer = ServersManager.findServer(getServer().getId());
+		if (phpServer == null) {
+			registerPHPServer();
+		} else {
+			setupServer(phpServer);
+			ServersManager.save();
+		}
+		
+		
+		
+		
+	}
+	public void removePHPServer()
+	{
+		Server phpServer = ServersManager.findServer(getServer().getId());
+		if (phpServer != null) {
+			ServersManager.getInstance().removeServer(phpServer.getUniqueId());
+		}
+	}
+	
+	private void setupServer(Server phpServer)
+	{
+		IServer server = getServer();
+		phpServer.setName(server.getName() );
+		phpServer.setAttribute(IServerType.TYPE, PHPServer.TYPE_ID);
+		StringBuilder sb = new StringBuilder("http://"); //$NON-NLS-1$
+		sb.append(server.getHost());
+		if (server.getServerPorts(null)[0].getPort() != 80) {
+			sb.append(':').append(phpServer.getPort());
+		}
+		try {
+			phpServer.setBaseURL(sb.toString());
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
+		phpServer.setDebuggerId(server.getAttribute(PHPServer.PROPERTY_DEBUG, Server.NONE_DEBUGGER_ID));
+		
+		IPath documentRoot = null;
+		for (IModule module : server.getModules()) {
+			IPath loc = module.getProject().getLocation();
+			if (documentRoot == null) { // XXX: read HTdocs project property
+				documentRoot = loc;
+			} else {
+				while (!documentRoot.isPrefixOf(loc)) {
+					documentRoot = documentRoot.removeLastSegments(1);
+				}
+			}
+		}
+		if (documentRoot == null) {
+			documentRoot = ResourcesPlugin.getWorkspace().getRoot().getLocation(); // empty documentRoot
+		}
+		phpServer.setDocumentRoot(documentRoot.toOSString());
+	}
 }

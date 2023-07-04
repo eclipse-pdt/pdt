@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.core.internal.resources.Workspace;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -59,6 +60,7 @@ import org.eclipse.php.internal.debug.core.zend.communication.DebuggerCommunicat
 import org.eclipse.php.internal.debug.core.zend.debugger.PHPSessionLaunchMapper;
 import org.eclipse.php.internal.server.core.Server;
 import org.eclipse.php.internal.server.core.manager.ServersManager;
+import org.eclipse.php.server.core.types.IServerType;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.ServerPort;
@@ -471,6 +473,9 @@ public class PHPServerBehaviour extends ServerBehaviourDelegate implements IPHPS
 
 		PublishHelper helper = new PublishHelper(getRuntimeBaseDirectory().append("temp").toFile()); //$NON-NLS-1$
 		// If parent web module
+		for (IModule module : moduleTree) {
+			System.out.println(module.getProject().getLocation().toOSString());
+		}
 		if (moduleTree.length == 1) {
 			publishDir(deltaKind, p, moduleTree, helper, monitor);
 		}

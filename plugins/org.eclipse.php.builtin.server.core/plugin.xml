@@ -116,4 +116,12 @@
             id="org.eclipse.php.server.builtin">
       </launchableAdapter>
    </extension>
+   <extension
+         point="org.eclipse.php.server.core.serverType">
+      <type
+            description="Local built in PHP Server"
+            id="org.eclipse.php.server.builtin"
+            name="Built-in PHP Server">
+      </type>
+   </extension>
 </plugin>

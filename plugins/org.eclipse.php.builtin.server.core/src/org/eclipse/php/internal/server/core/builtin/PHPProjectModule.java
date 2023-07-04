@@ -59,7 +59,7 @@ public class PHPProjectModule extends ProjectModule {
 	 */
 	@Override
 	protected IModuleResource[] getModuleResources(IPath path, IContainer container) throws CoreException {
-		return internalGetModuleResources(path, container);
+		return new IModuleResource[0];
 	}
 
 	private IModuleResource[] internalGetModuleResources(IPath path, IContainer container) throws CoreException {

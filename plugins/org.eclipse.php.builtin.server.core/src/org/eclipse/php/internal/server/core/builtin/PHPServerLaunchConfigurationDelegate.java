@@ -13,12 +13,14 @@
 package org.eclipse.php.internal.server.core.builtin;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.core.model.LaunchConfigurationDelegate;
 import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
+import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.ServerCore;
 import org.eclipse.wst.server.core.ServerUtil;
@@ -43,6 +45,24 @@ public class PHPServerLaunchConfigurationDelegate extends LaunchConfigurationDel
 
 		// Determine PHP configuration file location:
 		String workingDir = phpServer.getServerDeployDirectory().toOSString();
+		IPath workPath = null;
+		
+		for (IModule module:server.getModules()) {
+			
+			IPath loc = module.getProject().getLocation();
+			if (workPath == null) {
+				workPath = loc;
+			} else {
+				while (!workPath.isPrefixOf(loc)) {
+					workPath = workPath.removeLastSegments(1);
+				}
+			}
+		}
+		if (workPath != null) {
+			workingDir = workPath.toOSString();
+		}
+	
+		
 		String host = phpServer.getServer().getHost();
 		int port = phpServer.getPHPServerConfiguration().getMainPort().getPort();
 		String phpExeLocation = configuration.getAttribute(IPHPDebugConstants.ATTR_EXECUTABLE_LOCATION, ""); //$NON-NLS-1$

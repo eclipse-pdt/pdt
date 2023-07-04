@@ -59,6 +59,11 @@ public class Server implements IXMLPreferencesStorable, IAdaptable, IUniqueIdent
 		setDebuggerId(NONE_DEBUGGER_ID);
 	}
 
+	public Server(String id) {
+		this();
+		setAttribute(UNIQUE_ID, id);
+	}
+
 	/**
 	 * Constructs a new Server.
 	 * 
@@ -87,8 +92,8 @@ public class Server implements IXMLPreferencesStorable, IAdaptable, IUniqueIdent
 	}
 
 	/**
-	 * Add a property change listener to this server. The same listener will not be
-	 * added twice.
+	 * Add a property change listener to this server. The same listener will not
+	 * be added twice.
 	 * 
 	 * @param listener
 	 *            java.beans.PropertyChangeListener; cannot be <code>null</code>
@@ -296,7 +301,8 @@ public class Server implements IXMLPreferencesStorable, IAdaptable, IUniqueIdent
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.php.internal.core.util.preferences.IXMLPreferencesStorable
+	 * @see
+	 * org.eclipse.php.internal.core.util.preferences.IXMLPreferencesStorable
 	 * #restoreFromMap(java.util.HashMap)
 	 */
 	@Override
@@ -317,7 +323,8 @@ public class Server implements IXMLPreferencesStorable, IAdaptable, IUniqueIdent
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.php.internal.core.util.preferences.IXMLPreferencesStorable
+	 * @see
+	 * org.eclipse.php.internal.core.util.preferences.IXMLPreferencesStorable
 	 * #storeToMap()
 	 */
 	@Override
