@@ -1572,6 +1572,8 @@ optional_class_type ::=
 function_call_parameter_list ::=
 non_empty_function_call_parameter_list:paramsList
 {:
+	paramsList.setStart(paramsListleft);
+	paramsList.setEnd(paramsListright);
 	RESULT = paramsList;
 :}
 

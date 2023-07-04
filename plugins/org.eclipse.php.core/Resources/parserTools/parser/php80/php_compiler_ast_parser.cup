@@ -2273,7 +2273,7 @@ non_empty_argument_list:paramsList possible_comma
 non_empty_argument_list ::=
 argument:argument
 {:
-	PHPCallArgumentsList paramsList = new PHPCallArgumentsList();
+	PHPCallArgumentsList paramsList = new PHPCallArgumentsList(argumentleft, argumentright);
 	paramsList.addNode(argument);
 	RESULT = paramsList;
 :}
@@ -2290,6 +2290,7 @@ argument:argument
 			}
 		}
 	}
+	paramsList.setEnd(varright);
 	RESULT = paramsList;
 :}
 ;
