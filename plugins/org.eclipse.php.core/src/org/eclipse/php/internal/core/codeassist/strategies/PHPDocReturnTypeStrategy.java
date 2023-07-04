@@ -38,6 +38,7 @@ public class PHPDocReturnTypeStrategy extends TypesStrategy {
 			"resource", //$NON-NLS-1$
 			"null", //$NON-NLS-1$
 			"callable", //$NON-NLS-1$
+			"scalar", //$NON-NLS-1$
 
 			// additional not specified in phpDoc manual
 			"NULL", //$NON-NLS-1$

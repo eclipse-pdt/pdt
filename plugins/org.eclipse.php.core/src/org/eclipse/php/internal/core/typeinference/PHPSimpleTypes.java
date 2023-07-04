@@ -107,6 +107,12 @@ public class PHPSimpleTypes {
 	@NonNull
 	public static final IEvaluatedType ITERABLE = new PHPClassType("iterable"); //$NON-NLS-1$
 
+	/**
+	 * @since 8.1
+	 */
+	@NonNull
+	public static final IEvaluatedType SCALAR = new PHPClassType("scalar"); //$NON-NLS-1$
+
 	static {
 
 		SIMPLE_TYPES = new HashMap<>();
@@ -128,6 +134,7 @@ public class PHPSimpleTypes {
 		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=531379
 		// "callback" is a (less complete) synonym of "callable"
 		SIMPLE_TYPES.put("callback", new TypeInfo(CALLABLE, null)); //$NON-NLS-1$
+		
 		SIMPLE_TYPES.put("iterable", new TypeInfo(ITERABLE, PHPVersion.PHP7_1)); //$NON-NLS-1$
 
 		SIMPLE_TYPES.put("static", new TypeInfo(MIXED, PHPVersion.PHP8_0)); //$NON-NLS-1$
@@ -135,6 +142,8 @@ public class PHPSimpleTypes {
 		SIMPLE_TYPES.put("never", new TypeInfo(VOID, PHPVersion.PHP8_1)); //$NON-NLS-1$
 		SIMPLE_TYPES.put("false", new TypeInfo(BOOLEAN, PHPVersion.PHP8_2)); //$NON-NLS-1$
 		SIMPLE_TYPES.put("true", new TypeInfo(BOOLEAN, PHPVersion.PHP8_2)); //$NON-NLS-1$
+		
+		SIMPLE_TYPES.put("scalar", new TypeInfo(SCALAR, null)); //$NON-NLS-1$
 	}
 
 	/**
