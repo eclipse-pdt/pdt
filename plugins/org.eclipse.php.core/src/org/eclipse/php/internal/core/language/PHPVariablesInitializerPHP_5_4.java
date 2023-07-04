@@ -23,6 +23,8 @@ public class PHPVariablesInitializerPHP_5_4 extends PHPVariablesInitializerPHP_5
 
 	@Override
 	public void initializeGlobals(Collection<String> globals) {
+		globals.add("$argc"); //$NON-NLS-1$
+		globals.add("$argv"); //$NON-NLS-1$
 	}
 
 }

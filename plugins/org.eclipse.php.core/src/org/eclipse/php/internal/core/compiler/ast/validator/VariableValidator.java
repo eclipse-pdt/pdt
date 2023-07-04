@@ -96,10 +96,12 @@ public class VariableValidator implements IValidatorExtension {
 		public Map<String, Variable> variables = new HashMap<>();
 		public int start;
 		public int end;
+		public boolean global;
 
-		public Scope(int start, int end) {
+		public Scope(int start, int end, boolean global) {
 			this.start = start;
 			this.end = end;
+			this.global = global;
 		}
 
 		void copy(Scope scope) {
@@ -240,7 +242,7 @@ public class VariableValidator implements IValidatorExtension {
 		@Override
 		public boolean visit(ModuleDeclaration s) throws Exception {
 			PHPModuleDeclaration module = (PHPModuleDeclaration) s;
-			pushScope(0, module.end());
+			pushScope(0, module.end(), true);
 			List<VarComment> varComments = module.getVarComments();
 			varCommentList = new ArrayList<>(module.getVarComments().size());
 			varCommentList.addAll(varComments);
@@ -403,7 +405,7 @@ public class VariableValidator implements IValidatorExtension {
 
 		@Override
 		public boolean visit(NamespaceDeclaration s) throws Exception {
-			pushScope(s.sourceStart(), s.sourceEnd());
+			pushScope(s.sourceStart(), s.sourceEnd(), true);
 			return true;
 		}
 
@@ -471,6 +473,9 @@ public class VariableValidator implements IValidatorExtension {
 		}
 
 		protected void check(String name, int start, int end) {
+			if (current.global && isGlobal(name)) {
+				return;
+			}
 			current.contains(name, start);
 			Variable var = current.variables.get(name);
 
@@ -748,7 +753,11 @@ public class VariableValidator implements IValidatorExtension {
 		}
 
 		private Scope pushScope(int start, int end) {
-			current = new Scope(start, end);
+			return pushScope(start, end, false);
+		}
+
+		private Scope pushScope(int start, int end, boolean global) {
+			current = new Scope(start, end, global);
 			scopes.push(current);
 			depth++;
 			return scopes.peekFirst();
