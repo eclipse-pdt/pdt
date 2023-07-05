@@ -956,8 +956,10 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 	}
 
 	public boolean endvisit(CatchClause catchClause) throws Exception {
-		fRequestor.exitField(catchClause.sourceEnd() - 1);
-		fInfoStack.pop();
+		if (catchClause.getVariable() != null) {
+			fRequestor.exitField(catchClause.sourceEnd() - 1);
+			fInfoStack.pop();
+		}
 		return true;
 	}
 
