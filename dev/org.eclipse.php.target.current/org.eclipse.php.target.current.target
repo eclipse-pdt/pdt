@@ -18,7 +18,7 @@
 <unit id="org.eclipse.zest.core" version="0.0.0"/>
 <unit id="org.eclipse.zest.layouts" version="0.0.0"/>
 <unit id="org.eclipse.wildwebdeveloper.feature.feature.group" version="0.0.0"/>
-<repository location="https://download.eclipse.org/releases/2023-03/"/>
+<repository location="https://download.eclipse.org/releases/2023-06/"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="com.google.gson" version="0.0.0"/>
@@ -49,10 +49,20 @@
 <repository location="https://download.eclipse.org/technology/dltk/updates-nightly/"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.mylyn.commons.sdk.feature.group" version="0.0.0"/>
-<unit id="org.eclipse.mylyn.context.sdk.feature.group" version="0.0.0"/>
-<unit id="org.eclipse.mylyn.sdk_feature.feature.group" version="0.0.0"/>
-<repository location="https://download.eclipse.org/mylyn/releases/latest/"/>
+<unit id="org.eclipse.mylyn.commons.feature.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.mylyn.commons.identity.feature.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.mylyn.commons.activity.feature.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.mylyn.commons.notifications.feature.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.mylyn.commons.repositories.feature.feature.group" version="0.0.0"/>
+
+<unit id="org.eclipse.mylyn.context.feature.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.mylyn.ide.feature.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.mylyn.monitor.feature.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.mylyn.context.feature.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.mylyn.discovery.feature.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.mylyn.tasks.feature.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.mylyn.team.feature.feature.group" version="0.0.0"/>
+<repository location="https://download.eclipse.org/mylyn/updates/milestone/latest/"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.wst.jsdt.feature.feature.group" version="0.0.0"/>
