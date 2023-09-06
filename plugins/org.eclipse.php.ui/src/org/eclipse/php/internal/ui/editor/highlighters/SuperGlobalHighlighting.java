@@ -19,6 +19,7 @@ import org.eclipse.php.internal.ui.editor.highlighter.AbstractSemanticHighlighti
 
 public class SuperGlobalHighlighting extends AbstractSemanticHighlighting {
 	protected class SuperGlobalApply extends AbstractSemanticApply {
+		private int scope = 0;
 
 		@Override
 		public boolean visit(Variable var) {
@@ -26,6 +27,22 @@ public class SuperGlobalHighlighting extends AbstractSemanticHighlighting {
 				highlight(var);
 			}
 			return true;
+		}
+
+		@Override
+		public boolean visit(Block block) {
+			if (isScope(block.getParent().getType())) {
+				scope++;
+			}
+			return super.visit(block);
+		}
+
+		@Override
+		public void endVisit(Block block) {
+			if (isScope(block.getParent().getType())) {
+				scope--;
+			}
+			super.endVisit(block);
 		}
 
 		@Override
@@ -48,8 +65,25 @@ public class SuperGlobalHighlighting extends AbstractSemanticHighlighting {
 			if ((var.isDollared() || ASTNodes.isQuotedDollaredCurlied(var)) && var.getName() instanceof Identifier) {
 				String name = "$" //$NON-NLS-1$
 						+ ((Identifier) var.getName()).getName();
+				if (scope > 0) {
+					return PHPVariables.isSuperGlobal(name, var.getAST().apiLevel());
+				}
 				return PHPVariables.isVariable(name, var.getAST().apiLevel());
 			}
+			return false;
+		}
+
+		private boolean isScope(int type) {
+			switch (type) {
+			case ASTNode.ANONYMOUS_CLASS_DECLARATION:
+			case ASTNode.CLASS_DECLARATION:
+			case ASTNode.FUNCTION_DECLARATION:
+			case ASTNode.LAMBDA_FUNCTION_DECLARATION:
+			case ASTNode.ARROW_FUNCTION_DECLARATION:
+			case ASTNode.INTERFACE_DECLARATION:
+				return true;
+			}
+
 			return false;
 		}
 	}

@@ -65,6 +65,19 @@ public class PHPVariables {
 		return getInstance(phpVersion).getByType(type);
 	}
 
+	public static boolean isSuperGlobal(@Nullable String name, PHPVersion phpVersion) {
+		if (name == null) {
+			return false;
+		}
+		String[] variables = getInstance(phpVersion).variables.get(SUPER_GLOBAL);
+		for (String variable : variables) {
+			if (variable.equals(name)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	public String[] getByType(int type) {
 		List<String> result = new LinkedList<>();
 		for (Entry<Integer, String[]> item : variables.entrySet()) {
