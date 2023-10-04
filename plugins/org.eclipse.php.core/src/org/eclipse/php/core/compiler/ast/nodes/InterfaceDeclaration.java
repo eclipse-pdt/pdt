@@ -129,4 +129,9 @@ public class InterfaceDeclaration extends TypeDeclaration
 	public void setAttributes(List<Attribute> attributes) {
 		this.attributes = attributes;
 	}
+
+	@Override
+	public void setPHPDoc(PHPDocBlock block) {
+		this.phpDoc = block;
+	}
 }

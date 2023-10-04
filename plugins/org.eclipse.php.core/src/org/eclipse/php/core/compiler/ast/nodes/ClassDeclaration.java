@@ -38,8 +38,7 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
  * var $anotherOne; private function myFunction($a) { } }
  * </pre>
  */
-public class ClassDeclaration extends TypeDeclaration
-		implements IPHPDocAwareDeclaration, IRecoverable, IAttributed {
+public class ClassDeclaration extends TypeDeclaration implements IPHPDocAwareDeclaration, IRecoverable, IAttributed {
 
 	private PHPDocBlock phpDoc;
 	private TypeReference superClass;
@@ -220,5 +219,10 @@ public class ClassDeclaration extends TypeDeclaration
 	@Override
 	public void setAttributes(List<Attribute> attributes) {
 		this.attributes = attributes;
+	}
+
+	@Override
+	public void setPHPDoc(PHPDocBlock block) {
+		this.phpDoc = block;
 	}
 }

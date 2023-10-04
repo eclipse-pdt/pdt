@@ -87,4 +87,9 @@ public class NamespaceDeclaration extends TypeDeclaration implements IPHPDocAwar
 	public String toString() {
 		return ASTPrintVisitor.toXMLString(this);
 	}
+
+	@Override
+	public void setPHPDoc(PHPDocBlock block) {
+		this.phpDoc = block;
+	}
 }

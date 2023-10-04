@@ -123,4 +123,9 @@ public class PHPFieldDeclaration extends FieldDeclaration implements IPHPDocAwar
 	public boolean isReadonly() {
 		return (this.modifiers & IPHPModifiers.AccReadonly) != 0;
 	}
+
+	@Override
+	public void setPHPDoc(PHPDocBlock block) {
+		this.phpDoc = block;
+	}
 }

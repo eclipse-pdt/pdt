@@ -28,6 +28,16 @@ parser code {:
 			this.doc = doc;
 		}
 	}
+	
+	class NodeDocPair<T> {
+		public T node;
+		public PHPDocBlock doc;
+		
+		public NodeDocPair(T node, PHPDocBlock doc) {
+			this.node = node;
+			this.doc = doc;
+		}
+	}
 
 	protected Expression detectScalar(Expression expr) {
 		if (expr instanceof FullyQualifiedReference) {
@@ -39,11 +49,17 @@ parser code {:
 		return expr;
 	}
 	
-	protected void setAttributes(ASTNode target, List<Attribute> list)
+	protected void setAttributes(ASTNode target, NodeDocPair<List<Attribute>> list)
 	{
-		((IAttributed)target).setAttributes(list);
-		Attribute group = list.get(0);
+		((IAttributed)target).setAttributes(list.node);
+		Attribute group = list.node.get(0);
 		target.setStart(group.start());
+		if (list.doc != null && target instanceof IPHPDocAwareDeclaration) {
+			IPHPDocAwareDeclaration decl = (IPHPDocAwareDeclaration)target;
+			if (decl.getPHPDoc() == null) {
+				decl.setPHPDoc(list.doc);
+			}
+		}
 	}
 
 	protected int getElementTypeByUseType(int useType) {
@@ -213,7 +229,7 @@ terminal CompilerAstLexer.PHPDocBlockSymbolPair T_FN;
 terminal PREC_ARROW_FUNCTION;
 
 //php 8.0
-terminal T_ATTRIBUTE;
+terminal CompilerAstLexer.PHPDocBlockSymbolPair T_ATTRIBUTE;
 terminal String T_MATCH;
 terminal T_NULLSAFE_OBJECT_OPERATOR;
 terminal String T_NAME_FULLY_QUALIFIED;
@@ -376,8 +392,8 @@ non terminal YieldExpression yield_expr;
 //php8.0
 non terminal Attribute attribute_decl;
 non terminal List<Attribute> attribute_group;
-non terminal List<Attribute> attribute;
-non terminal List<Attribute> attributes;
+non terminal NodeDocPair<List<Attribute>> attribute;
+non terminal NodeDocPair<List<Attribute>> attributes;
 non terminal Statement attributed_statement;
 non terminal FormalParameter attributed_parameter;
 non terminal Expression inline_function;
@@ -858,24 +874,25 @@ attribute_group:list T_COMMA attribute_decl:decl
 :}
 ;
 attribute ::=
-T_ATTRIBUTE attribute_group:list possible_comma T_CLOSE_RECT
+T_ATTRIBUTE:s attribute_group:list possible_comma T_CLOSE_RECT
 {:
-	RESULT = list;
+	RESULT = new NodeDocPair<List<Attribute>>(list, s.doc);
 :}
 ;
 
 attributes ::=
 attributes:attributesList attribute:attr
 {:
-	attributesList.addAll(attr);
+	attributesList.node.addAll(attr.node);
+	if (attr.doc != null) {
+		attributesList.doc = attr.doc;
+	}
 	
 	RESULT = attributesList;
 :}
 | attribute:attr
-{:
-	List<Attribute> attributesList = new LinkedList<Attribute>(attr);
-	
-	RESULT = attributesList;
+{:	
+	RESULT = attr;
 :}
 ;
 
@@ -3347,7 +3364,7 @@ T_NEW:start class_name_reference:className ctor_arguments:ctor
 | T_NEW:start attributes:attrs T_CLASS:tclass ctor_arguments:ctor anonymous_class:ac
 {:
 	Expression className = new SimpleReference(tclassleft, tclassright, "class");
-	ac.setAttributes(attrs);
+	ac.setAttributes(attrs.node);
 	RESULT = new ClassInstanceCreation(startleft, acright, className, ctor, ac);
 :}
 ;

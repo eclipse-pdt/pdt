@@ -132,4 +132,9 @@ public class PHPMethodDeclaration extends MethodDeclaration implements IPHPDocAw
 	public void setAttributes(List<Attribute> attributes) {
 		this.attributes = attributes;
 	}
+
+	@Override
+	public void setPHPDoc(PHPDocBlock block) {
+		this.phpDoc = block;
+	}
 }

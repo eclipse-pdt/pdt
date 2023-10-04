@@ -33,4 +33,6 @@ public interface IPHPDocAwareDeclaration {
 	 * @return PHPDoc block
 	 */
 	public PHPDocBlock getPHPDoc();
+
+	public void setPHPDoc(PHPDocBlock block);
 }
