@@ -29,7 +29,6 @@
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="com.google.gson" version="0.0.0"/>
 <unit id="org.apache.commons.io" version="0.0.0"/>
-<unit id="org.apache.commons.lang" version="0.0.0"/>
 <unit id="org.apache.commons.lang3" version="0.0.0"/>
 <unit id="org.apache.commons.logging" version="0.0.0"/>
 
