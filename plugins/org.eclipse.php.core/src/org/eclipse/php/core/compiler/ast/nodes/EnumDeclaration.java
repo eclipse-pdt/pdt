@@ -133,4 +133,9 @@ public class EnumDeclaration extends TypeDeclaration implements IPHPDocAwareDecl
 	public TypeReference getBackingType() {
 		return backingType;
 	}
+
+	@Override
+	public void setPHPDoc(PHPDocBlock block) {
+		this.phpDoc = block;
+	}
 }
