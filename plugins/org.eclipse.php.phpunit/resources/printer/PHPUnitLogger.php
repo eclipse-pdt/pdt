@@ -589,7 +589,7 @@ class PHPUnitEclipseLogger
     private $warnings;
 
     private $varx;
-    
+
     private $out;
 
     /**
@@ -811,7 +811,7 @@ class PHPUnitEclipseLogger
                 } else if (method_exists($this->exception, "getMessage")) { // PHPUnit 3.6.3
                     $message = $this->exception->getMessage();
                 }
-                if (method_exists($this->exception, "getComparisonFailure") && method_exists($this->exception->getComparisonFailure(), "getDiff")) {
+                if (method_exists($this->exception, "getComparisonFailure") && $this->exception->getComparisonFailure() != null && method_exists($this->exception->getComparisonFailure(), "getDiff")) {
                     $diff = $this->exception->getComparisonFailure()->getDiff();
                 }
             }
