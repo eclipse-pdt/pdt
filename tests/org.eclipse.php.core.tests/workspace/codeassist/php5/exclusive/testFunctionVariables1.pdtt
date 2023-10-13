@@ -12,4 +12,5 @@ field($_REQUEST)
 field($_SERVER)
 field($_SESSION)
 field($GLOBALS)
-
+field($php_errormsg)
+field($http_response_header)

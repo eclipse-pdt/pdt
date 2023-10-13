@@ -48,13 +48,7 @@ public class PHPVariables {
 		if (name == null) {
 			return false;
 		}
-		String[] variables = getVariables(phpVersion);
-		for (String variable : variables) {
-			if (variable.equals(name)) {
-				return true;
-			}
-		}
-		return false;
+		return checkName(getVariables(phpVersion), name);
 	}
 
 	public static String[] getVariables(PHPVersion phpVersion) {
@@ -65,11 +59,18 @@ public class PHPVariables {
 		return getInstance(phpVersion).getByType(type);
 	}
 
+	public static String[] getSuperGlobalVariables(PHPVersion phpVersion) {
+		return getVariables(phpVersion, SUPER_GLOBAL);
+	}
+
 	public static boolean isSuperGlobal(@Nullable String name, PHPVersion phpVersion) {
 		if (name == null) {
 			return false;
 		}
-		String[] variables = getInstance(phpVersion).variables.get(SUPER_GLOBAL);
+		return checkName(getInstance(phpVersion).variables.get(SUPER_GLOBAL), name);
+	}
+
+	private static boolean checkName(String[] variables, String name) {
 		for (String variable : variables) {
 			if (variable.equals(name)) {
 				return true;
@@ -104,10 +105,12 @@ public class PHPVariables {
 			case PHP7_2:
 			case PHP7_3:
 			case PHP7_4:
+				initializer = new PHPVariablesInitializerPHP_5_4();
+				break;
 			case PHP8_0:
 			case PHP8_1:
 			case PHP8_2:
-				initializer = new PHPVariablesInitializerPHP_5_4();
+				initializer = new PHPVariablesInitializerPHP_8_0();
 				break;
 			case PHP5:
 			case PHP5_3:

@@ -27,6 +27,8 @@ public class PHPVariablesInitializerPHP_5 implements IPHPVariablesInitializer {
 		superGlobals.add("$_SERVER"); //$NON-NLS-1$
 		superGlobals.add("$_SESSION"); //$NON-NLS-1$
 		superGlobals.add("$GLOBALS"); //$NON-NLS-1$
+		superGlobals.add("$php_errormsg"); //$NON-NLS-1$
+		superGlobals.add("$http_response_header"); //$NON-NLS-1$
 	}
 
 	@Override

@@ -1,0 +1,8 @@
+--TEST--
+--FILE--
+<?php
+function functionWithGlobal($argc, $argv) {}
+function functionWithGlobal($_GET) {}
+?>
+--EXPECT--
+[line=3, start=79, end=84] Cannot re-assign auto-global variable $_GET

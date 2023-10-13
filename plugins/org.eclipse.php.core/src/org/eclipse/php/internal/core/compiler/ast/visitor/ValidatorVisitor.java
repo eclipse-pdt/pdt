@@ -79,6 +79,8 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 	private static final int ALLOW_ARRAY = 1;
 	private static final int ALLOW_NEW = 2;
 
+	private String[] globals = null;
+
 	// https://www.php.net/manual/en/reserved.other-reserved-words.php
 	private static final List<SimpleProposal> RESERVED_WORDS = new ArrayList<>();
 
@@ -1215,7 +1217,7 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 	public boolean visit(FormalParameter s) throws Exception {
 		validateConstantExpression(s.getInitialization(), ALLOW_ARRAY | ALLOW_NEW);
 		if (version.isGreaterThan(PHPVersion.PHP5_3) && s.getParameterName() != null
-				&& PHPVariables.isVariable(s.getParameterName().getName(), version)) {
+				&& isSuperGlobal(s.getParameterName().getName())) {
 			reportProblem(s.getParameterName(), Messages.ReassignAutoGlobalVariable,
 					PHPProblemIdentifier.ReassignAutoGlobalVariable, s.getParameterName().getName(),
 					ProblemSeverities.Error);
@@ -1446,6 +1448,37 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 	@Override
 	public PHPVersion getPHPVersion() {
 		return version;
+	}
+
+	/**
+	 * @param name
+	 * @return
+	 */
+	private boolean isSuperGlobal(String name) {
+		if ("$GLOBALS".equals(name)) { //$NON-NLS-1$
+			return true;
+		}
+		if (!name.startsWith("$_")) { //$NON-NLS-1$
+			return false;
+		}
+
+		return isGlobal(name);
+	}
+
+	/**
+	 * @param name
+	 * @return
+	 */
+	private boolean isGlobal(String name) {
+		if (globals == null) {
+			globals = PHPVariables.getVariables(getPHPVersion());
+		}
+		for (String global : globals) {
+			if (global.equals(name)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 }
