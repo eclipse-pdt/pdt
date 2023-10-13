@@ -21,6 +21,7 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.dltk.annotations.NonNull;
 import org.eclipse.dltk.ast.ASTNode;
+import org.eclipse.dltk.ast.declarations.Declaration;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.declarations.TypeDeclaration;
 import org.eclipse.dltk.ast.expressions.Expression;
@@ -66,9 +67,14 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 
 	private static final String EMPTY = ""; //$NON-NLS-1$
 	private static final String PAAMAYIM_NEKUDOTAIM = "::"; //$NON-NLS-1$
+	private static final String CALL = "()"; //$NON-NLS-1$
 	private static final String NAMESPACE_RESOLVER = "NAMESPACE_RESOLVER"; //$NON-NLS-1$
 	private static final List<String> TYPE_SKIP = new ArrayList<>();
 	private static final List<String> COMMENT_TYPE_SKIP = new ArrayList<>();
+
+	private static final String ACCESS_ABSTRACT = "abstract"; //$NON-NLS-1$
+	private static final String ACCESS_PRIVATE = "private"; //$NON-NLS-1$
+	private static final String ACCESS_PROTECTED = "protected"; //$NON-NLS-1$
 
 	private static final int ALLOW_ARRAY = 1;
 	private static final int ALLOW_NEW = 2;
@@ -244,9 +250,37 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 					PHPProblemIdentifier.DuplicateMethodDeclaration, new String[] { s.getName() },
 					ProblemSeverities.Error);
 		} else {
+			if (parentType instanceof InterfaceDeclaration) {
+				checkInterfaceMethodMofiers((InterfaceDeclaration) parentType, s);
+
+			}
 			childs.put(id, s);
 		}
 		return super.visit(s);
+	}
+
+	private void checkInterfaceMethodMofiers(InterfaceDeclaration parentType, PHPMethodDeclaration s) {
+		if (PHPFlags.isAbstract(s.getModifiers()) && s.getBody().end() - s.getBody().start() == 1) {
+			reportAccessProblem(parentType, s, ACCESS_ABSTRACT);
+		}
+		if (PHPFlags.isPrivate(s.getModifiers())) {
+			reportAccessProblem(parentType, s, ACCESS_PRIVATE);
+		}
+		if (PHPFlags.isProtected(s.getModifiers())) {
+			reportAccessProblem(parentType, s, ACCESS_PROTECTED);
+		}
+
+	}
+
+	private void reportAccessProblem(TypeDeclaration parentType, Declaration s, String key) {
+		int indexOf = context.getSourceContents().substring(s.start(), s.getNameStart()).toLowerCase().indexOf(key);
+		if (indexOf >= 0) {
+			reportProblem(s.start() + indexOf, s.start() + indexOf + 8, Messages.IntefaceMethodAccessType,
+					PHPProblemIdentifier.InterfaceAccessTypeMustBeOmmited,
+					new String[] { parentType.getName() + PAAMAYIM_NEKUDOTAIM + s.getName() + CALL },
+					ProblemSeverities.Error);
+		}
+
 	}
 
 	@Override

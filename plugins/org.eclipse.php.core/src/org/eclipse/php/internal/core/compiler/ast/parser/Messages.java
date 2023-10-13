@@ -70,6 +70,7 @@ public class Messages extends NLS {
 	public static String EnumCaseInClass;
 	public static String EnumCaseWithType;
 	public static String EnumCaseWithoutType;
+	public static String IntefaceMethodAccessType;
 
 	static {
 		// initialize resource bundle

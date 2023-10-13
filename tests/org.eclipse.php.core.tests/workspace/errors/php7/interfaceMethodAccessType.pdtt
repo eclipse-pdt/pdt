@@ -1,0 +1,14 @@
+--TEST--
+Test interface problems
+--FILE--
+<?php
+interface TestInterfaceAccess {
+	abstract function f1();
+	protected function f2();
+	private function f3();
+}
+?>
+--EXPECT--
+[line=3, start=39, end=47] Access type for interface method TestInterfaceAccess::f1() must be omitted
+[line=4, start=64, end=72] Access type for interface method TestInterfaceAccess::f2() must be omitted
+[line=5, start=90, end=98] Access type for interface method TestInterfaceAccess::f3() must be omitted
