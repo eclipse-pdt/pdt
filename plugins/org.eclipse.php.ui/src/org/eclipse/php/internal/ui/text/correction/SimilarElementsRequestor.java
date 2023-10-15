@@ -55,7 +55,7 @@ public class SimilarElementsRequestor extends CompletionRequestor {
 		requestor.setIgnored(CompletionProposal.LABEL_REF, true);
 		requestor.setIgnored(CompletionProposal.PACKAGE_REF, true);
 		requestor.setIgnored(CompletionProposal.VARIABLE_DECLARATION, true);
-		requestor.setIgnored(CompletionProposal.METHOD_REF, true);
+		// requestor.setIgnored(CompletionProposal.METHOD_REF, true);
 		requestor.setIgnored(CompletionProposal.FIELD_REF, true);
 		requestor.setIgnored(CompletionProposal.LOCAL_VARIABLE_REF, true);
 		requestor.setIgnored(CompletionProposal.VARIABLE_DECLARATION, true);

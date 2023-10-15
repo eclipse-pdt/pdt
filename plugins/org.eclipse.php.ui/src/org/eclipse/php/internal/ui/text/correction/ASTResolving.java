@@ -216,12 +216,16 @@ public class ASTResolving {
 		}
 
 		ASTNode parent = node.getParent();
+		if (parent.getType() == ASTNode.NAMESPACE_NAME) {
+			parent = parent.getParent();
+		}
 
 		switch (parent.getType()) {
 		case ASTNode.CLASS_DECLARATION:
 		case ASTNode.INTERFACE_DECLARATION:
 			kind = SimilarElementsRequestor.CLASSES | SimilarElementsRequestor.INTERFACES;
 			break;
+
 		case ASTNode.METHOD_DECLARATION:
 			kind = SimilarElementsRequestor.ALL_TYPES;
 			break;
@@ -242,6 +246,9 @@ public class ASTResolving {
 			break;
 		case ASTNode.FUNCTION_NAME:
 			kind = SimilarElementsRequestor.FUNCTIONS;
+			break;
+		case ASTNode.ATTRIBUTE:
+			kind = SimilarElementsRequestor.CLASSES | SimilarElementsRequestor.INTERFACES;
 			break;
 		default:
 		}
