@@ -19,6 +19,7 @@ import org.eclipse.dltk.ast.ASTVisitor;
 import org.eclipse.dltk.ast.declarations.Declaration;
 import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.ast.references.ConstantReference;
+import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.utils.CorePrinter;
 import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
 
@@ -35,6 +36,7 @@ public class ConstantDeclaration extends Declaration implements IPHPDocAwareDecl
 
 	private final ConstantReference constant;
 	private final Expression initializer;
+	private final SimpleReference constantType;
 	private PHPDocBlock phpDoc;
 	private List<Attribute> attributes;
 
@@ -45,6 +47,12 @@ public class ConstantDeclaration extends Declaration implements IPHPDocAwareDecl
 
 	public ConstantDeclaration(ConstantReference constant, Expression initializer, int modifiers, int start, int end,
 			PHPDocBlock phpDoc) {
+		this(null, constant, initializer, modifiers, start, end, phpDoc);
+
+	}
+
+	public ConstantDeclaration(SimpleReference type, ConstantReference constant, Expression initializer, int modifiers,
+			int start, int end, PHPDocBlock phpDoc) {
 		super(start, end);
 
 		assert constant != null;
@@ -52,6 +60,7 @@ public class ConstantDeclaration extends Declaration implements IPHPDocAwareDecl
 		this.constant = constant;
 		this.initializer = initializer;
 		this.phpDoc = phpDoc;
+		this.constantType = type;
 
 		setModifiers(modifiers);
 		setName(constant.getName());
@@ -117,5 +126,9 @@ public class ConstantDeclaration extends Declaration implements IPHPDocAwareDecl
 	@Override
 	public void setPHPDoc(PHPDocBlock block) {
 		this.phpDoc = block;
+	}
+
+	public SimpleReference getConstantType() {
+		return constantType;
 	}
 }

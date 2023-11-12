@@ -104,6 +104,10 @@ public class TypeInferenceTests {
 				"/workspace/typeinference/php54", "/workspace/typeinference/php55", "/workspace/typeinference/php56",
 				"/workspace/typeinference/php70", "/workspace/typeinference/php80", "/workspace/typeinference/php81",
 				"/workspace/typeinference/php82" });
+		TESTS.put(PHPVersion.PHP8_3, new String[] { "/workspace/typeinference/php5", "/workspace/typeinference/php53",
+				"/workspace/typeinference/php54", "/workspace/typeinference/php55", "/workspace/typeinference/php56",
+				"/workspace/typeinference/php70", "/workspace/typeinference/php80", "/workspace/typeinference/php81",
+				"/workspace/typeinference/php82", "/workspace/typeinference/php83" });
 	};
 
 	private static int counter = 0;

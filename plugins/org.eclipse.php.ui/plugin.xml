@@ -2978,6 +2978,14 @@
              <feature name="null,false,true types"></feature>
              <feature name="constants in traits"></feature>
        </phpVersion>
+       <phpVersion
+             name="8.3 (experimental)"
+             version="php8.3">
+             <feature name="class constsnts types"></feature>
+             <feature name="json improvements"></feature>
+             <feature name="dynamic class constants"></feature>
+             <feature name="randomizer improvements"></feature>
+       </phpVersion>
    </extension>
    <extension
          point="org.eclipse.php.ui.problemConfiguration">

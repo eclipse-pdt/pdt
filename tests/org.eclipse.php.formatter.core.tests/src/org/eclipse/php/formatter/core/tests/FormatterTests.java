@@ -82,6 +82,7 @@ public class FormatterTests {
 		TESTS.put(PHPVersion.PHP8_0, new String[] { "/workspace/formatter/php80" });
 		TESTS.put(PHPVersion.PHP8_1, new String[] { "/workspace/formatter/php81" });
 		TESTS.put(PHPVersion.PHP8_2, new String[] { "/workspace/formatter/php82" });
+		TESTS.put(PHPVersion.PHP8_3, new String[] { "/workspace/formatter/php82" });
 	};
 
 	protected static int suiteCounter = 0;

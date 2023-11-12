@@ -33,6 +33,8 @@ import org.eclipse.php.core.ast.visitor.Visitor;
  */
 public class ConstantDeclaration extends BodyDeclaration {
 
+	private Expression constantType;
+
 	private final ASTNode.NodeList<Identifier> names = new ASTNode.NodeList<>(NAMES_PROPERTY);
 	private final ASTNode.NodeList<Expression> initializers = new ASTNode.NodeList<>(INITIALIZERS_PROPERTY);
 
@@ -44,6 +46,9 @@ public class ConstantDeclaration extends BodyDeclaration {
 	public static final ChildListPropertyDescriptor INITIALIZERS_PROPERTY = new ChildListPropertyDescriptor(
 			ConstantDeclaration.class, "initializers", Expression.class, //$NON-NLS-1$
 			CYCLE_RISK);
+	public static final ChildPropertyDescriptor CONSTANT_TYPE_PROPERTY = new ChildPropertyDescriptor(
+			FormalParameter.class, "constantType", Expression.class, OPTIONAL, CYCLE_RISK); //$NON-NLS-1$
+
 	public static final SimplePropertyDescriptor MODIFIER_PROPERTY = new SimplePropertyDescriptor(
 			ConstantDeclaration.class, "modifier", Integer.class, OPTIONAL); //$NON-NLS-1$
 
@@ -59,6 +64,8 @@ public class ConstantDeclaration extends BodyDeclaration {
 
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS_PHP8;
 
+	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS_PHP83;
+
 	static {
 		List<StructuralPropertyDescriptor> properyList = new ArrayList<>(3);
 		properyList.add(NAMES_PROPERTY);
@@ -72,6 +79,14 @@ public class ConstantDeclaration extends BodyDeclaration {
 		properyList.add(MODIFIER_PROPERTY);
 		properyList.add(ATTRIBUTES_PROPERTY);
 		PROPERTY_DESCRIPTORS_PHP8 = Collections.unmodifiableList(properyList);
+
+		properyList = new ArrayList<>(5);
+		properyList.add(NAMES_PROPERTY);
+		properyList.add(CONSTANT_TYPE_PROPERTY);
+		properyList.add(INITIALIZERS_PROPERTY);
+		properyList.add(MODIFIER_PROPERTY);
+		properyList.add(ATTRIBUTES_PROPERTY);
+		PROPERTY_DESCRIPTORS_PHP83 = Collections.unmodifiableList(properyList);
 	}
 
 	public ConstantDeclaration(int start, int end, AST ast, List<Identifier> names, List<Expression> initializers) {
@@ -85,6 +100,11 @@ public class ConstantDeclaration extends BodyDeclaration {
 
 	public ConstantDeclaration(int start, int end, AST ast, int modifier, List<Identifier> names,
 			List<Expression> initializers, List<AttributeGroup> attributes) {
+		this(start, end, ast, modifier, null, names, initializers, attributes);
+	}
+
+	public ConstantDeclaration(int start, int end, AST ast, int modifier, Expression constantType,
+			List<Identifier> names, List<Expression> initializers, List<AttributeGroup> attributes) {
 		super(start, end, ast, modifier);
 
 		if (names == null || initializers == null || names.size() != initializers.size()) {
@@ -93,6 +113,7 @@ public class ConstantDeclaration extends BodyDeclaration {
 		if (attributes != null) {
 			attributes().addAll(attributes);
 		}
+		setConstantType(constantType);
 
 		Iterator<Identifier> iteratorNames = names.iterator();
 		Iterator<Expression> iteratorInitializers = initializers.iterator();
@@ -107,11 +128,17 @@ public class ConstantDeclaration extends BodyDeclaration {
 	}
 
 	public ConstantDeclaration(int start, int end, AST ast, int modifier, List<ASTNode[]> variablesAndDefaults) {
+		this(start, end, ast, modifier, null, variablesAndDefaults);
+	}
+
+	public ConstantDeclaration(int start, int end, AST ast, int modifier, Expression type,
+			List<ASTNode[]> variablesAndDefaults) {
 		super(start, end, ast, modifier);
 		if (variablesAndDefaults == null || variablesAndDefaults.size() == 0) {
 			throw new IllegalArgumentException();
 		}
 
+		this.constantType = type;
 		for (Iterator<ASTNode[]> iter = variablesAndDefaults.iterator(); iter.hasNext();) {
 			ASTNode[] element = iter.next();
 			assert element != null && element.length == 2 && element[0] != null && element[1] != null;
@@ -139,6 +166,9 @@ public class ConstantDeclaration extends BodyDeclaration {
 		for (AttributeGroup attr : attributes()) {
 			attr.accept(visitor);
 		}
+		if (constantType != null) {
+			constantType.accept(visitor);
+		}
 		Iterator<Identifier> iterator1 = names.iterator();
 		Iterator<Expression> iterator2 = initializers.iterator();
 		while (iterator1.hasNext()) {
@@ -152,6 +182,9 @@ public class ConstantDeclaration extends BodyDeclaration {
 		accept(visitor);
 		for (AttributeGroup attr : attributes()) {
 			attr.traverseTopDown(visitor);
+		}
+		if (constantType != null) {
+			constantType.traverseTopDown(visitor);
 		}
 		Iterator<Identifier> iterator1 = names.iterator();
 		Iterator<Expression> iterator2 = initializers.iterator();
@@ -170,6 +203,9 @@ public class ConstantDeclaration extends BodyDeclaration {
 			iterator1.next().traverseBottomUp(visitor);
 			iterator2.next().traverseBottomUp(visitor);
 		}
+		if (constantType != null) {
+			constantType.traverseBottomUp(visitor);
+		}
 		for (AttributeGroup attr : attributes()) {
 			attr.traverseBottomUp(visitor);
 		}
@@ -181,6 +217,11 @@ public class ConstantDeclaration extends BodyDeclaration {
 		buffer.append(tab).append("<ConstantDeclaration"); //$NON-NLS-1$
 		appendInterval(buffer);
 		buffer.append(" modifier='").append(getModifierString()).append('\''); //$NON-NLS-1$
+		if (constantType != null) {
+			buffer.append(" type='"); //$NON-NLS-1$
+			constantType.toString(buffer, tab);
+			buffer.append('\'');
+		}
 		buffer.append(">\n"); //$NON-NLS-1$
 		toStringAttributes(buffer, tab + TAB);
 		Iterator<Identifier> iterator1 = names.iterator();
@@ -246,17 +287,38 @@ public class ConstantDeclaration extends BodyDeclaration {
 		final List<Identifier> names = ASTNode.copySubtrees(target, this.names());
 		final List<Expression> initializers = ASTNode.copySubtrees(target, this.initializers());
 		final List<AttributeGroup> attributes = ASTNode.copySubtrees(target, attributes());
-		return new ConstantDeclaration(this.getStart(), this.getEnd(), target, this.getModifier(), names, initializers,
-				attributes);
+		final Expression type = ASTNode.copySubtree(target, this.getConstantType());
+		return new ConstantDeclaration(this.getStart(), this.getEnd(), target, this.getModifier(), type, names,
+				initializers, attributes);
 
 	}
 
 	@Override
+	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
+
+		if (property == CONSTANT_TYPE_PROPERTY) {
+			if (get) {
+				return getConstantType();
+			} else {
+				setConstantType((Expression) child);
+				return null;
+			}
+		}
+
+		// allow default implementation to flag the error
+		return super.internalGetSetChildProperty(property, get, child);
+	}
+
+	@Override
 	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(PHPVersion apiLevel) {
+
 		if (PHPVersion.PHP8_0.isGreaterThan(apiLevel)) {
 			return PROPERTY_DESCRIPTORS;
 		}
-		return PROPERTY_DESCRIPTORS_PHP8;
+		if (PHPVersion.PHP8_2.isLessThan(apiLevel)) {
+			return PROPERTY_DESCRIPTORS_PHP8;
+		}
+		return PROPERTY_DESCRIPTORS_PHP83;
 	}
 
 	@Override
@@ -268,4 +330,19 @@ public class ConstantDeclaration extends BodyDeclaration {
 	protected ChildListPropertyDescriptor getAttributesProperty() {
 		return ATTRIBUTES_PROPERTY;
 	}
+
+	public Expression getConstantType() {
+		return constantType;
+	}
+
+	public void setConstantType(Expression constantType) {
+		if (constantType != null && !(constantType instanceof Identifier) && !(constantType instanceof NamespaceName)) {
+			throw new IllegalArgumentException();
+		}
+		ASTNode oldChild = this.constantType;
+		preReplaceChild(oldChild, constantType, CONSTANT_TYPE_PROPERTY);
+		this.constantType = constantType;
+		postReplaceChild(oldChild, constantType, CONSTANT_TYPE_PROPERTY);
+	}
+
 }

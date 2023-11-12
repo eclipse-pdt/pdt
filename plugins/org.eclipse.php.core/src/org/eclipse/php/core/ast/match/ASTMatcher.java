@@ -355,6 +355,7 @@ public class ASTMatcher {
 		ConstantDeclaration o = (ConstantDeclaration) other;
 
 		return (safeSubtreeListMatch(node.initializers(), o.initializers())
+				&& match((Identifier) node.getConstantType(), (Identifier) o.getConstantType())
 				&& safeSubtreeListMatch(node.names(), o.names()));
 	}
 

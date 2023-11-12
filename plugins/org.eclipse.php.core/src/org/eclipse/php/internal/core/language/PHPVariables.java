@@ -110,6 +110,7 @@ public class PHPVariables {
 			case PHP8_0:
 			case PHP8_1:
 			case PHP8_2:
+			case PHP8_3:
 				initializer = new PHPVariablesInitializerPHP_8_0();
 				break;
 			case PHP5:

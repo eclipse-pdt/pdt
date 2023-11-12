@@ -72,6 +72,9 @@ public class ModelStructureTests {
 		TESTS.put(PHPVersion.PHP8_2,
 				new String[] { "/workspace/model_structure/php53", "/workspace/model_structure/php80",
 						"/workspace/model_structure/php81", "/workspace/model_structure/php82" });
+		TESTS.put(PHPVersion.PHP8_3,
+				new String[] { "/workspace/model_structure/php53", "/workspace/model_structure/php80",
+						"/workspace/model_structure/php81", "/workspace/model_structure/php83" });
 	};
 
 	protected IProject project;
