@@ -16,8 +16,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.apache.commons.logging,
  org.eclipse.php.composer.api,
  org.eclipse.wst.validation,
- org.eclipse.e4.core.di.annotations,
- javax.inject
+ org.eclipse.e4.core.di.annotations
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-ActivationPolicy: lazy
 Export-Package: 
@@ -38,5 +37,6 @@ Export-Package:
  org.eclipse.php.composer.core.visitor,
  org.eclipse.php.composer.internal.core.resources,
  org.eclipse.php.composer.internal.core.util
+Import-Package: javax.inject;version="[1.0.0,2.0.0)"
 
 
