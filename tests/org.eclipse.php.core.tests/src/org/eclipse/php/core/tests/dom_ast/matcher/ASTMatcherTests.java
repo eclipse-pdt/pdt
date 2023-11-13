@@ -47,9 +47,13 @@ public class ASTMatcherTests {
 	public static TestWatcher watcher = new TestSuiteWatcher();
 
 	public void performMatching(String matchingStr, String notMatchingStr) throws Exception {
+		performMatching(matchingStr, notMatchingStr, PHPVersion.PHP8_3);
+	}
 
-		ASTNode node = getAstNode(matchingStr);
-		ASTNode notMatchingNode = getAstNode(notMatchingStr);
+	public void performMatching(String matchingStr, String notMatchingStr, PHPVersion phpVersion) throws Exception {
+
+		ASTNode node = getAstNode(matchingStr, phpVersion);
+		ASTNode notMatchingNode = getAstNode(notMatchingStr, phpVersion);
 
 		assertTrue(node.subtreeMatch(new PHPASTMatcher(), node));
 		assertFalse(node.subtreeMatch(new PHPASTMatcher(), notMatchingNode));
@@ -58,11 +62,10 @@ public class ASTMatcherTests {
 		assertFalse(node.subtreeMatch(new PHPASTMatcher(), null));
 	}
 
-	private ASTNode getAstNode(String str) throws Exception {
+	private ASTNode getAstNode(String str, PHPVersion phpVersion) throws Exception {
 		StringReader reader = new StringReader(str);
-		Program program = ASTParser.newParser(reader, PHPVersion.PHP5,
-				ProjectOptions.isSupportingASPTags((IProject) null), ProjectOptions.useShortTags((IProject) null))
-				.createAST(new NullProgressMonitor());
+		Program program = ASTParser.newParser(reader, phpVersion, ProjectOptions.isSupportingASPTags((IProject) null),
+				ProjectOptions.useShortTags((IProject) null)).createAST(new NullProgressMonitor());
 		List<Statement> statements = program.statements();
 
 		assertNotNull(statements);
@@ -363,7 +366,7 @@ public class ASTMatcherTests {
 	public void matchRefernceInstanciation() throws Exception {
 		String matchingStr = "<?php $b = &new MyClass();?>";
 		String notMatchingStr = "<?php $b = &new MyClass2();?>";
-		performMatching(matchingStr, notMatchingStr);
+		performMatching(matchingStr, notMatchingStr, PHPVersion.PHP5_6);
 	}
 
 	@Test
@@ -468,7 +471,7 @@ public class ASTMatcherTests {
 	public void matchAndOperation() throws Exception {
 		String matchingStr = "<?php foo() & $a->bar();?>";
 		String notMatchingStr = "<?php foo() & $b->bar();?>";
-		performMatching(matchingStr, notMatchingStr);
+		performMatching(matchingStr, notMatchingStr, PHPVersion.PHP5_6);
 	}
 
 	@Test
@@ -809,6 +812,27 @@ public class ASTMatcherTests {
 	public void matchEval() throws Exception {
 		String matchingStr = "<?php eval($a); ?> ";
 		String notMatchingStr = "<?php eval($b); ?> ";
+		performMatching(matchingStr, notMatchingStr);
+	}
+
+	@Test
+	public void matchConstatantVisibility() throws Exception {
+		String matchingStr = "<?php class MyClass { private const STATUS = '1'; } ?> ";
+		String notMatchingStr = "<?php class MyClass { public const STATUS = '1'; } ?> ";
+		performMatching(matchingStr, notMatchingStr);
+	}
+
+	@Test
+	public void matchConstatantType() throws Exception {
+		String matchingStr = "<?php class MyClass { private const string STATUS = '1'; } ?> ";
+		String notMatchingStr = "<?php class MyClass { private const STATUS = '1'; } ?> ";
+		performMatching(matchingStr, notMatchingStr);
+	}
+
+	@Test
+	public void matchConstantAccess() throws Exception {
+		String matchingStr = "<?php echo MyClass::{$var} ?> ";
+		String notMatchingStr = "<?php echo MyClass::{$var2} ?> ";
 		performMatching(matchingStr, notMatchingStr);
 	}
 

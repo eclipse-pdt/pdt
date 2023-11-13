@@ -47,7 +47,7 @@ public class ConstantDeclaration extends BodyDeclaration {
 			ConstantDeclaration.class, "initializers", Expression.class, //$NON-NLS-1$
 			CYCLE_RISK);
 	public static final ChildPropertyDescriptor CONSTANT_TYPE_PROPERTY = new ChildPropertyDescriptor(
-			FormalParameter.class, "constantType", Expression.class, OPTIONAL, CYCLE_RISK); //$NON-NLS-1$
+			ConstantDeclaration.class, "constantType", Expression.class, OPTIONAL, CYCLE_RISK); //$NON-NLS-1$
 
 	public static final SimplePropertyDescriptor MODIFIER_PROPERTY = new SimplePropertyDescriptor(
 			ConstantDeclaration.class, "modifier", Integer.class, OPTIONAL); //$NON-NLS-1$

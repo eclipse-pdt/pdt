@@ -366,7 +366,7 @@ public class ASTMatcher {
 
 		return (safeSubtreeListMatch(node.initializers(), o.initializers())
 				&& safeSubtreeMatch((Identifier) node.getConstantType(), (Identifier) o.getConstantType())
-				&& safeSubtreeListMatch(node.names(), o.names()));
+				&& safeEquals(node.getModifier(), o.getModifier()) && safeSubtreeListMatch(node.names(), o.names()));
 	}
 
 	public boolean match(ClassDeclaration node, Object other) {
@@ -377,7 +377,7 @@ public class ASTMatcher {
 
 		return (safeEquals(node.getModifier(), o.getModifier())
 				&& safeSubtreeMatch(node.getSuperClass(), o.getSuperClass())
-				&& safeSubtreeMatch((TypeDeclaration) node, (TypeDeclaration) o));
+				&& match((TypeDeclaration) node, (TypeDeclaration) o));
 	}
 
 	private boolean match(TypeDeclaration node, Object other) {
