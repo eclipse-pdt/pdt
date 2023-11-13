@@ -257,6 +257,16 @@ public class ASTMatcher {
 				&& safeEquals(node.getArrayType(), o.getArrayType()));
 	}
 
+	public boolean match(ReflectionConstantAccess node, Object other) {
+		if (!(other instanceof ReflectionConstantAccess)) {
+			return false;
+		}
+		ReflectionConstantAccess o = (ReflectionConstantAccess) other;
+
+		return (safeSubtreeMatch(node.getClassName(), o.getClassName())
+				&& safeSubtreeMatch(node.getConstant(), o.getConstant()));
+	}
+
 	public boolean match(ArrayCreation node, Object other) {
 		if (!(other instanceof ArrayCreation)) {
 			return false;
@@ -355,7 +365,7 @@ public class ASTMatcher {
 		ConstantDeclaration o = (ConstantDeclaration) other;
 
 		return (safeSubtreeListMatch(node.initializers(), o.initializers())
-				&& match((Identifier) node.getConstantType(), (Identifier) o.getConstantType())
+				&& safeSubtreeMatch((Identifier) node.getConstantType(), (Identifier) o.getConstantType())
 				&& safeSubtreeListMatch(node.names(), o.names()));
 	}
 
@@ -367,7 +377,7 @@ public class ASTMatcher {
 
 		return (safeEquals(node.getModifier(), o.getModifier())
 				&& safeSubtreeMatch(node.getSuperClass(), o.getSuperClass())
-				&& match((TypeDeclaration) node, (TypeDeclaration) o));
+				&& safeSubtreeMatch((TypeDeclaration) node, (TypeDeclaration) o));
 	}
 
 	private boolean match(TypeDeclaration node, Object other) {

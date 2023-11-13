@@ -80,6 +80,9 @@ public class ConstantDeclaration extends Declaration implements IPHPDocAwareDecl
 					attr.traverse(visitor);
 				}
 			}
+			if (constantType != null) {
+				constantType.traverse(visitor);
+			}
 			constant.traverse(visitor);
 			if (initializer != null) {
 				initializer.traverse(visitor);

@@ -217,13 +217,16 @@ public class ConstantDeclaration extends BodyDeclaration {
 		buffer.append(tab).append("<ConstantDeclaration"); //$NON-NLS-1$
 		appendInterval(buffer);
 		buffer.append(" modifier='").append(getModifierString()).append('\''); //$NON-NLS-1$
-		if (constantType != null) {
-			buffer.append(" type='"); //$NON-NLS-1$
-			constantType.toString(buffer, tab);
-			buffer.append('\'');
-		}
 		buffer.append(">\n"); //$NON-NLS-1$
 		toStringAttributes(buffer, tab + TAB);
+
+		if (constantType != null) {
+			buffer.append(tab).append(TAB).append("<Type>\n"); //$NON-NLS-1$
+			constantType.toString(buffer, tab + TAB + TAB);
+			buffer.append("\n").append(tab).append(TAB).append("</Type>\n");
+			toStringAttributes(buffer, tab + TAB);
+		}
+
 		Iterator<Identifier> iterator1 = names.iterator();
 		Iterator<Expression> iterator2 = initializers.iterator();
 		while (iterator1.hasNext()) {

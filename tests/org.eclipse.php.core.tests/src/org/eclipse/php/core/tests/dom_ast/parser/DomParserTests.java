@@ -97,7 +97,7 @@ public class DomParserTests {
 						"/workspace/dom_parser/php71", "/workspace/dom_parser/php72", "/workspace/dom_parser/php73",
 						"/workspace/dom_parser/php74", "/workspace/dom_parser/php80", "/workspace/dom_parser/php81",
 						"/workspace/dom_parser/php82" });
-		TESTS.put(PHPVersion.PHP8_2,
+		TESTS.put(PHPVersion.PHP8_3,
 				new String[] { "/workspace/dom_parser/php53", "/workspace/dom_parser/php54",
 						"/workspace/dom_parser/php55", "/workspace/dom_parser/php56", "/workspace/dom_parser/php7",
 						"/workspace/dom_parser/php71", "/workspace/dom_parser/php72", "/workspace/dom_parser/php73",

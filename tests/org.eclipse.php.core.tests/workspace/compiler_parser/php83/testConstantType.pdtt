@@ -1,0 +1,24 @@
+--TEST--
+PHP 8.2
+--FILE--
+<?php
+class Foo {
+    public const string BAR = 'In Progress';
+}
+?>
+--EXPECT--
+<ModuleDeclaration start="0" end="68">
+	<ClassDeclaration start="6" end="64" modifiers="" name="Foo">
+		<ConstantDeclaration start="22" end="61" modifiers="public">
+			<FullyQualifiedReference start="35" end="41" name="string">
+			</FullyQualifiedReference>
+			<ConstantReference start="42" end="45" name="BAR">
+			</ConstantReference>
+			<Scalar start="48" end="61" type="string" value="&apos;In Progress&apos;">
+			</Scalar>
+		</ConstantDeclaration>
+	</ClassDeclaration>
+	<EmptyStatement start="65" end="67">
+	</EmptyStatement>
+</ModuleDeclaration>
+

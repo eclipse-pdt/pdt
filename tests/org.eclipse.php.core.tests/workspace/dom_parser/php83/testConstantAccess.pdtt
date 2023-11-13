@@ -1,0 +1,30 @@
+--TEST--
+PHP 8.2
+--FILE--
+<?php
+echo MyClass::{$var};
+?>
+--EXPECT--
+<Program start='0' length='30'>
+	<Statements>
+		<EchoStatement start='6' length='21'>
+			<ReflectionConstantAccess start='11' length='15'>
+				<ClassName>
+					<NamespaceName start='11' length='7' global='false' current='false'>
+						<Identifier start='11' length='7' name='MyClass'/>
+					</NamespaceName>
+				</ClassName>
+				<Constant>
+					<ReflectionVariable start='20' length='6'>
+						<Variable start='21' length='4' isDollared='true'>
+							<Identifier start='22' length='3' name='var'/>
+						</Variable>
+					</ReflectionVariable>
+				</Constant>
+			</ReflectionConstantAccess>
+		</EchoStatement>
+		<EmptyStatement start='28' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

@@ -4319,6 +4319,16 @@ class_name:className T_PAAMAYIM_NEKUDOTAYIM identifier:var
 {:
 	RESULT = new StaticConstantAccess(classNameleft, varright, className, new ConstantReference(varleft, varright, var));
 :}
+
+| class_name:className T_PAAMAYIM_NEKUDOTAYIM T_CURLY_OPEN expr:var T_CURLY_CLOSE:e
+{:
+	RESULT = new ReflectionConstantAccess(classNameleft, eright, className, var);
+:}
+
+| variable_class_name:className T_PAAMAYIM_NEKUDOTAYIM T_CURLY_OPEN expr:var T_CURLY_CLOSE:e
+{:
+	RESULT = new ReflectionConstantAccess(classNameleft, eright, className, var);
+:}
 ;
 
 static_member ::=

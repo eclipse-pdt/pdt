@@ -3768,6 +3768,16 @@ class_name:className T_PAAMAYIM_NEKUDOTAYIM identifier:constName
 {:
 	RESULT = new StaticConstantAccess(classNameleft, constNameright, parser.ast, className, new Identifier(constNameleft, constNameright, parser.ast, constName));
 :}
+
+| class_name:className T_PAAMAYIM_NEKUDOTAYIM T_CURLY_OPEN:s expr:constName T_CURLY_CLOSE:e
+{:
+	RESULT = new ReflectionConstantAccess(classNameleft, eright, parser.ast, className, new ReflectionVariable(sleft, eright, parser.ast, constName));
+:}
+
+| variable_class_name:className T_PAAMAYIM_NEKUDOTAYIM T_CURLY_OPEN:s expr:constName T_CURLY_CLOSE:e
+{:
+	RESULT = new ReflectionConstantAccess(classNameleft, eright, parser.ast, className, new ReflectionVariable(sleft, eright, parser.ast, constName));
+:}
 ;
 
 static_member ::=

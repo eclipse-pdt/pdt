@@ -446,4 +446,9 @@ public interface Visitor {
 	boolean visit(AsCallableExpression asCallableExpression);
 
 	void endvisit(AsCallableExpression asCallableExpression);
+
+	// php8.3
+	boolean visit(ReflectionConstantAccess constantAccess);
+
+	void endvisit(ReflectionConstantAccess constantAccess);
 }

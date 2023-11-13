@@ -466,6 +466,10 @@ public class BindingResolver {
 		return null;
 	}
 
+	IVariableBinding resolveField(ReflectionConstantAccess constantAccess) {
+		return null;
+	}
+
 	/**
 	 * Resolves the given import declaration and returns the binding for it.
 	 * <p>

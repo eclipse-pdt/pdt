@@ -1,0 +1,40 @@
+--TEST--
+PHP 8.2
+--FILE--
+<?php
+class Foo {
+    public const string BAR = 'In Progress';
+}
+?>
+--EXPECT--
+<Program start='0' length='67'>
+	<Statements>
+		<ClassDeclaration start='6' length='58' modifier=''>
+			<ClassName>
+				<Identifier start='12' length='3' name='Foo'/>
+			</ClassName>
+			<SuperClassName>
+			</SuperClassName>
+			<Interfaces>
+			</Interfaces>
+			<Block start='16' length='48' isCurly='true'>
+				<ConstantDeclaration start='22' length='40' modifier='public'>
+					<Type>
+						<NamespaceName start='35' length='6' global='false' current='false'>
+							<Identifier start='35' length='6' name='string'/>
+						</NamespaceName>
+					</Type>
+					<VariableName>
+						<Identifier start='42' length='3' name='BAR'/>
+					</VariableName>
+					<InitialValue>
+						<Scalar start='48' length='13' type='string' value='&apos;In Progress&apos;'/>
+					</InitialValue>
+				</ConstantDeclaration>
+			</Block>
+		</ClassDeclaration>
+		<EmptyStatement start='65' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

@@ -1621,4 +1621,21 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 	}
 
 	// php8.1 ends
+
+	// php8.3
+
+	@Override
+	public boolean visit(ReflectionConstantAccess s) throws Exception {
+		Map<String, String> parameters = createInitialParameters(s);
+		xmlWriter.startTag("ReflectionConstantAccess", parameters); //$NON-NLS-1$
+
+		return true;
+	}
+
+	@Override
+	public boolean endvisit(ReflectionConstantAccess e) throws Exception {
+		xmlWriter.endTag("ReflectionConstantAccess"); //$NON-NLS-1$
+		return false;
+	}
+	// php8.3 ends
 }

@@ -908,4 +908,13 @@ public abstract class AbstractVisitor implements Visitor {
 	@Override
 	public void endvisit(AsCallableExpression asCallableExpression) {
 	}
+
+	@Override
+	public boolean visit(ReflectionConstantAccess asCallableExpression) {
+		return true;
+	}
+
+	@Override
+	public void endvisit(ReflectionConstantAccess asCallableExpression) {
+	}
 }
