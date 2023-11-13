@@ -176,17 +176,15 @@
 		<editor
 			contributorClass="org.eclipse.php.internal.ui.editor.ActionContributorForPHP"
 			default="true" icon="icons/full/obj16/phpfile.png" id="org.eclipse.php.editor"
-			name="%editor.name.0" symbolicFontName="org.eclipse.wst.sse.ui.textfont">
+			name="%editor.name.0">
 			<contentTypeBinding contentTypeId="org.eclipse.php.core.phpsource" />
-			<class class="org.eclipse.php.internal.ui.editor.PHPStructuredEditor">
-				<parameter name="org.eclipse.wst.sse.ui.appearancePreferenceScopeName" value="org.eclipse.php.ui" />
+			<class class="org.eclipse.php.internal.ui.editor.PHPSourceEditor">
 			</class>
 		</editor>
 		<editor
 			icon="icons/full/obj16/phpfile.png"
 			id="org.eclipse.php.untitledPHPEditor" 
-			name="%editor.name.1"
-			symbolicFontName="org.eclipse.wst.sse.ui.textfont">
+			name="%editor.name.1">
 			<class class="org.eclipse.php.internal.ui.editor.UntitledPHPEditor">
 				<parameter name="org.eclipse.wst.sse.ui.appearancePreferenceScopeName" value="org.eclipse.php.ui" />
 			</class>
@@ -1211,9 +1209,9 @@
 	<!--Commands:-->
 	<extension point="org.eclipse.ui.contexts">
 		<context name="%context.editingPhpSource.name" description="%context.editingPhpSource.description"
-			parentId="org.eclipse.wst.sse.ui.structuredTextEditorScope" id="org.eclipse.php.ui.phpEditorScope" />
+			parentId="org.eclipse.ui.textEditorScope" id="org.eclipse.php.ui.phpEditorScope" />
 		<context name="%context.editingPhpSource.name"
-			parentId="org.eclipse.wst.sse.ui.structuredTextEditorScope"
+			parentId="org.eclipse.ui.textEditorScope"
 			description="%context.editingPhpSource.description" id="org.eclipse.php.core.phpsource">
 		</context>
 		

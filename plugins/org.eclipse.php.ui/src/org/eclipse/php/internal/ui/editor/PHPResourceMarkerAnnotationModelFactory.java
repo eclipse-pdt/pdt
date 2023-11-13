@@ -18,7 +18,7 @@ import org.eclipse.core.filebuffers.IAnnotationModelFactory;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.text.source.IAnnotationModel;
-import org.eclipse.wst.sse.ui.internal.StructuredResourceMarkerAnnotationModelFactory;
+import org.eclipse.ui.texteditor.ResourceMarkerAnnotationModelFactory;
 
 /**
  * This class overrides the factory as an extension for WST extension point in
@@ -31,7 +31,7 @@ import org.eclipse.wst.sse.ui.internal.StructuredResourceMarkerAnnotationModelFa
  * @author yaronm
  * 
  */
-public class PHPResourceMarkerAnnotationModelFactory extends StructuredResourceMarkerAnnotationModelFactory
+public class PHPResourceMarkerAnnotationModelFactory extends ResourceMarkerAnnotationModelFactory
 		implements IAnnotationModelFactory {
 	/*
 	 * @see org.eclipse.core.filebuffers.IAnnotationModelFactory#
