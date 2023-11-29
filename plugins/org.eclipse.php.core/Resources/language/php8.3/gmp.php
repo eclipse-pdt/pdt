@@ -1,17 +1,7 @@
 <?php
 
-// Start of gmp v.8.2.6
+// Start of gmp v.8.3.0
 
-/**
- * A GMP number. These objects support overloaded
- * arithmetic,
- * bitwise and
- * comparison operators.
- * <p>No object-oriented interface is provided to manipulate
- * GMP objects. Please use the
- * procedural GMP API.</p>
- * @link http://www.php.net/manual/en/class.gmp.php
- */
 class GMP  {
 
 	/**
@@ -22,560 +12,377 @@ class GMP  {
 	public function __construct (string|int $num = 0, int $base = 0) {}
 
 	/**
-	 * Serializes the GMP object
-	 * @link http://www.php.net/manual/en/gmp.serialize.php
-	 * @return array No value is returned.
+	 * {@inheritdoc}
 	 */
 	public function __serialize (): array {}
 
 	/**
-	 * Deserializes the data parameter into a GMP object
-	 * @link http://www.php.net/manual/en/gmp.unserialize.php
-	 * @param array $data The value being deserialized.
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param array $data
 	 */
 	public function __unserialize (array $data): void {}
 
 }
 
 /**
- * Create GMP number
- * @link http://www.php.net/manual/en/function.gmp-init.php
- * @param int|string $num 
- * @param int $base [optional] 
- * @return GMP A GMP object.
+ * {@inheritdoc}
+ * @param string|int $num
+ * @param int $base [optional]
  */
-function gmp_init (int|string $num, int $base = null): GMP {}
+function gmp_init (string|int $num, int $base = 0): GMP {}
 
 /**
- * Import from a binary string
- * @link http://www.php.net/manual/en/function.gmp-import.php
- * @param string $data 
- * @param int $word_size [optional] 
- * @param int $flags [optional] 
- * @return GMP Returns a GMP number.
+ * {@inheritdoc}
+ * @param string $data
+ * @param int $word_size [optional]
+ * @param int $flags [optional]
  */
-function gmp_import (string $data, int $word_size = 1, int $flags = 'GMP_MSW_FIRST | GMP_NATIVE_ENDIAN'): GMP {}
+function gmp_import (string $data, int $word_size = 1, int $flags = 17): GMP {}
 
 /**
- * Export to a binary string
- * @link http://www.php.net/manual/en/function.gmp-export.php
- * @param GMP|int|string $num 
- * @param int $word_size [optional] 
- * @param int $flags [optional] 
- * @return string Returns a string.
+ * {@inheritdoc}
+ * @param GMP|string|int $num
+ * @param int $word_size [optional]
+ * @param int $flags [optional]
  */
-function gmp_export (GMP|int|string $num, int $word_size = 1, int $flags = 'GMP_MSW_FIRST | GMP_NATIVE_ENDIAN'): string {}
+function gmp_export (GMP|string|int $num, int $word_size = 1, int $flags = 17): string {}
 
 /**
- * Convert GMP number to integer
- * @link http://www.php.net/manual/en/function.gmp-intval.php
- * @param GMP|int|string $num 
- * @return int The int value of num.
+ * {@inheritdoc}
+ * @param GMP|string|int $num
  */
-function gmp_intval (GMP|int|string $num): int {}
+function gmp_intval (GMP|string|int $num): int {}
 
 /**
- * Convert GMP number to string
- * @link http://www.php.net/manual/en/function.gmp-strval.php
- * @param GMP|int|string $num 
- * @param int $base [optional] 
- * @return string The number, as a string.
+ * {@inheritdoc}
+ * @param GMP|string|int $num
+ * @param int $base [optional]
  */
-function gmp_strval (GMP|int|string $num, int $base = 10): string {}
+function gmp_strval (GMP|string|int $num, int $base = 10): string {}
 
 /**
- * Add numbers
- * @link http://www.php.net/manual/en/function.gmp-add.php
- * @param GMP|int|string $num1 
- * @param GMP|int|string $num2 
- * @return GMP A GMP number representing the sum of the arguments.
+ * {@inheritdoc}
+ * @param GMP|string|int $num1
+ * @param GMP|string|int $num2
  */
-function gmp_add (GMP|int|string $num1, GMP|int|string $num2): GMP {}
+function gmp_add (GMP|string|int $num1, GMP|string|int $num2): GMP {}
 
 /**
- * Subtract numbers
- * @link http://www.php.net/manual/en/function.gmp-sub.php
- * @param GMP|int|string $num1 
- * @param GMP|int|string $num2 
- * @return GMP A GMP object.
+ * {@inheritdoc}
+ * @param GMP|string|int $num1
+ * @param GMP|string|int $num2
  */
-function gmp_sub (GMP|int|string $num1, GMP|int|string $num2): GMP {}
+function gmp_sub (GMP|string|int $num1, GMP|string|int $num2): GMP {}
 
 /**
- * Multiply numbers
- * @link http://www.php.net/manual/en/function.gmp-mul.php
- * @param GMP|int|string $num1 
- * @param GMP|int|string $num2 
- * @return GMP A GMP object.
+ * {@inheritdoc}
+ * @param GMP|string|int $num1
+ * @param GMP|string|int $num2
  */
-function gmp_mul (GMP|int|string $num1, GMP|int|string $num2): GMP {}
+function gmp_mul (GMP|string|int $num1, GMP|string|int $num2): GMP {}
 
 /**
- * Divide numbers and get quotient and remainder
- * @link http://www.php.net/manual/en/function.gmp-div-qr.php
- * @param GMP|int|string $num1 
- * @param GMP|int|string $num2 
- * @param int $rounding_mode [optional] 
- * @return array Returns an array, with the first
- * element being [n/d] (the integer result of the
- * division) and the second being (n - [n/d] &#42; d)
- * (the remainder of the division).
+ * {@inheritdoc}
+ * @param GMP|string|int $num1
+ * @param GMP|string|int $num2
+ * @param int $rounding_mode [optional]
  */
-function gmp_div_qr (GMP|int|string $num1, GMP|int|string $num2, int $rounding_mode = GMP_ROUND_ZERO): array {}
+function gmp_div_qr (GMP|string|int $num1, GMP|string|int $num2, int $rounding_mode = 0): array {}
 
 /**
- * Divide numbers
- * @link http://www.php.net/manual/en/function.gmp-div-q.php
- * @param GMP|int|string $num1 
- * @param GMP|int|string $num2 
- * @param int $rounding_mode [optional] 
- * @return GMP A GMP object.
+ * {@inheritdoc}
+ * @param GMP|string|int $num1
+ * @param GMP|string|int $num2
+ * @param int $rounding_mode [optional]
  */
-function gmp_div_q (GMP|int|string $num1, GMP|int|string $num2, int $rounding_mode = GMP_ROUND_ZERO): GMP {}
+function gmp_div_q (GMP|string|int $num1, GMP|string|int $num2, int $rounding_mode = 0): GMP {}
 
 /**
- * Remainder of the division of numbers
- * @link http://www.php.net/manual/en/function.gmp-div-r.php
- * @param GMP|int|string $num1 
- * @param GMP|int|string $num2 
- * @param int $rounding_mode [optional] 
- * @return GMP The remainder, as a GMP number.
+ * {@inheritdoc}
+ * @param GMP|string|int $num1
+ * @param GMP|string|int $num2
+ * @param int $rounding_mode [optional]
  */
-function gmp_div_r (GMP|int|string $num1, GMP|int|string $num2, int $rounding_mode = GMP_ROUND_ZERO): GMP {}
+function gmp_div_r (GMP|string|int $num1, GMP|string|int $num2, int $rounding_mode = 0): GMP {}
 
 /**
- * Alias of gmp_div_q
- * @link http://www.php.net/manual/en/function.gmp-div.php
- * @param GMP|int|string $num1 
- * @param GMP|int|string $num2 
- * @param int $rounding_mode [optional] 
- * @return GMP A GMP object.
+ * {@inheritdoc}
+ * @param GMP|string|int $num1
+ * @param GMP|string|int $num2
+ * @param int $rounding_mode [optional]
  */
-function gmp_div (GMP|int|string $num1, GMP|int|string $num2, int $rounding_mode = GMP_ROUND_ZERO): GMP {}
+function gmp_div (GMP|string|int $num1, GMP|string|int $num2, int $rounding_mode = 0): GMP {}
 
 /**
- * Modulo operation
- * @link http://www.php.net/manual/en/function.gmp-mod.php
- * @param GMP|int|string $num1 
- * @param GMP|int|string $num2 
- * @return GMP A GMP object.
+ * {@inheritdoc}
+ * @param GMP|string|int $num1
+ * @param GMP|string|int $num2
  */
-function gmp_mod (GMP|int|string $num1, GMP|int|string $num2): GMP {}
+function gmp_mod (GMP|string|int $num1, GMP|string|int $num2): GMP {}
 
 /**
- * Exact division of numbers
- * @link http://www.php.net/manual/en/function.gmp-divexact.php
- * @param GMP|int|string $num1 
- * @param GMP|int|string $num2 
- * @return GMP A GMP object.
+ * {@inheritdoc}
+ * @param GMP|string|int $num1
+ * @param GMP|string|int $num2
  */
-function gmp_divexact (GMP|int|string $num1, GMP|int|string $num2): GMP {}
+function gmp_divexact (GMP|string|int $num1, GMP|string|int $num2): GMP {}
 
 /**
- * Negate number
- * @link http://www.php.net/manual/en/function.gmp-neg.php
- * @param GMP|int|string $num 
- * @return GMP Returns -num, as a GMP number.
+ * {@inheritdoc}
+ * @param GMP|string|int $num
  */
-function gmp_neg (GMP|int|string $num): GMP {}
+function gmp_neg (GMP|string|int $num): GMP {}
 
 /**
- * Absolute value
- * @link http://www.php.net/manual/en/function.gmp-abs.php
- * @param GMP|int|string $num 
- * @return GMP Returns the absolute value of num, as a GMP number.
+ * {@inheritdoc}
+ * @param GMP|string|int $num
  */
-function gmp_abs (GMP|int|string $num): GMP {}
+function gmp_abs (GMP|string|int $num): GMP {}
 
 /**
- * Factorial
- * @link http://www.php.net/manual/en/function.gmp-fact.php
- * @param GMP|int|string $num 
- * @return GMP A GMP object.
+ * {@inheritdoc}
+ * @param GMP|string|int $num
  */
-function gmp_fact (GMP|int|string $num): GMP {}
+function gmp_fact (GMP|string|int $num): GMP {}
 
 /**
- * Calculate square root
- * @link http://www.php.net/manual/en/function.gmp-sqrt.php
- * @param GMP|int|string $num 
- * @return GMP The integer portion of the square root, as a GMP number.
+ * {@inheritdoc}
+ * @param GMP|string|int $num
  */
-function gmp_sqrt (GMP|int|string $num): GMP {}
+function gmp_sqrt (GMP|string|int $num): GMP {}
 
 /**
- * Square root with remainder
- * @link http://www.php.net/manual/en/function.gmp-sqrtrem.php
- * @param GMP|int|string $num 
- * @return array Returns array where first element is the integer square root of
- * num and the second is the remainder
- * (i.e., the difference between num and the
- * first element squared).
+ * {@inheritdoc}
+ * @param GMP|string|int $num
  */
-function gmp_sqrtrem (GMP|int|string $num): array {}
+function gmp_sqrtrem (GMP|string|int $num): array {}
 
 /**
- * Take the integer part of nth root
- * @link http://www.php.net/manual/en/function.gmp-root.php
- * @param GMP|int|string $num 
- * @param int $nth 
- * @return GMP The integer component of the resultant root, as a GMP number.
+ * {@inheritdoc}
+ * @param GMP|string|int $num
+ * @param int $nth
  */
-function gmp_root (GMP|int|string $num, int $nth): GMP {}
+function gmp_root (GMP|string|int $num, int $nth): GMP {}
 
 /**
- * Take the integer part and remainder of nth root
- * @link http://www.php.net/manual/en/function.gmp-rootrem.php
- * @param GMP|int|string $num 
- * @param int $nth 
- * @return array A two element array, where the first element is the integer component of
- * the root, and the second element is the remainder, both represented as GMP
- * numbers.
+ * {@inheritdoc}
+ * @param GMP|string|int $num
+ * @param int $nth
  */
-function gmp_rootrem (GMP|int|string $num, int $nth): array {}
+function gmp_rootrem (GMP|string|int $num, int $nth): array {}
 
 /**
- * Raise number into power
- * @link http://www.php.net/manual/en/function.gmp-pow.php
- * @param GMP|int|string $num 
- * @param int $exponent 
- * @return GMP The new (raised) number, as a GMP number. The case of 
- * 0^0 yields 1.
+ * {@inheritdoc}
+ * @param GMP|string|int $num
+ * @param int $exponent
  */
-function gmp_pow (GMP|int|string $num, int $exponent): GMP {}
+function gmp_pow (GMP|string|int $num, int $exponent): GMP {}
 
 /**
- * Raise number into power with modulo
- * @link http://www.php.net/manual/en/function.gmp-powm.php
- * @param GMP|int|string $num 
- * @param GMP|int|string $exponent 
- * @param GMP|int|string $modulus 
- * @return GMP The new (raised) number, as a GMP number.
+ * {@inheritdoc}
+ * @param GMP|string|int $num
+ * @param GMP|string|int $exponent
+ * @param GMP|string|int $modulus
  */
-function gmp_powm (GMP|int|string $num, GMP|int|string $exponent, GMP|int|string $modulus): GMP {}
+function gmp_powm (GMP|string|int $num, GMP|string|int $exponent, GMP|string|int $modulus): GMP {}
 
 /**
- * Perfect square check
- * @link http://www.php.net/manual/en/function.gmp-perfect-square.php
- * @param GMP|int|string $num 
- * @return bool Returns true if num is a perfect square,
- * false otherwise.
+ * {@inheritdoc}
+ * @param GMP|string|int $num
  */
-function gmp_perfect_square (GMP|int|string $num): bool {}
+function gmp_perfect_square (GMP|string|int $num): bool {}
 
 /**
- * Perfect power check
- * @link http://www.php.net/manual/en/function.gmp-perfect-power.php
- * @param GMP|int|string $num >A GMP object, an int or a numeric string.
- * @return bool Returns true if num is a perfect power, false otherwise.
+ * {@inheritdoc}
+ * @param GMP|string|int $num
  */
-function gmp_perfect_power (GMP|int|string $num): bool {}
+function gmp_perfect_power (GMP|string|int $num): bool {}
 
 /**
- * Check if number is "probably prime"
- * @link http://www.php.net/manual/en/function.gmp-prob-prime.php
- * @param GMP|int|string $num 
- * @param int $repetitions [optional] 
- * @return int If this function returns 0, num is
- * definitely not prime. If it returns 1, then
- * num is "probably" prime. If it returns 2,
- * then num is surely prime.
+ * {@inheritdoc}
+ * @param GMP|string|int $num
+ * @param int $repetitions [optional]
  */
-function gmp_prob_prime (GMP|int|string $num, int $repetitions = 10): int {}
+function gmp_prob_prime (GMP|string|int $num, int $repetitions = 10): int {}
 
 /**
- * Calculate GCD
- * @link http://www.php.net/manual/en/function.gmp-gcd.php
- * @param GMP|int|string $num1 
- * @param GMP|int|string $num2 
- * @return GMP A positive GMP number that divides into both
- * num1 and num2.
+ * {@inheritdoc}
+ * @param GMP|string|int $num1
+ * @param GMP|string|int $num2
  */
-function gmp_gcd (GMP|int|string $num1, GMP|int|string $num2): GMP {}
+function gmp_gcd (GMP|string|int $num1, GMP|string|int $num2): GMP {}
 
 /**
- * Calculate GCD and multipliers
- * @link http://www.php.net/manual/en/function.gmp-gcdext.php
- * @param GMP|int|string $num1 
- * @param GMP|int|string $num2 
- * @return array An array of GMP numbers.
+ * {@inheritdoc}
+ * @param GMP|string|int $num1
+ * @param GMP|string|int $num2
  */
-function gmp_gcdext (GMP|int|string $num1, GMP|int|string $num2): array {}
+function gmp_gcdext (GMP|string|int $num1, GMP|string|int $num2): array {}
 
 /**
- * Calculate LCM
- * @link http://www.php.net/manual/en/function.gmp-lcm.php
- * @param GMP|int|string $num1 >A GMP object, an int or a numeric string.
- * @param GMP|int|string $num2 >A GMP object, an int or a numeric string.
- * @return GMP A GMP object.
+ * {@inheritdoc}
+ * @param GMP|string|int $num1
+ * @param GMP|string|int $num2
  */
-function gmp_lcm (GMP|int|string $num1, GMP|int|string $num2): GMP {}
+function gmp_lcm (GMP|string|int $num1, GMP|string|int $num2): GMP {}
 
 /**
- * Inverse by modulo
- * @link http://www.php.net/manual/en/function.gmp-invert.php
- * @param GMP|int|string $num1 
- * @param GMP|int|string $num2 
- * @return GMP|false A GMP number on success or false if an inverse does not exist.
+ * {@inheritdoc}
+ * @param GMP|string|int $num1
+ * @param GMP|string|int $num2
  */
-function gmp_invert (GMP|int|string $num1, GMP|int|string $num2): GMP|false {}
+function gmp_invert (GMP|string|int $num1, GMP|string|int $num2): GMP|false {}
 
 /**
- * Jacobi symbol
- * @link http://www.php.net/manual/en/function.gmp-jacobi.php
- * @param GMP|int|string $num1 
- * @param GMP|int|string $num2 
- * @return int A GMP object.
+ * {@inheritdoc}
+ * @param GMP|string|int $num1
+ * @param GMP|string|int $num2
  */
-function gmp_jacobi (GMP|int|string $num1, GMP|int|string $num2): int {}
+function gmp_jacobi (GMP|string|int $num1, GMP|string|int $num2): int {}
 
 /**
- * Legendre symbol
- * @link http://www.php.net/manual/en/function.gmp-legendre.php
- * @param GMP|int|string $num1 
- * @param GMP|int|string $num2 
- * @return int A GMP object.
+ * {@inheritdoc}
+ * @param GMP|string|int $num1
+ * @param GMP|string|int $num2
  */
-function gmp_legendre (GMP|int|string $num1, GMP|int|string $num2): int {}
+function gmp_legendre (GMP|string|int $num1, GMP|string|int $num2): int {}
 
 /**
- * Kronecker symbol
- * @link http://www.php.net/manual/en/function.gmp-kronecker.php
- * @param GMP|int|string $num1 >A GMP object, an int or a numeric string.
- * @param GMP|int|string $num2 >A GMP object, an int or a numeric string.
- * @return int Returns the Kronecker symbol of num1 and
- * num2
+ * {@inheritdoc}
+ * @param GMP|string|int $num1
+ * @param GMP|string|int $num2
  */
-function gmp_kronecker (GMP|int|string $num1, GMP|int|string $num2): int {}
+function gmp_kronecker (GMP|string|int $num1, GMP|string|int $num2): int {}
 
 /**
- * Compare numbers
- * @link http://www.php.net/manual/en/function.gmp-cmp.php
- * @param GMP|int|string $num1 
- * @param GMP|int|string $num2 
- * @return int Returns a positive value if a &gt; b, zero if
- * a = b and a negative value if a &lt;
- * b.
+ * {@inheritdoc}
+ * @param GMP|string|int $num1
+ * @param GMP|string|int $num2
  */
-function gmp_cmp (GMP|int|string $num1, GMP|int|string $num2): int {}
+function gmp_cmp (GMP|string|int $num1, GMP|string|int $num2): int {}
 
 /**
- * Sign of number
- * @link http://www.php.net/manual/en/function.gmp-sign.php
- * @param GMP|int|string $num 
- * @return int Returns 1 if num is positive,
- * -1 if num is negative,
- * and 0 if num is zero.
+ * {@inheritdoc}
+ * @param GMP|string|int $num
  */
-function gmp_sign (GMP|int|string $num): int {}
+function gmp_sign (GMP|string|int $num): int {}
 
 /**
- * Sets the RNG seed
- * @link http://www.php.net/manual/en/function.gmp-random-seed.php
- * @param GMP|int|string $seed 
- * @return void No value is returned.
+ * {@inheritdoc}
+ * @param GMP|string|int $seed
  */
-function gmp_random_seed (GMP|int|string $seed): void {}
+function gmp_random_seed (GMP|string|int $seed): void {}
 
 /**
- * Random number
- * @link http://www.php.net/manual/en/function.gmp-random-bits.php
- * @param int $bits 
- * @return GMP A random GMP number.
+ * {@inheritdoc}
+ * @param int $bits
  */
 function gmp_random_bits (int $bits): GMP {}
 
 /**
- * Random number
- * @link http://www.php.net/manual/en/function.gmp-random-range.php
- * @param GMP|int|string $min 
- * @param GMP|int|string $max 
- * @return GMP A random GMP number.
+ * {@inheritdoc}
+ * @param GMP|string|int $min
+ * @param GMP|string|int $max
  */
-function gmp_random_range (GMP|int|string $min, GMP|int|string $max): GMP {}
+function gmp_random_range (GMP|string|int $min, GMP|string|int $max): GMP {}
 
 /**
- * Bitwise AND
- * @link http://www.php.net/manual/en/function.gmp-and.php
- * @param GMP|int|string $num1 
- * @param GMP|int|string $num2 
- * @return GMP A GMP number representing the bitwise AND comparison.
+ * {@inheritdoc}
+ * @param GMP|string|int $num1
+ * @param GMP|string|int $num2
  */
-function gmp_and (GMP|int|string $num1, GMP|int|string $num2): GMP {}
+function gmp_and (GMP|string|int $num1, GMP|string|int $num2): GMP {}
 
 /**
- * Bitwise OR
- * @link http://www.php.net/manual/en/function.gmp-or.php
- * @param GMP|int|string $num1 
- * @param GMP|int|string $num2 
- * @return GMP A GMP object.
+ * {@inheritdoc}
+ * @param GMP|string|int $num1
+ * @param GMP|string|int $num2
  */
-function gmp_or (GMP|int|string $num1, GMP|int|string $num2): GMP {}
+function gmp_or (GMP|string|int $num1, GMP|string|int $num2): GMP {}
 
 /**
- * Calculates one's complement
- * @link http://www.php.net/manual/en/function.gmp-com.php
- * @param GMP|int|string $num 
- * @return GMP Returns the one's complement of num, as a GMP number.
+ * {@inheritdoc}
+ * @param GMP|string|int $num
  */
-function gmp_com (GMP|int|string $num): GMP {}
+function gmp_com (GMP|string|int $num): GMP {}
 
 /**
- * Bitwise XOR
- * @link http://www.php.net/manual/en/function.gmp-xor.php
- * @param GMP|int|string $num1 
- * @param GMP|int|string $num2 
- * @return GMP A GMP object.
+ * {@inheritdoc}
+ * @param GMP|string|int $num1
+ * @param GMP|string|int $num2
  */
-function gmp_xor (GMP|int|string $num1, GMP|int|string $num2): GMP {}
+function gmp_xor (GMP|string|int $num1, GMP|string|int $num2): GMP {}
 
 /**
- * Set bit
- * @link http://www.php.net/manual/en/function.gmp-setbit.php
- * @param GMP $num 
- * @param int $index 
- * @param bool $value [optional] 
- * @return void A GMP object.
+ * {@inheritdoc}
+ * @param GMP $num
+ * @param int $index
+ * @param bool $value [optional]
  */
 function gmp_setbit (GMP $num, int $index, bool $value = true): void {}
 
 /**
- * Clear bit
- * @link http://www.php.net/manual/en/function.gmp-clrbit.php
- * @param GMP $num 
- * @param int $index 
- * @return void A GMP object.
+ * {@inheritdoc}
+ * @param GMP $num
+ * @param int $index
  */
 function gmp_clrbit (GMP $num, int $index): void {}
 
 /**
- * Tests if a bit is set
- * @link http://www.php.net/manual/en/function.gmp-testbit.php
- * @param GMP|int|string $num 
- * @param int $index 
- * @return bool Returns true if the bit is set in num, 
- * otherwise false.
+ * {@inheritdoc}
+ * @param GMP|string|int $num
+ * @param int $index
  */
-function gmp_testbit (GMP|int|string $num, int $index): bool {}
+function gmp_testbit (GMP|string|int $num, int $index): bool {}
 
 /**
- * Scan for 0
- * @link http://www.php.net/manual/en/function.gmp-scan0.php
- * @param GMP|int|string $num1 
- * @param int $start 
- * @return int Returns the index of the found bit, as an int. The
- * index starts from 0.
+ * {@inheritdoc}
+ * @param GMP|string|int $num1
+ * @param int $start
  */
-function gmp_scan0 (GMP|int|string $num1, int $start): int {}
+function gmp_scan0 (GMP|string|int $num1, int $start): int {}
 
 /**
- * Scan for 1
- * @link http://www.php.net/manual/en/function.gmp-scan1.php
- * @param GMP|int|string $num1 
- * @param int $start 
- * @return int Returns the index of the found bit, as an int.
- * If no set bit is found, -1 is returned.
+ * {@inheritdoc}
+ * @param GMP|string|int $num1
+ * @param int $start
  */
-function gmp_scan1 (GMP|int|string $num1, int $start): int {}
+function gmp_scan1 (GMP|string|int $num1, int $start): int {}
 
 /**
- * Population count
- * @link http://www.php.net/manual/en/function.gmp-popcount.php
- * @param GMP|int|string $num 
- * @return int The population count of num, as an int.
+ * {@inheritdoc}
+ * @param GMP|string|int $num
  */
-function gmp_popcount (GMP|int|string $num): int {}
+function gmp_popcount (GMP|string|int $num): int {}
 
 /**
- * Hamming distance
- * @link http://www.php.net/manual/en/function.gmp-hamdist.php
- * @param GMP|int|string $num1 
- * @param GMP|int|string $num2 
- * @return int The hamming distance between num1 and num2, as an int.
+ * {@inheritdoc}
+ * @param GMP|string|int $num1
+ * @param GMP|string|int $num2
  */
-function gmp_hamdist (GMP|int|string $num1, GMP|int|string $num2): int {}
+function gmp_hamdist (GMP|string|int $num1, GMP|string|int $num2): int {}
 
 /**
- * Find next prime number
- * @link http://www.php.net/manual/en/function.gmp-nextprime.php
- * @param GMP|int|string $num 
- * @return GMP Return the next prime number greater than num,
- * as a GMP number.
+ * {@inheritdoc}
+ * @param GMP|string|int $num
  */
-function gmp_nextprime (GMP|int|string $num): GMP {}
+function gmp_nextprime (GMP|string|int $num): GMP {}
 
 /**
- * Calculates binomial coefficient
- * @link http://www.php.net/manual/en/function.gmp-binomial.php
- * @param GMP|int|string $n 
- * @param int $k 
- * @return GMP Returns the binomial coefficient C(n, k).
+ * {@inheritdoc}
+ * @param GMP|string|int $n
+ * @param int $k
  */
-function gmp_binomial (GMP|int|string $n, int $k): GMP {}
+function gmp_binomial (GMP|string|int $n, int $k): GMP {}
 
-
-/**
- * 
- * @link http://www.php.net/manual/en/gmp.constants.php
- * @var int
- */
 define ('GMP_ROUND_ZERO', 0);
-
-/**
- * 
- * @link http://www.php.net/manual/en/gmp.constants.php
- * @var int
- */
 define ('GMP_ROUND_PLUSINF', 1);
-
-/**
- * 
- * @link http://www.php.net/manual/en/gmp.constants.php
- * @var int
- */
 define ('GMP_ROUND_MINUSINF', 2);
-
-/**
- * The GMP library version
- * @link http://www.php.net/manual/en/gmp.constants.php
- * @var string
- */
-define ('GMP_VERSION', "6.2.1");
-
-/**
- * 
- * @link http://www.php.net/manual/en/gmp.constants.php
- * @var int
- */
+define ('GMP_VERSION', "6.3.0");
 define ('GMP_MSW_FIRST', 1);
-
-/**
- * 
- * @link http://www.php.net/manual/en/gmp.constants.php
- * @var int
- */
 define ('GMP_LSW_FIRST', 2);
-
-/**
- * 
- * @link http://www.php.net/manual/en/gmp.constants.php
- * @var int
- */
 define ('GMP_LITTLE_ENDIAN', 4);
-
-/**
- * 
- * @link http://www.php.net/manual/en/gmp.constants.php
- * @var int
- */
 define ('GMP_BIG_ENDIAN', 8);
-
-/**
- * 
- * @link http://www.php.net/manual/en/gmp.constants.php
- * @var int
- */
 define ('GMP_NATIVE_ENDIAN', 16);
 
-// End of gmp v.8.2.6
+// End of gmp v.8.3.0

@@ -3,376 +3,259 @@
 // Start of mcrypt v.1.0.6
 
 /**
- * Gets the key size of the specified cipher
- * @link http://www.php.net/manual/en/function.mcrypt-get-key-size.php
- * @param int $cipher 
- * @return int|false Returns the maximum supported key size of the algorithm in bytes
- * or false on failure.
- * @deprecated 1
+ * {@inheritdoc}
+ * @param mixed $cipher
+ * @param mixed $module
+ * @deprecated 
  */
-function mcrypt_get_key_size (int $cipher): int|false {}
+function mcrypt_get_key_size ($cipher = null, $module = null) {}
 
 /**
- * Gets the block size of the specified cipher
- * @link http://www.php.net/manual/en/function.mcrypt-get-block-size.php
- * @param int $cipher 
- * @return int|false Returns the algorithm block size in bytes or false on failure.
- * @deprecated 1
+ * {@inheritdoc}
+ * @param mixed $cipher
+ * @param mixed $module
+ * @deprecated 
  */
-function mcrypt_get_block_size (int $cipher): int|false {}
+function mcrypt_get_block_size ($cipher = null, $module = null) {}
 
 /**
- * Gets the name of the specified cipher
- * @link http://www.php.net/manual/en/function.mcrypt-get-cipher-name.php
- * @param int $cipher 
- * @return string This function returns the name of the cipher or false if the cipher does
- * not exist.
- * @deprecated 1
+ * {@inheritdoc}
+ * @param mixed $cipher
+ * @deprecated 
  */
-function mcrypt_get_cipher_name (int $cipher): string {}
+function mcrypt_get_cipher_name ($cipher = null) {}
 
 /**
- * Creates an initialization vector (IV) from a random source
- * @link http://www.php.net/manual/en/function.mcrypt-create-iv.php
- * @param int $size 
- * @param int $source [optional] 
- * @return string Returns the initialization vector, or false on error.
- * @deprecated 1
+ * {@inheritdoc}
+ * @param mixed $size
+ * @param mixed $source [optional]
+ * @deprecated 
  */
-function mcrypt_create_iv (int $size, int $source = MCRYPT_DEV_URANDOM): string {}
+function mcrypt_create_iv ($size = null, $source = NULL) {}
 
 /**
- * Gets an array of all supported ciphers
- * @link http://www.php.net/manual/en/function.mcrypt-list-algorithms.php
- * @param string $lib_dir [optional] 
- * @return array Returns an array with all the supported algorithms.
- * @deprecated 1
+ * {@inheritdoc}
+ * @param mixed $lib_dir [optional]
+ * @deprecated 
  */
-function mcrypt_list_algorithms (string $lib_dir = 'ini_get("mcrypt.algorithms_dir")'): array {}
+function mcrypt_list_algorithms ($lib_dir = NULL) {}
 
 /**
- * Gets an array of all supported modes
- * @link http://www.php.net/manual/en/function.mcrypt-list-modes.php
- * @param string $lib_dir [optional] 
- * @return array Returns an array with all the supported modes.
- * @deprecated 1
+ * {@inheritdoc}
+ * @param mixed $lib_dir [optional]
+ * @deprecated 
  */
-function mcrypt_list_modes (string $lib_dir = 'ini_get("mcrypt.modes_dir")'): array {}
+function mcrypt_list_modes ($lib_dir = NULL) {}
 
 /**
- * Returns the size of the IV belonging to a specific cipher/mode combination
- * @link http://www.php.net/manual/en/function.mcrypt-get-iv-size.php
- * @param string $cipher 
- * @param string $mode 
- * @return int Returns the size of the Initialization Vector (IV) in bytes. On error the
- * function returns false. If the IV is ignored in the specified cipher/mode
- * combination zero is returned.
- * @deprecated 1
+ * {@inheritdoc}
+ * @param mixed $cipher
+ * @param mixed $module
+ * @deprecated 
  */
-function mcrypt_get_iv_size (string $cipher, string $mode): int {}
+function mcrypt_get_iv_size ($cipher = null, $module = null) {}
 
 /**
- * Encrypts plaintext with given parameters
- * @link http://www.php.net/manual/en/function.mcrypt-encrypt.php
- * @param string $cipher 
- * @param string $key 
- * @param string $data 
- * @param string $mode 
- * @param string $iv [optional] 
- * @return string|false Returns the encrypted data as a string or false on failure.
- * @deprecated 1
+ * {@inheritdoc}
+ * @param mixed $cipher
+ * @param mixed $key
+ * @param mixed $data
+ * @param mixed $mode
+ * @param mixed $iv [optional]
+ * @deprecated 
  */
-function mcrypt_encrypt (string $cipher, string $key, string $data, string $mode, string $iv = null): string|false {}
+function mcrypt_encrypt ($cipher = null, $key = null, $data = null, $mode = null, $iv = NULL) {}
 
 /**
- * Decrypts crypttext with given parameters
- * @link http://www.php.net/manual/en/function.mcrypt-decrypt.php
- * @param string $cipher 
- * @param string $key 
- * @param string $data 
- * @param string $mode 
- * @param string $iv [optional] 
- * @return string|false Returns the decrypted data as a string or false on failure.
- * @deprecated 1
+ * {@inheritdoc}
+ * @param mixed $cipher
+ * @param mixed $key
+ * @param mixed $data
+ * @param mixed $mode
+ * @param mixed $iv [optional]
+ * @deprecated 
  */
-function mcrypt_decrypt (string $cipher, string $key, string $data, string $mode, string $iv = null): string|false {}
+function mcrypt_decrypt ($cipher = null, $key = null, $data = null, $mode = null, $iv = NULL) {}
 
 /**
- * Opens the module of the algorithm and the mode to be used
- * @link http://www.php.net/manual/en/function.mcrypt-module-open.php
- * @param string $algorithm 
- * @param string $algorithm_directory 
- * @param string $mode 
- * @param string $mode_directory 
- * @return resource Normally it returns an encryption descriptor, or false on error.
- * @deprecated 1
+ * {@inheritdoc}
+ * @param mixed $cipher
+ * @param mixed $cipher_directory
+ * @param mixed $mode
+ * @param mixed $mode_directory
+ * @deprecated 
  */
-function mcrypt_module_open (string $algorithm, string $algorithm_directory, string $mode, string $mode_directory) {}
+function mcrypt_module_open ($cipher = null, $cipher_directory = null, $mode = null, $mode_directory = null) {}
 
 /**
- * This function initializes all buffers needed for encryption
- * @link http://www.php.net/manual/en/function.mcrypt-generic-init.php
- * @param resource $td 
- * @param string $key 
- * @param string $iv 
- * @return int The function returns a negative value on error: -3 when the key length
- * was incorrect, -4 when there was a memory allocation problem and any
- * other return value is an unknown error. If an error occurs a warning will
- * be displayed accordingly. false is returned if incorrect parameters
- * were passed.
- * @deprecated 1
+ * {@inheritdoc}
+ * @param mixed $td
+ * @param mixed $key
+ * @param mixed $iv
+ * @deprecated 
  */
-function mcrypt_generic_init ($td, string $key, string $iv): int {}
+function mcrypt_generic_init ($td = null, $key = null, $iv = null) {}
 
 /**
- * This function encrypts data
- * @link http://www.php.net/manual/en/function.mcrypt-generic.php
- * @param resource $td 
- * @param string $data 
- * @return string Returns the encrypted data.
- * @deprecated 1
+ * {@inheritdoc}
+ * @param mixed $td
+ * @param mixed $data
+ * @deprecated 
  */
-function mcrypt_generic ($td, string $data): string {}
+function mcrypt_generic ($td = null, $data = null) {}
 
 /**
- * Decrypts data
- * @link http://www.php.net/manual/en/function.mdecrypt-generic.php
- * @param resource $td 
- * @param string $data 
- * @return string Returns decrypted string.
- * @deprecated 1
+ * {@inheritdoc}
+ * @param mixed $td
+ * @param mixed $data
+ * @deprecated 
  */
-function mdecrypt_generic ($td, string $data): string {}
+function mdecrypt_generic ($td = null, $data = null) {}
 
 /**
- * This function deinitializes an encryption module
- * @link http://www.php.net/manual/en/function.mcrypt-generic-deinit.php
- * @param resource $td 
- * @return bool Returns true on success or false on failure.
- * @deprecated 1
+ * {@inheritdoc}
+ * @param mixed $td
+ * @deprecated 
  */
-function mcrypt_generic_deinit ($td): bool {}
+function mcrypt_generic_deinit ($td = null) {}
 
 /**
- * Runs a self test on the opened module
- * @link http://www.php.net/manual/en/function.mcrypt-enc-self-test.php
- * @param resource $td 
- * @return int Returns 0 on success and a negative int on failure.
- * @deprecated 1
+ * {@inheritdoc}
+ * @param mixed $td
+ * @deprecated 
  */
-function mcrypt_enc_self_test ($td): int {}
+function mcrypt_enc_self_test ($td = null) {}
 
 /**
- * Checks whether the encryption of the opened mode works on blocks
- * @link http://www.php.net/manual/en/function.mcrypt-enc-is-block-algorithm-mode.php
- * @param resource $td 
- * @return bool Returns true if the mode is for use with block algorithms, otherwise it
- * returns false.
- * @deprecated 1
+ * {@inheritdoc}
+ * @param mixed $td
+ * @deprecated 
  */
-function mcrypt_enc_is_block_algorithm_mode ($td): bool {}
+function mcrypt_enc_is_block_algorithm_mode ($td = null) {}
 
 /**
- * Checks whether the algorithm of the opened mode is a block algorithm
- * @link http://www.php.net/manual/en/function.mcrypt-enc-is-block-algorithm.php
- * @param resource $td 
- * @return bool Returns true if the algorithm is a block algorithm or false if it is
- * a stream one.
- * @deprecated 1
+ * {@inheritdoc}
+ * @param mixed $td
+ * @deprecated 
  */
-function mcrypt_enc_is_block_algorithm ($td): bool {}
+function mcrypt_enc_is_block_algorithm ($td = null) {}
 
 /**
- * Checks whether the opened mode outputs blocks
- * @link http://www.php.net/manual/en/function.mcrypt-enc-is-block-mode.php
- * @param resource $td 
- * @return bool Returns true if the mode outputs blocks of bytes,
- * or false if it outputs just bytes.
- * @deprecated 1
+ * {@inheritdoc}
+ * @param mixed $td
+ * @deprecated 
  */
-function mcrypt_enc_is_block_mode ($td): bool {}
+function mcrypt_enc_is_block_mode ($td = null) {}
 
 /**
- * Returns the blocksize of the opened algorithm
- * @link http://www.php.net/manual/en/function.mcrypt-enc-get-block-size.php
- * @param resource $td 
- * @return int Returns the block size of the specified algorithm in bytes.
- * @deprecated 1
+ * {@inheritdoc}
+ * @param mixed $td
+ * @deprecated 
  */
-function mcrypt_enc_get_block_size ($td): int {}
+function mcrypt_enc_get_block_size ($td = null) {}
 
 /**
- * Returns the maximum supported keysize of the opened mode
- * @link http://www.php.net/manual/en/function.mcrypt-enc-get-key-size.php
- * @param resource $td 
- * @return int Returns the maximum supported key size of the algorithm in bytes.
- * @deprecated 1
+ * {@inheritdoc}
+ * @param mixed $td
+ * @deprecated 
  */
-function mcrypt_enc_get_key_size ($td): int {}
+function mcrypt_enc_get_key_size ($td = null) {}
 
 /**
- * Returns an array with the supported keysizes of the opened algorithm
- * @link http://www.php.net/manual/en/function.mcrypt-enc-get-supported-key-sizes.php
- * @param resource $td 
- * @return array Returns an array with the key sizes supported by the algorithm
- * specified by the encryption descriptor. If it returns an empty
- * array then all key sizes between 1 and
- * mcrypt_enc_get_key_size are supported by the
- * algorithm.
- * @deprecated 1
+ * {@inheritdoc}
+ * @param mixed $td
+ * @deprecated 
  */
-function mcrypt_enc_get_supported_key_sizes ($td): array {}
+function mcrypt_enc_get_supported_key_sizes ($td = null) {}
 
 /**
- * Returns the size of the IV of the opened algorithm
- * @link http://www.php.net/manual/en/function.mcrypt-enc-get-iv-size.php
- * @param resource $td 
- * @return int Returns the size of the IV, or 0 if the IV is ignored by the algorithm.
- * @deprecated 1
+ * {@inheritdoc}
+ * @param mixed $td
+ * @deprecated 
  */
-function mcrypt_enc_get_iv_size ($td): int {}
+function mcrypt_enc_get_iv_size ($td = null) {}
 
 /**
- * Returns the name of the opened algorithm
- * @link http://www.php.net/manual/en/function.mcrypt-enc-get-algorithms-name.php
- * @param resource $td 
- * @return string Returns the name of the opened algorithm as a string.
- * @deprecated 1
+ * {@inheritdoc}
+ * @param mixed $td
+ * @deprecated 
  */
-function mcrypt_enc_get_algorithms_name ($td): string {}
+function mcrypt_enc_get_algorithms_name ($td = null) {}
 
 /**
- * Returns the name of the opened mode
- * @link http://www.php.net/manual/en/function.mcrypt-enc-get-modes-name.php
- * @param resource $td 
- * @return string Returns the name as a string.
- * @deprecated 1
+ * {@inheritdoc}
+ * @param mixed $td
+ * @deprecated 
  */
-function mcrypt_enc_get_modes_name ($td): string {}
+function mcrypt_enc_get_modes_name ($td = null) {}
 
 /**
- * This function runs a self test on the specified module
- * @link http://www.php.net/manual/en/function.mcrypt-module-self-test.php
- * @param string $algorithm 
- * @param string $lib_dir [optional] 
- * @return bool The function returns true if the self test succeeds, or false when it
- * fails.
- * @deprecated 1
+ * {@inheritdoc}
+ * @param mixed $algorithm
+ * @param mixed $lib_dir [optional]
+ * @deprecated 
  */
-function mcrypt_module_self_test (string $algorithm, string $lib_dir = null): bool {}
+function mcrypt_module_self_test ($algorithm = null, $lib_dir = NULL) {}
 
 /**
- * Returns if the specified module is a block algorithm or not
- * @link http://www.php.net/manual/en/function.mcrypt-module-is-block-algorithm-mode.php
- * @param string $mode 
- * @param string $lib_dir [optional] 
- * @return bool This function returns true if the mode is for use with block
- * algorithms, otherwise it returns false. (e.g. false for stream, and
- * true for cbc, cfb, ofb).
- * @deprecated 1
+ * {@inheritdoc}
+ * @param mixed $mode
+ * @param mixed $lib_dir [optional]
+ * @deprecated 
  */
-function mcrypt_module_is_block_algorithm_mode (string $mode, string $lib_dir = null): bool {}
+function mcrypt_module_is_block_algorithm_mode ($mode = null, $lib_dir = NULL) {}
 
 /**
- * This function checks whether the specified algorithm is a block algorithm
- * @link http://www.php.net/manual/en/function.mcrypt-module-is-block-algorithm.php
- * @param string $algorithm 
- * @param string $lib_dir [optional] 
- * @return bool This function returns true if the specified algorithm is a block
- * algorithm, or false if it is a stream one.
- * @deprecated 1
+ * {@inheritdoc}
+ * @param mixed $algorithm
+ * @param mixed $lib_dir [optional]
+ * @deprecated 
  */
-function mcrypt_module_is_block_algorithm (string $algorithm, string $lib_dir = null): bool {}
+function mcrypt_module_is_block_algorithm ($algorithm = null, $lib_dir = NULL) {}
 
 /**
- * Returns if the specified mode outputs blocks or not
- * @link http://www.php.net/manual/en/function.mcrypt-module-is-block-mode.php
- * @param string $mode 
- * @param string $lib_dir [optional] 
- * @return bool This function returns true if the mode outputs blocks of bytes or
- * false if it outputs just bytes. (e.g. true for cbc and ecb, and
- * false for cfb and stream).
- * @deprecated 1
+ * {@inheritdoc}
+ * @param mixed $mode
+ * @param mixed $lib_dir [optional]
+ * @deprecated 
  */
-function mcrypt_module_is_block_mode (string $mode, string $lib_dir = null): bool {}
+function mcrypt_module_is_block_mode ($mode = null, $lib_dir = NULL) {}
 
 /**
- * Returns the blocksize of the specified algorithm
- * @link http://www.php.net/manual/en/function.mcrypt-module-get-algo-block-size.php
- * @param string $algorithm 
- * @param string $lib_dir [optional] 
- * @return int Returns the block size of the algorithm specified in bytes.
- * @deprecated 1
+ * {@inheritdoc}
+ * @param mixed $algorithm
+ * @param mixed $lib_dir [optional]
+ * @deprecated 
  */
-function mcrypt_module_get_algo_block_size (string $algorithm, string $lib_dir = null): int {}
+function mcrypt_module_get_algo_block_size ($algorithm = null, $lib_dir = NULL) {}
 
 /**
- * Returns the maximum supported keysize of the opened mode
- * @link http://www.php.net/manual/en/function.mcrypt-module-get-algo-key-size.php
- * @param string $algorithm 
- * @param string $lib_dir [optional] 
- * @return int This function returns the maximum supported key size of the
- * algorithm specified in bytes.
- * @deprecated 1
+ * {@inheritdoc}
+ * @param mixed $algorithm
+ * @param mixed $lib_dir [optional]
+ * @deprecated 
  */
-function mcrypt_module_get_algo_key_size (string $algorithm, string $lib_dir = null): int {}
+function mcrypt_module_get_algo_key_size ($algorithm = null, $lib_dir = NULL) {}
 
 /**
- * Returns an array with the supported keysizes of the opened algorithm
- * @link http://www.php.net/manual/en/function.mcrypt-module-get-supported-key-sizes.php
- * @param string $algorithm 
- * @param string $lib_dir [optional] 
- * @return array Returns an array with the key sizes supported by the specified algorithm.
- * If it returns an empty array then all key sizes between 1 and
- * mcrypt_module_get_algo_key_size are supported by the
- * algorithm.
- * @deprecated 1
+ * {@inheritdoc}
+ * @param mixed $algorithm
+ * @param mixed $lib_dir [optional]
+ * @deprecated 
  */
-function mcrypt_module_get_supported_key_sizes (string $algorithm, string $lib_dir = null): array {}
+function mcrypt_module_get_supported_key_sizes ($algorithm = null, $lib_dir = NULL) {}
 
 /**
- * Closes the mcrypt module
- * @link http://www.php.net/manual/en/function.mcrypt-module-close.php
- * @param resource $td 
- * @return bool Returns true on success or false on failure.
- * @deprecated 1
+ * {@inheritdoc}
+ * @param mixed $td
+ * @deprecated 
  */
-function mcrypt_module_close ($td): bool {}
+function mcrypt_module_close ($td = null) {}
 
-
-/**
- * 
- * @link http://www.php.net/manual/en/mcrypt.constants.php
- * @var int
- */
 define ('MCRYPT_ENCRYPT', 0);
-
-/**
- * 
- * @link http://www.php.net/manual/en/mcrypt.constants.php
- * @var int
- */
 define ('MCRYPT_DECRYPT', 1);
-
-/**
- * 
- * @link http://www.php.net/manual/en/mcrypt.constants.php
- * @var int
- */
 define ('MCRYPT_DEV_RANDOM', 0);
-
-/**
- * 
- * @link http://www.php.net/manual/en/mcrypt.constants.php
- * @var int
- */
 define ('MCRYPT_DEV_URANDOM', 1);
-
-/**
- * 
- * @link http://www.php.net/manual/en/mcrypt.constants.php
- * @var int
- */
 define ('MCRYPT_RAND', 2);
 define ('MCRYPT_3DES', "tripledes");
 define ('MCRYPT_ARCFOUR_IV', "arcfour-iv");

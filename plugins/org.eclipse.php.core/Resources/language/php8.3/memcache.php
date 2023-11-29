@@ -200,47 +200,46 @@ class MemcachePool  {
 
 }
 
-/**
- * Represents a connection to a set of memcache servers.
- * @link http://www.php.net/manual/en/class.memcache.php
- */
 class Memcache extends MemcachePool  {
 
 	/**
-	 * Open memcached server connection
-	 * @link http://www.php.net/manual/en/memcache.connect.php
-	 * @param string $host 
-	 * @param int $port [optional] 
-	 * @param int $timeout [optional] 
-	 * @return bool Returns true on success or false on failure.
+	 * {@inheritdoc}
+	 * @param mixed $host
+	 * @param mixed $port [optional]
+	 * @param mixed $timeout [optional]
+	 * @param mixed $unused4 [optional]
+	 * @param mixed $unused5 [optional]
+	 * @param mixed $unused6 [optional]
+	 * @param mixed $unused7 [optional]
+	 * @param mixed $unugsed8 [optional]
 	 */
-	public function connect (string $host, int $port = null, int $timeout = null): bool {}
+	public function connect ($host = null, $port = NULL, $timeout = NULL, $unused4 = NULL, $unused5 = NULL, $unused6 = NULL, $unused7 = NULL, $unugsed8 = NULL) {}
 
 	/**
-	 * Open memcached server persistent connection
-	 * @link http://www.php.net/manual/en/memcache.pconnect.php
-	 * @param string $host 
-	 * @param int $port [optional] 
-	 * @param int $timeout [optional] 
-	 * @return mixed Returns a Memcache object or false on failure.
+	 * {@inheritdoc}
+	 * @param mixed $host
+	 * @param mixed $port [optional]
+	 * @param mixed $timeout [optional]
+	 * @param mixed $unused4 [optional]
+	 * @param mixed $unused5 [optional]
+	 * @param mixed $unused6 [optional]
+	 * @param mixed $unused7 [optional]
+	 * @param mixed $unugsed8 [optional]
 	 */
-	public function pconnect (string $host, int $port = null, int $timeout = null): mixed {}
+	public function pconnect ($host = null, $port = NULL, $timeout = NULL, $unused4 = NULL, $unused5 = NULL, $unused6 = NULL, $unused7 = NULL, $unugsed8 = NULL) {}
 
 	/**
-	 * Add a memcached server to connection pool
-	 * @link http://www.php.net/manual/en/memcache.addserver.php
-	 * @param string $host 
-	 * @param int $port [optional] 
-	 * @param bool $persistent [optional] 
-	 * @param int $weight [optional] 
-	 * @param int $timeout [optional] 
-	 * @param int $retry_interval [optional] 
-	 * @param bool $status [optional] 
-	 * @param callable $failure_callback [optional] 
-	 * @param int $timeoutms [optional] 
-	 * @return bool Returns true on success or false on failure.
+	 * {@inheritdoc}
+	 * @param mixed $host
+	 * @param mixed $tcp_port [optional]
+	 * @param mixed $persistent [optional]
+	 * @param mixed $weight [optional]
+	 * @param mixed $timeout [optional]
+	 * @param mixed $retry_interval [optional]
+	 * @param mixed $status [optional]
+	 * @param mixed $failure_callback [optional]
 	 */
-	public function addserver (string $host, int $port = 11211, bool $persistent = null, int $weight = null, int $timeout = null, int $retry_interval = null, bool $status = null, callable $failure_callback = null, int $timeoutms = null): bool {}
+	public function addserver ($host = null, $tcp_port = NULL, $persistent = NULL, $weight = NULL, $timeout = NULL, $retry_interval = NULL, $status = NULL, $failure_callback = NULL): bool {}
 
 	/**
 	 * {@inheritdoc}
@@ -571,13 +570,10 @@ function memcache_get (MemcachePool $memcache, $key = null, &$flags = NULL, &$ca
 function memcache_delete (MemcachePool $memcache, $key = null, $exptime = NULL): array|bool {}
 
 /**
- * Turn debug output on/off
- * @link http://www.php.net/manual/en/function.memcache-debug.php
- * @param bool $on_off 
- * @return bool Returns true if PHP was built with --enable-debug option, otherwise
- * returns false.
+ * {@inheritdoc}
+ * @param mixed $on_off
  */
-function memcache_debug (bool $on_off): bool {}
+function memcache_debug ($on_off = null): bool {}
 
 /**
  * {@inheritdoc}

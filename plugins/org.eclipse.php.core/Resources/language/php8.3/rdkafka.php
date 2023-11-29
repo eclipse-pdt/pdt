@@ -377,14 +377,12 @@ class Producer extends \RdKafka  {
 class Exception extends \Exception implements \Throwable, \Stringable {
 
 	/**
-	 * Construct the exception
-	 * @link http://www.php.net/manual/en/exception.construct.php
-	 * @param string $message [optional] 
-	 * @param int $code [optional] 
-	 * @param \Throwable|null $previous [optional] 
-	 * @return string 
+	 * {@inheritdoc}
+	 * @param string $message [optional]
+	 * @param int $code [optional]
+	 * @param \Throwable|null $previous [optional]
 	 */
-	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
+	public function __construct (string $message = '', int $code = 0, ?\Throwable $previous = NULL) {}
 
 	/**
 	 * {@inheritdoc}
@@ -392,62 +390,42 @@ class Exception extends \Exception implements \Throwable, \Stringable {
 	public function __wakeup () {}
 
 	/**
-	 * Gets the Exception message
-	 * @link http://www.php.net/manual/en/exception.getmessage.php
-	 * @return string Returns the Exception message as a string.
+	 * {@inheritdoc}
 	 */
 	final public function getMessage (): string {}
 
 	/**
-	 * Gets the Exception code
-	 * @link http://www.php.net/manual/en/exception.getcode.php
-	 * @return int Returns the exception code as int in
-	 * Exception but possibly as other type in
-	 * Exception descendants (for example as
-	 * string in PDOException).
+	 * {@inheritdoc}
 	 */
-	final public function getCode (): int {}
+	final public function getCode () {}
 
 	/**
-	 * Gets the file in which the exception was created
-	 * @link http://www.php.net/manual/en/exception.getfile.php
-	 * @return string Returns the filename in which the exception was created.
+	 * {@inheritdoc}
 	 */
 	final public function getFile (): string {}
 
 	/**
-	 * Gets the line in which the exception was created
-	 * @link http://www.php.net/manual/en/exception.getline.php
-	 * @return int Returns the line number where the exception was created.
+	 * {@inheritdoc}
 	 */
 	final public function getLine (): int {}
 
 	/**
-	 * Gets the stack trace
-	 * @link http://www.php.net/manual/en/exception.gettrace.php
-	 * @return array Returns the Exception stack trace as an array.
+	 * {@inheritdoc}
 	 */
 	final public function getTrace (): array {}
 
 	/**
-	 * Returns previous Throwable
-	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return \Throwable|null Returns the previous Throwable if available 
-	 * or null otherwise.
+	 * {@inheritdoc}
 	 */
 	final public function getPrevious (): ?\Throwable {}
 
 	/**
-	 * Gets the stack trace as a string
-	 * @link http://www.php.net/manual/en/exception.gettraceasstring.php
-	 * @return string Returns the Exception stack trace as a string.
+	 * {@inheritdoc}
 	 */
 	final public function getTraceAsString (): string {}
 
 	/**
-	 * String representation of the exception
-	 * @link http://www.php.net/manual/en/exception.tostring.php
-	 * @return string Returns the string representation of the exception.
+	 * {@inheritdoc}
 	 */
 	public function __toString (): string {}
 
@@ -589,62 +567,42 @@ class KafkaErrorException extends \RdKafka\Exception implements \Stringable, \Th
 	public function __wakeup () {}
 
 	/**
-	 * Gets the Exception message
-	 * @link http://www.php.net/manual/en/exception.getmessage.php
-	 * @return string Returns the Exception message as a string.
+	 * {@inheritdoc}
 	 */
 	final public function getMessage (): string {}
 
 	/**
-	 * Gets the Exception code
-	 * @link http://www.php.net/manual/en/exception.getcode.php
-	 * @return int Returns the exception code as int in
-	 * Exception but possibly as other type in
-	 * Exception descendants (for example as
-	 * string in PDOException).
+	 * {@inheritdoc}
 	 */
-	final public function getCode (): int {}
+	final public function getCode () {}
 
 	/**
-	 * Gets the file in which the exception was created
-	 * @link http://www.php.net/manual/en/exception.getfile.php
-	 * @return string Returns the filename in which the exception was created.
+	 * {@inheritdoc}
 	 */
 	final public function getFile (): string {}
 
 	/**
-	 * Gets the line in which the exception was created
-	 * @link http://www.php.net/manual/en/exception.getline.php
-	 * @return int Returns the line number where the exception was created.
+	 * {@inheritdoc}
 	 */
 	final public function getLine (): int {}
 
 	/**
-	 * Gets the stack trace
-	 * @link http://www.php.net/manual/en/exception.gettrace.php
-	 * @return array Returns the Exception stack trace as an array.
+	 * {@inheritdoc}
 	 */
 	final public function getTrace (): array {}
 
 	/**
-	 * Returns previous Throwable
-	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return \Throwable|null Returns the previous Throwable if available 
-	 * or null otherwise.
+	 * {@inheritdoc}
 	 */
 	final public function getPrevious (): ?\Throwable {}
 
 	/**
-	 * Gets the stack trace as a string
-	 * @link http://www.php.net/manual/en/exception.gettraceasstring.php
-	 * @return string Returns the Exception stack trace as a string.
+	 * {@inheritdoc}
 	 */
 	final public function getTraceAsString (): string {}
 
 	/**
-	 * String representation of the exception
-	 * @link http://www.php.net/manual/en/exception.tostring.php
-	 * @return string Returns the string representation of the exception.
+	 * {@inheritdoc}
 	 */
 	public function __toString (): string {}
 
@@ -1186,8 +1144,8 @@ define ('RD_KAFKA_MSG_F_BLOCK', 4);
 define ('RD_KAFKA_PURGE_F_QUEUE', 1);
 define ('RD_KAFKA_PURGE_F_INFLIGHT', 2);
 define ('RD_KAFKA_PURGE_F_NON_BLOCKING', 4);
-define ('RD_KAFKA_VERSION', 33620479);
-define ('RD_KAFKA_BUILD_VERSION', 17367807);
+define ('RD_KAFKA_VERSION', 33751295);
+define ('RD_KAFKA_BUILD_VERSION', 33685759);
 define ('RD_KAFKA_RESP_ERR__BEGIN', -200);
 define ('RD_KAFKA_RESP_ERR__BAD_MSG', -199);
 define ('RD_KAFKA_RESP_ERR__BAD_COMPRESSION', -198);

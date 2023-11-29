@@ -1,6 +1,6 @@
 <?php
 
-// Start of grpc v.1.54.0
+// Start of grpc v.1.59.1
 
 namespace Grpc {
 
@@ -296,9 +296,9 @@ define ('Grpc\CHANNEL_CONNECTING', 1);
 define ('Grpc\CHANNEL_READY', 2);
 define ('Grpc\CHANNEL_TRANSIENT_FAILURE', 3);
 define ('Grpc\CHANNEL_FATAL_FAILURE', 4);
-define ('Grpc\VERSION', "1.54.0");
+define ('Grpc\VERSION', "1.59.1");
 
 
 }
 
-// End of grpc v.1.54.0
+// End of grpc v.1.59.1

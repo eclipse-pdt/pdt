@@ -1,6 +1,6 @@
 <?php
 
-// Start of http v.4.2.3
+// Start of http v.4.2.4
 
 namespace http {
 
@@ -16,14 +16,12 @@ namespace http\Exception {
 class RuntimeException extends \RuntimeException implements \Stringable, \Throwable, \http\Exception {
 
 	/**
-	 * Construct the exception
-	 * @link http://www.php.net/manual/en/exception.construct.php
-	 * @param string $message [optional] 
-	 * @param int $code [optional] 
-	 * @param \Throwable|null $previous [optional] 
-	 * @return string 
+	 * {@inheritdoc}
+	 * @param string $message [optional]
+	 * @param int $code [optional]
+	 * @param \Throwable|null $previous [optional]
 	 */
-	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
+	public function __construct (string $message = '', int $code = 0, ?\Throwable $previous = NULL) {}
 
 	/**
 	 * {@inheritdoc}
@@ -31,62 +29,42 @@ class RuntimeException extends \RuntimeException implements \Stringable, \Throwa
 	public function __wakeup () {}
 
 	/**
-	 * Gets the Exception message
-	 * @link http://www.php.net/manual/en/exception.getmessage.php
-	 * @return string Returns the Exception message as a string.
+	 * {@inheritdoc}
 	 */
 	final public function getMessage (): string {}
 
 	/**
-	 * Gets the Exception code
-	 * @link http://www.php.net/manual/en/exception.getcode.php
-	 * @return int Returns the exception code as int in
-	 * Exception but possibly as other type in
-	 * Exception descendants (for example as
-	 * string in PDOException).
+	 * {@inheritdoc}
 	 */
-	final public function getCode (): int {}
+	final public function getCode () {}
 
 	/**
-	 * Gets the file in which the exception was created
-	 * @link http://www.php.net/manual/en/exception.getfile.php
-	 * @return string Returns the filename in which the exception was created.
+	 * {@inheritdoc}
 	 */
 	final public function getFile (): string {}
 
 	/**
-	 * Gets the line in which the exception was created
-	 * @link http://www.php.net/manual/en/exception.getline.php
-	 * @return int Returns the line number where the exception was created.
+	 * {@inheritdoc}
 	 */
 	final public function getLine (): int {}
 
 	/**
-	 * Gets the stack trace
-	 * @link http://www.php.net/manual/en/exception.gettrace.php
-	 * @return array Returns the Exception stack trace as an array.
+	 * {@inheritdoc}
 	 */
 	final public function getTrace (): array {}
 
 	/**
-	 * Returns previous Throwable
-	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return \Throwable|null Returns the previous Throwable if available 
-	 * or null otherwise.
+	 * {@inheritdoc}
 	 */
 	final public function getPrevious (): ?\Throwable {}
 
 	/**
-	 * Gets the stack trace as a string
-	 * @link http://www.php.net/manual/en/exception.gettraceasstring.php
-	 * @return string Returns the Exception stack trace as a string.
+	 * {@inheritdoc}
 	 */
 	final public function getTraceAsString (): string {}
 
 	/**
-	 * String representation of the exception
-	 * @link http://www.php.net/manual/en/exception.tostring.php
-	 * @return string Returns the string representation of the exception.
+	 * {@inheritdoc}
 	 */
 	public function __toString (): string {}
 
@@ -95,14 +73,12 @@ class RuntimeException extends \RuntimeException implements \Stringable, \Throwa
 class UnexpectedValueException extends \UnexpectedValueException implements \Throwable, \Stringable, \http\Exception {
 
 	/**
-	 * Construct the exception
-	 * @link http://www.php.net/manual/en/exception.construct.php
-	 * @param string $message [optional] 
-	 * @param int $code [optional] 
-	 * @param \Throwable|null $previous [optional] 
-	 * @return string 
+	 * {@inheritdoc}
+	 * @param string $message [optional]
+	 * @param int $code [optional]
+	 * @param \Throwable|null $previous [optional]
 	 */
-	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
+	public function __construct (string $message = '', int $code = 0, ?\Throwable $previous = NULL) {}
 
 	/**
 	 * {@inheritdoc}
@@ -110,62 +86,42 @@ class UnexpectedValueException extends \UnexpectedValueException implements \Thr
 	public function __wakeup () {}
 
 	/**
-	 * Gets the Exception message
-	 * @link http://www.php.net/manual/en/exception.getmessage.php
-	 * @return string Returns the Exception message as a string.
+	 * {@inheritdoc}
 	 */
 	final public function getMessage (): string {}
 
 	/**
-	 * Gets the Exception code
-	 * @link http://www.php.net/manual/en/exception.getcode.php
-	 * @return int Returns the exception code as int in
-	 * Exception but possibly as other type in
-	 * Exception descendants (for example as
-	 * string in PDOException).
+	 * {@inheritdoc}
 	 */
-	final public function getCode (): int {}
+	final public function getCode () {}
 
 	/**
-	 * Gets the file in which the exception was created
-	 * @link http://www.php.net/manual/en/exception.getfile.php
-	 * @return string Returns the filename in which the exception was created.
+	 * {@inheritdoc}
 	 */
 	final public function getFile (): string {}
 
 	/**
-	 * Gets the line in which the exception was created
-	 * @link http://www.php.net/manual/en/exception.getline.php
-	 * @return int Returns the line number where the exception was created.
+	 * {@inheritdoc}
 	 */
 	final public function getLine (): int {}
 
 	/**
-	 * Gets the stack trace
-	 * @link http://www.php.net/manual/en/exception.gettrace.php
-	 * @return array Returns the Exception stack trace as an array.
+	 * {@inheritdoc}
 	 */
 	final public function getTrace (): array {}
 
 	/**
-	 * Returns previous Throwable
-	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return \Throwable|null Returns the previous Throwable if available 
-	 * or null otherwise.
+	 * {@inheritdoc}
 	 */
 	final public function getPrevious (): ?\Throwable {}
 
 	/**
-	 * Gets the stack trace as a string
-	 * @link http://www.php.net/manual/en/exception.gettraceasstring.php
-	 * @return string Returns the Exception stack trace as a string.
+	 * {@inheritdoc}
 	 */
 	final public function getTraceAsString (): string {}
 
 	/**
-	 * String representation of the exception
-	 * @link http://www.php.net/manual/en/exception.tostring.php
-	 * @return string Returns the string representation of the exception.
+	 * {@inheritdoc}
 	 */
 	public function __toString (): string {}
 
@@ -174,14 +130,12 @@ class UnexpectedValueException extends \UnexpectedValueException implements \Thr
 class BadMethodCallException extends \BadMethodCallException implements \Stringable, \Throwable, \http\Exception {
 
 	/**
-	 * Construct the exception
-	 * @link http://www.php.net/manual/en/exception.construct.php
-	 * @param string $message [optional] 
-	 * @param int $code [optional] 
-	 * @param \Throwable|null $previous [optional] 
-	 * @return string 
+	 * {@inheritdoc}
+	 * @param string $message [optional]
+	 * @param int $code [optional]
+	 * @param \Throwable|null $previous [optional]
 	 */
-	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
+	public function __construct (string $message = '', int $code = 0, ?\Throwable $previous = NULL) {}
 
 	/**
 	 * {@inheritdoc}
@@ -189,62 +143,42 @@ class BadMethodCallException extends \BadMethodCallException implements \Stringa
 	public function __wakeup () {}
 
 	/**
-	 * Gets the Exception message
-	 * @link http://www.php.net/manual/en/exception.getmessage.php
-	 * @return string Returns the Exception message as a string.
+	 * {@inheritdoc}
 	 */
 	final public function getMessage (): string {}
 
 	/**
-	 * Gets the Exception code
-	 * @link http://www.php.net/manual/en/exception.getcode.php
-	 * @return int Returns the exception code as int in
-	 * Exception but possibly as other type in
-	 * Exception descendants (for example as
-	 * string in PDOException).
+	 * {@inheritdoc}
 	 */
-	final public function getCode (): int {}
+	final public function getCode () {}
 
 	/**
-	 * Gets the file in which the exception was created
-	 * @link http://www.php.net/manual/en/exception.getfile.php
-	 * @return string Returns the filename in which the exception was created.
+	 * {@inheritdoc}
 	 */
 	final public function getFile (): string {}
 
 	/**
-	 * Gets the line in which the exception was created
-	 * @link http://www.php.net/manual/en/exception.getline.php
-	 * @return int Returns the line number where the exception was created.
+	 * {@inheritdoc}
 	 */
 	final public function getLine (): int {}
 
 	/**
-	 * Gets the stack trace
-	 * @link http://www.php.net/manual/en/exception.gettrace.php
-	 * @return array Returns the Exception stack trace as an array.
+	 * {@inheritdoc}
 	 */
 	final public function getTrace (): array {}
 
 	/**
-	 * Returns previous Throwable
-	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return \Throwable|null Returns the previous Throwable if available 
-	 * or null otherwise.
+	 * {@inheritdoc}
 	 */
 	final public function getPrevious (): ?\Throwable {}
 
 	/**
-	 * Gets the stack trace as a string
-	 * @link http://www.php.net/manual/en/exception.gettraceasstring.php
-	 * @return string Returns the Exception stack trace as a string.
+	 * {@inheritdoc}
 	 */
 	final public function getTraceAsString (): string {}
 
 	/**
-	 * String representation of the exception
-	 * @link http://www.php.net/manual/en/exception.tostring.php
-	 * @return string Returns the string representation of the exception.
+	 * {@inheritdoc}
 	 */
 	public function __toString (): string {}
 
@@ -253,14 +187,12 @@ class BadMethodCallException extends \BadMethodCallException implements \Stringa
 class InvalidArgumentException extends \InvalidArgumentException implements \Throwable, \Stringable, \http\Exception {
 
 	/**
-	 * Construct the exception
-	 * @link http://www.php.net/manual/en/exception.construct.php
-	 * @param string $message [optional] 
-	 * @param int $code [optional] 
-	 * @param \Throwable|null $previous [optional] 
-	 * @return string 
+	 * {@inheritdoc}
+	 * @param string $message [optional]
+	 * @param int $code [optional]
+	 * @param \Throwable|null $previous [optional]
 	 */
-	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
+	public function __construct (string $message = '', int $code = 0, ?\Throwable $previous = NULL) {}
 
 	/**
 	 * {@inheritdoc}
@@ -268,62 +200,42 @@ class InvalidArgumentException extends \InvalidArgumentException implements \Thr
 	public function __wakeup () {}
 
 	/**
-	 * Gets the Exception message
-	 * @link http://www.php.net/manual/en/exception.getmessage.php
-	 * @return string Returns the Exception message as a string.
+	 * {@inheritdoc}
 	 */
 	final public function getMessage (): string {}
 
 	/**
-	 * Gets the Exception code
-	 * @link http://www.php.net/manual/en/exception.getcode.php
-	 * @return int Returns the exception code as int in
-	 * Exception but possibly as other type in
-	 * Exception descendants (for example as
-	 * string in PDOException).
+	 * {@inheritdoc}
 	 */
-	final public function getCode (): int {}
+	final public function getCode () {}
 
 	/**
-	 * Gets the file in which the exception was created
-	 * @link http://www.php.net/manual/en/exception.getfile.php
-	 * @return string Returns the filename in which the exception was created.
+	 * {@inheritdoc}
 	 */
 	final public function getFile (): string {}
 
 	/**
-	 * Gets the line in which the exception was created
-	 * @link http://www.php.net/manual/en/exception.getline.php
-	 * @return int Returns the line number where the exception was created.
+	 * {@inheritdoc}
 	 */
 	final public function getLine (): int {}
 
 	/**
-	 * Gets the stack trace
-	 * @link http://www.php.net/manual/en/exception.gettrace.php
-	 * @return array Returns the Exception stack trace as an array.
+	 * {@inheritdoc}
 	 */
 	final public function getTrace (): array {}
 
 	/**
-	 * Returns previous Throwable
-	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return \Throwable|null Returns the previous Throwable if available 
-	 * or null otherwise.
+	 * {@inheritdoc}
 	 */
 	final public function getPrevious (): ?\Throwable {}
 
 	/**
-	 * Gets the stack trace as a string
-	 * @link http://www.php.net/manual/en/exception.gettraceasstring.php
-	 * @return string Returns the Exception stack trace as a string.
+	 * {@inheritdoc}
 	 */
 	final public function getTraceAsString (): string {}
 
 	/**
-	 * String representation of the exception
-	 * @link http://www.php.net/manual/en/exception.tostring.php
-	 * @return string Returns the string representation of the exception.
+	 * {@inheritdoc}
 	 */
 	public function __toString (): string {}
 
@@ -332,14 +244,12 @@ class InvalidArgumentException extends \InvalidArgumentException implements \Thr
 class BadHeaderException extends \DomainException implements \Throwable, \Stringable, \http\Exception {
 
 	/**
-	 * Construct the exception
-	 * @link http://www.php.net/manual/en/exception.construct.php
-	 * @param string $message [optional] 
-	 * @param int $code [optional] 
-	 * @param \Throwable|null $previous [optional] 
-	 * @return string 
+	 * {@inheritdoc}
+	 * @param string $message [optional]
+	 * @param int $code [optional]
+	 * @param \Throwable|null $previous [optional]
 	 */
-	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
+	public function __construct (string $message = '', int $code = 0, ?\Throwable $previous = NULL) {}
 
 	/**
 	 * {@inheritdoc}
@@ -347,62 +257,42 @@ class BadHeaderException extends \DomainException implements \Throwable, \String
 	public function __wakeup () {}
 
 	/**
-	 * Gets the Exception message
-	 * @link http://www.php.net/manual/en/exception.getmessage.php
-	 * @return string Returns the Exception message as a string.
+	 * {@inheritdoc}
 	 */
 	final public function getMessage (): string {}
 
 	/**
-	 * Gets the Exception code
-	 * @link http://www.php.net/manual/en/exception.getcode.php
-	 * @return int Returns the exception code as int in
-	 * Exception but possibly as other type in
-	 * Exception descendants (for example as
-	 * string in PDOException).
+	 * {@inheritdoc}
 	 */
-	final public function getCode (): int {}
+	final public function getCode () {}
 
 	/**
-	 * Gets the file in which the exception was created
-	 * @link http://www.php.net/manual/en/exception.getfile.php
-	 * @return string Returns the filename in which the exception was created.
+	 * {@inheritdoc}
 	 */
 	final public function getFile (): string {}
 
 	/**
-	 * Gets the line in which the exception was created
-	 * @link http://www.php.net/manual/en/exception.getline.php
-	 * @return int Returns the line number where the exception was created.
+	 * {@inheritdoc}
 	 */
 	final public function getLine (): int {}
 
 	/**
-	 * Gets the stack trace
-	 * @link http://www.php.net/manual/en/exception.gettrace.php
-	 * @return array Returns the Exception stack trace as an array.
+	 * {@inheritdoc}
 	 */
 	final public function getTrace (): array {}
 
 	/**
-	 * Returns previous Throwable
-	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return \Throwable|null Returns the previous Throwable if available 
-	 * or null otherwise.
+	 * {@inheritdoc}
 	 */
 	final public function getPrevious (): ?\Throwable {}
 
 	/**
-	 * Gets the stack trace as a string
-	 * @link http://www.php.net/manual/en/exception.gettraceasstring.php
-	 * @return string Returns the Exception stack trace as a string.
+	 * {@inheritdoc}
 	 */
 	final public function getTraceAsString (): string {}
 
 	/**
-	 * String representation of the exception
-	 * @link http://www.php.net/manual/en/exception.tostring.php
-	 * @return string Returns the string representation of the exception.
+	 * {@inheritdoc}
 	 */
 	public function __toString (): string {}
 
@@ -411,14 +301,12 @@ class BadHeaderException extends \DomainException implements \Throwable, \String
 class BadUrlException extends \DomainException implements \Throwable, \Stringable, \http\Exception {
 
 	/**
-	 * Construct the exception
-	 * @link http://www.php.net/manual/en/exception.construct.php
-	 * @param string $message [optional] 
-	 * @param int $code [optional] 
-	 * @param \Throwable|null $previous [optional] 
-	 * @return string 
+	 * {@inheritdoc}
+	 * @param string $message [optional]
+	 * @param int $code [optional]
+	 * @param \Throwable|null $previous [optional]
 	 */
-	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
+	public function __construct (string $message = '', int $code = 0, ?\Throwable $previous = NULL) {}
 
 	/**
 	 * {@inheritdoc}
@@ -426,62 +314,42 @@ class BadUrlException extends \DomainException implements \Throwable, \Stringabl
 	public function __wakeup () {}
 
 	/**
-	 * Gets the Exception message
-	 * @link http://www.php.net/manual/en/exception.getmessage.php
-	 * @return string Returns the Exception message as a string.
+	 * {@inheritdoc}
 	 */
 	final public function getMessage (): string {}
 
 	/**
-	 * Gets the Exception code
-	 * @link http://www.php.net/manual/en/exception.getcode.php
-	 * @return int Returns the exception code as int in
-	 * Exception but possibly as other type in
-	 * Exception descendants (for example as
-	 * string in PDOException).
+	 * {@inheritdoc}
 	 */
-	final public function getCode (): int {}
+	final public function getCode () {}
 
 	/**
-	 * Gets the file in which the exception was created
-	 * @link http://www.php.net/manual/en/exception.getfile.php
-	 * @return string Returns the filename in which the exception was created.
+	 * {@inheritdoc}
 	 */
 	final public function getFile (): string {}
 
 	/**
-	 * Gets the line in which the exception was created
-	 * @link http://www.php.net/manual/en/exception.getline.php
-	 * @return int Returns the line number where the exception was created.
+	 * {@inheritdoc}
 	 */
 	final public function getLine (): int {}
 
 	/**
-	 * Gets the stack trace
-	 * @link http://www.php.net/manual/en/exception.gettrace.php
-	 * @return array Returns the Exception stack trace as an array.
+	 * {@inheritdoc}
 	 */
 	final public function getTrace (): array {}
 
 	/**
-	 * Returns previous Throwable
-	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return \Throwable|null Returns the previous Throwable if available 
-	 * or null otherwise.
+	 * {@inheritdoc}
 	 */
 	final public function getPrevious (): ?\Throwable {}
 
 	/**
-	 * Gets the stack trace as a string
-	 * @link http://www.php.net/manual/en/exception.gettraceasstring.php
-	 * @return string Returns the Exception stack trace as a string.
+	 * {@inheritdoc}
 	 */
 	final public function getTraceAsString (): string {}
 
 	/**
-	 * String representation of the exception
-	 * @link http://www.php.net/manual/en/exception.tostring.php
-	 * @return string Returns the string representation of the exception.
+	 * {@inheritdoc}
 	 */
 	public function __toString (): string {}
 
@@ -490,14 +358,12 @@ class BadUrlException extends \DomainException implements \Throwable, \Stringabl
 class BadMessageException extends \DomainException implements \Throwable, \Stringable, \http\Exception {
 
 	/**
-	 * Construct the exception
-	 * @link http://www.php.net/manual/en/exception.construct.php
-	 * @param string $message [optional] 
-	 * @param int $code [optional] 
-	 * @param \Throwable|null $previous [optional] 
-	 * @return string 
+	 * {@inheritdoc}
+	 * @param string $message [optional]
+	 * @param int $code [optional]
+	 * @param \Throwable|null $previous [optional]
 	 */
-	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
+	public function __construct (string $message = '', int $code = 0, ?\Throwable $previous = NULL) {}
 
 	/**
 	 * {@inheritdoc}
@@ -505,62 +371,42 @@ class BadMessageException extends \DomainException implements \Throwable, \Strin
 	public function __wakeup () {}
 
 	/**
-	 * Gets the Exception message
-	 * @link http://www.php.net/manual/en/exception.getmessage.php
-	 * @return string Returns the Exception message as a string.
+	 * {@inheritdoc}
 	 */
 	final public function getMessage (): string {}
 
 	/**
-	 * Gets the Exception code
-	 * @link http://www.php.net/manual/en/exception.getcode.php
-	 * @return int Returns the exception code as int in
-	 * Exception but possibly as other type in
-	 * Exception descendants (for example as
-	 * string in PDOException).
+	 * {@inheritdoc}
 	 */
-	final public function getCode (): int {}
+	final public function getCode () {}
 
 	/**
-	 * Gets the file in which the exception was created
-	 * @link http://www.php.net/manual/en/exception.getfile.php
-	 * @return string Returns the filename in which the exception was created.
+	 * {@inheritdoc}
 	 */
 	final public function getFile (): string {}
 
 	/**
-	 * Gets the line in which the exception was created
-	 * @link http://www.php.net/manual/en/exception.getline.php
-	 * @return int Returns the line number where the exception was created.
+	 * {@inheritdoc}
 	 */
 	final public function getLine (): int {}
 
 	/**
-	 * Gets the stack trace
-	 * @link http://www.php.net/manual/en/exception.gettrace.php
-	 * @return array Returns the Exception stack trace as an array.
+	 * {@inheritdoc}
 	 */
 	final public function getTrace (): array {}
 
 	/**
-	 * Returns previous Throwable
-	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return \Throwable|null Returns the previous Throwable if available 
-	 * or null otherwise.
+	 * {@inheritdoc}
 	 */
 	final public function getPrevious (): ?\Throwable {}
 
 	/**
-	 * Gets the stack trace as a string
-	 * @link http://www.php.net/manual/en/exception.gettraceasstring.php
-	 * @return string Returns the Exception stack trace as a string.
+	 * {@inheritdoc}
 	 */
 	final public function getTraceAsString (): string {}
 
 	/**
-	 * String representation of the exception
-	 * @link http://www.php.net/manual/en/exception.tostring.php
-	 * @return string Returns the string representation of the exception.
+	 * {@inheritdoc}
 	 */
 	public function __toString (): string {}
 
@@ -569,14 +415,12 @@ class BadMessageException extends \DomainException implements \Throwable, \Strin
 class BadConversionException extends \DomainException implements \Throwable, \Stringable, \http\Exception {
 
 	/**
-	 * Construct the exception
-	 * @link http://www.php.net/manual/en/exception.construct.php
-	 * @param string $message [optional] 
-	 * @param int $code [optional] 
-	 * @param \Throwable|null $previous [optional] 
-	 * @return string 
+	 * {@inheritdoc}
+	 * @param string $message [optional]
+	 * @param int $code [optional]
+	 * @param \Throwable|null $previous [optional]
 	 */
-	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
+	public function __construct (string $message = '', int $code = 0, ?\Throwable $previous = NULL) {}
 
 	/**
 	 * {@inheritdoc}
@@ -584,62 +428,42 @@ class BadConversionException extends \DomainException implements \Throwable, \St
 	public function __wakeup () {}
 
 	/**
-	 * Gets the Exception message
-	 * @link http://www.php.net/manual/en/exception.getmessage.php
-	 * @return string Returns the Exception message as a string.
+	 * {@inheritdoc}
 	 */
 	final public function getMessage (): string {}
 
 	/**
-	 * Gets the Exception code
-	 * @link http://www.php.net/manual/en/exception.getcode.php
-	 * @return int Returns the exception code as int in
-	 * Exception but possibly as other type in
-	 * Exception descendants (for example as
-	 * string in PDOException).
+	 * {@inheritdoc}
 	 */
-	final public function getCode (): int {}
+	final public function getCode () {}
 
 	/**
-	 * Gets the file in which the exception was created
-	 * @link http://www.php.net/manual/en/exception.getfile.php
-	 * @return string Returns the filename in which the exception was created.
+	 * {@inheritdoc}
 	 */
 	final public function getFile (): string {}
 
 	/**
-	 * Gets the line in which the exception was created
-	 * @link http://www.php.net/manual/en/exception.getline.php
-	 * @return int Returns the line number where the exception was created.
+	 * {@inheritdoc}
 	 */
 	final public function getLine (): int {}
 
 	/**
-	 * Gets the stack trace
-	 * @link http://www.php.net/manual/en/exception.gettrace.php
-	 * @return array Returns the Exception stack trace as an array.
+	 * {@inheritdoc}
 	 */
 	final public function getTrace (): array {}
 
 	/**
-	 * Returns previous Throwable
-	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return \Throwable|null Returns the previous Throwable if available 
-	 * or null otherwise.
+	 * {@inheritdoc}
 	 */
 	final public function getPrevious (): ?\Throwable {}
 
 	/**
-	 * Gets the stack trace as a string
-	 * @link http://www.php.net/manual/en/exception.gettraceasstring.php
-	 * @return string Returns the Exception stack trace as a string.
+	 * {@inheritdoc}
 	 */
 	final public function getTraceAsString (): string {}
 
 	/**
-	 * String representation of the exception
-	 * @link http://www.php.net/manual/en/exception.tostring.php
-	 * @return string Returns the string representation of the exception.
+	 * {@inheritdoc}
 	 */
 	public function __toString (): string {}
 
@@ -648,14 +472,12 @@ class BadConversionException extends \DomainException implements \Throwable, \St
 class BadQueryStringException extends \DomainException implements \Throwable, \Stringable, \http\Exception {
 
 	/**
-	 * Construct the exception
-	 * @link http://www.php.net/manual/en/exception.construct.php
-	 * @param string $message [optional] 
-	 * @param int $code [optional] 
-	 * @param \Throwable|null $previous [optional] 
-	 * @return string 
+	 * {@inheritdoc}
+	 * @param string $message [optional]
+	 * @param int $code [optional]
+	 * @param \Throwable|null $previous [optional]
 	 */
-	public function __construct (string $message = '""', int $code = null, ?\Throwable $previous = null): string {}
+	public function __construct (string $message = '', int $code = 0, ?\Throwable $previous = NULL) {}
 
 	/**
 	 * {@inheritdoc}
@@ -663,62 +485,42 @@ class BadQueryStringException extends \DomainException implements \Throwable, \S
 	public function __wakeup () {}
 
 	/**
-	 * Gets the Exception message
-	 * @link http://www.php.net/manual/en/exception.getmessage.php
-	 * @return string Returns the Exception message as a string.
+	 * {@inheritdoc}
 	 */
 	final public function getMessage (): string {}
 
 	/**
-	 * Gets the Exception code
-	 * @link http://www.php.net/manual/en/exception.getcode.php
-	 * @return int Returns the exception code as int in
-	 * Exception but possibly as other type in
-	 * Exception descendants (for example as
-	 * string in PDOException).
+	 * {@inheritdoc}
 	 */
-	final public function getCode (): int {}
+	final public function getCode () {}
 
 	/**
-	 * Gets the file in which the exception was created
-	 * @link http://www.php.net/manual/en/exception.getfile.php
-	 * @return string Returns the filename in which the exception was created.
+	 * {@inheritdoc}
 	 */
 	final public function getFile (): string {}
 
 	/**
-	 * Gets the line in which the exception was created
-	 * @link http://www.php.net/manual/en/exception.getline.php
-	 * @return int Returns the line number where the exception was created.
+	 * {@inheritdoc}
 	 */
 	final public function getLine (): int {}
 
 	/**
-	 * Gets the stack trace
-	 * @link http://www.php.net/manual/en/exception.gettrace.php
-	 * @return array Returns the Exception stack trace as an array.
+	 * {@inheritdoc}
 	 */
 	final public function getTrace (): array {}
 
 	/**
-	 * Returns previous Throwable
-	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return \Throwable|null Returns the previous Throwable if available 
-	 * or null otherwise.
+	 * {@inheritdoc}
 	 */
 	final public function getPrevious (): ?\Throwable {}
 
 	/**
-	 * Gets the stack trace as a string
-	 * @link http://www.php.net/manual/en/exception.gettraceasstring.php
-	 * @return string Returns the Exception stack trace as a string.
+	 * {@inheritdoc}
 	 */
 	final public function getTraceAsString (): string {}
 
 	/**
-	 * String representation of the exception
-	 * @link http://www.php.net/manual/en/exception.tostring.php
-	 * @return string Returns the string representation of the exception.
+	 * {@inheritdoc}
 	 */
 	public function __toString (): string {}
 
@@ -3734,7 +3536,7 @@ class Params implements \Stringable, \ArrayAccess {
 
 namespace {
 
-define ('http\Client\Curl\FEATURES', 1441777565);
+define ('http\Client\Curl\FEATURES', 1441744797);
 define ('http\Client\Curl\Features\IPV6', 1);
 define ('http\Client\Curl\Features\KERBEROS4', 2);
 define ('http\Client\Curl\Features\SSL', 4);
@@ -3761,15 +3563,15 @@ define ('http\Client\Curl\Features\HTTP3', 33554432);
 define ('http\Client\Curl\Features\ZSTD', 67108864);
 define ('http\Client\Curl\Features\UNICODE', 134217728);
 define ('http\Client\Curl\Features\HSTS', 268435456);
-define ('http\Client\Curl\VERSIONS', "libcurl/8.1.0 (SecureTransport) OpenSSL/1.1.1t zlib/1.2.11 brotli/1.0.9 zstd/1.5.5 libidn2/2.3.4 libssh2/1.10.0 nghttp2/1.53.0 librtmp/2.3");
-define ('http\Client\Curl\Versions\CURL', "8.1.0");
-define ('http\Client\Curl\Versions\SSL', "(SecureTransport) OpenSSL/1.1.1t");
-define ('http\Client\Curl\Versions\LIBZ', "1.2.11");
+define ('http\Client\Curl\VERSIONS', "libcurl/8.4.0 (SecureTransport) OpenSSL/3.2.0 zlib/1.2.12 brotli/1.1.0 zstd/1.5.5 libidn2/2.3.4 libssh2/1.11.0 nghttp2/1.58.0 librtmp/2.3 OpenLDAP/2.6.6");
+define ('http\Client\Curl\Versions\CURL', "8.4.0");
+define ('http\Client\Curl\Versions\SSL', "(SecureTransport) OpenSSL/3.2.0");
+define ('http\Client\Curl\Versions\LIBZ', "1.2.12");
 define ('http\Client\Curl\Versions\ARES', null);
 define ('http\Client\Curl\Versions\IDN', "2.3.4");
 define ('http\Client\Curl\Versions\ICONV', null);
-define ('http\Client\Curl\Versions\BROTLI', "1.0.9");
-define ('http\Client\Curl\Versions\NGHTTP2', "1.53.0");
+define ('http\Client\Curl\Versions\BROTLI', "1.1.0");
+define ('http\Client\Curl\Versions\NGHTTP2', "1.58.0");
 define ('http\Client\Curl\Versions\QUIC', null);
 define ('http\Client\Curl\Versions\CAINFO', null);
 define ('http\Client\Curl\Versions\CAPATH', null);
@@ -3790,7 +3592,6 @@ define ('http\Client\Curl\SSL_VERSION_TLSv1_3', 7);
 define ('http\Client\Curl\SSL_VERSION_SSLv2', 2);
 define ('http\Client\Curl\SSL_VERSION_SSLv3', 3);
 define ('http\Client\Curl\SSL_VERSION_ANY', 0);
-define ('http\Client\Curl\TLSAUTH_SRP', 1);
 define ('http\Client\Curl\SSL_VERSION_MAX_DEFAULT', 65536);
 define ('http\Client\Curl\SSL_VERSION_MAX_TLSv1_0', 262144);
 define ('http\Client\Curl\SSL_VERSION_MAX_TLSv1_1', 327680);
@@ -3829,4 +3630,4 @@ define ('http\Client\Curl\HSTS_READONLYFILE', 2);
 
 }
 
-// End of http v.4.2.3
+// End of http v.4.2.4

@@ -1,23 +1,16 @@
 <?php
 
-// Start of SPL v.8.2.6
+// Start of SPL v.8.3.0
 
-/**
- * Exception that represents error in the program logic. This kind of
- * exception should lead directly to a fix in your code.
- * @link http://www.php.net/manual/en/class.logicexception.php
- */
 class LogicException extends Exception implements Throwable, Stringable {
 
 	/**
-	 * Construct the exception
-	 * @link http://www.php.net/manual/en/exception.construct.php
-	 * @param string $message [optional] 
-	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
-	 * @return string 
+	 * {@inheritdoc}
+	 * @param string $message [optional]
+	 * @param int $code [optional]
+	 * @param Throwable|null $previous [optional]
 	 */
-	public function __construct (string $message = '""', int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '', int $code = 0, ?Throwable $previous = NULL) {}
 
 	/**
 	 * {@inheritdoc}
@@ -25,83 +18,56 @@ class LogicException extends Exception implements Throwable, Stringable {
 	public function __wakeup () {}
 
 	/**
-	 * Gets the Exception message
-	 * @link http://www.php.net/manual/en/exception.getmessage.php
-	 * @return string Returns the Exception message as a string.
+	 * {@inheritdoc}
 	 */
 	final public function getMessage (): string {}
 
 	/**
-	 * Gets the Exception code
-	 * @link http://www.php.net/manual/en/exception.getcode.php
-	 * @return int Returns the exception code as int in
-	 * Exception but possibly as other type in
-	 * Exception descendants (for example as
-	 * string in PDOException).
+	 * {@inheritdoc}
 	 */
-	final public function getCode (): int {}
+	final public function getCode () {}
 
 	/**
-	 * Gets the file in which the exception was created
-	 * @link http://www.php.net/manual/en/exception.getfile.php
-	 * @return string Returns the filename in which the exception was created.
+	 * {@inheritdoc}
 	 */
 	final public function getFile (): string {}
 
 	/**
-	 * Gets the line in which the exception was created
-	 * @link http://www.php.net/manual/en/exception.getline.php
-	 * @return int Returns the line number where the exception was created.
+	 * {@inheritdoc}
 	 */
 	final public function getLine (): int {}
 
 	/**
-	 * Gets the stack trace
-	 * @link http://www.php.net/manual/en/exception.gettrace.php
-	 * @return array Returns the Exception stack trace as an array.
+	 * {@inheritdoc}
 	 */
 	final public function getTrace (): array {}
 
 	/**
-	 * Returns previous Throwable
-	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
-	 * or null otherwise.
+	 * {@inheritdoc}
 	 */
 	final public function getPrevious (): ?Throwable {}
 
 	/**
-	 * Gets the stack trace as a string
-	 * @link http://www.php.net/manual/en/exception.gettraceasstring.php
-	 * @return string Returns the Exception stack trace as a string.
+	 * {@inheritdoc}
 	 */
 	final public function getTraceAsString (): string {}
 
 	/**
-	 * String representation of the exception
-	 * @link http://www.php.net/manual/en/exception.tostring.php
-	 * @return string Returns the string representation of the exception.
+	 * {@inheritdoc}
 	 */
 	public function __toString (): string {}
 
 }
 
-/**
- * Exception thrown if a callback refers to an undefined function or if some
- * arguments are missing.
- * @link http://www.php.net/manual/en/class.badfunctioncallexception.php
- */
 class BadFunctionCallException extends LogicException implements Stringable, Throwable {
 
 	/**
-	 * Construct the exception
-	 * @link http://www.php.net/manual/en/exception.construct.php
-	 * @param string $message [optional] 
-	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
-	 * @return string 
+	 * {@inheritdoc}
+	 * @param string $message [optional]
+	 * @param int $code [optional]
+	 * @param Throwable|null $previous [optional]
 	 */
-	public function __construct (string $message = '""', int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '', int $code = 0, ?Throwable $previous = NULL) {}
 
 	/**
 	 * {@inheritdoc}
@@ -109,83 +75,56 @@ class BadFunctionCallException extends LogicException implements Stringable, Thr
 	public function __wakeup () {}
 
 	/**
-	 * Gets the Exception message
-	 * @link http://www.php.net/manual/en/exception.getmessage.php
-	 * @return string Returns the Exception message as a string.
+	 * {@inheritdoc}
 	 */
 	final public function getMessage (): string {}
 
 	/**
-	 * Gets the Exception code
-	 * @link http://www.php.net/manual/en/exception.getcode.php
-	 * @return int Returns the exception code as int in
-	 * Exception but possibly as other type in
-	 * Exception descendants (for example as
-	 * string in PDOException).
+	 * {@inheritdoc}
 	 */
-	final public function getCode (): int {}
+	final public function getCode () {}
 
 	/**
-	 * Gets the file in which the exception was created
-	 * @link http://www.php.net/manual/en/exception.getfile.php
-	 * @return string Returns the filename in which the exception was created.
+	 * {@inheritdoc}
 	 */
 	final public function getFile (): string {}
 
 	/**
-	 * Gets the line in which the exception was created
-	 * @link http://www.php.net/manual/en/exception.getline.php
-	 * @return int Returns the line number where the exception was created.
+	 * {@inheritdoc}
 	 */
 	final public function getLine (): int {}
 
 	/**
-	 * Gets the stack trace
-	 * @link http://www.php.net/manual/en/exception.gettrace.php
-	 * @return array Returns the Exception stack trace as an array.
+	 * {@inheritdoc}
 	 */
 	final public function getTrace (): array {}
 
 	/**
-	 * Returns previous Throwable
-	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
-	 * or null otherwise.
+	 * {@inheritdoc}
 	 */
 	final public function getPrevious (): ?Throwable {}
 
 	/**
-	 * Gets the stack trace as a string
-	 * @link http://www.php.net/manual/en/exception.gettraceasstring.php
-	 * @return string Returns the Exception stack trace as a string.
+	 * {@inheritdoc}
 	 */
 	final public function getTraceAsString (): string {}
 
 	/**
-	 * String representation of the exception
-	 * @link http://www.php.net/manual/en/exception.tostring.php
-	 * @return string Returns the string representation of the exception.
+	 * {@inheritdoc}
 	 */
 	public function __toString (): string {}
 
 }
 
-/**
- * Exception thrown if a callback refers to an undefined method or if some
- * arguments are missing.
- * @link http://www.php.net/manual/en/class.badmethodcallexception.php
- */
 class BadMethodCallException extends BadFunctionCallException implements Throwable, Stringable {
 
 	/**
-	 * Construct the exception
-	 * @link http://www.php.net/manual/en/exception.construct.php
-	 * @param string $message [optional] 
-	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
-	 * @return string 
+	 * {@inheritdoc}
+	 * @param string $message [optional]
+	 * @param int $code [optional]
+	 * @param Throwable|null $previous [optional]
 	 */
-	public function __construct (string $message = '""', int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '', int $code = 0, ?Throwable $previous = NULL) {}
 
 	/**
 	 * {@inheritdoc}
@@ -193,82 +132,56 @@ class BadMethodCallException extends BadFunctionCallException implements Throwab
 	public function __wakeup () {}
 
 	/**
-	 * Gets the Exception message
-	 * @link http://www.php.net/manual/en/exception.getmessage.php
-	 * @return string Returns the Exception message as a string.
+	 * {@inheritdoc}
 	 */
 	final public function getMessage (): string {}
 
 	/**
-	 * Gets the Exception code
-	 * @link http://www.php.net/manual/en/exception.getcode.php
-	 * @return int Returns the exception code as int in
-	 * Exception but possibly as other type in
-	 * Exception descendants (for example as
-	 * string in PDOException).
+	 * {@inheritdoc}
 	 */
-	final public function getCode (): int {}
+	final public function getCode () {}
 
 	/**
-	 * Gets the file in which the exception was created
-	 * @link http://www.php.net/manual/en/exception.getfile.php
-	 * @return string Returns the filename in which the exception was created.
+	 * {@inheritdoc}
 	 */
 	final public function getFile (): string {}
 
 	/**
-	 * Gets the line in which the exception was created
-	 * @link http://www.php.net/manual/en/exception.getline.php
-	 * @return int Returns the line number where the exception was created.
+	 * {@inheritdoc}
 	 */
 	final public function getLine (): int {}
 
 	/**
-	 * Gets the stack trace
-	 * @link http://www.php.net/manual/en/exception.gettrace.php
-	 * @return array Returns the Exception stack trace as an array.
+	 * {@inheritdoc}
 	 */
 	final public function getTrace (): array {}
 
 	/**
-	 * Returns previous Throwable
-	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
-	 * or null otherwise.
+	 * {@inheritdoc}
 	 */
 	final public function getPrevious (): ?Throwable {}
 
 	/**
-	 * Gets the stack trace as a string
-	 * @link http://www.php.net/manual/en/exception.gettraceasstring.php
-	 * @return string Returns the Exception stack trace as a string.
+	 * {@inheritdoc}
 	 */
 	final public function getTraceAsString (): string {}
 
 	/**
-	 * String representation of the exception
-	 * @link http://www.php.net/manual/en/exception.tostring.php
-	 * @return string Returns the string representation of the exception.
+	 * {@inheritdoc}
 	 */
 	public function __toString (): string {}
 
 }
 
-/**
- * Exception thrown if a value does not adhere to a defined valid data domain.
- * @link http://www.php.net/manual/en/class.domainexception.php
- */
 class DomainException extends LogicException implements Stringable, Throwable {
 
 	/**
-	 * Construct the exception
-	 * @link http://www.php.net/manual/en/exception.construct.php
-	 * @param string $message [optional] 
-	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
-	 * @return string 
+	 * {@inheritdoc}
+	 * @param string $message [optional]
+	 * @param int $code [optional]
+	 * @param Throwable|null $previous [optional]
 	 */
-	public function __construct (string $message = '""', int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '', int $code = 0, ?Throwable $previous = NULL) {}
 
 	/**
 	 * {@inheritdoc}
@@ -276,82 +189,56 @@ class DomainException extends LogicException implements Stringable, Throwable {
 	public function __wakeup () {}
 
 	/**
-	 * Gets the Exception message
-	 * @link http://www.php.net/manual/en/exception.getmessage.php
-	 * @return string Returns the Exception message as a string.
+	 * {@inheritdoc}
 	 */
 	final public function getMessage (): string {}
 
 	/**
-	 * Gets the Exception code
-	 * @link http://www.php.net/manual/en/exception.getcode.php
-	 * @return int Returns the exception code as int in
-	 * Exception but possibly as other type in
-	 * Exception descendants (for example as
-	 * string in PDOException).
+	 * {@inheritdoc}
 	 */
-	final public function getCode (): int {}
+	final public function getCode () {}
 
 	/**
-	 * Gets the file in which the exception was created
-	 * @link http://www.php.net/manual/en/exception.getfile.php
-	 * @return string Returns the filename in which the exception was created.
+	 * {@inheritdoc}
 	 */
 	final public function getFile (): string {}
 
 	/**
-	 * Gets the line in which the exception was created
-	 * @link http://www.php.net/manual/en/exception.getline.php
-	 * @return int Returns the line number where the exception was created.
+	 * {@inheritdoc}
 	 */
 	final public function getLine (): int {}
 
 	/**
-	 * Gets the stack trace
-	 * @link http://www.php.net/manual/en/exception.gettrace.php
-	 * @return array Returns the Exception stack trace as an array.
+	 * {@inheritdoc}
 	 */
 	final public function getTrace (): array {}
 
 	/**
-	 * Returns previous Throwable
-	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
-	 * or null otherwise.
+	 * {@inheritdoc}
 	 */
 	final public function getPrevious (): ?Throwable {}
 
 	/**
-	 * Gets the stack trace as a string
-	 * @link http://www.php.net/manual/en/exception.gettraceasstring.php
-	 * @return string Returns the Exception stack trace as a string.
+	 * {@inheritdoc}
 	 */
 	final public function getTraceAsString (): string {}
 
 	/**
-	 * String representation of the exception
-	 * @link http://www.php.net/manual/en/exception.tostring.php
-	 * @return string Returns the string representation of the exception.
+	 * {@inheritdoc}
 	 */
 	public function __toString (): string {}
 
 }
 
-/**
- * Exception thrown if an argument is not of the expected type.
- * @link http://www.php.net/manual/en/class.invalidargumentexception.php
- */
 class InvalidArgumentException extends LogicException implements Stringable, Throwable {
 
 	/**
-	 * Construct the exception
-	 * @link http://www.php.net/manual/en/exception.construct.php
-	 * @param string $message [optional] 
-	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
-	 * @return string 
+	 * {@inheritdoc}
+	 * @param string $message [optional]
+	 * @param int $code [optional]
+	 * @param Throwable|null $previous [optional]
 	 */
-	public function __construct (string $message = '""', int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '', int $code = 0, ?Throwable $previous = NULL) {}
 
 	/**
 	 * {@inheritdoc}
@@ -359,82 +246,56 @@ class InvalidArgumentException extends LogicException implements Stringable, Thr
 	public function __wakeup () {}
 
 	/**
-	 * Gets the Exception message
-	 * @link http://www.php.net/manual/en/exception.getmessage.php
-	 * @return string Returns the Exception message as a string.
+	 * {@inheritdoc}
 	 */
 	final public function getMessage (): string {}
 
 	/**
-	 * Gets the Exception code
-	 * @link http://www.php.net/manual/en/exception.getcode.php
-	 * @return int Returns the exception code as int in
-	 * Exception but possibly as other type in
-	 * Exception descendants (for example as
-	 * string in PDOException).
+	 * {@inheritdoc}
 	 */
-	final public function getCode (): int {}
+	final public function getCode () {}
 
 	/**
-	 * Gets the file in which the exception was created
-	 * @link http://www.php.net/manual/en/exception.getfile.php
-	 * @return string Returns the filename in which the exception was created.
+	 * {@inheritdoc}
 	 */
 	final public function getFile (): string {}
 
 	/**
-	 * Gets the line in which the exception was created
-	 * @link http://www.php.net/manual/en/exception.getline.php
-	 * @return int Returns the line number where the exception was created.
+	 * {@inheritdoc}
 	 */
 	final public function getLine (): int {}
 
 	/**
-	 * Gets the stack trace
-	 * @link http://www.php.net/manual/en/exception.gettrace.php
-	 * @return array Returns the Exception stack trace as an array.
+	 * {@inheritdoc}
 	 */
 	final public function getTrace (): array {}
 
 	/**
-	 * Returns previous Throwable
-	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
-	 * or null otherwise.
+	 * {@inheritdoc}
 	 */
 	final public function getPrevious (): ?Throwable {}
 
 	/**
-	 * Gets the stack trace as a string
-	 * @link http://www.php.net/manual/en/exception.gettraceasstring.php
-	 * @return string Returns the Exception stack trace as a string.
+	 * {@inheritdoc}
 	 */
 	final public function getTraceAsString (): string {}
 
 	/**
-	 * String representation of the exception
-	 * @link http://www.php.net/manual/en/exception.tostring.php
-	 * @return string Returns the string representation of the exception.
+	 * {@inheritdoc}
 	 */
 	public function __toString (): string {}
 
 }
 
-/**
- * Exception thrown if a length is invalid.
- * @link http://www.php.net/manual/en/class.lengthexception.php
- */
 class LengthException extends LogicException implements Stringable, Throwable {
 
 	/**
-	 * Construct the exception
-	 * @link http://www.php.net/manual/en/exception.construct.php
-	 * @param string $message [optional] 
-	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
-	 * @return string 
+	 * {@inheritdoc}
+	 * @param string $message [optional]
+	 * @param int $code [optional]
+	 * @param Throwable|null $previous [optional]
 	 */
-	public function __construct (string $message = '""', int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '', int $code = 0, ?Throwable $previous = NULL) {}
 
 	/**
 	 * {@inheritdoc}
@@ -442,83 +303,56 @@ class LengthException extends LogicException implements Stringable, Throwable {
 	public function __wakeup () {}
 
 	/**
-	 * Gets the Exception message
-	 * @link http://www.php.net/manual/en/exception.getmessage.php
-	 * @return string Returns the Exception message as a string.
+	 * {@inheritdoc}
 	 */
 	final public function getMessage (): string {}
 
 	/**
-	 * Gets the Exception code
-	 * @link http://www.php.net/manual/en/exception.getcode.php
-	 * @return int Returns the exception code as int in
-	 * Exception but possibly as other type in
-	 * Exception descendants (for example as
-	 * string in PDOException).
+	 * {@inheritdoc}
 	 */
-	final public function getCode (): int {}
+	final public function getCode () {}
 
 	/**
-	 * Gets the file in which the exception was created
-	 * @link http://www.php.net/manual/en/exception.getfile.php
-	 * @return string Returns the filename in which the exception was created.
+	 * {@inheritdoc}
 	 */
 	final public function getFile (): string {}
 
 	/**
-	 * Gets the line in which the exception was created
-	 * @link http://www.php.net/manual/en/exception.getline.php
-	 * @return int Returns the line number where the exception was created.
+	 * {@inheritdoc}
 	 */
 	final public function getLine (): int {}
 
 	/**
-	 * Gets the stack trace
-	 * @link http://www.php.net/manual/en/exception.gettrace.php
-	 * @return array Returns the Exception stack trace as an array.
+	 * {@inheritdoc}
 	 */
 	final public function getTrace (): array {}
 
 	/**
-	 * Returns previous Throwable
-	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
-	 * or null otherwise.
+	 * {@inheritdoc}
 	 */
 	final public function getPrevious (): ?Throwable {}
 
 	/**
-	 * Gets the stack trace as a string
-	 * @link http://www.php.net/manual/en/exception.gettraceasstring.php
-	 * @return string Returns the Exception stack trace as a string.
+	 * {@inheritdoc}
 	 */
 	final public function getTraceAsString (): string {}
 
 	/**
-	 * String representation of the exception
-	 * @link http://www.php.net/manual/en/exception.tostring.php
-	 * @return string Returns the string representation of the exception.
+	 * {@inheritdoc}
 	 */
 	public function __toString (): string {}
 
 }
 
-/**
- * Exception thrown when an illegal index was requested. This represents
- * errors that should be detected at compile time.
- * @link http://www.php.net/manual/en/class.outofrangeexception.php
- */
 class OutOfRangeException extends LogicException implements Stringable, Throwable {
 
 	/**
-	 * Construct the exception
-	 * @link http://www.php.net/manual/en/exception.construct.php
-	 * @param string $message [optional] 
-	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
-	 * @return string 
+	 * {@inheritdoc}
+	 * @param string $message [optional]
+	 * @param int $code [optional]
+	 * @param Throwable|null $previous [optional]
 	 */
-	public function __construct (string $message = '""', int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '', int $code = 0, ?Throwable $previous = NULL) {}
 
 	/**
 	 * {@inheritdoc}
@@ -526,82 +360,56 @@ class OutOfRangeException extends LogicException implements Stringable, Throwabl
 	public function __wakeup () {}
 
 	/**
-	 * Gets the Exception message
-	 * @link http://www.php.net/manual/en/exception.getmessage.php
-	 * @return string Returns the Exception message as a string.
+	 * {@inheritdoc}
 	 */
 	final public function getMessage (): string {}
 
 	/**
-	 * Gets the Exception code
-	 * @link http://www.php.net/manual/en/exception.getcode.php
-	 * @return int Returns the exception code as int in
-	 * Exception but possibly as other type in
-	 * Exception descendants (for example as
-	 * string in PDOException).
+	 * {@inheritdoc}
 	 */
-	final public function getCode (): int {}
+	final public function getCode () {}
 
 	/**
-	 * Gets the file in which the exception was created
-	 * @link http://www.php.net/manual/en/exception.getfile.php
-	 * @return string Returns the filename in which the exception was created.
+	 * {@inheritdoc}
 	 */
 	final public function getFile (): string {}
 
 	/**
-	 * Gets the line in which the exception was created
-	 * @link http://www.php.net/manual/en/exception.getline.php
-	 * @return int Returns the line number where the exception was created.
+	 * {@inheritdoc}
 	 */
 	final public function getLine (): int {}
 
 	/**
-	 * Gets the stack trace
-	 * @link http://www.php.net/manual/en/exception.gettrace.php
-	 * @return array Returns the Exception stack trace as an array.
+	 * {@inheritdoc}
 	 */
 	final public function getTrace (): array {}
 
 	/**
-	 * Returns previous Throwable
-	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
-	 * or null otherwise.
+	 * {@inheritdoc}
 	 */
 	final public function getPrevious (): ?Throwable {}
 
 	/**
-	 * Gets the stack trace as a string
-	 * @link http://www.php.net/manual/en/exception.gettraceasstring.php
-	 * @return string Returns the Exception stack trace as a string.
+	 * {@inheritdoc}
 	 */
 	final public function getTraceAsString (): string {}
 
 	/**
-	 * String representation of the exception
-	 * @link http://www.php.net/manual/en/exception.tostring.php
-	 * @return string Returns the string representation of the exception.
+	 * {@inheritdoc}
 	 */
 	public function __toString (): string {}
 
 }
 
-/**
- * Exception thrown if an error which can only be found on runtime occurs.
- * @link http://www.php.net/manual/en/class.runtimeexception.php
- */
 class RuntimeException extends Exception implements Throwable, Stringable {
 
 	/**
-	 * Construct the exception
-	 * @link http://www.php.net/manual/en/exception.construct.php
-	 * @param string $message [optional] 
-	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
-	 * @return string 
+	 * {@inheritdoc}
+	 * @param string $message [optional]
+	 * @param int $code [optional]
+	 * @param Throwable|null $previous [optional]
 	 */
-	public function __construct (string $message = '""', int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '', int $code = 0, ?Throwable $previous = NULL) {}
 
 	/**
 	 * {@inheritdoc}
@@ -609,83 +417,56 @@ class RuntimeException extends Exception implements Throwable, Stringable {
 	public function __wakeup () {}
 
 	/**
-	 * Gets the Exception message
-	 * @link http://www.php.net/manual/en/exception.getmessage.php
-	 * @return string Returns the Exception message as a string.
+	 * {@inheritdoc}
 	 */
 	final public function getMessage (): string {}
 
 	/**
-	 * Gets the Exception code
-	 * @link http://www.php.net/manual/en/exception.getcode.php
-	 * @return int Returns the exception code as int in
-	 * Exception but possibly as other type in
-	 * Exception descendants (for example as
-	 * string in PDOException).
+	 * {@inheritdoc}
 	 */
-	final public function getCode (): int {}
+	final public function getCode () {}
 
 	/**
-	 * Gets the file in which the exception was created
-	 * @link http://www.php.net/manual/en/exception.getfile.php
-	 * @return string Returns the filename in which the exception was created.
+	 * {@inheritdoc}
 	 */
 	final public function getFile (): string {}
 
 	/**
-	 * Gets the line in which the exception was created
-	 * @link http://www.php.net/manual/en/exception.getline.php
-	 * @return int Returns the line number where the exception was created.
+	 * {@inheritdoc}
 	 */
 	final public function getLine (): int {}
 
 	/**
-	 * Gets the stack trace
-	 * @link http://www.php.net/manual/en/exception.gettrace.php
-	 * @return array Returns the Exception stack trace as an array.
+	 * {@inheritdoc}
 	 */
 	final public function getTrace (): array {}
 
 	/**
-	 * Returns previous Throwable
-	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
-	 * or null otherwise.
+	 * {@inheritdoc}
 	 */
 	final public function getPrevious (): ?Throwable {}
 
 	/**
-	 * Gets the stack trace as a string
-	 * @link http://www.php.net/manual/en/exception.gettraceasstring.php
-	 * @return string Returns the Exception stack trace as a string.
+	 * {@inheritdoc}
 	 */
 	final public function getTraceAsString (): string {}
 
 	/**
-	 * String representation of the exception
-	 * @link http://www.php.net/manual/en/exception.tostring.php
-	 * @return string Returns the string representation of the exception.
+	 * {@inheritdoc}
 	 */
 	public function __toString (): string {}
 
 }
 
-/**
- * Exception thrown if a value is not a valid key. This represents errors
- * that cannot be detected at compile time.
- * @link http://www.php.net/manual/en/class.outofboundsexception.php
- */
 class OutOfBoundsException extends RuntimeException implements Stringable, Throwable {
 
 	/**
-	 * Construct the exception
-	 * @link http://www.php.net/manual/en/exception.construct.php
-	 * @param string $message [optional] 
-	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
-	 * @return string 
+	 * {@inheritdoc}
+	 * @param string $message [optional]
+	 * @param int $code [optional]
+	 * @param Throwable|null $previous [optional]
 	 */
-	public function __construct (string $message = '""', int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '', int $code = 0, ?Throwable $previous = NULL) {}
 
 	/**
 	 * {@inheritdoc}
@@ -693,82 +474,56 @@ class OutOfBoundsException extends RuntimeException implements Stringable, Throw
 	public function __wakeup () {}
 
 	/**
-	 * Gets the Exception message
-	 * @link http://www.php.net/manual/en/exception.getmessage.php
-	 * @return string Returns the Exception message as a string.
+	 * {@inheritdoc}
 	 */
 	final public function getMessage (): string {}
 
 	/**
-	 * Gets the Exception code
-	 * @link http://www.php.net/manual/en/exception.getcode.php
-	 * @return int Returns the exception code as int in
-	 * Exception but possibly as other type in
-	 * Exception descendants (for example as
-	 * string in PDOException).
+	 * {@inheritdoc}
 	 */
-	final public function getCode (): int {}
+	final public function getCode () {}
 
 	/**
-	 * Gets the file in which the exception was created
-	 * @link http://www.php.net/manual/en/exception.getfile.php
-	 * @return string Returns the filename in which the exception was created.
+	 * {@inheritdoc}
 	 */
 	final public function getFile (): string {}
 
 	/**
-	 * Gets the line in which the exception was created
-	 * @link http://www.php.net/manual/en/exception.getline.php
-	 * @return int Returns the line number where the exception was created.
+	 * {@inheritdoc}
 	 */
 	final public function getLine (): int {}
 
 	/**
-	 * Gets the stack trace
-	 * @link http://www.php.net/manual/en/exception.gettrace.php
-	 * @return array Returns the Exception stack trace as an array.
+	 * {@inheritdoc}
 	 */
 	final public function getTrace (): array {}
 
 	/**
-	 * Returns previous Throwable
-	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
-	 * or null otherwise.
+	 * {@inheritdoc}
 	 */
 	final public function getPrevious (): ?Throwable {}
 
 	/**
-	 * Gets the stack trace as a string
-	 * @link http://www.php.net/manual/en/exception.gettraceasstring.php
-	 * @return string Returns the Exception stack trace as a string.
+	 * {@inheritdoc}
 	 */
 	final public function getTraceAsString (): string {}
 
 	/**
-	 * String representation of the exception
-	 * @link http://www.php.net/manual/en/exception.tostring.php
-	 * @return string Returns the string representation of the exception.
+	 * {@inheritdoc}
 	 */
 	public function __toString (): string {}
 
 }
 
-/**
- * Exception thrown when adding an element to a full container.
- * @link http://www.php.net/manual/en/class.overflowexception.php
- */
 class OverflowException extends RuntimeException implements Stringable, Throwable {
 
 	/**
-	 * Construct the exception
-	 * @link http://www.php.net/manual/en/exception.construct.php
-	 * @param string $message [optional] 
-	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
-	 * @return string 
+	 * {@inheritdoc}
+	 * @param string $message [optional]
+	 * @param int $code [optional]
+	 * @param Throwable|null $previous [optional]
 	 */
-	public function __construct (string $message = '""', int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '', int $code = 0, ?Throwable $previous = NULL) {}
 
 	/**
 	 * {@inheritdoc}
@@ -776,85 +531,56 @@ class OverflowException extends RuntimeException implements Stringable, Throwabl
 	public function __wakeup () {}
 
 	/**
-	 * Gets the Exception message
-	 * @link http://www.php.net/manual/en/exception.getmessage.php
-	 * @return string Returns the Exception message as a string.
+	 * {@inheritdoc}
 	 */
 	final public function getMessage (): string {}
 
 	/**
-	 * Gets the Exception code
-	 * @link http://www.php.net/manual/en/exception.getcode.php
-	 * @return int Returns the exception code as int in
-	 * Exception but possibly as other type in
-	 * Exception descendants (for example as
-	 * string in PDOException).
+	 * {@inheritdoc}
 	 */
-	final public function getCode (): int {}
+	final public function getCode () {}
 
 	/**
-	 * Gets the file in which the exception was created
-	 * @link http://www.php.net/manual/en/exception.getfile.php
-	 * @return string Returns the filename in which the exception was created.
+	 * {@inheritdoc}
 	 */
 	final public function getFile (): string {}
 
 	/**
-	 * Gets the line in which the exception was created
-	 * @link http://www.php.net/manual/en/exception.getline.php
-	 * @return int Returns the line number where the exception was created.
+	 * {@inheritdoc}
 	 */
 	final public function getLine (): int {}
 
 	/**
-	 * Gets the stack trace
-	 * @link http://www.php.net/manual/en/exception.gettrace.php
-	 * @return array Returns the Exception stack trace as an array.
+	 * {@inheritdoc}
 	 */
 	final public function getTrace (): array {}
 
 	/**
-	 * Returns previous Throwable
-	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
-	 * or null otherwise.
+	 * {@inheritdoc}
 	 */
 	final public function getPrevious (): ?Throwable {}
 
 	/**
-	 * Gets the stack trace as a string
-	 * @link http://www.php.net/manual/en/exception.gettraceasstring.php
-	 * @return string Returns the Exception stack trace as a string.
+	 * {@inheritdoc}
 	 */
 	final public function getTraceAsString (): string {}
 
 	/**
-	 * String representation of the exception
-	 * @link http://www.php.net/manual/en/exception.tostring.php
-	 * @return string Returns the string representation of the exception.
+	 * {@inheritdoc}
 	 */
 	public function __toString (): string {}
 
 }
 
-/**
- * Exception thrown to indicate range errors during program execution.
- * Normally this means there was an arithmetic error other than
- * under/overflow. This is the runtime version of
- * DomainException.
- * @link http://www.php.net/manual/en/class.rangeexception.php
- */
 class RangeException extends RuntimeException implements Stringable, Throwable {
 
 	/**
-	 * Construct the exception
-	 * @link http://www.php.net/manual/en/exception.construct.php
-	 * @param string $message [optional] 
-	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
-	 * @return string 
+	 * {@inheritdoc}
+	 * @param string $message [optional]
+	 * @param int $code [optional]
+	 * @param Throwable|null $previous [optional]
 	 */
-	public function __construct (string $message = '""', int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '', int $code = 0, ?Throwable $previous = NULL) {}
 
 	/**
 	 * {@inheritdoc}
@@ -862,83 +588,56 @@ class RangeException extends RuntimeException implements Stringable, Throwable {
 	public function __wakeup () {}
 
 	/**
-	 * Gets the Exception message
-	 * @link http://www.php.net/manual/en/exception.getmessage.php
-	 * @return string Returns the Exception message as a string.
+	 * {@inheritdoc}
 	 */
 	final public function getMessage (): string {}
 
 	/**
-	 * Gets the Exception code
-	 * @link http://www.php.net/manual/en/exception.getcode.php
-	 * @return int Returns the exception code as int in
-	 * Exception but possibly as other type in
-	 * Exception descendants (for example as
-	 * string in PDOException).
+	 * {@inheritdoc}
 	 */
-	final public function getCode (): int {}
+	final public function getCode () {}
 
 	/**
-	 * Gets the file in which the exception was created
-	 * @link http://www.php.net/manual/en/exception.getfile.php
-	 * @return string Returns the filename in which the exception was created.
+	 * {@inheritdoc}
 	 */
 	final public function getFile (): string {}
 
 	/**
-	 * Gets the line in which the exception was created
-	 * @link http://www.php.net/manual/en/exception.getline.php
-	 * @return int Returns the line number where the exception was created.
+	 * {@inheritdoc}
 	 */
 	final public function getLine (): int {}
 
 	/**
-	 * Gets the stack trace
-	 * @link http://www.php.net/manual/en/exception.gettrace.php
-	 * @return array Returns the Exception stack trace as an array.
+	 * {@inheritdoc}
 	 */
 	final public function getTrace (): array {}
 
 	/**
-	 * Returns previous Throwable
-	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
-	 * or null otherwise.
+	 * {@inheritdoc}
 	 */
 	final public function getPrevious (): ?Throwable {}
 
 	/**
-	 * Gets the stack trace as a string
-	 * @link http://www.php.net/manual/en/exception.gettraceasstring.php
-	 * @return string Returns the Exception stack trace as a string.
+	 * {@inheritdoc}
 	 */
 	final public function getTraceAsString (): string {}
 
 	/**
-	 * String representation of the exception
-	 * @link http://www.php.net/manual/en/exception.tostring.php
-	 * @return string Returns the string representation of the exception.
+	 * {@inheritdoc}
 	 */
 	public function __toString (): string {}
 
 }
 
-/**
- * Exception thrown when performing an invalid operation on an empty
- * container, such as removing an element.
- * @link http://www.php.net/manual/en/class.underflowexception.php
- */
 class UnderflowException extends RuntimeException implements Stringable, Throwable {
 
 	/**
-	 * Construct the exception
-	 * @link http://www.php.net/manual/en/exception.construct.php
-	 * @param string $message [optional] 
-	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
-	 * @return string 
+	 * {@inheritdoc}
+	 * @param string $message [optional]
+	 * @param int $code [optional]
+	 * @param Throwable|null $previous [optional]
 	 */
-	public function __construct (string $message = '""', int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '', int $code = 0, ?Throwable $previous = NULL) {}
 
 	/**
 	 * {@inheritdoc}
@@ -946,85 +645,56 @@ class UnderflowException extends RuntimeException implements Stringable, Throwab
 	public function __wakeup () {}
 
 	/**
-	 * Gets the Exception message
-	 * @link http://www.php.net/manual/en/exception.getmessage.php
-	 * @return string Returns the Exception message as a string.
+	 * {@inheritdoc}
 	 */
 	final public function getMessage (): string {}
 
 	/**
-	 * Gets the Exception code
-	 * @link http://www.php.net/manual/en/exception.getcode.php
-	 * @return int Returns the exception code as int in
-	 * Exception but possibly as other type in
-	 * Exception descendants (for example as
-	 * string in PDOException).
+	 * {@inheritdoc}
 	 */
-	final public function getCode (): int {}
+	final public function getCode () {}
 
 	/**
-	 * Gets the file in which the exception was created
-	 * @link http://www.php.net/manual/en/exception.getfile.php
-	 * @return string Returns the filename in which the exception was created.
+	 * {@inheritdoc}
 	 */
 	final public function getFile (): string {}
 
 	/**
-	 * Gets the line in which the exception was created
-	 * @link http://www.php.net/manual/en/exception.getline.php
-	 * @return int Returns the line number where the exception was created.
+	 * {@inheritdoc}
 	 */
 	final public function getLine (): int {}
 
 	/**
-	 * Gets the stack trace
-	 * @link http://www.php.net/manual/en/exception.gettrace.php
-	 * @return array Returns the Exception stack trace as an array.
+	 * {@inheritdoc}
 	 */
 	final public function getTrace (): array {}
 
 	/**
-	 * Returns previous Throwable
-	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
-	 * or null otherwise.
+	 * {@inheritdoc}
 	 */
 	final public function getPrevious (): ?Throwable {}
 
 	/**
-	 * Gets the stack trace as a string
-	 * @link http://www.php.net/manual/en/exception.gettraceasstring.php
-	 * @return string Returns the Exception stack trace as a string.
+	 * {@inheritdoc}
 	 */
 	final public function getTraceAsString (): string {}
 
 	/**
-	 * String representation of the exception
-	 * @link http://www.php.net/manual/en/exception.tostring.php
-	 * @return string Returns the string representation of the exception.
+	 * {@inheritdoc}
 	 */
 	public function __toString (): string {}
 
 }
 
-/**
- * Exception thrown if a value does not match with a set of values. Typically
- * this happens when a function calls another function and expects the return
- * value to be of a certain type or value not including arithmetic or buffer
- * related errors.
- * @link http://www.php.net/manual/en/class.unexpectedvalueexception.php
- */
 class UnexpectedValueException extends RuntimeException implements Stringable, Throwable {
 
 	/**
-	 * Construct the exception
-	 * @link http://www.php.net/manual/en/exception.construct.php
-	 * @param string $message [optional] 
-	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
-	 * @return string 
+	 * {@inheritdoc}
+	 * @param string $message [optional]
+	 * @param int $code [optional]
+	 * @param Throwable|null $previous [optional]
 	 */
-	public function __construct (string $message = '""', int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '', int $code = 0, ?Throwable $previous = NULL) {}
 
 	/**
 	 * {@inheritdoc}
@@ -1032,182 +702,120 @@ class UnexpectedValueException extends RuntimeException implements Stringable, T
 	public function __wakeup () {}
 
 	/**
-	 * Gets the Exception message
-	 * @link http://www.php.net/manual/en/exception.getmessage.php
-	 * @return string Returns the Exception message as a string.
+	 * {@inheritdoc}
 	 */
 	final public function getMessage (): string {}
 
 	/**
-	 * Gets the Exception code
-	 * @link http://www.php.net/manual/en/exception.getcode.php
-	 * @return int Returns the exception code as int in
-	 * Exception but possibly as other type in
-	 * Exception descendants (for example as
-	 * string in PDOException).
+	 * {@inheritdoc}
 	 */
-	final public function getCode (): int {}
+	final public function getCode () {}
 
 	/**
-	 * Gets the file in which the exception was created
-	 * @link http://www.php.net/manual/en/exception.getfile.php
-	 * @return string Returns the filename in which the exception was created.
+	 * {@inheritdoc}
 	 */
 	final public function getFile (): string {}
 
 	/**
-	 * Gets the line in which the exception was created
-	 * @link http://www.php.net/manual/en/exception.getline.php
-	 * @return int Returns the line number where the exception was created.
+	 * {@inheritdoc}
 	 */
 	final public function getLine (): int {}
 
 	/**
-	 * Gets the stack trace
-	 * @link http://www.php.net/manual/en/exception.gettrace.php
-	 * @return array Returns the Exception stack trace as an array.
+	 * {@inheritdoc}
 	 */
 	final public function getTrace (): array {}
 
 	/**
-	 * Returns previous Throwable
-	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
-	 * or null otherwise.
+	 * {@inheritdoc}
 	 */
 	final public function getPrevious (): ?Throwable {}
 
 	/**
-	 * Gets the stack trace as a string
-	 * @link http://www.php.net/manual/en/exception.gettraceasstring.php
-	 * @return string Returns the Exception stack trace as a string.
+	 * {@inheritdoc}
 	 */
 	final public function getTraceAsString (): string {}
 
 	/**
-	 * String representation of the exception
-	 * @link http://www.php.net/manual/en/exception.tostring.php
-	 * @return string Returns the string representation of the exception.
+	 * {@inheritdoc}
 	 */
 	public function __toString (): string {}
 
 }
 
-/**
- * Classes implementing RecursiveIterator can be used to iterate
- * over iterators recursively.
- * @link http://www.php.net/manual/en/class.recursiveiterator.php
- */
 interface RecursiveIterator extends Iterator, Traversable {
 
 	/**
-	 * Returns if an iterator can be created for the current entry
-	 * @link http://www.php.net/manual/en/recursiveiterator.haschildren.php
-	 * @return bool Returns true if the current entry can be iterated over, otherwise returns false.
+	 * {@inheritdoc}
 	 */
-	abstract public function hasChildren (): bool;
+	abstract public function hasChildren ();
 
 	/**
-	 * Returns an iterator for the current entry
-	 * @link http://www.php.net/manual/en/recursiveiterator.getchildren.php
-	 * @return RecursiveIterator|null Returns an iterator for the current entry if it exists, or null otherwise.
+	 * {@inheritdoc}
 	 */
-	abstract public function getChildren (): ?RecursiveIterator;
+	abstract public function getChildren ();
 
 	/**
-	 * Return the current element
-	 * @link http://www.php.net/manual/en/iterator.current.php
-	 * @return mixed Can return any type.
+	 * {@inheritdoc}
 	 */
-	abstract public function current (): mixed;
+	abstract public function current ();
 
 	/**
-	 * Move forward to next element
-	 * @link http://www.php.net/manual/en/iterator.next.php
-	 * @return void Any returned value is ignored.
+	 * {@inheritdoc}
 	 */
-	abstract public function next (): void;
+	abstract public function next ();
 
 	/**
-	 * Return the key of the current element
-	 * @link http://www.php.net/manual/en/iterator.key.php
-	 * @return mixed Returns scalar on success, or null on failure.
+	 * {@inheritdoc}
 	 */
-	abstract public function key (): mixed;
+	abstract public function key ();
 
 	/**
-	 * Checks if current position is valid
-	 * @link http://www.php.net/manual/en/iterator.valid.php
-	 * @return bool The return value will be casted to bool and then evaluated.
-	 * Returns true on success or false on failure.
+	 * {@inheritdoc}
 	 */
-	abstract public function valid (): bool;
+	abstract public function valid ();
 
 	/**
-	 * Rewind the Iterator to the first element
-	 * @link http://www.php.net/manual/en/iterator.rewind.php
-	 * @return void Any returned value is ignored.
+	 * {@inheritdoc}
 	 */
-	abstract public function rewind (): void;
+	abstract public function rewind ();
 
 }
 
-/**
- * Classes implementing OuterIterator can be used to iterate
- * over iterators.
- * @link http://www.php.net/manual/en/class.outeriterator.php
- */
 interface OuterIterator extends Iterator, Traversable {
 
 	/**
-	 * Returns the inner iterator for the current entry
-	 * @link http://www.php.net/manual/en/outeriterator.getinneriterator.php
-	 * @return Iterator|null Returns the inner iterator for the current entry if it exists, or null otherwise.
+	 * {@inheritdoc}
 	 */
-	abstract public function getInnerIterator (): ?Iterator;
+	abstract public function getInnerIterator ();
 
 	/**
-	 * Return the current element
-	 * @link http://www.php.net/manual/en/iterator.current.php
-	 * @return mixed Can return any type.
+	 * {@inheritdoc}
 	 */
-	abstract public function current (): mixed;
+	abstract public function current ();
 
 	/**
-	 * Move forward to next element
-	 * @link http://www.php.net/manual/en/iterator.next.php
-	 * @return void Any returned value is ignored.
+	 * {@inheritdoc}
 	 */
-	abstract public function next (): void;
+	abstract public function next ();
 
 	/**
-	 * Return the key of the current element
-	 * @link http://www.php.net/manual/en/iterator.key.php
-	 * @return mixed Returns scalar on success, or null on failure.
+	 * {@inheritdoc}
 	 */
-	abstract public function key (): mixed;
+	abstract public function key ();
 
 	/**
-	 * Checks if current position is valid
-	 * @link http://www.php.net/manual/en/iterator.valid.php
-	 * @return bool The return value will be casted to bool and then evaluated.
-	 * Returns true on success or false on failure.
+	 * {@inheritdoc}
 	 */
-	abstract public function valid (): bool;
+	abstract public function valid ();
 
 	/**
-	 * Rewind the Iterator to the first element
-	 * @link http://www.php.net/manual/en/iterator.rewind.php
-	 * @return void Any returned value is ignored.
+	 * {@inheritdoc}
 	 */
-	abstract public function rewind (): void;
+	abstract public function rewind ();
 
 }
 
-/**
- * Can be used to iterate through recursive iterators.
- * @link http://www.php.net/manual/en/class.recursiveiteratoriterator.php
- */
 class RecursiveIteratorIterator implements OuterIterator, Traversable, Iterator {
 	const LEAVES_ONLY = 0;
 	const SELF_FIRST = 1;
@@ -1216,871 +824,592 @@ class RecursiveIteratorIterator implements OuterIterator, Traversable, Iterator 
 
 
 	/**
-	 * Construct a RecursiveIteratorIterator
-	 * @link http://www.php.net/manual/en/recursiveiteratoriterator.construct.php
-	 * @param Traversable $iterator 
-	 * @param int $mode [optional] 
-	 * @param int $flags [optional] 
-	 * @return Traversable 
+	 * {@inheritdoc}
+	 * @param Traversable $iterator
+	 * @param int $mode [optional]
+	 * @param int $flags [optional]
 	 */
-	public function __construct (Traversable $iterator, int $mode = \RecursiveIteratorIterator::LEAVES_ONLY, int $flags = null): Traversable {}
+	public function __construct (Traversable $iterator, int $mode = 0, int $flags = 0) {}
 
 	/**
-	 * Rewind the iterator to the first element of the top level inner iterator
-	 * @link http://www.php.net/manual/en/recursiveiteratoriterator.rewind.php
-	 * @return void No value is returned.
+	 * {@inheritdoc}
 	 */
-	public function rewind (): void {}
+	public function rewind () {}
 
 	/**
-	 * Check whether the current position is valid
-	 * @link http://www.php.net/manual/en/recursiveiteratoriterator.valid.php
-	 * @return bool true if the current position is valid, otherwise false
+	 * {@inheritdoc}
 	 */
-	public function valid (): bool {}
+	public function valid () {}
 
 	/**
-	 * Access the current key
-	 * @link http://www.php.net/manual/en/recursiveiteratoriterator.key.php
-	 * @return mixed The current key.
+	 * {@inheritdoc}
 	 */
-	public function key (): mixed {}
+	public function key () {}
 
 	/**
-	 * Access the current element value
-	 * @link http://www.php.net/manual/en/recursiveiteratoriterator.current.php
-	 * @return mixed The current elements value.
+	 * {@inheritdoc}
 	 */
-	public function current (): mixed {}
+	public function current () {}
 
 	/**
-	 * Move forward to the next element
-	 * @link http://www.php.net/manual/en/recursiveiteratoriterator.next.php
-	 * @return void No value is returned.
+	 * {@inheritdoc}
 	 */
-	public function next (): void {}
+	public function next () {}
 
 	/**
-	 * Get the current depth of the recursive iteration
-	 * @link http://www.php.net/manual/en/recursiveiteratoriterator.getdepth.php
-	 * @return int The current depth of the recursive iteration.
+	 * {@inheritdoc}
 	 */
-	public function getDepth (): int {}
+	public function getDepth () {}
 
 	/**
-	 * The current active sub iterator
-	 * @link http://www.php.net/manual/en/recursiveiteratoriterator.getsubiterator.php
-	 * @param int|null $level [optional] 
-	 * @return RecursiveIterator|null The current active sub iterator on success; null on failure.
+	 * {@inheritdoc}
+	 * @param int|null $level [optional]
 	 */
-	public function getSubIterator (?int $level = null): ?RecursiveIterator {}
+	public function getSubIterator (?int $level = NULL) {}
 
 	/**
-	 * Get inner iterator
-	 * @link http://www.php.net/manual/en/recursiveiteratoriterator.getinneriterator.php
-	 * @return RecursiveIterator The current active sub iterator.
+	 * {@inheritdoc}
 	 */
-	public function getInnerIterator (): RecursiveIterator {}
+	public function getInnerIterator () {}
 
 	/**
-	 * Begin Iteration
-	 * @link http://www.php.net/manual/en/recursiveiteratoriterator.beginiteration.php
-	 * @return void No value is returned.
+	 * {@inheritdoc}
 	 */
-	public function beginIteration (): void {}
+	public function beginIteration () {}
 
 	/**
-	 * End Iteration
-	 * @link http://www.php.net/manual/en/recursiveiteratoriterator.enditeration.php
-	 * @return void No value is returned.
+	 * {@inheritdoc}
 	 */
-	public function endIteration (): void {}
+	public function endIteration () {}
 
 	/**
-	 * Has children
-	 * @link http://www.php.net/manual/en/recursiveiteratoriterator.callhaschildren.php
-	 * @return bool Returns whether the element has children.
+	 * {@inheritdoc}
 	 */
-	public function callHasChildren (): bool {}
+	public function callHasChildren () {}
 
 	/**
-	 * Get children
-	 * @link http://www.php.net/manual/en/recursiveiteratoriterator.callgetchildren.php
-	 * @return RecursiveIterator|null A RecursiveIterator on success, or null on failure.
+	 * {@inheritdoc}
 	 */
-	public function callGetChildren (): ?RecursiveIterator {}
+	public function callGetChildren () {}
 
 	/**
-	 * Begin children
-	 * @link http://www.php.net/manual/en/recursiveiteratoriterator.beginchildren.php
-	 * @return void No value is returned.
+	 * {@inheritdoc}
 	 */
-	public function beginChildren (): void {}
+	public function beginChildren () {}
 
 	/**
-	 * End children
-	 * @link http://www.php.net/manual/en/recursiveiteratoriterator.endchildren.php
-	 * @return void No value is returned.
+	 * {@inheritdoc}
 	 */
-	public function endChildren (): void {}
+	public function endChildren () {}
 
 	/**
-	 * Next element
-	 * @link http://www.php.net/manual/en/recursiveiteratoriterator.nextelement.php
-	 * @return void No value is returned.
+	 * {@inheritdoc}
 	 */
-	public function nextElement (): void {}
+	public function nextElement () {}
 
 	/**
-	 * Set max depth
-	 * @link http://www.php.net/manual/en/recursiveiteratoriterator.setmaxdepth.php
-	 * @param int $maxDepth [optional] 
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param int $maxDepth [optional]
 	 */
-	public function setMaxDepth (int $maxDepth = -1): void {}
+	public function setMaxDepth (int $maxDepth = -1) {}
 
 	/**
-	 * Get max depth
-	 * @link http://www.php.net/manual/en/recursiveiteratoriterator.getmaxdepth.php
-	 * @return int|false The maximum accepted depth, or false if any depth is allowed.
+	 * {@inheritdoc}
 	 */
-	public function getMaxDepth (): int|false {}
+	public function getMaxDepth () {}
 
 }
 
-/**
- * This iterator wrapper allows the conversion of anything that is
- * Traversable into an Iterator.
- * It is important to understand that most classes that do not implement
- * Iterators have reasons as most likely they do not allow the full
- * Iterator feature set. If so, techniques should be provided to prevent
- * misuse, otherwise expect exceptions or fatal errors.
- * @link http://www.php.net/manual/en/class.iteratoriterator.php
- */
 class IteratorIterator implements OuterIterator, Traversable, Iterator {
 
 	/**
-	 * Create an iterator from anything that is traversable
-	 * @link http://www.php.net/manual/en/iteratoriterator.construct.php
-	 * @param Traversable $iterator 
-	 * @param string|null $class [optional] 
-	 * @return Traversable 
+	 * {@inheritdoc}
+	 * @param Traversable $iterator
+	 * @param string|null $class [optional]
 	 */
-	public function __construct (Traversable $iterator, ?string $class = null): Traversable {}
+	public function __construct (Traversable $iterator, ?string $class = NULL) {}
 
 	/**
-	 * Get the inner iterator
-	 * @link http://www.php.net/manual/en/iteratoriterator.getinneriterator.php
-	 * @return Iterator|null The inner iterator as passed to IteratorIterator::__construct, or null when there is no inner iterator.
+	 * {@inheritdoc}
 	 */
-	public function getInnerIterator (): ?Iterator {}
+	public function getInnerIterator () {}
 
 	/**
-	 * Rewind to the first element
-	 * @link http://www.php.net/manual/en/iteratoriterator.rewind.php
-	 * @return void No value is returned.
+	 * {@inheritdoc}
 	 */
-	public function rewind (): void {}
+	public function rewind () {}
 
 	/**
-	 * Checks if the iterator is valid
-	 * @link http://www.php.net/manual/en/iteratoriterator.valid.php
-	 * @return bool Returns true if the iterator is valid, otherwise false
+	 * {@inheritdoc}
 	 */
-	public function valid (): bool {}
+	public function valid () {}
 
 	/**
-	 * Get the key of the current element
-	 * @link http://www.php.net/manual/en/iteratoriterator.key.php
-	 * @return mixed The key of the current element.
+	 * {@inheritdoc}
 	 */
-	public function key (): mixed {}
+	public function key () {}
 
 	/**
-	 * Get the current value
-	 * @link http://www.php.net/manual/en/iteratoriterator.current.php
-	 * @return mixed The value of the current element.
+	 * {@inheritdoc}
 	 */
-	public function current (): mixed {}
+	public function current () {}
 
 	/**
-	 * Forward to the next element
-	 * @link http://www.php.net/manual/en/iteratoriterator.next.php
-	 * @return void No value is returned.
+	 * {@inheritdoc}
 	 */
-	public function next (): void {}
+	public function next () {}
 
 }
 
-/**
- * This abstract iterator filters out unwanted values. This class should be extended to
- * implement custom iterator filters. The FilterIterator::accept
- * must be implemented in the subclass.
- * @link http://www.php.net/manual/en/class.filteriterator.php
- */
 abstract class FilterIterator extends IteratorIterator implements Iterator, Traversable, OuterIterator {
 
 	/**
-	 * Check whether the current element of the iterator is acceptable
-	 * @link http://www.php.net/manual/en/filteriterator.accept.php
-	 * @return bool true if the current element is acceptable, otherwise false.
+	 * {@inheritdoc}
 	 */
-	abstract public function accept (): bool;
+	abstract public function accept ();
 
 	/**
-	 * Construct a filterIterator
-	 * @link http://www.php.net/manual/en/filteriterator.construct.php
-	 * @param Iterator $iterator 
-	 * @return Iterator 
+	 * {@inheritdoc}
+	 * @param Iterator $iterator
 	 */
-	public function __construct (Iterator $iterator): Iterator {}
+	public function __construct (Iterator $iterator) {}
 
 	/**
-	 * Rewind the iterator
-	 * @link http://www.php.net/manual/en/filteriterator.rewind.php
-	 * @return void No value is returned.
+	 * {@inheritdoc}
 	 */
-	public function rewind (): void {}
+	public function rewind () {}
 
 	/**
-	 * Move the iterator forward
-	 * @link http://www.php.net/manual/en/filteriterator.next.php
-	 * @return void No value is returned.
+	 * {@inheritdoc}
 	 */
-	public function next (): void {}
+	public function next () {}
 
 	/**
-	 * Get the inner iterator
-	 * @link http://www.php.net/manual/en/iteratoriterator.getinneriterator.php
-	 * @return Iterator|null The inner iterator as passed to IteratorIterator::__construct, or null when there is no inner iterator.
+	 * {@inheritdoc}
 	 */
-	public function getInnerIterator (): ?Iterator {}
+	public function getInnerIterator () {}
 
 	/**
-	 * Checks if the iterator is valid
-	 * @link http://www.php.net/manual/en/iteratoriterator.valid.php
-	 * @return bool Returns true if the iterator is valid, otherwise false
+	 * {@inheritdoc}
 	 */
-	public function valid (): bool {}
+	public function valid () {}
 
 	/**
-	 * Get the key of the current element
-	 * @link http://www.php.net/manual/en/iteratoriterator.key.php
-	 * @return mixed The key of the current element.
+	 * {@inheritdoc}
 	 */
-	public function key (): mixed {}
+	public function key () {}
 
 	/**
-	 * Get the current value
-	 * @link http://www.php.net/manual/en/iteratoriterator.current.php
-	 * @return mixed The value of the current element.
+	 * {@inheritdoc}
 	 */
-	public function current (): mixed {}
+	public function current () {}
 
 }
 
-/**
- * This abstract iterator filters out unwanted values for a RecursiveIterator.
- * This class should be extended to implement custom filters. 
- * The RecursiveFilterIterator::accept must be implemented in the subclass.
- * @link http://www.php.net/manual/en/class.recursivefilteriterator.php
- */
 abstract class RecursiveFilterIterator extends FilterIterator implements OuterIterator, Traversable, Iterator, RecursiveIterator {
 
 	/**
-	 * Create a RecursiveFilterIterator from a RecursiveIterator
-	 * @link http://www.php.net/manual/en/recursivefilteriterator.construct.php
-	 * @param RecursiveIterator $iterator 
-	 * @return RecursiveIterator 
+	 * {@inheritdoc}
+	 * @param RecursiveIterator $iterator
 	 */
-	public function __construct (RecursiveIterator $iterator): RecursiveIterator {}
+	public function __construct (RecursiveIterator $iterator) {}
 
 	/**
-	 * Check whether the inner iterator's current element has children
-	 * @link http://www.php.net/manual/en/recursivefilteriterator.haschildren.php
-	 * @return bool true if the inner iterator has children, otherwise false
+	 * {@inheritdoc}
 	 */
-	public function hasChildren (): bool {}
+	public function hasChildren () {}
 
 	/**
-	 * Return the inner iterator's children contained in a RecursiveFilterIterator
-	 * @link http://www.php.net/manual/en/recursivefilteriterator.getchildren.php
-	 * @return RecursiveFilterIterator|null Returns a RecursiveFilterIterator containing the inner iterator's children.
+	 * {@inheritdoc}
 	 */
-	public function getChildren (): ?RecursiveFilterIterator {}
+	public function getChildren () {}
 
 	/**
-	 * Check whether the current element of the iterator is acceptable
-	 * @link http://www.php.net/manual/en/filteriterator.accept.php
-	 * @return bool true if the current element is acceptable, otherwise false.
+	 * {@inheritdoc}
 	 */
-	abstract public function accept (): bool;
+	abstract public function accept ();
 
 	/**
-	 * Rewind the iterator
-	 * @link http://www.php.net/manual/en/filteriterator.rewind.php
-	 * @return void No value is returned.
+	 * {@inheritdoc}
 	 */
-	public function rewind (): void {}
+	public function rewind () {}
 
 	/**
-	 * Move the iterator forward
-	 * @link http://www.php.net/manual/en/filteriterator.next.php
-	 * @return void No value is returned.
+	 * {@inheritdoc}
 	 */
-	public function next (): void {}
+	public function next () {}
 
 	/**
-	 * Get the inner iterator
-	 * @link http://www.php.net/manual/en/iteratoriterator.getinneriterator.php
-	 * @return Iterator|null The inner iterator as passed to IteratorIterator::__construct, or null when there is no inner iterator.
+	 * {@inheritdoc}
 	 */
-	public function getInnerIterator (): ?Iterator {}
+	public function getInnerIterator () {}
 
 	/**
-	 * Checks if the iterator is valid
-	 * @link http://www.php.net/manual/en/iteratoriterator.valid.php
-	 * @return bool Returns true if the iterator is valid, otherwise false
+	 * {@inheritdoc}
 	 */
-	public function valid (): bool {}
+	public function valid () {}
 
 	/**
-	 * Get the key of the current element
-	 * @link http://www.php.net/manual/en/iteratoriterator.key.php
-	 * @return mixed The key of the current element.
+	 * {@inheritdoc}
 	 */
-	public function key (): mixed {}
+	public function key () {}
 
 	/**
-	 * Get the current value
-	 * @link http://www.php.net/manual/en/iteratoriterator.current.php
-	 * @return mixed The value of the current element.
+	 * {@inheritdoc}
 	 */
-	public function current (): mixed {}
+	public function current () {}
 
 }
 
-/**
- * @link http://www.php.net/manual/en/class.callbackfilteriterator.php
- */
 class CallbackFilterIterator extends FilterIterator implements OuterIterator, Traversable, Iterator {
 
 	/**
-	 * Create a filtered iterator from another iterator
-	 * @link http://www.php.net/manual/en/callbackfilteriterator.construct.php
-	 * @param Iterator $iterator The iterator to be filtered.
-	 * @param callable $callback The callback, which should return true to accept the current item
-	 * or false otherwise.
-	 * See Examples.
-	 * <p>May be any valid callable value.</p>
-	 * @return Iterator 
+	 * {@inheritdoc}
+	 * @param Iterator $iterator
+	 * @param callable $callback
 	 */
-	public function __construct (Iterator $iterator, callable $callback): Iterator {}
+	public function __construct (Iterator $iterator, callable $callback) {}
 
 	/**
-	 * Calls the callback with the current value, the current key and the inner iterator as arguments
-	 * @link http://www.php.net/manual/en/callbackfilteriterator.accept.php
-	 * @return bool Returns true to accept the current item, or false otherwise.
+	 * {@inheritdoc}
 	 */
-	public function accept (): bool {}
+	public function accept () {}
 
 	/**
-	 * Rewind the iterator
-	 * @link http://www.php.net/manual/en/filteriterator.rewind.php
-	 * @return void No value is returned.
+	 * {@inheritdoc}
 	 */
-	public function rewind (): void {}
+	public function rewind () {}
 
 	/**
-	 * Move the iterator forward
-	 * @link http://www.php.net/manual/en/filteriterator.next.php
-	 * @return void No value is returned.
+	 * {@inheritdoc}
 	 */
-	public function next (): void {}
+	public function next () {}
 
 	/**
-	 * Get the inner iterator
-	 * @link http://www.php.net/manual/en/iteratoriterator.getinneriterator.php
-	 * @return Iterator|null The inner iterator as passed to IteratorIterator::__construct, or null when there is no inner iterator.
+	 * {@inheritdoc}
 	 */
-	public function getInnerIterator (): ?Iterator {}
+	public function getInnerIterator () {}
 
 	/**
-	 * Checks if the iterator is valid
-	 * @link http://www.php.net/manual/en/iteratoriterator.valid.php
-	 * @return bool Returns true if the iterator is valid, otherwise false
+	 * {@inheritdoc}
 	 */
-	public function valid (): bool {}
+	public function valid () {}
 
 	/**
-	 * Get the key of the current element
-	 * @link http://www.php.net/manual/en/iteratoriterator.key.php
-	 * @return mixed The key of the current element.
+	 * {@inheritdoc}
 	 */
-	public function key (): mixed {}
+	public function key () {}
 
 	/**
-	 * Get the current value
-	 * @link http://www.php.net/manual/en/iteratoriterator.current.php
-	 * @return mixed The value of the current element.
+	 * {@inheritdoc}
 	 */
-	public function current (): mixed {}
+	public function current () {}
 
 }
 
-/**
- * @link http://www.php.net/manual/en/class.recursivecallbackfilteriterator.php
- */
 class RecursiveCallbackFilterIterator extends CallbackFilterIterator implements Iterator, Traversable, OuterIterator, RecursiveIterator {
 
 	/**
-	 * Create a RecursiveCallbackFilterIterator from a RecursiveIterator
-	 * @link http://www.php.net/manual/en/recursivecallbackfilteriterator.construct.php
-	 * @param RecursiveIterator $iterator The recursive iterator to be filtered.
-	 * @param callable $callback The callback, which should return true to accept the current item
-	 * or false otherwise.
-	 * See Examples.
-	 * <p>May be any valid callable value.</p>
-	 * @return RecursiveIterator 
+	 * {@inheritdoc}
+	 * @param RecursiveIterator $iterator
+	 * @param callable $callback
 	 */
-	public function __construct (RecursiveIterator $iterator, callable $callback): RecursiveIterator {}
+	public function __construct (RecursiveIterator $iterator, callable $callback) {}
 
 	/**
-	 * Check whether the inner iterator's current element has children
-	 * @link http://www.php.net/manual/en/recursivecallbackfilteriterator.haschildren.php
-	 * @return bool Returns true if the current element has children, false otherwise.
+	 * {@inheritdoc}
 	 */
-	public function hasChildren (): bool {}
+	public function hasChildren () {}
 
 	/**
-	 * Return the inner iterator's children contained in a RecursiveCallbackFilterIterator
-	 * @link http://www.php.net/manual/en/recursivecallbackfilteriterator.getchildren.php
-	 * @return RecursiveCallbackFilterIterator Returns a RecursiveCallbackFilterIterator containing
-	 * the children.
+	 * {@inheritdoc}
 	 */
-	public function getChildren (): RecursiveCallbackFilterIterator {}
+	public function getChildren () {}
 
 	/**
-	 * Calls the callback with the current value, the current key and the inner iterator as arguments
-	 * @link http://www.php.net/manual/en/callbackfilteriterator.accept.php
-	 * @return bool Returns true to accept the current item, or false otherwise.
+	 * {@inheritdoc}
 	 */
-	public function accept (): bool {}
+	public function accept () {}
 
 	/**
-	 * Rewind the iterator
-	 * @link http://www.php.net/manual/en/filteriterator.rewind.php
-	 * @return void No value is returned.
+	 * {@inheritdoc}
 	 */
-	public function rewind (): void {}
+	public function rewind () {}
 
 	/**
-	 * Move the iterator forward
-	 * @link http://www.php.net/manual/en/filteriterator.next.php
-	 * @return void No value is returned.
+	 * {@inheritdoc}
 	 */
-	public function next (): void {}
+	public function next () {}
 
 	/**
-	 * Get the inner iterator
-	 * @link http://www.php.net/manual/en/iteratoriterator.getinneriterator.php
-	 * @return Iterator|null The inner iterator as passed to IteratorIterator::__construct, or null when there is no inner iterator.
+	 * {@inheritdoc}
 	 */
-	public function getInnerIterator (): ?Iterator {}
+	public function getInnerIterator () {}
 
 	/**
-	 * Checks if the iterator is valid
-	 * @link http://www.php.net/manual/en/iteratoriterator.valid.php
-	 * @return bool Returns true if the iterator is valid, otherwise false
+	 * {@inheritdoc}
 	 */
-	public function valid (): bool {}
+	public function valid () {}
 
 	/**
-	 * Get the key of the current element
-	 * @link http://www.php.net/manual/en/iteratoriterator.key.php
-	 * @return mixed The key of the current element.
+	 * {@inheritdoc}
 	 */
-	public function key (): mixed {}
+	public function key () {}
 
 	/**
-	 * Get the current value
-	 * @link http://www.php.net/manual/en/iteratoriterator.current.php
-	 * @return mixed The value of the current element.
+	 * {@inheritdoc}
 	 */
-	public function current (): mixed {}
+	public function current () {}
 
 }
 
-/**
- * This extended FilterIterator allows a recursive
- * iteration using RecursiveIteratorIterator that only
- * shows those elements which have children.
- * @link http://www.php.net/manual/en/class.parentiterator.php
- */
 class ParentIterator extends RecursiveFilterIterator implements RecursiveIterator, Iterator, Traversable, OuterIterator {
 
 	/**
-	 * Constructs a ParentIterator
-	 * @link http://www.php.net/manual/en/parentiterator.construct.php
-	 * @param RecursiveIterator $iterator 
-	 * @return RecursiveIterator 
+	 * {@inheritdoc}
+	 * @param RecursiveIterator $iterator
 	 */
-	public function __construct (RecursiveIterator $iterator): RecursiveIterator {}
+	public function __construct (RecursiveIterator $iterator) {}
 
 	/**
-	 * Determines acceptability
-	 * @link http://www.php.net/manual/en/parentiterator.accept.php
-	 * @return bool true if the current element is acceptable, otherwise false.
+	 * {@inheritdoc}
 	 */
-	public function accept (): bool {}
+	public function accept () {}
 
 	/**
-	 * Check whether the inner iterator's current element has children
-	 * @link http://www.php.net/manual/en/recursivefilteriterator.haschildren.php
-	 * @return bool true if the inner iterator has children, otherwise false
+	 * {@inheritdoc}
 	 */
-	public function hasChildren (): bool {}
+	public function hasChildren () {}
 
 	/**
-	 * Return the inner iterator's children contained in a RecursiveFilterIterator
-	 * @link http://www.php.net/manual/en/recursivefilteriterator.getchildren.php
-	 * @return RecursiveFilterIterator|null Returns a RecursiveFilterIterator containing the inner iterator's children.
+	 * {@inheritdoc}
 	 */
-	public function getChildren (): ?RecursiveFilterIterator {}
+	public function getChildren () {}
 
 	/**
-	 * Rewind the iterator
-	 * @link http://www.php.net/manual/en/filteriterator.rewind.php
-	 * @return void No value is returned.
+	 * {@inheritdoc}
 	 */
-	public function rewind (): void {}
+	public function rewind () {}
 
 	/**
-	 * Move the iterator forward
-	 * @link http://www.php.net/manual/en/filteriterator.next.php
-	 * @return void No value is returned.
+	 * {@inheritdoc}
 	 */
-	public function next (): void {}
+	public function next () {}
 
 	/**
-	 * Get the inner iterator
-	 * @link http://www.php.net/manual/en/iteratoriterator.getinneriterator.php
-	 * @return Iterator|null The inner iterator as passed to IteratorIterator::__construct, or null when there is no inner iterator.
+	 * {@inheritdoc}
 	 */
-	public function getInnerIterator (): ?Iterator {}
+	public function getInnerIterator () {}
 
 	/**
-	 * Checks if the iterator is valid
-	 * @link http://www.php.net/manual/en/iteratoriterator.valid.php
-	 * @return bool Returns true if the iterator is valid, otherwise false
+	 * {@inheritdoc}
 	 */
-	public function valid (): bool {}
+	public function valid () {}
 
 	/**
-	 * Get the key of the current element
-	 * @link http://www.php.net/manual/en/iteratoriterator.key.php
-	 * @return mixed The key of the current element.
+	 * {@inheritdoc}
 	 */
-	public function key (): mixed {}
+	public function key () {}
 
 	/**
-	 * Get the current value
-	 * @link http://www.php.net/manual/en/iteratoriterator.current.php
-	 * @return mixed The value of the current element.
+	 * {@inheritdoc}
 	 */
-	public function current (): mixed {}
+	public function current () {}
 
 }
 
-/**
- * The Seekable iterator.
- * @link http://www.php.net/manual/en/class.seekableiterator.php
- */
 interface SeekableIterator extends Iterator, Traversable {
 
 	/**
-	 * Seeks to a position
-	 * @link http://www.php.net/manual/en/seekableiterator.seek.php
-	 * @param int $offset 
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param int $offset
 	 */
-	abstract public function seek (int $offset): void;
+	abstract public function seek (int $offset);
 
 	/**
-	 * Return the current element
-	 * @link http://www.php.net/manual/en/iterator.current.php
-	 * @return mixed Can return any type.
+	 * {@inheritdoc}
 	 */
-	abstract public function current (): mixed;
+	abstract public function current ();
 
 	/**
-	 * Move forward to next element
-	 * @link http://www.php.net/manual/en/iterator.next.php
-	 * @return void Any returned value is ignored.
+	 * {@inheritdoc}
 	 */
-	abstract public function next (): void;
+	abstract public function next ();
 
 	/**
-	 * Return the key of the current element
-	 * @link http://www.php.net/manual/en/iterator.key.php
-	 * @return mixed Returns scalar on success, or null on failure.
+	 * {@inheritdoc}
 	 */
-	abstract public function key (): mixed;
+	abstract public function key ();
 
 	/**
-	 * Checks if current position is valid
-	 * @link http://www.php.net/manual/en/iterator.valid.php
-	 * @return bool The return value will be casted to bool and then evaluated.
-	 * Returns true on success or false on failure.
+	 * {@inheritdoc}
 	 */
-	abstract public function valid (): bool;
+	abstract public function valid ();
 
 	/**
-	 * Rewind the Iterator to the first element
-	 * @link http://www.php.net/manual/en/iterator.rewind.php
-	 * @return void Any returned value is ignored.
+	 * {@inheritdoc}
 	 */
-	abstract public function rewind (): void;
+	abstract public function rewind ();
 
 }
 
-/**
- * The LimitIterator class allows iteration over 
- * a limited subset of items in an Iterator.
- * @link http://www.php.net/manual/en/class.limititerator.php
- */
 class LimitIterator extends IteratorIterator implements Iterator, Traversable, OuterIterator {
 
 	/**
-	 * Construct a LimitIterator
-	 * @link http://www.php.net/manual/en/limititerator.construct.php
-	 * @param Iterator $iterator 
-	 * @param int $offset [optional] 
-	 * @param int $limit [optional] 
-	 * @return Iterator 
+	 * {@inheritdoc}
+	 * @param Iterator $iterator
+	 * @param int $offset [optional]
+	 * @param int $limit [optional]
 	 */
-	public function __construct (Iterator $iterator, int $offset = null, int $limit = -1): Iterator {}
+	public function __construct (Iterator $iterator, int $offset = 0, int $limit = -1) {}
 
 	/**
-	 * Rewind the iterator to the specified starting offset
-	 * @link http://www.php.net/manual/en/limititerator.rewind.php
-	 * @return void No value is returned.
+	 * {@inheritdoc}
 	 */
-	public function rewind (): void {}
+	public function rewind () {}
 
 	/**
-	 * Check whether the current element is valid
-	 * @link http://www.php.net/manual/en/limititerator.valid.php
-	 * @return bool Returns true on success or false on failure.
+	 * {@inheritdoc}
 	 */
-	public function valid (): bool {}
+	public function valid () {}
 
 	/**
-	 * Move the iterator forward
-	 * @link http://www.php.net/manual/en/limititerator.next.php
-	 * @return void No value is returned.
+	 * {@inheritdoc}
 	 */
-	public function next (): void {}
+	public function next () {}
 
 	/**
-	 * Seek to the given position
-	 * @link http://www.php.net/manual/en/limititerator.seek.php
-	 * @param int $offset 
-	 * @return int Returns the offset position after seeking.
+	 * {@inheritdoc}
+	 * @param int $offset
 	 */
-	public function seek (int $offset): int {}
+	public function seek (int $offset) {}
 
 	/**
-	 * Return the current position
-	 * @link http://www.php.net/manual/en/limititerator.getposition.php
-	 * @return int The current position.
+	 * {@inheritdoc}
 	 */
-	public function getPosition (): int {}
+	public function getPosition () {}
 
 	/**
-	 * Get the inner iterator
-	 * @link http://www.php.net/manual/en/iteratoriterator.getinneriterator.php
-	 * @return Iterator|null The inner iterator as passed to IteratorIterator::__construct, or null when there is no inner iterator.
+	 * {@inheritdoc}
 	 */
-	public function getInnerIterator (): ?Iterator {}
+	public function getInnerIterator () {}
 
 	/**
-	 * Get the key of the current element
-	 * @link http://www.php.net/manual/en/iteratoriterator.key.php
-	 * @return mixed The key of the current element.
+	 * {@inheritdoc}
 	 */
-	public function key (): mixed {}
+	public function key () {}
 
 	/**
-	 * Get the current value
-	 * @link http://www.php.net/manual/en/iteratoriterator.current.php
-	 * @return mixed The value of the current element.
+	 * {@inheritdoc}
 	 */
-	public function current (): mixed {}
+	public function current () {}
 
 }
 
-/**
- * This object supports cached iteration over another iterator.
- * @link http://www.php.net/manual/en/class.cachingiterator.php
- */
 class CachingIterator extends IteratorIterator implements Stringable, Iterator, Traversable, OuterIterator, ArrayAccess, Countable {
-	/**
-	 * Convert every element to string.
 	const CALL_TOSTRING = 1;
-	/**
-	 * Don't throw exception in accessing children.
 	const CATCH_GET_CHILD = 16;
-	/**
-	 * Use key for conversion to
-	 * string.
 	const TOSTRING_USE_KEY = 2;
-	/**
-	 * Use current for
-	 * conversion to string.
 	const TOSTRING_USE_CURRENT = 4;
-	/**
-	 * Use inner
-	 * for conversion to string.
 	const TOSTRING_USE_INNER = 8;
-	/**
-	 * Cache all read data.
 	const FULL_CACHE = 256;
 
 
 	/**
-	 * Construct a new CachingIterator object for the iterator
-	 * @link http://www.php.net/manual/en/cachingiterator.construct.php
-	 * @param Iterator $iterator 
-	 * @param int $flags [optional] 
-	 * @return Iterator 
+	 * {@inheritdoc}
+	 * @param Iterator $iterator
+	 * @param int $flags [optional]
 	 */
-	public function __construct (Iterator $iterator, int $flags = \CachingIterator::CALL_TOSTRING): Iterator {}
+	public function __construct (Iterator $iterator, int $flags = 1) {}
 
 	/**
-	 * Rewind the iterator
-	 * @link http://www.php.net/manual/en/cachingiterator.rewind.php
-	 * @return void No value is returned.
+	 * {@inheritdoc}
 	 */
-	public function rewind (): void {}
+	public function rewind () {}
 
 	/**
-	 * Check whether the current element is valid
-	 * @link http://www.php.net/manual/en/cachingiterator.valid.php
-	 * @return bool Returns true on success or false on failure.
+	 * {@inheritdoc}
 	 */
-	public function valid (): bool {}
+	public function valid () {}
 
 	/**
-	 * Move the iterator forward
-	 * @link http://www.php.net/manual/en/cachingiterator.next.php
-	 * @return void No value is returned.
+	 * {@inheritdoc}
 	 */
-	public function next (): void {}
+	public function next () {}
 
 	/**
-	 * Check whether the inner iterator has a valid next element
-	 * @link http://www.php.net/manual/en/cachingiterator.hasnext.php
-	 * @return bool Returns true on success or false on failure.
+	 * {@inheritdoc}
 	 */
-	public function hasNext (): bool {}
+	public function hasNext () {}
 
 	/**
-	 * Return the string representation of the current element
-	 * @link http://www.php.net/manual/en/cachingiterator.tostring.php
-	 * @return string The string representation of the current element.
+	 * {@inheritdoc}
 	 */
 	public function __toString (): string {}
 
 	/**
-	 * Get flags used
-	 * @link http://www.php.net/manual/en/cachingiterator.getflags.php
-	 * @return int Description...
+	 * {@inheritdoc}
 	 */
-	public function getFlags (): int {}
+	public function getFlags () {}
 
 	/**
-	 * The setFlags purpose
-	 * @link http://www.php.net/manual/en/cachingiterator.setflags.php
-	 * @param int $flags 
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param int $flags
 	 */
-	public function setFlags (int $flags): void {}
+	public function setFlags (int $flags) {}
 
 	/**
-	 * The offsetGet purpose
-	 * @link http://www.php.net/manual/en/cachingiterator.offsetget.php
-	 * @param string $key 
-	 * @return mixed Description...
+	 * {@inheritdoc}
+	 * @param mixed $key
 	 */
-	public function offsetGet (string $key): mixed {}
+	public function offsetGet ($key = null) {}
 
 	/**
-	 * The offsetSet purpose
-	 * @link http://www.php.net/manual/en/cachingiterator.offsetset.php
-	 * @param string $key 
-	 * @param mixed $value 
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param mixed $key
+	 * @param mixed $value
 	 */
-	public function offsetSet (string $key, mixed $value): void {}
+	public function offsetSet ($key = null, mixed $value = null) {}
 
 	/**
-	 * The offsetUnset purpose
-	 * @link http://www.php.net/manual/en/cachingiterator.offsetunset.php
-	 * @param string $key 
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param mixed $key
 	 */
-	public function offsetUnset (string $key): void {}
+	public function offsetUnset ($key = null) {}
 
 	/**
-	 * The offsetExists purpose
-	 * @link http://www.php.net/manual/en/cachingiterator.offsetexists.php
-	 * @param string $key 
-	 * @return bool Returns true if an entry referenced by the offset exists, false otherwise.
+	 * {@inheritdoc}
+	 * @param mixed $key
 	 */
-	public function offsetExists (string $key): bool {}
+	public function offsetExists ($key = null) {}
 
 	/**
-	 * Retrieve the contents of the cache
-	 * @link http://www.php.net/manual/en/cachingiterator.getcache.php
-	 * @return array An array containing the cache items.
+	 * {@inheritdoc}
 	 */
-	public function getCache (): array {}
+	public function getCache () {}
 
 	/**
-	 * The number of elements in the iterator
-	 * @link http://www.php.net/manual/en/cachingiterator.count.php
-	 * @return int The count of the elements iterated over.
+	 * {@inheritdoc}
 	 */
-	public function count (): int {}
+	public function count () {}
 
 	/**
-	 * Get the inner iterator
-	 * @link http://www.php.net/manual/en/iteratoriterator.getinneriterator.php
-	 * @return Iterator|null The inner iterator as passed to IteratorIterator::__construct, or null when there is no inner iterator.
+	 * {@inheritdoc}
 	 */
-	public function getInnerIterator (): ?Iterator {}
+	public function getInnerIterator () {}
 
 	/**
-	 * Get the key of the current element
-	 * @link http://www.php.net/manual/en/iteratoriterator.key.php
-	 * @return mixed The key of the current element.
+	 * {@inheritdoc}
 	 */
-	public function key (): mixed {}
+	public function key () {}
 
 	/**
-	 * Get the current value
-	 * @link http://www.php.net/manual/en/iteratoriterator.current.php
-	 * @return mixed The value of the current element.
+	 * {@inheritdoc}
 	 */
-	public function current (): mixed {}
+	public function current () {}
 
 }
 
-/**
- * ...
- * @link http://www.php.net/manual/en/class.recursivecachingiterator.php
- */
 class RecursiveCachingIterator extends CachingIterator implements Countable, ArrayAccess, OuterIterator, Traversable, Iterator, Stringable, RecursiveIterator {
 	const CALL_TOSTRING = 1;
 	const CATCH_GET_CHILD = 16;
@@ -2091,498 +1420,342 @@ class RecursiveCachingIterator extends CachingIterator implements Countable, Arr
 
 
 	/**
-	 * Construct
-	 * @link http://www.php.net/manual/en/recursivecachingiterator.construct.php
-	 * @param Iterator $iterator 
-	 * @param int $flags [optional] 
-	 * @return Iterator 
+	 * {@inheritdoc}
+	 * @param Iterator $iterator
+	 * @param int $flags [optional]
 	 */
-	public function __construct (Iterator $iterator, int $flags = \RecursiveCachingIterator::CALL_TOSTRING): Iterator {}
+	public function __construct (Iterator $iterator, int $flags = 1) {}
 
 	/**
-	 * Check whether the current element of the inner iterator has children
-	 * @link http://www.php.net/manual/en/recursivecachingiterator.haschildren.php
-	 * @return bool true if the inner iterator has children, otherwise false
+	 * {@inheritdoc}
 	 */
-	public function hasChildren (): bool {}
+	public function hasChildren () {}
 
 	/**
-	 * Return the inner iterator's children as a RecursiveCachingIterator
-	 * @link http://www.php.net/manual/en/recursivecachingiterator.getchildren.php
-	 * @return RecursiveCachingIterator|null The inner iterator's children, as a RecursiveCachingIterator; or null if there is no children.
+	 * {@inheritdoc}
 	 */
-	public function getChildren (): ?RecursiveCachingIterator {}
+	public function getChildren () {}
 
 	/**
-	 * Rewind the iterator
-	 * @link http://www.php.net/manual/en/cachingiterator.rewind.php
-	 * @return void No value is returned.
+	 * {@inheritdoc}
 	 */
-	public function rewind (): void {}
+	public function rewind () {}
 
 	/**
-	 * Check whether the current element is valid
-	 * @link http://www.php.net/manual/en/cachingiterator.valid.php
-	 * @return bool Returns true on success or false on failure.
+	 * {@inheritdoc}
 	 */
-	public function valid (): bool {}
+	public function valid () {}
 
 	/**
-	 * Move the iterator forward
-	 * @link http://www.php.net/manual/en/cachingiterator.next.php
-	 * @return void No value is returned.
+	 * {@inheritdoc}
 	 */
-	public function next (): void {}
+	public function next () {}
 
 	/**
-	 * Check whether the inner iterator has a valid next element
-	 * @link http://www.php.net/manual/en/cachingiterator.hasnext.php
-	 * @return bool Returns true on success or false on failure.
+	 * {@inheritdoc}
 	 */
-	public function hasNext (): bool {}
+	public function hasNext () {}
 
 	/**
-	 * Return the string representation of the current element
-	 * @link http://www.php.net/manual/en/cachingiterator.tostring.php
-	 * @return string The string representation of the current element.
+	 * {@inheritdoc}
 	 */
 	public function __toString (): string {}
 
 	/**
-	 * Get flags used
-	 * @link http://www.php.net/manual/en/cachingiterator.getflags.php
-	 * @return int Description...
+	 * {@inheritdoc}
 	 */
-	public function getFlags (): int {}
+	public function getFlags () {}
 
 	/**
-	 * The setFlags purpose
-	 * @link http://www.php.net/manual/en/cachingiterator.setflags.php
-	 * @param int $flags 
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param int $flags
 	 */
-	public function setFlags (int $flags): void {}
+	public function setFlags (int $flags) {}
 
 	/**
-	 * The offsetGet purpose
-	 * @link http://www.php.net/manual/en/cachingiterator.offsetget.php
-	 * @param string $key 
-	 * @return mixed Description...
+	 * {@inheritdoc}
+	 * @param mixed $key
 	 */
-	public function offsetGet (string $key): mixed {}
+	public function offsetGet ($key = null) {}
 
 	/**
-	 * The offsetSet purpose
-	 * @link http://www.php.net/manual/en/cachingiterator.offsetset.php
-	 * @param string $key 
-	 * @param mixed $value 
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param mixed $key
+	 * @param mixed $value
 	 */
-	public function offsetSet (string $key, mixed $value): void {}
+	public function offsetSet ($key = null, mixed $value = null) {}
 
 	/**
-	 * The offsetUnset purpose
-	 * @link http://www.php.net/manual/en/cachingiterator.offsetunset.php
-	 * @param string $key 
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param mixed $key
 	 */
-	public function offsetUnset (string $key): void {}
+	public function offsetUnset ($key = null) {}
 
 	/**
-	 * The offsetExists purpose
-	 * @link http://www.php.net/manual/en/cachingiterator.offsetexists.php
-	 * @param string $key 
-	 * @return bool Returns true if an entry referenced by the offset exists, false otherwise.
+	 * {@inheritdoc}
+	 * @param mixed $key
 	 */
-	public function offsetExists (string $key): bool {}
+	public function offsetExists ($key = null) {}
 
 	/**
-	 * Retrieve the contents of the cache
-	 * @link http://www.php.net/manual/en/cachingiterator.getcache.php
-	 * @return array An array containing the cache items.
+	 * {@inheritdoc}
 	 */
-	public function getCache (): array {}
+	public function getCache () {}
 
 	/**
-	 * The number of elements in the iterator
-	 * @link http://www.php.net/manual/en/cachingiterator.count.php
-	 * @return int The count of the elements iterated over.
+	 * {@inheritdoc}
 	 */
-	public function count (): int {}
+	public function count () {}
 
 	/**
-	 * Get the inner iterator
-	 * @link http://www.php.net/manual/en/iteratoriterator.getinneriterator.php
-	 * @return Iterator|null The inner iterator as passed to IteratorIterator::__construct, or null when there is no inner iterator.
+	 * {@inheritdoc}
 	 */
-	public function getInnerIterator (): ?Iterator {}
+	public function getInnerIterator () {}
 
 	/**
-	 * Get the key of the current element
-	 * @link http://www.php.net/manual/en/iteratoriterator.key.php
-	 * @return mixed The key of the current element.
+	 * {@inheritdoc}
 	 */
-	public function key (): mixed {}
+	public function key () {}
 
 	/**
-	 * Get the current value
-	 * @link http://www.php.net/manual/en/iteratoriterator.current.php
-	 * @return mixed The value of the current element.
+	 * {@inheritdoc}
 	 */
-	public function current (): mixed {}
+	public function current () {}
 
 }
 
-/**
- * This iterator ignores rewind operations. This allows processing an iterator in multiple partial foreach loops.
- * @link http://www.php.net/manual/en/class.norewinditerator.php
- */
 class NoRewindIterator extends IteratorIterator implements Iterator, Traversable, OuterIterator {
 
 	/**
-	 * Construct a NoRewindIterator
-	 * @link http://www.php.net/manual/en/norewinditerator.construct.php
-	 * @param Iterator $iterator 
-	 * @return Iterator 
+	 * {@inheritdoc}
+	 * @param Iterator $iterator
 	 */
-	public function __construct (Iterator $iterator): Iterator {}
+	public function __construct (Iterator $iterator) {}
 
 	/**
-	 * Prevents the rewind operation on the inner iterator
-	 * @link http://www.php.net/manual/en/norewinditerator.rewind.php
-	 * @return void No value is returned.
+	 * {@inheritdoc}
 	 */
-	public function rewind (): void {}
+	public function rewind () {}
 
 	/**
-	 * Validates the iterator
-	 * @link http://www.php.net/manual/en/norewinditerator.valid.php
-	 * @return bool Returns true on success or false on failure.
+	 * {@inheritdoc}
 	 */
-	public function valid (): bool {}
+	public function valid () {}
 
 	/**
-	 * Get the current key
-	 * @link http://www.php.net/manual/en/norewinditerator.key.php
-	 * @return mixed The current key.
+	 * {@inheritdoc}
 	 */
-	public function key (): mixed {}
+	public function key () {}
 
 	/**
-	 * Get the current value
-	 * @link http://www.php.net/manual/en/norewinditerator.current.php
-	 * @return mixed The current value.
+	 * {@inheritdoc}
 	 */
-	public function current (): mixed {}
+	public function current () {}
 
 	/**
-	 * Forward to the next element
-	 * @link http://www.php.net/manual/en/norewinditerator.next.php
-	 * @return void No value is returned.
+	 * {@inheritdoc}
 	 */
-	public function next (): void {}
+	public function next () {}
 
 	/**
-	 * Get the inner iterator
-	 * @link http://www.php.net/manual/en/iteratoriterator.getinneriterator.php
-	 * @return Iterator|null The inner iterator as passed to IteratorIterator::__construct, or null when there is no inner iterator.
+	 * {@inheritdoc}
 	 */
-	public function getInnerIterator (): ?Iterator {}
+	public function getInnerIterator () {}
 
 }
 
-/**
- * An Iterator that iterates over several iterators one after the other.
- * @link http://www.php.net/manual/en/class.appenditerator.php
- */
 class AppendIterator extends IteratorIterator implements Iterator, Traversable, OuterIterator {
 
 	/**
-	 * Constructs an AppendIterator
-	 * @link http://www.php.net/manual/en/appenditerator.construct.php
+	 * {@inheritdoc}
 	 */
 	public function __construct () {}
 
 	/**
-	 * Appends an iterator
-	 * @link http://www.php.net/manual/en/appenditerator.append.php
-	 * @param Iterator $iterator 
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param Iterator $iterator
 	 */
-	public function append (Iterator $iterator): void {}
+	public function append (Iterator $iterator) {}
 
 	/**
-	 * Rewinds the Iterator
-	 * @link http://www.php.net/manual/en/appenditerator.rewind.php
-	 * @return void No value is returned.
+	 * {@inheritdoc}
 	 */
-	public function rewind (): void {}
+	public function rewind () {}
 
 	/**
-	 * Checks validity of the current element
-	 * @link http://www.php.net/manual/en/appenditerator.valid.php
-	 * @return bool Returns true if the current iteration is valid, false otherwise.
+	 * {@inheritdoc}
 	 */
-	public function valid (): bool {}
+	public function valid () {}
 
 	/**
-	 * Gets the current value
-	 * @link http://www.php.net/manual/en/appenditerator.current.php
-	 * @return mixed The current value if it is valid or null otherwise.
+	 * {@inheritdoc}
 	 */
-	public function current (): mixed {}
+	public function current () {}
 
 	/**
-	 * Moves to the next element
-	 * @link http://www.php.net/manual/en/appenditerator.next.php
-	 * @return void No value is returned.
+	 * {@inheritdoc}
 	 */
-	public function next (): void {}
+	public function next () {}
 
 	/**
-	 * Gets an index of iterators
-	 * @link http://www.php.net/manual/en/appenditerator.getiteratorindex.php
-	 * @return int|null Returns the zero-based, integer index of the current inner iterator if it exists, or null otherwise.
+	 * {@inheritdoc}
 	 */
-	public function getIteratorIndex (): ?int {}
+	public function getIteratorIndex () {}
 
 	/**
-	 * Gets the ArrayIterator
-	 * @link http://www.php.net/manual/en/appenditerator.getarrayiterator.php
-	 * @return ArrayIterator Returns an ArrayIterator containing
-	 * the appended iterators.
+	 * {@inheritdoc}
 	 */
-	public function getArrayIterator (): ArrayIterator {}
+	public function getArrayIterator () {}
 
 	/**
-	 * Get the inner iterator
-	 * @link http://www.php.net/manual/en/iteratoriterator.getinneriterator.php
-	 * @return Iterator|null The inner iterator as passed to IteratorIterator::__construct, or null when there is no inner iterator.
+	 * {@inheritdoc}
 	 */
-	public function getInnerIterator (): ?Iterator {}
+	public function getInnerIterator () {}
 
 	/**
-	 * Get the key of the current element
-	 * @link http://www.php.net/manual/en/iteratoriterator.key.php
-	 * @return mixed The key of the current element.
+	 * {@inheritdoc}
 	 */
-	public function key (): mixed {}
+	public function key () {}
 
 }
 
-/**
- * The InfiniteIterator allows one to
- * infinitely iterate over an iterator without having to manually
- * rewind the iterator upon reaching its end.
- * @link http://www.php.net/manual/en/class.infiniteiterator.php
- */
 class InfiniteIterator extends IteratorIterator implements Iterator, Traversable, OuterIterator {
 
 	/**
-	 * Constructs an InfiniteIterator
-	 * @link http://www.php.net/manual/en/infiniteiterator.construct.php
-	 * @param Iterator $iterator 
-	 * @return Iterator 
+	 * {@inheritdoc}
+	 * @param Iterator $iterator
 	 */
-	public function __construct (Iterator $iterator): Iterator {}
+	public function __construct (Iterator $iterator) {}
 
 	/**
-	 * Moves the inner Iterator forward or rewinds it
-	 * @link http://www.php.net/manual/en/infiniteiterator.next.php
-	 * @return void No value is returned.
+	 * {@inheritdoc}
 	 */
-	public function next (): void {}
+	public function next () {}
 
 	/**
-	 * Get the inner iterator
-	 * @link http://www.php.net/manual/en/iteratoriterator.getinneriterator.php
-	 * @return Iterator|null The inner iterator as passed to IteratorIterator::__construct, or null when there is no inner iterator.
+	 * {@inheritdoc}
 	 */
-	public function getInnerIterator (): ?Iterator {}
+	public function getInnerIterator () {}
 
 	/**
-	 * Rewind to the first element
-	 * @link http://www.php.net/manual/en/iteratoriterator.rewind.php
-	 * @return void No value is returned.
+	 * {@inheritdoc}
 	 */
-	public function rewind (): void {}
+	public function rewind () {}
 
 	/**
-	 * Checks if the iterator is valid
-	 * @link http://www.php.net/manual/en/iteratoriterator.valid.php
-	 * @return bool Returns true if the iterator is valid, otherwise false
+	 * {@inheritdoc}
 	 */
-	public function valid (): bool {}
+	public function valid () {}
 
 	/**
-	 * Get the key of the current element
-	 * @link http://www.php.net/manual/en/iteratoriterator.key.php
-	 * @return mixed The key of the current element.
+	 * {@inheritdoc}
 	 */
-	public function key (): mixed {}
+	public function key () {}
 
 	/**
-	 * Get the current value
-	 * @link http://www.php.net/manual/en/iteratoriterator.current.php
-	 * @return mixed The value of the current element.
+	 * {@inheritdoc}
 	 */
-	public function current (): mixed {}
+	public function current () {}
 
 }
 
-/**
- * This iterator can be used to filter another iterator based on a regular expression.
- * @link http://www.php.net/manual/en/class.regexiterator.php
- */
 class RegexIterator extends FilterIterator implements OuterIterator, Traversable, Iterator {
-	/**
-	 * Special flag: Match the entry key instead of the entry value.
 	const USE_KEY = 1;
-	/**
-	 * Inverts the return value of RegexIterator::accept.
 	const INVERT_MATCH = 2;
-	/**
-	 * Only execute match (filter) for the current entry 
-	 * (see preg_match).
 	const MATCH = 0;
-	/**
-	 * Return the first match for the current entry 
-	 * (see preg_match).
 	const GET_MATCH = 1;
-	/**
-	 * Return all matches for the current entry 
-	 * (see preg_match_all).
 	const ALL_MATCHES = 2;
-	/**
-	 * Returns the split values for the current entry (see preg_split).
 	const SPLIT = 3;
-	/**
-	 * Replace the current entry 
-	 * (see preg_replace; Not fully implemented yet)
 	const REPLACE = 4;
 
 
 	public ?string $replacement;
 
 	/**
-	 * Create a new RegexIterator
-	 * @link http://www.php.net/manual/en/regexiterator.construct.php
-	 * @param Iterator $iterator 
-	 * @param string $pattern 
-	 * @param int $mode [optional] 
-	 * @param int $flags [optional] 
-	 * @param int $pregFlags [optional] 
-	 * @return Iterator 
+	 * {@inheritdoc}
+	 * @param Iterator $iterator
+	 * @param string $pattern
+	 * @param int $mode [optional]
+	 * @param int $flags [optional]
+	 * @param int $pregFlags [optional]
 	 */
-	public function __construct (Iterator $iterator, string $pattern, int $mode = \RegexIterator::MATCH, int $flags = null, int $pregFlags = null): Iterator {}
+	public function __construct (Iterator $iterator, string $pattern, int $mode = 0, int $flags = 0, int $pregFlags = 0) {}
 
 	/**
-	 * Get accept status
-	 * @link http://www.php.net/manual/en/regexiterator.accept.php
-	 * @return bool true if a match, false otherwise.
+	 * {@inheritdoc}
 	 */
-	public function accept (): bool {}
+	public function accept () {}
 
 	/**
-	 * Returns operation mode
-	 * @link http://www.php.net/manual/en/regexiterator.getmode.php
-	 * @return int Returns the operation mode.
+	 * {@inheritdoc}
 	 */
-	public function getMode (): int {}
+	public function getMode () {}
 
 	/**
-	 * Sets the operation mode
-	 * @link http://www.php.net/manual/en/regexiterator.setmode.php
-	 * @param int $mode 
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param int $mode
 	 */
-	public function setMode (int $mode): void {}
+	public function setMode (int $mode) {}
 
 	/**
-	 * Get flags
-	 * @link http://www.php.net/manual/en/regexiterator.getflags.php
-	 * @return int Returns the set flags.
+	 * {@inheritdoc}
 	 */
-	public function getFlags (): int {}
+	public function getFlags () {}
 
 	/**
-	 * Sets the flags
-	 * @link http://www.php.net/manual/en/regexiterator.setflags.php
-	 * @param int $flags 
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param int $flags
 	 */
-	public function setFlags (int $flags): void {}
+	public function setFlags (int $flags) {}
 
 	/**
-	 * Returns current regular expression
-	 * @link http://www.php.net/manual/en/regexiterator.getregex.php
-	 * @return string 
+	 * {@inheritdoc}
 	 */
-	public function getRegex (): string {}
+	public function getRegex () {}
 
 	/**
-	 * Returns the regular expression flags
-	 * @link http://www.php.net/manual/en/regexiterator.getpregflags.php
-	 * @return int Returns a bitmask of the regular expression flags.
+	 * {@inheritdoc}
 	 */
-	public function getPregFlags (): int {}
+	public function getPregFlags () {}
 
 	/**
-	 * Sets the regular expression flags
-	 * @link http://www.php.net/manual/en/regexiterator.setpregflags.php
-	 * @param int $pregFlags 
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param int $pregFlags
 	 */
-	public function setPregFlags (int $pregFlags): void {}
+	public function setPregFlags (int $pregFlags) {}
 
 	/**
-	 * Rewind the iterator
-	 * @link http://www.php.net/manual/en/filteriterator.rewind.php
-	 * @return void No value is returned.
+	 * {@inheritdoc}
 	 */
-	public function rewind (): void {}
+	public function rewind () {}
 
 	/**
-	 * Move the iterator forward
-	 * @link http://www.php.net/manual/en/filteriterator.next.php
-	 * @return void No value is returned.
+	 * {@inheritdoc}
 	 */
-	public function next (): void {}
+	public function next () {}
 
 	/**
-	 * Get the inner iterator
-	 * @link http://www.php.net/manual/en/iteratoriterator.getinneriterator.php
-	 * @return Iterator|null The inner iterator as passed to IteratorIterator::__construct, or null when there is no inner iterator.
+	 * {@inheritdoc}
 	 */
-	public function getInnerIterator (): ?Iterator {}
+	public function getInnerIterator () {}
 
 	/**
-	 * Checks if the iterator is valid
-	 * @link http://www.php.net/manual/en/iteratoriterator.valid.php
-	 * @return bool Returns true if the iterator is valid, otherwise false
+	 * {@inheritdoc}
 	 */
-	public function valid (): bool {}
+	public function valid () {}
 
 	/**
-	 * Get the key of the current element
-	 * @link http://www.php.net/manual/en/iteratoriterator.key.php
-	 * @return mixed The key of the current element.
+	 * {@inheritdoc}
 	 */
-	public function key (): mixed {}
+	public function key () {}
 
 	/**
-	 * Get the current value
-	 * @link http://www.php.net/manual/en/iteratoriterator.current.php
-	 * @return mixed The value of the current element.
+	 * {@inheritdoc}
 	 */
-	public function current (): mixed {}
+	public function current () {}
 
 }
 
-/**
- * This recursive iterator can filter another recursive iterator via a regular expression.
- * @link http://www.php.net/manual/en/class.recursiveregexiterator.php
- */
 class RecursiveRegexIterator extends RegexIterator implements Iterator, Traversable, OuterIterator, RecursiveIterator {
 	const USE_KEY = 1;
 	const INVERT_MATCH = 2;
@@ -2594,16 +1767,14 @@ class RecursiveRegexIterator extends RegexIterator implements Iterator, Traversa
 
 
 	/**
-	 * Creates a new RecursiveRegexIterator
-	 * @link http://www.php.net/manual/en/recursiveregexiterator.construct.php
-	 * @param RecursiveIterator $iterator 
-	 * @param string $pattern 
-	 * @param int $mode [optional] 
-	 * @param int $flags [optional] 
-	 * @param int $pregFlags [optional] 
-	 * @return RecursiveIterator 
+	 * {@inheritdoc}
+	 * @param RecursiveIterator $iterator
+	 * @param string $pattern
+	 * @param int $mode [optional]
+	 * @param int $flags [optional]
+	 * @param int $pregFlags [optional]
 	 */
-	public function __construct (RecursiveIterator $iterator, string $pattern, int $mode = \RecursiveRegexIterator::MATCH, int $flags = null, int $pregFlags = null): RecursiveIterator {}
+	public function __construct (RecursiveIterator $iterator, string $pattern, int $mode = 0, int $flags = 0, int $pregFlags = 0) {}
 
 	/**
 	 * {@inheritdoc}
@@ -2611,162 +1782,114 @@ class RecursiveRegexIterator extends RegexIterator implements Iterator, Traversa
 	public function accept () {}
 
 	/**
-	 * Returns whether an iterator can be obtained for the current entry
-	 * @link http://www.php.net/manual/en/recursiveregexiterator.haschildren.php
-	 * @return bool Returns true if an iterator can be obtained for the current entry, otherwise returns false.
+	 * {@inheritdoc}
 	 */
-	public function hasChildren (): bool {}
+	public function hasChildren () {}
 
 	/**
-	 * Returns an iterator for the current entry
-	 * @link http://www.php.net/manual/en/recursiveregexiterator.getchildren.php
-	 * @return RecursiveRegexIterator An iterator for the current entry, if it can be iterated over by the inner iterator.
+	 * {@inheritdoc}
 	 */
-	public function getChildren (): RecursiveRegexIterator {}
+	public function getChildren () {}
 
 	/**
-	 * Returns operation mode
-	 * @link http://www.php.net/manual/en/regexiterator.getmode.php
-	 * @return int Returns the operation mode.
+	 * {@inheritdoc}
 	 */
-	public function getMode (): int {}
+	public function getMode () {}
 
 	/**
-	 * Sets the operation mode
-	 * @link http://www.php.net/manual/en/regexiterator.setmode.php
-	 * @param int $mode 
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param int $mode
 	 */
-	public function setMode (int $mode): void {}
+	public function setMode (int $mode) {}
 
 	/**
-	 * Get flags
-	 * @link http://www.php.net/manual/en/regexiterator.getflags.php
-	 * @return int Returns the set flags.
+	 * {@inheritdoc}
 	 */
-	public function getFlags (): int {}
+	public function getFlags () {}
 
 	/**
-	 * Sets the flags
-	 * @link http://www.php.net/manual/en/regexiterator.setflags.php
-	 * @param int $flags 
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param int $flags
 	 */
-	public function setFlags (int $flags): void {}
+	public function setFlags (int $flags) {}
 
 	/**
-	 * Returns current regular expression
-	 * @link http://www.php.net/manual/en/regexiterator.getregex.php
-	 * @return string 
+	 * {@inheritdoc}
 	 */
-	public function getRegex (): string {}
+	public function getRegex () {}
 
 	/**
-	 * Returns the regular expression flags
-	 * @link http://www.php.net/manual/en/regexiterator.getpregflags.php
-	 * @return int Returns a bitmask of the regular expression flags.
+	 * {@inheritdoc}
 	 */
-	public function getPregFlags (): int {}
+	public function getPregFlags () {}
 
 	/**
-	 * Sets the regular expression flags
-	 * @link http://www.php.net/manual/en/regexiterator.setpregflags.php
-	 * @param int $pregFlags 
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param int $pregFlags
 	 */
-	public function setPregFlags (int $pregFlags): void {}
+	public function setPregFlags (int $pregFlags) {}
 
 	/**
-	 * Rewind the iterator
-	 * @link http://www.php.net/manual/en/filteriterator.rewind.php
-	 * @return void No value is returned.
+	 * {@inheritdoc}
 	 */
-	public function rewind (): void {}
+	public function rewind () {}
 
 	/**
-	 * Move the iterator forward
-	 * @link http://www.php.net/manual/en/filteriterator.next.php
-	 * @return void No value is returned.
+	 * {@inheritdoc}
 	 */
-	public function next (): void {}
+	public function next () {}
 
 	/**
-	 * Get the inner iterator
-	 * @link http://www.php.net/manual/en/iteratoriterator.getinneriterator.php
-	 * @return Iterator|null The inner iterator as passed to IteratorIterator::__construct, or null when there is no inner iterator.
+	 * {@inheritdoc}
 	 */
-	public function getInnerIterator (): ?Iterator {}
+	public function getInnerIterator () {}
 
 	/**
-	 * Checks if the iterator is valid
-	 * @link http://www.php.net/manual/en/iteratoriterator.valid.php
-	 * @return bool Returns true if the iterator is valid, otherwise false
+	 * {@inheritdoc}
 	 */
-	public function valid (): bool {}
+	public function valid () {}
 
 	/**
-	 * Get the key of the current element
-	 * @link http://www.php.net/manual/en/iteratoriterator.key.php
-	 * @return mixed The key of the current element.
+	 * {@inheritdoc}
 	 */
-	public function key (): mixed {}
+	public function key () {}
 
 	/**
-	 * Get the current value
-	 * @link http://www.php.net/manual/en/iteratoriterator.current.php
-	 * @return mixed The value of the current element.
+	 * {@inheritdoc}
 	 */
-	public function current (): mixed {}
+	public function current () {}
 
 }
 
-/**
- * The EmptyIterator class for an empty iterator.
- * @link http://www.php.net/manual/en/class.emptyiterator.php
- */
 class EmptyIterator implements Iterator, Traversable {
 
 	/**
-	 * The current() method
-	 * @link http://www.php.net/manual/en/emptyiterator.current.php
-	 * @return never No value is returned.
+	 * {@inheritdoc}
 	 */
-	public function current (): never {}
+	public function current () {}
 
 	/**
-	 * The next() method
-	 * @link http://www.php.net/manual/en/emptyiterator.next.php
-	 * @return void No value is returned.
+	 * {@inheritdoc}
 	 */
-	public function next (): void {}
+	public function next () {}
 
 	/**
-	 * The key() method
-	 * @link http://www.php.net/manual/en/emptyiterator.key.php
-	 * @return never No value is returned.
+	 * {@inheritdoc}
 	 */
-	public function key (): never {}
+	public function key () {}
 
 	/**
-	 * The valid() method
-	 * @link http://www.php.net/manual/en/emptyiterator.valid.php
-	 * @return false false
+	 * {@inheritdoc}
 	 */
-	public function valid (): false {}
+	public function valid () {}
 
 	/**
-	 * The rewind() method
-	 * @link http://www.php.net/manual/en/emptyiterator.rewind.php
-	 * @return void No value is returned.
+	 * {@inheritdoc}
 	 */
-	public function rewind (): void {}
+	public function rewind () {}
 
 }
 
-/**
- * Allows iterating over a RecursiveIterator to generate an ASCII graphic tree.
- * @link http://www.php.net/manual/en/class.recursivetreeiterator.php
- */
 class RecursiveTreeIterator extends RecursiveIteratorIterator implements Iterator, Traversable, OuterIterator {
 	const LEAVES_ONLY = 0;
 	const SELF_FIRST = 1;
@@ -2783,378 +1906,241 @@ class RecursiveTreeIterator extends RecursiveIteratorIterator implements Iterato
 
 
 	/**
-	 * Construct a RecursiveTreeIterator
-	 * @link http://www.php.net/manual/en/recursivetreeiterator.construct.php
-	 * @param RecursiveIterator|IteratorAggregate $iterator 
-	 * @param int $flags [optional] 
-	 * @param int $cachingIteratorFlags [optional] 
-	 * @param int $mode [optional] 
-	 * @return RecursiveIterator|IteratorAggregate 
+	 * {@inheritdoc}
+	 * @param mixed $iterator
+	 * @param int $flags [optional]
+	 * @param int $cachingIteratorFlags [optional]
+	 * @param int $mode [optional]
 	 */
-	public function __construct (RecursiveIterator|IteratorAggregate $iterator, int $flags = \RecursiveTreeIterator::BYPASS_KEY, int $cachingIteratorFlags = \CachingIterator::CATCH_GET_CHILD, int $mode = \RecursiveTreeIterator::SELF_FIRST): RecursiveIterator|IteratorAggregate {}
+	public function __construct ($iterator = null, int $flags = 8, int $cachingIteratorFlags = 16, int $mode = 1) {}
 
 	/**
-	 * Get the key of the current element
-	 * @link http://www.php.net/manual/en/recursivetreeiterator.key.php
-	 * @return mixed Returns the current key prefixed and postfixed.
+	 * {@inheritdoc}
 	 */
-	public function key (): mixed {}
+	public function key () {}
 
 	/**
-	 * Get current element
-	 * @link http://www.php.net/manual/en/recursivetreeiterator.current.php
-	 * @return mixed Returns the current element prefixed and postfixed.
+	 * {@inheritdoc}
 	 */
-	public function current (): mixed {}
+	public function current () {}
 
 	/**
-	 * Get the prefix
-	 * @link http://www.php.net/manual/en/recursivetreeiterator.getprefix.php
-	 * @return string Returns the string to place in front of current element
+	 * {@inheritdoc}
 	 */
-	public function getPrefix (): string {}
+	public function getPrefix () {}
 
 	/**
-	 * Set postfix
-	 * @link http://www.php.net/manual/en/recursivetreeiterator.setpostfix.php
-	 * @param string $postfix 
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param string $postfix
 	 */
-	public function setPostfix (string $postfix): void {}
+	public function setPostfix (string $postfix) {}
 
 	/**
-	 * Set a part of the prefix
-	 * @link http://www.php.net/manual/en/recursivetreeiterator.setprefixpart.php
-	 * @param int $part 
-	 * @param string $value 
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param int $part
+	 * @param string $value
 	 */
-	public function setPrefixPart (int $part, string $value): void {}
+	public function setPrefixPart (int $part, string $value) {}
 
 	/**
-	 * Get current entry
-	 * @link http://www.php.net/manual/en/recursivetreeiterator.getentry.php
-	 * @return string Returns the part of the tree built for the current element.
+	 * {@inheritdoc}
 	 */
-	public function getEntry (): string {}
+	public function getEntry () {}
 
 	/**
-	 * Get the postfix
-	 * @link http://www.php.net/manual/en/recursivetreeiterator.getpostfix.php
-	 * @return string Returns the string to place after the current element.
+	 * {@inheritdoc}
 	 */
-	public function getPostfix (): string {}
+	public function getPostfix () {}
 
 	/**
-	 * Rewind the iterator to the first element of the top level inner iterator
-	 * @link http://www.php.net/manual/en/recursiveiteratoriterator.rewind.php
-	 * @return void No value is returned.
+	 * {@inheritdoc}
 	 */
-	public function rewind (): void {}
+	public function rewind () {}
 
 	/**
-	 * Check whether the current position is valid
-	 * @link http://www.php.net/manual/en/recursiveiteratoriterator.valid.php
-	 * @return bool true if the current position is valid, otherwise false
+	 * {@inheritdoc}
 	 */
-	public function valid (): bool {}
+	public function valid () {}
 
 	/**
-	 * Move forward to the next element
-	 * @link http://www.php.net/manual/en/recursiveiteratoriterator.next.php
-	 * @return void No value is returned.
+	 * {@inheritdoc}
 	 */
-	public function next (): void {}
+	public function next () {}
 
 	/**
-	 * Get the current depth of the recursive iteration
-	 * @link http://www.php.net/manual/en/recursiveiteratoriterator.getdepth.php
-	 * @return int The current depth of the recursive iteration.
+	 * {@inheritdoc}
 	 */
-	public function getDepth (): int {}
+	public function getDepth () {}
 
 	/**
-	 * The current active sub iterator
-	 * @link http://www.php.net/manual/en/recursiveiteratoriterator.getsubiterator.php
-	 * @param int|null $level [optional] 
-	 * @return RecursiveIterator|null The current active sub iterator on success; null on failure.
+	 * {@inheritdoc}
+	 * @param int|null $level [optional]
 	 */
-	public function getSubIterator (?int $level = null): ?RecursiveIterator {}
+	public function getSubIterator (?int $level = NULL) {}
 
 	/**
-	 * Get inner iterator
-	 * @link http://www.php.net/manual/en/recursiveiteratoriterator.getinneriterator.php
-	 * @return RecursiveIterator The current active sub iterator.
+	 * {@inheritdoc}
 	 */
-	public function getInnerIterator (): RecursiveIterator {}
+	public function getInnerIterator () {}
 
 	/**
-	 * Begin Iteration
-	 * @link http://www.php.net/manual/en/recursiveiteratoriterator.beginiteration.php
-	 * @return void No value is returned.
+	 * {@inheritdoc}
 	 */
-	public function beginIteration (): void {}
+	public function beginIteration () {}
 
 	/**
-	 * End Iteration
-	 * @link http://www.php.net/manual/en/recursiveiteratoriterator.enditeration.php
-	 * @return void No value is returned.
+	 * {@inheritdoc}
 	 */
-	public function endIteration (): void {}
+	public function endIteration () {}
 
 	/**
-	 * Has children
-	 * @link http://www.php.net/manual/en/recursiveiteratoriterator.callhaschildren.php
-	 * @return bool Returns whether the element has children.
+	 * {@inheritdoc}
 	 */
-	public function callHasChildren (): bool {}
+	public function callHasChildren () {}
 
 	/**
-	 * Get children
-	 * @link http://www.php.net/manual/en/recursiveiteratoriterator.callgetchildren.php
-	 * @return RecursiveIterator|null A RecursiveIterator on success, or null on failure.
+	 * {@inheritdoc}
 	 */
-	public function callGetChildren (): ?RecursiveIterator {}
+	public function callGetChildren () {}
 
 	/**
-	 * Begin children
-	 * @link http://www.php.net/manual/en/recursiveiteratoriterator.beginchildren.php
-	 * @return void No value is returned.
+	 * {@inheritdoc}
 	 */
-	public function beginChildren (): void {}
+	public function beginChildren () {}
 
 	/**
-	 * End children
-	 * @link http://www.php.net/manual/en/recursiveiteratoriterator.endchildren.php
-	 * @return void No value is returned.
+	 * {@inheritdoc}
 	 */
-	public function endChildren (): void {}
+	public function endChildren () {}
 
 	/**
-	 * Next element
-	 * @link http://www.php.net/manual/en/recursiveiteratoriterator.nextelement.php
-	 * @return void No value is returned.
+	 * {@inheritdoc}
 	 */
-	public function nextElement (): void {}
+	public function nextElement () {}
 
 	/**
-	 * Set max depth
-	 * @link http://www.php.net/manual/en/recursiveiteratoriterator.setmaxdepth.php
-	 * @param int $maxDepth [optional] 
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param int $maxDepth [optional]
 	 */
-	public function setMaxDepth (int $maxDepth = -1): void {}
+	public function setMaxDepth (int $maxDepth = -1) {}
 
 	/**
-	 * Get max depth
-	 * @link http://www.php.net/manual/en/recursiveiteratoriterator.getmaxdepth.php
-	 * @return int|false The maximum accepted depth, or false if any depth is allowed.
+	 * {@inheritdoc}
 	 */
-	public function getMaxDepth (): int|false {}
+	public function getMaxDepth () {}
 
 }
 
-/**
- * This class allows objects to work as arrays.
- * @link http://www.php.net/manual/en/class.arrayobject.php
- */
 class ArrayObject implements IteratorAggregate, Traversable, ArrayAccess, Serializable, Countable {
-	/**
-	 * Properties of the object have their normal functionality when accessed as list (var_dump, foreach, etc.).
 	const STD_PROP_LIST = 1;
-	/**
-	 * Entries can be accessed as properties (read and write).
 	const ARRAY_AS_PROPS = 2;
 
 
 	/**
-	 * Construct a new array object
-	 * @link http://www.php.net/manual/en/arrayobject.construct.php
-	 * @param array|object $array [optional] 
-	 * @param int $flags [optional] 
-	 * @param string $iteratorClass [optional] 
-	 * @return array|object 
+	 * {@inheritdoc}
+	 * @param object|array $array [optional]
+	 * @param int $flags [optional]
+	 * @param string $iteratorClass [optional]
 	 */
-	public function __construct (array|object $array = '[]', int $flags = null, string $iteratorClass = 'ArrayIterator::class'): array|object {}
+	public function __construct (object|array $array = array (
+), int $flags = 0, string $iteratorClass = 'ArrayIterator') {}
 
 	/**
-	 * Returns whether the requested index exists
-	 * @link http://www.php.net/manual/en/arrayobject.offsetexists.php
-	 * @param mixed $key 
-	 * @return bool true if the requested index exists, otherwise false
+	 * {@inheritdoc}
+	 * @param mixed $key
 	 */
-	public function offsetExists (mixed $key): bool {}
+	public function offsetExists (mixed $key = null) {}
 
 	/**
-	 * Returns the value at the specified index
-	 * @link http://www.php.net/manual/en/arrayobject.offsetget.php
-	 * @param mixed $key 
-	 * @return mixed The value at the specified index or null.
+	 * {@inheritdoc}
+	 * @param mixed $key
 	 */
-	public function offsetGet (mixed $key): mixed {}
+	public function offsetGet (mixed $key = null) {}
 
 	/**
-	 * Sets the value at the specified index to newval
-	 * @link http://www.php.net/manual/en/arrayobject.offsetset.php
-	 * @param mixed $key 
-	 * @param mixed $value 
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param mixed $key
+	 * @param mixed $value
 	 */
-	public function offsetSet (mixed $key, mixed $value): void {}
+	public function offsetSet (mixed $key = null, mixed $value = null) {}
 
 	/**
-	 * Unsets the value at the specified index
-	 * @link http://www.php.net/manual/en/arrayobject.offsetunset.php
-	 * @param mixed $key 
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param mixed $key
 	 */
-	public function offsetUnset (mixed $key): void {}
+	public function offsetUnset (mixed $key = null) {}
 
 	/**
-	 * Appends the value
-	 * @link http://www.php.net/manual/en/arrayobject.append.php
-	 * @param mixed $value 
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param mixed $value
 	 */
-	public function append (mixed $value): void {}
+	public function append (mixed $value = null) {}
 
 	/**
-	 * Creates a copy of the ArrayObject
-	 * @link http://www.php.net/manual/en/arrayobject.getarraycopy.php
-	 * @return array Returns a copy of the array. When the ArrayObject refers to an object,
-	 * an array of the properties of that object will be returned.
+	 * {@inheritdoc}
 	 */
-	public function getArrayCopy (): array {}
+	public function getArrayCopy () {}
 
 	/**
-	 * Get the number of public properties in the ArrayObject
-	 * @link http://www.php.net/manual/en/arrayobject.count.php
-	 * @return int The number of public properties in the ArrayObject.
-	 * <p>When the ArrayObject is constructed from an array all properties are public.</p>
+	 * {@inheritdoc}
 	 */
-	public function count (): int {}
+	public function count () {}
 
 	/**
-	 * Gets the behavior flags
-	 * @link http://www.php.net/manual/en/arrayobject.getflags.php
-	 * @return int Returns the behavior flags of the ArrayObject.
+	 * {@inheritdoc}
 	 */
-	public function getFlags (): int {}
+	public function getFlags () {}
 
 	/**
-	 * Sets the behavior flags
-	 * @link http://www.php.net/manual/en/arrayobject.setflags.php
-	 * @param int $flags 
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param int $flags
 	 */
-	public function setFlags (int $flags): void {}
+	public function setFlags (int $flags) {}
 
 	/**
-	 * Sort the entries by value
-	 * @link http://www.php.net/manual/en/arrayobject.asort.php
-	 * @param int $flags [optional] The optional second parameter flags
-	 * may be used to modify the sorting behavior using these values:
-	 * <p>Sorting type flags:
-	 * <p>
-	 * <br>
-	 * SORT_REGULAR - compare items normally;
-	 * the details are described in the comparison operators section
-	 * <br>
-	 * SORT_NUMERIC - compare items numerically
-	 * <br>
-	 * SORT_STRING - compare items as strings
-	 * <br>
-	 * SORT_LOCALE_STRING - compare items as
-	 * strings, based on the current locale. It uses the locale,
-	 * which can be changed using setlocale
-	 * <br>
-	 * SORT_NATURAL - compare items as strings
-	 * using "natural ordering" like natsort
-	 * <br>
-	 * SORT_FLAG_CASE - can be combined
-	 * (bitwise OR) with
-	 * SORT_STRING or
-	 * SORT_NATURAL to sort strings case-insensitively
-	 * </p></p>
-	 * @return true Always returns true.
+	 * {@inheritdoc}
+	 * @param int $flags [optional]
 	 */
-	public function asort (int $flags = SORT_REGULAR): true {}
+	public function asort (int $flags = 0) {}
 
 	/**
-	 * Sort the entries by key
-	 * @link http://www.php.net/manual/en/arrayobject.ksort.php
-	 * @param int $flags [optional] The optional second parameter flags
-	 * may be used to modify the sorting behavior using these values:
-	 * <p>Sorting type flags:
-	 * <p>
-	 * <br>
-	 * SORT_REGULAR - compare items normally;
-	 * the details are described in the comparison operators section
-	 * <br>
-	 * SORT_NUMERIC - compare items numerically
-	 * <br>
-	 * SORT_STRING - compare items as strings
-	 * <br>
-	 * SORT_LOCALE_STRING - compare items as
-	 * strings, based on the current locale. It uses the locale,
-	 * which can be changed using setlocale
-	 * <br>
-	 * SORT_NATURAL - compare items as strings
-	 * using "natural ordering" like natsort
-	 * <br>
-	 * SORT_FLAG_CASE - can be combined
-	 * (bitwise OR) with
-	 * SORT_STRING or
-	 * SORT_NATURAL to sort strings case-insensitively
-	 * </p></p>
-	 * @return true Always returns true.
+	 * {@inheritdoc}
+	 * @param int $flags [optional]
 	 */
-	public function ksort (int $flags = SORT_REGULAR): true {}
+	public function ksort (int $flags = 0) {}
 
 	/**
-	 * Sort the entries with a user-defined comparison function and maintain key association
-	 * @link http://www.php.net/manual/en/arrayobject.uasort.php
-	 * @param callable $callback 
-	 * @return true Always returns true.
+	 * {@inheritdoc}
+	 * @param callable $callback
 	 */
-	public function uasort (callable $callback): true {}
+	public function uasort (callable $callback) {}
 
 	/**
-	 * Sort the entries by keys using a user-defined comparison function
-	 * @link http://www.php.net/manual/en/arrayobject.uksort.php
-	 * @param callable $callback 
-	 * @return true Always returns true.
+	 * {@inheritdoc}
+	 * @param callable $callback
 	 */
-	public function uksort (callable $callback): true {}
+	public function uksort (callable $callback) {}
 
 	/**
-	 * Sort entries using a "natural order" algorithm
-	 * @link http://www.php.net/manual/en/arrayobject.natsort.php
-	 * @return true No value is returned.
+	 * {@inheritdoc}
 	 */
-	public function natsort (): true {}
+	public function natsort () {}
 
 	/**
-	 * Sort an array using a case insensitive "natural order" algorithm
-	 * @link http://www.php.net/manual/en/arrayobject.natcasesort.php
-	 * @return true No value is returned.
+	 * {@inheritdoc}
 	 */
-	public function natcasesort (): true {}
+	public function natcasesort () {}
 
 	/**
-	 * Unserialize an ArrayObject
-	 * @link http://www.php.net/manual/en/arrayobject.unserialize.php
-	 * @param string $data 
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param string $data
 	 */
-	public function unserialize (string $data): void {}
+	public function unserialize (string $data) {}
 
 	/**
-	 * Serialize an ArrayObject
-	 * @link http://www.php.net/manual/en/arrayobject.serialize.php
-	 * @return string The serialized representation of the ArrayObject.
+	 * {@inheritdoc}
 	 */
-	public function serialize (): string {}
+	public function serialize () {}
 
 	/**
 	 * {@inheritdoc}
@@ -3168,34 +2154,26 @@ class ArrayObject implements IteratorAggregate, Traversable, ArrayAccess, Serial
 	public function __unserialize (array $data) {}
 
 	/**
-	 * Create a new iterator from an ArrayObject instance
-	 * @link http://www.php.net/manual/en/arrayobject.getiterator.php
-	 * @return Iterator An iterator from an ArrayObject.
+	 * {@inheritdoc}
 	 */
-	public function getIterator (): Iterator {}
+	public function getIterator () {}
 
 	/**
-	 * Exchange the array for another one
-	 * @link http://www.php.net/manual/en/arrayobject.exchangearray.php
-	 * @param array|object $array 
-	 * @return array Returns the old array.
+	 * {@inheritdoc}
+	 * @param object|array $array
 	 */
-	public function exchangeArray (array|object $array): array {}
+	public function exchangeArray (object|array $array) {}
 
 	/**
-	 * Sets the iterator classname for the ArrayObject
-	 * @link http://www.php.net/manual/en/arrayobject.setiteratorclass.php
-	 * @param string $iteratorClass 
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param string $iteratorClass
 	 */
-	public function setIteratorClass (string $iteratorClass): void {}
+	public function setIteratorClass (string $iteratorClass) {}
 
 	/**
-	 * Gets the iterator classname for the ArrayObject
-	 * @link http://www.php.net/manual/en/arrayobject.getiteratorclass.php
-	 * @return string Returns the iterator class name that is used to iterate over this object.
+	 * {@inheritdoc}
 	 */
-	public function getIteratorClass (): string {}
+	public function getIteratorClass () {}
 
 	/**
 	 * {@inheritdoc}
@@ -3204,211 +2182,115 @@ class ArrayObject implements IteratorAggregate, Traversable, ArrayAccess, Serial
 
 }
 
-/**
- * This iterator allows to unset and modify values and keys while iterating
- * over Arrays and Objects.
- * <p>When you want to iterate over the same array multiple times you need to
- * instantiate ArrayObject and let it create ArrayIterator instances that
- * refer to it either by using foreach or by calling its getIterator()
- * method manually.</p>
- * @link http://www.php.net/manual/en/class.arrayiterator.php
- */
 class ArrayIterator implements SeekableIterator, Traversable, Iterator, ArrayAccess, Serializable, Countable {
-	/**
-	 * Properties of the object have their normal functionality when accessed as list (var_dump, foreach, etc.).
 	const STD_PROP_LIST = 1;
-	/**
-	 * Entries can be accessed as properties (read and write).
 	const ARRAY_AS_PROPS = 2;
 
 
 	/**
-	 * Construct an ArrayIterator
-	 * @link http://www.php.net/manual/en/arrayiterator.construct.php
-	 * @param array|object $array [optional] 
-	 * @param int $flags [optional] 
-	 * @return array|object 
+	 * {@inheritdoc}
+	 * @param object|array $array [optional]
+	 * @param int $flags [optional]
 	 */
-	public function __construct (array|object $array = '[]', int $flags = null): array|object {}
+	public function __construct (object|array $array = array (
+), int $flags = 0) {}
 
 	/**
-	 * Check if offset exists
-	 * @link http://www.php.net/manual/en/arrayiterator.offsetexists.php
-	 * @param mixed $key 
-	 * @return bool true if the offset exists, otherwise false
+	 * {@inheritdoc}
+	 * @param mixed $key
 	 */
-	public function offsetExists (mixed $key): bool {}
+	public function offsetExists (mixed $key = null) {}
 
 	/**
-	 * Get value for an offset
-	 * @link http://www.php.net/manual/en/arrayiterator.offsetget.php
-	 * @param mixed $key 
-	 * @return mixed The value at offset key.
+	 * {@inheritdoc}
+	 * @param mixed $key
 	 */
-	public function offsetGet (mixed $key): mixed {}
+	public function offsetGet (mixed $key = null) {}
 
 	/**
-	 * Set value for an offset
-	 * @link http://www.php.net/manual/en/arrayiterator.offsetset.php
-	 * @param mixed $key 
-	 * @param mixed $value 
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param mixed $key
+	 * @param mixed $value
 	 */
-	public function offsetSet (mixed $key, mixed $value): void {}
+	public function offsetSet (mixed $key = null, mixed $value = null) {}
 
 	/**
-	 * Unset value for an offset
-	 * @link http://www.php.net/manual/en/arrayiterator.offsetunset.php
-	 * @param mixed $key 
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param mixed $key
 	 */
-	public function offsetUnset (mixed $key): void {}
+	public function offsetUnset (mixed $key = null) {}
 
 	/**
-	 * Append an element
-	 * @link http://www.php.net/manual/en/arrayiterator.append.php
-	 * @param mixed $value 
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param mixed $value
 	 */
-	public function append (mixed $value): void {}
+	public function append (mixed $value = null) {}
 
 	/**
-	 * Get array copy
-	 * @link http://www.php.net/manual/en/arrayiterator.getarraycopy.php
-	 * @return array A copy of the array, or array of public properties
-	 * if ArrayIterator refers to an object.
+	 * {@inheritdoc}
 	 */
-	public function getArrayCopy (): array {}
+	public function getArrayCopy () {}
 
 	/**
-	 * Count elements
-	 * @link http://www.php.net/manual/en/arrayiterator.count.php
-	 * @return int The number of elements or public properties in the associated
-	 * array or object, respectively.
+	 * {@inheritdoc}
 	 */
-	public function count (): int {}
+	public function count () {}
 
 	/**
-	 * Get behavior flags
-	 * @link http://www.php.net/manual/en/arrayiterator.getflags.php
-	 * @return int Returns the behavior flags of the ArrayIterator.
+	 * {@inheritdoc}
 	 */
-	public function getFlags (): int {}
+	public function getFlags () {}
 
 	/**
-	 * Set behaviour flags
-	 * @link http://www.php.net/manual/en/arrayiterator.setflags.php
-	 * @param int $flags 
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param int $flags
 	 */
-	public function setFlags (int $flags): void {}
+	public function setFlags (int $flags) {}
 
 	/**
-	 * Sort entries by values
-	 * @link http://www.php.net/manual/en/arrayiterator.asort.php
-	 * @param int $flags [optional] The optional second parameter flags
-	 * may be used to modify the sorting behavior using these values:
-	 * <p>Sorting type flags:
-	 * <p>
-	 * <br>
-	 * SORT_REGULAR - compare items normally;
-	 * the details are described in the comparison operators section
-	 * <br>
-	 * SORT_NUMERIC - compare items numerically
-	 * <br>
-	 * SORT_STRING - compare items as strings
-	 * <br>
-	 * SORT_LOCALE_STRING - compare items as
-	 * strings, based on the current locale. It uses the locale,
-	 * which can be changed using setlocale
-	 * <br>
-	 * SORT_NATURAL - compare items as strings
-	 * using "natural ordering" like natsort
-	 * <br>
-	 * SORT_FLAG_CASE - can be combined
-	 * (bitwise OR) with
-	 * SORT_STRING or
-	 * SORT_NATURAL to sort strings case-insensitively
-	 * </p></p>
-	 * @return true Always returns true.
+	 * {@inheritdoc}
+	 * @param int $flags [optional]
 	 */
-	public function asort (int $flags = SORT_REGULAR): true {}
+	public function asort (int $flags = 0) {}
 
 	/**
-	 * Sort entries by keys
-	 * @link http://www.php.net/manual/en/arrayiterator.ksort.php
-	 * @param int $flags [optional] The optional second parameter flags
-	 * may be used to modify the sorting behavior using these values:
-	 * <p>Sorting type flags:
-	 * <p>
-	 * <br>
-	 * SORT_REGULAR - compare items normally;
-	 * the details are described in the comparison operators section
-	 * <br>
-	 * SORT_NUMERIC - compare items numerically
-	 * <br>
-	 * SORT_STRING - compare items as strings
-	 * <br>
-	 * SORT_LOCALE_STRING - compare items as
-	 * strings, based on the current locale. It uses the locale,
-	 * which can be changed using setlocale
-	 * <br>
-	 * SORT_NATURAL - compare items as strings
-	 * using "natural ordering" like natsort
-	 * <br>
-	 * SORT_FLAG_CASE - can be combined
-	 * (bitwise OR) with
-	 * SORT_STRING or
-	 * SORT_NATURAL to sort strings case-insensitively
-	 * </p></p>
-	 * @return true Always returns true.
+	 * {@inheritdoc}
+	 * @param int $flags [optional]
 	 */
-	public function ksort (int $flags = SORT_REGULAR): true {}
+	public function ksort (int $flags = 0) {}
 
 	/**
-	 * Sort with a user-defined comparison function and maintain index association
-	 * @link http://www.php.net/manual/en/arrayiterator.uasort.php
-	 * @param callable $callback 
-	 * @return true Always returns true.
+	 * {@inheritdoc}
+	 * @param callable $callback
 	 */
-	public function uasort (callable $callback): true {}
+	public function uasort (callable $callback) {}
 
 	/**
-	 * Sort by keys using a user-defined comparison function
-	 * @link http://www.php.net/manual/en/arrayiterator.uksort.php
-	 * @param callable $callback 
-	 * @return true Always returns true.
+	 * {@inheritdoc}
+	 * @param callable $callback
 	 */
-	public function uksort (callable $callback): true {}
+	public function uksort (callable $callback) {}
 
 	/**
-	 * Sort entries naturally
-	 * @link http://www.php.net/manual/en/arrayiterator.natsort.php
-	 * @return true Always returns true.
+	 * {@inheritdoc}
 	 */
-	public function natsort (): true {}
+	public function natsort () {}
 
 	/**
-	 * Sort entries naturally, case insensitive
-	 * @link http://www.php.net/manual/en/arrayiterator.natcasesort.php
-	 * @return true Always returns true.
+	 * {@inheritdoc}
 	 */
-	public function natcasesort (): true {}
+	public function natcasesort () {}
 
 	/**
-	 * Unserialize
-	 * @link http://www.php.net/manual/en/arrayiterator.unserialize.php
-	 * @param string $data 
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param string $data
 	 */
-	public function unserialize (string $data): void {}
+	public function unserialize (string $data) {}
 
 	/**
-	 * Serialize
-	 * @link http://www.php.net/manual/en/arrayiterator.serialize.php
-	 * @return string The serialized ArrayIterator.
+	 * {@inheritdoc}
 	 */
-	public function serialize (): string {}
+	public function serialize () {}
 
 	/**
 	 * {@inheritdoc}
@@ -3422,47 +2304,35 @@ class ArrayIterator implements SeekableIterator, Traversable, Iterator, ArrayAcc
 	public function __unserialize (array $data) {}
 
 	/**
-	 * Rewind array back to the start
-	 * @link http://www.php.net/manual/en/arrayiterator.rewind.php
-	 * @return void No value is returned.
+	 * {@inheritdoc}
 	 */
-	public function rewind (): void {}
+	public function rewind () {}
 
 	/**
-	 * Return current array entry
-	 * @link http://www.php.net/manual/en/arrayiterator.current.php
-	 * @return mixed The current array entry.
+	 * {@inheritdoc}
 	 */
-	public function current (): mixed {}
+	public function current () {}
 
 	/**
-	 * Return current array key
-	 * @link http://www.php.net/manual/en/arrayiterator.key.php
-	 * @return string|int|null The current array key.
+	 * {@inheritdoc}
 	 */
-	public function key (): string|int|null {}
+	public function key () {}
 
 	/**
-	 * Move to next entry
-	 * @link http://www.php.net/manual/en/arrayiterator.next.php
-	 * @return void No value is returned.
+	 * {@inheritdoc}
 	 */
-	public function next (): void {}
+	public function next () {}
 
 	/**
-	 * Check whether array contains more entries
-	 * @link http://www.php.net/manual/en/arrayiterator.valid.php
-	 * @return bool Returns true if the iterator is valid, otherwise false
+	 * {@inheritdoc}
 	 */
-	public function valid (): bool {}
+	public function valid () {}
 
 	/**
-	 * Seek to position
-	 * @link http://www.php.net/manual/en/arrayiterator.seek.php
-	 * @param int $offset 
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param int $offset
 	 */
-	public function seek (int $offset): void {}
+	public function seek (int $offset) {}
 
 	/**
 	 * {@inheritdoc}
@@ -3471,222 +2341,126 @@ class ArrayIterator implements SeekableIterator, Traversable, Iterator, ArrayAcc
 
 }
 
-/**
- * This iterator allows to unset and modify values and keys while iterating over Arrays and Objects
- * in the same way as the ArrayIterator. Additionally it is possible to iterate
- * over the current iterator entry.
- * @link http://www.php.net/manual/en/class.recursivearrayiterator.php
- */
 class RecursiveArrayIterator extends ArrayIterator implements Countable, Serializable, ArrayAccess, Iterator, Traversable, SeekableIterator, RecursiveIterator {
 	const STD_PROP_LIST = 1;
 	const ARRAY_AS_PROPS = 2;
-	/**
-	 * Treat only arrays (not objects) as having children for recursive iteration.
 	const CHILD_ARRAYS_ONLY = 4;
 
 
 	/**
-	 * Returns whether current entry is an array or an object
-	 * @link http://www.php.net/manual/en/recursivearrayiterator.haschildren.php
-	 * @return bool Returns true if the current entry is an array or an object,
-	 * otherwise false is returned.
+	 * {@inheritdoc}
 	 */
-	public function hasChildren (): bool {}
+	public function hasChildren () {}
 
 	/**
-	 * Returns an iterator for the current entry if it is an array or an object
-	 * @link http://www.php.net/manual/en/recursivearrayiterator.getchildren.php
-	 * @return RecursiveArrayIterator|null An iterator for the current entry, if it is an array or object; or null on failure.
+	 * {@inheritdoc}
 	 */
-	public function getChildren (): ?RecursiveArrayIterator {}
+	public function getChildren () {}
 
 	/**
-	 * Construct an ArrayIterator
-	 * @link http://www.php.net/manual/en/arrayiterator.construct.php
-	 * @param array|object $array [optional] 
-	 * @param int $flags [optional] 
-	 * @return array|object 
+	 * {@inheritdoc}
+	 * @param object|array $array [optional]
+	 * @param int $flags [optional]
 	 */
-	public function __construct (array|object $array = '[]', int $flags = null): array|object {}
+	public function __construct (object|array $array = array (
+), int $flags = 0) {}
 
 	/**
-	 * Check if offset exists
-	 * @link http://www.php.net/manual/en/arrayiterator.offsetexists.php
-	 * @param mixed $key 
-	 * @return bool true if the offset exists, otherwise false
+	 * {@inheritdoc}
+	 * @param mixed $key
 	 */
-	public function offsetExists (mixed $key): bool {}
+	public function offsetExists (mixed $key = null) {}
 
 	/**
-	 * Get value for an offset
-	 * @link http://www.php.net/manual/en/arrayiterator.offsetget.php
-	 * @param mixed $key 
-	 * @return mixed The value at offset key.
+	 * {@inheritdoc}
+	 * @param mixed $key
 	 */
-	public function offsetGet (mixed $key): mixed {}
+	public function offsetGet (mixed $key = null) {}
 
 	/**
-	 * Set value for an offset
-	 * @link http://www.php.net/manual/en/arrayiterator.offsetset.php
-	 * @param mixed $key 
-	 * @param mixed $value 
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param mixed $key
+	 * @param mixed $value
 	 */
-	public function offsetSet (mixed $key, mixed $value): void {}
+	public function offsetSet (mixed $key = null, mixed $value = null) {}
 
 	/**
-	 * Unset value for an offset
-	 * @link http://www.php.net/manual/en/arrayiterator.offsetunset.php
-	 * @param mixed $key 
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param mixed $key
 	 */
-	public function offsetUnset (mixed $key): void {}
+	public function offsetUnset (mixed $key = null) {}
 
 	/**
-	 * Append an element
-	 * @link http://www.php.net/manual/en/arrayiterator.append.php
-	 * @param mixed $value 
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param mixed $value
 	 */
-	public function append (mixed $value): void {}
+	public function append (mixed $value = null) {}
 
 	/**
-	 * Get array copy
-	 * @link http://www.php.net/manual/en/arrayiterator.getarraycopy.php
-	 * @return array A copy of the array, or array of public properties
-	 * if ArrayIterator refers to an object.
+	 * {@inheritdoc}
 	 */
-	public function getArrayCopy (): array {}
+	public function getArrayCopy () {}
 
 	/**
-	 * Count elements
-	 * @link http://www.php.net/manual/en/arrayiterator.count.php
-	 * @return int The number of elements or public properties in the associated
-	 * array or object, respectively.
+	 * {@inheritdoc}
 	 */
-	public function count (): int {}
+	public function count () {}
 
 	/**
-	 * Get behavior flags
-	 * @link http://www.php.net/manual/en/arrayiterator.getflags.php
-	 * @return int Returns the behavior flags of the ArrayIterator.
+	 * {@inheritdoc}
 	 */
-	public function getFlags (): int {}
+	public function getFlags () {}
 
 	/**
-	 * Set behaviour flags
-	 * @link http://www.php.net/manual/en/arrayiterator.setflags.php
-	 * @param int $flags 
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param int $flags
 	 */
-	public function setFlags (int $flags): void {}
+	public function setFlags (int $flags) {}
 
 	/**
-	 * Sort entries by values
-	 * @link http://www.php.net/manual/en/arrayiterator.asort.php
-	 * @param int $flags [optional] The optional second parameter flags
-	 * may be used to modify the sorting behavior using these values:
-	 * <p>Sorting type flags:
-	 * <p>
-	 * <br>
-	 * SORT_REGULAR - compare items normally;
-	 * the details are described in the comparison operators section
-	 * <br>
-	 * SORT_NUMERIC - compare items numerically
-	 * <br>
-	 * SORT_STRING - compare items as strings
-	 * <br>
-	 * SORT_LOCALE_STRING - compare items as
-	 * strings, based on the current locale. It uses the locale,
-	 * which can be changed using setlocale
-	 * <br>
-	 * SORT_NATURAL - compare items as strings
-	 * using "natural ordering" like natsort
-	 * <br>
-	 * SORT_FLAG_CASE - can be combined
-	 * (bitwise OR) with
-	 * SORT_STRING or
-	 * SORT_NATURAL to sort strings case-insensitively
-	 * </p></p>
-	 * @return true Always returns true.
+	 * {@inheritdoc}
+	 * @param int $flags [optional]
 	 */
-	public function asort (int $flags = SORT_REGULAR): true {}
+	public function asort (int $flags = 0) {}
 
 	/**
-	 * Sort entries by keys
-	 * @link http://www.php.net/manual/en/arrayiterator.ksort.php
-	 * @param int $flags [optional] The optional second parameter flags
-	 * may be used to modify the sorting behavior using these values:
-	 * <p>Sorting type flags:
-	 * <p>
-	 * <br>
-	 * SORT_REGULAR - compare items normally;
-	 * the details are described in the comparison operators section
-	 * <br>
-	 * SORT_NUMERIC - compare items numerically
-	 * <br>
-	 * SORT_STRING - compare items as strings
-	 * <br>
-	 * SORT_LOCALE_STRING - compare items as
-	 * strings, based on the current locale. It uses the locale,
-	 * which can be changed using setlocale
-	 * <br>
-	 * SORT_NATURAL - compare items as strings
-	 * using "natural ordering" like natsort
-	 * <br>
-	 * SORT_FLAG_CASE - can be combined
-	 * (bitwise OR) with
-	 * SORT_STRING or
-	 * SORT_NATURAL to sort strings case-insensitively
-	 * </p></p>
-	 * @return true Always returns true.
+	 * {@inheritdoc}
+	 * @param int $flags [optional]
 	 */
-	public function ksort (int $flags = SORT_REGULAR): true {}
+	public function ksort (int $flags = 0) {}
 
 	/**
-	 * Sort with a user-defined comparison function and maintain index association
-	 * @link http://www.php.net/manual/en/arrayiterator.uasort.php
-	 * @param callable $callback 
-	 * @return true Always returns true.
+	 * {@inheritdoc}
+	 * @param callable $callback
 	 */
-	public function uasort (callable $callback): true {}
+	public function uasort (callable $callback) {}
 
 	/**
-	 * Sort by keys using a user-defined comparison function
-	 * @link http://www.php.net/manual/en/arrayiterator.uksort.php
-	 * @param callable $callback 
-	 * @return true Always returns true.
+	 * {@inheritdoc}
+	 * @param callable $callback
 	 */
-	public function uksort (callable $callback): true {}
+	public function uksort (callable $callback) {}
 
 	/**
-	 * Sort entries naturally
-	 * @link http://www.php.net/manual/en/arrayiterator.natsort.php
-	 * @return true Always returns true.
+	 * {@inheritdoc}
 	 */
-	public function natsort (): true {}
+	public function natsort () {}
 
 	/**
-	 * Sort entries naturally, case insensitive
-	 * @link http://www.php.net/manual/en/arrayiterator.natcasesort.php
-	 * @return true Always returns true.
+	 * {@inheritdoc}
 	 */
-	public function natcasesort (): true {}
+	public function natcasesort () {}
 
 	/**
-	 * Unserialize
-	 * @link http://www.php.net/manual/en/arrayiterator.unserialize.php
-	 * @param string $data 
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param string $data
 	 */
-	public function unserialize (string $data): void {}
+	public function unserialize (string $data) {}
 
 	/**
-	 * Serialize
-	 * @link http://www.php.net/manual/en/arrayiterator.serialize.php
-	 * @return string The serialized ArrayIterator.
+	 * {@inheritdoc}
 	 */
-	public function serialize (): string {}
+	public function serialize () {}
 
 	/**
 	 * {@inheritdoc}
@@ -3700,47 +2474,35 @@ class RecursiveArrayIterator extends ArrayIterator implements Countable, Seriali
 	public function __unserialize (array $data) {}
 
 	/**
-	 * Rewind array back to the start
-	 * @link http://www.php.net/manual/en/arrayiterator.rewind.php
-	 * @return void No value is returned.
+	 * {@inheritdoc}
 	 */
-	public function rewind (): void {}
+	public function rewind () {}
 
 	/**
-	 * Return current array entry
-	 * @link http://www.php.net/manual/en/arrayiterator.current.php
-	 * @return mixed The current array entry.
+	 * {@inheritdoc}
 	 */
-	public function current (): mixed {}
+	public function current () {}
 
 	/**
-	 * Return current array key
-	 * @link http://www.php.net/manual/en/arrayiterator.key.php
-	 * @return string|int|null The current array key.
+	 * {@inheritdoc}
 	 */
-	public function key (): string|int|null {}
+	public function key () {}
 
 	/**
-	 * Move to next entry
-	 * @link http://www.php.net/manual/en/arrayiterator.next.php
-	 * @return void No value is returned.
+	 * {@inheritdoc}
 	 */
-	public function next (): void {}
+	public function next () {}
 
 	/**
-	 * Check whether array contains more entries
-	 * @link http://www.php.net/manual/en/arrayiterator.valid.php
-	 * @return bool Returns true if the iterator is valid, otherwise false
+	 * {@inheritdoc}
 	 */
-	public function valid (): bool {}
+	public function valid () {}
 
 	/**
-	 * Seek to position
-	 * @link http://www.php.net/manual/en/arrayiterator.seek.php
-	 * @param int $offset 
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param int $offset
 	 */
-	public function seek (int $offset): void {}
+	public function seek (int $offset) {}
 
 	/**
 	 * {@inheritdoc}
@@ -3749,226 +2511,159 @@ class RecursiveArrayIterator extends ArrayIterator implements Countable, Seriali
 
 }
 
-/**
- * The SplFileInfo class offers a high-level object-oriented interface to
- * information for an individual file.
- * @link http://www.php.net/manual/en/class.splfileinfo.php
- */
 class SplFileInfo implements Stringable {
 
 	/**
-	 * Construct a new SplFileInfo object
-	 * @link http://www.php.net/manual/en/splfileinfo.construct.php
-	 * @param string $filename 
-	 * @return string 
+	 * {@inheritdoc}
+	 * @param string $filename
 	 */
-	public function __construct (string $filename): string {}
+	public function __construct (string $filename) {}
 
 	/**
-	 * Gets the path without filename
-	 * @link http://www.php.net/manual/en/splfileinfo.getpath.php
-	 * @return string Returns the path to the file.
+	 * {@inheritdoc}
 	 */
-	public function getPath (): string {}
+	public function getPath () {}
 
 	/**
-	 * Gets the filename
-	 * @link http://www.php.net/manual/en/splfileinfo.getfilename.php
-	 * @return string The filename.
+	 * {@inheritdoc}
 	 */
-	public function getFilename (): string {}
+	public function getFilename () {}
 
 	/**
-	 * Gets the file extension
-	 * @link http://www.php.net/manual/en/splfileinfo.getextension.php
-	 * @return string Returns a string containing the file extension, or an
-	 * empty string if the file has no extension.
+	 * {@inheritdoc}
 	 */
-	public function getExtension (): string {}
+	public function getExtension () {}
 
 	/**
-	 * Gets the base name of the file
-	 * @link http://www.php.net/manual/en/splfileinfo.getbasename.php
-	 * @param string $suffix [optional] 
-	 * @return string Returns the base name without path information.
+	 * {@inheritdoc}
+	 * @param string $suffix [optional]
 	 */
-	public function getBasename (string $suffix = '""'): string {}
+	public function getBasename (string $suffix = '') {}
 
 	/**
-	 * Gets the path to the file
-	 * @link http://www.php.net/manual/en/splfileinfo.getpathname.php
-	 * @return string The path to the file.
+	 * {@inheritdoc}
 	 */
-	public function getPathname (): string {}
+	public function getPathname () {}
 
 	/**
-	 * Gets file permissions
-	 * @link http://www.php.net/manual/en/splfileinfo.getperms.php
-	 * @return int|false Returns the file permissions on success, or false on failure.
+	 * {@inheritdoc}
 	 */
-	public function getPerms (): int|false {}
+	public function getPerms () {}
 
 	/**
-	 * Gets the inode for the file
-	 * @link http://www.php.net/manual/en/splfileinfo.getinode.php
-	 * @return int|false Returns the inode number for the filesystem object on success, or false on failure.
+	 * {@inheritdoc}
 	 */
-	public function getInode (): int|false {}
+	public function getInode () {}
 
 	/**
-	 * Gets file size
-	 * @link http://www.php.net/manual/en/splfileinfo.getsize.php
-	 * @return int|false The filesize in bytes on success, or false on failure.
+	 * {@inheritdoc}
 	 */
-	public function getSize (): int|false {}
+	public function getSize () {}
 
 	/**
-	 * Gets the owner of the file
-	 * @link http://www.php.net/manual/en/splfileinfo.getowner.php
-	 * @return int|false The owner id in numerical format on success, or false on failure.
+	 * {@inheritdoc}
 	 */
-	public function getOwner (): int|false {}
+	public function getOwner () {}
 
 	/**
-	 * Gets the file group
-	 * @link http://www.php.net/manual/en/splfileinfo.getgroup.php
-	 * @return int|false The group id in numerical format on success, or false on failure.
+	 * {@inheritdoc}
 	 */
-	public function getGroup (): int|false {}
+	public function getGroup () {}
 
 	/**
-	 * Gets last access time of the file
-	 * @link http://www.php.net/manual/en/splfileinfo.getatime.php
-	 * @return int|false Returns the time the file was last accessed on success, or false on failure.
+	 * {@inheritdoc}
 	 */
-	public function getATime (): int|false {}
+	public function getATime () {}
 
 	/**
-	 * Gets the last modified time
-	 * @link http://www.php.net/manual/en/splfileinfo.getmtime.php
-	 * @return int|false Returns the last modified time for the file, in a Unix timestamp on success, or false on failure.
+	 * {@inheritdoc}
 	 */
-	public function getMTime (): int|false {}
+	public function getMTime () {}
 
 	/**
-	 * Gets the inode change time
-	 * @link http://www.php.net/manual/en/splfileinfo.getctime.php
-	 * @return int|false The last change time, in a Unix timestamp on success, or false on failure.
+	 * {@inheritdoc}
 	 */
-	public function getCTime (): int|false {}
+	public function getCTime () {}
 
 	/**
-	 * Gets file type
-	 * @link http://www.php.net/manual/en/splfileinfo.gettype.php
-	 * @return string|false A string representing the type of the entry.
-	 * May be one of file, link,
-	 * dir, block, fifo,
-	 * char, socket, or unknown, or false on failure.
+	 * {@inheritdoc}
 	 */
-	public function getType (): string|false {}
+	public function getType () {}
 
 	/**
-	 * Tells if the entry is writable
-	 * @link http://www.php.net/manual/en/splfileinfo.iswritable.php
-	 * @return bool Returns true if writable, false otherwise;
+	 * {@inheritdoc}
 	 */
-	public function isWritable (): bool {}
+	public function isWritable () {}
 
 	/**
-	 * Tells if file is readable
-	 * @link http://www.php.net/manual/en/splfileinfo.isreadable.php
-	 * @return bool Returns true if readable, false otherwise.
+	 * {@inheritdoc}
 	 */
-	public function isReadable (): bool {}
+	public function isReadable () {}
 
 	/**
-	 * Tells if the file is executable
-	 * @link http://www.php.net/manual/en/splfileinfo.isexecutable.php
-	 * @return bool Returns true if executable, false otherwise.
+	 * {@inheritdoc}
 	 */
-	public function isExecutable (): bool {}
+	public function isExecutable () {}
 
 	/**
-	 * Tells if the object references a regular file
-	 * @link http://www.php.net/manual/en/splfileinfo.isfile.php
-	 * @return bool Returns true if the file exists and is a regular file (not a link), false otherwise.
+	 * {@inheritdoc}
 	 */
-	public function isFile (): bool {}
+	public function isFile () {}
 
 	/**
-	 * Tells if the file is a directory
-	 * @link http://www.php.net/manual/en/splfileinfo.isdir.php
-	 * @return bool Returns true if a directory, false otherwise.
+	 * {@inheritdoc}
 	 */
-	public function isDir (): bool {}
+	public function isDir () {}
 
 	/**
-	 * Tells if the file is a link
-	 * @link http://www.php.net/manual/en/splfileinfo.islink.php
-	 * @return bool Returns true if the file is a link, false otherwise.
+	 * {@inheritdoc}
 	 */
-	public function isLink (): bool {}
+	public function isLink () {}
 
 	/**
-	 * Gets the target of a link
-	 * @link http://www.php.net/manual/en/splfileinfo.getlinktarget.php
-	 * @return string|false Returns the target of the filesystem link on success, or false on failure.
+	 * {@inheritdoc}
 	 */
-	public function getLinkTarget (): string|false {}
+	public function getLinkTarget () {}
 
 	/**
-	 * Gets absolute path to file
-	 * @link http://www.php.net/manual/en/splfileinfo.getrealpath.php
-	 * @return string|false Returns the path to the file, or false if the file does not exist.
+	 * {@inheritdoc}
 	 */
-	public function getRealPath (): string|false {}
+	public function getRealPath () {}
 
 	/**
-	 * Gets an SplFileInfo object for the file
-	 * @link http://www.php.net/manual/en/splfileinfo.getfileinfo.php
-	 * @param string|null $class [optional] 
-	 * @return SplFileInfo An SplFileInfo object created for the file.
+	 * {@inheritdoc}
+	 * @param string|null $class [optional]
 	 */
-	public function getFileInfo (?string $class = null): SplFileInfo {}
+	public function getFileInfo (?string $class = NULL) {}
 
 	/**
-	 * Gets an SplFileInfo object for the path
-	 * @link http://www.php.net/manual/en/splfileinfo.getpathinfo.php
-	 * @param string|null $class [optional] 
-	 * @return SplFileInfo|null Returns an SplFileInfo object for the parent path of the file on success, or null on failure.
+	 * {@inheritdoc}
+	 * @param string|null $class [optional]
 	 */
-	public function getPathInfo (?string $class = null): ?SplFileInfo {}
+	public function getPathInfo (?string $class = NULL) {}
 
 	/**
-	 * Gets an SplFileObject object for the file
-	 * @link http://www.php.net/manual/en/splfileinfo.openfile.php
-	 * @param string $mode [optional] 
-	 * @param bool $useIncludePath [optional] 
-	 * @param resource|null $context [optional] 
-	 * @return SplFileObject The opened file as an SplFileObject object.
+	 * {@inheritdoc}
+	 * @param string $mode [optional]
+	 * @param bool $useIncludePath [optional]
+	 * @param mixed $context [optional]
 	 */
-	public function openFile (string $mode = '"r"', bool $useIncludePath = false, $context = null): SplFileObject {}
+	public function openFile (string $mode = 'r', bool $useIncludePath = false, $context = NULL) {}
 
 	/**
-	 * Sets the class used with SplFileInfo::openFile
-	 * @link http://www.php.net/manual/en/splfileinfo.setfileclass.php
-	 * @param string $class [optional] 
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param string $class [optional]
 	 */
-	public function setFileClass (string $class = 'SplFileObject::class'): void {}
+	public function setFileClass (string $class = 'SplFileObject') {}
 
 	/**
-	 * Sets the class used with SplFileInfo::getFileInfo and SplFileInfo::getPathInfo
-	 * @link http://www.php.net/manual/en/splfileinfo.setinfoclass.php
-	 * @param string $class [optional] 
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param string $class [optional]
 	 */
-	public function setInfoClass (string $class = 'SplFileInfo::class'): void {}
+	public function setInfoClass (string $class = 'SplFileInfo') {}
 
 	/**
-	 * Returns the path to the file as a string
-	 * @link http://www.php.net/manual/en/splfileinfo.tostring.php
-	 * @return string Returns the path to the file.
+	 * {@inheritdoc}
 	 */
 	public function __toString (): string {}
 
@@ -3985,279 +2680,197 @@ class SplFileInfo implements Stringable {
 
 }
 
-/**
- * The DirectoryIterator class provides a simple interface for viewing
- * the contents of filesystem directories.
- * @link http://www.php.net/manual/en/class.directoryiterator.php
- */
 class DirectoryIterator extends SplFileInfo implements Stringable, SeekableIterator, Traversable, Iterator {
 
 	/**
-	 * Constructs a new directory iterator from a path
-	 * @link http://www.php.net/manual/en/directoryiterator.construct.php
-	 * @param string $directory 
-	 * @return string 
+	 * {@inheritdoc}
+	 * @param string $directory
 	 */
-	public function __construct (string $directory): string {}
+	public function __construct (string $directory) {}
 
 	/**
-	 * Return file name of current DirectoryIterator item
-	 * @link http://www.php.net/manual/en/directoryiterator.getfilename.php
-	 * @return string Returns the file name of the current DirectoryIterator item.
+	 * {@inheritdoc}
 	 */
-	public function getFilename (): string {}
+	public function getFilename () {}
 
 	/**
-	 * Gets the file extension
-	 * @link http://www.php.net/manual/en/directoryiterator.getextension.php
-	 * @return string Returns a string containing the file extension, or an
-	 * empty string if the file has no extension.
+	 * {@inheritdoc}
 	 */
-	public function getExtension (): string {}
+	public function getExtension () {}
 
 	/**
-	 * Get base name of current DirectoryIterator item
-	 * @link http://www.php.net/manual/en/directoryiterator.getbasename.php
-	 * @param string $suffix [optional] 
-	 * @return string The base name of the current DirectoryIterator item.
+	 * {@inheritdoc}
+	 * @param string $suffix [optional]
 	 */
-	public function getBasename (string $suffix = '""'): string {}
+	public function getBasename (string $suffix = '') {}
 
 	/**
-	 * Determine if current DirectoryIterator item is '.' or '..'
-	 * @link http://www.php.net/manual/en/directoryiterator.isdot.php
-	 * @return bool true if the entry is . or ..,
-	 * otherwise false
+	 * {@inheritdoc}
 	 */
-	public function isDot (): bool {}
+	public function isDot () {}
 
 	/**
-	 * Rewind the DirectoryIterator back to the start
-	 * @link http://www.php.net/manual/en/directoryiterator.rewind.php
-	 * @return void No value is returned.
+	 * {@inheritdoc}
 	 */
-	public function rewind (): void {}
+	public function rewind () {}
 
 	/**
-	 * Check whether current DirectoryIterator position is a valid file
-	 * @link http://www.php.net/manual/en/directoryiterator.valid.php
-	 * @return bool Returns true if the position is valid, otherwise false
+	 * {@inheritdoc}
 	 */
-	public function valid (): bool {}
+	public function valid () {}
 
 	/**
-	 * Return the key for the current DirectoryIterator item
-	 * @link http://www.php.net/manual/en/directoryiterator.key.php
-	 * @return mixed The key for the current DirectoryIterator item as an int.
+	 * {@inheritdoc}
 	 */
-	public function key (): mixed {}
+	public function key () {}
 
 	/**
-	 * Return the current DirectoryIterator item
-	 * @link http://www.php.net/manual/en/directoryiterator.current.php
-	 * @return mixed The current DirectoryIterator item.
+	 * {@inheritdoc}
 	 */
-	public function current (): mixed {}
+	public function current () {}
 
 	/**
-	 * Move forward to next DirectoryIterator item
-	 * @link http://www.php.net/manual/en/directoryiterator.next.php
-	 * @return void No value is returned.
+	 * {@inheritdoc}
 	 */
-	public function next (): void {}
+	public function next () {}
 
 	/**
-	 * Seek to a DirectoryIterator item
-	 * @link http://www.php.net/manual/en/directoryiterator.seek.php
-	 * @param int $offset 
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param int $offset
 	 */
-	public function seek (int $offset): void {}
+	public function seek (int $offset) {}
 
 	/**
-	 * Get file name as a string
-	 * @link http://www.php.net/manual/en/directoryiterator.tostring.php
-	 * @return string Returns the file name of the current DirectoryIterator item.
+	 * {@inheritdoc}
 	 */
 	public function __toString (): string {}
 
 	/**
-	 * Gets the path without filename
-	 * @link http://www.php.net/manual/en/splfileinfo.getpath.php
-	 * @return string Returns the path to the file.
+	 * {@inheritdoc}
 	 */
-	public function getPath (): string {}
+	public function getPath () {}
 
 	/**
-	 * Gets the path to the file
-	 * @link http://www.php.net/manual/en/splfileinfo.getpathname.php
-	 * @return string The path to the file.
+	 * {@inheritdoc}
 	 */
-	public function getPathname (): string {}
+	public function getPathname () {}
 
 	/**
-	 * Gets file permissions
-	 * @link http://www.php.net/manual/en/splfileinfo.getperms.php
-	 * @return int|false Returns the file permissions on success, or false on failure.
+	 * {@inheritdoc}
 	 */
-	public function getPerms (): int|false {}
+	public function getPerms () {}
 
 	/**
-	 * Gets the inode for the file
-	 * @link http://www.php.net/manual/en/splfileinfo.getinode.php
-	 * @return int|false Returns the inode number for the filesystem object on success, or false on failure.
+	 * {@inheritdoc}
 	 */
-	public function getInode (): int|false {}
+	public function getInode () {}
 
 	/**
-	 * Gets file size
-	 * @link http://www.php.net/manual/en/splfileinfo.getsize.php
-	 * @return int|false The filesize in bytes on success, or false on failure.
+	 * {@inheritdoc}
 	 */
-	public function getSize (): int|false {}
+	public function getSize () {}
 
 	/**
-	 * Gets the owner of the file
-	 * @link http://www.php.net/manual/en/splfileinfo.getowner.php
-	 * @return int|false The owner id in numerical format on success, or false on failure.
+	 * {@inheritdoc}
 	 */
-	public function getOwner (): int|false {}
+	public function getOwner () {}
 
 	/**
-	 * Gets the file group
-	 * @link http://www.php.net/manual/en/splfileinfo.getgroup.php
-	 * @return int|false The group id in numerical format on success, or false on failure.
+	 * {@inheritdoc}
 	 */
-	public function getGroup (): int|false {}
+	public function getGroup () {}
 
 	/**
-	 * Gets last access time of the file
-	 * @link http://www.php.net/manual/en/splfileinfo.getatime.php
-	 * @return int|false Returns the time the file was last accessed on success, or false on failure.
+	 * {@inheritdoc}
 	 */
-	public function getATime (): int|false {}
+	public function getATime () {}
 
 	/**
-	 * Gets the last modified time
-	 * @link http://www.php.net/manual/en/splfileinfo.getmtime.php
-	 * @return int|false Returns the last modified time for the file, in a Unix timestamp on success, or false on failure.
+	 * {@inheritdoc}
 	 */
-	public function getMTime (): int|false {}
+	public function getMTime () {}
 
 	/**
-	 * Gets the inode change time
-	 * @link http://www.php.net/manual/en/splfileinfo.getctime.php
-	 * @return int|false The last change time, in a Unix timestamp on success, or false on failure.
+	 * {@inheritdoc}
 	 */
-	public function getCTime (): int|false {}
+	public function getCTime () {}
 
 	/**
-	 * Gets file type
-	 * @link http://www.php.net/manual/en/splfileinfo.gettype.php
-	 * @return string|false A string representing the type of the entry.
-	 * May be one of file, link,
-	 * dir, block, fifo,
-	 * char, socket, or unknown, or false on failure.
+	 * {@inheritdoc}
 	 */
-	public function getType (): string|false {}
+	public function getType () {}
 
 	/**
-	 * Tells if the entry is writable
-	 * @link http://www.php.net/manual/en/splfileinfo.iswritable.php
-	 * @return bool Returns true if writable, false otherwise;
+	 * {@inheritdoc}
 	 */
-	public function isWritable (): bool {}
+	public function isWritable () {}
 
 	/**
-	 * Tells if file is readable
-	 * @link http://www.php.net/manual/en/splfileinfo.isreadable.php
-	 * @return bool Returns true if readable, false otherwise.
+	 * {@inheritdoc}
 	 */
-	public function isReadable (): bool {}
+	public function isReadable () {}
 
 	/**
-	 * Tells if the file is executable
-	 * @link http://www.php.net/manual/en/splfileinfo.isexecutable.php
-	 * @return bool Returns true if executable, false otherwise.
+	 * {@inheritdoc}
 	 */
-	public function isExecutable (): bool {}
+	public function isExecutable () {}
 
 	/**
-	 * Tells if the object references a regular file
-	 * @link http://www.php.net/manual/en/splfileinfo.isfile.php
-	 * @return bool Returns true if the file exists and is a regular file (not a link), false otherwise.
+	 * {@inheritdoc}
 	 */
-	public function isFile (): bool {}
+	public function isFile () {}
 
 	/**
-	 * Tells if the file is a directory
-	 * @link http://www.php.net/manual/en/splfileinfo.isdir.php
-	 * @return bool Returns true if a directory, false otherwise.
+	 * {@inheritdoc}
 	 */
-	public function isDir (): bool {}
+	public function isDir () {}
 
 	/**
-	 * Tells if the file is a link
-	 * @link http://www.php.net/manual/en/splfileinfo.islink.php
-	 * @return bool Returns true if the file is a link, false otherwise.
+	 * {@inheritdoc}
 	 */
-	public function isLink (): bool {}
+	public function isLink () {}
 
 	/**
-	 * Gets the target of a link
-	 * @link http://www.php.net/manual/en/splfileinfo.getlinktarget.php
-	 * @return string|false Returns the target of the filesystem link on success, or false on failure.
+	 * {@inheritdoc}
 	 */
-	public function getLinkTarget (): string|false {}
+	public function getLinkTarget () {}
 
 	/**
-	 * Gets absolute path to file
-	 * @link http://www.php.net/manual/en/splfileinfo.getrealpath.php
-	 * @return string|false Returns the path to the file, or false if the file does not exist.
+	 * {@inheritdoc}
 	 */
-	public function getRealPath (): string|false {}
+	public function getRealPath () {}
 
 	/**
-	 * Gets an SplFileInfo object for the file
-	 * @link http://www.php.net/manual/en/splfileinfo.getfileinfo.php
-	 * @param string|null $class [optional] 
-	 * @return SplFileInfo An SplFileInfo object created for the file.
+	 * {@inheritdoc}
+	 * @param string|null $class [optional]
 	 */
-	public function getFileInfo (?string $class = null): SplFileInfo {}
+	public function getFileInfo (?string $class = NULL) {}
 
 	/**
-	 * Gets an SplFileInfo object for the path
-	 * @link http://www.php.net/manual/en/splfileinfo.getpathinfo.php
-	 * @param string|null $class [optional] 
-	 * @return SplFileInfo|null Returns an SplFileInfo object for the parent path of the file on success, or null on failure.
+	 * {@inheritdoc}
+	 * @param string|null $class [optional]
 	 */
-	public function getPathInfo (?string $class = null): ?SplFileInfo {}
+	public function getPathInfo (?string $class = NULL) {}
 
 	/**
-	 * Gets an SplFileObject object for the file
-	 * @link http://www.php.net/manual/en/splfileinfo.openfile.php
-	 * @param string $mode [optional] 
-	 * @param bool $useIncludePath [optional] 
-	 * @param resource|null $context [optional] 
-	 * @return SplFileObject The opened file as an SplFileObject object.
+	 * {@inheritdoc}
+	 * @param string $mode [optional]
+	 * @param bool $useIncludePath [optional]
+	 * @param mixed $context [optional]
 	 */
-	public function openFile (string $mode = '"r"', bool $useIncludePath = false, $context = null): SplFileObject {}
+	public function openFile (string $mode = 'r', bool $useIncludePath = false, $context = NULL) {}
 
 	/**
-	 * Sets the class used with SplFileInfo::openFile
-	 * @link http://www.php.net/manual/en/splfileinfo.setfileclass.php
-	 * @param string $class [optional] 
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param string $class [optional]
 	 */
-	public function setFileClass (string $class = 'SplFileObject::class'): void {}
+	public function setFileClass (string $class = 'SplFileObject') {}
 
 	/**
-	 * Sets the class used with SplFileInfo::getFileInfo and SplFileInfo::getPathInfo
-	 * @link http://www.php.net/manual/en/splfileinfo.setinfoclass.php
-	 * @param string $class [optional] 
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param string $class [optional]
 	 */
-	public function setInfoClass (string $class = 'SplFileInfo::class'): void {}
+	public function setInfoClass (string $class = 'SplFileInfo') {}
 
 	/**
 	 * {@inheritdoc}
@@ -4272,335 +2885,222 @@ class DirectoryIterator extends SplFileInfo implements Stringable, SeekableItera
 
 }
 
-/**
- * The Filesystem iterator
- * @link http://www.php.net/manual/en/class.filesystemiterator.php
- */
 class FilesystemIterator extends DirectoryIterator implements Iterator, Traversable, SeekableIterator, Stringable {
-	/**
-	 * Masks FilesystemIterator::current
 	const CURRENT_MODE_MASK = 240;
-	/**
-	 * Makes FilesystemIterator::current return the pathname.
 	const CURRENT_AS_PATHNAME = 32;
-	/**
-	 * Makes FilesystemIterator::current return an SplFileInfo instance.
 	const CURRENT_AS_FILEINFO = 0;
-	/**
-	 * Makes FilesystemIterator::current return $this (the FilesystemIterator).
 	const CURRENT_AS_SELF = 16;
-	/**
-	 * Masks FilesystemIterator::key
 	const KEY_MODE_MASK = 3840;
-	/**
-	 * Makes FilesystemIterator::key return the pathname.
 	const KEY_AS_PATHNAME = 0;
-	/**
-	 * Makes RecursiveDirectoryIterator::hasChildren follow symlinks.
 	const FOLLOW_SYMLINKS = 16384;
-	/**
-	 * Makes FilesystemIterator::key return the filename.
 	const KEY_AS_FILENAME = 256;
-	/**
-	 * Same as FilesystemIterator::KEY_AS_FILENAME | FilesystemIterator::CURRENT_AS_FILEINFO.
 	const NEW_CURRENT_AND_KEY = 256;
-	/**
-	 * Mask used for FilesystemIterator::getFlags and FilesystemIterator::setFlags.
 	const OTHER_MODE_MASK = 28672;
-	/**
-	 * Skips dot files (. and ..).
 	const SKIP_DOTS = 4096;
-	/**
-	 * Makes paths use Unix-style forward slash irrespective of system default.
-	 * Note that the path that is passed to the
-	 * constructor is not modified.
 	const UNIX_PATHS = 8192;
 
 
 	/**
-	 * Constructs a new filesystem iterator
-	 * @link http://www.php.net/manual/en/filesystemiterator.construct.php
-	 * @param string $directory 
-	 * @param int $flags [optional] 
-	 * @return string 
+	 * {@inheritdoc}
+	 * @param string $directory
+	 * @param int $flags [optional]
 	 */
-	public function __construct (string $directory, int $flags = 'FilesystemIterator::KEY_AS_PATHNAME | FilesystemIterator::CURRENT_AS_FILEINFO | FilesystemIterator::SKIP_DOTS'): string {}
+	public function __construct (string $directory, int $flags = 4096) {}
 
 	/**
-	 * Rewinds back to the beginning
-	 * @link http://www.php.net/manual/en/filesystemiterator.rewind.php
-	 * @return void No value is returned.
+	 * {@inheritdoc}
 	 */
-	public function rewind (): void {}
+	public function rewind () {}
 
 	/**
-	 * Retrieve the key for the current file
-	 * @link http://www.php.net/manual/en/filesystemiterator.key.php
-	 * @return string Returns the pathname or filename depending on the set flags.
-	 * See the FilesystemIterator constants.
+	 * {@inheritdoc}
 	 */
-	public function key (): string {}
+	public function key () {}
 
 	/**
-	 * The current file
-	 * @link http://www.php.net/manual/en/filesystemiterator.current.php
-	 * @return string|SplFileInfo|FilesystemIterator The filename, file information, or $this depending on the set flags.
-	 * See the FilesystemIterator constants.
+	 * {@inheritdoc}
 	 */
-	public function current (): string|SplFileInfo|FilesystemIterator {}
+	public function current () {}
 
 	/**
-	 * Get the handling flags
-	 * @link http://www.php.net/manual/en/filesystemiterator.getflags.php
-	 * @return int The integer value of the set flags.
+	 * {@inheritdoc}
 	 */
-	public function getFlags (): int {}
+	public function getFlags () {}
 
 	/**
-	 * Sets handling flags
-	 * @link http://www.php.net/manual/en/filesystemiterator.setflags.php
-	 * @param int $flags 
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param int $flags
 	 */
-	public function setFlags (int $flags): void {}
+	public function setFlags (int $flags) {}
 
 	/**
-	 * Return file name of current DirectoryIterator item
-	 * @link http://www.php.net/manual/en/directoryiterator.getfilename.php
-	 * @return string Returns the file name of the current DirectoryIterator item.
+	 * {@inheritdoc}
 	 */
-	public function getFilename (): string {}
+	public function getFilename () {}
 
 	/**
-	 * Gets the file extension
-	 * @link http://www.php.net/manual/en/directoryiterator.getextension.php
-	 * @return string Returns a string containing the file extension, or an
-	 * empty string if the file has no extension.
+	 * {@inheritdoc}
 	 */
-	public function getExtension (): string {}
+	public function getExtension () {}
 
 	/**
-	 * Get base name of current DirectoryIterator item
-	 * @link http://www.php.net/manual/en/directoryiterator.getbasename.php
-	 * @param string $suffix [optional] 
-	 * @return string The base name of the current DirectoryIterator item.
+	 * {@inheritdoc}
+	 * @param string $suffix [optional]
 	 */
-	public function getBasename (string $suffix = '""'): string {}
+	public function getBasename (string $suffix = '') {}
 
 	/**
-	 * Determine if current DirectoryIterator item is '.' or '..'
-	 * @link http://www.php.net/manual/en/directoryiterator.isdot.php
-	 * @return bool true if the entry is . or ..,
-	 * otherwise false
+	 * {@inheritdoc}
 	 */
-	public function isDot (): bool {}
+	public function isDot () {}
 
 	/**
-	 * Check whether current DirectoryIterator position is a valid file
-	 * @link http://www.php.net/manual/en/directoryiterator.valid.php
-	 * @return bool Returns true if the position is valid, otherwise false
+	 * {@inheritdoc}
 	 */
-	public function valid (): bool {}
+	public function valid () {}
 
 	/**
-	 * Move forward to next DirectoryIterator item
-	 * @link http://www.php.net/manual/en/directoryiterator.next.php
-	 * @return void No value is returned.
+	 * {@inheritdoc}
 	 */
-	public function next (): void {}
+	public function next () {}
 
 	/**
-	 * Seek to a DirectoryIterator item
-	 * @link http://www.php.net/manual/en/directoryiterator.seek.php
-	 * @param int $offset 
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param int $offset
 	 */
-	public function seek (int $offset): void {}
+	public function seek (int $offset) {}
 
 	/**
-	 * Get file name as a string
-	 * @link http://www.php.net/manual/en/directoryiterator.tostring.php
-	 * @return string Returns the file name of the current DirectoryIterator item.
+	 * {@inheritdoc}
 	 */
 	public function __toString (): string {}
 
 	/**
-	 * Gets the path without filename
-	 * @link http://www.php.net/manual/en/splfileinfo.getpath.php
-	 * @return string Returns the path to the file.
+	 * {@inheritdoc}
 	 */
-	public function getPath (): string {}
+	public function getPath () {}
 
 	/**
-	 * Gets the path to the file
-	 * @link http://www.php.net/manual/en/splfileinfo.getpathname.php
-	 * @return string The path to the file.
+	 * {@inheritdoc}
 	 */
-	public function getPathname (): string {}
+	public function getPathname () {}
 
 	/**
-	 * Gets file permissions
-	 * @link http://www.php.net/manual/en/splfileinfo.getperms.php
-	 * @return int|false Returns the file permissions on success, or false on failure.
+	 * {@inheritdoc}
 	 */
-	public function getPerms (): int|false {}
+	public function getPerms () {}
 
 	/**
-	 * Gets the inode for the file
-	 * @link http://www.php.net/manual/en/splfileinfo.getinode.php
-	 * @return int|false Returns the inode number for the filesystem object on success, or false on failure.
+	 * {@inheritdoc}
 	 */
-	public function getInode (): int|false {}
+	public function getInode () {}
 
 	/**
-	 * Gets file size
-	 * @link http://www.php.net/manual/en/splfileinfo.getsize.php
-	 * @return int|false The filesize in bytes on success, or false on failure.
+	 * {@inheritdoc}
 	 */
-	public function getSize (): int|false {}
+	public function getSize () {}
 
 	/**
-	 * Gets the owner of the file
-	 * @link http://www.php.net/manual/en/splfileinfo.getowner.php
-	 * @return int|false The owner id in numerical format on success, or false on failure.
+	 * {@inheritdoc}
 	 */
-	public function getOwner (): int|false {}
+	public function getOwner () {}
 
 	/**
-	 * Gets the file group
-	 * @link http://www.php.net/manual/en/splfileinfo.getgroup.php
-	 * @return int|false The group id in numerical format on success, or false on failure.
+	 * {@inheritdoc}
 	 */
-	public function getGroup (): int|false {}
+	public function getGroup () {}
 
 	/**
-	 * Gets last access time of the file
-	 * @link http://www.php.net/manual/en/splfileinfo.getatime.php
-	 * @return int|false Returns the time the file was last accessed on success, or false on failure.
+	 * {@inheritdoc}
 	 */
-	public function getATime (): int|false {}
+	public function getATime () {}
 
 	/**
-	 * Gets the last modified time
-	 * @link http://www.php.net/manual/en/splfileinfo.getmtime.php
-	 * @return int|false Returns the last modified time for the file, in a Unix timestamp on success, or false on failure.
+	 * {@inheritdoc}
 	 */
-	public function getMTime (): int|false {}
+	public function getMTime () {}
 
 	/**
-	 * Gets the inode change time
-	 * @link http://www.php.net/manual/en/splfileinfo.getctime.php
-	 * @return int|false The last change time, in a Unix timestamp on success, or false on failure.
+	 * {@inheritdoc}
 	 */
-	public function getCTime (): int|false {}
+	public function getCTime () {}
 
 	/**
-	 * Gets file type
-	 * @link http://www.php.net/manual/en/splfileinfo.gettype.php
-	 * @return string|false A string representing the type of the entry.
-	 * May be one of file, link,
-	 * dir, block, fifo,
-	 * char, socket, or unknown, or false on failure.
+	 * {@inheritdoc}
 	 */
-	public function getType (): string|false {}
+	public function getType () {}
 
 	/**
-	 * Tells if the entry is writable
-	 * @link http://www.php.net/manual/en/splfileinfo.iswritable.php
-	 * @return bool Returns true if writable, false otherwise;
+	 * {@inheritdoc}
 	 */
-	public function isWritable (): bool {}
+	public function isWritable () {}
 
 	/**
-	 * Tells if file is readable
-	 * @link http://www.php.net/manual/en/splfileinfo.isreadable.php
-	 * @return bool Returns true if readable, false otherwise.
+	 * {@inheritdoc}
 	 */
-	public function isReadable (): bool {}
+	public function isReadable () {}
 
 	/**
-	 * Tells if the file is executable
-	 * @link http://www.php.net/manual/en/splfileinfo.isexecutable.php
-	 * @return bool Returns true if executable, false otherwise.
+	 * {@inheritdoc}
 	 */
-	public function isExecutable (): bool {}
+	public function isExecutable () {}
 
 	/**
-	 * Tells if the object references a regular file
-	 * @link http://www.php.net/manual/en/splfileinfo.isfile.php
-	 * @return bool Returns true if the file exists and is a regular file (not a link), false otherwise.
+	 * {@inheritdoc}
 	 */
-	public function isFile (): bool {}
+	public function isFile () {}
 
 	/**
-	 * Tells if the file is a directory
-	 * @link http://www.php.net/manual/en/splfileinfo.isdir.php
-	 * @return bool Returns true if a directory, false otherwise.
+	 * {@inheritdoc}
 	 */
-	public function isDir (): bool {}
+	public function isDir () {}
 
 	/**
-	 * Tells if the file is a link
-	 * @link http://www.php.net/manual/en/splfileinfo.islink.php
-	 * @return bool Returns true if the file is a link, false otherwise.
+	 * {@inheritdoc}
 	 */
-	public function isLink (): bool {}
+	public function isLink () {}
 
 	/**
-	 * Gets the target of a link
-	 * @link http://www.php.net/manual/en/splfileinfo.getlinktarget.php
-	 * @return string|false Returns the target of the filesystem link on success, or false on failure.
+	 * {@inheritdoc}
 	 */
-	public function getLinkTarget (): string|false {}
+	public function getLinkTarget () {}
 
 	/**
-	 * Gets absolute path to file
-	 * @link http://www.php.net/manual/en/splfileinfo.getrealpath.php
-	 * @return string|false Returns the path to the file, or false if the file does not exist.
+	 * {@inheritdoc}
 	 */
-	public function getRealPath (): string|false {}
+	public function getRealPath () {}
 
 	/**
-	 * Gets an SplFileInfo object for the file
-	 * @link http://www.php.net/manual/en/splfileinfo.getfileinfo.php
-	 * @param string|null $class [optional] 
-	 * @return SplFileInfo An SplFileInfo object created for the file.
+	 * {@inheritdoc}
+	 * @param string|null $class [optional]
 	 */
-	public function getFileInfo (?string $class = null): SplFileInfo {}
+	public function getFileInfo (?string $class = NULL) {}
 
 	/**
-	 * Gets an SplFileInfo object for the path
-	 * @link http://www.php.net/manual/en/splfileinfo.getpathinfo.php
-	 * @param string|null $class [optional] 
-	 * @return SplFileInfo|null Returns an SplFileInfo object for the parent path of the file on success, or null on failure.
+	 * {@inheritdoc}
+	 * @param string|null $class [optional]
 	 */
-	public function getPathInfo (?string $class = null): ?SplFileInfo {}
+	public function getPathInfo (?string $class = NULL) {}
 
 	/**
-	 * Gets an SplFileObject object for the file
-	 * @link http://www.php.net/manual/en/splfileinfo.openfile.php
-	 * @param string $mode [optional] 
-	 * @param bool $useIncludePath [optional] 
-	 * @param resource|null $context [optional] 
-	 * @return SplFileObject The opened file as an SplFileObject object.
+	 * {@inheritdoc}
+	 * @param string $mode [optional]
+	 * @param bool $useIncludePath [optional]
+	 * @param mixed $context [optional]
 	 */
-	public function openFile (string $mode = '"r"', bool $useIncludePath = false, $context = null): SplFileObject {}
+	public function openFile (string $mode = 'r', bool $useIncludePath = false, $context = NULL) {}
 
 	/**
-	 * Sets the class used with SplFileInfo::openFile
-	 * @link http://www.php.net/manual/en/splfileinfo.setfileclass.php
-	 * @param string $class [optional] 
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param string $class [optional]
 	 */
-	public function setFileClass (string $class = 'SplFileObject::class'): void {}
+	public function setFileClass (string $class = 'SplFileObject') {}
 
 	/**
-	 * Sets the class used with SplFileInfo::getFileInfo and SplFileInfo::getPathInfo
-	 * @link http://www.php.net/manual/en/splfileinfo.setinfoclass.php
-	 * @param string $class [optional] 
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param string $class [optional]
 	 */
-	public function setInfoClass (string $class = 'SplFileInfo::class'): void {}
+	public function setInfoClass (string $class = 'SplFileInfo') {}
 
 	/**
 	 * {@inheritdoc}
@@ -4615,11 +3115,6 @@ class FilesystemIterator extends DirectoryIterator implements Iterator, Traversa
 
 }
 
-/**
- * The RecursiveDirectoryIterator provides
- * an interface for iterating recursively over filesystem directories.
- * @link http://www.php.net/manual/en/class.recursivedirectoryiterator.php
- */
 class RecursiveDirectoryIterator extends FilesystemIterator implements Stringable, SeekableIterator, Traversable, Iterator, RecursiveIterator {
 	const CURRENT_MODE_MASK = 240;
 	const CURRENT_AS_PATHNAME = 32;
@@ -4636,320 +3131,227 @@ class RecursiveDirectoryIterator extends FilesystemIterator implements Stringabl
 
 
 	/**
-	 * Constructs a RecursiveDirectoryIterator
-	 * @link http://www.php.net/manual/en/recursivedirectoryiterator.construct.php
-	 * @param string $directory 
-	 * @param int $flags [optional] 
-	 * @return string 
+	 * {@inheritdoc}
+	 * @param string $directory
+	 * @param int $flags [optional]
 	 */
-	public function __construct (string $directory, int $flags = 'FilesystemIterator::KEY_AS_PATHNAME | FilesystemIterator::CURRENT_AS_FILEINFO'): string {}
+	public function __construct (string $directory, int $flags = 0) {}
 
 	/**
-	 * Returns whether current entry is a directory and not '.' or '..'
-	 * @link http://www.php.net/manual/en/recursivedirectoryiterator.haschildren.php
-	 * @param bool $allowLinks [optional] 
-	 * @return bool Returns whether the current entry is a directory, but not '.' or '..'
+	 * {@inheritdoc}
+	 * @param bool $allowLinks [optional]
 	 */
-	public function hasChildren (bool $allowLinks = false): bool {}
+	public function hasChildren (bool $allowLinks = false) {}
 
 	/**
-	 * Returns an iterator for the current entry if it is a directory
-	 * @link http://www.php.net/manual/en/recursivedirectoryiterator.getchildren.php
-	 * @return RecursiveDirectoryIterator The filename, file information, or $this depending on the set flags.
-	 * See the FilesystemIterator
-	 * constants.
+	 * {@inheritdoc}
 	 */
-	public function getChildren (): RecursiveDirectoryIterator {}
+	public function getChildren () {}
 
 	/**
-	 * Get sub path
-	 * @link http://www.php.net/manual/en/recursivedirectoryiterator.getsubpath.php
-	 * @return string The sub path.
+	 * {@inheritdoc}
 	 */
-	public function getSubPath (): string {}
+	public function getSubPath () {}
 
 	/**
-	 * Get sub path and name
-	 * @link http://www.php.net/manual/en/recursivedirectoryiterator.getsubpathname.php
-	 * @return string The sub path (sub directory) and filename.
+	 * {@inheritdoc}
 	 */
-	public function getSubPathname (): string {}
+	public function getSubPathname () {}
 
 	/**
-	 * Rewinds back to the beginning
-	 * @link http://www.php.net/manual/en/filesystemiterator.rewind.php
-	 * @return void No value is returned.
+	 * {@inheritdoc}
 	 */
-	public function rewind (): void {}
+	public function rewind () {}
 
 	/**
-	 * Retrieve the key for the current file
-	 * @link http://www.php.net/manual/en/filesystemiterator.key.php
-	 * @return string Returns the pathname or filename depending on the set flags.
-	 * See the FilesystemIterator constants.
+	 * {@inheritdoc}
 	 */
-	public function key (): string {}
+	public function key () {}
 
 	/**
-	 * The current file
-	 * @link http://www.php.net/manual/en/filesystemiterator.current.php
-	 * @return string|SplFileInfo|FilesystemIterator The filename, file information, or $this depending on the set flags.
-	 * See the FilesystemIterator constants.
+	 * {@inheritdoc}
 	 */
-	public function current (): string|SplFileInfo|FilesystemIterator {}
+	public function current () {}
 
 	/**
-	 * Get the handling flags
-	 * @link http://www.php.net/manual/en/filesystemiterator.getflags.php
-	 * @return int The integer value of the set flags.
+	 * {@inheritdoc}
 	 */
-	public function getFlags (): int {}
+	public function getFlags () {}
 
 	/**
-	 * Sets handling flags
-	 * @link http://www.php.net/manual/en/filesystemiterator.setflags.php
-	 * @param int $flags 
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param int $flags
 	 */
-	public function setFlags (int $flags): void {}
+	public function setFlags (int $flags) {}
 
 	/**
-	 * Return file name of current DirectoryIterator item
-	 * @link http://www.php.net/manual/en/directoryiterator.getfilename.php
-	 * @return string Returns the file name of the current DirectoryIterator item.
+	 * {@inheritdoc}
 	 */
-	public function getFilename (): string {}
+	public function getFilename () {}
 
 	/**
-	 * Gets the file extension
-	 * @link http://www.php.net/manual/en/directoryiterator.getextension.php
-	 * @return string Returns a string containing the file extension, or an
-	 * empty string if the file has no extension.
+	 * {@inheritdoc}
 	 */
-	public function getExtension (): string {}
+	public function getExtension () {}
 
 	/**
-	 * Get base name of current DirectoryIterator item
-	 * @link http://www.php.net/manual/en/directoryiterator.getbasename.php
-	 * @param string $suffix [optional] 
-	 * @return string The base name of the current DirectoryIterator item.
+	 * {@inheritdoc}
+	 * @param string $suffix [optional]
 	 */
-	public function getBasename (string $suffix = '""'): string {}
+	public function getBasename (string $suffix = '') {}
 
 	/**
-	 * Determine if current DirectoryIterator item is '.' or '..'
-	 * @link http://www.php.net/manual/en/directoryiterator.isdot.php
-	 * @return bool true if the entry is . or ..,
-	 * otherwise false
+	 * {@inheritdoc}
 	 */
-	public function isDot (): bool {}
+	public function isDot () {}
 
 	/**
-	 * Check whether current DirectoryIterator position is a valid file
-	 * @link http://www.php.net/manual/en/directoryiterator.valid.php
-	 * @return bool Returns true if the position is valid, otherwise false
+	 * {@inheritdoc}
 	 */
-	public function valid (): bool {}
+	public function valid () {}
 
 	/**
-	 * Move forward to next DirectoryIterator item
-	 * @link http://www.php.net/manual/en/directoryiterator.next.php
-	 * @return void No value is returned.
+	 * {@inheritdoc}
 	 */
-	public function next (): void {}
+	public function next () {}
 
 	/**
-	 * Seek to a DirectoryIterator item
-	 * @link http://www.php.net/manual/en/directoryiterator.seek.php
-	 * @param int $offset 
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param int $offset
 	 */
-	public function seek (int $offset): void {}
+	public function seek (int $offset) {}
 
 	/**
-	 * Get file name as a string
-	 * @link http://www.php.net/manual/en/directoryiterator.tostring.php
-	 * @return string Returns the file name of the current DirectoryIterator item.
+	 * {@inheritdoc}
 	 */
 	public function __toString (): string {}
 
 	/**
-	 * Gets the path without filename
-	 * @link http://www.php.net/manual/en/splfileinfo.getpath.php
-	 * @return string Returns the path to the file.
+	 * {@inheritdoc}
 	 */
-	public function getPath (): string {}
+	public function getPath () {}
 
 	/**
-	 * Gets the path to the file
-	 * @link http://www.php.net/manual/en/splfileinfo.getpathname.php
-	 * @return string The path to the file.
+	 * {@inheritdoc}
 	 */
-	public function getPathname (): string {}
+	public function getPathname () {}
 
 	/**
-	 * Gets file permissions
-	 * @link http://www.php.net/manual/en/splfileinfo.getperms.php
-	 * @return int|false Returns the file permissions on success, or false on failure.
+	 * {@inheritdoc}
 	 */
-	public function getPerms (): int|false {}
+	public function getPerms () {}
 
 	/**
-	 * Gets the inode for the file
-	 * @link http://www.php.net/manual/en/splfileinfo.getinode.php
-	 * @return int|false Returns the inode number for the filesystem object on success, or false on failure.
+	 * {@inheritdoc}
 	 */
-	public function getInode (): int|false {}
+	public function getInode () {}
 
 	/**
-	 * Gets file size
-	 * @link http://www.php.net/manual/en/splfileinfo.getsize.php
-	 * @return int|false The filesize in bytes on success, or false on failure.
+	 * {@inheritdoc}
 	 */
-	public function getSize (): int|false {}
+	public function getSize () {}
 
 	/**
-	 * Gets the owner of the file
-	 * @link http://www.php.net/manual/en/splfileinfo.getowner.php
-	 * @return int|false The owner id in numerical format on success, or false on failure.
+	 * {@inheritdoc}
 	 */
-	public function getOwner (): int|false {}
+	public function getOwner () {}
 
 	/**
-	 * Gets the file group
-	 * @link http://www.php.net/manual/en/splfileinfo.getgroup.php
-	 * @return int|false The group id in numerical format on success, or false on failure.
+	 * {@inheritdoc}
 	 */
-	public function getGroup (): int|false {}
+	public function getGroup () {}
 
 	/**
-	 * Gets last access time of the file
-	 * @link http://www.php.net/manual/en/splfileinfo.getatime.php
-	 * @return int|false Returns the time the file was last accessed on success, or false on failure.
+	 * {@inheritdoc}
 	 */
-	public function getATime (): int|false {}
+	public function getATime () {}
 
 	/**
-	 * Gets the last modified time
-	 * @link http://www.php.net/manual/en/splfileinfo.getmtime.php
-	 * @return int|false Returns the last modified time for the file, in a Unix timestamp on success, or false on failure.
+	 * {@inheritdoc}
 	 */
-	public function getMTime (): int|false {}
+	public function getMTime () {}
 
 	/**
-	 * Gets the inode change time
-	 * @link http://www.php.net/manual/en/splfileinfo.getctime.php
-	 * @return int|false The last change time, in a Unix timestamp on success, or false on failure.
+	 * {@inheritdoc}
 	 */
-	public function getCTime (): int|false {}
+	public function getCTime () {}
 
 	/**
-	 * Gets file type
-	 * @link http://www.php.net/manual/en/splfileinfo.gettype.php
-	 * @return string|false A string representing the type of the entry.
-	 * May be one of file, link,
-	 * dir, block, fifo,
-	 * char, socket, or unknown, or false on failure.
+	 * {@inheritdoc}
 	 */
-	public function getType (): string|false {}
+	public function getType () {}
 
 	/**
-	 * Tells if the entry is writable
-	 * @link http://www.php.net/manual/en/splfileinfo.iswritable.php
-	 * @return bool Returns true if writable, false otherwise;
+	 * {@inheritdoc}
 	 */
-	public function isWritable (): bool {}
+	public function isWritable () {}
 
 	/**
-	 * Tells if file is readable
-	 * @link http://www.php.net/manual/en/splfileinfo.isreadable.php
-	 * @return bool Returns true if readable, false otherwise.
+	 * {@inheritdoc}
 	 */
-	public function isReadable (): bool {}
+	public function isReadable () {}
 
 	/**
-	 * Tells if the file is executable
-	 * @link http://www.php.net/manual/en/splfileinfo.isexecutable.php
-	 * @return bool Returns true if executable, false otherwise.
+	 * {@inheritdoc}
 	 */
-	public function isExecutable (): bool {}
+	public function isExecutable () {}
 
 	/**
-	 * Tells if the object references a regular file
-	 * @link http://www.php.net/manual/en/splfileinfo.isfile.php
-	 * @return bool Returns true if the file exists and is a regular file (not a link), false otherwise.
+	 * {@inheritdoc}
 	 */
-	public function isFile (): bool {}
+	public function isFile () {}
 
 	/**
-	 * Tells if the file is a directory
-	 * @link http://www.php.net/manual/en/splfileinfo.isdir.php
-	 * @return bool Returns true if a directory, false otherwise.
+	 * {@inheritdoc}
 	 */
-	public function isDir (): bool {}
+	public function isDir () {}
 
 	/**
-	 * Tells if the file is a link
-	 * @link http://www.php.net/manual/en/splfileinfo.islink.php
-	 * @return bool Returns true if the file is a link, false otherwise.
+	 * {@inheritdoc}
 	 */
-	public function isLink (): bool {}
+	public function isLink () {}
 
 	/**
-	 * Gets the target of a link
-	 * @link http://www.php.net/manual/en/splfileinfo.getlinktarget.php
-	 * @return string|false Returns the target of the filesystem link on success, or false on failure.
+	 * {@inheritdoc}
 	 */
-	public function getLinkTarget (): string|false {}
+	public function getLinkTarget () {}
 
 	/**
-	 * Gets absolute path to file
-	 * @link http://www.php.net/manual/en/splfileinfo.getrealpath.php
-	 * @return string|false Returns the path to the file, or false if the file does not exist.
+	 * {@inheritdoc}
 	 */
-	public function getRealPath (): string|false {}
+	public function getRealPath () {}
 
 	/**
-	 * Gets an SplFileInfo object for the file
-	 * @link http://www.php.net/manual/en/splfileinfo.getfileinfo.php
-	 * @param string|null $class [optional] 
-	 * @return SplFileInfo An SplFileInfo object created for the file.
+	 * {@inheritdoc}
+	 * @param string|null $class [optional]
 	 */
-	public function getFileInfo (?string $class = null): SplFileInfo {}
+	public function getFileInfo (?string $class = NULL) {}
 
 	/**
-	 * Gets an SplFileInfo object for the path
-	 * @link http://www.php.net/manual/en/splfileinfo.getpathinfo.php
-	 * @param string|null $class [optional] 
-	 * @return SplFileInfo|null Returns an SplFileInfo object for the parent path of the file on success, or null on failure.
+	 * {@inheritdoc}
+	 * @param string|null $class [optional]
 	 */
-	public function getPathInfo (?string $class = null): ?SplFileInfo {}
+	public function getPathInfo (?string $class = NULL) {}
 
 	/**
-	 * Gets an SplFileObject object for the file
-	 * @link http://www.php.net/manual/en/splfileinfo.openfile.php
-	 * @param string $mode [optional] 
-	 * @param bool $useIncludePath [optional] 
-	 * @param resource|null $context [optional] 
-	 * @return SplFileObject The opened file as an SplFileObject object.
+	 * {@inheritdoc}
+	 * @param string $mode [optional]
+	 * @param bool $useIncludePath [optional]
+	 * @param mixed $context [optional]
 	 */
-	public function openFile (string $mode = '"r"', bool $useIncludePath = false, $context = null): SplFileObject {}
+	public function openFile (string $mode = 'r', bool $useIncludePath = false, $context = NULL) {}
 
 	/**
-	 * Sets the class used with SplFileInfo::openFile
-	 * @link http://www.php.net/manual/en/splfileinfo.setfileclass.php
-	 * @param string $class [optional] 
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param string $class [optional]
 	 */
-	public function setFileClass (string $class = 'SplFileObject::class'): void {}
+	public function setFileClass (string $class = 'SplFileObject') {}
 
 	/**
-	 * Sets the class used with SplFileInfo::getFileInfo and SplFileInfo::getPathInfo
-	 * @link http://www.php.net/manual/en/splfileinfo.setinfoclass.php
-	 * @param string $class [optional] 
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param string $class [optional]
 	 */
-	public function setInfoClass (string $class = 'SplFileInfo::class'): void {}
+	public function setInfoClass (string $class = 'SplFileInfo') {}
 
 	/**
 	 * {@inheritdoc}
@@ -4964,11 +3366,6 @@ class RecursiveDirectoryIterator extends FilesystemIterator implements Stringabl
 
 }
 
-/**
- * Iterates through a file system in a similar fashion to 
- * glob.
- * @link http://www.php.net/manual/en/class.globiterator.php
- */
 class GlobIterator extends FilesystemIterator implements Stringable, SeekableIterator, Traversable, Iterator, Countable {
 	const CURRENT_MODE_MASK = 240;
 	const CURRENT_AS_PATHNAME = 32;
@@ -4985,297 +3382,211 @@ class GlobIterator extends FilesystemIterator implements Stringable, SeekableIte
 
 
 	/**
-	 * Construct a directory using glob
-	 * @link http://www.php.net/manual/en/globiterator.construct.php
-	 * @param string $pattern 
-	 * @param int $flags [optional] 
-	 * @return string 
+	 * {@inheritdoc}
+	 * @param string $pattern
+	 * @param int $flags [optional]
 	 */
-	public function __construct (string $pattern, int $flags = 'FilesystemIterator::KEY_AS_PATHNAME | FilesystemIterator::CURRENT_AS_FILEINFO'): string {}
+	public function __construct (string $pattern, int $flags = 0) {}
 
 	/**
-	 * Get the number of directories and files
-	 * @link http://www.php.net/manual/en/globiterator.count.php
-	 * @return int The number of returned directories and files, as an
-	 * int.
+	 * {@inheritdoc}
 	 */
-	public function count (): int {}
+	public function count () {}
 
 	/**
-	 * Rewinds back to the beginning
-	 * @link http://www.php.net/manual/en/filesystemiterator.rewind.php
-	 * @return void No value is returned.
+	 * {@inheritdoc}
 	 */
-	public function rewind (): void {}
+	public function rewind () {}
 
 	/**
-	 * Retrieve the key for the current file
-	 * @link http://www.php.net/manual/en/filesystemiterator.key.php
-	 * @return string Returns the pathname or filename depending on the set flags.
-	 * See the FilesystemIterator constants.
+	 * {@inheritdoc}
 	 */
-	public function key (): string {}
+	public function key () {}
 
 	/**
-	 * The current file
-	 * @link http://www.php.net/manual/en/filesystemiterator.current.php
-	 * @return string|SplFileInfo|FilesystemIterator The filename, file information, or $this depending on the set flags.
-	 * See the FilesystemIterator constants.
+	 * {@inheritdoc}
 	 */
-	public function current (): string|SplFileInfo|FilesystemIterator {}
+	public function current () {}
 
 	/**
-	 * Get the handling flags
-	 * @link http://www.php.net/manual/en/filesystemiterator.getflags.php
-	 * @return int The integer value of the set flags.
+	 * {@inheritdoc}
 	 */
-	public function getFlags (): int {}
+	public function getFlags () {}
 
 	/**
-	 * Sets handling flags
-	 * @link http://www.php.net/manual/en/filesystemiterator.setflags.php
-	 * @param int $flags 
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param int $flags
 	 */
-	public function setFlags (int $flags): void {}
+	public function setFlags (int $flags) {}
 
 	/**
-	 * Return file name of current DirectoryIterator item
-	 * @link http://www.php.net/manual/en/directoryiterator.getfilename.php
-	 * @return string Returns the file name of the current DirectoryIterator item.
+	 * {@inheritdoc}
 	 */
-	public function getFilename (): string {}
+	public function getFilename () {}
 
 	/**
-	 * Gets the file extension
-	 * @link http://www.php.net/manual/en/directoryiterator.getextension.php
-	 * @return string Returns a string containing the file extension, or an
-	 * empty string if the file has no extension.
+	 * {@inheritdoc}
 	 */
-	public function getExtension (): string {}
+	public function getExtension () {}
 
 	/**
-	 * Get base name of current DirectoryIterator item
-	 * @link http://www.php.net/manual/en/directoryiterator.getbasename.php
-	 * @param string $suffix [optional] 
-	 * @return string The base name of the current DirectoryIterator item.
+	 * {@inheritdoc}
+	 * @param string $suffix [optional]
 	 */
-	public function getBasename (string $suffix = '""'): string {}
+	public function getBasename (string $suffix = '') {}
 
 	/**
-	 * Determine if current DirectoryIterator item is '.' or '..'
-	 * @link http://www.php.net/manual/en/directoryiterator.isdot.php
-	 * @return bool true if the entry is . or ..,
-	 * otherwise false
+	 * {@inheritdoc}
 	 */
-	public function isDot (): bool {}
+	public function isDot () {}
 
 	/**
-	 * Check whether current DirectoryIterator position is a valid file
-	 * @link http://www.php.net/manual/en/directoryiterator.valid.php
-	 * @return bool Returns true if the position is valid, otherwise false
+	 * {@inheritdoc}
 	 */
-	public function valid (): bool {}
+	public function valid () {}
 
 	/**
-	 * Move forward to next DirectoryIterator item
-	 * @link http://www.php.net/manual/en/directoryiterator.next.php
-	 * @return void No value is returned.
+	 * {@inheritdoc}
 	 */
-	public function next (): void {}
+	public function next () {}
 
 	/**
-	 * Seek to a DirectoryIterator item
-	 * @link http://www.php.net/manual/en/directoryiterator.seek.php
-	 * @param int $offset 
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param int $offset
 	 */
-	public function seek (int $offset): void {}
+	public function seek (int $offset) {}
 
 	/**
-	 * Get file name as a string
-	 * @link http://www.php.net/manual/en/directoryiterator.tostring.php
-	 * @return string Returns the file name of the current DirectoryIterator item.
+	 * {@inheritdoc}
 	 */
 	public function __toString (): string {}
 
 	/**
-	 * Gets the path without filename
-	 * @link http://www.php.net/manual/en/splfileinfo.getpath.php
-	 * @return string Returns the path to the file.
+	 * {@inheritdoc}
 	 */
-	public function getPath (): string {}
+	public function getPath () {}
 
 	/**
-	 * Gets the path to the file
-	 * @link http://www.php.net/manual/en/splfileinfo.getpathname.php
-	 * @return string The path to the file.
+	 * {@inheritdoc}
 	 */
-	public function getPathname (): string {}
+	public function getPathname () {}
 
 	/**
-	 * Gets file permissions
-	 * @link http://www.php.net/manual/en/splfileinfo.getperms.php
-	 * @return int|false Returns the file permissions on success, or false on failure.
+	 * {@inheritdoc}
 	 */
-	public function getPerms (): int|false {}
+	public function getPerms () {}
 
 	/**
-	 * Gets the inode for the file
-	 * @link http://www.php.net/manual/en/splfileinfo.getinode.php
-	 * @return int|false Returns the inode number for the filesystem object on success, or false on failure.
+	 * {@inheritdoc}
 	 */
-	public function getInode (): int|false {}
+	public function getInode () {}
 
 	/**
-	 * Gets file size
-	 * @link http://www.php.net/manual/en/splfileinfo.getsize.php
-	 * @return int|false The filesize in bytes on success, or false on failure.
+	 * {@inheritdoc}
 	 */
-	public function getSize (): int|false {}
+	public function getSize () {}
 
 	/**
-	 * Gets the owner of the file
-	 * @link http://www.php.net/manual/en/splfileinfo.getowner.php
-	 * @return int|false The owner id in numerical format on success, or false on failure.
+	 * {@inheritdoc}
 	 */
-	public function getOwner (): int|false {}
+	public function getOwner () {}
 
 	/**
-	 * Gets the file group
-	 * @link http://www.php.net/manual/en/splfileinfo.getgroup.php
-	 * @return int|false The group id in numerical format on success, or false on failure.
+	 * {@inheritdoc}
 	 */
-	public function getGroup (): int|false {}
+	public function getGroup () {}
 
 	/**
-	 * Gets last access time of the file
-	 * @link http://www.php.net/manual/en/splfileinfo.getatime.php
-	 * @return int|false Returns the time the file was last accessed on success, or false on failure.
+	 * {@inheritdoc}
 	 */
-	public function getATime (): int|false {}
+	public function getATime () {}
 
 	/**
-	 * Gets the last modified time
-	 * @link http://www.php.net/manual/en/splfileinfo.getmtime.php
-	 * @return int|false Returns the last modified time for the file, in a Unix timestamp on success, or false on failure.
+	 * {@inheritdoc}
 	 */
-	public function getMTime (): int|false {}
+	public function getMTime () {}
 
 	/**
-	 * Gets the inode change time
-	 * @link http://www.php.net/manual/en/splfileinfo.getctime.php
-	 * @return int|false The last change time, in a Unix timestamp on success, or false on failure.
+	 * {@inheritdoc}
 	 */
-	public function getCTime (): int|false {}
+	public function getCTime () {}
 
 	/**
-	 * Gets file type
-	 * @link http://www.php.net/manual/en/splfileinfo.gettype.php
-	 * @return string|false A string representing the type of the entry.
-	 * May be one of file, link,
-	 * dir, block, fifo,
-	 * char, socket, or unknown, or false on failure.
+	 * {@inheritdoc}
 	 */
-	public function getType (): string|false {}
+	public function getType () {}
 
 	/**
-	 * Tells if the entry is writable
-	 * @link http://www.php.net/manual/en/splfileinfo.iswritable.php
-	 * @return bool Returns true if writable, false otherwise;
+	 * {@inheritdoc}
 	 */
-	public function isWritable (): bool {}
+	public function isWritable () {}
 
 	/**
-	 * Tells if file is readable
-	 * @link http://www.php.net/manual/en/splfileinfo.isreadable.php
-	 * @return bool Returns true if readable, false otherwise.
+	 * {@inheritdoc}
 	 */
-	public function isReadable (): bool {}
+	public function isReadable () {}
 
 	/**
-	 * Tells if the file is executable
-	 * @link http://www.php.net/manual/en/splfileinfo.isexecutable.php
-	 * @return bool Returns true if executable, false otherwise.
+	 * {@inheritdoc}
 	 */
-	public function isExecutable (): bool {}
+	public function isExecutable () {}
 
 	/**
-	 * Tells if the object references a regular file
-	 * @link http://www.php.net/manual/en/splfileinfo.isfile.php
-	 * @return bool Returns true if the file exists and is a regular file (not a link), false otherwise.
+	 * {@inheritdoc}
 	 */
-	public function isFile (): bool {}
+	public function isFile () {}
 
 	/**
-	 * Tells if the file is a directory
-	 * @link http://www.php.net/manual/en/splfileinfo.isdir.php
-	 * @return bool Returns true if a directory, false otherwise.
+	 * {@inheritdoc}
 	 */
-	public function isDir (): bool {}
+	public function isDir () {}
 
 	/**
-	 * Tells if the file is a link
-	 * @link http://www.php.net/manual/en/splfileinfo.islink.php
-	 * @return bool Returns true if the file is a link, false otherwise.
+	 * {@inheritdoc}
 	 */
-	public function isLink (): bool {}
+	public function isLink () {}
 
 	/**
-	 * Gets the target of a link
-	 * @link http://www.php.net/manual/en/splfileinfo.getlinktarget.php
-	 * @return string|false Returns the target of the filesystem link on success, or false on failure.
+	 * {@inheritdoc}
 	 */
-	public function getLinkTarget (): string|false {}
+	public function getLinkTarget () {}
 
 	/**
-	 * Gets absolute path to file
-	 * @link http://www.php.net/manual/en/splfileinfo.getrealpath.php
-	 * @return string|false Returns the path to the file, or false if the file does not exist.
+	 * {@inheritdoc}
 	 */
-	public function getRealPath (): string|false {}
+	public function getRealPath () {}
 
 	/**
-	 * Gets an SplFileInfo object for the file
-	 * @link http://www.php.net/manual/en/splfileinfo.getfileinfo.php
-	 * @param string|null $class [optional] 
-	 * @return SplFileInfo An SplFileInfo object created for the file.
+	 * {@inheritdoc}
+	 * @param string|null $class [optional]
 	 */
-	public function getFileInfo (?string $class = null): SplFileInfo {}
+	public function getFileInfo (?string $class = NULL) {}
 
 	/**
-	 * Gets an SplFileInfo object for the path
-	 * @link http://www.php.net/manual/en/splfileinfo.getpathinfo.php
-	 * @param string|null $class [optional] 
-	 * @return SplFileInfo|null Returns an SplFileInfo object for the parent path of the file on success, or null on failure.
+	 * {@inheritdoc}
+	 * @param string|null $class [optional]
 	 */
-	public function getPathInfo (?string $class = null): ?SplFileInfo {}
+	public function getPathInfo (?string $class = NULL) {}
 
 	/**
-	 * Gets an SplFileObject object for the file
-	 * @link http://www.php.net/manual/en/splfileinfo.openfile.php
-	 * @param string $mode [optional] 
-	 * @param bool $useIncludePath [optional] 
-	 * @param resource|null $context [optional] 
-	 * @return SplFileObject The opened file as an SplFileObject object.
+	 * {@inheritdoc}
+	 * @param string $mode [optional]
+	 * @param bool $useIncludePath [optional]
+	 * @param mixed $context [optional]
 	 */
-	public function openFile (string $mode = '"r"', bool $useIncludePath = false, $context = null): SplFileObject {}
+	public function openFile (string $mode = 'r', bool $useIncludePath = false, $context = NULL) {}
 
 	/**
-	 * Sets the class used with SplFileInfo::openFile
-	 * @link http://www.php.net/manual/en/splfileinfo.setfileclass.php
-	 * @param string $class [optional] 
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param string $class [optional]
 	 */
-	public function setFileClass (string $class = 'SplFileObject::class'): void {}
+	public function setFileClass (string $class = 'SplFileObject') {}
 
 	/**
-	 * Sets the class used with SplFileInfo::getFileInfo and SplFileInfo::getPathInfo
-	 * @link http://www.php.net/manual/en/splfileinfo.setinfoclass.php
-	 * @param string $class [optional] 
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param string $class [optional]
 	 */
-	public function setInfoClass (string $class = 'SplFileInfo::class'): void {}
+	public function setInfoClass (string $class = 'SplFileInfo') {}
 
 	/**
 	 * {@inheritdoc}
@@ -5290,281 +3601,191 @@ class GlobIterator extends FilesystemIterator implements Stringable, SeekableIte
 
 }
 
-/**
- * The SplFileObject class offers an object-oriented interface for a file.
- * @link http://www.php.net/manual/en/class.splfileobject.php
- */
 class SplFileObject extends SplFileInfo implements Stringable, RecursiveIterator, Traversable, Iterator, SeekableIterator {
-	/**
-	 * Drop newlines at the end of a line.
 	const DROP_NEW_LINE = 1;
-	/**
-	 * Read on rewind/next.
 	const READ_AHEAD = 2;
-	/**
-	 * Skips empty lines in the file. This requires the READ_AHEAD flag be enabled, to work as expected.
 	const SKIP_EMPTY = 4;
-	/**
-	 * Read lines as CSV rows.
 	const READ_CSV = 8;
 
 
 	/**
-	 * Construct a new file object
-	 * @link http://www.php.net/manual/en/splfileobject.construct.php
-	 * @param string $filename 
-	 * @param string $mode [optional] 
-	 * @param bool $useIncludePath [optional] 
-	 * @param resource|null $context [optional] 
-	 * @return string 
+	 * {@inheritdoc}
+	 * @param string $filename
+	 * @param string $mode [optional]
+	 * @param bool $useIncludePath [optional]
+	 * @param mixed $context [optional]
 	 */
-	public function __construct (string $filename, string $mode = '"r"', bool $useIncludePath = false, $context = null): string {}
+	public function __construct (string $filename, string $mode = 'r', bool $useIncludePath = false, $context = NULL) {}
 
 	/**
-	 * Rewind the file to the first line
-	 * @link http://www.php.net/manual/en/splfileobject.rewind.php
-	 * @return void No value is returned.
+	 * {@inheritdoc}
 	 */
-	public function rewind (): void {}
+	public function rewind () {}
 
 	/**
-	 * Reached end of file
-	 * @link http://www.php.net/manual/en/splfileobject.eof.php
-	 * @return bool Returns true if file is at EOF, false otherwise.
+	 * {@inheritdoc}
 	 */
-	public function eof (): bool {}
+	public function eof () {}
 
 	/**
-	 * Not at EOF
-	 * @link http://www.php.net/manual/en/splfileobject.valid.php
-	 * @return bool Returns true if not reached EOF, false otherwise.
+	 * {@inheritdoc}
 	 */
-	public function valid (): bool {}
+	public function valid () {}
 
 	/**
-	 * Gets line from file
-	 * @link http://www.php.net/manual/en/splfileobject.fgets.php
-	 * @return string Returns a string containing the next line from the file.
+	 * {@inheritdoc}
 	 */
-	public function fgets (): string {}
+	public function fgets () {}
 
 	/**
-	 * Read from file
-	 * @link http://www.php.net/manual/en/splfileobject.fread.php
-	 * @param int $length The number of bytes to read.
-	 * @return string|false Returns the string read from the file or false on failure.
+	 * {@inheritdoc}
+	 * @param int $length
 	 */
-	public function fread (int $length): string|false {}
+	public function fread (int $length) {}
 
 	/**
-	 * Gets line from file and parse as CSV fields
-	 * @link http://www.php.net/manual/en/splfileobject.fgetcsv.php
-	 * @param string $separator [optional] 
-	 * @param string $enclosure [optional] 
-	 * @param string $escape [optional] 
-	 * @return array|false Returns an indexed array containing the fields read, or false on error.
-	 * <p>A blank line in a CSV file will be returned as an array
-	 * comprising a single null field unless using SplFileObject::SKIP_EMPTY | SplFileObject::DROP_NEW_LINE, 
-	 * in which case empty lines are skipped.</p>
+	 * {@inheritdoc}
+	 * @param string $separator [optional]
+	 * @param string $enclosure [optional]
+	 * @param string $escape [optional]
 	 */
-	public function fgetcsv (string $separator = '","', string $enclosure = '"\\""', string $escape = '"\\\\"'): array|false {}
+	public function fgetcsv (string $separator = ',', string $enclosure = '"', string $escape = '\\') {}
 
 	/**
-	 * Write a field array as a CSV line
-	 * @link http://www.php.net/manual/en/splfileobject.fputcsv.php
-	 * @param array $fields An array of values.
-	 * @param string $separator [optional] The optional separator parameter sets the field
-	 * delimiter (one single-byte character only).
-	 * @param string $enclosure [optional] The optional enclosure parameter sets the field
-	 * enclosure (one single-byte character only).
-	 * @param string $escape [optional] The optional escape parameter sets the
-	 * escape character (at most one single-byte character).
-	 * An empty string ("") disables the proprietary escape mechanism.
-	 * @param string $eol [optional] The optional eol parameter sets
-	 * a custom End of Line sequence.
-	 * @return int|false Returns the length of the written string or false on failure.
-	 * <p>Returns false, and does not write the CSV line to the file, if the
-	 * separator or enclosure
-	 * parameter is not a single character.</p>
+	 * {@inheritdoc}
+	 * @param array $fields
+	 * @param string $separator [optional]
+	 * @param string $enclosure [optional]
+	 * @param string $escape [optional]
+	 * @param string $eol [optional]
 	 */
-	public function fputcsv (array $fields, string $separator = '","', string $enclosure = '"\\""', string $escape = '"\\\\"', string $eol = '"\\n"'): int|false {}
+	public function fputcsv (array $fields, string $separator = ',', string $enclosure = '"', string $escape = '\\', string $eol = '
+') {}
 
 	/**
-	 * Set the delimiter, enclosure and escape character for CSV
-	 * @link http://www.php.net/manual/en/splfileobject.setcsvcontrol.php
-	 * @param string $separator [optional] 
-	 * @param string $enclosure [optional] 
-	 * @param string $escape [optional] 
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param string $separator [optional]
+	 * @param string $enclosure [optional]
+	 * @param string $escape [optional]
 	 */
-	public function setCsvControl (string $separator = '","', string $enclosure = '"\\""', string $escape = '"\\\\"'): void {}
+	public function setCsvControl (string $separator = ',', string $enclosure = '"', string $escape = '\\') {}
 
 	/**
-	 * Get the delimiter, enclosure and escape character for CSV
-	 * @link http://www.php.net/manual/en/splfileobject.getcsvcontrol.php
-	 * @return array Returns an indexed array containing the delimiter, enclosure and escape character.
+	 * {@inheritdoc}
 	 */
-	public function getCsvControl (): array {}
+	public function getCsvControl () {}
 
 	/**
-	 * Portable file locking
-	 * @link http://www.php.net/manual/en/splfileobject.flock.php
-	 * @param int $operation 
-	 * @param int $wouldBlock [optional] 
-	 * @return bool Returns true on success or false on failure.
+	 * {@inheritdoc}
+	 * @param int $operation
+	 * @param mixed $wouldBlock [optional]
 	 */
-	public function flock (int $operation, int &$wouldBlock = null): bool {}
+	public function flock (int $operation, &$wouldBlock = NULL) {}
 
 	/**
-	 * Flushes the output to the file
-	 * @link http://www.php.net/manual/en/splfileobject.fflush.php
-	 * @return bool Returns true on success or false on failure.
+	 * {@inheritdoc}
 	 */
-	public function fflush (): bool {}
+	public function fflush () {}
 
 	/**
-	 * Return current file position
-	 * @link http://www.php.net/manual/en/splfileobject.ftell.php
-	 * @return int|false Returns the position of the file pointer as an integer, or false on error.
+	 * {@inheritdoc}
 	 */
-	public function ftell (): int|false {}
+	public function ftell () {}
 
 	/**
-	 * Seek to a position
-	 * @link http://www.php.net/manual/en/splfileobject.fseek.php
-	 * @param int $offset 
-	 * @param int $whence [optional] 
-	 * @return int Returns 0 if the seek was successful, -1 otherwise. Note that seeking
-	 * past EOF is not considered an error.
+	 * {@inheritdoc}
+	 * @param int $offset
+	 * @param int $whence [optional]
 	 */
-	public function fseek (int $offset, int $whence = SEEK_SET): int {}
+	public function fseek (int $offset, int $whence = 0) {}
 
 	/**
-	 * Gets character from file
-	 * @link http://www.php.net/manual/en/splfileobject.fgetc.php
-	 * @return string|false Returns a string containing a single character read from the file or false on EOF.
+	 * {@inheritdoc}
 	 */
-	public function fgetc (): string|false {}
+	public function fgetc () {}
 
 	/**
-	 * Output all remaining data on a file pointer
-	 * @link http://www.php.net/manual/en/splfileobject.fpassthru.php
-	 * @return int Returns the number of characters read from handle
-	 * and passed through to the output.
+	 * {@inheritdoc}
 	 */
-	public function fpassthru (): int {}
+	public function fpassthru () {}
 
 	/**
-	 * Parses input from file according to a format
-	 * @link http://www.php.net/manual/en/splfileobject.fscanf.php
-	 * @param string $format 
-	 * @param mixed $vars 
-	 * @return array|int|null If only one parameter is passed to this method, the values parsed will be
-	 * returned as an array. Otherwise, if optional parameters are passed, the
-	 * function will return the number of assigned values. The optional
-	 * parameters must be passed by reference.
+	 * {@inheritdoc}
+	 * @param string $format
+	 * @param mixed $vars [optional]
 	 */
-	public function fscanf (string $format, mixed &...$vars): array|int|null {}
+	public function fscanf (string $format, mixed &...$vars) {}
 
 	/**
-	 * Write to file
-	 * @link http://www.php.net/manual/en/splfileobject.fwrite.php
-	 * @param string $data 
-	 * @param int $length [optional] 
-	 * @return int|false Returns the number of bytes written, or false on error.
+	 * {@inheritdoc}
+	 * @param string $data
+	 * @param int $length [optional]
 	 */
-	public function fwrite (string $data, int $length = null): int|false {}
+	public function fwrite (string $data, int $length = 0) {}
 
 	/**
-	 * Gets information about the file
-	 * @link http://www.php.net/manual/en/splfileobject.fstat.php
-	 * @return array Returns an array with the statistics of the file; the format of the array
-	 * is described in detail on the stat manual page.
+	 * {@inheritdoc}
 	 */
-	public function fstat (): array {}
+	public function fstat () {}
 
 	/**
-	 * Truncates the file to a given length
-	 * @link http://www.php.net/manual/en/splfileobject.ftruncate.php
-	 * @param int $size 
-	 * @return bool Returns true on success or false on failure.
+	 * {@inheritdoc}
+	 * @param int $size
 	 */
-	public function ftruncate (int $size): bool {}
+	public function ftruncate (int $size) {}
 
 	/**
-	 * Retrieve current line of file
-	 * @link http://www.php.net/manual/en/splfileobject.current.php
-	 * @return string|array|false Retrieves the current line of the file. If the SplFileObject::READ_CSV flag is set, this method returns an array containing the current line parsed as CSV data.
-	 * If the end of the file is reached, false is returned.
+	 * {@inheritdoc}
 	 */
-	public function current (): string|array|false {}
+	public function current () {}
 
 	/**
-	 * Get line number
-	 * @link http://www.php.net/manual/en/splfileobject.key.php
-	 * @return int Returns the current line number.
+	 * {@inheritdoc}
 	 */
-	public function key (): int {}
+	public function key () {}
 
 	/**
-	 * Read next line
-	 * @link http://www.php.net/manual/en/splfileobject.next.php
-	 * @return void No value is returned.
+	 * {@inheritdoc}
 	 */
-	public function next (): void {}
+	public function next () {}
 
 	/**
-	 * Sets flags for the SplFileObject
-	 * @link http://www.php.net/manual/en/splfileobject.setflags.php
-	 * @param int $flags 
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param int $flags
 	 */
-	public function setFlags (int $flags): void {}
+	public function setFlags (int $flags) {}
 
 	/**
-	 * Gets flags for the SplFileObject
-	 * @link http://www.php.net/manual/en/splfileobject.getflags.php
-	 * @return int Returns an int representing the flags.
+	 * {@inheritdoc}
 	 */
-	public function getFlags (): int {}
+	public function getFlags () {}
 
 	/**
-	 * Set maximum line length
-	 * @link http://www.php.net/manual/en/splfileobject.setmaxlinelen.php
-	 * @param int $maxLength 
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param int $maxLength
 	 */
-	public function setMaxLineLen (int $maxLength): void {}
+	public function setMaxLineLen (int $maxLength) {}
 
 	/**
-	 * Get maximum line length
-	 * @link http://www.php.net/manual/en/splfileobject.getmaxlinelen.php
-	 * @return int Returns the maximum line length if one has been set with
-	 * SplFileObject::setMaxLineLen, default is 0.
+	 * {@inheritdoc}
 	 */
-	public function getMaxLineLen (): int {}
+	public function getMaxLineLen () {}
 
 	/**
-	 * SplFileObject does not have children
-	 * @link http://www.php.net/manual/en/splfileobject.haschildren.php
-	 * @return false Returns false
+	 * {@inheritdoc}
 	 */
-	public function hasChildren (): false {}
+	public function hasChildren () {}
 
 	/**
-	 * No purpose
-	 * @link http://www.php.net/manual/en/splfileobject.getchildren.php
-	 * @return null Returns null.
+	 * {@inheritdoc}
 	 */
-	public function getChildren (): null {}
+	public function getChildren () {}
 
 	/**
-	 * Seek to specified line
-	 * @link http://www.php.net/manual/en/splfileobject.seek.php
-	 * @param int $line 
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param int $line
 	 */
-	public function seek (int $line): void {}
+	public function seek (int $line) {}
 
 	/**
 	 * {@inheritdoc}
@@ -5577,205 +3798,147 @@ class SplFileObject extends SplFileInfo implements Stringable, RecursiveIterator
 	public function __toString (): string {}
 
 	/**
-	 * Gets the path without filename
-	 * @link http://www.php.net/manual/en/splfileinfo.getpath.php
-	 * @return string Returns the path to the file.
+	 * {@inheritdoc}
 	 */
-	public function getPath (): string {}
+	public function getPath () {}
 
 	/**
-	 * Gets the filename
-	 * @link http://www.php.net/manual/en/splfileinfo.getfilename.php
-	 * @return string The filename.
+	 * {@inheritdoc}
 	 */
-	public function getFilename (): string {}
+	public function getFilename () {}
 
 	/**
-	 * Gets the file extension
-	 * @link http://www.php.net/manual/en/splfileinfo.getextension.php
-	 * @return string Returns a string containing the file extension, or an
-	 * empty string if the file has no extension.
+	 * {@inheritdoc}
 	 */
-	public function getExtension (): string {}
+	public function getExtension () {}
 
 	/**
-	 * Gets the base name of the file
-	 * @link http://www.php.net/manual/en/splfileinfo.getbasename.php
-	 * @param string $suffix [optional] 
-	 * @return string Returns the base name without path information.
+	 * {@inheritdoc}
+	 * @param string $suffix [optional]
 	 */
-	public function getBasename (string $suffix = '""'): string {}
+	public function getBasename (string $suffix = '') {}
 
 	/**
-	 * Gets the path to the file
-	 * @link http://www.php.net/manual/en/splfileinfo.getpathname.php
-	 * @return string The path to the file.
+	 * {@inheritdoc}
 	 */
-	public function getPathname (): string {}
+	public function getPathname () {}
 
 	/**
-	 * Gets file permissions
-	 * @link http://www.php.net/manual/en/splfileinfo.getperms.php
-	 * @return int|false Returns the file permissions on success, or false on failure.
+	 * {@inheritdoc}
 	 */
-	public function getPerms (): int|false {}
+	public function getPerms () {}
 
 	/**
-	 * Gets the inode for the file
-	 * @link http://www.php.net/manual/en/splfileinfo.getinode.php
-	 * @return int|false Returns the inode number for the filesystem object on success, or false on failure.
+	 * {@inheritdoc}
 	 */
-	public function getInode (): int|false {}
+	public function getInode () {}
 
 	/**
-	 * Gets file size
-	 * @link http://www.php.net/manual/en/splfileinfo.getsize.php
-	 * @return int|false The filesize in bytes on success, or false on failure.
+	 * {@inheritdoc}
 	 */
-	public function getSize (): int|false {}
+	public function getSize () {}
 
 	/**
-	 * Gets the owner of the file
-	 * @link http://www.php.net/manual/en/splfileinfo.getowner.php
-	 * @return int|false The owner id in numerical format on success, or false on failure.
+	 * {@inheritdoc}
 	 */
-	public function getOwner (): int|false {}
+	public function getOwner () {}
 
 	/**
-	 * Gets the file group
-	 * @link http://www.php.net/manual/en/splfileinfo.getgroup.php
-	 * @return int|false The group id in numerical format on success, or false on failure.
+	 * {@inheritdoc}
 	 */
-	public function getGroup (): int|false {}
+	public function getGroup () {}
 
 	/**
-	 * Gets last access time of the file
-	 * @link http://www.php.net/manual/en/splfileinfo.getatime.php
-	 * @return int|false Returns the time the file was last accessed on success, or false on failure.
+	 * {@inheritdoc}
 	 */
-	public function getATime (): int|false {}
+	public function getATime () {}
 
 	/**
-	 * Gets the last modified time
-	 * @link http://www.php.net/manual/en/splfileinfo.getmtime.php
-	 * @return int|false Returns the last modified time for the file, in a Unix timestamp on success, or false on failure.
+	 * {@inheritdoc}
 	 */
-	public function getMTime (): int|false {}
+	public function getMTime () {}
 
 	/**
-	 * Gets the inode change time
-	 * @link http://www.php.net/manual/en/splfileinfo.getctime.php
-	 * @return int|false The last change time, in a Unix timestamp on success, or false on failure.
+	 * {@inheritdoc}
 	 */
-	public function getCTime (): int|false {}
+	public function getCTime () {}
 
 	/**
-	 * Gets file type
-	 * @link http://www.php.net/manual/en/splfileinfo.gettype.php
-	 * @return string|false A string representing the type of the entry.
-	 * May be one of file, link,
-	 * dir, block, fifo,
-	 * char, socket, or unknown, or false on failure.
+	 * {@inheritdoc}
 	 */
-	public function getType (): string|false {}
+	public function getType () {}
 
 	/**
-	 * Tells if the entry is writable
-	 * @link http://www.php.net/manual/en/splfileinfo.iswritable.php
-	 * @return bool Returns true if writable, false otherwise;
+	 * {@inheritdoc}
 	 */
-	public function isWritable (): bool {}
+	public function isWritable () {}
 
 	/**
-	 * Tells if file is readable
-	 * @link http://www.php.net/manual/en/splfileinfo.isreadable.php
-	 * @return bool Returns true if readable, false otherwise.
+	 * {@inheritdoc}
 	 */
-	public function isReadable (): bool {}
+	public function isReadable () {}
 
 	/**
-	 * Tells if the file is executable
-	 * @link http://www.php.net/manual/en/splfileinfo.isexecutable.php
-	 * @return bool Returns true if executable, false otherwise.
+	 * {@inheritdoc}
 	 */
-	public function isExecutable (): bool {}
+	public function isExecutable () {}
 
 	/**
-	 * Tells if the object references a regular file
-	 * @link http://www.php.net/manual/en/splfileinfo.isfile.php
-	 * @return bool Returns true if the file exists and is a regular file (not a link), false otherwise.
+	 * {@inheritdoc}
 	 */
-	public function isFile (): bool {}
+	public function isFile () {}
 
 	/**
-	 * Tells if the file is a directory
-	 * @link http://www.php.net/manual/en/splfileinfo.isdir.php
-	 * @return bool Returns true if a directory, false otherwise.
+	 * {@inheritdoc}
 	 */
-	public function isDir (): bool {}
+	public function isDir () {}
 
 	/**
-	 * Tells if the file is a link
-	 * @link http://www.php.net/manual/en/splfileinfo.islink.php
-	 * @return bool Returns true if the file is a link, false otherwise.
+	 * {@inheritdoc}
 	 */
-	public function isLink (): bool {}
+	public function isLink () {}
 
 	/**
-	 * Gets the target of a link
-	 * @link http://www.php.net/manual/en/splfileinfo.getlinktarget.php
-	 * @return string|false Returns the target of the filesystem link on success, or false on failure.
+	 * {@inheritdoc}
 	 */
-	public function getLinkTarget (): string|false {}
+	public function getLinkTarget () {}
 
 	/**
-	 * Gets absolute path to file
-	 * @link http://www.php.net/manual/en/splfileinfo.getrealpath.php
-	 * @return string|false Returns the path to the file, or false if the file does not exist.
+	 * {@inheritdoc}
 	 */
-	public function getRealPath (): string|false {}
+	public function getRealPath () {}
 
 	/**
-	 * Gets an SplFileInfo object for the file
-	 * @link http://www.php.net/manual/en/splfileinfo.getfileinfo.php
-	 * @param string|null $class [optional] 
-	 * @return SplFileInfo An SplFileInfo object created for the file.
+	 * {@inheritdoc}
+	 * @param string|null $class [optional]
 	 */
-	public function getFileInfo (?string $class = null): SplFileInfo {}
+	public function getFileInfo (?string $class = NULL) {}
 
 	/**
-	 * Gets an SplFileInfo object for the path
-	 * @link http://www.php.net/manual/en/splfileinfo.getpathinfo.php
-	 * @param string|null $class [optional] 
-	 * @return SplFileInfo|null Returns an SplFileInfo object for the parent path of the file on success, or null on failure.
+	 * {@inheritdoc}
+	 * @param string|null $class [optional]
 	 */
-	public function getPathInfo (?string $class = null): ?SplFileInfo {}
+	public function getPathInfo (?string $class = NULL) {}
 
 	/**
-	 * Gets an SplFileObject object for the file
-	 * @link http://www.php.net/manual/en/splfileinfo.openfile.php
-	 * @param string $mode [optional] 
-	 * @param bool $useIncludePath [optional] 
-	 * @param resource|null $context [optional] 
-	 * @return SplFileObject The opened file as an SplFileObject object.
+	 * {@inheritdoc}
+	 * @param string $mode [optional]
+	 * @param bool $useIncludePath [optional]
+	 * @param mixed $context [optional]
 	 */
-	public function openFile (string $mode = '"r"', bool $useIncludePath = false, $context = null): SplFileObject {}
+	public function openFile (string $mode = 'r', bool $useIncludePath = false, $context = NULL) {}
 
 	/**
-	 * Sets the class used with SplFileInfo::openFile
-	 * @link http://www.php.net/manual/en/splfileinfo.setfileclass.php
-	 * @param string $class [optional] 
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param string $class [optional]
 	 */
-	public function setFileClass (string $class = 'SplFileObject::class'): void {}
+	public function setFileClass (string $class = 'SplFileObject') {}
 
 	/**
-	 * Sets the class used with SplFileInfo::getFileInfo and SplFileInfo::getPathInfo
-	 * @link http://www.php.net/manual/en/splfileinfo.setinfoclass.php
-	 * @param string $class [optional] 
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param string $class [optional]
 	 */
-	public function setInfoClass (string $class = 'SplFileInfo::class'): void {}
+	public function setInfoClass (string $class = 'SplFileInfo') {}
 
 	/**
 	 * {@inheritdoc}
@@ -5790,10 +3953,6 @@ class SplFileObject extends SplFileInfo implements Stringable, RecursiveIterator
 
 }
 
-/**
- * The SplTempFileObject class offers an object-oriented interface for a temporary file.
- * @link http://www.php.net/manual/en/class.spltempfileobject.php
- */
 class SplTempFileObject extends SplFileObject implements SeekableIterator, Iterator, Traversable, RecursiveIterator, Stringable {
 	const DROP_NEW_LINE = 1;
 	const READ_AHEAD = 2;
@@ -5802,258 +3961,180 @@ class SplTempFileObject extends SplFileObject implements SeekableIterator, Itera
 
 
 	/**
-	 * Construct a new temporary file object
-	 * @link http://www.php.net/manual/en/spltempfileobject.construct.php
-	 * @param int $maxMemory [optional] 
-	 * @return int 
+	 * {@inheritdoc}
+	 * @param int $maxMemory [optional]
 	 */
-	public function __construct (int $maxMemory = '2 * 1024 * 1024'): int {}
+	public function __construct (int $maxMemory = 2097152) {}
 
 	/**
-	 * Rewind the file to the first line
-	 * @link http://www.php.net/manual/en/splfileobject.rewind.php
-	 * @return void No value is returned.
+	 * {@inheritdoc}
 	 */
-	public function rewind (): void {}
+	public function rewind () {}
 
 	/**
-	 * Reached end of file
-	 * @link http://www.php.net/manual/en/splfileobject.eof.php
-	 * @return bool Returns true if file is at EOF, false otherwise.
+	 * {@inheritdoc}
 	 */
-	public function eof (): bool {}
+	public function eof () {}
 
 	/**
-	 * Not at EOF
-	 * @link http://www.php.net/manual/en/splfileobject.valid.php
-	 * @return bool Returns true if not reached EOF, false otherwise.
+	 * {@inheritdoc}
 	 */
-	public function valid (): bool {}
+	public function valid () {}
 
 	/**
-	 * Gets line from file
-	 * @link http://www.php.net/manual/en/splfileobject.fgets.php
-	 * @return string Returns a string containing the next line from the file.
+	 * {@inheritdoc}
 	 */
-	public function fgets (): string {}
+	public function fgets () {}
 
 	/**
-	 * Read from file
-	 * @link http://www.php.net/manual/en/splfileobject.fread.php
-	 * @param int $length The number of bytes to read.
-	 * @return string|false Returns the string read from the file or false on failure.
+	 * {@inheritdoc}
+	 * @param int $length
 	 */
-	public function fread (int $length): string|false {}
+	public function fread (int $length) {}
 
 	/**
-	 * Gets line from file and parse as CSV fields
-	 * @link http://www.php.net/manual/en/splfileobject.fgetcsv.php
-	 * @param string $separator [optional] 
-	 * @param string $enclosure [optional] 
-	 * @param string $escape [optional] 
-	 * @return array|false Returns an indexed array containing the fields read, or false on error.
-	 * <p>A blank line in a CSV file will be returned as an array
-	 * comprising a single null field unless using SplFileObject::SKIP_EMPTY | SplFileObject::DROP_NEW_LINE, 
-	 * in which case empty lines are skipped.</p>
+	 * {@inheritdoc}
+	 * @param string $separator [optional]
+	 * @param string $enclosure [optional]
+	 * @param string $escape [optional]
 	 */
-	public function fgetcsv (string $separator = '","', string $enclosure = '"\\""', string $escape = '"\\\\"'): array|false {}
+	public function fgetcsv (string $separator = ',', string $enclosure = '"', string $escape = '\\') {}
 
 	/**
-	 * Write a field array as a CSV line
-	 * @link http://www.php.net/manual/en/splfileobject.fputcsv.php
-	 * @param array $fields An array of values.
-	 * @param string $separator [optional] The optional separator parameter sets the field
-	 * delimiter (one single-byte character only).
-	 * @param string $enclosure [optional] The optional enclosure parameter sets the field
-	 * enclosure (one single-byte character only).
-	 * @param string $escape [optional] The optional escape parameter sets the
-	 * escape character (at most one single-byte character).
-	 * An empty string ("") disables the proprietary escape mechanism.
-	 * @param string $eol [optional] The optional eol parameter sets
-	 * a custom End of Line sequence.
-	 * @return int|false Returns the length of the written string or false on failure.
-	 * <p>Returns false, and does not write the CSV line to the file, if the
-	 * separator or enclosure
-	 * parameter is not a single character.</p>
+	 * {@inheritdoc}
+	 * @param array $fields
+	 * @param string $separator [optional]
+	 * @param string $enclosure [optional]
+	 * @param string $escape [optional]
+	 * @param string $eol [optional]
 	 */
-	public function fputcsv (array $fields, string $separator = '","', string $enclosure = '"\\""', string $escape = '"\\\\"', string $eol = '"\\n"'): int|false {}
+	public function fputcsv (array $fields, string $separator = ',', string $enclosure = '"', string $escape = '\\', string $eol = '
+') {}
 
 	/**
-	 * Set the delimiter, enclosure and escape character for CSV
-	 * @link http://www.php.net/manual/en/splfileobject.setcsvcontrol.php
-	 * @param string $separator [optional] 
-	 * @param string $enclosure [optional] 
-	 * @param string $escape [optional] 
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param string $separator [optional]
+	 * @param string $enclosure [optional]
+	 * @param string $escape [optional]
 	 */
-	public function setCsvControl (string $separator = '","', string $enclosure = '"\\""', string $escape = '"\\\\"'): void {}
+	public function setCsvControl (string $separator = ',', string $enclosure = '"', string $escape = '\\') {}
 
 	/**
-	 * Get the delimiter, enclosure and escape character for CSV
-	 * @link http://www.php.net/manual/en/splfileobject.getcsvcontrol.php
-	 * @return array Returns an indexed array containing the delimiter, enclosure and escape character.
+	 * {@inheritdoc}
 	 */
-	public function getCsvControl (): array {}
+	public function getCsvControl () {}
 
 	/**
-	 * Portable file locking
-	 * @link http://www.php.net/manual/en/splfileobject.flock.php
-	 * @param int $operation 
-	 * @param int $wouldBlock [optional] 
-	 * @return bool Returns true on success or false on failure.
+	 * {@inheritdoc}
+	 * @param int $operation
+	 * @param mixed $wouldBlock [optional]
 	 */
-	public function flock (int $operation, int &$wouldBlock = null): bool {}
+	public function flock (int $operation, &$wouldBlock = NULL) {}
 
 	/**
-	 * Flushes the output to the file
-	 * @link http://www.php.net/manual/en/splfileobject.fflush.php
-	 * @return bool Returns true on success or false on failure.
+	 * {@inheritdoc}
 	 */
-	public function fflush (): bool {}
+	public function fflush () {}
 
 	/**
-	 * Return current file position
-	 * @link http://www.php.net/manual/en/splfileobject.ftell.php
-	 * @return int|false Returns the position of the file pointer as an integer, or false on error.
+	 * {@inheritdoc}
 	 */
-	public function ftell (): int|false {}
+	public function ftell () {}
 
 	/**
-	 * Seek to a position
-	 * @link http://www.php.net/manual/en/splfileobject.fseek.php
-	 * @param int $offset 
-	 * @param int $whence [optional] 
-	 * @return int Returns 0 if the seek was successful, -1 otherwise. Note that seeking
-	 * past EOF is not considered an error.
+	 * {@inheritdoc}
+	 * @param int $offset
+	 * @param int $whence [optional]
 	 */
-	public function fseek (int $offset, int $whence = SEEK_SET): int {}
+	public function fseek (int $offset, int $whence = 0) {}
 
 	/**
-	 * Gets character from file
-	 * @link http://www.php.net/manual/en/splfileobject.fgetc.php
-	 * @return string|false Returns a string containing a single character read from the file or false on EOF.
+	 * {@inheritdoc}
 	 */
-	public function fgetc (): string|false {}
+	public function fgetc () {}
 
 	/**
-	 * Output all remaining data on a file pointer
-	 * @link http://www.php.net/manual/en/splfileobject.fpassthru.php
-	 * @return int Returns the number of characters read from handle
-	 * and passed through to the output.
+	 * {@inheritdoc}
 	 */
-	public function fpassthru (): int {}
+	public function fpassthru () {}
 
 	/**
-	 * Parses input from file according to a format
-	 * @link http://www.php.net/manual/en/splfileobject.fscanf.php
-	 * @param string $format 
-	 * @param mixed $vars 
-	 * @return array|int|null If only one parameter is passed to this method, the values parsed will be
-	 * returned as an array. Otherwise, if optional parameters are passed, the
-	 * function will return the number of assigned values. The optional
-	 * parameters must be passed by reference.
+	 * {@inheritdoc}
+	 * @param string $format
+	 * @param mixed $vars [optional]
 	 */
-	public function fscanf (string $format, mixed &...$vars): array|int|null {}
+	public function fscanf (string $format, mixed &...$vars) {}
 
 	/**
-	 * Write to file
-	 * @link http://www.php.net/manual/en/splfileobject.fwrite.php
-	 * @param string $data 
-	 * @param int $length [optional] 
-	 * @return int|false Returns the number of bytes written, or false on error.
+	 * {@inheritdoc}
+	 * @param string $data
+	 * @param int $length [optional]
 	 */
-	public function fwrite (string $data, int $length = null): int|false {}
+	public function fwrite (string $data, int $length = 0) {}
 
 	/**
-	 * Gets information about the file
-	 * @link http://www.php.net/manual/en/splfileobject.fstat.php
-	 * @return array Returns an array with the statistics of the file; the format of the array
-	 * is described in detail on the stat manual page.
+	 * {@inheritdoc}
 	 */
-	public function fstat (): array {}
+	public function fstat () {}
 
 	/**
-	 * Truncates the file to a given length
-	 * @link http://www.php.net/manual/en/splfileobject.ftruncate.php
-	 * @param int $size 
-	 * @return bool Returns true on success or false on failure.
+	 * {@inheritdoc}
+	 * @param int $size
 	 */
-	public function ftruncate (int $size): bool {}
+	public function ftruncate (int $size) {}
 
 	/**
-	 * Retrieve current line of file
-	 * @link http://www.php.net/manual/en/splfileobject.current.php
-	 * @return string|array|false Retrieves the current line of the file. If the SplFileObject::READ_CSV flag is set, this method returns an array containing the current line parsed as CSV data.
-	 * If the end of the file is reached, false is returned.
+	 * {@inheritdoc}
 	 */
-	public function current (): string|array|false {}
+	public function current () {}
 
 	/**
-	 * Get line number
-	 * @link http://www.php.net/manual/en/splfileobject.key.php
-	 * @return int Returns the current line number.
+	 * {@inheritdoc}
 	 */
-	public function key (): int {}
+	public function key () {}
 
 	/**
-	 * Read next line
-	 * @link http://www.php.net/manual/en/splfileobject.next.php
-	 * @return void No value is returned.
+	 * {@inheritdoc}
 	 */
-	public function next (): void {}
+	public function next () {}
 
 	/**
-	 * Sets flags for the SplFileObject
-	 * @link http://www.php.net/manual/en/splfileobject.setflags.php
-	 * @param int $flags 
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param int $flags
 	 */
-	public function setFlags (int $flags): void {}
+	public function setFlags (int $flags) {}
 
 	/**
-	 * Gets flags for the SplFileObject
-	 * @link http://www.php.net/manual/en/splfileobject.getflags.php
-	 * @return int Returns an int representing the flags.
+	 * {@inheritdoc}
 	 */
-	public function getFlags (): int {}
+	public function getFlags () {}
 
 	/**
-	 * Set maximum line length
-	 * @link http://www.php.net/manual/en/splfileobject.setmaxlinelen.php
-	 * @param int $maxLength 
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param int $maxLength
 	 */
-	public function setMaxLineLen (int $maxLength): void {}
+	public function setMaxLineLen (int $maxLength) {}
 
 	/**
-	 * Get maximum line length
-	 * @link http://www.php.net/manual/en/splfileobject.getmaxlinelen.php
-	 * @return int Returns the maximum line length if one has been set with
-	 * SplFileObject::setMaxLineLen, default is 0.
+	 * {@inheritdoc}
 	 */
-	public function getMaxLineLen (): int {}
+	public function getMaxLineLen () {}
 
 	/**
-	 * SplFileObject does not have children
-	 * @link http://www.php.net/manual/en/splfileobject.haschildren.php
-	 * @return false Returns false
+	 * {@inheritdoc}
 	 */
-	public function hasChildren (): false {}
+	public function hasChildren () {}
 
 	/**
-	 * No purpose
-	 * @link http://www.php.net/manual/en/splfileobject.getchildren.php
-	 * @return null Returns null.
+	 * {@inheritdoc}
 	 */
-	public function getChildren (): null {}
+	public function getChildren () {}
 
 	/**
-	 * Seek to specified line
-	 * @link http://www.php.net/manual/en/splfileobject.seek.php
-	 * @param int $line 
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param int $line
 	 */
-	public function seek (int $line): void {}
+	public function seek (int $line) {}
 
 	/**
 	 * {@inheritdoc}
@@ -6066,205 +4147,147 @@ class SplTempFileObject extends SplFileObject implements SeekableIterator, Itera
 	public function __toString (): string {}
 
 	/**
-	 * Gets the path without filename
-	 * @link http://www.php.net/manual/en/splfileinfo.getpath.php
-	 * @return string Returns the path to the file.
+	 * {@inheritdoc}
 	 */
-	public function getPath (): string {}
+	public function getPath () {}
 
 	/**
-	 * Gets the filename
-	 * @link http://www.php.net/manual/en/splfileinfo.getfilename.php
-	 * @return string The filename.
+	 * {@inheritdoc}
 	 */
-	public function getFilename (): string {}
+	public function getFilename () {}
 
 	/**
-	 * Gets the file extension
-	 * @link http://www.php.net/manual/en/splfileinfo.getextension.php
-	 * @return string Returns a string containing the file extension, or an
-	 * empty string if the file has no extension.
+	 * {@inheritdoc}
 	 */
-	public function getExtension (): string {}
+	public function getExtension () {}
 
 	/**
-	 * Gets the base name of the file
-	 * @link http://www.php.net/manual/en/splfileinfo.getbasename.php
-	 * @param string $suffix [optional] 
-	 * @return string Returns the base name without path information.
+	 * {@inheritdoc}
+	 * @param string $suffix [optional]
 	 */
-	public function getBasename (string $suffix = '""'): string {}
+	public function getBasename (string $suffix = '') {}
 
 	/**
-	 * Gets the path to the file
-	 * @link http://www.php.net/manual/en/splfileinfo.getpathname.php
-	 * @return string The path to the file.
+	 * {@inheritdoc}
 	 */
-	public function getPathname (): string {}
+	public function getPathname () {}
 
 	/**
-	 * Gets file permissions
-	 * @link http://www.php.net/manual/en/splfileinfo.getperms.php
-	 * @return int|false Returns the file permissions on success, or false on failure.
+	 * {@inheritdoc}
 	 */
-	public function getPerms (): int|false {}
+	public function getPerms () {}
 
 	/**
-	 * Gets the inode for the file
-	 * @link http://www.php.net/manual/en/splfileinfo.getinode.php
-	 * @return int|false Returns the inode number for the filesystem object on success, or false on failure.
+	 * {@inheritdoc}
 	 */
-	public function getInode (): int|false {}
+	public function getInode () {}
 
 	/**
-	 * Gets file size
-	 * @link http://www.php.net/manual/en/splfileinfo.getsize.php
-	 * @return int|false The filesize in bytes on success, or false on failure.
+	 * {@inheritdoc}
 	 */
-	public function getSize (): int|false {}
+	public function getSize () {}
 
 	/**
-	 * Gets the owner of the file
-	 * @link http://www.php.net/manual/en/splfileinfo.getowner.php
-	 * @return int|false The owner id in numerical format on success, or false on failure.
+	 * {@inheritdoc}
 	 */
-	public function getOwner (): int|false {}
+	public function getOwner () {}
 
 	/**
-	 * Gets the file group
-	 * @link http://www.php.net/manual/en/splfileinfo.getgroup.php
-	 * @return int|false The group id in numerical format on success, or false on failure.
+	 * {@inheritdoc}
 	 */
-	public function getGroup (): int|false {}
+	public function getGroup () {}
 
 	/**
-	 * Gets last access time of the file
-	 * @link http://www.php.net/manual/en/splfileinfo.getatime.php
-	 * @return int|false Returns the time the file was last accessed on success, or false on failure.
+	 * {@inheritdoc}
 	 */
-	public function getATime (): int|false {}
+	public function getATime () {}
 
 	/**
-	 * Gets the last modified time
-	 * @link http://www.php.net/manual/en/splfileinfo.getmtime.php
-	 * @return int|false Returns the last modified time for the file, in a Unix timestamp on success, or false on failure.
+	 * {@inheritdoc}
 	 */
-	public function getMTime (): int|false {}
+	public function getMTime () {}
 
 	/**
-	 * Gets the inode change time
-	 * @link http://www.php.net/manual/en/splfileinfo.getctime.php
-	 * @return int|false The last change time, in a Unix timestamp on success, or false on failure.
+	 * {@inheritdoc}
 	 */
-	public function getCTime (): int|false {}
+	public function getCTime () {}
 
 	/**
-	 * Gets file type
-	 * @link http://www.php.net/manual/en/splfileinfo.gettype.php
-	 * @return string|false A string representing the type of the entry.
-	 * May be one of file, link,
-	 * dir, block, fifo,
-	 * char, socket, or unknown, or false on failure.
+	 * {@inheritdoc}
 	 */
-	public function getType (): string|false {}
+	public function getType () {}
 
 	/**
-	 * Tells if the entry is writable
-	 * @link http://www.php.net/manual/en/splfileinfo.iswritable.php
-	 * @return bool Returns true if writable, false otherwise;
+	 * {@inheritdoc}
 	 */
-	public function isWritable (): bool {}
+	public function isWritable () {}
 
 	/**
-	 * Tells if file is readable
-	 * @link http://www.php.net/manual/en/splfileinfo.isreadable.php
-	 * @return bool Returns true if readable, false otherwise.
+	 * {@inheritdoc}
 	 */
-	public function isReadable (): bool {}
+	public function isReadable () {}
 
 	/**
-	 * Tells if the file is executable
-	 * @link http://www.php.net/manual/en/splfileinfo.isexecutable.php
-	 * @return bool Returns true if executable, false otherwise.
+	 * {@inheritdoc}
 	 */
-	public function isExecutable (): bool {}
+	public function isExecutable () {}
 
 	/**
-	 * Tells if the object references a regular file
-	 * @link http://www.php.net/manual/en/splfileinfo.isfile.php
-	 * @return bool Returns true if the file exists and is a regular file (not a link), false otherwise.
+	 * {@inheritdoc}
 	 */
-	public function isFile (): bool {}
+	public function isFile () {}
 
 	/**
-	 * Tells if the file is a directory
-	 * @link http://www.php.net/manual/en/splfileinfo.isdir.php
-	 * @return bool Returns true if a directory, false otherwise.
+	 * {@inheritdoc}
 	 */
-	public function isDir (): bool {}
+	public function isDir () {}
 
 	/**
-	 * Tells if the file is a link
-	 * @link http://www.php.net/manual/en/splfileinfo.islink.php
-	 * @return bool Returns true if the file is a link, false otherwise.
+	 * {@inheritdoc}
 	 */
-	public function isLink (): bool {}
+	public function isLink () {}
 
 	/**
-	 * Gets the target of a link
-	 * @link http://www.php.net/manual/en/splfileinfo.getlinktarget.php
-	 * @return string|false Returns the target of the filesystem link on success, or false on failure.
+	 * {@inheritdoc}
 	 */
-	public function getLinkTarget (): string|false {}
+	public function getLinkTarget () {}
 
 	/**
-	 * Gets absolute path to file
-	 * @link http://www.php.net/manual/en/splfileinfo.getrealpath.php
-	 * @return string|false Returns the path to the file, or false if the file does not exist.
+	 * {@inheritdoc}
 	 */
-	public function getRealPath (): string|false {}
+	public function getRealPath () {}
 
 	/**
-	 * Gets an SplFileInfo object for the file
-	 * @link http://www.php.net/manual/en/splfileinfo.getfileinfo.php
-	 * @param string|null $class [optional] 
-	 * @return SplFileInfo An SplFileInfo object created for the file.
+	 * {@inheritdoc}
+	 * @param string|null $class [optional]
 	 */
-	public function getFileInfo (?string $class = null): SplFileInfo {}
+	public function getFileInfo (?string $class = NULL) {}
 
 	/**
-	 * Gets an SplFileInfo object for the path
-	 * @link http://www.php.net/manual/en/splfileinfo.getpathinfo.php
-	 * @param string|null $class [optional] 
-	 * @return SplFileInfo|null Returns an SplFileInfo object for the parent path of the file on success, or null on failure.
+	 * {@inheritdoc}
+	 * @param string|null $class [optional]
 	 */
-	public function getPathInfo (?string $class = null): ?SplFileInfo {}
+	public function getPathInfo (?string $class = NULL) {}
 
 	/**
-	 * Gets an SplFileObject object for the file
-	 * @link http://www.php.net/manual/en/splfileinfo.openfile.php
-	 * @param string $mode [optional] 
-	 * @param bool $useIncludePath [optional] 
-	 * @param resource|null $context [optional] 
-	 * @return SplFileObject The opened file as an SplFileObject object.
+	 * {@inheritdoc}
+	 * @param string $mode [optional]
+	 * @param bool $useIncludePath [optional]
+	 * @param mixed $context [optional]
 	 */
-	public function openFile (string $mode = '"r"', bool $useIncludePath = false, $context = null): SplFileObject {}
+	public function openFile (string $mode = 'r', bool $useIncludePath = false, $context = NULL) {}
 
 	/**
-	 * Sets the class used with SplFileInfo::openFile
-	 * @link http://www.php.net/manual/en/splfileinfo.setfileclass.php
-	 * @param string $class [optional] 
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param string $class [optional]
 	 */
-	public function setFileClass (string $class = 'SplFileObject::class'): void {}
+	public function setFileClass (string $class = 'SplFileObject') {}
 
 	/**
-	 * Sets the class used with SplFileInfo::getFileInfo and SplFileInfo::getPathInfo
-	 * @link http://www.php.net/manual/en/splfileinfo.setinfoclass.php
-	 * @param string $class [optional] 
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param string $class [optional]
 	 */
-	public function setInfoClass (string $class = 'SplFileInfo::class'): void {}
+	public function setInfoClass (string $class = 'SplFileInfo') {}
 
 	/**
 	 * {@inheritdoc}
@@ -6279,77 +4302,51 @@ class SplTempFileObject extends SplFileObject implements SeekableIterator, Itera
 
 }
 
-/**
- * The SplDoublyLinkedList class provides the main functionalities of a doubly linked list.
- * @link http://www.php.net/manual/en/class.spldoublylinkedlist.php
- */
 class SplDoublyLinkedList implements Iterator, Traversable, Countable, ArrayAccess, Serializable {
-	/**
-	 * The list will be iterated in a last in, first out order, like a stack.
 	const IT_MODE_LIFO = 2;
-	/**
-	 * The list will be iterated in a first in, first out order, like a queue.
 	const IT_MODE_FIFO = 0;
-	/**
-	 * Iteration will remove the iterated elements.
 	const IT_MODE_DELETE = 1;
-	/**
-	 * Iteration will not remove the iterated elements.
 	const IT_MODE_KEEP = 0;
 
 
 	/**
-	 * Add/insert a new value at the specified index
-	 * @link http://www.php.net/manual/en/spldoublylinkedlist.add.php
-	 * @param int $index 
-	 * @param mixed $value 
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param int $index
+	 * @param mixed $value
 	 */
-	public function add (int $index, mixed $value): void {}
+	public function add (int $index, mixed $value = null) {}
 
 	/**
-	 * Pops a node from the end of the doubly linked list
-	 * @link http://www.php.net/manual/en/spldoublylinkedlist.pop.php
-	 * @return mixed The value of the popped node.
+	 * {@inheritdoc}
 	 */
-	public function pop (): mixed {}
+	public function pop () {}
 
 	/**
-	 * Shifts a node from the beginning of the doubly linked list
-	 * @link http://www.php.net/manual/en/spldoublylinkedlist.shift.php
-	 * @return mixed The value of the shifted node.
+	 * {@inheritdoc}
 	 */
-	public function shift (): mixed {}
+	public function shift () {}
 
 	/**
-	 * Pushes an element at the end of the doubly linked list
-	 * @link http://www.php.net/manual/en/spldoublylinkedlist.push.php
-	 * @param mixed $value 
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param mixed $value
 	 */
-	public function push (mixed $value): void {}
+	public function push (mixed $value = null) {}
 
 	/**
-	 * Prepends the doubly linked list with an element
-	 * @link http://www.php.net/manual/en/spldoublylinkedlist.unshift.php
-	 * @param mixed $value 
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param mixed $value
 	 */
-	public function unshift (mixed $value): void {}
+	public function unshift (mixed $value = null) {}
 
 	/**
-	 * Peeks at the node from the end of the doubly linked list
-	 * @link http://www.php.net/manual/en/spldoublylinkedlist.top.php
-	 * @return mixed The value of the last node.
+	 * {@inheritdoc}
 	 */
-	public function top (): mixed {}
+	public function top () {}
 
 	/**
-	 * Peeks at the node from the beginning of the doubly linked list
-	 * @link http://www.php.net/manual/en/spldoublylinkedlist.bottom.php
-	 * @return mixed The value of the first node.
+	 * {@inheritdoc}
 	 */
-	public function bottom (): mixed {}
+	public function bottom () {}
 
 	/**
 	 * {@inheritdoc}
@@ -6357,123 +4354,91 @@ class SplDoublyLinkedList implements Iterator, Traversable, Countable, ArrayAcce
 	public function __debugInfo () {}
 
 	/**
-	 * Counts the number of elements in the doubly linked list
-	 * @link http://www.php.net/manual/en/spldoublylinkedlist.count.php
-	 * @return int Returns the number of elements in the doubly linked list.
+	 * {@inheritdoc}
 	 */
-	public function count (): int {}
+	public function count () {}
 
 	/**
-	 * Checks whether the doubly linked list is empty
-	 * @link http://www.php.net/manual/en/spldoublylinkedlist.isempty.php
-	 * @return bool Returns whether the doubly linked list is empty.
+	 * {@inheritdoc}
 	 */
-	public function isEmpty (): bool {}
+	public function isEmpty () {}
 
 	/**
-	 * Sets the mode of iteration
-	 * @link http://www.php.net/manual/en/spldoublylinkedlist.setiteratormode.php
-	 * @param int $mode 
-	 * @return int Returns the different modes and flags that affect the iteration.
+	 * {@inheritdoc}
+	 * @param int $mode
 	 */
-	public function setIteratorMode (int $mode): int {}
+	public function setIteratorMode (int $mode) {}
 
 	/**
-	 * Returns the mode of iteration
-	 * @link http://www.php.net/manual/en/spldoublylinkedlist.getiteratormode.php
-	 * @return int Returns the different modes and flags that affect the iteration.
+	 * {@inheritdoc}
 	 */
-	public function getIteratorMode (): int {}
+	public function getIteratorMode () {}
 
 	/**
-	 * Returns whether the requested $index exists
-	 * @link http://www.php.net/manual/en/spldoublylinkedlist.offsetexists.php
-	 * @param int $index 
-	 * @return bool true if the requested index exists, otherwise false
+	 * {@inheritdoc}
+	 * @param mixed $index
 	 */
-	public function offsetExists (int $index): bool {}
+	public function offsetExists ($index = null) {}
 
 	/**
-	 * Returns the value at the specified $index
-	 * @link http://www.php.net/manual/en/spldoublylinkedlist.offsetget.php
-	 * @param int $index 
-	 * @return mixed The value at the specified index.
+	 * {@inheritdoc}
+	 * @param mixed $index
 	 */
-	public function offsetGet (int $index): mixed {}
+	public function offsetGet ($index = null) {}
 
 	/**
-	 * Sets the value at the specified $index to $value
-	 * @link http://www.php.net/manual/en/spldoublylinkedlist.offsetset.php
-	 * @param int|null $index 
-	 * @param mixed $value 
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param mixed $index
+	 * @param mixed $value
 	 */
-	public function offsetSet (?int $index, mixed $value): void {}
+	public function offsetSet ($index = null, mixed $value = null) {}
 
 	/**
-	 * Unsets the value at the specified $index
-	 * @link http://www.php.net/manual/en/spldoublylinkedlist.offsetunset.php
-	 * @param int $index 
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param mixed $index
 	 */
-	public function offsetUnset (int $index): void {}
+	public function offsetUnset ($index = null) {}
 
 	/**
-	 * Rewind iterator back to the start
-	 * @link http://www.php.net/manual/en/spldoublylinkedlist.rewind.php
-	 * @return void No value is returned.
+	 * {@inheritdoc}
 	 */
-	public function rewind (): void {}
+	public function rewind () {}
 
 	/**
-	 * Return current array entry
-	 * @link http://www.php.net/manual/en/spldoublylinkedlist.current.php
-	 * @return mixed The current node value.
+	 * {@inheritdoc}
 	 */
-	public function current (): mixed {}
+	public function current () {}
 
 	/**
-	 * Return current node index
-	 * @link http://www.php.net/manual/en/spldoublylinkedlist.key.php
-	 * @return int The current node index.
+	 * {@inheritdoc}
 	 */
-	public function key (): int {}
+	public function key () {}
 
 	/**
-	 * Move to previous entry
-	 * @link http://www.php.net/manual/en/spldoublylinkedlist.prev.php
-	 * @return void No value is returned.
+	 * {@inheritdoc}
 	 */
-	public function prev (): void {}
+	public function prev () {}
 
 	/**
-	 * Move to next entry
-	 * @link http://www.php.net/manual/en/spldoublylinkedlist.next.php
-	 * @return void No value is returned.
+	 * {@inheritdoc}
 	 */
-	public function next (): void {}
+	public function next () {}
 
 	/**
-	 * Check whether the doubly linked list contains more nodes
-	 * @link http://www.php.net/manual/en/spldoublylinkedlist.valid.php
-	 * @return bool Returns <p>false otherwise.
+	 * {@inheritdoc}
 	 */
-	public function valid (): bool {}
+	public function valid () {}
 
 	/**
-	 * Unserializes the storage
-	 * @link http://www.php.net/manual/en/spldoublylinkedlist.unserialize.php
-	 * @param string $data The serialized string.
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param string $data
 	 */
-	public function unserialize (string $data): void {}
+	public function unserialize (string $data) {}
 
 	/**
-	 * Serializes the storage
-	 * @link http://www.php.net/manual/en/spldoublylinkedlist.serialize.php
-	 * @return string The serialized string.
+	 * {@inheritdoc}
 	 */
-	public function serialize (): string {}
+	public function serialize () {}
 
 	/**
 	 * {@inheritdoc}
@@ -6488,11 +4453,6 @@ class SplDoublyLinkedList implements Iterator, Traversable, Countable, ArrayAcce
 
 }
 
-/**
- * The SplQueue class provides the main functionalities of a queue implemented using a doubly linked list by
- * setting the iterator mode to SplDoublyLinkedList::IT_MODE_FIFO.
- * @link http://www.php.net/manual/en/class.splqueue.php
- */
 class SplQueue extends SplDoublyLinkedList implements Serializable, ArrayAccess, Countable, Traversable, Iterator {
 	const IT_MODE_LIFO = 2;
 	const IT_MODE_FIFO = 0;
@@ -6501,72 +4461,54 @@ class SplQueue extends SplDoublyLinkedList implements Serializable, ArrayAccess,
 
 
 	/**
-	 * Adds an element to the queue
-	 * @link http://www.php.net/manual/en/splqueue.enqueue.php
-	 * @param mixed $value 
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param mixed $value
 	 */
-	public function enqueue (mixed $value): void {}
+	public function enqueue (mixed $value = null) {}
 
 	/**
-	 * Dequeues a node from the queue
-	 * @link http://www.php.net/manual/en/splqueue.dequeue.php
-	 * @return mixed The value of the dequeued node.
+	 * {@inheritdoc}
 	 */
-	public function dequeue (): mixed {}
+	public function dequeue () {}
 
 	/**
-	 * Add/insert a new value at the specified index
-	 * @link http://www.php.net/manual/en/spldoublylinkedlist.add.php
-	 * @param int $index 
-	 * @param mixed $value 
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param int $index
+	 * @param mixed $value
 	 */
-	public function add (int $index, mixed $value): void {}
+	public function add (int $index, mixed $value = null) {}
 
 	/**
-	 * Pops a node from the end of the doubly linked list
-	 * @link http://www.php.net/manual/en/spldoublylinkedlist.pop.php
-	 * @return mixed The value of the popped node.
+	 * {@inheritdoc}
 	 */
-	public function pop (): mixed {}
+	public function pop () {}
 
 	/**
-	 * Shifts a node from the beginning of the doubly linked list
-	 * @link http://www.php.net/manual/en/spldoublylinkedlist.shift.php
-	 * @return mixed The value of the shifted node.
+	 * {@inheritdoc}
 	 */
-	public function shift (): mixed {}
+	public function shift () {}
 
 	/**
-	 * Pushes an element at the end of the doubly linked list
-	 * @link http://www.php.net/manual/en/spldoublylinkedlist.push.php
-	 * @param mixed $value 
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param mixed $value
 	 */
-	public function push (mixed $value): void {}
+	public function push (mixed $value = null) {}
 
 	/**
-	 * Prepends the doubly linked list with an element
-	 * @link http://www.php.net/manual/en/spldoublylinkedlist.unshift.php
-	 * @param mixed $value 
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param mixed $value
 	 */
-	public function unshift (mixed $value): void {}
+	public function unshift (mixed $value = null) {}
 
 	/**
-	 * Peeks at the node from the end of the doubly linked list
-	 * @link http://www.php.net/manual/en/spldoublylinkedlist.top.php
-	 * @return mixed The value of the last node.
+	 * {@inheritdoc}
 	 */
-	public function top (): mixed {}
+	public function top () {}
 
 	/**
-	 * Peeks at the node from the beginning of the doubly linked list
-	 * @link http://www.php.net/manual/en/spldoublylinkedlist.bottom.php
-	 * @return mixed The value of the first node.
+	 * {@inheritdoc}
 	 */
-	public function bottom (): mixed {}
+	public function bottom () {}
 
 	/**
 	 * {@inheritdoc}
@@ -6574,123 +4516,91 @@ class SplQueue extends SplDoublyLinkedList implements Serializable, ArrayAccess,
 	public function __debugInfo () {}
 
 	/**
-	 * Counts the number of elements in the doubly linked list
-	 * @link http://www.php.net/manual/en/spldoublylinkedlist.count.php
-	 * @return int Returns the number of elements in the doubly linked list.
+	 * {@inheritdoc}
 	 */
-	public function count (): int {}
+	public function count () {}
 
 	/**
-	 * Checks whether the doubly linked list is empty
-	 * @link http://www.php.net/manual/en/spldoublylinkedlist.isempty.php
-	 * @return bool Returns whether the doubly linked list is empty.
+	 * {@inheritdoc}
 	 */
-	public function isEmpty (): bool {}
+	public function isEmpty () {}
 
 	/**
-	 * Sets the mode of iteration
-	 * @link http://www.php.net/manual/en/spldoublylinkedlist.setiteratormode.php
-	 * @param int $mode 
-	 * @return int Returns the different modes and flags that affect the iteration.
+	 * {@inheritdoc}
+	 * @param int $mode
 	 */
-	public function setIteratorMode (int $mode): int {}
+	public function setIteratorMode (int $mode) {}
 
 	/**
-	 * Returns the mode of iteration
-	 * @link http://www.php.net/manual/en/spldoublylinkedlist.getiteratormode.php
-	 * @return int Returns the different modes and flags that affect the iteration.
+	 * {@inheritdoc}
 	 */
-	public function getIteratorMode (): int {}
+	public function getIteratorMode () {}
 
 	/**
-	 * Returns whether the requested $index exists
-	 * @link http://www.php.net/manual/en/spldoublylinkedlist.offsetexists.php
-	 * @param int $index 
-	 * @return bool true if the requested index exists, otherwise false
+	 * {@inheritdoc}
+	 * @param mixed $index
 	 */
-	public function offsetExists (int $index): bool {}
+	public function offsetExists ($index = null) {}
 
 	/**
-	 * Returns the value at the specified $index
-	 * @link http://www.php.net/manual/en/spldoublylinkedlist.offsetget.php
-	 * @param int $index 
-	 * @return mixed The value at the specified index.
+	 * {@inheritdoc}
+	 * @param mixed $index
 	 */
-	public function offsetGet (int $index): mixed {}
+	public function offsetGet ($index = null) {}
 
 	/**
-	 * Sets the value at the specified $index to $value
-	 * @link http://www.php.net/manual/en/spldoublylinkedlist.offsetset.php
-	 * @param int|null $index 
-	 * @param mixed $value 
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param mixed $index
+	 * @param mixed $value
 	 */
-	public function offsetSet (?int $index, mixed $value): void {}
+	public function offsetSet ($index = null, mixed $value = null) {}
 
 	/**
-	 * Unsets the value at the specified $index
-	 * @link http://www.php.net/manual/en/spldoublylinkedlist.offsetunset.php
-	 * @param int $index 
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param mixed $index
 	 */
-	public function offsetUnset (int $index): void {}
+	public function offsetUnset ($index = null) {}
 
 	/**
-	 * Rewind iterator back to the start
-	 * @link http://www.php.net/manual/en/spldoublylinkedlist.rewind.php
-	 * @return void No value is returned.
+	 * {@inheritdoc}
 	 */
-	public function rewind (): void {}
+	public function rewind () {}
 
 	/**
-	 * Return current array entry
-	 * @link http://www.php.net/manual/en/spldoublylinkedlist.current.php
-	 * @return mixed The current node value.
+	 * {@inheritdoc}
 	 */
-	public function current (): mixed {}
+	public function current () {}
 
 	/**
-	 * Return current node index
-	 * @link http://www.php.net/manual/en/spldoublylinkedlist.key.php
-	 * @return int The current node index.
+	 * {@inheritdoc}
 	 */
-	public function key (): int {}
+	public function key () {}
 
 	/**
-	 * Move to previous entry
-	 * @link http://www.php.net/manual/en/spldoublylinkedlist.prev.php
-	 * @return void No value is returned.
+	 * {@inheritdoc}
 	 */
-	public function prev (): void {}
+	public function prev () {}
 
 	/**
-	 * Move to next entry
-	 * @link http://www.php.net/manual/en/spldoublylinkedlist.next.php
-	 * @return void No value is returned.
+	 * {@inheritdoc}
 	 */
-	public function next (): void {}
+	public function next () {}
 
 	/**
-	 * Check whether the doubly linked list contains more nodes
-	 * @link http://www.php.net/manual/en/spldoublylinkedlist.valid.php
-	 * @return bool Returns <p>false otherwise.
+	 * {@inheritdoc}
 	 */
-	public function valid (): bool {}
+	public function valid () {}
 
 	/**
-	 * Unserializes the storage
-	 * @link http://www.php.net/manual/en/spldoublylinkedlist.unserialize.php
-	 * @param string $data The serialized string.
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param string $data
 	 */
-	public function unserialize (string $data): void {}
+	public function unserialize (string $data) {}
 
 	/**
-	 * Serializes the storage
-	 * @link http://www.php.net/manual/en/spldoublylinkedlist.serialize.php
-	 * @return string The serialized string.
+	 * {@inheritdoc}
 	 */
-	public function serialize (): string {}
+	public function serialize () {}
 
 	/**
 	 * {@inheritdoc}
@@ -6705,11 +4615,6 @@ class SplQueue extends SplDoublyLinkedList implements Serializable, ArrayAccess,
 
 }
 
-/**
- * The SplStack class provides the main functionalities of a stack implemented using a doubly linked list by
- * setting the iterator mode to SplDoublyLinkedList::IT_MODE_LIFO.
- * @link http://www.php.net/manual/en/class.splstack.php
- */
 class SplStack extends SplDoublyLinkedList implements Serializable, ArrayAccess, Countable, Traversable, Iterator {
 	const IT_MODE_LIFO = 2;
 	const IT_MODE_FIFO = 0;
@@ -6718,57 +4623,43 @@ class SplStack extends SplDoublyLinkedList implements Serializable, ArrayAccess,
 
 
 	/**
-	 * Add/insert a new value at the specified index
-	 * @link http://www.php.net/manual/en/spldoublylinkedlist.add.php
-	 * @param int $index 
-	 * @param mixed $value 
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param int $index
+	 * @param mixed $value
 	 */
-	public function add (int $index, mixed $value): void {}
+	public function add (int $index, mixed $value = null) {}
 
 	/**
-	 * Pops a node from the end of the doubly linked list
-	 * @link http://www.php.net/manual/en/spldoublylinkedlist.pop.php
-	 * @return mixed The value of the popped node.
+	 * {@inheritdoc}
 	 */
-	public function pop (): mixed {}
+	public function pop () {}
 
 	/**
-	 * Shifts a node from the beginning of the doubly linked list
-	 * @link http://www.php.net/manual/en/spldoublylinkedlist.shift.php
-	 * @return mixed The value of the shifted node.
+	 * {@inheritdoc}
 	 */
-	public function shift (): mixed {}
+	public function shift () {}
 
 	/**
-	 * Pushes an element at the end of the doubly linked list
-	 * @link http://www.php.net/manual/en/spldoublylinkedlist.push.php
-	 * @param mixed $value 
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param mixed $value
 	 */
-	public function push (mixed $value): void {}
+	public function push (mixed $value = null) {}
 
 	/**
-	 * Prepends the doubly linked list with an element
-	 * @link http://www.php.net/manual/en/spldoublylinkedlist.unshift.php
-	 * @param mixed $value 
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param mixed $value
 	 */
-	public function unshift (mixed $value): void {}
+	public function unshift (mixed $value = null) {}
 
 	/**
-	 * Peeks at the node from the end of the doubly linked list
-	 * @link http://www.php.net/manual/en/spldoublylinkedlist.top.php
-	 * @return mixed The value of the last node.
+	 * {@inheritdoc}
 	 */
-	public function top (): mixed {}
+	public function top () {}
 
 	/**
-	 * Peeks at the node from the beginning of the doubly linked list
-	 * @link http://www.php.net/manual/en/spldoublylinkedlist.bottom.php
-	 * @return mixed The value of the first node.
+	 * {@inheritdoc}
 	 */
-	public function bottom (): mixed {}
+	public function bottom () {}
 
 	/**
 	 * {@inheritdoc}
@@ -6776,123 +4667,91 @@ class SplStack extends SplDoublyLinkedList implements Serializable, ArrayAccess,
 	public function __debugInfo () {}
 
 	/**
-	 * Counts the number of elements in the doubly linked list
-	 * @link http://www.php.net/manual/en/spldoublylinkedlist.count.php
-	 * @return int Returns the number of elements in the doubly linked list.
+	 * {@inheritdoc}
 	 */
-	public function count (): int {}
+	public function count () {}
 
 	/**
-	 * Checks whether the doubly linked list is empty
-	 * @link http://www.php.net/manual/en/spldoublylinkedlist.isempty.php
-	 * @return bool Returns whether the doubly linked list is empty.
+	 * {@inheritdoc}
 	 */
-	public function isEmpty (): bool {}
+	public function isEmpty () {}
 
 	/**
-	 * Sets the mode of iteration
-	 * @link http://www.php.net/manual/en/spldoublylinkedlist.setiteratormode.php
-	 * @param int $mode 
-	 * @return int Returns the different modes and flags that affect the iteration.
+	 * {@inheritdoc}
+	 * @param int $mode
 	 */
-	public function setIteratorMode (int $mode): int {}
+	public function setIteratorMode (int $mode) {}
 
 	/**
-	 * Returns the mode of iteration
-	 * @link http://www.php.net/manual/en/spldoublylinkedlist.getiteratormode.php
-	 * @return int Returns the different modes and flags that affect the iteration.
+	 * {@inheritdoc}
 	 */
-	public function getIteratorMode (): int {}
+	public function getIteratorMode () {}
 
 	/**
-	 * Returns whether the requested $index exists
-	 * @link http://www.php.net/manual/en/spldoublylinkedlist.offsetexists.php
-	 * @param int $index 
-	 * @return bool true if the requested index exists, otherwise false
+	 * {@inheritdoc}
+	 * @param mixed $index
 	 */
-	public function offsetExists (int $index): bool {}
+	public function offsetExists ($index = null) {}
 
 	/**
-	 * Returns the value at the specified $index
-	 * @link http://www.php.net/manual/en/spldoublylinkedlist.offsetget.php
-	 * @param int $index 
-	 * @return mixed The value at the specified index.
+	 * {@inheritdoc}
+	 * @param mixed $index
 	 */
-	public function offsetGet (int $index): mixed {}
+	public function offsetGet ($index = null) {}
 
 	/**
-	 * Sets the value at the specified $index to $value
-	 * @link http://www.php.net/manual/en/spldoublylinkedlist.offsetset.php
-	 * @param int|null $index 
-	 * @param mixed $value 
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param mixed $index
+	 * @param mixed $value
 	 */
-	public function offsetSet (?int $index, mixed $value): void {}
+	public function offsetSet ($index = null, mixed $value = null) {}
 
 	/**
-	 * Unsets the value at the specified $index
-	 * @link http://www.php.net/manual/en/spldoublylinkedlist.offsetunset.php
-	 * @param int $index 
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param mixed $index
 	 */
-	public function offsetUnset (int $index): void {}
+	public function offsetUnset ($index = null) {}
 
 	/**
-	 * Rewind iterator back to the start
-	 * @link http://www.php.net/manual/en/spldoublylinkedlist.rewind.php
-	 * @return void No value is returned.
+	 * {@inheritdoc}
 	 */
-	public function rewind (): void {}
+	public function rewind () {}
 
 	/**
-	 * Return current array entry
-	 * @link http://www.php.net/manual/en/spldoublylinkedlist.current.php
-	 * @return mixed The current node value.
+	 * {@inheritdoc}
 	 */
-	public function current (): mixed {}
+	public function current () {}
 
 	/**
-	 * Return current node index
-	 * @link http://www.php.net/manual/en/spldoublylinkedlist.key.php
-	 * @return int The current node index.
+	 * {@inheritdoc}
 	 */
-	public function key (): int {}
+	public function key () {}
 
 	/**
-	 * Move to previous entry
-	 * @link http://www.php.net/manual/en/spldoublylinkedlist.prev.php
-	 * @return void No value is returned.
+	 * {@inheritdoc}
 	 */
-	public function prev (): void {}
+	public function prev () {}
 
 	/**
-	 * Move to next entry
-	 * @link http://www.php.net/manual/en/spldoublylinkedlist.next.php
-	 * @return void No value is returned.
+	 * {@inheritdoc}
 	 */
-	public function next (): void {}
+	public function next () {}
 
 	/**
-	 * Check whether the doubly linked list contains more nodes
-	 * @link http://www.php.net/manual/en/spldoublylinkedlist.valid.php
-	 * @return bool Returns <p>false otherwise.
+	 * {@inheritdoc}
 	 */
-	public function valid (): bool {}
+	public function valid () {}
 
 	/**
-	 * Unserializes the storage
-	 * @link http://www.php.net/manual/en/spldoublylinkedlist.unserialize.php
-	 * @param string $data The serialized string.
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param string $data
 	 */
-	public function unserialize (string $data): void {}
+	public function unserialize (string $data) {}
 
 	/**
-	 * Serializes the storage
-	 * @link http://www.php.net/manual/en/spldoublylinkedlist.serialize.php
-	 * @return string The serialized string.
+	 * {@inheritdoc}
 	 */
-	public function serialize (): string {}
+	public function serialize () {}
 
 	/**
 	 * {@inheritdoc}
@@ -6907,106 +4766,75 @@ class SplStack extends SplDoublyLinkedList implements Serializable, ArrayAccess,
 
 }
 
-/**
- * The SplHeap class provides the main functionalities of a Heap.
- * @link http://www.php.net/manual/en/class.splheap.php
- */
 abstract class SplHeap implements Iterator, Traversable, Countable {
 
 	/**
-	 * Extracts a node from top of the heap and sift up
-	 * @link http://www.php.net/manual/en/splheap.extract.php
-	 * @return mixed The value of the extracted node.
+	 * {@inheritdoc}
 	 */
-	public function extract (): mixed {}
+	public function extract () {}
 
 	/**
-	 * Inserts an element in the heap by sifting it up
-	 * @link http://www.php.net/manual/en/splheap.insert.php
-	 * @param mixed $value 
-	 * @return true Always returns true.
+	 * {@inheritdoc}
+	 * @param mixed $value
 	 */
-	public function insert (mixed $value): true {}
+	public function insert (mixed $value = null) {}
 
 	/**
-	 * Peeks at the node from the top of the heap
-	 * @link http://www.php.net/manual/en/splheap.top.php
-	 * @return mixed The value of the node on the top.
+	 * {@inheritdoc}
 	 */
-	public function top (): mixed {}
+	public function top () {}
 
 	/**
-	 * Counts the number of elements in the heap
-	 * @link http://www.php.net/manual/en/splheap.count.php
-	 * @return int Returns the number of elements in the heap.
+	 * {@inheritdoc}
 	 */
-	public function count (): int {}
+	public function count () {}
 
 	/**
-	 * Checks whether the heap is empty
-	 * @link http://www.php.net/manual/en/splheap.isempty.php
-	 * @return bool Returns whether the heap is empty.
+	 * {@inheritdoc}
 	 */
-	public function isEmpty (): bool {}
+	public function isEmpty () {}
 
 	/**
-	 * Rewind iterator back to the start (no-op)
-	 * @link http://www.php.net/manual/en/splheap.rewind.php
-	 * @return void No value is returned.
+	 * {@inheritdoc}
 	 */
-	public function rewind (): void {}
+	public function rewind () {}
 
 	/**
-	 * Return current node pointed by the iterator
-	 * @link http://www.php.net/manual/en/splheap.current.php
-	 * @return mixed The current node value.
+	 * {@inheritdoc}
 	 */
-	public function current (): mixed {}
+	public function current () {}
 
 	/**
-	 * Return current node index
-	 * @link http://www.php.net/manual/en/splheap.key.php
-	 * @return int The current node index.
+	 * {@inheritdoc}
 	 */
-	public function key (): int {}
+	public function key () {}
 
 	/**
-	 * Move to the next node
-	 * @link http://www.php.net/manual/en/splheap.next.php
-	 * @return void No value is returned.
+	 * {@inheritdoc}
 	 */
-	public function next (): void {}
+	public function next () {}
 
 	/**
-	 * Check whether the heap contains more nodes
-	 * @link http://www.php.net/manual/en/splheap.valid.php
-	 * @return bool Returns true if the heap contains any more nodes, false otherwise.
+	 * {@inheritdoc}
 	 */
-	public function valid (): bool {}
+	public function valid () {}
 
 	/**
-	 * Recover from the corrupted state and allow further actions on the heap
-	 * @link http://www.php.net/manual/en/splheap.recoverfromcorruption.php
-	 * @return bool Always returns true.
+	 * {@inheritdoc}
 	 */
-	public function recoverFromCorruption (): bool {}
+	public function recoverFromCorruption () {}
 
 	/**
-	 * Compare elements in order to place them correctly in the heap while sifting up
-	 * @link http://www.php.net/manual/en/splheap.compare.php
-	 * @param mixed $value1 
-	 * @param mixed $value2 
-	 * @return int Result of the comparison, positive integer if value1 is greater than value2, 0 if they are equal, negative integer otherwise.
-	 * <p>Having multiple elements with the same value in a Heap is not recommended. They will end up in an arbitrary relative position.</p>
+	 * {@inheritdoc}
+	 * @param mixed $value1
+	 * @param mixed $value2
 	 */
-	abstract protected function compare (mixed $value1, mixed $value2): int;
+	abstract protected function compare (mixed $value1 = null, mixed $value2 = null);
 
 	/**
-	 * Tells if the heap is in a corrupted state
-	 * @link http://www.php.net/manual/en/splheap.iscorrupted.php
-	 * @return bool Returns true if the heap is corrupted, false otherwise.
+	 * {@inheritdoc}
 	 */
-	public function isCorrupted (): bool {}
+	public function isCorrupted () {}
 
 	/**
 	 * {@inheritdoc}
@@ -7015,106 +4843,75 @@ abstract class SplHeap implements Iterator, Traversable, Countable {
 
 }
 
-/**
- * The SplMinHeap class provides the main functionalities of a heap, keeping the minimum on the top.
- * @link http://www.php.net/manual/en/class.splminheap.php
- */
 class SplMinHeap extends SplHeap implements Countable, Traversable, Iterator {
 
 	/**
-	 * Compare elements in order to place them correctly in the heap while sifting up
-	 * @link http://www.php.net/manual/en/splminheap.compare.php
-	 * @param mixed $value1 
-	 * @param mixed $value2 
-	 * @return int Result of the comparison, positive integer if value1 is lower than value2, 0 if they are equal, negative integer otherwise.
-	 * <p>Having multiple elements with the same value in a Heap is not recommended. They will end up in an arbitrary relative position.</p>
+	 * {@inheritdoc}
+	 * @param mixed $value1
+	 * @param mixed $value2
 	 */
-	protected function compare (mixed $value1, mixed $value2): int {}
+	protected function compare (mixed $value1 = null, mixed $value2 = null) {}
 
 	/**
-	 * Extracts a node from top of the heap and sift up
-	 * @link http://www.php.net/manual/en/splheap.extract.php
-	 * @return mixed The value of the extracted node.
+	 * {@inheritdoc}
 	 */
-	public function extract (): mixed {}
+	public function extract () {}
 
 	/**
-	 * Inserts an element in the heap by sifting it up
-	 * @link http://www.php.net/manual/en/splheap.insert.php
-	 * @param mixed $value 
-	 * @return true Always returns true.
+	 * {@inheritdoc}
+	 * @param mixed $value
 	 */
-	public function insert (mixed $value): true {}
+	public function insert (mixed $value = null) {}
 
 	/**
-	 * Peeks at the node from the top of the heap
-	 * @link http://www.php.net/manual/en/splheap.top.php
-	 * @return mixed The value of the node on the top.
+	 * {@inheritdoc}
 	 */
-	public function top (): mixed {}
+	public function top () {}
 
 	/**
-	 * Counts the number of elements in the heap
-	 * @link http://www.php.net/manual/en/splheap.count.php
-	 * @return int Returns the number of elements in the heap.
+	 * {@inheritdoc}
 	 */
-	public function count (): int {}
+	public function count () {}
 
 	/**
-	 * Checks whether the heap is empty
-	 * @link http://www.php.net/manual/en/splheap.isempty.php
-	 * @return bool Returns whether the heap is empty.
+	 * {@inheritdoc}
 	 */
-	public function isEmpty (): bool {}
+	public function isEmpty () {}
 
 	/**
-	 * Rewind iterator back to the start (no-op)
-	 * @link http://www.php.net/manual/en/splheap.rewind.php
-	 * @return void No value is returned.
+	 * {@inheritdoc}
 	 */
-	public function rewind (): void {}
+	public function rewind () {}
 
 	/**
-	 * Return current node pointed by the iterator
-	 * @link http://www.php.net/manual/en/splheap.current.php
-	 * @return mixed The current node value.
+	 * {@inheritdoc}
 	 */
-	public function current (): mixed {}
+	public function current () {}
 
 	/**
-	 * Return current node index
-	 * @link http://www.php.net/manual/en/splheap.key.php
-	 * @return int The current node index.
+	 * {@inheritdoc}
 	 */
-	public function key (): int {}
+	public function key () {}
 
 	/**
-	 * Move to the next node
-	 * @link http://www.php.net/manual/en/splheap.next.php
-	 * @return void No value is returned.
+	 * {@inheritdoc}
 	 */
-	public function next (): void {}
+	public function next () {}
 
 	/**
-	 * Check whether the heap contains more nodes
-	 * @link http://www.php.net/manual/en/splheap.valid.php
-	 * @return bool Returns true if the heap contains any more nodes, false otherwise.
+	 * {@inheritdoc}
 	 */
-	public function valid (): bool {}
+	public function valid () {}
 
 	/**
-	 * Recover from the corrupted state and allow further actions on the heap
-	 * @link http://www.php.net/manual/en/splheap.recoverfromcorruption.php
-	 * @return bool Always returns true.
+	 * {@inheritdoc}
 	 */
-	public function recoverFromCorruption (): bool {}
+	public function recoverFromCorruption () {}
 
 	/**
-	 * Tells if the heap is in a corrupted state
-	 * @link http://www.php.net/manual/en/splheap.iscorrupted.php
-	 * @return bool Returns true if the heap is corrupted, false otherwise.
+	 * {@inheritdoc}
 	 */
-	public function isCorrupted (): bool {}
+	public function isCorrupted () {}
 
 	/**
 	 * {@inheritdoc}
@@ -7123,106 +4920,75 @@ class SplMinHeap extends SplHeap implements Countable, Traversable, Iterator {
 
 }
 
-/**
- * The SplMaxHeap class provides the main functionalities of a heap, keeping the maximum on the top.
- * @link http://www.php.net/manual/en/class.splmaxheap.php
- */
 class SplMaxHeap extends SplHeap implements Countable, Traversable, Iterator {
 
 	/**
-	 * Compare elements in order to place them correctly in the heap while sifting up
-	 * @link http://www.php.net/manual/en/splmaxheap.compare.php
-	 * @param mixed $value1 
-	 * @param mixed $value2 
-	 * @return int Result of the comparison, positive integer if value1 is greater than value2, 0 if they are equal, negative integer otherwise.
-	 * <p>Having multiple elements with the same value in a Heap is not recommended. They will end up in an arbitrary relative position.</p>
+	 * {@inheritdoc}
+	 * @param mixed $value1
+	 * @param mixed $value2
 	 */
-	protected function compare (mixed $value1, mixed $value2): int {}
+	protected function compare (mixed $value1 = null, mixed $value2 = null) {}
 
 	/**
-	 * Extracts a node from top of the heap and sift up
-	 * @link http://www.php.net/manual/en/splheap.extract.php
-	 * @return mixed The value of the extracted node.
+	 * {@inheritdoc}
 	 */
-	public function extract (): mixed {}
+	public function extract () {}
 
 	/**
-	 * Inserts an element in the heap by sifting it up
-	 * @link http://www.php.net/manual/en/splheap.insert.php
-	 * @param mixed $value 
-	 * @return true Always returns true.
+	 * {@inheritdoc}
+	 * @param mixed $value
 	 */
-	public function insert (mixed $value): true {}
+	public function insert (mixed $value = null) {}
 
 	/**
-	 * Peeks at the node from the top of the heap
-	 * @link http://www.php.net/manual/en/splheap.top.php
-	 * @return mixed The value of the node on the top.
+	 * {@inheritdoc}
 	 */
-	public function top (): mixed {}
+	public function top () {}
 
 	/**
-	 * Counts the number of elements in the heap
-	 * @link http://www.php.net/manual/en/splheap.count.php
-	 * @return int Returns the number of elements in the heap.
+	 * {@inheritdoc}
 	 */
-	public function count (): int {}
+	public function count () {}
 
 	/**
-	 * Checks whether the heap is empty
-	 * @link http://www.php.net/manual/en/splheap.isempty.php
-	 * @return bool Returns whether the heap is empty.
+	 * {@inheritdoc}
 	 */
-	public function isEmpty (): bool {}
+	public function isEmpty () {}
 
 	/**
-	 * Rewind iterator back to the start (no-op)
-	 * @link http://www.php.net/manual/en/splheap.rewind.php
-	 * @return void No value is returned.
+	 * {@inheritdoc}
 	 */
-	public function rewind (): void {}
+	public function rewind () {}
 
 	/**
-	 * Return current node pointed by the iterator
-	 * @link http://www.php.net/manual/en/splheap.current.php
-	 * @return mixed The current node value.
+	 * {@inheritdoc}
 	 */
-	public function current (): mixed {}
+	public function current () {}
 
 	/**
-	 * Return current node index
-	 * @link http://www.php.net/manual/en/splheap.key.php
-	 * @return int The current node index.
+	 * {@inheritdoc}
 	 */
-	public function key (): int {}
+	public function key () {}
 
 	/**
-	 * Move to the next node
-	 * @link http://www.php.net/manual/en/splheap.next.php
-	 * @return void No value is returned.
+	 * {@inheritdoc}
 	 */
-	public function next (): void {}
+	public function next () {}
 
 	/**
-	 * Check whether the heap contains more nodes
-	 * @link http://www.php.net/manual/en/splheap.valid.php
-	 * @return bool Returns true if the heap contains any more nodes, false otherwise.
+	 * {@inheritdoc}
 	 */
-	public function valid (): bool {}
+	public function valid () {}
 
 	/**
-	 * Recover from the corrupted state and allow further actions on the heap
-	 * @link http://www.php.net/manual/en/splheap.recoverfromcorruption.php
-	 * @return bool Always returns true.
+	 * {@inheritdoc}
 	 */
-	public function recoverFromCorruption (): bool {}
+	public function recoverFromCorruption () {}
 
 	/**
-	 * Tells if the heap is in a corrupted state
-	 * @link http://www.php.net/manual/en/splheap.iscorrupted.php
-	 * @return bool Returns true if the heap is corrupted, false otherwise.
+	 * {@inheritdoc}
 	 */
-	public function isCorrupted (): bool {}
+	public function isCorrupted () {}
 
 	/**
 	 * {@inheritdoc}
@@ -7231,11 +4997,6 @@ class SplMaxHeap extends SplHeap implements Countable, Traversable, Iterator {
 
 }
 
-/**
- * The SplPriorityQueue class provides the main functionalities of a 
- * prioritized queue, implemented using a max heap.
- * @link http://www.php.net/manual/en/class.splpriorityqueue.php
- */
 class SplPriorityQueue implements Iterator, Traversable, Countable {
 	const EXTR_BOTH = 3;
 	const EXTR_PRIORITY = 2;
@@ -7243,115 +5004,84 @@ class SplPriorityQueue implements Iterator, Traversable, Countable {
 
 
 	/**
-	 * Compare priorities in order to place elements correctly in the heap while sifting up
-	 * @link http://www.php.net/manual/en/splpriorityqueue.compare.php
-	 * @param mixed $priority1 
-	 * @param mixed $priority2 
-	 * @return int Result of the comparison, positive integer if priority1 is greater than priority2, 0 if they are equal, negative integer otherwise.
-	 * <p>Multiple elements with the same priority will get dequeued in no particular order.</p>
+	 * {@inheritdoc}
+	 * @param mixed $priority1
+	 * @param mixed $priority2
 	 */
-	public function compare (mixed $priority1, mixed $priority2): int {}
+	public function compare (mixed $priority1 = null, mixed $priority2 = null) {}
 
 	/**
-	 * Inserts an element in the queue by sifting it up
-	 * @link http://www.php.net/manual/en/splpriorityqueue.insert.php
-	 * @param mixed $value 
-	 * @param mixed $priority 
-	 * @return bool Returns true.
+	 * {@inheritdoc}
+	 * @param mixed $value
+	 * @param mixed $priority
 	 */
-	public function insert (mixed $value, mixed $priority): bool {}
+	public function insert (mixed $value = null, mixed $priority = null) {}
 
 	/**
-	 * Sets the mode of extraction
-	 * @link http://www.php.net/manual/en/splpriorityqueue.setextractflags.php
-	 * @param int $flags 
-	 * @return int Returns the flags of extraction.
+	 * {@inheritdoc}
+	 * @param int $flags
 	 */
-	public function setExtractFlags (int $flags): int {}
+	public function setExtractFlags (int $flags) {}
 
 	/**
-	 * Peeks at the node from the top of the queue
-	 * @link http://www.php.net/manual/en/splpriorityqueue.top.php
-	 * @return mixed The value or priority (or both) of the top node, depending on the extract flag.
+	 * {@inheritdoc}
 	 */
-	public function top (): mixed {}
+	public function top () {}
 
 	/**
-	 * Extracts a node from top of the heap and sift up
-	 * @link http://www.php.net/manual/en/splpriorityqueue.extract.php
-	 * @return mixed The value or priority (or both) of the extracted node, depending on the extract flag.
+	 * {@inheritdoc}
 	 */
-	public function extract (): mixed {}
+	public function extract () {}
 
 	/**
-	 * Counts the number of elements in the queue
-	 * @link http://www.php.net/manual/en/splpriorityqueue.count.php
-	 * @return int Returns the number of elements in the queue.
+	 * {@inheritdoc}
 	 */
-	public function count (): int {}
+	public function count () {}
 
 	/**
-	 * Checks whether the queue is empty
-	 * @link http://www.php.net/manual/en/splpriorityqueue.isempty.php
-	 * @return bool Returns whether the queue is empty.
+	 * {@inheritdoc}
 	 */
-	public function isEmpty (): bool {}
+	public function isEmpty () {}
 
 	/**
-	 * Rewind iterator back to the start (no-op)
-	 * @link http://www.php.net/manual/en/splpriorityqueue.rewind.php
-	 * @return void No value is returned.
+	 * {@inheritdoc}
 	 */
-	public function rewind (): void {}
+	public function rewind () {}
 
 	/**
-	 * Return current node pointed by the iterator
-	 * @link http://www.php.net/manual/en/splpriorityqueue.current.php
-	 * @return mixed The value or priority (or both) of the current node, depending on the extract flag.
+	 * {@inheritdoc}
 	 */
-	public function current (): mixed {}
+	public function current () {}
 
 	/**
-	 * Return current node index
-	 * @link http://www.php.net/manual/en/splpriorityqueue.key.php
-	 * @return int The current node index.
+	 * {@inheritdoc}
 	 */
-	public function key (): int {}
+	public function key () {}
 
 	/**
-	 * Move to the next node
-	 * @link http://www.php.net/manual/en/splpriorityqueue.next.php
-	 * @return void No value is returned.
+	 * {@inheritdoc}
 	 */
-	public function next (): void {}
+	public function next () {}
 
 	/**
-	 * Check whether the queue contains more nodes
-	 * @link http://www.php.net/manual/en/splpriorityqueue.valid.php
-	 * @return bool Returns true if the queue contains any more nodes, false otherwise.
+	 * {@inheritdoc}
 	 */
-	public function valid (): bool {}
+	public function valid () {}
 
 	/**
-	 * Recover from the corrupted state and allow further actions on the queue
-	 * @link http://www.php.net/manual/en/splpriorityqueue.recoverfromcorruption.php
-	 * @return bool Always returns true.
+	 * {@inheritdoc}
 	 */
-	public function recoverFromCorruption (): bool {}
+	public function recoverFromCorruption () {}
 
 	/**
-	 * Tells if the priority queue is in a corrupted state
-	 * @link http://www.php.net/manual/en/splpriorityqueue.iscorrupted.php
-	 * @return bool Returns true if the priority queue is corrupted, false otherwise.
+	 * {@inheritdoc}
 	 */
-	public function isCorrupted (): bool {}
+	public function isCorrupted () {}
 
 	/**
-	 * Get the flags of extraction
-	 * @link http://www.php.net/manual/en/splpriorityqueue.getextractflags.php
-	 * @return int Returns the flags of extraction.
+	 * {@inheritdoc}
 	 */
-	public function getExtractFlags (): int {}
+	public function getExtractFlags () {}
 
 	/**
 	 * {@inheritdoc}
@@ -7360,30 +5090,18 @@ class SplPriorityQueue implements Iterator, Traversable, Countable {
 
 }
 
-/**
- * The SplFixedArray class provides the main functionalities of array. The 
- * main difference between a SplFixedArray and a normal PHP array is that 
- * the SplFixedArray must be resized manually and allows only integers within 
- * the range as indexes. The advantage is that it uses less memory than
- * a standard array.
- * @link http://www.php.net/manual/en/class.splfixedarray.php
- */
 class SplFixedArray implements IteratorAggregate, Traversable, ArrayAccess, Countable, JsonSerializable {
 
 	/**
-	 * Constructs a new fixed array
-	 * @link http://www.php.net/manual/en/splfixedarray.construct.php
-	 * @param int $size [optional] 
-	 * @return int 
+	 * {@inheritdoc}
+	 * @param int $size [optional]
 	 */
-	public function __construct (int $size = null): int {}
+	public function __construct (int $size = 0) {}
 
 	/**
-	 * Reinitialises the array after being unserialised
-	 * @link http://www.php.net/manual/en/splfixedarray.wakeup.php
-	 * @return void No value is returned.
+	 * {@inheritdoc}
 	 */
-	public function __wakeup (): void {}
+	public function __wakeup () {}
 
 	/**
 	 * {@inheritdoc}
@@ -7397,76 +5115,57 @@ class SplFixedArray implements IteratorAggregate, Traversable, ArrayAccess, Coun
 	public function __unserialize (array $data): void {}
 
 	/**
-	 * Returns the size of the array
-	 * @link http://www.php.net/manual/en/splfixedarray.count.php
-	 * @return int Returns the size of the array.
+	 * {@inheritdoc}
 	 */
-	public function count (): int {}
+	public function count () {}
 
 	/**
-	 * Returns a PHP array from the fixed array
-	 * @link http://www.php.net/manual/en/splfixedarray.toarray.php
-	 * @return array Returns a PHP array, similar to the fixed array.
+	 * {@inheritdoc}
 	 */
-	public function toArray (): array {}
+	public function toArray () {}
 
 	/**
-	 * Import a PHP array in a SplFixedArray instance
-	 * @link http://www.php.net/manual/en/splfixedarray.fromarray.php
-	 * @param array $array 
-	 * @param bool $preserveKeys [optional] 
-	 * @return SplFixedArray Returns an instance of SplFixedArray 
-	 * containing the array content.
+	 * {@inheritdoc}
+	 * @param array $array
+	 * @param bool $preserveKeys [optional]
 	 */
-	public static function fromArray (array $array, bool $preserveKeys = true): SplFixedArray {}
+	public static function fromArray (array $array, bool $preserveKeys = true) {}
 
 	/**
-	 * Gets the size of the array
-	 * @link http://www.php.net/manual/en/splfixedarray.getsize.php
-	 * @return int Returns the size of the array, as an int.
+	 * {@inheritdoc}
 	 */
-	public function getSize (): int {}
+	public function getSize () {}
 
 	/**
-	 * Change the size of an array
-	 * @link http://www.php.net/manual/en/splfixedarray.setsize.php
-	 * @param int $size 
-	 * @return bool Returns true on success or false on failure.
+	 * {@inheritdoc}
+	 * @param int $size
 	 */
-	public function setSize (int $size): bool {}
+	public function setSize (int $size) {}
 
 	/**
-	 * Returns whether the requested index exists
-	 * @link http://www.php.net/manual/en/splfixedarray.offsetexists.php
-	 * @param int $index 
-	 * @return bool true if the requested index exists, otherwise false
+	 * {@inheritdoc}
+	 * @param mixed $index
 	 */
-	public function offsetExists (int $index): bool {}
+	public function offsetExists ($index = null) {}
 
 	/**
-	 * Returns the value at the specified index
-	 * @link http://www.php.net/manual/en/splfixedarray.offsetget.php
-	 * @param int $index 
-	 * @return mixed The value at the specified index.
+	 * {@inheritdoc}
+	 * @param mixed $index
 	 */
-	public function offsetGet (int $index): mixed {}
+	public function offsetGet ($index = null) {}
 
 	/**
-	 * Sets a new value at a specified index
-	 * @link http://www.php.net/manual/en/splfixedarray.offsetset.php
-	 * @param int $index 
-	 * @param mixed $value 
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param mixed $index
+	 * @param mixed $value
 	 */
-	public function offsetSet (int $index, mixed $value): void {}
+	public function offsetSet ($index = null, mixed $value = null) {}
 
 	/**
-	 * Unsets the value at the specified $index
-	 * @link http://www.php.net/manual/en/splfixedarray.offsetunset.php
-	 * @param int $index 
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param mixed $index
 	 */
-	public function offsetUnset (int $index): void {}
+	public function offsetUnset ($index = null) {}
 
 	/**
 	 * {@inheritdoc}
@@ -7480,226 +5179,159 @@ class SplFixedArray implements IteratorAggregate, Traversable, ArrayAccess, Coun
 
 }
 
-/**
- * The SplObserver interface is used alongside
- * SplSubject to implement the Observer Design Pattern.
- * @link http://www.php.net/manual/en/class.splobserver.php
- */
 interface SplObserver  {
 
 	/**
-	 * Receive update from subject
-	 * @link http://www.php.net/manual/en/splobserver.update.php
-	 * @param SplSubject $subject 
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param SplSubject $subject
 	 */
-	abstract public function update (SplSubject $subject): void;
+	abstract public function update (SplSubject $subject);
 
 }
 
-/**
- * The SplSubject interface is used alongside
- * SplObserver to implement the Observer Design Pattern.
- * @link http://www.php.net/manual/en/class.splsubject.php
- */
 interface SplSubject  {
 
 	/**
-	 * Attach an SplObserver
-	 * @link http://www.php.net/manual/en/splsubject.attach.php
-	 * @param SplObserver $observer 
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param SplObserver $observer
 	 */
-	abstract public function attach (SplObserver $observer): void;
+	abstract public function attach (SplObserver $observer);
 
 	/**
-	 * Detach an observer
-	 * @link http://www.php.net/manual/en/splsubject.detach.php
-	 * @param SplObserver $observer 
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param SplObserver $observer
 	 */
-	abstract public function detach (SplObserver $observer): void;
+	abstract public function detach (SplObserver $observer);
 
 	/**
-	 * Notify an observer
-	 * @link http://www.php.net/manual/en/splsubject.notify.php
-	 * @return void No value is returned.
+	 * {@inheritdoc}
 	 */
-	abstract public function notify (): void;
+	abstract public function notify ();
 
 }
 
-/**
- * The SplObjectStorage class provides a map from objects to data or, by
- * ignoring data, an object set. This dual purpose can be useful in many
- * cases involving the need to uniquely identify objects.
- * @link http://www.php.net/manual/en/class.splobjectstorage.php
- */
 class SplObjectStorage implements Countable, Iterator, Traversable, Serializable, ArrayAccess {
 
 	/**
-	 * Adds an object in the storage
-	 * @link http://www.php.net/manual/en/splobjectstorage.attach.php
-	 * @param object $object 
-	 * @param mixed $info [optional] 
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param object $object
+	 * @param mixed $info [optional]
 	 */
-	public function attach (object $object, mixed $info = null): void {}
+	public function attach (object $object, mixed $info = NULL) {}
 
 	/**
-	 * Removes an object from the storage
-	 * @link http://www.php.net/manual/en/splobjectstorage.detach.php
-	 * @param object $object 
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param object $object
 	 */
-	public function detach (object $object): void {}
+	public function detach (object $object) {}
 
 	/**
-	 * Checks if the storage contains a specific object
-	 * @link http://www.php.net/manual/en/splobjectstorage.contains.php
-	 * @param object $object 
-	 * @return bool Returns true if the object is in the storage, false otherwise.
+	 * {@inheritdoc}
+	 * @param object $object
 	 */
-	public function contains (object $object): bool {}
+	public function contains (object $object) {}
 
 	/**
-	 * Adds all objects from another storage
-	 * @link http://www.php.net/manual/en/splobjectstorage.addall.php
-	 * @param SplObjectStorage $storage 
-	 * @return int The number of objects in the storage.
+	 * {@inheritdoc}
+	 * @param SplObjectStorage $storage
 	 */
-	public function addAll (SplObjectStorage $storage): int {}
+	public function addAll (SplObjectStorage $storage) {}
 
 	/**
-	 * Removes objects contained in another storage from the current storage
-	 * @link http://www.php.net/manual/en/splobjectstorage.removeall.php
-	 * @param SplObjectStorage $storage 
-	 * @return int Returns the number of remaining objects.
+	 * {@inheritdoc}
+	 * @param SplObjectStorage $storage
 	 */
-	public function removeAll (SplObjectStorage $storage): int {}
+	public function removeAll (SplObjectStorage $storage) {}
 
 	/**
-	 * Removes all objects except for those contained in another storage from the current storage
-	 * @link http://www.php.net/manual/en/splobjectstorage.removeallexcept.php
-	 * @param SplObjectStorage $storage 
-	 * @return int Returns the number of remaining objects.
+	 * {@inheritdoc}
+	 * @param SplObjectStorage $storage
 	 */
-	public function removeAllExcept (SplObjectStorage $storage): int {}
+	public function removeAllExcept (SplObjectStorage $storage) {}
 
 	/**
-	 * Returns the data associated with the current iterator entry
-	 * @link http://www.php.net/manual/en/splobjectstorage.getinfo.php
-	 * @return mixed The data associated with the current iterator position.
+	 * {@inheritdoc}
 	 */
-	public function getInfo (): mixed {}
+	public function getInfo () {}
 
 	/**
-	 * Sets the data associated with the current iterator entry
-	 * @link http://www.php.net/manual/en/splobjectstorage.setinfo.php
-	 * @param mixed $info 
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param mixed $info
 	 */
-	public function setInfo (mixed $info): void {}
+	public function setInfo (mixed $info = null) {}
 
 	/**
-	 * Returns the number of objects in the storage
-	 * @link http://www.php.net/manual/en/splobjectstorage.count.php
-	 * @param int $mode [optional] 
-	 * @return int The number of objects in the storage.
+	 * {@inheritdoc}
+	 * @param int $mode [optional]
 	 */
-	public function count (int $mode = COUNT_NORMAL): int {}
+	public function count (int $mode = 0) {}
 
 	/**
-	 * Rewind the iterator to the first storage element
-	 * @link http://www.php.net/manual/en/splobjectstorage.rewind.php
-	 * @return void No value is returned.
+	 * {@inheritdoc}
 	 */
-	public function rewind (): void {}
+	public function rewind () {}
 
 	/**
-	 * Returns if the current iterator entry is valid
-	 * @link http://www.php.net/manual/en/splobjectstorage.valid.php
-	 * @return bool Returns true if the iterator entry is valid, false otherwise.
+	 * {@inheritdoc}
 	 */
-	public function valid (): bool {}
+	public function valid () {}
 
 	/**
-	 * Returns the index at which the iterator currently is
-	 * @link http://www.php.net/manual/en/splobjectstorage.key.php
-	 * @return int The index corresponding to the position of the iterator.
+	 * {@inheritdoc}
 	 */
-	public function key (): int {}
+	public function key () {}
 
 	/**
-	 * Returns the current storage entry
-	 * @link http://www.php.net/manual/en/splobjectstorage.current.php
-	 * @return object The object at the current iterator position.
+	 * {@inheritdoc}
 	 */
-	public function current (): object {}
+	public function current () {}
 
 	/**
-	 * Move to the next entry
-	 * @link http://www.php.net/manual/en/splobjectstorage.next.php
-	 * @return void No value is returned.
+	 * {@inheritdoc}
 	 */
-	public function next (): void {}
+	public function next () {}
 
 	/**
-	 * Unserializes a storage from its string representation
-	 * @link http://www.php.net/manual/en/splobjectstorage.unserialize.php
-	 * @param string $data 
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param string $data
 	 */
-	public function unserialize (string $data): void {}
+	public function unserialize (string $data) {}
 
 	/**
-	 * Serializes the storage
-	 * @link http://www.php.net/manual/en/splobjectstorage.serialize.php
-	 * @return string A string representing the storage.
+	 * {@inheritdoc}
 	 */
-	public function serialize (): string {}
+	public function serialize () {}
 
 	/**
-	 * Checks whether an object exists in the storage
-	 * @link http://www.php.net/manual/en/splobjectstorage.offsetexists.php
-	 * @param object $object 
-	 * @return bool Returns true if the object exists in the storage,
-	 * and false otherwise.
+	 * {@inheritdoc}
+	 * @param mixed $object
 	 */
-	public function offsetExists (object $object): bool {}
+	public function offsetExists ($object = null) {}
 
 	/**
-	 * Returns the data associated with an object
-	 * @link http://www.php.net/manual/en/splobjectstorage.offsetget.php
-	 * @param object $object 
-	 * @return mixed The data previously associated with the object in the storage.
+	 * {@inheritdoc}
+	 * @param mixed $object
 	 */
-	public function offsetGet (object $object): mixed {}
+	public function offsetGet ($object = null) {}
 
 	/**
-	 * Associates data to an object in the storage
-	 * @link http://www.php.net/manual/en/splobjectstorage.offsetset.php
-	 * @param object $object 
-	 * @param mixed $info [optional] 
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param mixed $object
+	 * @param mixed $info [optional]
 	 */
-	public function offsetSet (object $object, mixed $info = null): void {}
+	public function offsetSet ($object = null, mixed $info = NULL) {}
 
 	/**
-	 * Removes an object from the storage
-	 * @link http://www.php.net/manual/en/splobjectstorage.offsetunset.php
-	 * @param object $object 
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param mixed $object
 	 */
-	public function offsetUnset (object $object): void {}
+	public function offsetUnset ($object = null) {}
 
 	/**
-	 * Calculate a unique identifier for the contained objects
-	 * @link http://www.php.net/manual/en/splobjectstorage.gethash.php
-	 * @param object $object The object whose identifier is to be calculated.
-	 * @return string A string with the calculated identifier.
+	 * {@inheritdoc}
+	 * @param object $object
 	 */
-	public function getHash (object $object): string {}
+	public function getHash (object $object) {}
 
 	/**
 	 * {@inheritdoc}
@@ -7719,115 +5351,78 @@ class SplObjectStorage implements Countable, Iterator, Traversable, Serializable
 
 }
 
-/**
- * An Iterator that sequentially iterates over all attached iterators
- * @link http://www.php.net/manual/en/class.multipleiterator.php
- */
 class MultipleIterator implements Iterator, Traversable {
-	/**
-	 * Do not require all sub iterators to be valid in iteration.
 	const MIT_NEED_ANY = 0;
-	/**
-	 * Require all sub iterators to be valid in iteration.
 	const MIT_NEED_ALL = 1;
-	/**
-	 * Keys are created from the sub iterators position.
 	const MIT_KEYS_NUMERIC = 0;
-	/**
-	 * Keys are created from sub iterators associated information.
 	const MIT_KEYS_ASSOC = 2;
 
 
 	/**
-	 * Constructs a new MultipleIterator
-	 * @link http://www.php.net/manual/en/multipleiterator.construct.php
-	 * @param int $flags [optional] 
-	 * @return int 
+	 * {@inheritdoc}
+	 * @param int $flags [optional]
 	 */
-	public function __construct (int $flags = 'MultipleIterator::MIT_NEED_ALL | MultipleIterator::MIT_KEYS_NUMERIC'): int {}
+	public function __construct (int $flags = 1) {}
 
 	/**
-	 * Gets the flag information
-	 * @link http://www.php.net/manual/en/multipleiterator.getflags.php
-	 * @return int Information about the flags, as an int.
+	 * {@inheritdoc}
 	 */
-	public function getFlags (): int {}
+	public function getFlags () {}
 
 	/**
-	 * Sets flags
-	 * @link http://www.php.net/manual/en/multipleiterator.setflags.php
-	 * @param int $flags 
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param int $flags
 	 */
-	public function setFlags (int $flags): void {}
+	public function setFlags (int $flags) {}
 
 	/**
-	 * Attaches iterator information
-	 * @link http://www.php.net/manual/en/multipleiterator.attachiterator.php
-	 * @param Iterator $iterator 
-	 * @param string|int|null $info [optional] 
-	 * @return void Description...
+	 * {@inheritdoc}
+	 * @param Iterator $iterator
+	 * @param string|int|null $info [optional]
 	 */
-	public function attachIterator (Iterator $iterator, string|int|null $info = null): void {}
+	public function attachIterator (Iterator $iterator, string|int|null $info = NULL) {}
 
 	/**
-	 * Detaches an iterator
-	 * @link http://www.php.net/manual/en/multipleiterator.detachiterator.php
-	 * @param Iterator $iterator 
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param Iterator $iterator
 	 */
-	public function detachIterator (Iterator $iterator): void {}
+	public function detachIterator (Iterator $iterator) {}
 
 	/**
-	 * Checks if an iterator is attached
-	 * @link http://www.php.net/manual/en/multipleiterator.containsiterator.php
-	 * @param Iterator $iterator 
-	 * @return bool Returns true on success or false on failure.
+	 * {@inheritdoc}
+	 * @param Iterator $iterator
 	 */
-	public function containsIterator (Iterator $iterator): bool {}
+	public function containsIterator (Iterator $iterator) {}
 
 	/**
-	 * Gets the number of attached iterator instances
-	 * @link http://www.php.net/manual/en/multipleiterator.countiterators.php
-	 * @return int The number of attached iterator instances (as an int).
+	 * {@inheritdoc}
 	 */
-	public function countIterators (): int {}
+	public function countIterators () {}
 
 	/**
-	 * Rewinds all attached iterator instances
-	 * @link http://www.php.net/manual/en/multipleiterator.rewind.php
-	 * @return void No value is returned.
+	 * {@inheritdoc}
 	 */
-	public function rewind (): void {}
+	public function rewind () {}
 
 	/**
-	 * Checks the validity of sub iterators
-	 * @link http://www.php.net/manual/en/multipleiterator.valid.php
-	 * @return bool Returns true if one or all sub iterators are valid depending on flags,
-	 * otherwise false
+	 * {@inheritdoc}
 	 */
-	public function valid (): bool {}
+	public function valid () {}
 
 	/**
-	 * Gets the registered iterator instances
-	 * @link http://www.php.net/manual/en/multipleiterator.key.php
-	 * @return array An array of all registered iterator instances.
+	 * {@inheritdoc}
 	 */
-	public function key (): array {}
+	public function key () {}
 
 	/**
-	 * Gets the registered iterator instances
-	 * @link http://www.php.net/manual/en/multipleiterator.current.php
-	 * @return array An array containing the current values of each attached iterator.
+	 * {@inheritdoc}
 	 */
-	public function current (): array {}
+	public function current () {}
 
 	/**
-	 * Moves all attached iterator instances forward
-	 * @link http://www.php.net/manual/en/multipleiterator.next.php
-	 * @return void No value is returned.
+	 * {@inheritdoc}
 	 */
-	public function next (): void {}
+	public function next () {}
 
 	/**
 	 * {@inheritdoc}
@@ -7837,135 +5432,100 @@ class MultipleIterator implements Iterator, Traversable {
 }
 
 /**
- * Return the interfaces which are implemented by the given class or interface
- * @link http://www.php.net/manual/en/function.class-implements.php
- * @param object|string $object_or_class 
- * @param bool $autoload [optional] 
- * @return array|false An array on success, or false when the given class doesn't exist.
+ * {@inheritdoc}
+ * @param mixed $object_or_class
+ * @param bool $autoload [optional]
  */
-function class_implements (object|string $object_or_class, bool $autoload = true): array|false {}
+function class_implements ($object_or_class = null, bool $autoload = true): array|false {}
 
 /**
- * Return the parent classes of the given class
- * @link http://www.php.net/manual/en/function.class-parents.php
- * @param object|string $object_or_class 
- * @param bool $autoload [optional] 
- * @return array|false An array on success, or false when the given class doesn't exist.
+ * {@inheritdoc}
+ * @param mixed $object_or_class
+ * @param bool $autoload [optional]
  */
-function class_parents (object|string $object_or_class, bool $autoload = true): array|false {}
+function class_parents ($object_or_class = null, bool $autoload = true): array|false {}
 
 /**
- * Return the traits used by the given class
- * @link http://www.php.net/manual/en/function.class-uses.php
- * @param object|string $object_or_class 
- * @param bool $autoload [optional] 
- * @return array|false An array on success, or false when the given class doesn't exist.
+ * {@inheritdoc}
+ * @param mixed $object_or_class
+ * @param bool $autoload [optional]
  */
-function class_uses (object|string $object_or_class, bool $autoload = true): array|false {}
+function class_uses ($object_or_class = null, bool $autoload = true): array|false {}
 
 /**
- * Default implementation for __autoload()
- * @link http://www.php.net/manual/en/function.spl-autoload.php
- * @param string $class 
- * @param string|null $file_extensions [optional] 
- * @return void No value is returned.
+ * {@inheritdoc}
+ * @param string $class
+ * @param string|null $file_extensions [optional]
  */
-function spl_autoload (string $class, ?string $file_extensions = null): void {}
+function spl_autoload (string $class, ?string $file_extensions = NULL): void {}
 
 /**
- * Try all registered __autoload() functions to load the requested class
- * @link http://www.php.net/manual/en/function.spl-autoload-call.php
- * @param string $class 
- * @return void No value is returned.
+ * {@inheritdoc}
+ * @param string $class
  */
 function spl_autoload_call (string $class): void {}
 
 /**
- * Register and return default file extensions for spl_autoload
- * @link http://www.php.net/manual/en/function.spl-autoload-extensions.php
- * @param string|null $file_extensions [optional] 
- * @return string A comma delimited list of default file extensions for
- * spl_autoload.
+ * {@inheritdoc}
+ * @param string|null $file_extensions [optional]
  */
-function spl_autoload_extensions (?string $file_extensions = null): string {}
+function spl_autoload_extensions (?string $file_extensions = NULL): string {}
 
 /**
- * Return all registered __autoload() functions
- * @link http://www.php.net/manual/en/function.spl-autoload-functions.php
- * @return array An array of all registered __autoload functions.
- * If no function is registered, or the autoload queue is not activated,
- * then the return value will be an empty array.
+ * {@inheritdoc}
  */
 function spl_autoload_functions (): array {}
 
 /**
- * Register given function as __autoload() implementation
- * @link http://www.php.net/manual/en/function.spl-autoload-register.php
- * @param callable|null $callback [optional] 
- * @param bool $throw [optional] 
- * @param bool $prepend [optional] 
- * @return bool Returns true on success or false on failure.
+ * {@inheritdoc}
+ * @param callable|null $callback [optional]
+ * @param bool $throw [optional]
+ * @param bool $prepend [optional]
  */
-function spl_autoload_register (?callable $callback = null, bool $throw = true, bool $prepend = false): bool {}
+function spl_autoload_register (?callable $callback = NULL, bool $throw = true, bool $prepend = false): bool {}
 
 /**
- * Unregister given function as __autoload() implementation
- * @link http://www.php.net/manual/en/function.spl-autoload-unregister.php
- * @param callable $callback 
- * @return bool Returns true on success or false on failure.
+ * {@inheritdoc}
+ * @param callable $callback
  */
 function spl_autoload_unregister (callable $callback): bool {}
 
 /**
- * Return available SPL classes
- * @link http://www.php.net/manual/en/function.spl-classes.php
- * @return array Returns an array containing the currently available SPL classes.
+ * {@inheritdoc}
  */
 function spl_classes (): array {}
 
 /**
- * Return hash id for given object
- * @link http://www.php.net/manual/en/function.spl-object-hash.php
- * @param object $object 
- * @return string A string that is unique for each currently existing object and is always
- * the same for each object.
+ * {@inheritdoc}
+ * @param object $object
  */
 function spl_object_hash (object $object): string {}
 
 /**
- * Return the integer object handle for given object
- * @link http://www.php.net/manual/en/function.spl-object-id.php
- * @param object $object 
- * @return int An integer identifier that is unique for each currently existing object and
- * is always the same for each object.
+ * {@inheritdoc}
+ * @param object $object
  */
 function spl_object_id (object $object): int {}
 
 /**
- * Call a function for every element in an iterator
- * @link http://www.php.net/manual/en/function.iterator-apply.php
- * @param Traversable $iterator 
- * @param callable $callback 
- * @param array|null $args [optional] 
- * @return int Returns the iteration count.
+ * {@inheritdoc}
+ * @param Traversable $iterator
+ * @param callable $callback
+ * @param array|null $args [optional]
  */
-function iterator_apply (Traversable $iterator, callable $callback, ?array $args = null): int {}
+function iterator_apply (Traversable $iterator, callable $callback, ?array $args = NULL): int {}
 
 /**
- * Count the elements in an iterator
- * @link http://www.php.net/manual/en/function.iterator-count.php
- * @param Traversable|array $iterator 
- * @return int The number of elements in iterator.
+ * {@inheritdoc}
+ * @param Traversable|array $iterator
  */
 function iterator_count (Traversable|array $iterator): int {}
 
 /**
- * Copy the iterator into an array
- * @link http://www.php.net/manual/en/function.iterator-to-array.php
- * @param Traversable|array $iterator 
- * @param bool $preserve_keys [optional] 
- * @return array An array containing the elements of the iterator.
+ * {@inheritdoc}
+ * @param Traversable|array $iterator
+ * @param bool $preserve_keys [optional]
  */
 function iterator_to_array (Traversable|array $iterator, bool $preserve_keys = true): array {}
 
-// End of SPL v.8.2.6
+// End of SPL v.8.3.0

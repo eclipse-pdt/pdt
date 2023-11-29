@@ -1,567 +1,354 @@
 <?php
 
-// Start of tidy v.8.2.6
+// Start of tidy v.8.3.0
 
-/**
- * An HTML node in an HTML file, as detected by tidy.
- * @link http://www.php.net/manual/en/class.tidy.php
- */
 class tidy  {
 
-	/**
-	 * Return warnings and errors which occurred parsing the specified document
-	 * @var string
-	 * @link http://www.php.net/manual/en/class.tidy.php#tidy.props.errorbuffer
-	 */
-	public string $errorBuffer;
+	public ?string $errorBuffer;
 
-	/**
-	 * The HTML representation of the node, including the surrounding tags.
-	 * @var string|null
-	 * @link http://www.php.net/manual/en/class.tidy.php#tidy.props.value
-	 */
 	public ?string $value;
 
 	/**
-	 * Constructs a new tidy object
-	 * @link http://www.php.net/manual/en/tidy.construct.php
-	 * @param string|null $filename [optional] 
-	 * @param array|string|null $config [optional] 
-	 * @param string|null $encoding [optional] 
-	 * @param bool $useIncludePath [optional] 
-	 * @return string|null 
+	 * {@inheritdoc}
+	 * @param string|null $filename [optional]
+	 * @param array|string|null $config [optional]
+	 * @param string|null $encoding [optional]
+	 * @param bool $useIncludePath [optional]
 	 */
-	public function __construct (?string $filename = null, array|string|null $config = null, ?string $encoding = null, bool $useIncludePath = false): ?string {}
+	public function __construct (?string $filename = NULL, array|string|null $config = NULL, ?string $encoding = NULL, bool $useIncludePath = false) {}
 
 	/**
-	 * Returns the value of the specified configuration option for the tidy document
-	 * @link http://www.php.net/manual/en/tidy.getopt.php
-	 * @param string $option 
-	 * @return string|int|bool Returns the value of the specified option.
-	 * The return type depends on the type of the specified one.
+	 * {@inheritdoc}
+	 * @param string $option
 	 */
-	public function getOpt (string $option): string|int|bool {}
+	public function getOpt (string $option) {}
 
 	/**
-	 * Execute configured cleanup and repair operations on parsed markup
-	 * @link http://www.php.net/manual/en/tidy.cleanrepair.php
-	 * @return bool Returns true on success or false on failure.
+	 * {@inheritdoc}
 	 */
-	public function cleanRepair (): bool {}
+	public function cleanRepair () {}
 
 	/**
-	 * Parse markup in file or URI
-	 * @link http://www.php.net/manual/en/tidy.parsefile.php
-	 * @param string $filename 
-	 * @param array|string|null $config [optional] 
-	 * @param string|null $encoding [optional] 
-	 * @param bool $useIncludePath [optional] 
-	 * @return bool tidy::parseFile returns true on success.
-	 * tidy_parse_file returns a new tidy
-	 * instance on success.
-	 * Both, the method and the function return false on failure.
+	 * {@inheritdoc}
+	 * @param string $filename
+	 * @param array|string|null $config [optional]
+	 * @param string|null $encoding [optional]
+	 * @param bool $useIncludePath [optional]
 	 */
-	public function parseFile (string $filename, array|string|null $config = null, ?string $encoding = null, bool $useIncludePath = false): bool {}
+	public function parseFile (string $filename, array|string|null $config = NULL, ?string $encoding = NULL, bool $useIncludePath = false) {}
 
 	/**
-	 * Parse a document stored in a string
-	 * @link http://www.php.net/manual/en/tidy.parsestring.php
-	 * @param string $string 
-	 * @param array|string|null $config [optional] 
-	 * @param string|null $encoding [optional] 
-	 * @return bool tidy::parseString returns true on success.
-	 * tidy_parse_string returns a new tidy
-	 * instance on success.
-	 * Both, the method and the function return false on failure.
+	 * {@inheritdoc}
+	 * @param string $string
+	 * @param array|string|null $config [optional]
+	 * @param string|null $encoding [optional]
 	 */
-	public function parseString (string $string, array|string|null $config = null, ?string $encoding = null): bool {}
+	public function parseString (string $string, array|string|null $config = NULL, ?string $encoding = NULL) {}
 
 	/**
-	 * Repair a string using an optionally provided configuration file
-	 * @link http://www.php.net/manual/en/tidy.repairstring.php
-	 * @param string $string 
-	 * @param array|string|null $config [optional] 
-	 * @param string|null $encoding [optional] 
-	 * @return string|false Returns the repaired string, or false on failure.
+	 * {@inheritdoc}
+	 * @param string $string
+	 * @param array|string|null $config [optional]
+	 * @param string|null $encoding [optional]
 	 */
-	public static function repairString (string $string, array|string|null $config = null, ?string $encoding = null): string|false {}
+	public static function repairString (string $string, array|string|null $config = NULL, ?string $encoding = NULL) {}
 
 	/**
-	 * Repair a file and return it as a string
-	 * @link http://www.php.net/manual/en/tidy.repairfile.php
-	 * @param string $filename 
-	 * @param array|string|null $config [optional] 
-	 * @param string|null $encoding [optional] 
-	 * @param bool $useIncludePath [optional] 
-	 * @return string|false Returns the repaired contents as a string, or false on failure.
+	 * {@inheritdoc}
+	 * @param string $filename
+	 * @param array|string|null $config [optional]
+	 * @param string|null $encoding [optional]
+	 * @param bool $useIncludePath [optional]
 	 */
-	public static function repairFile (string $filename, array|string|null $config = null, ?string $encoding = null, bool $useIncludePath = false): string|false {}
+	public static function repairFile (string $filename, array|string|null $config = NULL, ?string $encoding = NULL, bool $useIncludePath = false) {}
 
 	/**
-	 * Run configured diagnostics on parsed and repaired markup
-	 * @link http://www.php.net/manual/en/tidy.diagnose.php
-	 * @return bool Returns true on success or false on failure.
+	 * {@inheritdoc}
 	 */
-	public function diagnose (): bool {}
+	public function diagnose () {}
 
 	/**
-	 * Get release date (version) for Tidy library
-	 * @link http://www.php.net/manual/en/tidy.getrelease.php
-	 * @return string Returns a string with the release date of the Tidy library,
-	 * which may be 'unknown'.
+	 * {@inheritdoc}
 	 */
-	public function getRelease (): string {}
+	public function getRelease () {}
 
 	/**
-	 * Get current Tidy configuration
-	 * @link http://www.php.net/manual/en/tidy.getconfig.php
-	 * @return array Returns an array of configuration options.
-	 * <p>For an explanation about each option, visit http://api.html-tidy.org/#quick-reference.</p>
+	 * {@inheritdoc}
 	 */
-	public function getConfig (): array {}
+	public function getConfig () {}
 
 	/**
-	 * Get status of specified document
-	 * @link http://www.php.net/manual/en/tidy.getstatus.php
-	 * @return int Returns 0 if no error/warning was raised, 1 for warnings or accessibility
-	 * errors, or 2 for errors.
+	 * {@inheritdoc}
 	 */
-	public function getStatus (): int {}
+	public function getStatus () {}
 
 	/**
-	 * Get the Detected HTML version for the specified document
-	 * @link http://www.php.net/manual/en/tidy.gethtmlver.php
-	 * @return int Returns the detected HTML version.
-	 * <p>This function is not yet implemented in the Tidylib itself, so it always
-	 * return 0.</p>
+	 * {@inheritdoc}
 	 */
-	public function getHtmlVer (): int {}
+	public function getHtmlVer () {}
 
 	/**
-	 * Returns the documentation for the given option name
-	 * @link http://www.php.net/manual/en/tidy.getoptdoc.php
-	 * @param string $option 
-	 * @return string|false Returns a string if the option exists and has documentation available, or
-	 * false otherwise.
+	 * {@inheritdoc}
+	 * @param string $option
 	 */
-	public function getOptDoc (string $option): string|false {}
+	public function getOptDoc (string $option) {}
 
 	/**
-	 * Indicates if the document is a XHTML document
-	 * @link http://www.php.net/manual/en/tidy.isxhtml.php
-	 * @return bool This function returns true if the specified tidy
-	 * tidy is a XHTML document, or false otherwise.
-	 * <p>This function is not yet implemented in the Tidylib itself, so it always
-	 * return false.</p>
+	 * {@inheritdoc}
 	 */
-	public function isXhtml (): bool {}
+	public function isXhtml () {}
 
 	/**
-	 * Indicates if the document is a generic (non HTML/XHTML) XML document
-	 * @link http://www.php.net/manual/en/tidy.isxml.php
-	 * @return bool This function returns true if the specified tidy
-	 * tidy is a generic XML document (non HTML/XHTML),
-	 * or false otherwise.
-	 * <p>This function is not yet implemented in the Tidylib itself, so it always
-	 * return false.</p>
+	 * {@inheritdoc}
 	 */
-	public function isXml (): bool {}
+	public function isXml () {}
 
 	/**
-	 * Returns a tidyNode object representing the root of the tidy parse tree
-	 * @link http://www.php.net/manual/en/tidy.root.php
-	 * @return tidyNode|null Returns the tidyNode object.
+	 * {@inheritdoc}
 	 */
-	public function root (): ?tidyNode {}
+	public function root () {}
 
 	/**
-	 * Returns a tidyNode object starting from the tag of the tidy parse tree
-	 * @link http://www.php.net/manual/en/tidy.head.php
-	 * @return tidyNode|null Returns the tidyNode object.
+	 * {@inheritdoc}
 	 */
-	public function head (): ?tidyNode {}
+	public function head () {}
 
 	/**
-	 * Returns a tidyNode object starting from the tag of the tidy parse tree
-	 * @link http://www.php.net/manual/en/tidy.html.php
-	 * @return tidyNode|null Returns the tidyNode object.
+	 * {@inheritdoc}
 	 */
-	public function html (): ?tidyNode {}
+	public function html () {}
 
 	/**
-	 * Returns a tidyNode object starting from the tag of the tidy parse tree
-	 * @link http://www.php.net/manual/en/tidy.body.php
-	 * @return tidyNode|null Returns a tidyNode object starting from the 
-	 * &lt;body&gt; tag of the tidy parse tree.
+	 * {@inheritdoc}
 	 */
-	public function body (): ?tidyNode {}
+	public function body () {}
 
 }
 
-/**
- * An HTML node in an HTML file, as detected by tidy.
- * @link http://www.php.net/manual/en/class.tidynode.php
- */
 final class tidyNode  {
 
-	/**
-	 * The HTML representation of the node, including the surrounding tags.
-	 * @var string
-	 * @link http://www.php.net/manual/en/class.tidynode.php#tidynode.props.value
-	 */
 	public readonly string $value;
 
-	/**
-	 * The name of the HTML node
-	 * @var string
-	 * @link http://www.php.net/manual/en/class.tidynode.php#tidynode.props.name
-	 */
 	public readonly string $name;
 
-	/**
-	 * The type of the node (one of the nodetype constants, e.g. TIDY_NODETYPE_PHP)
-	 * @var int
-	 * @link http://www.php.net/manual/en/class.tidynode.php#tidynode.props.type
-	 */
 	public readonly int $type;
 
-	/**
-	 * The line number at which the tags is located in the file
-	 * @var int
-	 * @link http://www.php.net/manual/en/class.tidynode.php#tidynode.props.line
-	 */
 	public readonly int $line;
 
-	/**
-	 * The column number at which the tags is located in the file
-	 * @var int
-	 * @link http://www.php.net/manual/en/class.tidynode.php#tidynode.props.column
-	 */
 	public readonly int $column;
 
-	/**
-	 * Indicates if the node is a proprietary tag
-	 * @var bool
-	 * @link http://www.php.net/manual/en/class.tidynode.php#tidynode.props.proprietary
-	 */
 	public readonly bool $proprietary;
 
-	/**
-	 * The ID of the node (one of the tag constants, e.g. TIDY_TAG_FRAME)
-	 * @var int|null
-	 * @link http://www.php.net/manual/en/class.tidynode.php#tidynode.props.id
-	 */
 	public readonly ?int $id;
 
-	/**
-	 * An array of string, representing
-	 * the attributes names (as keys) of the current node.
-	 * @var array|null
-	 * @link http://www.php.net/manual/en/class.tidynode.php#tidynode.props.attribute
-	 */
 	public readonly ?array $attribute;
 
-	/**
-	 * An array of tidyNode, representing
-	 * the children of the current node.
-	 * @var array|null
-	 * @link http://www.php.net/manual/en/class.tidynode.php#tidynode.props.child
-	 */
 	public readonly ?array $child;
 
 	/**
-	 * Private constructor to disallow direct instantiation
-	 * @link http://www.php.net/manual/en/tidynode.construct.php
+	 * {@inheritdoc}
 	 */
 	private function __construct () {}
 
 	/**
-	 * Checks if a node has children
-	 * @link http://www.php.net/manual/en/tidynode.haschildren.php
-	 * @return bool Returns true if the node has children, false otherwise.
+	 * {@inheritdoc}
 	 */
 	public function hasChildren (): bool {}
 
 	/**
-	 * Checks if a node has siblings
-	 * @link http://www.php.net/manual/en/tidynode.hassiblings.php
-	 * @return bool Returns true if the node has siblings, false otherwise.
+	 * {@inheritdoc}
 	 */
 	public function hasSiblings (): bool {}
 
 	/**
-	 * Checks if a node represents a comment
-	 * @link http://www.php.net/manual/en/tidynode.iscomment.php
-	 * @return bool Returns true if the node is a comment, false otherwise.
+	 * {@inheritdoc}
 	 */
 	public function isComment (): bool {}
 
 	/**
-	 * Checks if a node is an element node
-	 * @link http://www.php.net/manual/en/tidynode.ishtml.php
-	 * @return bool Returns true if the node is an element node, but not the root node of the document, false otherwise.
+	 * {@inheritdoc}
 	 */
 	public function isHtml (): bool {}
 
 	/**
-	 * Checks if a node represents text (no markup)
-	 * @link http://www.php.net/manual/en/tidynode.istext.php
-	 * @return bool Returns true if the node represent a text, false otherwise.
+	 * {@inheritdoc}
 	 */
 	public function isText (): bool {}
 
 	/**
-	 * Checks if this node is JSTE
-	 * @link http://www.php.net/manual/en/tidynode.isjste.php
-	 * @return bool Returns true if the node is JSTE, false otherwise.
+	 * {@inheritdoc}
 	 */
 	public function isJste (): bool {}
 
 	/**
-	 * Checks if this node is ASP
-	 * @link http://www.php.net/manual/en/tidynode.isasp.php
-	 * @return bool Returns true if the node is ASP, false otherwise.
+	 * {@inheritdoc}
 	 */
 	public function isAsp (): bool {}
 
 	/**
-	 * Checks if a node is PHP
-	 * @link http://www.php.net/manual/en/tidynode.isphp.php
-	 * @return bool Returns true if the current node is PHP code, false otherwise.
+	 * {@inheritdoc}
 	 */
 	public function isPhp (): bool {}
 
 	/**
-	 * Returns the parent node of the current node
-	 * @link http://www.php.net/manual/en/tidynode.getparent.php
-	 * @return tidyNode|null Returns a tidyNode if the node has a parent, or null
-	 * otherwise.
+	 * {@inheritdoc}
 	 */
 	public function getParent (): ?tidyNode {}
 
 }
 
 /**
- * Parse a document stored in a string
- * @link http://www.php.net/manual/en/tidy.parsestring.php
- * @param string $string 
- * @param array|string|null $config [optional] 
- * @param string|null $encoding [optional] 
- * @return tidy|false tidy::parseString returns true on success.
- * tidy_parse_string returns a new tidy
- * instance on success.
- * Both, the method and the function return false on failure.
+ * {@inheritdoc}
+ * @param string $string
+ * @param array|string|null $config [optional]
+ * @param string|null $encoding [optional]
  */
-function tidy_parse_string (string $string, array|string|null $config = null, ?string $encoding = null): tidy|false {}
+function tidy_parse_string (string $string, array|string|null $config = NULL, ?string $encoding = NULL): tidy|false {}
 
 /**
- * Return warnings and errors which occurred parsing the specified document
- * @link http://www.php.net/manual/en/tidy.props.errorbuffer.php
- * @param tidy $tidy 
- * @return string|false Returns the error buffer as a string, or false if the buffer is empty.
+ * {@inheritdoc}
+ * @param tidy $tidy
  */
 function tidy_get_error_buffer (tidy $tidy): string|false {}
 
 /**
- * Return a string representing the parsed tidy markup
- * @link http://www.php.net/manual/en/function.tidy-get-output.php
- * @param tidy $tidy 
- * @return string Returns the parsed tidy markup.
+ * {@inheritdoc}
+ * @param tidy $tidy
  */
 function tidy_get_output (tidy $tidy): string {}
 
 /**
- * Parse markup in file or URI
- * @link http://www.php.net/manual/en/tidy.parsefile.php
- * @param string $filename 
- * @param array|string|null $config [optional] 
- * @param string|null $encoding [optional] 
- * @param bool $useIncludePath [optional] 
- * @return tidy|false tidy::parseFile returns true on success.
- * tidy_parse_file returns a new tidy
- * instance on success.
- * Both, the method and the function return false on failure.
+ * {@inheritdoc}
+ * @param string $filename
+ * @param array|string|null $config [optional]
+ * @param string|null $encoding [optional]
+ * @param bool $useIncludePath [optional]
  */
-function tidy_parse_file (string $filename, array|string|null $config = null, ?string $encoding = null, bool $useIncludePath = false): tidy|false {}
+function tidy_parse_file (string $filename, array|string|null $config = NULL, ?string $encoding = NULL, bool $useIncludePath = false): tidy|false {}
 
 /**
- * Execute configured cleanup and repair operations on parsed markup
- * @link http://www.php.net/manual/en/tidy.cleanrepair.php
- * @param tidy $tidy 
- * @return bool Returns true on success or false on failure.
+ * {@inheritdoc}
+ * @param tidy $tidy
  */
 function tidy_clean_repair (tidy $tidy): bool {}
 
 /**
- * Repair a string using an optionally provided configuration file
- * @link http://www.php.net/manual/en/tidy.repairstring.php
- * @param string $string 
- * @param array|string|null $config [optional] 
- * @param string|null $encoding [optional] 
- * @return string|false Returns the repaired string, or false on failure.
+ * {@inheritdoc}
+ * @param string $string
+ * @param array|string|null $config [optional]
+ * @param string|null $encoding [optional]
  */
-function tidy_repair_string (string $string, array|string|null $config = null, ?string $encoding = null): string|false {}
+function tidy_repair_string (string $string, array|string|null $config = NULL, ?string $encoding = NULL): string|false {}
 
 /**
- * Repair a file and return it as a string
- * @link http://www.php.net/manual/en/tidy.repairfile.php
- * @param string $filename 
- * @param array|string|null $config [optional] 
- * @param string|null $encoding [optional] 
- * @param bool $useIncludePath [optional] 
- * @return string|false Returns the repaired contents as a string, or false on failure.
+ * {@inheritdoc}
+ * @param string $filename
+ * @param array|string|null $config [optional]
+ * @param string|null $encoding [optional]
+ * @param bool $useIncludePath [optional]
  */
-function tidy_repair_file (string $filename, array|string|null $config = null, ?string $encoding = null, bool $useIncludePath = false): string|false {}
+function tidy_repair_file (string $filename, array|string|null $config = NULL, ?string $encoding = NULL, bool $useIncludePath = false): string|false {}
 
 /**
- * Run configured diagnostics on parsed and repaired markup
- * @link http://www.php.net/manual/en/tidy.diagnose.php
- * @param tidy $tidy 
- * @return bool Returns true on success or false on failure.
+ * {@inheritdoc}
+ * @param tidy $tidy
  */
 function tidy_diagnose (tidy $tidy): bool {}
 
 /**
- * Get release date (version) for Tidy library
- * @link http://www.php.net/manual/en/tidy.getrelease.php
- * @return string Returns a string with the release date of the Tidy library,
- * which may be 'unknown'.
+ * {@inheritdoc}
  */
 function tidy_get_release (): string {}
 
 /**
- * Returns the documentation for the given option name
- * @link http://www.php.net/manual/en/tidy.getoptdoc.php
- * @param tidy $tidy 
- * @param string $option 
- * @return string|false Returns a string if the option exists and has documentation available, or
- * false otherwise.
+ * {@inheritdoc}
+ * @param tidy $tidy
+ * @param string $option
  */
 function tidy_get_opt_doc (tidy $tidy, string $option): string|false {}
 
 /**
- * Get current Tidy configuration
- * @link http://www.php.net/manual/en/tidy.getconfig.php
- * @param tidy $tidy 
- * @return array Returns an array of configuration options.
- * <p>For an explanation about each option, visit http://api.html-tidy.org/#quick-reference.</p>
+ * {@inheritdoc}
+ * @param tidy $tidy
  */
 function tidy_get_config (tidy $tidy): array {}
 
 /**
- * Get status of specified document
- * @link http://www.php.net/manual/en/tidy.getstatus.php
- * @param tidy $tidy 
- * @return int Returns 0 if no error/warning was raised, 1 for warnings or accessibility
- * errors, or 2 for errors.
+ * {@inheritdoc}
+ * @param tidy $tidy
  */
 function tidy_get_status (tidy $tidy): int {}
 
 /**
- * Get the Detected HTML version for the specified document
- * @link http://www.php.net/manual/en/tidy.gethtmlver.php
- * @param tidy $tidy 
- * @return int Returns the detected HTML version.
- * <p>This function is not yet implemented in the Tidylib itself, so it always
- * return 0.</p>
+ * {@inheritdoc}
+ * @param tidy $tidy
  */
 function tidy_get_html_ver (tidy $tidy): int {}
 
 /**
- * Indicates if the document is a XHTML document
- * @link http://www.php.net/manual/en/tidy.isxhtml.php
- * @param tidy $tidy 
- * @return bool This function returns true if the specified tidy
- * tidy is a XHTML document, or false otherwise.
- * <p>This function is not yet implemented in the Tidylib itself, so it always
- * return false.</p>
+ * {@inheritdoc}
+ * @param tidy $tidy
  */
 function tidy_is_xhtml (tidy $tidy): bool {}
 
 /**
- * Indicates if the document is a generic (non HTML/XHTML) XML document
- * @link http://www.php.net/manual/en/tidy.isxml.php
- * @param tidy $tidy 
- * @return bool This function returns true if the specified tidy
- * tidy is a generic XML document (non HTML/XHTML),
- * or false otherwise.
- * <p>This function is not yet implemented in the Tidylib itself, so it always
- * return false.</p>
+ * {@inheritdoc}
+ * @param tidy $tidy
  */
 function tidy_is_xml (tidy $tidy): bool {}
 
 /**
- * Returns the Number of Tidy errors encountered for specified document
- * @link http://www.php.net/manual/en/function.tidy-error-count.php
- * @param tidy $tidy 
- * @return int Returns the number of errors.
+ * {@inheritdoc}
+ * @param tidy $tidy
  */
 function tidy_error_count (tidy $tidy): int {}
 
 /**
- * Returns the Number of Tidy warnings encountered for specified document
- * @link http://www.php.net/manual/en/function.tidy-warning-count.php
- * @param tidy $tidy 
- * @return int Returns the number of warnings.
+ * {@inheritdoc}
+ * @param tidy $tidy
  */
 function tidy_warning_count (tidy $tidy): int {}
 
 /**
- * Returns the Number of Tidy accessibility warnings encountered for specified document
- * @link http://www.php.net/manual/en/function.tidy-access-count.php
- * @param tidy $tidy 
- * @return int Returns the number of warnings.
+ * {@inheritdoc}
+ * @param tidy $tidy
  */
 function tidy_access_count (tidy $tidy): int {}
 
 /**
- * Returns the Number of Tidy configuration errors encountered for specified document
- * @link http://www.php.net/manual/en/function.tidy-config-count.php
- * @param tidy $tidy 
- * @return int Returns the number of errors.
+ * {@inheritdoc}
+ * @param tidy $tidy
  */
 function tidy_config_count (tidy $tidy): int {}
 
 /**
- * Returns the value of the specified configuration option for the tidy document
- * @link http://www.php.net/manual/en/tidy.getopt.php
- * @param tidy $tidy 
- * @param string $option 
- * @return string|int|bool Returns the value of the specified option.
- * The return type depends on the type of the specified one.
+ * {@inheritdoc}
+ * @param tidy $tidy
+ * @param string $option
  */
 function tidy_getopt (tidy $tidy, string $option): string|int|bool {}
 
 /**
- * Returns a tidyNode object representing the root of the tidy parse tree
- * @link http://www.php.net/manual/en/tidy.root.php
- * @param tidy $tidy 
- * @return tidyNode|null Returns the tidyNode object.
+ * {@inheritdoc}
+ * @param tidy $tidy
  */
 function tidy_get_root (tidy $tidy): ?tidyNode {}
 
 /**
- * Returns a tidyNode object starting from the tag of the tidy parse tree
- * @link http://www.php.net/manual/en/tidy.html.php
- * @param tidy $tidy 
- * @return tidyNode|null Returns the tidyNode object.
+ * {@inheritdoc}
+ * @param tidy $tidy
  */
 function tidy_get_html (tidy $tidy): ?tidyNode {}
 
 /**
- * Returns a tidyNode object starting from the tag of the tidy parse tree
- * @link http://www.php.net/manual/en/tidy.head.php
- * @param tidy $tidy 
- * @return tidyNode|null Returns the tidyNode object.
+ * {@inheritdoc}
+ * @param tidy $tidy
  */
 function tidy_get_head (tidy $tidy): ?tidyNode {}
 
 /**
- * Returns a tidyNode object starting from the tag of the tidy parse tree
- * @link http://www.php.net/manual/en/tidy.body.php
- * @param tidy $tidy 
- * @return tidyNode|null Returns a tidyNode object starting from the 
- * &lt;body&gt; tag of the tidy parse tree.
+ * {@inheritdoc}
+ * @param tidy $tidy
  */
 function tidy_get_body (tidy $tidy): ?tidyNode {}
 
@@ -727,4 +514,4 @@ define ('TIDY_TAG_TIME', 149);
 define ('TIDY_TAG_TRACK', 150);
 define ('TIDY_TAG_VIDEO', 151);
 
-// End of tidy v.8.2.6
+// End of tidy v.8.3.0

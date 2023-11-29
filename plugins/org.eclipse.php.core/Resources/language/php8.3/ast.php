@@ -1,6 +1,6 @@
 <?php
 
-// Start of ast v.1.1.0
+// Start of ast v.1.1.1
 
 namespace ast {
 
@@ -143,7 +143,7 @@ define ('ast\AST_GOTO', 285);
 define ('ast\AST_BREAK', 286);
 define ('ast\AST_CONTINUE', 287);
 define ('ast\AST_CLASS_NAME', 276);
-define ('ast\AST_CLASS_CONST_GROUP', 546);
+define ('ast\AST_CLASS_CONST_GROUP', 777);
 define ('ast\AST_DIM', 512);
 define ('ast\AST_PROP', 513);
 define ('ast\AST_NULLSAFE_PROP', 514);
@@ -175,10 +175,10 @@ define ('ast\AST_NAMESPACE', 542);
 define ('ast\AST_USE_ELEM', 543);
 define ('ast\AST_TRAIT_ALIAS', 544);
 define ('ast\AST_GROUP_USE', 545);
-define ('ast\AST_ATTRIBUTE', 547);
-define ('ast\AST_MATCH', 548);
-define ('ast\AST_MATCH_ARM', 549);
-define ('ast\AST_NAMED_ARG', 550);
+define ('ast\AST_ATTRIBUTE', 546);
+define ('ast\AST_MATCH', 547);
+define ('ast\AST_MATCH_ARM', 548);
+define ('ast\AST_NAMED_ARG', 549);
 define ('ast\AST_METHOD_CALL', 768);
 define ('ast\AST_NULLSAFE_METHOD_CALL', 769);
 define ('ast\AST_STATIC_CALL', 770);
@@ -288,4 +288,4 @@ define ('ast\flags\ENCAPS_VAR_DOLLAR_CURLY_VAR_VAR', 2);
 
 }
 
-// End of ast v.1.1.0
+// End of ast v.1.1.1

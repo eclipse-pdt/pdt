@@ -1,6 +1,6 @@
 <?php
 
-// Start of redis v.5.3.7
+// Start of redis v.6.0.2
 
 class Redis  {
 	const REDIS_NOT_FOUND = 0;
@@ -10,9 +10,9 @@ class Redis  {
 	const REDIS_ZSET = 4;
 	const REDIS_HASH = 5;
 	const REDIS_STREAM = 6;
-	const PIPELINE = 2;
 	const ATOMIC = 0;
 	const MULTI = 1;
+	const PIPELINE = 2;
 	const OPT_SERIALIZER = 1;
 	const OPT_PREFIX = 2;
 	const OPT_READ_TIMEOUT = 3;
@@ -29,7 +29,6 @@ class Redis  {
 	const COMPRESSION_NONE = 0;
 	const COMPRESSION_LZF = 1;
 	const COMPRESSION_ZSTD = 2;
-	const COMPRESSION_ZSTD_MIN = 1;
 	const COMPRESSION_ZSTD_DEFAULT = 3;
 	const COMPRESSION_ZSTD_MAX = 22;
 	const COMPRESSION_LZ4 = 3;
@@ -38,8 +37,10 @@ class Redis  {
 	const SCAN_NORETRY = 0;
 	const SCAN_PREFIX = 2;
 	const SCAN_NOPREFIX = 3;
-	const AFTER = "after";
 	const BEFORE = "before";
+	const AFTER = "after";
+	const LEFT = "left";
+	const RIGHT = "right";
 	const OPT_MAX_RETRIES = 11;
 	const OPT_BACKOFF_ALGORITHM = 12;
 	const BACKOFF_ALGORITHM_DEFAULT = 0;
@@ -55,8 +56,9 @@ class Redis  {
 
 	/**
 	 * {@inheritdoc}
+	 * @param array|null $options [optional]
 	 */
-	public function __construct () {}
+	public function __construct (?array $options = NULL) {}
 
 	/**
 	 * {@inheritdoc}
@@ -65,1413 +67,1763 @@ class Redis  {
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
+	 * @param string $value
 	 */
-	public function _prefix ($key = null) {}
+	public function _compress (string $value): string {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $value
+	 */
+	public function _uncompress (string $value): string {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 */
+	public function _prefix (string $key): string {}
 
 	/**
 	 * {@inheritdoc}
 	 * @param mixed $value
 	 */
-	public function _serialize ($value = null) {}
+	public function _serialize (mixed $value = null): string {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $value
+	 */
+	public function _unserialize (string $value): mixed {}
 
 	/**
 	 * {@inheritdoc}
 	 * @param mixed $value
 	 */
-	public function _unserialize ($value = null) {}
+	public function _pack (mixed $value = null): string {}
 
 	/**
 	 * {@inheritdoc}
+	 * @param string $value
+	 */
+	public function _unpack (string $value): mixed {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $subcmd
+	 * @param string $args [optional]
+	 */
+	public function acl (string $subcmd, string ...$args): mixed {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
 	 * @param mixed $value
 	 */
-	public function _pack ($value = null) {}
+	public function append (string $key, mixed $value = null): Redis|int|false {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $value
+	 * @param mixed $credentials
 	 */
-	public function _unpack ($value = null) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $value
-	 */
-	public function _compress ($value = null) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $value
-	 */
-	public function _uncompress ($value = null) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $subcmd
-	 * @param mixed $args [optional]
-	 */
-	public function acl ($subcmd = null, ...$args) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $value
-	 */
-	public function append ($key = null, $value = null) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $auth
-	 */
-	public function auth ($auth = null) {}
+	public function auth (mixed $credentials = null): Redis|bool {}
 
 	/**
 	 * {@inheritdoc}
 	 */
-	public function bgSave () {}
+	public function bgSave (): Redis|bool {}
 
 	/**
 	 * {@inheritdoc}
 	 */
-	public function bgrewriteaof () {}
+	public function bgrewriteaof (): Redis|bool {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
+	 * @param string $key
+	 * @param int $start [optional]
+	 * @param int $end [optional]
+	 * @param bool $bybit [optional]
 	 */
-	public function bitcount ($key = null) {}
+	public function bitcount (string $key, int $start = 0, int $end = -1, bool $bybit = false): Redis|int|false {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $operation
-	 * @param mixed $ret_key
-	 * @param mixed $key
-	 * @param mixed $other_keys [optional]
+	 * @param string $operation
+	 * @param string $deskey
+	 * @param string $srckey
+	 * @param string $other_keys [optional]
 	 */
-	public function bitop ($operation = null, $ret_key = null, $key = null, ...$other_keys) {}
+	public function bitop (string $operation, string $deskey, string $srckey, string ...$other_keys): Redis|int|false {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $bit
-	 * @param mixed $start [optional]
-	 * @param mixed $end [optional]
+	 * @param string $key
+	 * @param bool $bit
+	 * @param int $start [optional]
+	 * @param int $end [optional]
+	 * @param bool $bybit [optional]
 	 */
-	public function bitpos ($key = null, $bit = null, $start = NULL, $end = NULL) {}
+	public function bitpos (string $key, bool $bit, int $start = 0, int $end = -1, bool $bybit = false): Redis|int|false {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $timeout_or_key
+	 * @param array|string $key_or_keys
+	 * @param string|int|float $timeout_or_key
 	 * @param mixed $extra_args [optional]
 	 */
-	public function blPop ($key = null, $timeout_or_key = null, ...$extra_args) {}
+	public function blPop (array|string $key_or_keys, string|int|float $timeout_or_key, mixed ...$extra_args): Redis|array|false|null {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $timeout_or_key
+	 * @param array|string $key_or_keys
+	 * @param string|int|float $timeout_or_key
 	 * @param mixed $extra_args [optional]
 	 */
-	public function brPop ($key = null, $timeout_or_key = null, ...$extra_args) {}
+	public function brPop (array|string $key_or_keys, string|int|float $timeout_or_key, mixed ...$extra_args): Redis|array|false|null {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $src
-	 * @param mixed $dst
-	 * @param mixed $timeout
+	 * @param string $src
+	 * @param string $dst
+	 * @param int|float $timeout
 	 */
-	public function brpoplpush ($src = null, $dst = null, $timeout = null) {}
+	public function brpoplpush (string $src, string $dst, int|float $timeout): Redis|string|false {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $timeout_or_key
+	 * @param array|string $key
+	 * @param string|int $timeout_or_key
 	 * @param mixed $extra_args [optional]
 	 */
-	public function bzPopMax ($key = null, $timeout_or_key = null, ...$extra_args) {}
+	public function bzPopMax (array|string $key, string|int $timeout_or_key, mixed ...$extra_args): Redis|array|false {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $timeout_or_key
+	 * @param array|string $key
+	 * @param string|int $timeout_or_key
 	 * @param mixed $extra_args [optional]
 	 */
-	public function bzPopMin ($key = null, $timeout_or_key = null, ...$extra_args) {}
+	public function bzPopMin (array|string $key, string|int $timeout_or_key, mixed ...$extra_args): Redis|array|false {}
 
 	/**
 	 * {@inheritdoc}
-	 */
-	public function clearLastError () {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $cmd
-	 * @param mixed $args [optional]
-	 */
-	public function client ($cmd = null, ...$args) {}
-
-	/**
-	 * {@inheritdoc}
-	 */
-	public function close () {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $args [optional]
-	 */
-	public function command (...$args) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $cmd
-	 * @param mixed $key
-	 * @param mixed $value [optional]
-	 */
-	public function config ($cmd = null, $key = null, $value = NULL) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $host
-	 * @param mixed $port [optional]
-	 * @param mixed $timeout [optional]
-	 * @param mixed $retry_interval [optional]
-	 */
-	public function connect ($host = null, $port = NULL, $timeout = NULL, $retry_interval = NULL) {}
-
-	/**
-	 * {@inheritdoc}
-	 */
-	public function dbSize () {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 */
-	public function debug ($key = null) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 */
-	public function decr ($key = null) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $value
-	 */
-	public function decrBy ($key = null, $value = null) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $other_keys [optional]
-	 */
-	public function del ($key = null, ...$other_keys) {}
-
-	/**
-	 * {@inheritdoc}
-	 */
-	public function discard () {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 */
-	public function dump ($key = null) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $msg
-	 */
-	public function echo ($msg = null) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $script
-	 * @param mixed $args [optional]
-	 * @param mixed $num_keys [optional]
-	 */
-	public function eval ($script = null, $args = NULL, $num_keys = NULL) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $script_sha
-	 * @param mixed $args [optional]
-	 * @param mixed $num_keys [optional]
-	 */
-	public function evalsha ($script_sha = null, $args = NULL, $num_keys = NULL) {}
-
-	/**
-	 * {@inheritdoc}
-	 */
-	public function exec () {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $other_keys [optional]
-	 */
-	public function exists ($key = null, ...$other_keys) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $timeout
-	 */
-	public function expire ($key = null, $timeout = null) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $timestamp
-	 */
-	public function expireAt ($key = null, $timestamp = null) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $async [optional]
-	 */
-	public function flushAll ($async = NULL) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $async [optional]
-	 */
-	public function flushDB ($async = NULL) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $lng
-	 * @param mixed $lat
-	 * @param mixed $member
-	 * @param mixed $other_triples [optional]
-	 */
-	public function geoadd ($key = null, $lng = null, $lat = null, $member = null, ...$other_triples) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $src
-	 * @param mixed $dst
-	 * @param mixed $unit [optional]
-	 */
-	public function geodist ($key = null, $src = null, $dst = null, $unit = NULL) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $member
-	 * @param mixed $other_members [optional]
-	 */
-	public function geohash ($key = null, $member = null, ...$other_members) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $member
-	 * @param mixed $other_members [optional]
-	 */
-	public function geopos ($key = null, $member = null, ...$other_members) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $lng
-	 * @param mixed $lan
-	 * @param mixed $radius
-	 * @param mixed $unit
-	 * @param array $opts [optional]
-	 */
-	public function georadius ($key = null, $lng = null, $lan = null, $radius = null, $unit = null, array $opts = NULL) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $lng
-	 * @param mixed $lan
-	 * @param mixed $radius
-	 * @param mixed $unit
-	 * @param array $opts [optional]
-	 */
-	public function georadius_ro ($key = null, $lng = null, $lan = null, $radius = null, $unit = null, array $opts = NULL) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $member
-	 * @param mixed $radius
-	 * @param mixed $unit
-	 * @param array $opts [optional]
-	 */
-	public function georadiusbymember ($key = null, $member = null, $radius = null, $unit = null, array $opts = NULL) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $member
-	 * @param mixed $radius
-	 * @param mixed $unit
-	 * @param array $opts [optional]
-	 */
-	public function georadiusbymember_ro ($key = null, $member = null, $radius = null, $unit = null, array $opts = NULL) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 */
-	public function get ($key = null) {}
-
-	/**
-	 * {@inheritdoc}
-	 */
-	public function getAuth () {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $offset
-	 */
-	public function getBit ($key = null, $offset = null) {}
-
-	/**
-	 * {@inheritdoc}
-	 */
-	public function getDBNum () {}
-
-	/**
-	 * {@inheritdoc}
-	 */
-	public function getHost () {}
-
-	/**
-	 * {@inheritdoc}
-	 */
-	public function getLastError () {}
-
-	/**
-	 * {@inheritdoc}
-	 */
-	public function getMode () {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $option
-	 */
-	public function getOption ($option = null) {}
-
-	/**
-	 * {@inheritdoc}
-	 */
-	public function getPersistentID () {}
-
-	/**
-	 * {@inheritdoc}
-	 */
-	public function getPort () {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $start
-	 * @param mixed $end
-	 */
-	public function getRange ($key = null, $start = null, $end = null) {}
-
-	/**
-	 * {@inheritdoc}
-	 */
-	public function getReadTimeout () {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $value
-	 */
-	public function getSet ($key = null, $value = null) {}
-
-	/**
-	 * {@inheritdoc}
-	 */
-	public function getTimeout () {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $member
-	 * @param mixed $other_members [optional]
-	 */
-	public function hDel ($key = null, $member = null, ...$other_members) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $member
-	 */
-	public function hExists ($key = null, $member = null) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $member
-	 */
-	public function hGet ($key = null, $member = null) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 */
-	public function hGetAll ($key = null) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $member
-	 * @param mixed $value
-	 */
-	public function hIncrBy ($key = null, $member = null, $value = null) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $member
-	 * @param mixed $value
-	 */
-	public function hIncrByFloat ($key = null, $member = null, $value = null) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 */
-	public function hKeys ($key = null) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 */
-	public function hLen ($key = null) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
+	 * @param float $timeout
 	 * @param array $keys
+	 * @param string $from
+	 * @param int $count [optional]
 	 */
-	public function hMget ($key = null, array $keys) {}
+	public function bzmpop (float $timeout, array $keys, string $from, int $count = 1): Redis|array|false|null {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param array $keys
+	 * @param string $from
+	 * @param int $count [optional]
+	 */
+	public function zmpop (array $keys, string $from, int $count = 1): Redis|array|false|null {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param float $timeout
+	 * @param array $keys
+	 * @param string $from
+	 * @param int $count [optional]
+	 */
+	public function blmpop (float $timeout, array $keys, string $from, int $count = 1): Redis|array|false|null {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param array $keys
+	 * @param string $from
+	 * @param int $count [optional]
+	 */
+	public function lmpop (array $keys, string $from, int $count = 1): Redis|array|false|null {}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function clearLastError (): bool {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $opt
+	 * @param mixed $args [optional]
+	 */
+	public function client (string $opt, mixed ...$args): mixed {}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function close (): bool {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string|null $opt [optional]
+	 * @param mixed $args [optional]
+	 */
+	public function command (?string $opt = NULL, mixed ...$args): mixed {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $operation
+	 * @param array|string|null $key_or_settings [optional]
+	 * @param string|null $value [optional]
+	 */
+	public function config (string $operation, array|string|null $key_or_settings = NULL, ?string $value = NULL): mixed {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $host
+	 * @param int $port [optional]
+	 * @param float $timeout [optional]
+	 * @param string|null $persistent_id [optional]
+	 * @param int $retry_interval [optional]
+	 * @param float $read_timeout [optional]
+	 * @param array|null $context [optional]
+	 */
+	public function connect (string $host, int $port = 6379, float $timeout = 0, ?string $persistent_id = NULL, int $retry_interval = 0, float $read_timeout = 0, ?array $context = NULL): bool {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $src
+	 * @param string $dst
+	 * @param array|null $options [optional]
+	 */
+	public function copy (string $src, string $dst, ?array $options = NULL): Redis|bool {}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function dbSize (): Redis|int|false {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 */
+	public function debug (string $key): Redis|string {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 * @param int $by [optional]
+	 */
+	public function decr (string $key, int $by = 1): Redis|int|false {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 * @param int $value
+	 */
+	public function decrBy (string $key, int $value): Redis|int|false {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param array|string $key
+	 * @param string $other_keys [optional]
+	 */
+	public function del (array|string $key, string ...$other_keys): Redis|int|false {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param array|string $key
+	 * @param string $other_keys [optional]
+	 * @deprecated 
+	 */
+	public function delete (array|string $key, string ...$other_keys): Redis|int|false {}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function discard (): Redis|bool {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 */
+	public function dump (string $key): Redis|string {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $str
+	 */
+	public function echo (string $str): Redis|string|false {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $script
+	 * @param array $args [optional]
+	 * @param int $num_keys [optional]
+	 */
+	public function eval (string $script, array $args = array (
+), int $num_keys = 0): mixed {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $script_sha
+	 * @param array $args [optional]
+	 * @param int $num_keys [optional]
+	 */
+	public function eval_ro (string $script_sha, array $args = array (
+), int $num_keys = 0): mixed {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $sha1
+	 * @param array $args [optional]
+	 * @param int $num_keys [optional]
+	 */
+	public function evalsha (string $sha1, array $args = array (
+), int $num_keys = 0): mixed {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $sha1
+	 * @param array $args [optional]
+	 * @param int $num_keys [optional]
+	 */
+	public function evalsha_ro (string $sha1, array $args = array (
+), int $num_keys = 0): mixed {}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function exec (): Redis|array|false {}
 
 	/**
 	 * {@inheritdoc}
 	 * @param mixed $key
-	 * @param array $pairs
+	 * @param mixed $other_keys [optional]
 	 */
-	public function hMset ($key = null, array $pairs) {}
+	public function exists (mixed $key = null, mixed ...$other_keys): Redis|int|bool {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $member
+	 * @param string $key
+	 * @param int $timeout
+	 * @param string|null $mode [optional]
+	 */
+	public function expire (string $key, int $timeout, ?string $mode = NULL): Redis|bool {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 * @param int $timestamp
+	 * @param string|null $mode [optional]
+	 */
+	public function expireAt (string $key, int $timestamp, ?string $mode = NULL): Redis|bool {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param array|null $to [optional]
+	 * @param bool $abort [optional]
+	 * @param int $timeout [optional]
+	 */
+	public function failover (?array $to = NULL, bool $abort = false, int $timeout = 0): Redis|bool {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 */
+	public function expiretime (string $key): Redis|int|false {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 */
+	public function pexpiretime (string $key): Redis|int|false {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $fn
+	 * @param array $keys [optional]
+	 * @param array $args [optional]
+	 */
+	public function fcall (string $fn, array $keys = array (
+), array $args = array (
+)): mixed {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $fn
+	 * @param array $keys [optional]
+	 * @param array $args [optional]
+	 */
+	public function fcall_ro (string $fn, array $keys = array (
+), array $args = array (
+)): mixed {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param bool|null $sync [optional]
+	 */
+	public function flushAll (?bool $sync = NULL): Redis|bool {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param bool|null $sync [optional]
+	 */
+	public function flushDB (?bool $sync = NULL): Redis|bool {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $operation
+	 * @param mixed $args [optional]
+	 */
+	public function function (string $operation, mixed ...$args): Redis|array|string|bool {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 * @param float $lng
+	 * @param float $lat
+	 * @param string $member
+	 * @param mixed $other_triples_and_options [optional]
+	 */
+	public function geoadd (string $key, float $lng, float $lat, string $member, mixed ...$other_triples_and_options): Redis|int|false {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 * @param string $src
+	 * @param string $dst
+	 * @param string|null $unit [optional]
+	 */
+	public function geodist (string $key, string $src, string $dst, ?string $unit = NULL): Redis|float|false {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 * @param string $member
+	 * @param string $other_members [optional]
+	 */
+	public function geohash (string $key, string $member, string ...$other_members): Redis|array|false {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 * @param string $member
+	 * @param string $other_members [optional]
+	 */
+	public function geopos (string $key, string $member, string ...$other_members): Redis|array|false {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 * @param float $lng
+	 * @param float $lat
+	 * @param float $radius
+	 * @param string $unit
+	 * @param array $options [optional]
+	 */
+	public function georadius (string $key, float $lng, float $lat, float $radius, string $unit, array $options = array (
+)): mixed {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 * @param float $lng
+	 * @param float $lat
+	 * @param float $radius
+	 * @param string $unit
+	 * @param array $options [optional]
+	 */
+	public function georadius_ro (string $key, float $lng, float $lat, float $radius, string $unit, array $options = array (
+)): mixed {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 * @param string $member
+	 * @param float $radius
+	 * @param string $unit
+	 * @param array $options [optional]
+	 */
+	public function georadiusbymember (string $key, string $member, float $radius, string $unit, array $options = array (
+)): mixed {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 * @param string $member
+	 * @param float $radius
+	 * @param string $unit
+	 * @param array $options [optional]
+	 */
+	public function georadiusbymember_ro (string $key, string $member, float $radius, string $unit, array $options = array (
+)): mixed {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 * @param array|string $position
+	 * @param array|int|float $shape
+	 * @param string $unit
+	 * @param array $options [optional]
+	 */
+	public function geosearch (string $key, array|string $position, array|int|float $shape, string $unit, array $options = array (
+)): array {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $dst
+	 * @param string $src
+	 * @param array|string $position
+	 * @param array|int|float $shape
+	 * @param string $unit
+	 * @param array $options [optional]
+	 */
+	public function geosearchstore (string $dst, string $src, array|string $position, array|int|float $shape, string $unit, array $options = array (
+)): Redis|array|int|false {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 */
+	public function get (string $key): mixed {}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function getAuth (): mixed {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 * @param int $idx
+	 */
+	public function getBit (string $key, int $idx): Redis|int|false {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 * @param array $options [optional]
+	 */
+	public function getEx (string $key, array $options = array (
+)): Redis|string|bool {}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function getDBNum (): int {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 */
+	public function getDel (string $key): Redis|string|bool {}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function getHost (): string {}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function getLastError (): ?string {}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function getMode (): int {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param int $option
+	 */
+	public function getOption (int $option): mixed {}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function getPersistentID (): ?string {}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function getPort (): int {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 * @param int $start
+	 * @param int $end
+	 */
+	public function getRange (string $key, int $start, int $end): Redis|string|false {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key1
+	 * @param string $key2
+	 * @param array|null $options [optional]
+	 */
+	public function lcs (string $key1, string $key2, ?array $options = NULL): Redis|array|string|int|false {}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function getReadTimeout (): float {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
 	 * @param mixed $value
 	 */
-	public function hSet ($key = null, $member = null, $value = null) {}
+	public function getset (string $key, mixed $value = null): Redis|string|false {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $member
+	 */
+	public function getTimeout (): float|false {}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function getTransferredBytes (): array {}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function clearTransferredBytes (): void {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 * @param string $field
+	 * @param string $other_fields [optional]
+	 */
+	public function hDel (string $key, string $field, string ...$other_fields): Redis|int|false {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 * @param string $field
+	 */
+	public function hExists (string $key, string $field): Redis|bool {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 * @param string $member
+	 */
+	public function hGet (string $key, string $member): mixed {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 */
+	public function hGetAll (string $key): Redis|array|false {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 * @param string $field
+	 * @param int $value
+	 */
+	public function hIncrBy (string $key, string $field, int $value): Redis|int|false {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 * @param string $field
+	 * @param float $value
+	 */
+	public function hIncrByFloat (string $key, string $field, float $value): Redis|float|false {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 */
+	public function hKeys (string $key): Redis|array|false {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 */
+	public function hLen (string $key): Redis|int|false {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 * @param array $fields
+	 */
+	public function hMget (string $key, array $fields): Redis|array|false {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 * @param array $fieldvals
+	 */
+	public function hMset (string $key, array $fieldvals): Redis|bool {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 * @param array|null $options [optional]
+	 */
+	public function hRandField (string $key, ?array $options = NULL): Redis|array|string {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 * @param string $member
 	 * @param mixed $value
 	 */
-	public function hSetNx ($key = null, $member = null, $value = null) {}
+	public function hSet (string $key, string $member, mixed $value = null): Redis|int|false {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $member
+	 * @param string $key
+	 * @param string $field
+	 * @param string $value
 	 */
-	public function hStrLen ($key = null, $member = null) {}
+	public function hSetNx (string $key, string $field, string $value): Redis|bool {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
+	 * @param string $key
+	 * @param string $field
 	 */
-	public function hVals ($key = null) {}
+	public function hStrLen (string $key, string $field): Redis|int|false {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $str_key
-	 * @param mixed $i_iterator
-	 * @param mixed $str_pattern [optional]
-	 * @param mixed $i_count [optional]
+	 * @param string $key
 	 */
-	public function hscan ($str_key = null, &$i_iterator = null, $str_pattern = NULL, $i_count = NULL) {}
+	public function hVals (string $key): Redis|array|false {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
+	 * @param string $key
+	 * @param int|null $iterator
+	 * @param string|null $pattern [optional]
+	 * @param int $count [optional]
 	 */
-	public function incr ($key = null) {}
+	public function hscan (string $key, ?int &$iterator = null, ?string $pattern = NULL, int $count = 0): Redis|array|bool {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $value
+	 * @param string $key
+	 * @param int $by [optional]
 	 */
-	public function incrBy ($key = null, $value = null) {}
+	public function incr (string $key, int $by = 1): Redis|int|false {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $value
+	 * @param string $key
+	 * @param int $value
 	 */
-	public function incrByFloat ($key = null, $value = null) {}
+	public function incrBy (string $key, int $value): Redis|int|false {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $option [optional]
+	 * @param string $key
+	 * @param float $value
 	 */
-	public function info ($option = NULL) {}
+	public function incrByFloat (string $key, float $value): Redis|float|false {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $sections [optional]
+	 */
+	public function info (string ...$sections): Redis|array|false {}
 
 	/**
 	 * {@inheritdoc}
 	 */
-	public function isConnected () {}
+	public function isConnected (): bool {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $pattern
+	 * @param string $pattern
 	 */
-	public function keys ($pattern = null) {}
+	public function keys (string $pattern) {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $position
+	 * @param string $key
+	 * @param string $pos
 	 * @param mixed $pivot
 	 * @param mixed $value
 	 */
-	public function lInsert ($key = null, $position = null, $pivot = null, $value = null) {}
+	public function lInsert (string $key, string $pos, mixed $pivot = null, mixed $value = null) {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
+	 * @param string $key
 	 */
-	public function lLen ($key = null) {}
+	public function lLen (string $key): Redis|int|false {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
+	 * @param string $src
+	 * @param string $dst
+	 * @param string $wherefrom
+	 * @param string $whereto
 	 */
-	public function lPop ($key = null) {}
+	public function lMove (string $src, string $dst, string $wherefrom, string $whereto): Redis|string|false {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
+	 * @param string $src
+	 * @param string $dst
+	 * @param string $wherefrom
+	 * @param string $whereto
+	 * @param float $timeout
+	 */
+	public function blmove (string $src, string $dst, string $wherefrom, string $whereto, float $timeout): Redis|string|false {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 * @param int $count [optional]
+	 */
+	public function lPop (string $key, int $count = 0): Redis|array|string|bool {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 * @param mixed $value
+	 * @param array|null $options [optional]
+	 */
+	public function lPos (string $key, mixed $value = null, ?array $options = NULL): Redis|array|int|bool|null {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 * @param mixed $elements [optional]
+	 */
+	public function lPush (string $key, mixed ...$elements): Redis|int|false {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 * @param mixed $elements [optional]
+	 */
+	public function rPush (string $key, mixed ...$elements): Redis|int|false {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
 	 * @param mixed $value
 	 */
-	public function lPush ($key = null, $value = null) {}
+	public function lPushx (string $key, mixed $value = null): Redis|int|false {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
+	 * @param string $key
 	 * @param mixed $value
 	 */
-	public function lPushx ($key = null, $value = null) {}
+	public function rPushx (string $key, mixed $value = null): Redis|int|false {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $index
+	 * @param string $key
+	 * @param int $index
 	 * @param mixed $value
 	 */
-	public function lSet ($key = null, $index = null, $value = null) {}
+	public function lSet (string $key, int $index, mixed $value = null): Redis|bool {}
 
 	/**
 	 * {@inheritdoc}
 	 */
-	public function lastSave () {}
+	public function lastSave (): int {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $index
+	 * @param string $key
+	 * @param int $index
 	 */
-	public function lindex ($key = null, $index = null) {}
+	public function lindex (string $key, int $index): mixed {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $start
-	 * @param mixed $end
+	 * @param string $key
+	 * @param int $start
+	 * @param int $end
 	 */
-	public function lrange ($key = null, $start = null, $end = null) {}
+	public function lrange (string $key, int $start, int $end): Redis|array|false {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
+	 * @param string $key
 	 * @param mixed $value
-	 * @param mixed $count
+	 * @param int $count [optional]
 	 */
-	public function lrem ($key = null, $value = null, $count = null) {}
+	public function lrem (string $key, mixed $value = null, int $count = 0): Redis|int|false {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $start
-	 * @param mixed $stop
+	 * @param string $key
+	 * @param int $start
+	 * @param int $end
 	 */
-	public function ltrim ($key = null, $start = null, $stop = null) {}
+	public function ltrim (string $key, int $start, int $end): Redis|bool {}
 
 	/**
 	 * {@inheritdoc}
 	 * @param array $keys
 	 */
-	public function mget (array $keys) {}
+	public function mget (array $keys): Redis|array {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $host
-	 * @param mixed $port
-	 * @param mixed $key
-	 * @param mixed $db
-	 * @param mixed $timeout
-	 * @param mixed $copy [optional]
-	 * @param mixed $replace [optional]
+	 * @param string $host
+	 * @param int $port
+	 * @param array|string $key
+	 * @param int $dstdb
+	 * @param int $timeout
+	 * @param bool $copy [optional]
+	 * @param bool $replace [optional]
+	 * @param mixed $credentials [optional]
 	 */
-	public function migrate ($host = null, $port = null, $key = null, $db = null, $timeout = null, $copy = NULL, $replace = NULL) {}
+	public function migrate (string $host, int $port, array|string $key, int $dstdb, int $timeout, bool $copy = false, bool $replace = false, mixed $credentials = NULL): Redis|bool {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $dbindex
+	 * @param string $key
+	 * @param int $index
 	 */
-	public function move ($key = null, $dbindex = null) {}
+	public function move (string $key, int $index): Redis|bool {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param array $pairs
+	 * @param array $key_values
 	 */
-	public function mset (array $pairs) {}
+	public function mset (array $key_values): Redis|bool {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param array $pairs
+	 * @param array $key_values
 	 */
-	public function msetnx (array $pairs) {}
+	public function msetnx (array $key_values): Redis|bool {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $mode [optional]
+	 * @param int $value [optional]
 	 */
-	public function multi ($mode = NULL) {}
+	public function multi (int $value = 1): Redis|bool {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $field
-	 * @param mixed $key
+	 * @param string $subcommand
+	 * @param string $key
 	 */
-	public function object ($field = null, $key = null) {}
+	public function object (string $subcommand, string $key): Redis|string|int|false {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $host
-	 * @param mixed $port [optional]
-	 * @param mixed $timeout [optional]
+	 * @param string $host
+	 * @param int $port [optional]
+	 * @param float $timeout [optional]
+	 * @param string|null $persistent_id [optional]
+	 * @param int $retry_interval [optional]
+	 * @param float $read_timeout [optional]
+	 * @param array|null $context [optional]
+	 * @deprecated 
 	 */
-	public function pconnect ($host = null, $port = NULL, $timeout = NULL) {}
+	public function open (string $host, int $port = 6379, float $timeout = 0, ?string $persistent_id = NULL, int $retry_interval = 0, float $read_timeout = 0, ?array $context = NULL): bool {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
+	 * @param string $host
+	 * @param int $port [optional]
+	 * @param float $timeout [optional]
+	 * @param string|null $persistent_id [optional]
+	 * @param int $retry_interval [optional]
+	 * @param float $read_timeout [optional]
+	 * @param array|null $context [optional]
 	 */
-	public function persist ($key = null) {}
+	public function pconnect (string $host, int $port = 6379, float $timeout = 0, ?string $persistent_id = NULL, int $retry_interval = 0, float $read_timeout = 0, ?array $context = NULL): bool {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $timestamp
+	 * @param string $key
 	 */
-	public function pexpire ($key = null, $timestamp = null) {}
+	public function persist (string $key): Redis|bool {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $timestamp
+	 * @param string $key
+	 * @param int $timeout
+	 * @param string|null $mode [optional]
 	 */
-	public function pexpireAt ($key = null, $timestamp = null) {}
+	public function pexpire (string $key, int $timeout, ?string $mode = NULL): bool {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
+	 * @param string $key
+	 * @param int $timestamp
+	 * @param string|null $mode [optional]
+	 */
+	public function pexpireAt (string $key, int $timestamp, ?string $mode = NULL): Redis|bool {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
 	 * @param array $elements
 	 */
-	public function pfadd ($key = null, array $elements) {}
+	public function pfadd (string $key, array $elements): Redis|int {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
+	 * @param array|string $key_or_keys
 	 */
-	public function pfcount ($key = null) {}
+	public function pfcount (array|string $key_or_keys): Redis|int|false {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $dstkey
-	 * @param array $keys
+	 * @param string $dst
+	 * @param array $srckeys
 	 */
-	public function pfmerge ($dstkey = null, array $keys) {}
+	public function pfmerge (string $dst, array $srckeys): Redis|bool {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string|null $message [optional]
+	 */
+	public function ping (?string $message = NULL): Redis|string|bool {}
 
 	/**
 	 * {@inheritdoc}
 	 */
-	public function ping () {}
+	public function pipeline (): Redis|bool {}
 
 	/**
 	 * {@inheritdoc}
+	 * @param string $host
+	 * @param int $port [optional]
+	 * @param float $timeout [optional]
+	 * @param string|null $persistent_id [optional]
+	 * @param int $retry_interval [optional]
+	 * @param float $read_timeout [optional]
+	 * @param array|null $context [optional]
+	 * @deprecated 
 	 */
-	public function pipeline () {}
+	public function popen (string $host, int $port = 6379, float $timeout = 0, ?string $persistent_id = NULL, int $retry_interval = 0, float $read_timeout = 0, ?array $context = NULL): bool {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $expire
+	 * @param string $key
+	 * @param int $expire
 	 * @param mixed $value
 	 */
-	public function psetex ($key = null, $expire = null, $value = null) {}
+	public function psetex (string $key, int $expire, mixed $value = null): Redis|bool {}
 
 	/**
 	 * {@inheritdoc}
 	 * @param array $patterns
-	 * @param mixed $callback
+	 * @param callable $cb
 	 */
-	public function psubscribe (array $patterns, $callback = null) {}
+	public function psubscribe (array $patterns, callable $cb): bool {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
+	 * @param string $key
 	 */
-	public function pttl ($key = null) {}
+	public function pttl (string $key): Redis|int|false {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $channel
-	 * @param mixed $message
+	 * @param string $channel
+	 * @param string $message
 	 */
-	public function publish ($channel = null, $message = null) {}
+	public function publish (string $channel, string $message): Redis|int|false {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $cmd
+	 * @param string $command
+	 * @param mixed $arg [optional]
+	 */
+	public function pubsub (string $command, mixed $arg = NULL): mixed {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param array $patterns
+	 */
+	public function punsubscribe (array $patterns): Redis|array|bool {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 * @param int $count [optional]
+	 */
+	public function rPop (string $key, int $count = 0): Redis|array|string|bool {}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function randomKey (): Redis|string|false {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $command
 	 * @param mixed $args [optional]
 	 */
-	public function pubsub ($cmd = null, ...$args) {}
+	public function rawcommand (string $command, mixed ...$args): mixed {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $pattern
-	 * @param mixed $other_patterns [optional]
+	 * @param string $old_name
+	 * @param string $new_name
 	 */
-	public function punsubscribe ($pattern = null, ...$other_patterns) {}
+	public function rename (string $old_name, string $new_name): Redis|bool {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
+	 * @param string $key_src
+	 * @param string $key_dst
 	 */
-	public function rPop ($key = null) {}
+	public function renameNx (string $key_src, string $key_dst): Redis|bool {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
+	 */
+	public function reset (): Redis|bool {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 * @param int $ttl
+	 * @param string $value
+	 * @param array|null $options [optional]
+	 */
+	public function restore (string $key, int $ttl, string $value, ?array $options = NULL): Redis|bool {}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function role (): mixed {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $srckey
+	 * @param string $dstkey
+	 */
+	public function rpoplpush (string $srckey, string $dstkey): Redis|string|false {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 * @param mixed $value
+	 * @param mixed $other_values [optional]
+	 */
+	public function sAdd (string $key, mixed $value = null, mixed ...$other_values): Redis|int|false {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 * @param array $values
+	 */
+	public function sAddArray (string $key, array $values): int {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 * @param string $other_keys [optional]
+	 */
+	public function sDiff (string $key, string ...$other_keys): Redis|array|false {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $dst
+	 * @param string $key
+	 * @param string $other_keys [optional]
+	 */
+	public function sDiffStore (string $dst, string $key, string ...$other_keys): Redis|int|false {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param array|string $key
+	 * @param string $other_keys [optional]
+	 */
+	public function sInter (array|string $key, string ...$other_keys): Redis|array|false {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param array $keys
+	 * @param int $limit [optional]
+	 */
+	public function sintercard (array $keys, int $limit = -1): Redis|int|false {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param array|string $key
+	 * @param string $other_keys [optional]
+	 */
+	public function sInterStore (array|string $key, string ...$other_keys): Redis|int|false {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 */
+	public function sMembers (string $key): Redis|array|false {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 * @param string $member
+	 * @param string $other_members [optional]
+	 */
+	public function sMisMember (string $key, string $member, string ...$other_members): Redis|array|false {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $src
+	 * @param string $dst
 	 * @param mixed $value
 	 */
-	public function rPush ($key = null, $value = null) {}
+	public function sMove (string $src, string $dst, mixed $value = null): Redis|bool {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $value
+	 * @param string $key
+	 * @param int $count [optional]
 	 */
-	public function rPushx ($key = null, $value = null) {}
+	public function sPop (string $key, int $count = 0): Redis|array|string|false {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 * @param int $count [optional]
+	 */
+	public function sRandMember (string $key, int $count = 0): Redis|array|string|false {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 * @param string $other_keys [optional]
+	 */
+	public function sUnion (string $key, string ...$other_keys): Redis|array|false {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $dst
+	 * @param string $key
+	 * @param string $other_keys [optional]
+	 */
+	public function sUnionStore (string $dst, string $key, string ...$other_keys): Redis|int|false {}
 
 	/**
 	 * {@inheritdoc}
 	 */
-	public function randomKey () {}
+	public function save (): Redis|bool {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $cmd
+	 * @param int|null $iterator
+	 * @param string|null $pattern [optional]
+	 * @param int $count [optional]
+	 * @param string|null $type [optional]
+	 */
+	public function scan (?int &$iterator = null, ?string $pattern = NULL, int $count = 0, ?string $type = NULL): array|false {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 */
+	public function scard (string $key): Redis|int|false {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $command
 	 * @param mixed $args [optional]
 	 */
-	public function rawcommand ($cmd = null, ...$args) {}
+	public function script (string $command, mixed ...$args): mixed {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $newkey
+	 * @param int $db
 	 */
-	public function rename ($key = null, $newkey = null) {}
+	public function select (int $db): Redis|bool {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $newkey
+	 * @param string $key
+	 * @param mixed $value
+	 * @param mixed $options [optional]
 	 */
-	public function renameNx ($key = null, $newkey = null) {}
+	public function set (string $key, mixed $value = null, mixed $options = NULL): Redis|string|bool {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $ttl
-	 * @param mixed $key
+	 * @param string $key
+	 * @param int $idx
+	 * @param bool $value
+	 */
+	public function setBit (string $key, int $idx, bool $value): Redis|int|false {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 * @param int $index
+	 * @param string $value
+	 */
+	public function setRange (string $key, int $index, string $value): Redis|int|false {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param int $option
 	 * @param mixed $value
 	 */
-	public function restore ($ttl = null, $key = null, $value = null) {}
+	public function setOption (int $option, mixed $value = null): bool {}
 
 	/**
 	 * {@inheritdoc}
-	 */
-	public function role () {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $src
-	 * @param mixed $dst
-	 */
-	public function rpoplpush ($src = null, $dst = null) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
+	 * @param string $key
+	 * @param int $expire
 	 * @param mixed $value
 	 */
-	public function sAdd ($key = null, $value = null) {}
+	public function setex (string $key, int $expire, mixed $value = null) {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param array $options
-	 */
-	public function sAddArray ($key = null, array $options) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $other_keys [optional]
-	 */
-	public function sDiff ($key = null, ...$other_keys) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $dst
-	 * @param mixed $key
-	 * @param mixed $other_keys [optional]
-	 */
-	public function sDiffStore ($dst = null, $key = null, ...$other_keys) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $other_keys [optional]
-	 */
-	public function sInter ($key = null, ...$other_keys) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $dst
-	 * @param mixed $key
-	 * @param mixed $other_keys [optional]
-	 */
-	public function sInterStore ($dst = null, $key = null, ...$other_keys) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 */
-	public function sMembers ($key = null) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $member
-	 * @param mixed $other_members [optional]
-	 */
-	public function sMisMember ($key = null, $member = null, ...$other_members) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $src
-	 * @param mixed $dst
+	 * @param string $key
 	 * @param mixed $value
 	 */
-	public function sMove ($src = null, $dst = null, $value = null) {}
+	public function setnx (string $key, mixed $value = null): Redis|bool {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
-	 */
-	public function sPop ($key = null) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $count [optional]
-	 */
-	public function sRandMember ($key = null, $count = NULL) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $other_keys [optional]
-	 */
-	public function sUnion ($key = null, ...$other_keys) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $dst
-	 * @param mixed $key
-	 * @param mixed $other_keys [optional]
-	 */
-	public function sUnionStore ($dst = null, $key = null, ...$other_keys) {}
-
-	/**
-	 * {@inheritdoc}
-	 */
-	public function save () {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $i_iterator
-	 * @param mixed $str_pattern [optional]
-	 * @param mixed $i_count [optional]
-	 */
-	public function scan (&$i_iterator = null, $str_pattern = NULL, $i_count = NULL) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 */
-	public function scard ($key = null) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $cmd
-	 * @param mixed $args [optional]
-	 */
-	public function script ($cmd = null, ...$args) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $dbindex
-	 */
-	public function select ($dbindex = null) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $value
-	 * @param mixed $opts [optional]
-	 */
-	public function set ($key = null, $value = null, $opts = NULL) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $offset
+	 * @param string $key
 	 * @param mixed $value
 	 */
-	public function setBit ($key = null, $offset = null, $value = null) {}
+	public function sismember (string $key, mixed $value = null): Redis|bool {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $option
-	 * @param mixed $value
-	 */
-	public function setOption ($option = null, $value = null) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $offset
-	 * @param mixed $value
-	 */
-	public function setRange ($key = null, $offset = null, $value = null) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $expire
-	 * @param mixed $value
-	 */
-	public function setex ($key = null, $expire = null, $value = null) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $value
-	 */
-	public function setnx ($key = null, $value = null) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $value
-	 */
-	public function sismember ($key = null, $value = null) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $host [optional]
-	 * @param mixed $port [optional]
-	 */
-	public function slaveof ($host = NULL, $port = NULL) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $arg
-	 * @param mixed $option [optional]
-	 */
-	public function slowlog ($arg = null, $option = NULL) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param array $options [optional]
-	 */
-	public function sort ($key = null, array $options = NULL) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $pattern [optional]
-	 * @param mixed $get [optional]
-	 * @param mixed $start [optional]
-	 * @param mixed $end [optional]
-	 * @param mixed $getList [optional]
+	 * @param string|null $host [optional]
+	 * @param int $port [optional]
 	 * @deprecated 
 	 */
-	public function sortAsc ($key = null, $pattern = NULL, $get = NULL, $start = NULL, $end = NULL, $getList = NULL) {}
+	public function slaveof (?string $host = NULL, int $port = 6379): Redis|bool {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $pattern [optional]
+	 * @param string|null $host [optional]
+	 * @param int $port [optional]
+	 */
+	public function replicaof (?string $host = NULL, int $port = 6379): Redis|bool {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param array|string $key_or_array
+	 * @param string $more_keys [optional]
+	 */
+	public function touch (array|string $key_or_array, string ...$more_keys): Redis|int|false {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $operation
+	 * @param int $length [optional]
+	 */
+	public function slowlog (string $operation, int $length = 0): mixed {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 * @param array|null $options [optional]
+	 */
+	public function sort (string $key, ?array $options = NULL): mixed {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 * @param array|null $options [optional]
+	 */
+	public function sort_ro (string $key, ?array $options = NULL): mixed {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 * @param string|null $pattern [optional]
 	 * @param mixed $get [optional]
-	 * @param mixed $start [optional]
-	 * @param mixed $end [optional]
-	 * @param mixed $getList [optional]
+	 * @param int $offset [optional]
+	 * @param int $count [optional]
+	 * @param string|null $store [optional]
 	 * @deprecated 
 	 */
-	public function sortAscAlpha ($key = null, $pattern = NULL, $get = NULL, $start = NULL, $end = NULL, $getList = NULL) {}
+	public function sortAsc (string $key, ?string $pattern = NULL, mixed $get = NULL, int $offset = -1, int $count = -1, ?string $store = NULL): array {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $pattern [optional]
+	 * @param string $key
+	 * @param string|null $pattern [optional]
 	 * @param mixed $get [optional]
-	 * @param mixed $start [optional]
-	 * @param mixed $end [optional]
-	 * @param mixed $getList [optional]
+	 * @param int $offset [optional]
+	 * @param int $count [optional]
+	 * @param string|null $store [optional]
 	 * @deprecated 
 	 */
-	public function sortDesc ($key = null, $pattern = NULL, $get = NULL, $start = NULL, $end = NULL, $getList = NULL) {}
+	public function sortAscAlpha (string $key, ?string $pattern = NULL, mixed $get = NULL, int $offset = -1, int $count = -1, ?string $store = NULL): array {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $pattern [optional]
+	 * @param string $key
+	 * @param string|null $pattern [optional]
 	 * @param mixed $get [optional]
-	 * @param mixed $start [optional]
-	 * @param mixed $end [optional]
-	 * @param mixed $getList [optional]
+	 * @param int $offset [optional]
+	 * @param int $count [optional]
+	 * @param string|null $store [optional]
 	 * @deprecated 
 	 */
-	public function sortDescAlpha ($key = null, $pattern = NULL, $get = NULL, $start = NULL, $end = NULL, $getList = NULL) {}
+	public function sortDesc (string $key, ?string $pattern = NULL, mixed $get = NULL, int $offset = -1, int $count = -1, ?string $store = NULL): array {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $member
-	 * @param mixed $other_members [optional]
+	 * @param string $key
+	 * @param string|null $pattern [optional]
+	 * @param mixed $get [optional]
+	 * @param int $offset [optional]
+	 * @param int $count [optional]
+	 * @param string|null $store [optional]
+	 * @deprecated 
 	 */
-	public function srem ($key = null, $member = null, ...$other_members) {}
+	public function sortDescAlpha (string $key, ?string $pattern = NULL, mixed $get = NULL, int $offset = -1, int $count = -1, ?string $store = NULL): array {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $str_key
-	 * @param mixed $i_iterator
-	 * @param mixed $str_pattern [optional]
-	 * @param mixed $i_count [optional]
+	 * @param string $key
+	 * @param mixed $value
+	 * @param mixed $other_values [optional]
 	 */
-	public function sscan ($str_key = null, &$i_iterator = null, $str_pattern = NULL, $i_count = NULL) {}
+	public function srem (string $key, mixed $value = null, mixed ...$other_values): Redis|int|false {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
+	 * @param string $key
+	 * @param int|null $iterator
+	 * @param string|null $pattern [optional]
+	 * @param int $count [optional]
 	 */
-	public function strlen ($key = null) {}
+	public function sscan (string $key, ?int &$iterator = null, ?string $pattern = NULL, int $count = 0): array|false {}
 
 	/**
 	 * {@inheritdoc}
 	 * @param array $channels
-	 * @param mixed $callback
+	 * @param callable $cb
 	 */
-	public function subscribe (array $channels, $callback = null) {}
+	public function ssubscribe (array $channels, callable $cb): bool {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $srcdb
-	 * @param mixed $dstdb
+	 * @param string $key
 	 */
-	public function swapdb ($srcdb = null, $dstdb = null) {}
+	public function strlen (string $key): Redis|int|false {}
 
 	/**
 	 * {@inheritdoc}
+	 * @param array $channels
+	 * @param callable $cb
 	 */
-	public function time () {}
+	public function subscribe (array $channels, callable $cb): bool {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
+	 * @param array $channels
 	 */
-	public function ttl ($key = null) {}
+	public function sunsubscribe (array $channels): Redis|array|bool {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
+	 * @param int $src
+	 * @param int $dst
 	 */
-	public function type ($key = null) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $other_keys [optional]
-	 */
-	public function unlink ($key = null, ...$other_keys) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $channel
-	 * @param mixed $other_channels [optional]
-	 */
-	public function unsubscribe ($channel = null, ...$other_channels) {}
+	public function swapdb (int $src, int $dst): Redis|bool {}
 
 	/**
 	 * {@inheritdoc}
 	 */
-	public function unwatch () {}
+	public function time (): Redis|array {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $numslaves
-	 * @param mixed $timeout
+	 * @param string $key
 	 */
-	public function wait ($numslaves = null, $timeout = null) {}
+	public function ttl (string $key): Redis|int|false {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $other_keys [optional]
+	 * @param string $key
 	 */
-	public function watch ($key = null, ...$other_keys) {}
+	public function type (string $key): Redis|int|false {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $str_key
-	 * @param mixed $str_group
-	 * @param array $arr_ids
+	 * @param array|string $key
+	 * @param string $other_keys [optional]
 	 */
-	public function xack ($str_key = null, $str_group = null, array $arr_ids) {}
+	public function unlink (array|string $key, string ...$other_keys): Redis|int|false {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $str_key
-	 * @param mixed $str_id
-	 * @param array $arr_fields
-	 * @param mixed $i_maxlen [optional]
-	 * @param mixed $boo_approximate [optional]
+	 * @param array $channels
 	 */
-	public function xadd ($str_key = null, $str_id = null, array $arr_fields, $i_maxlen = NULL, $boo_approximate = NULL) {}
+	public function unsubscribe (array $channels): Redis|array|bool {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $str_key
-	 * @param mixed $str_group
-	 * @param mixed $str_consumer
-	 * @param mixed $i_min_idle
-	 * @param array $arr_ids
-	 * @param array $arr_opts [optional]
 	 */
-	public function xclaim ($str_key = null, $str_group = null, $str_consumer = null, $i_min_idle = null, array $arr_ids, array $arr_opts = NULL) {}
+	public function unwatch (): Redis|bool {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $str_key
-	 * @param array $arr_ids
+	 * @param array|string $key
+	 * @param string $other_keys [optional]
 	 */
-	public function xdel ($str_key = null, array $arr_ids) {}
+	public function watch (array|string $key, string ...$other_keys): Redis|bool {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $str_operation
-	 * @param mixed $str_key [optional]
-	 * @param mixed $str_arg1 [optional]
-	 * @param mixed $str_arg2 [optional]
-	 * @param mixed $str_arg3 [optional]
+	 * @param int $numreplicas
+	 * @param int $timeout
 	 */
-	public function xgroup ($str_operation = null, $str_key = NULL, $str_arg1 = NULL, $str_arg2 = NULL, $str_arg3 = NULL) {}
+	public function wait (int $numreplicas, int $timeout): int|false {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $str_cmd
-	 * @param mixed $str_key [optional]
-	 * @param mixed $str_group [optional]
+	 * @param string $key
+	 * @param string $group
+	 * @param array $ids
 	 */
-	public function xinfo ($str_cmd = null, $str_key = NULL, $str_group = NULL) {}
+	public function xack (string $key, string $group, array $ids): int|false {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
+	 * @param string $key
+	 * @param string $id
+	 * @param array $values
+	 * @param int $maxlen [optional]
+	 * @param bool $approx [optional]
+	 * @param bool $nomkstream [optional]
 	 */
-	public function xlen ($key = null) {}
+	public function xadd (string $key, string $id, array $values, int $maxlen = 0, bool $approx = false, bool $nomkstream = false): Redis|string|false {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $str_key
-	 * @param mixed $str_group
-	 * @param mixed $str_start [optional]
-	 * @param mixed $str_end [optional]
-	 * @param mixed $i_count [optional]
-	 * @param mixed $str_consumer [optional]
+	 * @param string $key
+	 * @param string $group
+	 * @param string $consumer
+	 * @param int $min_idle
+	 * @param string $start
+	 * @param int $count [optional]
+	 * @param bool $justid [optional]
 	 */
-	public function xpending ($str_key = null, $str_group = null, $str_start = NULL, $str_end = NULL, $i_count = NULL, $str_consumer = NULL) {}
+	public function xautoclaim (string $key, string $group, string $consumer, int $min_idle, string $start, int $count = -1, bool $justid = false): Redis|array|bool {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $str_key
-	 * @param mixed $str_start
-	 * @param mixed $str_end
-	 * @param mixed $i_count [optional]
+	 * @param string $key
+	 * @param string $group
+	 * @param string $consumer
+	 * @param int $min_idle
+	 * @param array $ids
+	 * @param array $options
 	 */
-	public function xrange ($str_key = null, $str_start = null, $str_end = null, $i_count = NULL) {}
+	public function xclaim (string $key, string $group, string $consumer, int $min_idle, array $ids, array $options): Redis|array|bool {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param array $arr_streams
-	 * @param mixed $i_count [optional]
-	 * @param mixed $i_block [optional]
+	 * @param string $key
+	 * @param array $ids
 	 */
-	public function xread (array $arr_streams, $i_count = NULL, $i_block = NULL) {}
+	public function xdel (string $key, array $ids): Redis|int|false {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $str_group
-	 * @param mixed $str_consumer
-	 * @param array $arr_streams
-	 * @param mixed $i_count [optional]
-	 * @param mixed $i_block [optional]
+	 * @param string $operation
+	 * @param string|null $key [optional]
+	 * @param string|null $group [optional]
+	 * @param string|null $id_or_consumer [optional]
+	 * @param bool $mkstream [optional]
+	 * @param int $entries_read [optional]
 	 */
-	public function xreadgroup ($str_group = null, $str_consumer = null, array $arr_streams, $i_count = NULL, $i_block = NULL) {}
+	public function xgroup (string $operation, ?string $key = NULL, ?string $group = NULL, ?string $id_or_consumer = NULL, bool $mkstream = false, int $entries_read = -2): mixed {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $str_key
-	 * @param mixed $str_start
-	 * @param mixed $str_end
-	 * @param mixed $i_count [optional]
+	 * @param string $operation
+	 * @param string|null $arg1 [optional]
+	 * @param string|null $arg2 [optional]
+	 * @param int $count [optional]
 	 */
-	public function xrevrange ($str_key = null, $str_start = null, $str_end = null, $i_count = NULL) {}
+	public function xinfo (string $operation, ?string $arg1 = NULL, ?string $arg2 = NULL, int $count = -1): mixed {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $str_key
-	 * @param mixed $i_maxlen
-	 * @param mixed $boo_approximate [optional]
+	 * @param string $key
 	 */
-	public function xtrim ($str_key = null, $i_maxlen = null, $boo_approximate = NULL) {}
+	public function xlen (string $key): Redis|int|false {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $score
-	 * @param mixed $value
-	 * @param mixed $extra_args [optional]
+	 * @param string $key
+	 * @param string $group
+	 * @param string|null $start [optional]
+	 * @param string|null $end [optional]
+	 * @param int $count [optional]
+	 * @param string|null $consumer [optional]
 	 */
-	public function zAdd ($key = null, $score = null, $value = null, ...$extra_args) {}
+	public function xpending (string $key, string $group, ?string $start = NULL, ?string $end = NULL, int $count = -1, ?string $consumer = NULL): Redis|array|false {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
+	 * @param string $key
+	 * @param string $start
+	 * @param string $end
+	 * @param int $count [optional]
 	 */
-	public function zCard ($key = null) {}
+	public function xrange (string $key, string $start, string $end, int $count = -1): Redis|array|bool {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $min
-	 * @param mixed $max
+	 * @param array $streams
+	 * @param int $count [optional]
+	 * @param int $block [optional]
 	 */
-	public function zCount ($key = null, $min = null, $max = null) {}
+	public function xread (array $streams, int $count = -1, int $block = -1): Redis|array|bool {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $value
+	 * @param string $group
+	 * @param string $consumer
+	 * @param array $streams
+	 * @param int $count [optional]
+	 * @param int $block [optional]
+	 */
+	public function xreadgroup (string $group, string $consumer, array $streams, int $count = 1, int $block = 1): Redis|array|bool {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 * @param string $end
+	 * @param string $start
+	 * @param int $count [optional]
+	 */
+	public function xrevrange (string $key, string $end, string $start, int $count = -1): Redis|array|bool {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 * @param string $threshold
+	 * @param bool $approx [optional]
+	 * @param bool $minid [optional]
+	 * @param int $limit [optional]
+	 */
+	public function xtrim (string $key, string $threshold, bool $approx = false, bool $minid = false, int $limit = -1): Redis|int|false {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 * @param array|float $score_or_options
+	 * @param mixed $more_scores_and_mems [optional]
+	 */
+	public function zAdd (string $key, array|float $score_or_options, mixed ...$more_scores_and_mems): Redis|int|float|false {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 */
+	public function zCard (string $key): Redis|int|false {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 * @param string $start
+	 * @param string $end
+	 */
+	public function zCount (string $key, string $start, string $end): Redis|int|false {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 * @param float $value
 	 * @param mixed $member
 	 */
-	public function zIncrBy ($key = null, $value = null, $member = null) {}
+	public function zIncrBy (string $key, float $value, mixed $member = null): Redis|float|false {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $min
-	 * @param mixed $max
+	 * @param string $key
+	 * @param string $min
+	 * @param string $max
 	 */
-	public function zLexCount ($key = null, $min = null, $max = null) {}
+	public function zLexCount (string $key, string $min, string $max): Redis|int|false {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
+	 * @param string $key
+	 * @param mixed $member
+	 * @param mixed $other_members [optional]
 	 */
-	public function zPopMax ($key = null) {}
+	public function zMscore (string $key, mixed $member = null, mixed ...$other_members): Redis|array|false {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
+	 * @param string $key
+	 * @param int|null $count [optional]
 	 */
-	public function zPopMin ($key = null) {}
+	public function zPopMax (string $key, ?int $count = NULL): Redis|array|false {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $start
-	 * @param mixed $end
-	 * @param mixed $scores [optional]
+	 * @param string $key
+	 * @param int|null $count [optional]
 	 */
-	public function zRange ($key = null, $start = null, $end = null, $scores = NULL) {}
+	public function zPopMin (string $key, ?int $count = NULL): Redis|array|false {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $min
-	 * @param mixed $max
-	 * @param mixed $offset [optional]
-	 * @param mixed $limit [optional]
+	 * @param string $key
+	 * @param string|int $start
+	 * @param string|int $end
+	 * @param array|bool|null $options [optional]
 	 */
-	public function zRangeByLex ($key = null, $min = null, $max = null, $offset = NULL, $limit = NULL) {}
+	public function zRange (string $key, string|int $start, string|int $end, array|bool|null $options = NULL): Redis|array|false {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $start
-	 * @param mixed $end
+	 * @param string $key
+	 * @param string $min
+	 * @param string $max
+	 * @param int $offset [optional]
+	 * @param int $count [optional]
+	 */
+	public function zRangeByLex (string $key, string $min, string $max, int $offset = -1, int $count = -1): Redis|array|false {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 * @param string $start
+	 * @param string $end
 	 * @param array $options [optional]
 	 */
-	public function zRangeByScore ($key = null, $start = null, $end = null, array $options = NULL) {}
+	public function zRangeByScore (string $key, string $start, string $end, array $options = array (
+)): Redis|array|false {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
+	 * @param string $dstkey
+	 * @param string $srckey
+	 * @param string $start
+	 * @param string $end
+	 * @param array|bool|null $options [optional]
+	 */
+	public function zrangestore (string $dstkey, string $srckey, string $start, string $end, array|bool|null $options = NULL): Redis|int|false {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 * @param array|null $options [optional]
+	 */
+	public function zRandMember (string $key, ?array $options = NULL): Redis|array|string {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
 	 * @param mixed $member
 	 */
-	public function zRank ($key = null, $member = null) {}
+	public function zRank (string $key, mixed $member = null): Redis|int|false {}
 
 	/**
 	 * {@inheritdoc}
@@ -1479,346 +1831,138 @@ class Redis  {
 	 * @param mixed $member
 	 * @param mixed $other_members [optional]
 	 */
-	public function zRem ($key = null, $member = null, ...$other_members) {}
+	public function zRem (mixed $key = null, mixed $member = null, mixed ...$other_members): Redis|int|false {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $min
-	 * @param mixed $max
+	 * @param string $key
+	 * @param string $min
+	 * @param string $max
 	 */
-	public function zRemRangeByLex ($key = null, $min = null, $max = null) {}
+	public function zRemRangeByLex (string $key, string $min, string $max): Redis|int|false {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $start
-	 * @param mixed $end
+	 * @param string $key
+	 * @param int $start
+	 * @param int $end
 	 */
-	public function zRemRangeByRank ($key = null, $start = null, $end = null) {}
+	public function zRemRangeByRank (string $key, int $start, int $end): Redis|int|false {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $min
-	 * @param mixed $max
+	 * @param string $key
+	 * @param string $start
+	 * @param string $end
 	 */
-	public function zRemRangeByScore ($key = null, $min = null, $max = null) {}
+	public function zRemRangeByScore (string $key, string $start, string $end): Redis|int|false {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $start
-	 * @param mixed $end
+	 * @param string $key
+	 * @param int $start
+	 * @param int $end
 	 * @param mixed $scores [optional]
 	 */
-	public function zRevRange ($key = null, $start = null, $end = null, $scores = NULL) {}
+	public function zRevRange (string $key, int $start, int $end, mixed $scores = NULL): Redis|array|false {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $min
-	 * @param mixed $max
-	 * @param mixed $offset [optional]
-	 * @param mixed $limit [optional]
+	 * @param string $key
+	 * @param string $max
+	 * @param string $min
+	 * @param int $offset [optional]
+	 * @param int $count [optional]
 	 */
-	public function zRevRangeByLex ($key = null, $min = null, $max = null, $offset = NULL, $limit = NULL) {}
+	public function zRevRangeByLex (string $key, string $max, string $min, int $offset = -1, int $count = -1): Redis|array|false {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $start
-	 * @param mixed $end
-	 * @param array $options [optional]
+	 * @param string $key
+	 * @param string $max
+	 * @param string $min
+	 * @param array|bool $options [optional]
 	 */
-	public function zRevRangeByScore ($key = null, $start = null, $end = null, array $options = NULL) {}
+	public function zRevRangeByScore (string $key, string $max, string $min, array|bool $options = array (
+)): Redis|array|false {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
+	 * @param string $key
 	 * @param mixed $member
 	 */
-	public function zRevRank ($key = null, $member = null) {}
+	public function zRevRank (string $key, mixed $member = null): Redis|int|false {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
+	 * @param string $key
 	 * @param mixed $member
 	 */
-	public function zScore ($key = null, $member = null) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param array $keys
-	 * @param array|null $weights [optional]
-	 * @param mixed $aggregate [optional]
-	 */
-	public function zinterstore ($key = null, array $keys, ?array $weights = NULL, $aggregate = NULL) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $str_key
-	 * @param mixed $i_iterator
-	 * @param mixed $str_pattern [optional]
-	 * @param mixed $i_count [optional]
-	 */
-	public function zscan ($str_key = null, &$i_iterator = null, $str_pattern = NULL, $i_count = NULL) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param array $keys
-	 * @param array|null $weights [optional]
-	 * @param mixed $aggregate [optional]
-	 */
-	public function zunionstore ($key = null, array $keys, ?array $weights = NULL, $aggregate = NULL) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $other_keys [optional]
-	 * @deprecated 
-	 */
-	public function delete ($key = null, ...$other_keys) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $script
-	 * @param mixed $args [optional]
-	 * @param mixed $num_keys [optional]
-	 * @deprecated 
-	 */
-	public function evaluate ($script = null, $args = NULL, $num_keys = NULL) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $script_sha
-	 * @param mixed $args [optional]
-	 * @param mixed $num_keys [optional]
-	 * @deprecated 
-	 */
-	public function evaluateSha ($script_sha = null, $args = NULL, $num_keys = NULL) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $pattern
-	 * @deprecated 
-	 */
-	public function getKeys ($pattern = null) {}
+	public function zScore (string $key, mixed $member = null): Redis|float|false {}
 
 	/**
 	 * {@inheritdoc}
 	 * @param array $keys
-	 * @deprecated 
+	 * @param array|null $options [optional]
 	 */
-	public function getMultiple (array $keys) {}
+	public function zdiff (array $keys, ?array $options = NULL): Redis|array|false {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $index
-	 * @deprecated 
+	 * @param string $dst
+	 * @param array $keys
 	 */
-	public function lGet ($key = null, $index = null) {}
+	public function zdiffstore (string $dst, array $keys): Redis|int|false {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $start
-	 * @param mixed $end
-	 * @deprecated 
-	 */
-	public function lGetRange ($key = null, $start = null, $end = null) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $value
-	 * @param mixed $count
-	 * @deprecated 
-	 */
-	public function lRemove ($key = null, $value = null, $count = null) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @deprecated 
-	 */
-	public function lSize ($key = null) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $start
-	 * @param mixed $stop
-	 * @deprecated 
-	 */
-	public function listTrim ($key = null, $start = null, $stop = null) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $host
-	 * @param mixed $port [optional]
-	 * @param mixed $timeout [optional]
-	 * @param mixed $retry_interval [optional]
-	 * @deprecated 
-	 */
-	public function open ($host = null, $port = NULL, $timeout = NULL, $retry_interval = NULL) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $host
-	 * @param mixed $port [optional]
-	 * @param mixed $timeout [optional]
-	 * @deprecated 
-	 */
-	public function popen ($host = null, $port = NULL, $timeout = NULL) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $newkey
-	 * @deprecated 
-	 */
-	public function renameKey ($key = null, $newkey = null) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $value
-	 * @deprecated 
-	 */
-	public function sContains ($key = null, $value = null) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @deprecated 
-	 */
-	public function sGetMembers ($key = null) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $member
-	 * @param mixed $other_members [optional]
-	 * @deprecated 
-	 */
-	public function sRemove ($key = null, $member = null, ...$other_members) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @deprecated 
-	 */
-	public function sSize ($key = null) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $msg
-	 * @deprecated 
-	 */
-	public function sendEcho ($msg = null) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $timeout
-	 * @deprecated 
-	 */
-	public function setTimeout ($key = null, $timeout = null) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $start
-	 * @param mixed $end
-	 * @deprecated 
-	 */
-	public function substr ($key = null, $start = null, $end = null) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $member
-	 * @param mixed $other_members [optional]
-	 * @deprecated 
-	 */
-	public function zDelete ($key = null, $member = null, ...$other_members) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $min
-	 * @param mixed $max
-	 * @deprecated 
-	 */
-	public function zDeleteRangeByRank ($key = null, $min = null, $max = null) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $min
-	 * @param mixed $max
-	 * @deprecated 
-	 */
-	public function zDeleteRangeByScore ($key = null, $min = null, $max = null) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
 	 * @param array $keys
 	 * @param array|null $weights [optional]
-	 * @param mixed $aggregate [optional]
-	 * @deprecated 
+	 * @param array|null $options [optional]
 	 */
-	public function zInter ($key = null, array $keys, ?array $weights = NULL, $aggregate = NULL) {}
+	public function zinter (array $keys, ?array $weights = NULL, ?array $options = NULL): Redis|array|false {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $member
-	 * @param mixed $other_members [optional]
-	 * @deprecated 
+	 * @param array $keys
+	 * @param int $limit [optional]
 	 */
-	public function zRemove ($key = null, $member = null, ...$other_members) {}
+	public function zintercard (array $keys, int $limit = -1): Redis|int|false {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $min
-	 * @param mixed $max
-	 * @deprecated 
-	 */
-	public function zRemoveRangeByScore ($key = null, $min = null, $max = null) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $start
-	 * @param mixed $end
-	 * @param mixed $scores [optional]
-	 * @deprecated 
-	 */
-	public function zReverseRange ($key = null, $start = null, $end = null, $scores = NULL) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @deprecated 
-	 */
-	public function zSize ($key = null) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
+	 * @param string $dst
 	 * @param array $keys
 	 * @param array|null $weights [optional]
-	 * @param mixed $aggregate [optional]
-	 * @deprecated 
+	 * @param string|null $aggregate [optional]
 	 */
-	public function zUnion ($key = null, array $keys, ?array $weights = NULL, $aggregate = NULL) {}
+	public function zinterstore (string $dst, array $keys, ?array $weights = NULL, ?string $aggregate = NULL): Redis|int|false {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 * @param int|null $iterator
+	 * @param string|null $pattern [optional]
+	 * @param int $count [optional]
+	 */
+	public function zscan (string $key, ?int &$iterator = null, ?string $pattern = NULL, int $count = 0): Redis|array|false {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param array $keys
+	 * @param array|null $weights [optional]
+	 * @param array|null $options [optional]
+	 */
+	public function zunion (array $keys, ?array $weights = NULL, ?array $options = NULL): Redis|array|false {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $dst
+	 * @param array $keys
+	 * @param array|null $weights [optional]
+	 * @param string|null $aggregate [optional]
+	 */
+	public function zunionstore (string $dst, array $keys, ?array $weights = NULL, ?string $aggregate = NULL): Redis|int|false {}
 
 }
 
@@ -1826,1645 +1970,1933 @@ class RedisArray  {
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $function_name
-	 * @param mixed $arguments
+	 * @param string $function_name
+	 * @param array $arguments
 	 */
-	public function __call ($function_name = null, $arguments = null) {}
+	public function __call (string $function_name, array $arguments): mixed {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $name_or_hosts
-	 * @param array $options [optional]
+	 * @param array|string $name_or_hosts
+	 * @param array|null $options [optional]
 	 */
-	public function __construct ($name_or_hosts = null, array $options = NULL) {}
-
-	/**
-	 * {@inheritdoc}
-	 */
-	public function _continuum () {}
+	public function __construct (array|string $name_or_hosts, ?array $options = NULL) {}
 
 	/**
 	 * {@inheritdoc}
 	 */
-	public function _distributor () {}
+	public function _continuum (): array|bool {}
 
 	/**
 	 * {@inheritdoc}
 	 */
-	public function _function () {}
+	public function _distributor (): callable|bool {}
 
 	/**
 	 * {@inheritdoc}
 	 */
-	public function _hosts () {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $host
-	 */
-	public function _instance ($host = null) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $callable [optional]
-	 */
-	public function _rehash ($callable = NULL) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 */
-	public function _target ($key = null) {}
+	public function _function (): callable|bool {}
 
 	/**
 	 * {@inheritdoc}
 	 */
-	public function bgsave () {}
+	public function _hosts (): array|bool {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $keys
+	 * @param string $host
 	 */
-	public function del ($keys = null) {}
+	public function _instance (string $host): Redis|bool|null {}
 
 	/**
 	 * {@inheritdoc}
+	 * @param callable|null $fn [optional]
 	 */
-	public function discard () {}
+	public function _rehash (?callable $fn = NULL): ?bool {}
 
 	/**
 	 * {@inheritdoc}
+	 * @param string $key
 	 */
-	public function exec () {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $async [optional]
-	 */
-	public function flushall ($async = NULL) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $async [optional]
-	 */
-	public function flushdb ($async = NULL) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $opt
-	 */
-	public function getOption ($opt = null) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $str_key
-	 * @param mixed $i_iterator
-	 * @param mixed $str_pattern [optional]
-	 * @param mixed $i_count [optional]
-	 */
-	public function hscan ($str_key = null, &$i_iterator = null, $str_pattern = NULL, $i_count = NULL) {}
+	public function _target (string $key): string|bool|null {}
 
 	/**
 	 * {@inheritdoc}
 	 */
-	public function info () {}
+	public function bgsave (): array {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $pattern
+	 * @param array|string $key
+	 * @param string $otherkeys [optional]
 	 */
-	public function keys ($pattern = null) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $keys
-	 */
-	public function mget ($keys = null) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $pairs
-	 */
-	public function mset ($pairs = null) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $host
-	 * @param mixed $mode [optional]
-	 */
-	public function multi ($host = null, $mode = NULL) {}
+	public function del (array|string $key, string ...$otherkeys): int|bool {}
 
 	/**
 	 * {@inheritdoc}
 	 */
-	public function ping () {}
+	public function discard (): ?bool {}
 
 	/**
 	 * {@inheritdoc}
 	 */
-	public function save () {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $iterator
-	 * @param mixed $node
-	 * @param mixed $pattern [optional]
-	 * @param mixed $count [optional]
-	 */
-	public function scan (&$iterator = null, $node = null, $pattern = NULL, $count = NULL) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $index
-	 */
-	public function select ($index = null) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $opt
-	 * @param mixed $value
-	 */
-	public function setOption ($opt = null, $value = null) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $str_key
-	 * @param mixed $i_iterator
-	 * @param mixed $str_pattern [optional]
-	 * @param mixed $i_count [optional]
-	 */
-	public function sscan ($str_key = null, &$i_iterator = null, $str_pattern = NULL, $i_count = NULL) {}
+	public function exec (): ?bool {}
 
 	/**
 	 * {@inheritdoc}
 	 */
-	public function unlink () {}
+	public function flushall (): array|bool {}
 
 	/**
 	 * {@inheritdoc}
 	 */
-	public function unwatch () {}
+	public function flushdb (): array|bool {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $str_key
-	 * @param mixed $i_iterator
-	 * @param mixed $str_pattern [optional]
-	 * @param mixed $i_count [optional]
+	 * @param int $opt
 	 */
-	public function zscan ($str_key = null, &$i_iterator = null, $str_pattern = NULL, $i_count = NULL) {}
+	public function getOption (int $opt): array|bool {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $keys
+	 * @param string $key
+	 * @param int|null $iterator
+	 * @param string|null $pattern [optional]
+	 * @param int $count [optional]
 	 */
-	public function delete ($keys = null) {}
+	public function hscan (string $key, ?int &$iterator = null, ?string $pattern = NULL, int $count = 0): array|bool {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $keys
 	 */
-	public function getMultiple ($keys = null) {}
+	public function info (): array|bool {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $pattern
+	 */
+	public function keys (string $pattern): array|bool {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param array $keys
+	 */
+	public function mget (array $keys): array|bool {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param array $pairs
+	 */
+	public function mset (array $pairs): bool {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $host
+	 * @param int|null $mode [optional]
+	 */
+	public function multi (string $host, ?int $mode = NULL): RedisArray|bool {}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function ping (): array|bool {}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function save (): array|bool {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param int|null $iterator
+	 * @param string $node
+	 * @param string|null $pattern [optional]
+	 * @param int $count [optional]
+	 */
+	public function scan (?int &$iterator = null, string $node, ?string $pattern = NULL, int $count = 0): array|bool {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param int $index
+	 */
+	public function select (int $index): array|bool {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param int $opt
+	 * @param string $value
+	 */
+	public function setOption (int $opt, string $value): array|bool {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 * @param int|null $iterator
+	 * @param string|null $pattern [optional]
+	 * @param int $count [optional]
+	 */
+	public function sscan (string $key, ?int &$iterator = null, ?string $pattern = NULL, int $count = 0): array|bool {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param array|string $key
+	 * @param string $otherkeys [optional]
+	 */
+	public function unlink (array|string $key, string ...$otherkeys): int|bool {}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function unwatch (): ?bool {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 * @param int|null $iterator
+	 * @param string|null $pattern [optional]
+	 * @param int $count [optional]
+	 */
+	public function zscan (string $key, ?int &$iterator = null, ?string $pattern = NULL, int $count = 0): array|bool {}
 
 }
 
 class RedisCluster  {
-	const REDIS_NOT_FOUND = 0;
-	const REDIS_STRING = 1;
-	const REDIS_SET = 2;
-	const REDIS_LIST = 3;
-	const REDIS_ZSET = 4;
-	const REDIS_HASH = 5;
-	const REDIS_STREAM = 6;
-	const ATOMIC = 0;
-	const MULTI = 1;
-	const OPT_SERIALIZER = 1;
-	const OPT_PREFIX = 2;
-	const OPT_READ_TIMEOUT = 3;
-	const OPT_TCP_KEEPALIVE = 6;
-	const OPT_COMPRESSION = 7;
-	const OPT_REPLY_LITERAL = 8;
-	const OPT_COMPRESSION_LEVEL = 9;
-	const OPT_NULL_MULTIBULK_AS_NULL = 10;
-	const SERIALIZER_NONE = 0;
-	const SERIALIZER_PHP = 1;
-	const SERIALIZER_IGBINARY = 2;
-	const SERIALIZER_MSGPACK = 3;
-	const SERIALIZER_JSON = 4;
-	const COMPRESSION_NONE = 0;
-	const COMPRESSION_LZF = 1;
-	const COMPRESSION_ZSTD = 2;
-	const COMPRESSION_ZSTD_MIN = 1;
-	const COMPRESSION_ZSTD_DEFAULT = 3;
-	const COMPRESSION_ZSTD_MAX = 22;
-	const COMPRESSION_LZ4 = 3;
-	const OPT_SCAN = 4;
-	const SCAN_RETRY = 1;
-	const SCAN_NORETRY = 0;
-	const SCAN_PREFIX = 2;
-	const SCAN_NOPREFIX = 3;
-	const AFTER = "after";
-	const BEFORE = "before";
 	const OPT_SLAVE_FAILOVER = 5;
 	const FAILOVER_NONE = 0;
 	const FAILOVER_ERROR = 1;
 	const FAILOVER_DISTRIBUTE = 2;
 	const FAILOVER_DISTRIBUTE_SLAVES = 3;
-	const OPT_MAX_RETRIES = 11;
-	const OPT_BACKOFF_ALGORITHM = 12;
-	const BACKOFF_ALGORITHM_DEFAULT = 0;
-	const BACKOFF_ALGORITHM_CONSTANT = 6;
-	const BACKOFF_ALGORITHM_UNIFORM = 5;
-	const BACKOFF_ALGORITHM_EXPONENTIAL = 4;
-	const BACKOFF_ALGORITHM_FULL_JITTER = 2;
-	const BACKOFF_ALGORITHM_EQUAL_JITTER = 3;
-	const BACKOFF_ALGORITHM_DECORRELATED_JITTER = 1;
-	const OPT_BACKOFF_BASE = 13;
-	const OPT_BACKOFF_CAP = 14;
 
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $name
-	 * @param array $seeds [optional]
-	 * @param mixed $timeout [optional]
-	 * @param mixed $read_timeout [optional]
-	 * @param mixed $persistent [optional]
+	 * @param string|null $name
+	 * @param array|null $seeds [optional]
+	 * @param int|float $timeout [optional]
+	 * @param int|float $read_timeout [optional]
+	 * @param bool $persistent [optional]
 	 * @param mixed $auth [optional]
+	 * @param array|null $context [optional]
 	 */
-	public function __construct ($name = null, array $seeds = NULL, $timeout = NULL, $read_timeout = NULL, $persistent = NULL, $auth = NULL) {}
+	public function __construct (?string $name = null, ?array $seeds = NULL, int|float $timeout = 0, int|float $read_timeout = 0, bool $persistent = false, mixed $auth = NULL, ?array $context = NULL) {}
 
 	/**
 	 * {@inheritdoc}
+	 * @param string $value
 	 */
-	public function _masters () {}
+	public function _compress (string $value): string {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
+	 * @param string $value
 	 */
-	public function _prefix ($key = null) {}
-
-	/**
-	 * {@inheritdoc}
-	 */
-	public function _redir () {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $value
-	 */
-	public function _serialize ($value = null) {}
+	public function _uncompress (string $value): string {}
 
 	/**
 	 * {@inheritdoc}
 	 * @param mixed $value
 	 */
-	public function _unserialize ($value = null) {}
+	public function _serialize (mixed $value = null): string|bool {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $value
+	 */
+	public function _unserialize (string $value): mixed {}
 
 	/**
 	 * {@inheritdoc}
 	 * @param mixed $value
 	 */
-	public function _compress ($value = null) {}
+	public function _pack (mixed $value = null): string {}
 
 	/**
 	 * {@inheritdoc}
+	 * @param string $value
+	 */
+	public function _unpack (string $value): mixed {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 */
+	public function _prefix (string $key): string|bool {}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function _masters (): array {}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function _redir (): ?string {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param array|string $key_or_address
+	 * @param string $subcmd
+	 * @param string $args [optional]
+	 */
+	public function acl (array|string $key_or_address, string $subcmd, string ...$args): mixed {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
 	 * @param mixed $value
 	 */
-	public function _uncompress ($value = null) {}
+	public function append (string $key, mixed $value = null): RedisCluster|int|bool {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $value
+	 * @param array|string $key_or_address
 	 */
-	public function _pack ($value = null) {}
+	public function bgrewriteaof (array|string $key_or_address): RedisCluster|bool {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $value
+	 * @param array|string $key_or_address
 	 */
-	public function _unpack ($value = null) {}
+	public function bgsave (array|string $key_or_address): RedisCluster|bool {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key_or_address
-	 * @param mixed $subcmd
-	 * @param mixed $args [optional]
+	 * @param string $key
+	 * @param int $start [optional]
+	 * @param int $end [optional]
+	 * @param bool $bybit [optional]
 	 */
-	public function acl ($key_or_address = null, $subcmd = null, ...$args) {}
+	public function bitcount (string $key, int $start = 0, int $end = -1, bool $bybit = false): RedisCluster|int|bool {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $value
+	 * @param string $operation
+	 * @param string $deskey
+	 * @param string $srckey
+	 * @param string $otherkeys [optional]
 	 */
-	public function append ($key = null, $value = null) {}
+	public function bitop (string $operation, string $deskey, string $srckey, string ...$otherkeys): RedisCluster|int|bool {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key_or_address
+	 * @param string $key
+	 * @param bool $bit
+	 * @param int $start [optional]
+	 * @param int $end [optional]
+	 * @param bool $bybit [optional]
 	 */
-	public function bgrewriteaof ($key_or_address = null) {}
+	public function bitpos (string $key, bool $bit, int $start = 0, int $end = -1, bool $bybit = false): RedisCluster|int|false {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key_or_address
+	 * @param array|string $key
+	 * @param string|int|float $timeout_or_key
+	 * @param mixed $extra_args [optional]
 	 */
-	public function bgsave ($key_or_address = null) {}
+	public function blpop (array|string $key, string|int|float $timeout_or_key, mixed ...$extra_args): RedisCluster|array|false|null {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
+	 * @param array|string $key
+	 * @param string|int|float $timeout_or_key
+	 * @param mixed $extra_args [optional]
 	 */
-	public function bitcount ($key = null) {}
+	public function brpop (array|string $key, string|int|float $timeout_or_key, mixed ...$extra_args): RedisCluster|array|false|null {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $operation
-	 * @param mixed $ret_key
+	 * @param string $srckey
+	 * @param string $deskey
+	 * @param int $timeout
+	 */
+	public function brpoplpush (string $srckey, string $deskey, int $timeout): mixed {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $src
+	 * @param string $dst
+	 * @param string $wherefrom
+	 * @param string $whereto
+	 */
+	public function lmove (string $src, string $dst, string $wherefrom, string $whereto): Redis|string|false {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $src
+	 * @param string $dst
+	 * @param string $wherefrom
+	 * @param string $whereto
+	 * @param float $timeout
+	 */
+	public function blmove (string $src, string $dst, string $wherefrom, string $whereto, float $timeout): Redis|string|false {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param array|string $key
+	 * @param string|int $timeout_or_key
+	 * @param mixed $extra_args [optional]
+	 */
+	public function bzpopmax (array|string $key, string|int $timeout_or_key, mixed ...$extra_args): array {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param array|string $key
+	 * @param string|int $timeout_or_key
+	 * @param mixed $extra_args [optional]
+	 */
+	public function bzpopmin (array|string $key, string|int $timeout_or_key, mixed ...$extra_args): array {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param float $timeout
+	 * @param array $keys
+	 * @param string $from
+	 * @param int $count [optional]
+	 */
+	public function bzmpop (float $timeout, array $keys, string $from, int $count = 1): RedisCluster|array|false|null {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param array $keys
+	 * @param string $from
+	 * @param int $count [optional]
+	 */
+	public function zmpop (array $keys, string $from, int $count = 1): RedisCluster|array|false|null {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param float $timeout
+	 * @param array $keys
+	 * @param string $from
+	 * @param int $count [optional]
+	 */
+	public function blmpop (float $timeout, array $keys, string $from, int $count = 1): RedisCluster|array|false|null {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param array $keys
+	 * @param string $from
+	 * @param int $count [optional]
+	 */
+	public function lmpop (array $keys, string $from, int $count = 1): RedisCluster|array|false|null {}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function clearlasterror (): bool {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param array|string $key_or_address
+	 * @param string $subcommand
+	 * @param string|null $arg [optional]
+	 */
+	public function client (array|string $key_or_address, string $subcommand, ?string $arg = NULL): array|string|bool {}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function close (): bool {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param array|string $key_or_address
+	 * @param string $command
+	 * @param mixed $extra_args [optional]
+	 */
+	public function cluster (array|string $key_or_address, string $command, mixed ...$extra_args): mixed {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param mixed $extra_args [optional]
+	 */
+	public function command (mixed ...$extra_args): mixed {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param array|string $key_or_address
+	 * @param string $subcommand
+	 * @param mixed $extra_args [optional]
+	 */
+	public function config (array|string $key_or_address, string $subcommand, mixed ...$extra_args): mixed {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param array|string $key_or_address
+	 */
+	public function dbsize (array|string $key_or_address): RedisCluster|int {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $src
+	 * @param string $dst
+	 * @param array|null $options [optional]
+	 */
+	public function copy (string $src, string $dst, ?array $options = NULL): RedisCluster|bool {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 * @param int $by [optional]
+	 */
+	public function decr (string $key, int $by = 1): RedisCluster|int|false {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 * @param int $value
+	 */
+	public function decrby (string $key, int $value): RedisCluster|int|false {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 * @param float $value
+	 */
+	public function decrbyfloat (string $key, float $value): float {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param array|string $key
+	 * @param string $other_keys [optional]
+	 */
+	public function del (array|string $key, string ...$other_keys): RedisCluster|int|false {}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function discard (): bool {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 */
+	public function dump (string $key): RedisCluster|string|false {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param array|string $key_or_address
+	 * @param string $msg
+	 */
+	public function echo (array|string $key_or_address, string $msg): RedisCluster|string|false {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $script
+	 * @param array $args [optional]
+	 * @param int $num_keys [optional]
+	 */
+	public function eval (string $script, array $args = array (
+), int $num_keys = 0): mixed {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $script
+	 * @param array $args [optional]
+	 * @param int $num_keys [optional]
+	 */
+	public function eval_ro (string $script, array $args = array (
+), int $num_keys = 0): mixed {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $script_sha
+	 * @param array $args [optional]
+	 * @param int $num_keys [optional]
+	 */
+	public function evalsha (string $script_sha, array $args = array (
+), int $num_keys = 0): mixed {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $script_sha
+	 * @param array $args [optional]
+	 * @param int $num_keys [optional]
+	 */
+	public function evalsha_ro (string $script_sha, array $args = array (
+), int $num_keys = 0): mixed {}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function exec (): array|false {}
+
+	/**
+	 * {@inheritdoc}
 	 * @param mixed $key
 	 * @param mixed $other_keys [optional]
 	 */
-	public function bitop ($operation = null, $ret_key = null, $key = null, ...$other_keys) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $bit
-	 * @param mixed $start [optional]
-	 * @param mixed $end [optional]
-	 */
-	public function bitpos ($key = null, $bit = null, $start = NULL, $end = NULL) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $timeout_or_key
-	 * @param mixed $extra_args [optional]
-	 */
-	public function blpop ($key = null, $timeout_or_key = null, ...$extra_args) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $timeout_or_key
-	 * @param mixed $extra_args [optional]
-	 */
-	public function brpop ($key = null, $timeout_or_key = null, ...$extra_args) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $src
-	 * @param mixed $dst
-	 * @param mixed $timeout
-	 */
-	public function brpoplpush ($src = null, $dst = null, $timeout = null) {}
-
-	/**
-	 * {@inheritdoc}
-	 */
-	public function clearlasterror () {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $timeout_or_key
-	 * @param mixed $extra_args [optional]
-	 */
-	public function bzpopmax ($key = null, $timeout_or_key = null, ...$extra_args) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $timeout_or_key
-	 * @param mixed $extra_args [optional]
-	 */
-	public function bzpopmin ($key = null, $timeout_or_key = null, ...$extra_args) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key_or_address
-	 * @param mixed $arg [optional]
-	 * @param mixed $other_args [optional]
-	 */
-	public function client ($key_or_address = null, $arg = NULL, ...$other_args) {}
-
-	/**
-	 * {@inheritdoc}
-	 */
-	public function close () {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key_or_address
-	 * @param mixed $arg [optional]
-	 * @param mixed $other_args [optional]
-	 */
-	public function cluster ($key_or_address = null, $arg = NULL, ...$other_args) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $args [optional]
-	 */
-	public function command (...$args) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key_or_address
-	 * @param mixed $arg [optional]
-	 * @param mixed $other_args [optional]
-	 */
-	public function config ($key_or_address = null, $arg = NULL, ...$other_args) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key_or_address
-	 */
-	public function dbsize ($key_or_address = null) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 */
-	public function decr ($key = null) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $value
-	 */
-	public function decrby ($key = null, $value = null) {}
+	public function exists (mixed $key = null, mixed ...$other_keys): RedisCluster|int|bool {}
 
 	/**
 	 * {@inheritdoc}
 	 * @param mixed $key
 	 * @param mixed $other_keys [optional]
 	 */
-	public function del ($key = null, ...$other_keys) {}
+	public function touch (mixed $key = null, mixed ...$other_keys): RedisCluster|int|bool {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 * @param int $timeout
+	 * @param string|null $mode [optional]
+	 */
+	public function expire (string $key, int $timeout, ?string $mode = NULL): RedisCluster|bool {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 * @param int $timestamp
+	 * @param string|null $mode [optional]
+	 */
+	public function expireat (string $key, int $timestamp, ?string $mode = NULL): RedisCluster|bool {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 */
+	public function expiretime (string $key): RedisCluster|int|false {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 */
+	public function pexpiretime (string $key): RedisCluster|int|false {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param array|string $key_or_address
+	 * @param bool $async [optional]
+	 */
+	public function flushall (array|string $key_or_address, bool $async = false): RedisCluster|bool {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param array|string $key_or_address
+	 * @param bool $async [optional]
+	 */
+	public function flushdb (array|string $key_or_address, bool $async = false): RedisCluster|bool {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 * @param float $lng
+	 * @param float $lat
+	 * @param string $member
+	 * @param mixed $other_triples_and_options [optional]
+	 */
+	public function geoadd (string $key, float $lng, float $lat, string $member, mixed ...$other_triples_and_options): RedisCluster|int|false {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 * @param string $src
+	 * @param string $dest
+	 * @param string|null $unit [optional]
+	 */
+	public function geodist (string $key, string $src, string $dest, ?string $unit = NULL): RedisCluster|float|false {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 * @param string $member
+	 * @param string $other_members [optional]
+	 */
+	public function geohash (string $key, string $member, string ...$other_members): RedisCluster|array|false {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 * @param string $member
+	 * @param string $other_members [optional]
+	 */
+	public function geopos (string $key, string $member, string ...$other_members): RedisCluster|array|false {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 * @param float $lng
+	 * @param float $lat
+	 * @param float $radius
+	 * @param string $unit
+	 * @param array $options [optional]
+	 */
+	public function georadius (string $key, float $lng, float $lat, float $radius, string $unit, array $options = array (
+)): mixed {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 * @param float $lng
+	 * @param float $lat
+	 * @param float $radius
+	 * @param string $unit
+	 * @param array $options [optional]
+	 */
+	public function georadius_ro (string $key, float $lng, float $lat, float $radius, string $unit, array $options = array (
+)): mixed {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 * @param string $member
+	 * @param float $radius
+	 * @param string $unit
+	 * @param array $options [optional]
+	 */
+	public function georadiusbymember (string $key, string $member, float $radius, string $unit, array $options = array (
+)): mixed {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 * @param string $member
+	 * @param float $radius
+	 * @param string $unit
+	 * @param array $options [optional]
+	 */
+	public function georadiusbymember_ro (string $key, string $member, float $radius, string $unit, array $options = array (
+)): mixed {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 * @param array|string $position
+	 * @param array|int|float $shape
+	 * @param string $unit
+	 * @param array $options [optional]
+	 */
+	public function geosearch (string $key, array|string $position, array|int|float $shape, string $unit, array $options = array (
+)): RedisCluster|array {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $dst
+	 * @param string $src
+	 * @param array|string $position
+	 * @param array|int|float $shape
+	 * @param string $unit
+	 * @param array $options [optional]
+	 */
+	public function geosearchstore (string $dst, string $src, array|string $position, array|int|float $shape, string $unit, array $options = array (
+)): RedisCluster|array|int|false {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 */
+	public function get (string $key): mixed {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 * @param int $value
+	 */
+	public function getbit (string $key, int $value): RedisCluster|int|false {}
 
 	/**
 	 * {@inheritdoc}
 	 */
-	public function discard () {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 */
-	public function dump ($key = null) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $msg
-	 */
-	public function echo ($msg = null) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $script
-	 * @param mixed $args [optional]
-	 * @param mixed $num_keys [optional]
-	 */
-	public function eval ($script = null, $args = NULL, $num_keys = NULL) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $script_sha
-	 * @param mixed $args [optional]
-	 * @param mixed $num_keys [optional]
-	 */
-	public function evalsha ($script_sha = null, $args = NULL, $num_keys = NULL) {}
+	public function getlasterror (): ?string {}
 
 	/**
 	 * {@inheritdoc}
 	 */
-	public function exec () {}
+	public function getmode (): int {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
+	 * @param int $option
 	 */
-	public function exists ($key = null) {}
+	public function getoption (int $option): mixed {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $timeout
+	 * @param string $key
+	 * @param int $start
+	 * @param int $end
 	 */
-	public function expire ($key = null, $timeout = null) {}
+	public function getrange (string $key, int $start, int $end): RedisCluster|string|false {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $timestamp
+	 * @param string $key1
+	 * @param string $key2
+	 * @param array|null $options [optional]
 	 */
-	public function expireat ($key = null, $timestamp = null) {}
+	public function lcs (string $key1, string $key2, ?array $options = NULL): RedisCluster|array|string|int|false {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key_or_address
-	 * @param mixed $async [optional]
-	 */
-	public function flushall ($key_or_address = null, $async = NULL) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key_or_address
-	 * @param mixed $async [optional]
-	 */
-	public function flushdb ($key_or_address = null, $async = NULL) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $lng
-	 * @param mixed $lat
-	 * @param mixed $member
-	 * @param mixed $other_triples [optional]
-	 */
-	public function geoadd ($key = null, $lng = null, $lat = null, $member = null, ...$other_triples) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $src
-	 * @param mixed $dst
-	 * @param mixed $unit [optional]
-	 */
-	public function geodist ($key = null, $src = null, $dst = null, $unit = NULL) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $member
-	 * @param mixed $other_members [optional]
-	 */
-	public function geohash ($key = null, $member = null, ...$other_members) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $member
-	 * @param mixed $other_members [optional]
-	 */
-	public function geopos ($key = null, $member = null, ...$other_members) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $lng
-	 * @param mixed $lan
-	 * @param mixed $radius
-	 * @param mixed $unit
-	 * @param array $opts [optional]
-	 */
-	public function georadius ($key = null, $lng = null, $lan = null, $radius = null, $unit = null, array $opts = NULL) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $lng
-	 * @param mixed $lan
-	 * @param mixed $radius
-	 * @param mixed $unit
-	 * @param array $opts [optional]
-	 */
-	public function georadius_ro ($key = null, $lng = null, $lan = null, $radius = null, $unit = null, array $opts = NULL) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $member
-	 * @param mixed $radius
-	 * @param mixed $unit
-	 * @param array $opts [optional]
-	 */
-	public function georadiusbymember ($key = null, $member = null, $radius = null, $unit = null, array $opts = NULL) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $member
-	 * @param mixed $radius
-	 * @param mixed $unit
-	 * @param array $opts [optional]
-	 */
-	public function georadiusbymember_ro ($key = null, $member = null, $radius = null, $unit = null, array $opts = NULL) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 */
-	public function get ($key = null) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $offset
-	 */
-	public function getbit ($key = null, $offset = null) {}
-
-	/**
-	 * {@inheritdoc}
-	 */
-	public function getlasterror () {}
-
-	/**
-	 * {@inheritdoc}
-	 */
-	public function getmode () {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $option
-	 */
-	public function getoption ($option = null) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $start
-	 * @param mixed $end
-	 */
-	public function getrange ($key = null, $start = null, $end = null) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
+	 * @param string $key
 	 * @param mixed $value
 	 */
-	public function getset ($key = null, $value = null) {}
+	public function getset (string $key, mixed $value = null): RedisCluster|string|bool {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $member
-	 * @param mixed $other_members [optional]
 	 */
-	public function hdel ($key = null, $member = null, ...$other_members) {}
+	public function gettransferredbytes (): array|false {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $member
 	 */
-	public function hexists ($key = null, $member = null) {}
+	public function cleartransferredbytes (): void {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $member
+	 * @param string $key
+	 * @param string $member
+	 * @param string $other_members [optional]
 	 */
-	public function hget ($key = null, $member = null) {}
+	public function hdel (string $key, string $member, string ...$other_members): RedisCluster|int|false {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
+	 * @param string $key
+	 * @param string $member
 	 */
-	public function hgetall ($key = null) {}
+	public function hexists (string $key, string $member): RedisCluster|bool {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $member
-	 * @param mixed $value
+	 * @param string $key
+	 * @param string $member
 	 */
-	public function hincrby ($key = null, $member = null, $value = null) {}
+	public function hget (string $key, string $member): mixed {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $member
-	 * @param mixed $value
+	 * @param string $key
 	 */
-	public function hincrbyfloat ($key = null, $member = null, $value = null) {}
+	public function hgetall (string $key): RedisCluster|array|false {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
+	 * @param string $key
+	 * @param string $member
+	 * @param int $value
 	 */
-	public function hkeys ($key = null) {}
+	public function hincrby (string $key, string $member, int $value): RedisCluster|int|false {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
+	 * @param string $key
+	 * @param string $member
+	 * @param float $value
 	 */
-	public function hlen ($key = null) {}
+	public function hincrbyfloat (string $key, string $member, float $value): RedisCluster|float|false {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
+	 * @param string $key
+	 */
+	public function hkeys (string $key): RedisCluster|array|false {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 */
+	public function hlen (string $key): RedisCluster|int|false {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
 	 * @param array $keys
 	 */
-	public function hmget ($key = null, array $keys) {}
+	public function hmget (string $key, array $keys): RedisCluster|array|false {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param array $pairs
+	 * @param string $key
+	 * @param array $key_values
 	 */
-	public function hmset ($key = null, array $pairs) {}
+	public function hmset (string $key, array $key_values): RedisCluster|bool {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $str_key
-	 * @param mixed $i_iterator
-	 * @param mixed $str_pattern [optional]
-	 * @param mixed $i_count [optional]
+	 * @param string $key
+	 * @param int|null $iterator
+	 * @param string|null $pattern [optional]
+	 * @param int $count [optional]
 	 */
-	public function hscan ($str_key = null, &$i_iterator = null, $str_pattern = NULL, $i_count = NULL) {}
+	public function hscan (string $key, ?int &$iterator = null, ?string $pattern = NULL, int $count = 0): array|bool {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $member
+	 * @param string $key
+	 * @param array|null $options [optional]
+	 */
+	public function hrandfield (string $key, ?array $options = NULL): RedisCluster|array|string {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 * @param string $member
 	 * @param mixed $value
 	 */
-	public function hset ($key = null, $member = null, $value = null) {}
+	public function hset (string $key, string $member, mixed $value = null): RedisCluster|int|false {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $member
+	 * @param string $key
+	 * @param string $member
 	 * @param mixed $value
 	 */
-	public function hsetnx ($key = null, $member = null, $value = null) {}
+	public function hsetnx (string $key, string $member, mixed $value = null): RedisCluster|bool {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $member
+	 * @param string $key
+	 * @param string $field
 	 */
-	public function hstrlen ($key = null, $member = null) {}
+	public function hstrlen (string $key, string $field): RedisCluster|int|false {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
+	 * @param string $key
 	 */
-	public function hvals ($key = null) {}
+	public function hvals (string $key): RedisCluster|array|false {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
+	 * @param string $key
+	 * @param int $by [optional]
 	 */
-	public function incr ($key = null) {}
+	public function incr (string $key, int $by = 1): RedisCluster|int|false {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $value
+	 * @param string $key
+	 * @param int $value
 	 */
-	public function incrby ($key = null, $value = null) {}
+	public function incrby (string $key, int $value): RedisCluster|int|false {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $value
+	 * @param string $key
+	 * @param float $value
 	 */
-	public function incrbyfloat ($key = null, $value = null) {}
+	public function incrbyfloat (string $key, float $value): RedisCluster|float|false {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key_or_address
-	 * @param mixed $option [optional]
+	 * @param array|string $key_or_address
+	 * @param string $sections [optional]
 	 */
-	public function info ($key_or_address = null, $option = NULL) {}
+	public function info (array|string $key_or_address, string ...$sections): RedisCluster|array|false {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $pattern
+	 * @param string $pattern
 	 */
-	public function keys ($pattern = null) {}
+	public function keys (string $pattern): RedisCluster|array|false {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key_or_address
+	 * @param array|string $key_or_address
 	 */
-	public function lastsave ($key_or_address = null) {}
+	public function lastsave (array|string $key_or_address): RedisCluster|int|false {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $index
+	 * @param string $key
+	 * @param int $index
 	 */
-	public function lget ($key = null, $index = null) {}
+	public function lget (string $key, int $index): RedisCluster|string|bool {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $index
+	 * @param string $key
+	 * @param int $index
 	 */
-	public function lindex ($key = null, $index = null) {}
+	public function lindex (string $key, int $index): mixed {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $position
+	 * @param string $key
+	 * @param string $pos
 	 * @param mixed $pivot
 	 * @param mixed $value
 	 */
-	public function linsert ($key = null, $position = null, $pivot = null, $value = null) {}
+	public function linsert (string $key, string $pos, mixed $pivot = null, mixed $value = null): RedisCluster|int|false {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
+	 * @param string $key
 	 */
-	public function llen ($key = null) {}
+	public function llen (string $key): RedisCluster|int|bool {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
+	 * @param string $key
+	 * @param int $count [optional]
 	 */
-	public function lpop ($key = null) {}
+	public function lpop (string $key, int $count = 0): RedisCluster|array|string|bool {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
+	 * @param string $key
+	 * @param mixed $value
+	 * @param array|null $options [optional]
+	 */
+	public function lpos (string $key, mixed $value = null, ?array $options = NULL): Redis|array|int|bool|null {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 * @param mixed $value
+	 * @param mixed $other_values [optional]
+	 */
+	public function lpush (string $key, mixed $value = null, mixed ...$other_values): RedisCluster|int|bool {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
 	 * @param mixed $value
 	 */
-	public function lpush ($key = null, $value = null) {}
+	public function lpushx (string $key, mixed $value = null): RedisCluster|int|bool {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
+	 * @param string $key
+	 * @param int $start
+	 * @param int $end
+	 */
+	public function lrange (string $key, int $start, int $end): RedisCluster|array|false {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 * @param mixed $value
+	 * @param int $count [optional]
+	 */
+	public function lrem (string $key, mixed $value = null, int $count = 0): RedisCluster|int|bool {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 * @param int $index
 	 * @param mixed $value
 	 */
-	public function lpushx ($key = null, $value = null) {}
+	public function lset (string $key, int $index, mixed $value = null): RedisCluster|bool {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $start
-	 * @param mixed $end
+	 * @param string $key
+	 * @param int $start
+	 * @param int $end
 	 */
-	public function lrange ($key = null, $start = null, $end = null) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $value
-	 */
-	public function lrem ($key = null, $value = null) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $index
-	 * @param mixed $value
-	 */
-	public function lset ($key = null, $index = null, $value = null) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $start
-	 * @param mixed $stop
-	 */
-	public function ltrim ($key = null, $start = null, $stop = null) {}
+	public function ltrim (string $key, int $start, int $end): RedisCluster|bool {}
 
 	/**
 	 * {@inheritdoc}
 	 * @param array $keys
 	 */
-	public function mget (array $keys) {}
+	public function mget (array $keys): RedisCluster|array|false {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param array $pairs
+	 * @param array $key_values
 	 */
-	public function mset (array $pairs) {}
+	public function mset (array $key_values): RedisCluster|bool {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param array $pairs
+	 * @param array $key_values
 	 */
-	public function msetnx (array $pairs) {}
+	public function msetnx (array $key_values): RedisCluster|array|false {}
 
 	/**
 	 * {@inheritdoc}
+	 * @param int $value [optional]
 	 */
-	public function multi () {}
+	public function multi (int $value = 1): RedisCluster|bool {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $field
-	 * @param mixed $key
+	 * @param string $subcommand
+	 * @param string $key
 	 */
-	public function object ($field = null, $key = null) {}
+	public function object (string $subcommand, string $key): RedisCluster|string|int|false {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
+	 * @param string $key
 	 */
-	public function persist ($key = null) {}
+	public function persist (string $key): RedisCluster|bool {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $timestamp
+	 * @param string $key
+	 * @param int $timeout
+	 * @param string|null $mode [optional]
 	 */
-	public function pexpire ($key = null, $timestamp = null) {}
+	public function pexpire (string $key, int $timeout, ?string $mode = NULL): RedisCluster|bool {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $timestamp
+	 * @param string $key
+	 * @param int $timestamp
+	 * @param string|null $mode [optional]
 	 */
-	public function pexpireat ($key = null, $timestamp = null) {}
+	public function pexpireat (string $key, int $timestamp, ?string $mode = NULL): RedisCluster|bool {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
+	 * @param string $key
 	 * @param array $elements
 	 */
-	public function pfadd ($key = null, array $elements) {}
+	public function pfadd (string $key, array $elements): RedisCluster|bool {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
+	 * @param string $key
 	 */
-	public function pfcount ($key = null) {}
+	public function pfcount (string $key): RedisCluster|int|false {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $dstkey
+	 * @param string $key
 	 * @param array $keys
 	 */
-	public function pfmerge ($dstkey = null, array $keys) {}
+	public function pfmerge (string $key, array $keys): RedisCluster|bool {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key_or_address
+	 * @param array|string $key_or_address
+	 * @param string|null $message [optional]
 	 */
-	public function ping ($key_or_address = null) {}
+	public function ping (array|string $key_or_address, ?string $message = NULL): mixed {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $expire
-	 * @param mixed $value
+	 * @param string $key
+	 * @param int $timeout
+	 * @param string $value
 	 */
-	public function psetex ($key = null, $expire = null, $value = null) {}
+	public function psetex (string $key, int $timeout, string $value): RedisCluster|bool {}
 
 	/**
 	 * {@inheritdoc}
 	 * @param array $patterns
-	 * @param mixed $callback
+	 * @param callable $callback
 	 */
-	public function psubscribe (array $patterns, $callback = null) {}
+	public function psubscribe (array $patterns, callable $callback): void {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
+	 * @param string $key
 	 */
-	public function pttl ($key = null) {}
+	public function pttl (string $key): RedisCluster|int|false {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $channel
-	 * @param mixed $message
+	 * @param string $channel
+	 * @param string $message
 	 */
-	public function publish ($channel = null, $message = null) {}
+	public function publish (string $channel, string $message): RedisCluster|bool {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key_or_address
-	 * @param mixed $arg [optional]
-	 * @param mixed $other_args [optional]
+	 * @param array|string $key_or_address
+	 * @param string $values [optional]
 	 */
-	public function pubsub ($key_or_address = null, $arg = NULL, ...$other_args) {}
+	public function pubsub (array|string $key_or_address, string ...$values): mixed {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $pattern
-	 * @param mixed $other_patterns [optional]
+	 * @param string $pattern
+	 * @param string $other_patterns [optional]
 	 */
-	public function punsubscribe ($pattern = null, ...$other_patterns) {}
+	public function punsubscribe (string $pattern, string ...$other_patterns): array|bool {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key_or_address
+	 * @param array|string $key_or_address
 	 */
-	public function randomkey ($key_or_address = null) {}
+	public function randomkey (array|string $key_or_address): RedisCluster|string|bool {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $cmd
+	 * @param array|string $key_or_address
+	 * @param string $command
 	 * @param mixed $args [optional]
 	 */
-	public function rawcommand ($cmd = null, ...$args) {}
+	public function rawcommand (array|string $key_or_address, string $command, mixed ...$args): mixed {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $newkey
+	 * @param string $key_src
+	 * @param string $key_dst
 	 */
-	public function rename ($key = null, $newkey = null) {}
+	public function rename (string $key_src, string $key_dst): RedisCluster|bool {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $newkey
+	 * @param string $key
+	 * @param string $newkey
 	 */
-	public function renamenx ($key = null, $newkey = null) {}
+	public function renamenx (string $key, string $newkey): RedisCluster|bool {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $ttl
-	 * @param mixed $key
+	 * @param string $key
+	 * @param int $timeout
+	 * @param string $value
+	 * @param array|null $options [optional]
+	 */
+	public function restore (string $key, int $timeout, string $value, ?array $options = NULL): RedisCluster|bool {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param array|string $key_or_address
+	 */
+	public function role (array|string $key_or_address): mixed {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 * @param int $count [optional]
+	 */
+	public function rpop (string $key, int $count = 0): RedisCluster|array|string|bool {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $src
+	 * @param string $dst
+	 */
+	public function rpoplpush (string $src, string $dst): RedisCluster|string|bool {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 * @param mixed $elements [optional]
+	 */
+	public function rpush (string $key, mixed ...$elements): RedisCluster|int|false {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 * @param string $value
+	 */
+	public function rpushx (string $key, string $value): RedisCluster|int|bool {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 * @param mixed $value
+	 * @param mixed $other_values [optional]
+	 */
+	public function sadd (string $key, mixed $value = null, mixed ...$other_values): RedisCluster|int|false {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 * @param array $values
+	 */
+	public function saddarray (string $key, array $values): RedisCluster|int|bool {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param array|string $key_or_address
+	 */
+	public function save (array|string $key_or_address): RedisCluster|bool {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param int|null $iterator
+	 * @param array|string $key_or_address
+	 * @param string|null $pattern [optional]
+	 * @param int $count [optional]
+	 */
+	public function scan (?int &$iterator = null, array|string $key_or_address, ?string $pattern = NULL, int $count = 0): array|bool {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 */
+	public function scard (string $key): RedisCluster|int|false {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param array|string $key_or_address
+	 * @param mixed $args [optional]
+	 */
+	public function script (array|string $key_or_address, mixed ...$args): mixed {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 * @param string $other_keys [optional]
+	 */
+	public function sdiff (string $key, string ...$other_keys): RedisCluster|array|false {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $dst
+	 * @param string $key
+	 * @param string $other_keys [optional]
+	 */
+	public function sdiffstore (string $dst, string $key, string ...$other_keys): RedisCluster|int|false {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 * @param mixed $value
+	 * @param mixed $options [optional]
+	 */
+	public function set (string $key, mixed $value = null, mixed $options = NULL): RedisCluster|string|bool {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 * @param int $offset
+	 * @param bool $onoff
+	 */
+	public function setbit (string $key, int $offset, bool $onoff): RedisCluster|int|false {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 * @param int $expire
 	 * @param mixed $value
 	 */
-	public function restore ($ttl = null, $key = null, $value = null) {}
+	public function setex (string $key, int $expire, mixed $value = null): RedisCluster|bool {}
 
 	/**
 	 * {@inheritdoc}
-	 */
-	public function role () {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 */
-	public function rpop ($key = null) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $src
-	 * @param mixed $dst
-	 */
-	public function rpoplpush ($src = null, $dst = null) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
+	 * @param string $key
 	 * @param mixed $value
 	 */
-	public function rpush ($key = null, $value = null) {}
+	public function setnx (string $key, mixed $value = null): RedisCluster|bool {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
+	 * @param int $option
 	 * @param mixed $value
 	 */
-	public function rpushx ($key = null, $value = null) {}
+	public function setoption (int $option, mixed $value = null): bool {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
+	 * @param string $key
+	 * @param int $offset
+	 * @param string $value
+	 */
+	public function setrange (string $key, int $offset, string $value): RedisCluster|int|false {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param array|string $key
+	 * @param string $other_keys [optional]
+	 */
+	public function sinter (array|string $key, string ...$other_keys): RedisCluster|array|false {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param array $keys
+	 * @param int $limit [optional]
+	 */
+	public function sintercard (array $keys, int $limit = -1): RedisCluster|int|false {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param array|string $key
+	 * @param string $other_keys [optional]
+	 */
+	public function sinterstore (array|string $key, string ...$other_keys): RedisCluster|int|false {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
 	 * @param mixed $value
 	 */
-	public function sadd ($key = null, $value = null) {}
+	public function sismember (string $key, mixed $value = null): RedisCluster|bool {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param array $options
+	 * @param string $key
+	 * @param string $member
+	 * @param string $other_members [optional]
 	 */
-	public function saddarray ($key = null, array $options) {}
+	public function smismember (string $key, string $member, string ...$other_members): RedisCluster|array|false {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key_or_address
+	 * @param array|string $key_or_address
+	 * @param mixed $args [optional]
 	 */
-	public function save ($key_or_address = null) {}
+	public function slowlog (array|string $key_or_address, mixed ...$args): mixed {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $i_iterator
-	 * @param mixed $str_node
-	 * @param mixed $str_pattern [optional]
-	 * @param mixed $i_count [optional]
+	 * @param string $key
 	 */
-	public function scan (&$i_iterator = null, $str_node = null, $str_pattern = NULL, $i_count = NULL) {}
+	public function smembers (string $key): RedisCluster|array|false {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
+	 * @param string $src
+	 * @param string $dst
+	 * @param string $member
 	 */
-	public function scard ($key = null) {}
+	public function smove (string $src, string $dst, string $member): RedisCluster|bool {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key_or_address
-	 * @param mixed $arg [optional]
-	 * @param mixed $other_args [optional]
+	 * @param string $key
+	 * @param array|null $options [optional]
 	 */
-	public function script ($key_or_address = null, $arg = NULL, ...$other_args) {}
+	public function sort (string $key, ?array $options = NULL): RedisCluster|array|string|int|bool {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $other_keys [optional]
+	 * @param string $key
+	 * @param array|null $options [optional]
 	 */
-	public function sdiff ($key = null, ...$other_keys) {}
+	public function sort_ro (string $key, ?array $options = NULL): RedisCluster|array|string|int|bool {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $dst
-	 * @param mixed $key
-	 * @param mixed $other_keys [optional]
+	 * @param string $key
+	 * @param int $count [optional]
 	 */
-	public function sdiffstore ($dst = null, $key = null, ...$other_keys) {}
+	public function spop (string $key, int $count = 0): RedisCluster|array|string|false {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
+	 * @param string $key
+	 * @param int $count [optional]
+	 */
+	public function srandmember (string $key, int $count = 0): RedisCluster|array|string|false {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
 	 * @param mixed $value
-	 * @param mixed $opts [optional]
+	 * @param mixed $other_values [optional]
 	 */
-	public function set ($key = null, $value = null, $opts = NULL) {}
+	public function srem (string $key, mixed $value = null, mixed ...$other_values): RedisCluster|int|false {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $offset
-	 * @param mixed $value
+	 * @param string $key
+	 * @param int|null $iterator
+	 * @param string|null $pattern [optional]
+	 * @param int $count [optional]
 	 */
-	public function setbit ($key = null, $offset = null, $value = null) {}
+	public function sscan (string $key, ?int &$iterator = null, ?string $pattern = NULL, int $count = 0): array|false {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $expire
-	 * @param mixed $value
+	 * @param string $key
 	 */
-	public function setex ($key = null, $expire = null, $value = null) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $value
-	 */
-	public function setnx ($key = null, $value = null) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $option
-	 * @param mixed $value
-	 */
-	public function setoption ($option = null, $value = null) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $offset
-	 * @param mixed $value
-	 */
-	public function setrange ($key = null, $offset = null, $value = null) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $other_keys [optional]
-	 */
-	public function sinter ($key = null, ...$other_keys) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $dst
-	 * @param mixed $key
-	 * @param mixed $other_keys [optional]
-	 */
-	public function sinterstore ($dst = null, $key = null, ...$other_keys) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $value
-	 */
-	public function sismember ($key = null, $value = null) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key_or_address
-	 * @param mixed $arg [optional]
-	 * @param mixed $other_args [optional]
-	 */
-	public function slowlog ($key_or_address = null, $arg = NULL, ...$other_args) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 */
-	public function smembers ($key = null) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $src
-	 * @param mixed $dst
-	 * @param mixed $value
-	 */
-	public function smove ($src = null, $dst = null, $value = null) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param array $options [optional]
-	 */
-	public function sort ($key = null, array $options = NULL) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 */
-	public function spop ($key = null) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $count [optional]
-	 */
-	public function srandmember ($key = null, $count = NULL) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $value
-	 */
-	public function srem ($key = null, $value = null) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $str_key
-	 * @param mixed $i_iterator
-	 * @param mixed $str_pattern [optional]
-	 * @param mixed $i_count [optional]
-	 */
-	public function sscan ($str_key = null, &$i_iterator = null, $str_pattern = NULL, $i_count = NULL) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 */
-	public function strlen ($key = null) {}
+	public function strlen (string $key): RedisCluster|int|false {}
 
 	/**
 	 * {@inheritdoc}
 	 * @param array $channels
-	 * @param mixed $callback
+	 * @param callable $cb
 	 */
-	public function subscribe (array $channels, $callback = null) {}
+	public function subscribe (array $channels, callable $cb): void {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $other_keys [optional]
+	 * @param string $key
+	 * @param string $other_keys [optional]
 	 */
-	public function sunion ($key = null, ...$other_keys) {}
+	public function sunion (string $key, string ...$other_keys): RedisCluster|array|bool {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $dst
-	 * @param mixed $key
-	 * @param mixed $other_keys [optional]
+	 * @param string $dst
+	 * @param string $key
+	 * @param string $other_keys [optional]
 	 */
-	public function sunionstore ($dst = null, $key = null, ...$other_keys) {}
+	public function sunionstore (string $dst, string $key, string ...$other_keys): RedisCluster|int|false {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param array|string $key_or_address
+	 */
+	public function time (array|string $key_or_address): RedisCluster|array|bool {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 */
+	public function ttl (string $key): RedisCluster|int|false {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 */
+	public function type (string $key): RedisCluster|int|false {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param array $channels
+	 */
+	public function unsubscribe (array $channels): array|bool {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param array|string $key
+	 * @param string $other_keys [optional]
+	 */
+	public function unlink (array|string $key, string ...$other_keys): RedisCluster|int|false {}
 
 	/**
 	 * {@inheritdoc}
 	 */
-	public function time () {}
+	public function unwatch (): bool {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
+	 * @param string $key
+	 * @param string $other_keys [optional]
 	 */
-	public function ttl ($key = null) {}
+	public function watch (string $key, string ...$other_keys): RedisCluster|bool {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
+	 * @param string $key
+	 * @param string $group
+	 * @param array $ids
 	 */
-	public function type ($key = null) {}
+	public function xack (string $key, string $group, array $ids): RedisCluster|int|false {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $channel
-	 * @param mixed $other_channels [optional]
+	 * @param string $key
+	 * @param string $id
+	 * @param array $values
+	 * @param int $maxlen [optional]
+	 * @param bool $approx [optional]
 	 */
-	public function unsubscribe ($channel = null, ...$other_channels) {}
+	public function xadd (string $key, string $id, array $values, int $maxlen = 0, bool $approx = false): RedisCluster|string|false {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $other_keys [optional]
+	 * @param string $key
+	 * @param string $group
+	 * @param string $consumer
+	 * @param int $min_iddle
+	 * @param array $ids
+	 * @param array $options
 	 */
-	public function unlink ($key = null, ...$other_keys) {}
+	public function xclaim (string $key, string $group, string $consumer, int $min_iddle, array $ids, array $options): RedisCluster|array|string|false {}
 
 	/**
 	 * {@inheritdoc}
+	 * @param string $key
+	 * @param array $ids
 	 */
-	public function unwatch () {}
+	public function xdel (string $key, array $ids): RedisCluster|int|false {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $other_keys [optional]
+	 * @param string $operation
+	 * @param string|null $key [optional]
+	 * @param string|null $group [optional]
+	 * @param string|null $id_or_consumer [optional]
+	 * @param bool $mkstream [optional]
+	 * @param int $entries_read [optional]
 	 */
-	public function watch ($key = null, ...$other_keys) {}
+	public function xgroup (string $operation, ?string $key = NULL, ?string $group = NULL, ?string $id_or_consumer = NULL, bool $mkstream = false, int $entries_read = -2): mixed {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $str_key
-	 * @param mixed $str_group
-	 * @param array $arr_ids
+	 * @param string $key
+	 * @param string $group
+	 * @param string $consumer
+	 * @param int $min_idle
+	 * @param string $start
+	 * @param int $count [optional]
+	 * @param bool $justid [optional]
 	 */
-	public function xack ($str_key = null, $str_group = null, array $arr_ids) {}
+	public function xautoclaim (string $key, string $group, string $consumer, int $min_idle, string $start, int $count = -1, bool $justid = false): RedisCluster|array|bool {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $str_key
-	 * @param mixed $str_id
-	 * @param array $arr_fields
-	 * @param mixed $i_maxlen [optional]
-	 * @param mixed $boo_approximate [optional]
+	 * @param string $operation
+	 * @param string|null $arg1 [optional]
+	 * @param string|null $arg2 [optional]
+	 * @param int $count [optional]
 	 */
-	public function xadd ($str_key = null, $str_id = null, array $arr_fields, $i_maxlen = NULL, $boo_approximate = NULL) {}
+	public function xinfo (string $operation, ?string $arg1 = NULL, ?string $arg2 = NULL, int $count = -1): mixed {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $str_key
-	 * @param mixed $str_group
-	 * @param mixed $str_consumer
-	 * @param mixed $i_min_idle
-	 * @param array $arr_ids
-	 * @param array $arr_opts [optional]
+	 * @param string $key
 	 */
-	public function xclaim ($str_key = null, $str_group = null, $str_consumer = null, $i_min_idle = null, array $arr_ids, array $arr_opts = NULL) {}
+	public function xlen (string $key): RedisCluster|int|false {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $str_key
-	 * @param array $arr_ids
+	 * @param string $key
+	 * @param string $group
+	 * @param string|null $start [optional]
+	 * @param string|null $end [optional]
+	 * @param int $count [optional]
+	 * @param string|null $consumer [optional]
 	 */
-	public function xdel ($str_key = null, array $arr_ids) {}
+	public function xpending (string $key, string $group, ?string $start = NULL, ?string $end = NULL, int $count = -1, ?string $consumer = NULL): RedisCluster|array|false {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $str_operation
-	 * @param mixed $str_key [optional]
-	 * @param mixed $str_arg1 [optional]
-	 * @param mixed $str_arg2 [optional]
-	 * @param mixed $str_arg3 [optional]
+	 * @param string $key
+	 * @param string $start
+	 * @param string $end
+	 * @param int $count [optional]
 	 */
-	public function xgroup ($str_operation = null, $str_key = NULL, $str_arg1 = NULL, $str_arg2 = NULL, $str_arg3 = NULL) {}
+	public function xrange (string $key, string $start, string $end, int $count = -1): RedisCluster|array|bool {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $str_cmd
-	 * @param mixed $str_key [optional]
-	 * @param mixed $str_group [optional]
+	 * @param array $streams
+	 * @param int $count [optional]
+	 * @param int $block [optional]
 	 */
-	public function xinfo ($str_cmd = null, $str_key = NULL, $str_group = NULL) {}
+	public function xread (array $streams, int $count = -1, int $block = -1): RedisCluster|array|bool {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
+	 * @param string $group
+	 * @param string $consumer
+	 * @param array $streams
+	 * @param int $count [optional]
+	 * @param int $block [optional]
 	 */
-	public function xlen ($key = null) {}
+	public function xreadgroup (string $group, string $consumer, array $streams, int $count = 1, int $block = 1): RedisCluster|array|bool {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $str_key
-	 * @param mixed $str_group
-	 * @param mixed $str_start [optional]
-	 * @param mixed $str_end [optional]
-	 * @param mixed $i_count [optional]
-	 * @param mixed $str_consumer [optional]
+	 * @param string $key
+	 * @param string $start
+	 * @param string $end
+	 * @param int $count [optional]
 	 */
-	public function xpending ($str_key = null, $str_group = null, $str_start = NULL, $str_end = NULL, $i_count = NULL, $str_consumer = NULL) {}
+	public function xrevrange (string $key, string $start, string $end, int $count = -1): RedisCluster|array|bool {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $str_key
-	 * @param mixed $str_start
-	 * @param mixed $str_end
-	 * @param mixed $i_count [optional]
+	 * @param string $key
+	 * @param int $maxlen
+	 * @param bool $approx [optional]
+	 * @param bool $minid [optional]
+	 * @param int $limit [optional]
 	 */
-	public function xrange ($str_key = null, $str_start = null, $str_end = null, $i_count = NULL) {}
+	public function xtrim (string $key, int $maxlen, bool $approx = false, bool $minid = false, int $limit = -1): RedisCluster|int|false {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param array $arr_streams
-	 * @param mixed $i_count [optional]
-	 * @param mixed $i_block [optional]
+	 * @param string $key
+	 * @param array|float $score_or_options
+	 * @param mixed $more_scores_and_mems [optional]
 	 */
-	public function xread (array $arr_streams, $i_count = NULL, $i_block = NULL) {}
+	public function zadd (string $key, array|float $score_or_options, mixed ...$more_scores_and_mems): RedisCluster|int|float|false {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $str_group
-	 * @param mixed $str_consumer
-	 * @param array $arr_streams
-	 * @param mixed $i_count [optional]
-	 * @param mixed $i_block [optional]
+	 * @param string $key
 	 */
-	public function xreadgroup ($str_group = null, $str_consumer = null, array $arr_streams, $i_count = NULL, $i_block = NULL) {}
+	public function zcard (string $key): RedisCluster|int|false {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $str_key
-	 * @param mixed $str_start
-	 * @param mixed $str_end
-	 * @param mixed $i_count [optional]
+	 * @param string $key
+	 * @param string $start
+	 * @param string $end
 	 */
-	public function xrevrange ($str_key = null, $str_start = null, $str_end = null, $i_count = NULL) {}
+	public function zcount (string $key, string $start, string $end): RedisCluster|int|false {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $str_key
-	 * @param mixed $i_maxlen
-	 * @param mixed $boo_approximate [optional]
+	 * @param string $key
+	 * @param float $value
+	 * @param string $member
 	 */
-	public function xtrim ($str_key = null, $i_maxlen = null, $boo_approximate = NULL) {}
+	public function zincrby (string $key, float $value, string $member): RedisCluster|float|false {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $score
-	 * @param mixed $value
-	 * @param mixed $extra_args [optional]
-	 */
-	public function zadd ($key = null, $score = null, $value = null, ...$extra_args) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 */
-	public function zcard ($key = null) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $min
-	 * @param mixed $max
-	 */
-	public function zcount ($key = null, $min = null, $max = null) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $value
-	 * @param mixed $member
-	 */
-	public function zincrby ($key = null, $value = null, $member = null) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
+	 * @param string $dst
 	 * @param array $keys
 	 * @param array|null $weights [optional]
-	 * @param mixed $aggregate [optional]
+	 * @param string|null $aggregate [optional]
 	 */
-	public function zinterstore ($key = null, array $keys, ?array $weights = NULL, $aggregate = NULL) {}
+	public function zinterstore (string $dst, array $keys, ?array $weights = NULL, ?string $aggregate = NULL): RedisCluster|int|false {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $min
-	 * @param mixed $max
+	 * @param array $keys
+	 * @param int $limit [optional]
 	 */
-	public function zlexcount ($key = null, $min = null, $max = null) {}
+	public function zintercard (array $keys, int $limit = -1): RedisCluster|int|false {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
+	 * @param string $key
+	 * @param string $min
+	 * @param string $max
 	 */
-	public function zpopmax ($key = null) {}
+	public function zlexcount (string $key, string $min, string $max): RedisCluster|int|false {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
+	 * @param string $key
+	 * @param int|null $value [optional]
 	 */
-	public function zpopmin ($key = null) {}
+	public function zpopmax (string $key, ?int $value = NULL): RedisCluster|array|bool {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
+	 * @param string $key
+	 * @param int|null $value [optional]
+	 */
+	public function zpopmin (string $key, ?int $value = NULL): RedisCluster|array|bool {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
 	 * @param mixed $start
 	 * @param mixed $end
-	 * @param mixed $scores [optional]
+	 * @param array|bool|null $options [optional]
 	 */
-	public function zrange ($key = null, $start = null, $end = null, $scores = NULL) {}
+	public function zrange (string $key, mixed $start = null, mixed $end = null, array|bool|null $options = NULL): RedisCluster|array|bool {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $min
-	 * @param mixed $max
-	 * @param mixed $offset [optional]
-	 * @param mixed $limit [optional]
+	 * @param string $dstkey
+	 * @param string $srckey
+	 * @param int $start
+	 * @param int $end
+	 * @param array|bool|null $options [optional]
 	 */
-	public function zrangebylex ($key = null, $min = null, $max = null, $offset = NULL, $limit = NULL) {}
+	public function zrangestore (string $dstkey, string $srckey, int $start, int $end, array|bool|null $options = NULL): RedisCluster|int|false {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $start
-	 * @param mixed $end
+	 * @param string $key
+	 * @param array|null $options [optional]
+	 */
+	public function zrandmember (string $key, ?array $options = NULL): RedisCluster|array|string {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 * @param string $min
+	 * @param string $max
+	 * @param int $offset [optional]
+	 * @param int $count [optional]
+	 */
+	public function zrangebylex (string $key, string $min, string $max, int $offset = -1, int $count = -1): RedisCluster|array|false {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 * @param string $start
+	 * @param string $end
 	 * @param array $options [optional]
 	 */
-	public function zrangebyscore ($key = null, $start = null, $end = null, array $options = NULL) {}
+	public function zrangebyscore (string $key, string $start, string $end, array $options = array (
+)): RedisCluster|array|false {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
+	 * @param string $key
 	 * @param mixed $member
 	 */
-	public function zrank ($key = null, $member = null) {}
+	public function zrank (string $key, mixed $member = null): RedisCluster|int|false {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
+	 * @param string $key
+	 * @param string $value
+	 * @param string $other_values [optional]
+	 */
+	public function zrem (string $key, string $value, string ...$other_values): RedisCluster|int|false {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 * @param string $min
+	 * @param string $max
+	 */
+	public function zremrangebylex (string $key, string $min, string $max): RedisCluster|int|false {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 * @param string $min
+	 * @param string $max
+	 */
+	public function zremrangebyrank (string $key, string $min, string $max): RedisCluster|int|false {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 * @param string $min
+	 * @param string $max
+	 */
+	public function zremrangebyscore (string $key, string $min, string $max): RedisCluster|int|false {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 * @param string $min
+	 * @param string $max
+	 * @param array|null $options [optional]
+	 */
+	public function zrevrange (string $key, string $min, string $max, ?array $options = NULL): RedisCluster|array|bool {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 * @param string $min
+	 * @param string $max
+	 * @param array|null $options [optional]
+	 */
+	public function zrevrangebylex (string $key, string $min, string $max, ?array $options = NULL): RedisCluster|array|bool {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 * @param string $min
+	 * @param string $max
+	 * @param array|null $options [optional]
+	 */
+	public function zrevrangebyscore (string $key, string $min, string $max, ?array $options = NULL): RedisCluster|array|bool {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 * @param mixed $member
+	 */
+	public function zrevrank (string $key, mixed $member = null): RedisCluster|int|false {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 * @param int|null $iterator
+	 * @param string|null $pattern [optional]
+	 * @param int $count [optional]
+	 */
+	public function zscan (string $key, ?int &$iterator = null, ?string $pattern = NULL, int $count = 0): RedisCluster|array|bool {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
+	 * @param mixed $member
+	 */
+	public function zscore (string $key, mixed $member = null): RedisCluster|float|false {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $key
 	 * @param mixed $member
 	 * @param mixed $other_members [optional]
 	 */
-	public function zrem ($key = null, $member = null, ...$other_members) {}
+	public function zmscore (string $key, mixed $member = null, mixed ...$other_members): Redis|array|false {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $min
-	 * @param mixed $max
-	 */
-	public function zremrangebylex ($key = null, $min = null, $max = null) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $min
-	 * @param mixed $max
-	 */
-	public function zremrangebyrank ($key = null, $min = null, $max = null) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $min
-	 * @param mixed $max
-	 */
-	public function zremrangebyscore ($key = null, $min = null, $max = null) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $start
-	 * @param mixed $end
-	 * @param mixed $scores [optional]
-	 */
-	public function zrevrange ($key = null, $start = null, $end = null, $scores = NULL) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $min
-	 * @param mixed $max
-	 * @param mixed $offset [optional]
-	 * @param mixed $limit [optional]
-	 */
-	public function zrevrangebylex ($key = null, $min = null, $max = null, $offset = NULL, $limit = NULL) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $start
-	 * @param mixed $end
-	 * @param array $options [optional]
-	 */
-	public function zrevrangebyscore ($key = null, $start = null, $end = null, array $options = NULL) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $member
-	 */
-	public function zrevrank ($key = null, $member = null) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $str_key
-	 * @param mixed $i_iterator
-	 * @param mixed $str_pattern [optional]
-	 * @param mixed $i_count [optional]
-	 */
-	public function zscan ($str_key = null, &$i_iterator = null, $str_pattern = NULL, $i_count = NULL) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
-	 * @param mixed $member
-	 */
-	public function zscore ($key = null, $member = null) {}
-
-	/**
-	 * {@inheritdoc}
-	 * @param mixed $key
+	 * @param string $dst
 	 * @param array $keys
 	 * @param array|null $weights [optional]
-	 * @param mixed $aggregate [optional]
+	 * @param string|null $aggregate [optional]
 	 */
-	public function zunionstore ($key = null, array $keys, ?array $weights = NULL, $aggregate = NULL) {}
+	public function zunionstore (string $dst, array $keys, ?array $weights = NULL, ?string $aggregate = NULL): RedisCluster|int|false {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param array $keys
+	 * @param array|null $weights [optional]
+	 * @param array|null $options [optional]
+	 */
+	public function zinter (array $keys, ?array $weights = NULL, ?array $options = NULL): RedisCluster|array|false {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $dst
+	 * @param array $keys
+	 */
+	public function zdiffstore (string $dst, array $keys): RedisCluster|int|false {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param array $keys
+	 * @param array|null $weights [optional]
+	 * @param array|null $options [optional]
+	 */
+	public function zunion (array $keys, ?array $weights = NULL, ?array $options = NULL): RedisCluster|array|false {}
+
+	/**
+	 * {@inheritdoc}
+	 * @param array $keys
+	 * @param array|null $options [optional]
+	 */
+	public function zdiff (array $keys, ?array $options = NULL): RedisCluster|array|false {}
+
+}
+
+class RedisClusterException extends RuntimeException implements Stringable, Throwable {
+
+	/**
+	 * {@inheritdoc}
+	 * @param string $message [optional]
+	 * @param int $code [optional]
+	 * @param Throwable|null $previous [optional]
+	 */
+	public function __construct (string $message = '', int $code = 0, ?Throwable $previous = NULL) {}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function __wakeup () {}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	final public function getMessage (): string {}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	final public function getCode () {}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	final public function getFile (): string {}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	final public function getLine (): int {}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	final public function getTrace (): array {}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	final public function getPrevious (): ?Throwable {}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	final public function getTraceAsString (): string {}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function __toString (): string {}
 
 }
 
@@ -3472,26 +3904,21 @@ class RedisSentinel  {
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $host
-	 * @param mixed $port [optional]
-	 * @param mixed $timeout [optional]
-	 * @param mixed $persistent [optional]
-	 * @param mixed $retry_interval [optional]
-	 * @param mixed $read_timeout [optional]
+	 * @param array|null $options [optional]
 	 */
-	public function __construct ($host = null, $port = NULL, $timeout = NULL, $persistent = NULL, $retry_interval = NULL, $read_timeout = NULL) {}
+	public function __construct (?array $options = NULL) {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $value
+	 * @param string $master
 	 */
-	public function ckquorum ($value = null) {}
+	public function ckquorum (string $master) {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $value
+	 * @param string $master
 	 */
-	public function failover ($value = null) {}
+	public function failover (string $master) {}
 
 	/**
 	 * {@inheritdoc}
@@ -3500,15 +3927,15 @@ class RedisSentinel  {
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $value
+	 * @param string $master
 	 */
-	public function getMasterAddrByName ($value = null) {}
+	public function getMasterAddrByName (string $master) {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $value
+	 * @param string $master
 	 */
-	public function master ($value = null) {}
+	public function master (string $master) {}
 
 	/**
 	 * {@inheritdoc}
@@ -3518,39 +3945,42 @@ class RedisSentinel  {
 	/**
 	 * {@inheritdoc}
 	 */
+	public function myid (): string {}
+
+	/**
+	 * {@inheritdoc}
+	 */
 	public function ping () {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $value
+	 * @param string $pattern
 	 */
-	public function reset ($value = null) {}
+	public function reset (string $pattern) {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $value
+	 * @param string $master
 	 */
-	public function sentinels ($value = null) {}
+	public function sentinels (string $master) {}
 
 	/**
 	 * {@inheritdoc}
-	 * @param mixed $value
+	 * @param string $master
 	 */
-	public function slaves ($value = null) {}
+	public function slaves (string $master) {}
 
 }
 
-class RedisException extends Exception implements Throwable, Stringable {
+class RedisException extends RuntimeException implements Stringable, Throwable {
 
 	/**
-	 * Construct the exception
-	 * @link http://www.php.net/manual/en/exception.construct.php
-	 * @param string $message [optional] 
-	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
-	 * @return string 
+	 * {@inheritdoc}
+	 * @param string $message [optional]
+	 * @param int $code [optional]
+	 * @param Throwable|null $previous [optional]
 	 */
-	public function __construct (string $message = '""', int $code = null, ?Throwable $previous = null): string {}
+	public function __construct (string $message = '', int $code = 0, ?Throwable $previous = NULL) {}
 
 	/**
 	 * {@inheritdoc}
@@ -3558,143 +3988,44 @@ class RedisException extends Exception implements Throwable, Stringable {
 	public function __wakeup () {}
 
 	/**
-	 * Gets the Exception message
-	 * @link http://www.php.net/manual/en/exception.getmessage.php
-	 * @return string Returns the Exception message as a string.
+	 * {@inheritdoc}
 	 */
 	final public function getMessage (): string {}
-
-	/**
-	 * Gets the Exception code
-	 * @link http://www.php.net/manual/en/exception.getcode.php
-	 * @return int Returns the exception code as int in
-	 * Exception but possibly as other type in
-	 * Exception descendants (for example as
-	 * string in PDOException).
-	 */
-	final public function getCode (): int {}
-
-	/**
-	 * Gets the file in which the exception was created
-	 * @link http://www.php.net/manual/en/exception.getfile.php
-	 * @return string Returns the filename in which the exception was created.
-	 */
-	final public function getFile (): string {}
-
-	/**
-	 * Gets the line in which the exception was created
-	 * @link http://www.php.net/manual/en/exception.getline.php
-	 * @return int Returns the line number where the exception was created.
-	 */
-	final public function getLine (): int {}
-
-	/**
-	 * Gets the stack trace
-	 * @link http://www.php.net/manual/en/exception.gettrace.php
-	 * @return array Returns the Exception stack trace as an array.
-	 */
-	final public function getTrace (): array {}
-
-	/**
-	 * Returns previous Throwable
-	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
-	 * or null otherwise.
-	 */
-	final public function getPrevious (): ?Throwable {}
-
-	/**
-	 * Gets the stack trace as a string
-	 * @link http://www.php.net/manual/en/exception.gettraceasstring.php
-	 * @return string Returns the Exception stack trace as a string.
-	 */
-	final public function getTraceAsString (): string {}
-
-	/**
-	 * String representation of the exception
-	 * @link http://www.php.net/manual/en/exception.tostring.php
-	 * @return string Returns the string representation of the exception.
-	 */
-	public function __toString (): string {}
-
-}
-
-class RedisClusterException extends Exception implements Throwable, Stringable {
-
-	/**
-	 * Construct the exception
-	 * @link http://www.php.net/manual/en/exception.construct.php
-	 * @param string $message [optional] 
-	 * @param int $code [optional] 
-	 * @param Throwable|null $previous [optional] 
-	 * @return string 
-	 */
-	public function __construct (string $message = '""', int $code = null, ?Throwable $previous = null): string {}
 
 	/**
 	 * {@inheritdoc}
 	 */
-	public function __wakeup () {}
+	final public function getCode () {}
 
 	/**
-	 * Gets the Exception message
-	 * @link http://www.php.net/manual/en/exception.getmessage.php
-	 * @return string Returns the Exception message as a string.
-	 */
-	final public function getMessage (): string {}
-
-	/**
-	 * Gets the Exception code
-	 * @link http://www.php.net/manual/en/exception.getcode.php
-	 * @return int Returns the exception code as int in
-	 * Exception but possibly as other type in
-	 * Exception descendants (for example as
-	 * string in PDOException).
-	 */
-	final public function getCode (): int {}
-
-	/**
-	 * Gets the file in which the exception was created
-	 * @link http://www.php.net/manual/en/exception.getfile.php
-	 * @return string Returns the filename in which the exception was created.
+	 * {@inheritdoc}
 	 */
 	final public function getFile (): string {}
 
 	/**
-	 * Gets the line in which the exception was created
-	 * @link http://www.php.net/manual/en/exception.getline.php
-	 * @return int Returns the line number where the exception was created.
+	 * {@inheritdoc}
 	 */
 	final public function getLine (): int {}
 
 	/**
-	 * Gets the stack trace
-	 * @link http://www.php.net/manual/en/exception.gettrace.php
-	 * @return array Returns the Exception stack trace as an array.
+	 * {@inheritdoc}
 	 */
 	final public function getTrace (): array {}
 
 	/**
-	 * Returns previous Throwable
-	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
-	 * or null otherwise.
+	 * {@inheritdoc}
 	 */
 	final public function getPrevious (): ?Throwable {}
 
 	/**
-	 * Gets the stack trace as a string
-	 * @link http://www.php.net/manual/en/exception.gettraceasstring.php
-	 * @return string Returns the Exception stack trace as a string.
+	 * {@inheritdoc}
 	 */
 	final public function getTraceAsString (): string {}
 
 	/**
-	 * String representation of the exception
-	 * @link http://www.php.net/manual/en/exception.tostring.php
-	 * @return string Returns the string representation of the exception.
+	 * {@inheritdoc}
 	 */
 	public function __toString (): string {}
 
 }
-// End of redis v.5.3.7
+// End of redis v.6.0.2

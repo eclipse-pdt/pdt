@@ -1,150 +1,100 @@
 <?php
 
-// Start of soap v.8.2.6
+// Start of soap v.8.3.0
 
-/**
- * The SoapClient class provides a client for SOAP 1.1,
- * SOAP 1.2 servers.
- * It can be used in WSDL or non-WSDL mode.
- * @link http://www.php.net/manual/en/class.soapclient.php
- */
 class SoapClient  {
 
 	/**
-	 * SoapClient constructor
-	 * @link http://www.php.net/manual/en/soapclient.construct.php
-	 * @param string|null $wsdl 
-	 * @param array $options [optional] 
-	 * @return string|null 
+	 * {@inheritdoc}
+	 * @param string|null $wsdl
+	 * @param array $options [optional]
 	 */
-	public function __construct (?string $wsdl, array $options = '[]'): ?string {}
+	public function __construct (?string $wsdl = null, array $options = array (
+)) {}
 
 	/**
-	 * Calls a SOAP function (deprecated)
-	 * @link http://www.php.net/manual/en/soapclient.call.php
-	 * @param string $name 
-	 * @param array $args 
-	 * @return mixed SOAP functions may return one, or multiple values. If only one value is
-	 * returned by the SOAP function, the return value will be a scalar.
-	 * If multiple values are returned, an associative array of named output
-	 * parameters is returned instead.
-	 * <p>On error, if the SoapClient object was constructed
-	 * with the exceptions option set to false,
-	 * a SoapFault object will be returned.</p>
+	 * {@inheritdoc}
+	 * @param string $name
+	 * @param array $args
 	 */
-	public function __call (string $name, array $args): mixed {}
+	public function __call (string $name, array $args) {}
 
 	/**
-	 * Calls a SOAP function
-	 * @link http://www.php.net/manual/en/soapclient.soapcall.php
-	 * @param string $name 
-	 * @param array $args 
-	 * @param array|null $options [optional] 
-	 * @param SoapHeader|array|null $inputHeaders [optional] 
-	 * @param array $outputHeaders [optional] 
-	 * @return mixed SOAP functions may return one, or multiple values. If only one value is
-	 * returned by the SOAP function, the return value will be a scalar.
-	 * If multiple values are returned, an associative array of named output
-	 * parameters is returned instead.
-	 * <p>On error, if the SoapClient object was constructed
-	 * with the exceptions option set to false,
-	 * a SoapFault object will be returned.</p>
+	 * {@inheritdoc}
+	 * @param string $name
+	 * @param array $args
+	 * @param array|null $options [optional]
+	 * @param mixed $inputHeaders [optional]
+	 * @param mixed $outputHeaders [optional]
 	 */
-	public function __soapCall (string $name, array $args, ?array $options = null, SoapHeader|array|null $inputHeaders = null, array &$outputHeaders = null): mixed {}
+	public function __soapCall (string $name, array $args, ?array $options = NULL, $inputHeaders = NULL, &$outputHeaders = NULL) {}
 
 	/**
-	 * Returns list of available SOAP functions
-	 * @link http://www.php.net/manual/en/soapclient.getfunctions.php
-	 * @return array|null The array of SOAP function prototypes, detailing the return type,
-	 * the function name and parameter types.
+	 * {@inheritdoc}
 	 */
-	public function __getFunctions (): ?array {}
+	public function __getFunctions () {}
 
 	/**
-	 * Returns a list of SOAP types
-	 * @link http://www.php.net/manual/en/soapclient.gettypes.php
-	 * @return array|null The array of SOAP types, detailing all structures and types.
+	 * {@inheritdoc}
 	 */
-	public function __getTypes (): ?array {}
+	public function __getTypes () {}
 
 	/**
-	 * Returns last SOAP request
-	 * @link http://www.php.net/manual/en/soapclient.getlastrequest.php
-	 * @return string|null The last SOAP request, as an XML string.
+	 * {@inheritdoc}
 	 */
-	public function __getLastRequest (): ?string {}
+	public function __getLastRequest () {}
 
 	/**
-	 * Returns last SOAP response
-	 * @link http://www.php.net/manual/en/soapclient.getlastresponse.php
-	 * @return string|null The last SOAP response, as an XML string.
+	 * {@inheritdoc}
 	 */
-	public function __getLastResponse (): ?string {}
+	public function __getLastResponse () {}
 
 	/**
-	 * Returns the SOAP headers from the last request
-	 * @link http://www.php.net/manual/en/soapclient.getlastrequestheaders.php
-	 * @return string|null The last SOAP request headers.
+	 * {@inheritdoc}
 	 */
-	public function __getLastRequestHeaders (): ?string {}
+	public function __getLastRequestHeaders () {}
 
 	/**
-	 * Returns the SOAP headers from the last response
-	 * @link http://www.php.net/manual/en/soapclient.getlastresponseheaders.php
-	 * @return string|null The last SOAP response headers.
+	 * {@inheritdoc}
 	 */
-	public function __getLastResponseHeaders (): ?string {}
+	public function __getLastResponseHeaders () {}
 
 	/**
-	 * Performs a SOAP request
-	 * @link http://www.php.net/manual/en/soapclient.dorequest.php
-	 * @param string $request 
-	 * @param string $location 
-	 * @param string $action 
-	 * @param int $version 
-	 * @param bool $oneWay [optional] 
-	 * @return string|null The XML SOAP response.
+	 * {@inheritdoc}
+	 * @param string $request
+	 * @param string $location
+	 * @param string $action
+	 * @param int $version
+	 * @param bool $oneWay [optional]
 	 */
-	public function __doRequest (string $request, string $location, string $action, int $version, bool $oneWay = false): ?string {}
+	public function __doRequest (string $request, string $location, string $action, int $version, bool $oneWay = false) {}
 
 	/**
-	 * Defines a cookie for SOAP requests
-	 * @link http://www.php.net/manual/en/soapclient.setcookie.php
-	 * @param string $name 
-	 * @param string|null $value [optional] 
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param string $name
+	 * @param string|null $value [optional]
 	 */
-	public function __setCookie (string $name, ?string $value = null): void {}
+	public function __setCookie (string $name, ?string $value = NULL) {}
 
 	/**
-	 * Get list of cookies
-	 * @link http://www.php.net/manual/en/soapclient.getcookies.php
-	 * @return array 
+	 * {@inheritdoc}
 	 */
-	public function __getCookies (): array {}
+	public function __getCookies () {}
 
 	/**
-	 * Sets SOAP headers for subsequent calls
-	 * @link http://www.php.net/manual/en/soapclient.setsoapheaders.php
-	 * @param SoapHeader|array|null $headers [optional] 
-	 * @return bool Returns true on success or false on failure.
+	 * {@inheritdoc}
+	 * @param mixed $headers [optional]
 	 */
-	public function __setSoapHeaders (SoapHeader|array|null $headers = null): bool {}
+	public function __setSoapHeaders ($headers = NULL) {}
 
 	/**
-	 * Sets the location of the Web service to use
-	 * @link http://www.php.net/manual/en/soapclient.setlocation.php
-	 * @param string|null $location [optional] 
-	 * @return string|null The old endpoint URL.
+	 * {@inheritdoc}
+	 * @param string|null $location [optional]
 	 */
-	public function __setLocation (?string $location = null): ?string {}
+	public function __setLocation (?string $location = NULL) {}
 
 }
 
-/**
- * A class representing a variable or object for use with SOAP services.
- * @link http://www.php.net/manual/en/class.soapvar.php
- */
 class SoapVar  {
 
 	public int $enc_type;
@@ -160,111 +110,82 @@ class SoapVar  {
 	public ?string $enc_namens;
 
 	/**
-	 * SoapVar constructor
-	 * @link http://www.php.net/manual/en/soapvar.construct.php
-	 * @param mixed $data 
-	 * @param int|null $encoding 
-	 * @param string|null $typeName [optional] 
-	 * @param string|null $typeNamespace [optional] 
-	 * @param string|null $nodeName [optional] 
-	 * @param string|null $nodeNamespace [optional] 
-	 * @return mixed 
+	 * {@inheritdoc}
+	 * @param mixed $data
+	 * @param int|null $encoding
+	 * @param string|null $typeName [optional]
+	 * @param string|null $typeNamespace [optional]
+	 * @param string|null $nodeName [optional]
+	 * @param string|null $nodeNamespace [optional]
 	 */
-	public function __construct (mixed $data, ?int $encoding, ?string $typeName = null, ?string $typeNamespace = null, ?string $nodeName = null, ?string $nodeNamespace = null): mixed {}
+	public function __construct (mixed $data = null, ?int $encoding = null, ?string $typeName = NULL, ?string $typeNamespace = NULL, ?string $nodeName = NULL, ?string $nodeNamespace = NULL) {}
 
 }
 
-/**
- * The SoapServer class provides a server for the SOAP 1.1
- * and SOAP 1.2 protocols. It can be
- * used with or without a WSDL service description.
- * @link http://www.php.net/manual/en/class.soapserver.php
- */
 class SoapServer  {
 
 	/**
-	 * SoapServer constructor
-	 * @link http://www.php.net/manual/en/soapserver.construct.php
-	 * @param string|null $wsdl 
-	 * @param array $options [optional] 
-	 * @return string|null 
+	 * {@inheritdoc}
+	 * @param string|null $wsdl
+	 * @param array $options [optional]
 	 */
-	public function __construct (?string $wsdl, array $options = '[]'): ?string {}
+	public function __construct (?string $wsdl = null, array $options = array (
+)) {}
 
 	/**
-	 * Issue SoapServer fault indicating an error
-	 * @link http://www.php.net/manual/en/soapserver.fault.php
-	 * @param string $code 
-	 * @param string $string 
-	 * @param string $actor [optional] 
-	 * @param mixed $details [optional] 
-	 * @param string $name [optional] 
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param string $code
+	 * @param string $string
+	 * @param string $actor [optional]
+	 * @param mixed $details [optional]
+	 * @param string $name [optional]
 	 */
-	public function fault (string $code, string $string, string $actor = '""', mixed $details = null, string $name = '""'): void {}
+	public function fault (string $code, string $string, string $actor = '', mixed $details = NULL, string $name = '') {}
 
 	/**
-	 * Add a SOAP header to the response
-	 * @link http://www.php.net/manual/en/soapserver.addsoapheader.php
-	 * @param SoapHeader $header 
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param SoapHeader $header
 	 */
-	public function addSoapHeader (SoapHeader $header): void {}
+	public function addSoapHeader (SoapHeader $header) {}
 
 	/**
-	 * Sets SoapServer persistence mode
-	 * @link http://www.php.net/manual/en/soapserver.setpersistence.php
-	 * @param int $mode 
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param int $mode
 	 */
-	public function setPersistence (int $mode): void {}
+	public function setPersistence (int $mode) {}
 
 	/**
-	 * Sets the class which handles SOAP requests
-	 * @link http://www.php.net/manual/en/soapserver.setclass.php
-	 * @param string $class 
-	 * @param mixed $args 
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param string $class
+	 * @param mixed $args [optional]
 	 */
-	public function setClass (string $class, mixed ...$args): void {}
+	public function setClass (string $class, mixed ...$args) {}
 
 	/**
-	 * Sets the object which will be used to handle SOAP requests
-	 * @link http://www.php.net/manual/en/soapserver.setobject.php
-	 * @param object $object 
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param object $object
 	 */
-	public function setObject (object $object): void {}
+	public function setObject (object $object) {}
 
 	/**
-	 * Returns list of defined functions
-	 * @link http://www.php.net/manual/en/soapserver.getfunctions.php
-	 * @return array An array of the defined functions.
+	 * {@inheritdoc}
 	 */
-	public function getFunctions (): array {}
+	public function getFunctions () {}
 
 	/**
-	 * Adds one or more functions to handle SOAP requests
-	 * @link http://www.php.net/manual/en/soapserver.addfunction.php
-	 * @param array|string|int $functions 
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param mixed $functions
 	 */
-	public function addFunction (array|string|int $functions): void {}
+	public function addFunction ($functions = null) {}
 
 	/**
-	 * Handles a SOAP request
-	 * @link http://www.php.net/manual/en/soapserver.handle.php
-	 * @param string|null $request [optional] 
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param string|null $request [optional]
 	 */
-	public function handle (?string $request = null): void {}
+	public function handle (?string $request = NULL) {}
 
 }
 
-/**
- * Represents a SOAP fault.
- * @link http://www.php.net/manual/en/class.soapfault.php
- */
 class SoapFault extends Exception implements Stringable, Throwable {
 
 	public string $faultstring;
@@ -282,22 +203,18 @@ class SoapFault extends Exception implements Stringable, Throwable {
 	public mixed $headerfault;
 
 	/**
-	 * SoapFault constructor
-	 * @link http://www.php.net/manual/en/soapfault.construct.php
-	 * @param array|string|null $code 
-	 * @param string $string 
-	 * @param string|null $actor [optional] 
-	 * @param mixed $details [optional] 
-	 * @param string|null $name [optional] 
-	 * @param mixed $headerFault [optional] 
-	 * @return array|string|null 
+	 * {@inheritdoc}
+	 * @param array|string|null $code
+	 * @param string $string
+	 * @param string|null $actor [optional]
+	 * @param mixed $details [optional]
+	 * @param string|null $name [optional]
+	 * @param mixed $headerFault [optional]
 	 */
-	public function __construct (array|string|null $code, string $string, ?string $actor = null, mixed $details = null, ?string $name = null, mixed $headerFault = null): array|string|null {}
+	public function __construct (array|string|null $code = null, string $string, ?string $actor = NULL, mixed $details = NULL, ?string $name = NULL, mixed $headerFault = NULL) {}
 
 	/**
-	 * Obtain a string representation of a SoapFault
-	 * @link http://www.php.net/manual/en/soapfault.tostring.php
-	 * @return string A string describing the SoapFault.
+	 * {@inheritdoc}
 	 */
 	public function __toString (): string {}
 
@@ -307,64 +224,42 @@ class SoapFault extends Exception implements Stringable, Throwable {
 	public function __wakeup () {}
 
 	/**
-	 * Gets the Exception message
-	 * @link http://www.php.net/manual/en/exception.getmessage.php
-	 * @return string Returns the Exception message as a string.
+	 * {@inheritdoc}
 	 */
 	final public function getMessage (): string {}
 
 	/**
-	 * Gets the Exception code
-	 * @link http://www.php.net/manual/en/exception.getcode.php
-	 * @return int Returns the exception code as int in
-	 * Exception but possibly as other type in
-	 * Exception descendants (for example as
-	 * string in PDOException).
+	 * {@inheritdoc}
 	 */
-	final public function getCode (): int {}
+	final public function getCode () {}
 
 	/**
-	 * Gets the file in which the exception was created
-	 * @link http://www.php.net/manual/en/exception.getfile.php
-	 * @return string Returns the filename in which the exception was created.
+	 * {@inheritdoc}
 	 */
 	final public function getFile (): string {}
 
 	/**
-	 * Gets the line in which the exception was created
-	 * @link http://www.php.net/manual/en/exception.getline.php
-	 * @return int Returns the line number where the exception was created.
+	 * {@inheritdoc}
 	 */
 	final public function getLine (): int {}
 
 	/**
-	 * Gets the stack trace
-	 * @link http://www.php.net/manual/en/exception.gettrace.php
-	 * @return array Returns the Exception stack trace as an array.
+	 * {@inheritdoc}
 	 */
 	final public function getTrace (): array {}
 
 	/**
-	 * Returns previous Throwable
-	 * @link http://www.php.net/manual/en/exception.getprevious.php
-	 * @return Throwable|null Returns the previous Throwable if available 
-	 * or null otherwise.
+	 * {@inheritdoc}
 	 */
 	final public function getPrevious (): ?Throwable {}
 
 	/**
-	 * Gets the stack trace as a string
-	 * @link http://www.php.net/manual/en/exception.gettraceasstring.php
-	 * @return string Returns the Exception stack trace as a string.
+	 * {@inheritdoc}
 	 */
 	final public function getTraceAsString (): string {}
 
 }
 
-/**
- * Represents parameter to a SOAP call.
- * @link http://www.php.net/manual/en/class.soapparam.php
- */
 class SoapParam  {
 
 	public string $param_name;
@@ -372,20 +267,14 @@ class SoapParam  {
 	public mixed $param_data;
 
 	/**
-	 * SoapParam constructor
-	 * @link http://www.php.net/manual/en/soapparam.construct.php
-	 * @param mixed $data 
-	 * @param string $name 
-	 * @return mixed 
+	 * {@inheritdoc}
+	 * @param mixed $data
+	 * @param string $name
 	 */
-	public function __construct (mixed $data, string $name): mixed {}
+	public function __construct (mixed $data = null, string $name) {}
 
 }
 
-/**
- * Represents a SOAP header.
- * @link http://www.php.net/manual/en/class.soapheader.php
- */
 class SoapHeader  {
 
 	public string $namespace;
@@ -399,34 +288,28 @@ class SoapHeader  {
 	public string|int|null $actor;
 
 	/**
-	 * SoapHeader constructor
-	 * @link http://www.php.net/manual/en/soapheader.construct.php
-	 * @param string $namespace 
-	 * @param string $name 
-	 * @param mixed $data [optional] 
-	 * @param bool $mustunderstand [optional] 
-	 * @param string $actor [optional] 
-	 * @return string 
+	 * {@inheritdoc}
+	 * @param string $namespace
+	 * @param string $name
+	 * @param mixed $data [optional]
+	 * @param bool $mustUnderstand [optional]
+	 * @param string|int|null $actor [optional]
 	 */
-	public function __construct (string $namespace, string $name, mixed $data = null, bool $mustunderstand = null, string $actor = null): string {}
+	public function __construct (string $namespace, string $name, mixed $data = NULL, bool $mustUnderstand = false, string|int|null $actor = NULL) {}
 
 }
 
 /**
- * Set whether to use the SOAP error handler
- * @link http://www.php.net/manual/en/function.use-soap-error-handler.php
- * @param bool $enable [optional] 
- * @return bool Returns the original value.
+ * {@inheritdoc}
+ * @param bool $enable [optional]
  */
 function use_soap_error_handler (bool $enable = true): bool {}
 
 /**
- * Checks if a SOAP call has failed
- * @link http://www.php.net/manual/en/function.is-soap-fault.php
- * @param mixed $object 
- * @return bool This will return true on error, and false otherwise.
+ * {@inheritdoc}
+ * @param mixed $object
  */
-function is_soap_fault (mixed $object): bool {}
+function is_soap_fault (mixed $object = null): bool {}
 
 define ('SOAP_1_1', 1);
 define ('SOAP_1_2', 2);
@@ -510,4 +393,4 @@ define ('SOAP_SSL_METHOD_SSLv2', 1);
 define ('SOAP_SSL_METHOD_SSLv3', 2);
 define ('SOAP_SSL_METHOD_SSLv23', 3);
 
-// End of soap v.8.2.6
+// End of soap v.8.3.0

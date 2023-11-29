@@ -1,95 +1,72 @@
 <?php
 
-// Start of bz2 v.8.2.6
+// Start of bz2 v.8.3.0
 
 /**
- * Opens a bzip2 compressed file
- * @link http://www.php.net/manual/en/function.bzopen.php
- * @param string|resource $file 
- * @param string $mode 
- * @return resource|false If the open fails, bzopen returns false, otherwise
- * it returns a pointer to the newly opened file.
+ * {@inheritdoc}
+ * @param mixed $file
+ * @param string $mode
  */
-function bzopen ($file, string $mode) {}
+function bzopen ($file = null, string $mode) {}
 
 /**
- * Binary safe bzip2 file read
- * @link http://www.php.net/manual/en/function.bzread.php
- * @param resource $bz 
- * @param int $length [optional] 
- * @return string|false Returns the uncompressed data, or false on error.
+ * {@inheritdoc}
+ * @param mixed $bz
+ * @param int $length [optional]
  */
-function bzread ($bz, int $length = 1024): string|false {}
+function bzread ($bz = null, int $length = 1024): string|false {}
 
 /**
- * Binary safe bzip2 file write
- * @link http://www.php.net/manual/en/function.bzwrite.php
- * @param resource $bz 
- * @param string $data 
- * @param int|null $length [optional] 
- * @return int|false Returns the number of bytes written, or false on error.
+ * {@inheritdoc}
+ * @param mixed $bz
+ * @param string $data
+ * @param int|null $length [optional]
  */
-function bzwrite ($bz, string $data, ?int $length = null): int|false {}
+function bzwrite ($bz = null, string $data, ?int $length = NULL): int|false {}
 
 /**
- * Do nothing
- * @link http://www.php.net/manual/en/function.bzflush.php
- * @param resource $bz 
- * @return bool Returns true on success or false on failure.
+ * {@inheritdoc}
+ * @param mixed $bz
  */
-function bzflush ($bz): bool {}
+function bzflush ($bz = null): bool {}
 
 /**
- * Close a bzip2 file
- * @link http://www.php.net/manual/en/function.bzclose.php
- * @param resource $bz 
- * @return bool Returns true on success or false on failure.
+ * {@inheritdoc}
+ * @param mixed $bz
  */
-function bzclose ($bz): bool {}
+function bzclose ($bz = null): bool {}
 
 /**
- * Returns a bzip2 error number
- * @link http://www.php.net/manual/en/function.bzerrno.php
- * @param resource $bz 
- * @return int Returns the error number as an integer.
+ * {@inheritdoc}
+ * @param mixed $bz
  */
-function bzerrno ($bz): int {}
+function bzerrno ($bz = null): int {}
 
 /**
- * Returns a bzip2 error string
- * @link http://www.php.net/manual/en/function.bzerrstr.php
- * @param resource $bz 
- * @return string Returns a string containing the error message.
+ * {@inheritdoc}
+ * @param mixed $bz
  */
-function bzerrstr ($bz): string {}
+function bzerrstr ($bz = null): string {}
 
 /**
- * Returns the bzip2 error number and error string in an array
- * @link http://www.php.net/manual/en/function.bzerror.php
- * @param resource $bz 
- * @return array Returns an associative array, with the error code in the 
- * errno entry, and the error message in the
- * errstr entry.
+ * {@inheritdoc}
+ * @param mixed $bz
  */
-function bzerror ($bz): array {}
+function bzerror ($bz = null): array {}
 
 /**
- * Compress a string into bzip2 encoded data
- * @link http://www.php.net/manual/en/function.bzcompress.php
- * @param string $data 
- * @param int $block_size [optional] 
- * @param int $work_factor [optional] 
- * @return string|int The compressed string, or an error number if an error occurred.
+ * {@inheritdoc}
+ * @param string $data
+ * @param int $block_size [optional]
+ * @param int $work_factor [optional]
  */
-function bzcompress (string $data, int $block_size = 4, int $work_factor = null): string|int {}
+function bzcompress (string $data, int $block_size = 4, int $work_factor = 0): string|int {}
 
 /**
- * Decompresses bzip2 encoded data
- * @link http://www.php.net/manual/en/function.bzdecompress.php
- * @param string $data 
- * @param bool $use_less_memory [optional] 
- * @return string|int|false The decompressed string, or false or an error number if an error occurred.
+ * {@inheritdoc}
+ * @param string $data
+ * @param bool $use_less_memory [optional]
  */
 function bzdecompress (string $data, bool $use_less_memory = false): string|int|false {}
 
-// End of bz2 v.8.2.6
+// End of bz2 v.8.3.0

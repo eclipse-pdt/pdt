@@ -1,262 +1,190 @@
 <?php
 
-// Start of hash v.8.2.6
+// Start of hash v.8.3.0
 
-/**
- * @link http://www.php.net/manual/en/class.hashcontext.php
- */
 final class HashContext  {
 
 	/**
-	 * Private constructor to disallow direct instantiation
-	 * @link http://www.php.net/manual/en/hashcontext.construct.php
+	 * {@inheritdoc}
 	 */
 	private function __construct () {}
 
 	/**
-	 * Serializes the HashContext object
-	 * @link http://www.php.net/manual/en/hashcontext.serialize.php
-	 * @return array No value is returned.
+	 * {@inheritdoc}
 	 */
 	public function __serialize (): array {}
 
 	/**
-	 * Deserializes the data parameter into a HashContext object
-	 * @link http://www.php.net/manual/en/hashcontext.unserialize.php
-	 * @param array $data The value being deserialized.
-	 * @return void No value is returned.
+	 * {@inheritdoc}
+	 * @param array $data
 	 */
 	public function __unserialize (array $data): void {}
 
 }
 
 /**
- * Generate a hash value (message digest)
- * @link http://www.php.net/manual/en/function.hash.php
- * @param string $algo 
- * @param string $data 
- * @param bool $binary [optional] 
- * @param array $options [optional] 
- * @return string Returns a string containing the calculated message digest as lowercase hexits
- * unless binary is set to true in which case the raw
- * binary representation of the message digest is returned.
+ * {@inheritdoc}
+ * @param string $algo
+ * @param string $data
+ * @param bool $binary [optional]
+ * @param array $options [optional]
  */
-function hash (string $algo, string $data, bool $binary = false, array $options = '[]'): string {}
+function hash (string $algo, string $data, bool $binary = false, array $options = array (
+)): string {}
 
 /**
- * Generate a hash value using the contents of a given file
- * @link http://www.php.net/manual/en/function.hash-file.php
- * @param string $algo 
- * @param string $filename 
- * @param bool $binary [optional] 
- * @param array $options [optional] 
- * @return string|false Returns a string containing the calculated message digest as lowercase hexits
- * unless binary is set to true in which case the raw
- * binary representation of the message digest is returned.
+ * {@inheritdoc}
+ * @param string $algo
+ * @param string $filename
+ * @param bool $binary [optional]
+ * @param array $options [optional]
  */
-function hash_file (string $algo, string $filename, bool $binary = false, array $options = '[]'): string|false {}
+function hash_file (string $algo, string $filename, bool $binary = false, array $options = array (
+)): string|false {}
 
 /**
- * Generate a keyed hash value using the HMAC method
- * @link http://www.php.net/manual/en/function.hash-hmac.php
- * @param string $algo 
- * @param string $data 
- * @param string $key 
- * @param bool $binary [optional] 
- * @return string Returns a string containing the calculated message digest as lowercase hexits
- * unless binary is set to true in which case the raw
- * binary representation of the message digest is returned.
+ * {@inheritdoc}
+ * @param string $algo
+ * @param string $data
+ * @param string $key
+ * @param bool $binary [optional]
  */
 function hash_hmac (string $algo, string $data, string $key, bool $binary = false): string {}
 
 /**
- * Generate a keyed hash value using the HMAC method and the contents of a given file
- * @link http://www.php.net/manual/en/function.hash-hmac-file.php
- * @param string $algo 
- * @param string $filename 
- * @param string $key 
- * @param bool $binary [optional] 
- * @return string|false Returns a string containing the calculated message digest as lowercase hexits
- * unless binary is set to true in which case the raw
- * binary representation of the message digest is returned.
- * Returns false if the file filename cannot be read.
+ * {@inheritdoc}
+ * @param string $algo
+ * @param string $filename
+ * @param string $key
+ * @param bool $binary [optional]
  */
 function hash_hmac_file (string $algo, string $filename, string $key, bool $binary = false): string|false {}
 
 /**
- * Initialize an incremental hashing context
- * @link http://www.php.net/manual/en/function.hash-init.php
- * @param string $algo 
- * @param int $flags [optional] 
- * @param string $key [optional] 
- * @param array $options [optional] 
- * @return HashContext Returns a Hashing Context for use with hash_update,
- * hash_update_stream, hash_update_file,
- * and hash_final.
+ * {@inheritdoc}
+ * @param string $algo
+ * @param int $flags [optional]
+ * @param string $key [optional]
+ * @param array $options [optional]
  */
-function hash_init (string $algo, int $flags = null, string $key = '""', array $options = '[]'): HashContext {}
+function hash_init (string $algo, int $flags = 0, string $key = '', array $options = array (
+)): HashContext {}
 
 /**
- * Pump data into an active hashing context
- * @link http://www.php.net/manual/en/function.hash-update.php
- * @param HashContext $context 
- * @param string $data 
- * @return bool Returns true.
+ * {@inheritdoc}
+ * @param HashContext $context
+ * @param string $data
  */
 function hash_update (HashContext $context, string $data): bool {}
 
 /**
- * Pump data into an active hashing context from an open stream
- * @link http://www.php.net/manual/en/function.hash-update-stream.php
- * @param HashContext $context 
- * @param resource $stream 
- * @param int $length [optional] 
- * @return int Actual number of bytes added to the hashing context from stream.
+ * {@inheritdoc}
+ * @param HashContext $context
+ * @param mixed $stream
+ * @param int $length [optional]
  */
-function hash_update_stream (HashContext $context, $stream, int $length = -1): int {}
+function hash_update_stream (HashContext $context, $stream = null, int $length = -1): int {}
 
 /**
- * Pump data into an active hashing context from a file
- * @link http://www.php.net/manual/en/function.hash-update-file.php
- * @param HashContext $context 
- * @param string $filename 
- * @param resource|null $stream_context [optional] 
- * @return bool Returns true on success or false on failure.
+ * {@inheritdoc}
+ * @param HashContext $context
+ * @param string $filename
+ * @param mixed $stream_context [optional]
  */
-function hash_update_file (HashContext $context, string $filename, $stream_context = null): bool {}
+function hash_update_file (HashContext $context, string $filename, $stream_context = NULL): bool {}
 
 /**
- * Finalize an incremental hash and return resulting digest
- * @link http://www.php.net/manual/en/function.hash-final.php
- * @param HashContext $context 
- * @param bool $binary [optional] 
- * @return string Returns a string containing the calculated message digest as lowercase hexits
- * unless binary is set to true in which case the raw
- * binary representation of the message digest is returned.
+ * {@inheritdoc}
+ * @param HashContext $context
+ * @param bool $binary [optional]
  */
 function hash_final (HashContext $context, bool $binary = false): string {}
 
 /**
- * Copy hashing context
- * @link http://www.php.net/manual/en/function.hash-copy.php
- * @param HashContext $context 
- * @return HashContext Returns a copy of Hashing Context.
+ * {@inheritdoc}
+ * @param HashContext $context
  */
 function hash_copy (HashContext $context): HashContext {}
 
 /**
- * Return a list of registered hashing algorithms
- * @link http://www.php.net/manual/en/function.hash-algos.php
- * @return array Returns a numerically indexed array containing the list of supported
- * hashing algorithms.
+ * {@inheritdoc}
  */
 function hash_algos (): array {}
 
 /**
- * Return a list of registered hashing algorithms suitable for hash_hmac
- * @link http://www.php.net/manual/en/function.hash-hmac-algos.php
- * @return array Returns a numerically indexed array containing the list of supported hashing
- * algorithms suitable for hash_hmac.
+ * {@inheritdoc}
  */
 function hash_hmac_algos (): array {}
 
 /**
- * Generate a PBKDF2 key derivation of a supplied password
- * @link http://www.php.net/manual/en/function.hash-pbkdf2.php
- * @param string $algo 
- * @param string $password 
- * @param string $salt 
- * @param int $iterations 
- * @param int $length [optional] 
- * @param bool $binary [optional] 
- * @return string Returns a string containing the derived key as lowercase hexits unless
- * binary is set to true in which case the raw
- * binary representation of the derived key is returned.
+ * {@inheritdoc}
+ * @param string $algo
+ * @param string $password
+ * @param string $salt
+ * @param int $iterations
+ * @param int $length [optional]
+ * @param bool $binary [optional]
+ * @param array $options [optional]
  */
-function hash_pbkdf2 (string $algo, string $password, string $salt, int $iterations, int $length = null, bool $binary = false): string {}
+function hash_pbkdf2 (string $algo, string $password, string $salt, int $iterations, int $length = 0, bool $binary = false, array $options = array (
+)): string {}
 
 /**
- * Timing attack safe string comparison
- * @link http://www.php.net/manual/en/function.hash-equals.php
- * @param string $known_string The string of known length to compare against
- * @param string $user_string The user-supplied string
- * @return bool Returns true when the two strings are equal, false otherwise.
+ * {@inheritdoc}
+ * @param string $known_string
+ * @param string $user_string
  */
 function hash_equals (string $known_string, string $user_string): bool {}
 
 /**
- * Generate a HKDF key derivation of a supplied key input
- * @link http://www.php.net/manual/en/function.hash-hkdf.php
- * @param string $algo 
- * @param string $key 
- * @param int $length [optional] 
- * @param string $info [optional] 
- * @param string $salt [optional] 
- * @return string Returns a string containing a raw binary representation of the derived key
- * (also known as output keying material - OKM).
+ * {@inheritdoc}
+ * @param string $algo
+ * @param string $key
+ * @param int $length [optional]
+ * @param string $info [optional]
+ * @param string $salt [optional]
  */
-function hash_hkdf (string $algo, string $key, int $length = null, string $info = '""', string $salt = '""'): string {}
+function hash_hkdf (string $algo, string $key, int $length = 0, string $info = '', string $salt = ''): string {}
 
 /**
- * Gets the block size of the specified hash
- * @link http://www.php.net/manual/en/function.mhash-get-block-size.php
- * @param int $algo 
- * @return int|false Returns the size in bytes or false, if the algo
- * does not exist.
- * @deprecated 1
+ * {@inheritdoc}
+ * @param int $algo
+ * @deprecated 
  */
 function mhash_get_block_size (int $algo): int|false {}
 
 /**
- * Gets the name of the specified hash
- * @link http://www.php.net/manual/en/function.mhash-get-hash-name.php
- * @param int $algo 
- * @return string|false Returns the name of the hash or false, if the hash does not exist.
- * @deprecated 1
+ * {@inheritdoc}
+ * @param int $algo
+ * @deprecated 
  */
 function mhash_get_hash_name (int $algo): string|false {}
 
 /**
- * Generates a key
- * @link http://www.php.net/manual/en/function.mhash-keygen-s2k.php
- * @param int $algo 
- * @param string $password 
- * @param string $salt 
- * @param int $length 
- * @return string|false Returns the generated key as a string, or false on error.
- * @deprecated 1
+ * {@inheritdoc}
+ * @param int $algo
+ * @param string $password
+ * @param string $salt
+ * @param int $length
+ * @deprecated 
  */
 function mhash_keygen_s2k (int $algo, string $password, string $salt, int $length): string|false {}
 
 /**
- * Gets the highest available hash ID
- * @link http://www.php.net/manual/en/function.mhash-count.php
- * @return int Returns the highest available hash ID. Hashes are numbered from 0 to this
- * hash ID.
- * @deprecated 1
+ * {@inheritdoc}
+ * @deprecated 
  */
 function mhash_count (): int {}
 
 /**
- * Computes hash
- * @link http://www.php.net/manual/en/function.mhash.php
- * @param int $algo 
- * @param string $data 
- * @param string|null $key [optional] 
- * @return string|false Returns the resulting hash (also called digest) or HMAC as a string, or
- * false on error.
- * @deprecated 1
+ * {@inheritdoc}
+ * @param int $algo
+ * @param string $data
+ * @param string|null $key [optional]
+ * @deprecated 
  */
-function mhash (int $algo, string $data, ?string $key = null): string|false {}
+function mhash (int $algo, string $data, ?string $key = NULL): string|false {}
 
-
-/**
- * Optional flag for hash_init.
- * Indicates that the HMAC digest-keying algorithm should be
- * applied to the current hashing context.
- * @link http://www.php.net/manual/en/hash.constants.php
- * @var int
- */
 define ('HASH_HMAC', 1);
 define ('MHASH_CRC32', 0);
 define ('MHASH_MD5', 1);
@@ -298,4 +226,4 @@ define ('MHASH_XXH64', 39);
 define ('MHASH_XXH3', 40);
 define ('MHASH_XXH128', 41);
 
-// End of hash v.8.2.6
+// End of hash v.8.3.0
