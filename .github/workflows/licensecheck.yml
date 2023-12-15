@@ -19,3 +19,5 @@ jobs:
       projectId: tools.pdt
     secrets:
       gitlabAPIToken: ${{ secrets.GITLAB_API_TOKEN }}
+    permissions:
+      pull-requests: write
