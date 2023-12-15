@@ -96,6 +96,7 @@ public class NewPHPTraitWizard extends NewPHPTypeWizard implements INewWizard {
 		NewPHPTraitPage page = (NewPHPTraitPage) this.page;
 		NewPHPElementData data = new NewPHPElementData();
 		data.isGeneratePHPDoc = page.isCheckboxCreationChecked(NewPHPTypePage.PHP_DOC_BLOCKS);
+		data.isStrictTypes = page.isCheckboxCreationChecked(NewPHPClassPage.STRICT_TYPES);
 		List<?> interfacesList = page.getInterfaces();
 		IType[] interfaces = new IType[interfacesList.size()];
 		interfacesList.toArray(interfaces);

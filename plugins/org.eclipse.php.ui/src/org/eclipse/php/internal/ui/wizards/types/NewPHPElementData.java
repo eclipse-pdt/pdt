@@ -33,6 +33,7 @@ public class NewPHPElementData {
 	public String[] requiredToAdd = new String[0];
 	public boolean isGenerateConstructor = false;
 	public boolean isGenerateDestructor = false;
+	public boolean isStrictTypes = false;
 	public boolean isGeneratePHPDoc = false;
 	public boolean isGenerateTODOs = false;
 	public boolean isInFirstBlock = false;

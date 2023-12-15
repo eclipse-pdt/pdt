@@ -84,6 +84,7 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 	public static final String PHP_DOC_BLOCKS = "PHPDoc Blocks";//$NON-NLS-1$
 	public static final String DESTRUCTOR = "Destructor";//$NON-NLS-1$
 	public static final String CONSTRUCTOR = "Constructor";//$NON-NLS-1$
+	public static final String STRICT_TYPES = "strict_types";//$NON-NLS-1$
 	public static final String INHERITED_ABSTRACT_METHODS = "Inherited abstract methods";//$NON-NLS-1$
 
 	private static final Pattern PHP_IDENTIFIER_PATTERN = Pattern

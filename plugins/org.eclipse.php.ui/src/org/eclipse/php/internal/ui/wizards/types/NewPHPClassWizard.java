@@ -130,6 +130,7 @@ public class NewPHPClassWizard extends NewPHPTypeWizard implements INewWizard {
 		data.isGenerateConstructor = page.isCheckboxCreationChecked(NewPHPClassPage.CONSTRUCTOR);
 
 		data.isGenerateDestructor = page.isCheckboxCreationChecked(NewPHPClassPage.DESTRUCTOR);
+		data.isStrictTypes = page.isCheckboxCreationChecked(NewPHPClassPage.STRICT_TYPES);
 		data.isFinal = page.isCreateModifierChecked(1);
 		data.isAbstract = page.isCreateModifierChecked(2);
 

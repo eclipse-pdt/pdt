@@ -1,4 +1,6 @@
 <?php
+/*strict_types:*/declare(strict_types=#strict_types_value#);
+/*:strict_types*/
 /*namespace:*/namespace #namespace_name#;
 /*:namespace*/
 /*php_content:*/
@@ -21,7 +23,7 @@
   /*functions:*/
   /*func_phpdoc:*/
   /**
-   /*func_phpdoc_params:*/*#func_phpdoc_param# 
+   /*func_phpdoc_params:*/*#func_phpdoc_param#
    /*:func_phpdoc_params*/ #func_phpdoc_see#*//*:func_phpdoc*/
   #func_modifier# #func_static_modifier# function #func_name#(/*func_params:*/#func_param_name#/*:func_params*/) {
       #func_parent_call#

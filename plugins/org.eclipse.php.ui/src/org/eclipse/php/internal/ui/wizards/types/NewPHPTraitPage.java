@@ -35,6 +35,7 @@ import org.eclipse.swt.widgets.Composite;
 public class NewPHPTraitPage extends NewPHPTypePage {
 
 	private static final String[] TRAIT__CHECKBOXES = new String[] { PHP_DOC_BLOCKS };
+	private static final String[] TRAIT__CHECKBOXES7 = new String[] { PHP_DOC_BLOCKS, STRICT_TYPES };
 
 	public NewPHPTraitPage() {
 		super(Messages.NewPHPTraitPage_0);
@@ -77,7 +78,11 @@ public class NewPHPTraitPage extends NewPHPTypePage {
 
 		addElementNameText(elementSection, Messages.NewPHPTraitPage_3);
 		addNamespaceText(elementSection);
-		addCheckboxesCreation(elementSection, TRAIT__CHECKBOXES);
+		if (phpVersion == null || phpVersion.isGreaterThan(PHPVersion.PHP5_4)) {
+			addCheckboxesCreation(elementSection, TRAIT__CHECKBOXES7);
+		} else {
+			addCheckboxesCreation(elementSection, TRAIT__CHECKBOXES);
+		}
 	}
 
 	@Override
@@ -108,8 +113,8 @@ public class NewPHPTraitPage extends NewPHPTypePage {
 	}
 
 	/**
-	 * This method was overriden to handle cases in which project's PHP version is
-	 * less than 5
+	 * This method was overriden to handle cases in which project's PHP version
+	 * is less than 5
 	 */
 	@Override
 	public void setVisible(boolean visible) {

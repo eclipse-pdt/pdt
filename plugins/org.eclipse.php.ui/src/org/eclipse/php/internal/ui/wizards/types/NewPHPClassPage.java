@@ -56,6 +56,9 @@ public class NewPHPClassPage extends NewPHPTypePage {
 	private Button browseSuperBtn;
 	private static final String[] CLASS_CHECKBOXES_PHP5 = new String[] { REQUIRE_ONCE, CONSTRUCTOR, PHP_DOC_BLOCKS,
 			null, DESTRUCTOR, TODOS, null, INHERITED_ABSTRACT_METHODS };
+
+	private static final String[] CLASS_CHECKBOXES_PHP7 = new String[] { REQUIRE_ONCE, STRICT_TYPES, CONSTRUCTOR,
+			PHP_DOC_BLOCKS, null, DESTRUCTOR, TODOS, null, INHERITED_ABSTRACT_METHODS };
 	public static final String[] CLASS_MODIFIERS = new String[] { "none", //$NON-NLS-1$
 			"final", "abstract" }; //$NON-NLS-1$ //$NON-NLS-2$
 
@@ -136,7 +139,11 @@ public class NewPHPClassPage extends NewPHPTypePage {
 			createTraitsControls(elementSection);
 		}
 
-		addCheckboxesCreation(elementSection, CLASS_CHECKBOXES_PHP5);
+		if (phpVersion == null || phpVersion.isGreaterThan(PHPVersion.PHP5_4)) {
+			addCheckboxesCreation(elementSection, CLASS_CHECKBOXES_PHP7);
+		} else {
+			addCheckboxesCreation(elementSection, CLASS_CHECKBOXES_PHP5);
+		}
 	}
 
 	// add the UI section that handles the Superclass selection
@@ -296,7 +303,8 @@ public class NewPHPClassPage extends NewPHPTypePage {
 	}
 
 	/**
-	 * Creates a UI component withing this Wizard page for selecting the Superclass
+	 * Creates a UI component withing this Wizard page for selecting the
+	 * Superclass
 	 * 
 	 * @return the selected super class
 	 */
@@ -340,7 +348,8 @@ public class NewPHPClassPage extends NewPHPTypePage {
 	}
 
 	/**
-	 * Returns true/false - whether the requested modifer's check box is selected
+	 * Returns true/false - whether the requested modifer's check box is
+	 * selected
 	 * 
 	 * @param checkBoxIndex
 	 *            - the index of the checkbox

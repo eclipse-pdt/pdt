@@ -35,6 +35,14 @@ public class PHPInterfaceTemplate extends PHPElementTemplate {
 			set(DEFAULT_PHPDOC_VAR, getDefaultPHPDoc());
 		}
 
+		extract(INPUT, STRICT_TYPES_STRUCT, STRICT_TYPES_COMPILED);
+		set(STRICT_TYPES_STRUCT, ""); //$NON-NLS-1$
+		// handle strict_types
+		if (data.isStrictTypes) {
+			set(STRICT_TYPES_VALUE, "1"); //$NON-NLS-1$
+			compile(STRICT_TYPES_COMPILED, STRICT_TYPES_STRUCT, true);
+		}
+
 		// handle interfaces declaration
 		extract(INPUT, INTERFACES_STRUCT, INTERFACES_STRUCT_COMPILED);
 		set(INTERFACES_STRUCT, ""); //$NON-NLS-1$

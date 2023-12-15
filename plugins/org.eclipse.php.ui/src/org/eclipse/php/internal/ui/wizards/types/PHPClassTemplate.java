@@ -42,6 +42,15 @@ public class PHPClassTemplate extends PHPElementTemplate {
 
 	@Override
 	public String processTemplate(NewPHPElementData data) {
+
+		extract(INPUT, STRICT_TYPES_STRUCT, STRICT_TYPES_COMPILED);
+		set(STRICT_TYPES_STRUCT, ""); //$NON-NLS-1$
+		// handle strict_types
+		if (data.isStrictTypes) {
+			set(STRICT_TYPES_VALUE, "1"); //$NON-NLS-1$
+			compile(STRICT_TYPES_COMPILED, STRICT_TYPES_STRUCT, true);
+		}
+
 		// handle class default PHPDOC
 		set(DEFAULT_PHPDOC_VAR, ""); //$NON-NLS-1$
 
@@ -532,15 +541,16 @@ public class PHPClassTemplate extends PHPElementTemplate {
 	}
 
 	/**
-	 * returns true if the given functions array contains a function by the given
-	 * name This method is used for avoiding multiple declaration of constructors
-	 * and destructors.
+	 * returns true if the given functions array contains a function by the
+	 * given name This method is used for avoiding multiple declaration of
+	 * constructors and destructors.
 	 * 
 	 * @param funcs
 	 *            the functions array to search in
 	 * @param name
 	 *            the name of the function to look for
-	 * @return true if there is a function by the name "name" in the array "funcs"
+	 * @return true if there is a function by the name "name" in the array
+	 *         "funcs"
 	 */
 	private boolean containsFunction(IMethod[] funcs, String name) {
 		for (int i = 0; i < funcs.length; i++) {

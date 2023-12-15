@@ -1,4 +1,6 @@
 <?php
+/*strict_types:*/declare(strict_types=#strict_types_value#);
+/*:strict_types*/
 /*namespace:*/namespace #namespace_name#;
 /*:namespace*/
 /*php_content:*/

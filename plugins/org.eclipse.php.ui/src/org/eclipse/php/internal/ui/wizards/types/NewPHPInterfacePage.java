@@ -18,6 +18,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IScriptProject;
+import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.internal.ui.util.StatusInfo;
 import org.eclipse.php.internal.ui.util.StatusUtil;
 import org.eclipse.swt.SWT;
@@ -32,6 +33,7 @@ import org.eclipse.swt.widgets.Composite;
 public class NewPHPInterfacePage extends NewPHPTypePage {
 
 	private static final String[] INTERFACE__CHECKBOXES = new String[] { REQUIRE_ONCE, PHP_DOC_BLOCKS };
+	private static final String[] INTERFACE__CHECKBOXES7 = new String[] { REQUIRE_ONCE, STRICT_TYPES, PHP_DOC_BLOCKS };
 
 	public NewPHPInterfacePage() {
 		super(Messages.NewPHPInterfacePage_0);
@@ -75,7 +77,11 @@ public class NewPHPInterfacePage extends NewPHPTypePage {
 		addNamespaceText(elementSection);
 
 		createSuperInterfacesControls(elementSection);
-		addCheckboxesCreation(elementSection, INTERFACE__CHECKBOXES);
+		if (phpVersion == null || phpVersion.isGreaterThan(PHPVersion.PHP5_4)) {
+			addCheckboxesCreation(elementSection, INTERFACE__CHECKBOXES7);
+		} else {
+			addCheckboxesCreation(elementSection, INTERFACE__CHECKBOXES);
+		}
 	}
 
 	@Override
@@ -106,8 +112,8 @@ public class NewPHPInterfacePage extends NewPHPTypePage {
 	}
 
 	/**
-	 * This method was overriden to handle cases in which project's PHP version is
-	 * less than 5
+	 * This method was overriden to handle cases in which project's PHP version
+	 * is less than 5
 	 */
 	@Override
 	public void setVisible(boolean visible) {
