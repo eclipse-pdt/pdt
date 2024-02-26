@@ -261,7 +261,7 @@ public class PackageSearch implements PackageSearchListenerInterface, IPackageCh
 	}
 
 	protected synchronized void startQuery() {
-		if (lastQuery == currentQuery) {
+		if (lastQuery.equals(currentQuery)) {
 			return;
 		}
 		downloader.search(currentQuery);
