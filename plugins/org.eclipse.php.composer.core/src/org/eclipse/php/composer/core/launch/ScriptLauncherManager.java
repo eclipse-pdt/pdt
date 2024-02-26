@@ -15,8 +15,6 @@ package org.eclipse.php.composer.core.launch;
 
 import java.util.HashMap;
 
-import javax.inject.Inject;
-
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionRegistry;
@@ -25,6 +23,8 @@ import org.eclipse.php.composer.core.ComposerPlugin;
 import org.eclipse.php.composer.core.launch.environment.Environment;
 import org.eclipse.php.composer.core.launch.environment.EnvironmentFactory;
 import org.eclipse.php.composer.core.log.Logger;
+
+import jakarta.inject.Inject;
 
 /**
  * 

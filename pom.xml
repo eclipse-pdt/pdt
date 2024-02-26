@@ -11,7 +11,7 @@
 
 	<!-- this is the parent POM from which all modules inherit common settings -->
 	<properties>
-		<tycho-version>4.0.2</tycho-version>
+		<tycho-version>4.0.6</tycho-version>
 		<antrun-version>1.8</antrun-version>
 		<maven.test.failure.ignore>true</maven.test.failure.ignore>
 		<test.vmargs>-server</test.vmargs>

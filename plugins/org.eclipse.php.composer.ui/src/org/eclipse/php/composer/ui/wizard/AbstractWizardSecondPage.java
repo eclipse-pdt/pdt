@@ -22,8 +22,6 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
-import javax.inject.Inject;
-
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.*;
 import org.eclipse.dltk.core.DLTKCore;
@@ -63,6 +61,8 @@ import org.eclipse.php.internal.ui.wizards.PHPBuildpathDetector;
 import org.eclipse.php.ui.util.PHPProjectUtils;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.actions.WorkspaceModifyDelegatingOperation;
+
+import jakarta.inject.Inject;
 
 public abstract class AbstractWizardSecondPage extends CapabilityConfigurationPage
 		implements IPHPProjectCreateWizardPage, Observer {

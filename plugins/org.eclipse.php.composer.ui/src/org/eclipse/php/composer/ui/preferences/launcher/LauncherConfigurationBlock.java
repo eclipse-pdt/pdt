@@ -17,8 +17,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Inject;
-
 import org.eclipse.core.resources.IProject;
 import org.eclipse.dltk.internal.ui.wizards.dialogfields.SelectionButtonDialogFieldGroup;
 import org.eclipse.e4.core.contexts.ContextInjectionFactory;
@@ -44,6 +42,8 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
+
+import jakarta.inject.Inject;
 
 public abstract class LauncherConfigurationBlock extends OptionsConfigurationBlock implements IDialogFieldListener {
 

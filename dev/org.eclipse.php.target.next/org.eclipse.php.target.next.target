@@ -15,7 +15,8 @@
 <unit id="org.eclipse.equinox.p2.ui.discovery" version=""/>
 <unit id="org.eclipse.tm.terminal.feature.feature.group" version=""/>
 <unit id="org.eclipse.ptp.rdt.sync.feature.group" version=""/>
-<unit id="org.eclipse.ptp.remote.feature.group" version="" />
+
+<unit id="org.eclipse.ptp.remote.server.core" version="" />
 <unit id="org.eclipse.remote.feature.group" version="" />
 
 <unit id="org.eclipse.birt.chart.engine" version=""/>
@@ -23,7 +24,7 @@
 <unit id="org.eclipse.birt.chart.device.swt" version=""/>
 
 <unit id="org.eclipse.wildwebdeveloper.feature.feature.group" version="0.0.0"/>
-<repository location="https://download.eclipse.org/releases/2023-12/"/>
+<repository location="https://download.eclipse.org/releases/2024-03/"/>
 </location>
 
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
