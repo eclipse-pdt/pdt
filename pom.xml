@@ -11,7 +11,7 @@
 
 	<!-- this is the parent POM from which all modules inherit common settings -->
 	<properties>
-		<tycho-version>4.0.6</tycho-version>
+		<tycho-version>4.0.7</tycho-version>
 		<antrun-version>1.8</antrun-version>
 		<maven.test.failure.ignore>true</maven.test.failure.ignore>
 		<test.vmargs>-server</test.vmargs>
@@ -28,8 +28,8 @@
 		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
 		<sonar.junit.reportPaths>${maven.multiModuleProjectDirectory}/tests/org.eclipse.php.core.tests/target/surefire-reports,${maven.multiModuleProjectDirectory}/tests/org.eclipse.php.ui.tests/target/surefire-reports,${maven.multiModuleProjectDirectory}/tests/org.eclipse.php.composer.tests/target/surefire-reports,${maven.multiModuleProjectDirectory}/tests/org.eclipse.php.composer.api.tests/target/surefire-reports,${maven.multiModuleProjectDirectory}/tests/org.eclipse.php.formatter.core.tests/target/surefire-reports,${maven.multiModuleProjectDirectory}/tests/org.eclipse.php.profile.core.tests/target/surefire-reports,${maven.multiModuleProjectDirectory}/tests/org.eclipse.php.refactoring.core.tests/target/surefire-reports</sonar.junit.reportPaths>
 		<sonar.skippedModules>org.eclipse.php.core.performance.tests,org.eclipse.php,features,org.eclipse.php.repository,org.eclipse.php.core.parser</sonar.skippedModules>
-		<sonar.java.source>17</sonar.java.source>
-		<sonar.java.target>17</sonar.java.target>
+		<sonar.java.source>21</sonar.java.source>
+		<sonar.java.target>21</sonar.java.target>
 		
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<tycho.scmUrl>scm:git:https://github.com/eclipse/pdt.git</tycho.scmUrl>
