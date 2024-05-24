@@ -1,5 +1,10 @@
 {
-    "hash": "c8ef8ace5c224fc98bbe87347c264fbc",
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "7007e442e8d56beec4ea97bd51026839",
     "packages": [
         {
             "name": "gossi/ldap",
@@ -35,29 +40,69 @@
                 }
             ],
             "description": "A class collection to encapsulate php ldap function and work with them in a nicer (and oop) way.",
-            "time": "2012-06-12 11:55:45"
+            "time": "2012-06-12T11:55:45+00:00"
         },
         {
             "name": "phing/phing",
-            "version": "2.5.0",
+            "version": "2.17.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phingofficial/phing.git",
-                "reference": "2.5.0"
+                "reference": "9f3bc8c72e65452686dcf64497e02a082f138908"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phingofficial/phing/zipball/2.5.0",
-                "reference": "2.5.0",
+                "url": "https://api.github.com/repos/phingofficial/phing/zipball/9f3bc8c72e65452686dcf64497e02a082f138908",
+                "reference": "9f3bc8c72e65452686dcf64497e02a082f138908",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.2.0"
             },
+            "require-dev": {
+                "ext-pdo_sqlite": "*",
+                "mikey179/vfsstream": "^1.6",
+                "pdepend/pdepend": "2.x",
+                "pear/archive_tar": "1.4.x",
+                "pear/http_request2": "dev-trunk",
+                "pear/net_growl": "dev-trunk",
+                "pear/pear-core-minimal": "1.10.1",
+                "pear/versioncontrol_git": "@dev",
+                "pear/versioncontrol_svn": "~0.5",
+                "phpdocumentor/phpdocumentor": "2.x",
+                "phploc/phploc": "~2.0.6",
+                "phpmd/phpmd": "~2.2",
+                "phpunit/phpunit": ">=3.7",
+                "sebastian/git": "~1.0",
+                "sebastian/phpcpd": "2.x",
+                "siad007/versioncontrol_hg": "^1.0",
+                "simpletest/simpletest": "^1.1",
+                "squizlabs/php_codesniffer": "~2.2",
+                "symfony/yaml": "^2.8 || ^3.1 || ^4.0"
+            },
+            "suggest": {
+                "pdepend/pdepend": "PHP version of JDepend",
+                "pear/archive_tar": "Tar file management class",
+                "pear/versioncontrol_git": "A library that provides OO interface to handle Git repository",
+                "pear/versioncontrol_svn": "A simple OO-style interface for Subversion, the free/open-source version control system",
+                "phpdocumentor/phpdocumentor": "Documentation Generator for PHP",
+                "phploc/phploc": "A tool for quickly measuring the size of a PHP project",
+                "phpmd/phpmd": "PHP version of PMD tool",
+                "phpunit/php-code-coverage": "Library that provides collection, processing, and rendering functionality for PHP code coverage information",
+                "phpunit/phpunit": "The PHP Unit Testing Framework",
+                "sebastian/phpcpd": "Copy/Paste Detector (CPD) for PHP code",
+                "siad007/versioncontrol_hg": "A library for interfacing with Mercurial repositories.",
+                "tedivm/jshrink": "Javascript Minifier built in PHP"
+            },
             "bin": [
                 "bin/phing"
             ],
             "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.16.x-dev"
+                }
+            },
             "autoload": {
                 "classmap": [
                     "classes/phing/"
@@ -68,7 +113,7 @@
                 "classes"
             ],
             "license": [
-                "LGPL3"
+                "LGPL-3.0-only"
             ],
             "authors": [
                 {
@@ -77,35 +122,59 @@
                 },
                 {
                     "name": "Phing Community",
-                    "homepage": "http://www.phing.info/trac/wiki/Development/Contributors"
+                    "homepage": "https://www.phing.info/trac/wiki/Development/Contributors"
                 }
             ],
             "description": "PHing Is Not GNU make; it's a PHP project build system or build tool based on Apache Ant.",
-            "homepage": "http://www.phing.info/",
+            "homepage": "https://www.phing.info/",
             "keywords": [
                 "build",
+                "phing",
                 "task",
                 "tool"
             ],
-            "time": "2013-02-16 14:23:57"
+            "support": {
+                "irc": "irc://irc.freenode.net/phing",
+                "issues": "https://www.phing.info/trac/report",
+                "source": "https://github.com/phingofficial/phing/tree/2.17.4"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/mrook",
+                    "type": "github"
+                },
+                {
+                    "url": "https://github.com/siad007",
+                    "type": "github"
+                },
+                {
+                    "url": "https://www.patreon.com/michielrook",
+                    "type": "patreon"
+                }
+            ],
+            "time": "2022-07-08T09:07:07+00:00"
         },
         {
             "name": "propel/propel1",
-            "version": "1.6.9",
+            "version": "1.7.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/propelorm/Propel.git",
-                "reference": "1.6.9"
+                "reference": "d46b050b41f2a4c7a0ef58bd1b84c07bd5e1d2cd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/propelorm/Propel/zipball/1.6.9",
-                "reference": "1.6.9",
+                "url": "https://api.github.com/repos/propelorm/Propel/zipball/d46b050b41f2a4c7a0ef58bd1b84c07bd5e1d2cd",
+                "reference": "d46b050b41f2a4c7a0ef58bd1b84c07bd5e1d2cd",
                 "shasum": ""
             },
             "require": {
-                "phing/phing": ">=2.4,<3.0",
+                "phing/phing": "~2.4",
                 "php": ">=5.2.4"
+            },
+            "require-dev": {
+                "pear-pear.php.net/pear_packagefilemanager2": "@stable",
+                "phpunit/phpunit": "~4.0||~5.0"
             },
             "bin": [
                 "generator/bin/propel-gen",
@@ -114,7 +183,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.6-dev"
+                    "dev-master": "1.7-dev"
                 }
             },
             "autoload": {
@@ -147,7 +216,11 @@
                 "orm",
                 "persistence"
             ],
-            "time": "2013-03-31 17:20:51"
+            "support": {
+                "issues": "https://github.com/propelorm/Propel/issues",
+                "source": "https://github.com/propelorm/Propel/tree/1.7.2"
+            },
+            "time": "2019-11-05T14:55:42+00:00"
         },
         {
             "name": "symfony/console",
@@ -194,23 +267,20 @@
             ],
             "description": "Symfony Console Component",
             "homepage": "http://symfony.com",
-            "time": "2013-03-01 06:43:14"
+            "time": "2013-03-01T06:43:14+00:00"
         }
     ],
-    "packages-dev": [
-
-    ],
-    "aliases": [
-
-    ],
+    "packages-dev": [],
+    "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
         "gossi/ldap": 20
     },
+    "prefer-stable": false,
+    "prefer-lowest": false,
     "platform": {
         "php": ">=5.4"
     },
-    "platform-dev": [
-
-    ]
+    "platform-dev": [],
+    "plugin-api-version": "2.6.0"
 }
