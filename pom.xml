@@ -8,7 +8,6 @@
 	<version>8.3.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>PHP Development Tools (PDT)</name>
-
 	<!-- this is the parent POM from which all modules inherit common settings -->
 	<properties>
 		<tycho-version>4.0.7</tycho-version>
