@@ -3099,6 +3099,11 @@ T_LIST:s T_OPEN_PARENTHESE assignment_list:varList T_CLOSE_PARENTHESE:close T_EQ
 	RESULT = new InfixExpression(expr1left, expr2right, parser.ast, expr1, InfixExpression.OP_AND, expr2);
 :}
 
+| expr:expr1 T_REFERENCE_FOLLOWED_BY_VAR_OR_VARARG expr:expr2
+{:
+	RESULT = new InfixExpression(expr1left, expr2right, parser.ast, expr1, InfixExpression.OP_AND, expr2);
+:}
+
 | expr:expr1 T_KOVA expr:expr2
 {:
 	RESULT = new InfixExpression(expr1left, expr2right, parser.ast, expr1, InfixExpression.OP_XOR, expr2);
