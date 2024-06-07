@@ -35,7 +35,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.ide.IDE;
-import org.eclipse.ui.internal.editors.text.NLSUtility;
+import org.eclipse.ui.internal.texteditor.NLSUtility;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.MarkerUtilities;
@@ -47,7 +47,7 @@ import org.eclipse.wst.sse.ui.internal.StructuredResourceMarkerAnnotationModel;
  * 
  * @author yaronm
  */
-public class UntitledPHPEditor extends PHPStructuredEditor {
+public class UntitledPHPEditor extends PHPSourceEditor {
 
 	public static final String ID = "org.eclipse.php.untitledPhpEditor"; //$NON-NLS-1$
 
