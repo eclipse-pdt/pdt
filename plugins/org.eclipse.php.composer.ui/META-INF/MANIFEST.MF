@@ -26,7 +26,6 @@ Require-Bundle: org.eclipse.ui.forms,
  org.eclipse.php.composer.api,
  org.eclipse.e4.core.contexts,
  org.eclipse.e4.core.di,
- org.apache.commons.io,
  org.eclipse.equinox.p2.ui.discovery,
  org.eclipse.equinox.p2.discovery,
  org.eclipse.php.server.core,
@@ -61,5 +60,6 @@ Export-Package:
  org.eclipse.php.composer.ui.wizard.importer,
  org.eclipse.php.composer.ui.wizard.project,
  org.eclipse.php.composer.ui.wizard.project.template
-Import-Package: jakarta.inject
+Import-Package: jakarta.inject,
+ org.apache.commons.io
 Bundle-ClassPath: .
