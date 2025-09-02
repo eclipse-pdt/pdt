@@ -14,9 +14,10 @@ on:
     
 jobs:
   call-mvn-license-check:
-    uses: eclipse/dash-licenses/.github/workflows/mavenLicenseCheck.yml@master
+    uses: eclipse-dash/dash-licenses/.github/workflows/mavenLicenseCheck.yml@master
     with:
       projectId: tools.pdt
+      javaVersion: 21
     secrets:
       gitlabAPIToken: ${{ secrets.GITLAB_API_TOKEN }}
     permissions:
