@@ -27,9 +27,9 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.php.debug.daemon,
  com.google.gson,
  org.eclipse.ui.console,
- org.apache.commons.io,
  org.apache.commons.lang3
 Bundle-ActivationPolicy: lazy
 Eclipse-BundleShape: dir
+Import-Package: org.apache.commons.io
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 

@@ -6,8 +6,7 @@ Bundle-SymbolicName: org.eclipse.php.composer.api
 Bundle-Version: 8.3.0.qualifier
 Bundle-Vendor: %Bundle-Vendor
 Bundle-RequiredExecutionEnvironment: JavaSE-17
-Require-Bundle: org.apache.commons.logging,
- org.apache.httpcomponents.httpclient;bundle-version="4.3.6",
+Require-Bundle: org.apache.httpcomponents.httpclient;bundle-version="4.3.6",
  org.apache.httpcomponents.httpcore;bundle-version="4.3.3",
  com.google.gson;bundle-version="2.2.4",
  org.eclipse.core.net,
@@ -19,3 +18,4 @@ Export-Package: org.eclipse.php.composer.api,
  org.eclipse.php.composer.api.objects,
  org.eclipse.php.composer.api.packages,
  org.eclipse.php.composer.api.repositories
+Import-Package: org.apache.commons.logging
