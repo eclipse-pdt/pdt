@@ -65,6 +65,7 @@ public class PHPIndexingVisitor extends PHPIndexingVisitorExtension {
 	private static final String CLASS_ATTR = "class"; //$NON-NLS-1$
 	public static final String CONSTRUCTOR_NAME = "__construct"; //$NON-NLS-1$
 	public static final String PARAMETER_SEPERATOR = "@"; //$NON-NLS-1$
+	public static final String DOC_SEPERATOR = ","; //$NON-NLS-1$
 	public static final String NULL_VALUE = "#"; //$NON-NLS-1$
 	public static final String QUALIFIER_SEPERATOR = ";"; //$NON-NLS-1$
 	public static final String RETURN_TYPE_SEPERATOR = ":"; //$NON-NLS-1$
@@ -182,6 +183,7 @@ public class PHPIndexingVisitor extends PHPIndexingVisitorExtension {
 	public static String encodeValue(@NonNull String value) {
 		return value.replace("&", "&a") //$NON-NLS-1$ //$NON-NLS-2$
 				.replace(PARAMETER_SEPERATOR, "&p") //$NON-NLS-1$
+				.replace(DOC_SEPERATOR, "&d") //$NON-NLS-1$
 				// these conversions should not be necessary, but let's be
 				// safe for future evolutions:
 				.replace(QUALIFIER_SEPERATOR, "&q") //$NON-NLS-1$
@@ -195,6 +197,7 @@ public class PHPIndexingVisitor extends PHPIndexingVisitorExtension {
 		return value.replace("&n", NULL_VALUE) //$NON-NLS-1$
 				.replace("&r", RETURN_TYPE_SEPERATOR) //$NON-NLS-1$
 				.replace("&q", QUALIFIER_SEPERATOR) //$NON-NLS-1$
+				.replace("&d", DOC_SEPERATOR) //$NON-NLS-1$
 				.replace("&p", PARAMETER_SEPERATOR) //$NON-NLS-1$
 				.replace("&a", "&"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
@@ -458,7 +461,7 @@ public class PHPIndexingVisitor extends PHPIndexingVisitorExtension {
 				}
 
 				if (i.hasNext()) {
-					metadata.append(","); //$NON-NLS-1$
+					metadata.append(DOC_SEPERATOR); // $NON-NLS-1$
 				}
 			}
 		}
