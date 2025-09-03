@@ -54,4 +54,4 @@ Export-Package: org.eclipse.php.debug.core.debugger,
  org.eclipse.php.internal.debug.core.zend.model;x-internal:=true,
  org.eclipse.php.internal.debug.core.zend.testConnection;x-internal:=true
 Bundle-Vendor: Eclipse PDT
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21

@@ -19,6 +19,6 @@ Require-Bundle: org.junit,
  org.eclipse.php.formatter.ui,
  org.eclipse.jface.text,
  org.eclipse.ui.workbench
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.php.formatter.core.tests

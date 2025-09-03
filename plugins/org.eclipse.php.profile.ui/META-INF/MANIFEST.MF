@@ -24,7 +24,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.birt.chart.engine,
  org.eclipse.birt.chart.engine.extension,
  org.eclipse.birt.chart.device.swt
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Bundle-ActivationPolicy: lazy
 Bundle-Vendor: Eclipse PDT
 Export-Package: org.eclipse.php.profile.ui,

@@ -32,4 +32,4 @@ Export-Package: org.eclipse.php.refactoring.core,
  org.eclipse.php.refactoring.core.utils,
  org.eclipse.php.refactoring.core.visitor
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21

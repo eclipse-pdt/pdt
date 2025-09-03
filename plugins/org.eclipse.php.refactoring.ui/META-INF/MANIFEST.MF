@@ -34,4 +34,4 @@ Export-Package: org.eclipse.php.refactoring.ui,
  org.eclipse.php.refactoring.ui.rename,
  org.eclipse.php.refactoring.ui.utils,
  org.eclipse.php.refactoring.ui.wizard
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21

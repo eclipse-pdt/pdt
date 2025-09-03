@@ -74,7 +74,7 @@ jobs:
     - name: "Install: Maven"
       uses: stCarolas/setup-maven@v4.5 # https://github.com/stCarolas/setup-maven
       with:
-        maven-version: 3.9.2 
+        maven-version: 3.9.11 
     - name: Build and analyze
       env:
        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

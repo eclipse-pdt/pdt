@@ -1,5 +1,5 @@
 /*******************************************************************************
-     * Copyright (c) 2009, 2020 IBM Corporation and others.
+     * Copyright (c) 2009, 2025 IBM Corporation and others.
      *
      * This program and the accompanying materials are made
      * available under the terms of the Eclipse Public License 2.0
@@ -87,8 +87,6 @@ public static final String INCLUDE_PATHS = PREFIX + "include_paths"; //$NON-NLS-
 public static final String BUILD_PATHS = PREFIX + "build_paths"; //$NON-NLS-1$ 016-concepts/152-build_paths.md
 
 public static final String PATH_MAPPING = PREFIX + "path_mapping"; //$NON-NLS-1$ 016-concepts/160-path_mapping.md
-
-public static final String JAVASCRIPT = PREFIX + "javascript"; //$NON-NLS-1$ 016-concepts/168-javascript.md
 
 public static final String MYLYN_INTEGRATION = PREFIX + "mylyn_integration"; //$NON-NLS-1$ 016-concepts/176-mylyn_integration.md
 
@@ -207,20 +205,6 @@ public static final String ADDING_A_SERVER_PATH_MAP = PREFIX + "adding_a_server_
 public static final String USING_THE_PHP_HTML_WYSYWIG_EDITOR = PREFIX + "using_the_php_html_wysywig_editor"; //$NON-NLS-1$ 024-tasks/192-using_the_php_html_wysywig_editor.md
 
 public static final String MYLYN_INTEGRATION1 = PREFIX + "mylyn_integration1"; //$NON-NLS-1$ 024-tasks/200-mylyn_integration1.md
-
-public static final String USING_JAVASCRIPT = PREFIX + "using_javascript"; //$NON-NLS-1$ 024-tasks/208-using_javascript/000-index.md
-
-public static final String ENABLING_JAVASCRIPT_SUPPORT_IN_PHP_PROJECTS = PREFIX + "enabling_javascript_support_in_php_projects"; //$NON-NLS-1$ 024-tasks/208-using_javascript/008-enabling_javascript_support_in_php_projects.md
-
-public static final String SETTING_THE_JAVASCRIPT_BUILD_PATH = PREFIX + "setting_the_javascript_build_path"; //$NON-NLS-1$ 024-tasks/208-using_javascript/016-setting_the_javascript_build_path.md
-
-public static final String VIEWING_JAVASCRIPT_ELEMENTS_IN_THE_OUTLINE_VIEW = PREFIX + "viewing_javascript_elements_in_the_outline_view"; //$NON-NLS-1$ 024-tasks/208-using_javascript/024-viewing_javascript_elements_in_the_outline_view.md
-
-public static final String USING_JAVASCRIPT_CONTENT_ASSIST = PREFIX + "using_javascript_content_assist"; //$NON-NLS-1$ 024-tasks/208-using_javascript/032-using_javascript_content_assist.md
-
-public static final String USING_JAVASCRIPT_SYNTAX_COLORING = PREFIX + "using_javascript_syntax_coloring"; //$NON-NLS-1$ 024-tasks/208-using_javascript/040-using_javascript_syntax_coloring.md
-
-public static final String USING_JAVASCRIPT_MARK_OCCURENCES = PREFIX + "using_javascript_mark_occurences"; //$NON-NLS-1$ 024-tasks/208-using_javascript/048-using_javascript_mark_occurences.md
 
 public static final String PROFILING = PREFIX + "profiling"; //$NON-NLS-1$ 024-tasks/216-profiling/000-index.md
 

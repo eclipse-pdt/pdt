@@ -11,7 +11,7 @@
 
 	<!-- this is the parent POM from which all modules inherit common settings -->
 	<properties>
-		<tycho-version>4.0.7</tycho-version>
+		<tycho-version>4.0.13</tycho-version>
 		<antrun-version>1.8</antrun-version>
 		<maven.test.failure.ignore>true</maven.test.failure.ignore>
 		<test.vmargs>-server</test.vmargs>
@@ -47,13 +47,13 @@
 		<url>https://github.com/eclipse/pdt/actions</url>
 	</ciManagement>
 	<scm>
-		<connection>scm:git:https://github.com/eclipse/pdt.git</connection>
-		<developerConnection>scm:git:ssh://git@github.com:eclipse/pdt.git</developerConnection>
-		<url>https://github.com/eclipse/pdt</url>
+		<connection>scm:git:https://github.com/eclipse-pdt/pdt.git</connection>
+		<developerConnection>scm:git:ssh://git@github.com:eclipse-pdt/pdt.git</developerConnection>
+		<url>https://github.com/eclipse-pdt/pdt</url>
 	</scm>
 	<issueManagement>
 		<system>GitHub</system>
-		<url>https://github.com/eclipse/pdt/issues</url>
+		<url>https://github.com/eclipse-pdt/pdt/issues</url>
 	</issueManagement>
 	<build>
 		<pluginManagement>
@@ -144,12 +144,17 @@
 				<artifactId>target-platform-configuration</artifactId>
 				<version>${tycho-version}</version>
 				<configuration>
-					<executionEnvironmentDefault>>JavaSE-17</executionEnvironmentDefault>
+					<executionEnvironmentDefault>>JavaSE-21</executionEnvironmentDefault>
 					<environments>
 						<environment>
 							<os>win32</os>
 							<ws>win32</ws>
 							<arch>x86_64</arch>
+						</environment>
+						<environment>
+							<os>win32</os>
+							<ws>win32</ws>
+							<arch>aarch64</arch>
 						</environment>
 						<environment>
 							<os>linux</os>
@@ -226,7 +231,7 @@
 				</property>
 			</activation>
 			<properties>
-				<eclipse.name>2023-03</eclipse.name>
+				<eclipse.name>2025-09</eclipse.name>
 			</properties>
 			<modules>
 				<module>dev/org.eclipse.php.target.next</module>
@@ -258,7 +263,7 @@
 				</property>
 			</activation>
 			<properties>
-				<eclipse.name>2022-12</eclipse.name>
+				<eclipse.name>2025-06</eclipse.name>
 			</properties>
 			<modules>
 				<module>dev/org.eclipse.php.target.current</module>

@@ -15,7 +15,7 @@ package org.eclipse.php.internal.debug.ui.views.variables;
 
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.internal.ui.elements.adapters.DefaultVariableCellModifier;
-import org.eclipse.debug.internal.ui.elements.adapters.VariableColumnPresentation;
+import org.eclipse.debug.ui.IDebugUIConstants;
 import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.php.internal.debug.core.zend.model.PHPValue;
 import org.eclipse.php.internal.debug.core.zend.model.PHPVariable;
@@ -35,7 +35,7 @@ public class PHPVariableCellModifier extends DefaultVariableCellModifier impleme
 	 */
 	@Override
 	public Object getValue(Object element, String property) {
-		if (VariableColumnPresentation.COLUMN_VARIABLE_VALUE.equals(property)) {
+		if (IDebugUIConstants.COLUMN_ID_VARIABLE_VALUE.equals(property)) {
 			if (element instanceof PHPVariable) {
 				PHPVariable variable = (PHPVariable) element;
 				try {
