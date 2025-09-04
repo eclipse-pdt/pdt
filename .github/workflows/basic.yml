@@ -73,7 +73,7 @@ jobs:
         distribution: temurin
         java-version: ${{ env.JAVA_VERSION }}
     - name: "Cache: Local Maven Repository"
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: |
           ~/.m2/repository
