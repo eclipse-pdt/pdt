@@ -80,7 +80,7 @@ jobs:
           !~/.m2/repository/*SNAPSHOT*
         key: ${{ runner.os }}-mvnrepo-${{ hashFiles('**/pom.xml') }}-${{ hashFiles('dev/org.eclipse.php.target.current/org.eclipse.php.target.current.target') }}
     - name: "Install: Maven"
-      uses: stCarolas/setup-maven@v4.5 # https://github.com/stCarolas/setup-maven
+      uses: stCarolas/setup-maven@v5 # https://github.com/stCarolas/setup-maven
       with:
         maven-version: 3.9.11 
     - name: Build with Maven
