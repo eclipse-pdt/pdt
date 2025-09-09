@@ -340,16 +340,26 @@ public class VariableValidator implements IValidatorExtension {
 			}
 			if (decl.getLexicalVars() != null) {
 				for (Expression var : decl.getLexicalVars()) {
+					ReferenceExpression isRef = null;
 					if (var instanceof ReferenceExpression) {
-						var = ((ReferenceExpression) var).getVariable();
+						isRef = (ReferenceExpression) var;
+						var = isRef.getVariable();
 					}
 					if (var instanceof VariableReference) {
 						final String name = ((VariableReference) var).getName();
 						if (prev.contains(name, var.sourceStart())) {
 							current.variables.put(name, new ImportedVariable(prev.variables.get(name)));
 						} else {
-							validator.reportProblem(var, NLS.bind(Messages.VariableValidator_IsUndefined, name),
-									PHPProblemIdentifier.UndefinedVariable, ProblemSeverity.WARNING);
+							if (isRef == null) {
+								validator.reportProblem(var, NLS.bind(Messages.VariableValidator_IsUndefined, name),
+										PHPProblemIdentifier.UndefinedVariable, ProblemSeverity.WARNING);
+							} else {
+								Variable tmp = new Variable(var);
+								tmp.setInitialized(isRef.start());
+								prev.variables.put(name, tmp);
+								current.variables.put(name, new ImportedVariable(tmp));
+							}
+
 						}
 					}
 				}
@@ -364,6 +374,31 @@ public class VariableValidator implements IValidatorExtension {
 			popScope();
 
 			return false;
+		}
+
+		public boolean visit(ReferenceExpression ref) throws Exception {
+
+			if (ref.getVariable() instanceof VariableReference) {
+				VariableReference var = (VariableReference) ref.getVariable();
+				if (!current.variables.containsKey(var.getName())) {
+					current.variables.put(var.getName(), new Variable(ref));
+				}
+			}
+
+			return true;
+		}
+
+		@Override
+		public boolean visit(ReflectionCallExpression node) throws Exception {
+			operations.push(Operation.USE);
+
+			return super.visit(node);
+		}
+
+		@Override
+		public boolean endvisit(ReflectionCallExpression s) throws Exception {
+			operations.pop();
+			return super.endvisit(s);
 		}
 
 		@Override
@@ -446,6 +481,7 @@ public class VariableValidator implements IValidatorExtension {
 
 		@Override
 		public boolean visit(VariableReference s) throws Exception {
+
 			String name = getName(s.getName());
 			if (name.charAt(0) != DOLLAR || isSuperGlobal(name)) {
 				return false;

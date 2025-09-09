@@ -1,0 +1,9 @@
+--TEST--
+Callback with reference
+--FILE--
+<?php
+$fct = function ($val) use (&$fct, $another) {
+    return $fct($val + 1);
+};
+--EXPECT--
+[line=2, start=41, end=49] Variable '$another' is undefined
