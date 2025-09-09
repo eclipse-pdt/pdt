@@ -40,11 +40,10 @@ public class ReferenceExpression extends Expression {
 
 	@Override
 	public void traverse(ASTVisitor visitor) throws Exception {
-		final boolean visit = visitor.visit(this);
-		if (visit) {
+		if (visitor.visit(this)) {
 			variable.traverse(visitor);
+			visitor.endvisit(this);
 		}
-		visitor.endvisit(this);
 	}
 
 	@Override

@@ -50,16 +50,15 @@ public class SwitchCase extends Statement {
 
 	@Override
 	public void traverse(ASTVisitor visitor) throws Exception {
-		final boolean visit = visitor.visit(this);
-		if (visit) {
+		if (visitor.visit(this)) {
 			if (value != null) {
 				value.traverse(visitor);
 			}
 			for (Statement action : actions) {
 				action.traverse(visitor);
 			}
+			visitor.endvisit(this);
 		}
-		visitor.endvisit(this);
 	}
 
 	@Override

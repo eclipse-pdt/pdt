@@ -23,7 +23,7 @@ import org.eclipse.dltk.ast.references.ConstantReference;
  * <pre>
  * e.g.
  * 
- * MyClass::CONST
+ * 		MyClass::CONST
  * </pre>
  */
 public class StaticConstantAccess extends StaticDispatch {
@@ -44,12 +44,11 @@ public class StaticConstantAccess extends StaticDispatch {
 
 	@Override
 	public void traverse(ASTVisitor visitor) throws Exception {
-		final boolean visit = visitor.visit(this);
-		if (visit) {
+		if (visitor.visit(this)) {
 			getDispatcher().traverse(visitor);
 			constant.traverse(visitor);
+			visitor.endvisit(this);
 		}
-		visitor.endvisit(this);
 	}
 
 	public ConstantReference getConstant() {

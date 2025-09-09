@@ -43,13 +43,12 @@ public class ListVariable extends Expression {
 
 	@Override
 	public void traverse(ASTVisitor visitor) throws Exception {
-		final boolean visit = visitor.visit(this);
-		if (visit) {
+		if (visitor.visit(this)) {
 			for (Expression variable : variables) {
 				variable.traverse(visitor);
 			}
+			visitor.endvisit(this);
 		}
-		visitor.endvisit(this);
 	}
 
 	@Override

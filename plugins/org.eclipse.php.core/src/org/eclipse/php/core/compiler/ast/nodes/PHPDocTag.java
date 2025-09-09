@@ -71,9 +71,9 @@ public class PHPDocTag extends ASTNode {
 		EXCEPTION("exception"), //$NON-NLS-1$
 		MAGIC("magic"), //$NON-NLS-1$
 		/**
-		 * Special tag kind used as a placeholder for all non-PHPDoc tags like Doctrine
-		 * ORM annotations. Use {@link PHPDocTag#getMatchedTag()} to retrieve the real
-		 * tag name attached to this tag kind.
+		 * Special tag kind used as a placeholder for all non-PHPDoc tags like
+		 * Doctrine ORM annotations. Use {@link PHPDocTag#getMatchedTag()} to
+		 * retrieve the real tag name attached to this tag kind.
 		 * 
 		 * @see https://bugs.eclipse.org/bugs/show_bug.cgi?id=469402
 		 */
@@ -407,13 +407,12 @@ public class PHPDocTag extends ASTNode {
 
 	@Override
 	public void traverse(ASTVisitor visitor) throws Exception {
-		boolean visit = visitor.visit(this);
-		if (visit) {
+		if (visitor.visit(this)) {
 			for (SimpleReference ref : allReferencesWithOrigOrder) {
 				ref.traverse(visitor);
 			}
+			visitor.endvisit(this);
 		}
-		visitor.endvisit(this);
 	}
 
 	public int getKind() {

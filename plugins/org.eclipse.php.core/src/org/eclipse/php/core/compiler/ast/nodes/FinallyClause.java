@@ -44,8 +44,8 @@ public class FinallyClause extends Statement {
 	public void traverse(ASTVisitor visitor) throws Exception {
 		if (visitor.visit(this)) {
 			statement.traverse(visitor);
+			visitor.endvisit(this);
 		}
-		visitor.endvisit(this);
 	}
 
 	@Override

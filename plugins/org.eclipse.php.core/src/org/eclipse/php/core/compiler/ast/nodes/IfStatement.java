@@ -48,15 +48,14 @@ public class IfStatement extends Statement {
 
 	@Override
 	public void traverse(ASTVisitor visitor) throws Exception {
-		final boolean visit = visitor.visit(this);
-		if (visit) {
+		if (visitor.visit(this)) {
 			condition.traverse(visitor);
 			trueStatement.traverse(visitor);
 			if (falseStatement != null) {
 				falseStatement.traverse(visitor);
 			}
+			visitor.endvisit(this);
 		}
-		visitor.endvisit(this);
 	}
 
 	@Override

@@ -746,6 +746,8 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 			}
 		}
 
+		xmlWriter.endTag("ConditionalExpression"); //$NON-NLS-1$
+
 		return false;
 	}
 
@@ -869,6 +871,8 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 
 		s.getAction().traverse(this);
 
+		xmlWriter.endTag("ForStatement"); //$NON-NLS-1$
+
 		return false;
 	}
 
@@ -898,6 +902,8 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 			falseStatement.traverse(this);
 			xmlWriter.endTag("FalseStatement"); //$NON-NLS-1$
 		}
+
+		xmlWriter.endTag("IfStatement"); //$NON-NLS-1$
 
 		return false;
 	}
@@ -1327,6 +1333,8 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 			s.getBody().traverse(this);
 		}
 
+		xmlWriter.endTag("LambdaFunctionDeclaration"); //$NON-NLS-1$
+
 		return false;
 	}
 
@@ -1360,6 +1368,7 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 		if (s.getBody() != null) {
 			s.getBody().traverse(this);
 		}
+		xmlWriter.endTag("ArrowFunctionDeclaration"); //$NON-NLS-1$
 
 		return false;
 	}
@@ -1388,6 +1397,9 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 		xmlWriter.startTag("Body", new HashMap<String, String>()); //$NON-NLS-1$
 		s.getBody().traverse(this);
 		xmlWriter.endTag("Body"); //$NON-NLS-1$
+
+		xmlWriter.endTag("AnonymousClassDeclaration"); //$NON-NLS-1$
+
 		return false;
 	}
 

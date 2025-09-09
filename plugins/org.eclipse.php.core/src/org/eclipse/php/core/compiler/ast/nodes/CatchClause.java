@@ -61,8 +61,7 @@ public class CatchClause extends Statement {
 
 	@Override
 	public void traverse(ASTVisitor visitor) throws Exception {
-		final boolean visit = visitor.visit(this);
-		if (visit) {
+		if (visitor.visit(this)) {
 			for (TypeReference typeReference : classNames) {
 				typeReference.traverse(visitor);
 			}
@@ -70,8 +69,8 @@ public class CatchClause extends Statement {
 				variable.traverse(visitor);
 			}
 			statement.traverse(visitor);
+			visitor.endvisit(this);
 		}
-		visitor.endvisit(this);
 	}
 
 	@Override

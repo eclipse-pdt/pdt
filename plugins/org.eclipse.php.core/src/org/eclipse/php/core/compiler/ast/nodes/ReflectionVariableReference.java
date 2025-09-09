@@ -43,11 +43,10 @@ public class ReflectionVariableReference extends Expression {
 
 	@Override
 	public void traverse(ASTVisitor visitor) throws Exception {
-		boolean visit = visitor.visit(this);
-		if (visit) {
+		if (visitor.visit(this)) {
 			expression.traverse(visitor);
+			visitor.endvisit(this);
 		}
-		visitor.endvisit(this);
 	}
 
 	public Expression getExpression() {

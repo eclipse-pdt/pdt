@@ -43,13 +43,12 @@ public class BreakStatement extends Statement {
 
 	@Override
 	public void traverse(ASTVisitor visitor) throws Exception {
-		final boolean visit = visitor.visit(this);
-		if (visit) {
+		if (visitor.visit(this)) {
 			if (expr != null) {
 				expr.traverse(visitor);
 			}
+			visitor.endvisit(this);
 		}
-		visitor.endvisit(this);
 	}
 
 	@Override

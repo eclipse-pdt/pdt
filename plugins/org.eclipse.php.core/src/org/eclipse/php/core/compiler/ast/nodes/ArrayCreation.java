@@ -56,9 +56,9 @@ public class ArrayCreation extends Expression implements Dereferencable {
 			for (ArrayElement element : elements) {
 				element.traverse(visitor);
 			}
+			visitor.endvisit(this);
 		}
 
-		visitor.endvisit(this);
 	}
 
 	@Override

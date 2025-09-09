@@ -43,8 +43,7 @@ public class MatchArm extends Statement {
 
 	@Override
 	public void traverse(ASTVisitor visitor) throws Exception {
-		final boolean visit = visitor.visit(this);
-		if (visit) {
+		if (visitor.visit(this)) {
 			if (conditions != null) {
 				for (Expression action : conditions) {
 					action.traverse(visitor);
@@ -52,9 +51,8 @@ public class MatchArm extends Statement {
 			}
 
 			value.traverse(visitor);
-
+			visitor.endvisit(this);
 		}
-		visitor.endvisit(this);
 	}
 
 	@Override

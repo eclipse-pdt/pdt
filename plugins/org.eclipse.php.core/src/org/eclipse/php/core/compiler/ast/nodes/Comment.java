@@ -48,8 +48,9 @@ public class Comment extends ASTNode {
 
 	@Override
 	public void traverse(ASTVisitor visitor) throws Exception {
-		visitor.visit(this);
-		visitor.endvisit(this);
+		if (visitor.visit(this)) {
+			visitor.endvisit(this);
+		}
 	}
 
 	public static String getCommentType(int type) {

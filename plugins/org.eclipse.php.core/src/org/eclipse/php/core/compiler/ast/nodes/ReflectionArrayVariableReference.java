@@ -59,13 +59,12 @@ public class ReflectionArrayVariableReference extends ReflectionVariableReferenc
 
 	@Override
 	public void traverse(ASTVisitor visitor) throws Exception {
-		final boolean visit = visitor.visit(this);
-		if (visit) {
+		if (visitor.visit(this)) {
 			getExpression().traverse(visitor);
 			if (index != null) {
 				index.traverse(visitor);
 			}
+			visitor.endvisit(this);
 		}
-		visitor.endvisit(this);
 	}
 }

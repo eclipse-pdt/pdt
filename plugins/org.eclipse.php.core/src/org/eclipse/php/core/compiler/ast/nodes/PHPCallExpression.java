@@ -24,7 +24,7 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
 public class PHPCallExpression extends CallExpression implements Dereferencable {
 
 	private boolean nullSafe = false;
-	
+
 	public PHPCallExpression(int start, int end, ASTNode receiver, String name, CallArgumentsList args) {
 		super(start, end, receiver, name, args);
 	}
@@ -36,13 +36,15 @@ public class PHPCallExpression extends CallExpression implements Dereferencable 
 	public PHPCallExpression(ASTNode receiver, String name, CallArgumentsList args) {
 		super(receiver, name, args);
 	}
-	
-	public PHPCallExpression(int start, int end, ASTNode receiver, boolean nullSafe, String name, CallArgumentsList args) {
+
+	public PHPCallExpression(int start, int end, ASTNode receiver, boolean nullSafe, String name,
+			CallArgumentsList args) {
 		super(start, end, receiver, name, args);
 		this.nullSafe = nullSafe;
 	}
 
-	public PHPCallExpression(int start, int end, ASTNode receiver, boolean nullSafe, SimpleReference name, CallArgumentsList args) {
+	public PHPCallExpression(int start, int end, ASTNode receiver, boolean nullSafe, SimpleReference name,
+			CallArgumentsList args) {
 		super(start, end, receiver, name, args);
 		this.nullSafe = nullSafe;
 	}

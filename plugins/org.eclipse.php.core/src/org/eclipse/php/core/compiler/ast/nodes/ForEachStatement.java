@@ -56,16 +56,15 @@ public class ForEachStatement extends Statement {
 
 	@Override
 	public void traverse(ASTVisitor visitor) throws Exception {
-		final boolean visit = visitor.visit(this);
-		if (visit) {
+		if (visitor.visit(this)) {
 			expression.traverse(visitor);
 			if (key != null) {
 				key.traverse(visitor);
 			}
 			value.traverse(visitor);
 			statement.traverse(visitor);
+			visitor.endvisit(this);
 		}
-		visitor.endvisit(this);
 	}
 
 	@Override

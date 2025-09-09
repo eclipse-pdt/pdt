@@ -54,15 +54,14 @@ public class ReflectionCallExpression extends Expression implements Dereferencab
 
 	@Override
 	public void traverse(ASTVisitor visitor) throws Exception {
-		boolean visit = visitor.visit(this);
-		if (visit) {
+		if (visitor.visit(this)) {
 			if (receiver != null) {
 				receiver.traverse(visitor);
 			}
 			name.traverse(visitor);
 			args.traverse(visitor);
+			visitor.endvisit(this);
 		}
-		visitor.endvisit(this);
 	}
 
 	public Expression getName() {

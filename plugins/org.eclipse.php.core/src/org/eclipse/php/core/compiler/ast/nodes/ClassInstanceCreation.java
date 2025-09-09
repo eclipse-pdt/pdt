@@ -54,8 +54,7 @@ public class ClassInstanceCreation extends Expression {
 
 	@Override
 	public void traverse(ASTVisitor visitor) throws Exception {
-		final boolean visit = visitor.visit(this);
-		if (visit) {
+		if (visitor.visit(this)) {
 			if (className != null) {
 				className.traverse(visitor);
 			}
@@ -63,8 +62,8 @@ public class ClassInstanceCreation extends Expression {
 			if (anonymousClassDeclaration != null) {
 				anonymousClassDeclaration.traverse(visitor);
 			}
+			visitor.endvisit(this);
 		}
-		visitor.endvisit(this);
 	}
 
 	@Override

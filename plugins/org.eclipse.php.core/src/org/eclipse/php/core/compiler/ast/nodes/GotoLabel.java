@@ -35,8 +35,9 @@ public class GotoLabel extends Statement {
 
 	@Override
 	public void traverse(ASTVisitor visitor) throws Exception {
-		visitor.visit(this);
-		visitor.endvisit(this);
+		if (visitor.visit(this)) {
+			visitor.endvisit(this);
+		}
 	}
 
 	public String getLabel() {

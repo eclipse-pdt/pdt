@@ -49,14 +49,13 @@ public class DeclareStatement extends Statement {
 
 	@Override
 	public void traverse(ASTVisitor visitor) throws Exception {
-		final boolean visit = visitor.visit(this);
-		if (visit) {
+		if (visitor.visit(this)) {
 			for (Expression directiveValue : directiveValues) {
 				directiveValue.traverse(visitor);
 			}
 			action.traverse(visitor);
+			visitor.endvisit(this);
 		}
-		visitor.endvisit(this);
 	}
 
 	@Override

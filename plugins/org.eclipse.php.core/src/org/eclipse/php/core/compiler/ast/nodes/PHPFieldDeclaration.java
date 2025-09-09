@@ -63,8 +63,7 @@ public class PHPFieldDeclaration extends FieldDeclaration implements IPHPDocAwar
 
 	@Override
 	public void traverse(ASTVisitor visitor) throws Exception {
-		boolean visit = visitor.visit(this);
-		if (visit) {
+		if (visitor.visit(this)) {
 			if (attributes != null) {
 				for (Attribute attr : attributes) {
 					attr.traverse(visitor);
@@ -77,8 +76,8 @@ public class PHPFieldDeclaration extends FieldDeclaration implements IPHPDocAwar
 			if (initializer != null) {
 				initializer.traverse(visitor);
 			}
+			visitor.endvisit(this);
 		}
-		visitor.endvisit(this);
 	}
 
 	@Override

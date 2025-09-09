@@ -52,8 +52,7 @@ public class ForStatement extends Statement {
 
 	@Override
 	public void traverse(ASTVisitor visitor) throws Exception {
-		final boolean visit = visitor.visit(this);
-		if (visit) {
+		if (visitor.visit(this)) {
 			for (Expression initialization : initializations) {
 				initialization.traverse(visitor);
 			}
@@ -64,8 +63,8 @@ public class ForStatement extends Statement {
 				increasement.traverse(visitor);
 			}
 			action.traverse(visitor);
+			visitor.endvisit(this);
 		}
-		visitor.endvisit(this);
 	}
 
 	@Override

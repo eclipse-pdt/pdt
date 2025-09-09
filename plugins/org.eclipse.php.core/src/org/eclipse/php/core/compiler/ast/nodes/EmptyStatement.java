@@ -35,8 +35,9 @@ public class EmptyStatement extends Statement {
 
 	@Override
 	public void traverse(ASTVisitor visitor) throws Exception {
-		visitor.visit(this);
-		visitor.endvisit(this);
+		if (visitor.visit(this)) {
+			visitor.endvisit(this);
+		}
 	}
 
 	@Override

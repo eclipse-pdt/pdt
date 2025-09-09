@@ -41,13 +41,12 @@ public class PHPDocBlock extends Comment {
 
 	@Override
 	public void traverse(ASTVisitor visitor) throws Exception {
-		boolean visit = visitor.visit(this);
-		if (visit) {
+		if (visitor.visit(this)) {
 			for (PHPDocTag tag : tags) {
 				tag.traverse(visitor);
 			}
+			visitor.endvisit(this);
 		}
-		visitor.endvisit(this);
 	}
 
 	public int getKind() {

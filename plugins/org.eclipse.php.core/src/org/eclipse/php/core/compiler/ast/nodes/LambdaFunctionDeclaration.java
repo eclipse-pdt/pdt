@@ -71,8 +71,7 @@ public class LambdaFunctionDeclaration extends Expression implements IAttributed
 
 	@Override
 	public void traverse(ASTVisitor visitor) throws Exception {
-		final boolean visit = visitor.visit(this);
-		if (visit) {
+		if (visitor.visit(this)) {
 			if (attributes != null) {
 				for (Attribute attr : attributes) {
 					attr.traverse(visitor);
@@ -95,8 +94,8 @@ public class LambdaFunctionDeclaration extends Expression implements IAttributed
 			if (this.body != null) {
 				this.body.traverse(visitor);
 			}
+			visitor.endvisit(this);
 		}
-		visitor.endvisit(this);
 	}
 
 	public Collection<? extends Expression> getLexicalVars() {
