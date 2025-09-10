@@ -116,16 +116,23 @@ public class VariableValidator implements IValidatorExtension {
 			}
 
 			for (VarComment varComment : varCommentList) {
+				if (varComment.sourceEnd() < current.start || varComment.sourceStart() > current.end) {
+					continue;
+				}
 				if (varComment.sourceStart() > offset || end < varComment.sourceStart()) {
 					continue;
 				}
 				if (varComment.getVariableReference().getName().equals(name)) {
 					this.variables.put(name, new DocVariable(varComment));
+
 					return true;
 				}
 			}
 
 			for (PHPDocBlock block : docBlocks) {
+				if (block.sourceEnd() < current.start || block.sourceStart() > current.end) {
+					continue;
+				}
 				if (block.sourceStart() > offset || end < block.sourceStart()) {
 					continue;
 				}

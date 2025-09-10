@@ -1,0 +1,24 @@
+--TEST--
+Correct docblock/varcomment read
+--FILE--
+<?php
+class Test
+{
+    public function test1()
+    {
+        /**
+         * @var \DateTime $date
+         */
+        $date = new \DateTime();
+        /* @var string $something */
+    }
+    
+    public function test2()
+    {
+        echo $something;
+        $date->callme();
+    }
+} 
+--EXPECT--
+[line=15, start=237, end=247] Variable '$something' is undefined
+[line=16, start=257, end=262] Variable '$date' is undefined
