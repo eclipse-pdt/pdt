@@ -61,7 +61,7 @@
 					<dependency>
 						<groupId>org.eclipse.mylyn.docs</groupId>
 						<artifactId>org.eclipse.mylyn.wikitext</artifactId>
-						<version>LATEST</version>
+						<version>3.0.48.202308291007</version>
 					</dependency>
 					<dependency>
 						<groupId>org.eclipse.mylyn.docs</groupId>
