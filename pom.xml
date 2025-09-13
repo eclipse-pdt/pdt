@@ -34,7 +34,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<tycho.scmUrl>scm:git:https://github.com/eclipse/pdt.git</tycho.scmUrl>
 		<tycho.testArgLine />
-		<jacoco.version>0.8.10</jacoco.version>
+		<jacoco.version>0.8.13</jacoco.version>
 		<eclipseNext>false</eclipseNext>
 		<p2.mirrorsPrefix>/tools/pdt/updates/8.4/</p2.mirrorsPrefix>
 		<p2.statsURI>https://download.eclipse.org/stats</p2.statsURI>
