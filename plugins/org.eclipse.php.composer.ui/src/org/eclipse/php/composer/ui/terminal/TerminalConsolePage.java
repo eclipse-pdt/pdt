@@ -28,18 +28,18 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.tm.internal.terminal.control.ITerminalListener;
-import org.eclipse.tm.internal.terminal.control.ITerminalViewControl;
-import org.eclipse.tm.internal.terminal.control.TerminalViewControlFactory;
-import org.eclipse.tm.internal.terminal.control.actions.AbstractTerminalAction;
-import org.eclipse.tm.internal.terminal.control.actions.TerminalActionCopy;
-import org.eclipse.tm.internal.terminal.control.actions.TerminalActionCut;
-import org.eclipse.tm.internal.terminal.control.actions.TerminalActionPaste;
-import org.eclipse.tm.internal.terminal.control.impl.TerminalPlugin;
-import org.eclipse.tm.internal.terminal.preferences.ITerminalConstants;
-import org.eclipse.tm.internal.terminal.provisional.api.ITerminalConnector;
-import org.eclipse.tm.internal.terminal.provisional.api.TerminalState;
-import org.eclipse.tm.terminal.view.core.interfaces.ITerminalService.Done;
+import org.eclipse.terminal.connector.ITerminalConnector;
+import org.eclipse.terminal.connector.TerminalState;
+import org.eclipse.terminal.control.ITerminalListener;
+import org.eclipse.terminal.control.ITerminalViewControl;
+import org.eclipse.terminal.control.TerminalTitleRequestor;
+import org.eclipse.terminal.control.TerminalViewControlFactory;
+import org.eclipse.terminal.internal.control.impl.TerminalPlugin;
+import org.eclipse.terminal.internal.preferences.ITerminalConstants;
+import org.eclipse.terminal.view.ui.internal.actions.AbstractTerminalAction;
+import org.eclipse.terminal.view.ui.internal.actions.TerminalActionCopy;
+import org.eclipse.terminal.view.ui.internal.actions.TerminalActionCut;
+import org.eclipse.terminal.view.ui.internal.actions.TerminalActionPaste;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.console.ConsolePlugin;
@@ -90,7 +90,7 @@ class TerminalConsolePage extends Page {
 	};
 
 	private Job connectTerminalJob = new ConnectTerminalJob();
-	private Done done;
+	private Runnable done;
 
 	private final ITerminalListener listener = new ITerminalListener() {
 		@Override
@@ -99,16 +99,21 @@ class TerminalConsolePage extends Page {
 				stopAction.setEnabled(true);
 			} else if (state == TerminalState.CLOSED) {
 				stopAction.setEnabled(false);
-				done.done(Status.OK_STATUS);
+				done.run();
 			}
 		}
 
 		@Override
-		public void setTerminalTitle(final String title) {
+		public void setTerminalSelectionChanged() {
 		}
+
+		@Override
+		public void setTerminalTitle(String title, TerminalTitleRequestor requestor) {
+		}
+
 	};
 
-	public TerminalConsolePage(TerminalConsole console, Done done) {
+	public TerminalConsolePage(TerminalConsole console, Runnable done) {
 		this.terminalConsole = console;
 		this.done = done;
 	}

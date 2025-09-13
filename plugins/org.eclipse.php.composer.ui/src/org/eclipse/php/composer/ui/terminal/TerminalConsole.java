@@ -14,9 +14,9 @@ package org.eclipse.php.composer.ui.terminal;
 
 import java.util.Map;
 
-import org.eclipse.tm.internal.terminal.provisional.api.ITerminalConnector;
-import org.eclipse.tm.terminal.connector.process.ProcessLauncherDelegate;
-import org.eclipse.tm.terminal.view.core.interfaces.ITerminalService.Done;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.terminal.connector.ITerminalConnector;
+import org.eclipse.terminal.connector.process.internal.ProcessLauncherDelegate;
 import org.eclipse.ui.console.AbstractConsole;
 import org.eclipse.ui.console.IConsoleView;
 import org.eclipse.ui.part.IPageBookViewPage;
@@ -26,9 +26,10 @@ public class TerminalConsole extends AbstractConsole {
 	private final ITerminalConnector terminalConnector;
 	private final int index;
 	private TerminalConsolePage terminalConsolePage;
-	private Done done;
+	private Runnable done;
 
-	public TerminalConsole(String title, int index, Map<String, Object> properties, Done done) {
+	public TerminalConsole(String title, int index, Map<String, Object> properties, Runnable done)
+			throws CoreException {
 		super(title, null);
 		this.terminalConnector = new ProcessLauncherDelegate().createTerminalConnector(properties);
 		this.index = index;
