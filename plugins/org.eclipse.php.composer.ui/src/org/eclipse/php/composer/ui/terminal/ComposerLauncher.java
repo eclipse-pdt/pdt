@@ -23,7 +23,6 @@ import java.util.concurrent.CountDownLatch;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.php.composer.core.ComposerPlugin;
 import org.eclipse.php.composer.core.launch.ScriptLauncher;
@@ -31,9 +30,8 @@ import org.eclipse.php.composer.core.launch.ScriptNotFoundException;
 import org.eclipse.php.composer.core.launch.environment.Environment;
 import org.eclipse.php.composer.core.launch.execution.ExecutionResponseListener;
 import org.eclipse.php.composer.core.log.Logger;
-import org.eclipse.tm.terminal.view.core.interfaces.ITerminalService.Done;
-import org.eclipse.tm.terminal.view.core.interfaces.ITerminalServiceOutputStreamMonitorListener;
-import org.eclipse.tm.terminal.view.core.interfaces.constants.ITerminalsConnectorConstants;
+import org.eclipse.terminal.view.core.ITerminalServiceOutputStreamMonitorListener;
+import org.eclipse.terminal.view.core.ITerminalsConnectorConstants;
 import org.eclipse.ui.console.ConsolePlugin;
 import org.eclipse.ui.console.IConsole;
 import org.eclipse.ui.console.IConsoleManager;
@@ -120,12 +118,13 @@ public class ComposerLauncher extends ScriptLauncher {
 		IConsoleManager consoleManager = ConsolePlugin.getDefault().getConsoleManager();
 
 		final CountDownLatch latch = new CountDownLatch(1);
-		terminalConsole = new TerminalConsole(title, 0, properties, new Done() {
+		terminalConsole = new TerminalConsole(title, 0, properties, new Runnable() {
 
 			@Override
-			public void done(IStatus status) {
+			public void run() {
 				latch.countDown();
 			}
+
 		});
 
 		for (ExecutionResponseListener handler : getListeners()) {

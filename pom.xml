@@ -263,7 +263,7 @@
 				</property>
 			</activation>
 			<properties>
-				<eclipse.name>2025-06</eclipse.name>
+				<eclipse.name>2025-09</eclipse.name>
 			</properties>
 			<modules>
 				<module>dev/org.eclipse.php.target.current</module>
