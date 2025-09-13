@@ -75,6 +75,7 @@ public class ArrowFunctionDeclaration extends Expression implements IAttributed 
 			if (this.body != null) {
 				this.body.traverse(visitor);
 			}
+			visitor.endvisit(this);
 		}
 	}
 

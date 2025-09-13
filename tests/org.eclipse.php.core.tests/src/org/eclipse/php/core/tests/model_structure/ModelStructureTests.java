@@ -64,17 +64,21 @@ public class ModelStructureTests {
 		TESTS.put(PHPVersion.PHP7_1, new String[] { "/workspace/model_structure/php53" });
 		TESTS.put(PHPVersion.PHP7_2, new String[] { "/workspace/model_structure/php53" });
 		TESTS.put(PHPVersion.PHP7_3, new String[] { "/workspace/model_structure/php53" });
-		TESTS.put(PHPVersion.PHP7_4, new String[] { "/workspace/model_structure/php53" });
-		TESTS.put(PHPVersion.PHP8_0,
-				new String[] { "/workspace/model_structure/php53", "/workspace/model_structure/php80" });
-		TESTS.put(PHPVersion.PHP8_1, new String[] { "/workspace/model_structure/php53",
-				"/workspace/model_structure/php80", "/workspace/model_structure/php81" });
+		TESTS.put(PHPVersion.PHP7_4,
+				new String[] { "/workspace/model_structure/php53", "/workspace/model_structure/php74" });
+		TESTS.put(PHPVersion.PHP8_0, new String[] { "/workspace/model_structure/php53",
+				"/workspace/model_structure/php74", "/workspace/model_structure/php80" });
+		TESTS.put(PHPVersion.PHP8_1,
+				new String[] { "/workspace/model_structure/php53", "/workspace/model_structure/php74",
+						"/workspace/model_structure/php80", "/workspace/model_structure/php81" });
 		TESTS.put(PHPVersion.PHP8_2,
-				new String[] { "/workspace/model_structure/php53", "/workspace/model_structure/php80",
-						"/workspace/model_structure/php81", "/workspace/model_structure/php82" });
+				new String[] { "/workspace/model_structure/php53", "/workspace/model_structure/php74",
+						"/workspace/model_structure/php80", "/workspace/model_structure/php81",
+						"/workspace/model_structure/php82" });
 		TESTS.put(PHPVersion.PHP8_3,
-				new String[] { "/workspace/model_structure/php53", "/workspace/model_structure/php80",
-						"/workspace/model_structure/php81", "/workspace/model_structure/php83" });
+				new String[] { "/workspace/model_structure/php53", "/workspace/model_structure/php74",
+						"/workspace/model_structure/php80", "/workspace/model_structure/php81",
+						"/workspace/model_structure/php83" });
 	};
 
 	protected IProject project;

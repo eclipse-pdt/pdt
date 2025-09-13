@@ -1,0 +1,16 @@
+--TEST--
+Test 
+--FILE--
+<?php
+function foo() {}
+$q1 = fn () => fn () => '';
+function bar() {}
+?>
+--EXPECT--
+FILE: test.php
+	FUNCTION: foo
+	VARIABLE: $q1
+		FUNCTION: __anonymous
+			FUNCTION: __anonymous
+	FUNCTION: bar
+
