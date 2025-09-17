@@ -85,6 +85,11 @@
 		<ant dir="${antfile.dir}/parser/php83/" antfile="generateAstParser.xml" />
 		<ant dir="${antfile.dir}/parser/php83/" antfile="generateAstScanner.xml" />
 		<ant dir="${antfile.dir}/parser/php83/" antfile="generateCompilerAstParser.xml" />
+		
+		<!-- PHP 8.3 AST -->
+		<ant dir="${antfile.dir}/parser/php84/" antfile="generateAstParser.xml" />
+		<ant dir="${antfile.dir}/parser/php84/" antfile="generateAstScanner.xml" />
+		<ant dir="${antfile.dir}/parser/php84/" antfile="generateCompilerAstParser.xml" />
 
 		<!-- PHPDoc Lexer -->
 		<ant dir="${antfile.dir}/parser/phpdoc/" antfile="generatePHPDocScanner.xml" />

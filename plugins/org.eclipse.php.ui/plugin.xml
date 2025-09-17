@@ -2979,12 +2979,26 @@
              <feature name="constants in traits"></feature>
        </phpVersion>
        <phpVersion
-             name="8.3 (experimental)"
+             name="8.3"
              version="php8.3">
              <feature name="class constsnts types"></feature>
              <feature name="json improvements"></feature>
              <feature name="dynamic class constants"></feature>
              <feature name="randomizer improvements"></feature>
+       </phpVersion>
+       <phpVersion
+             name="8.4"
+             version="php8.4">
+             <feature name="property hooks"></feature>
+             <feature name="asymmetric visibility"></feature>
+             <feature name="deprecated attribute"></feature>
+             <feature name="HTML5 DOM support"></feature>
+       </phpVersion>
+       <phpVersion
+             name="8.5"
+             version="php8.5">
+             <feature name="pipe operator"></feature>
+             <feature name="deprecations before PHP9"></feature>
        </phpVersion>
    </extension>
    <extension
