@@ -1466,7 +1466,7 @@ function print_constant($name, $value = null, $tabs = 0)
 function escape_const_value($value)
 {
     if (is_resource($value)) {
-        $value = "\"${value}\"";
+        $value = "\"{$value}\"";
     } elseif (is_array($value)) {
         $value = var_export($value, true);
     } elseif(is_object($value)) {
@@ -1734,6 +1734,9 @@ function xml_to_phpdoc($str)
  */
 function newline_to_phpdoc($str, $tabs = 0)
 {
+    if ($str == null) {
+        return null;
+    }
     $str = preg_replace('@([\r\n]+\s*)+@', "\n" . str_repeat("\t", $tabs) . " * ", $str);
     return $str;
 }
@@ -1917,7 +1920,7 @@ function show_help()
     Where:
       -help       Show this help.
       -nosplit    Do not split output to different files.
-      <manual.xml> Compiled version of http://svn.php.net/repository/phpdoc/en/trunk, use doc-base/configure.php
+      <manual.xml> Compiled version of https://github.com/php/doc-en.git, use doc-base/configure.php see https://doc.php.net/guide/local-setup.md#without-docker
       <phpDir>    The output directory. If not specified we'll use ./php<php-version>
     EOF);
 }
