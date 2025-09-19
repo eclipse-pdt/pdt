@@ -536,6 +536,20 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			stWhile = org.eclipse.php.internal.core.ast.scanner.php83.ParserConstants.T_WHILE;
 			stElse = org.eclipse.php.internal.core.ast.scanner.php83.ParserConstants.T_ELSE;
 			stElseIf = org.eclipse.php.internal.core.ast.scanner.php83.ParserConstants.T_ELSEIF;
+		} else if (PHPVersion.PHP8_4.equals(phpVersion)) {
+			result = new org.eclipse.php.internal.core.compiler.ast.parser.php84.CompilerAstLexer(reader);
+			((org.eclipse.php.internal.core.compiler.ast.parser.php84.CompilerAstLexer) result)
+					.setAST(new AST(reader, phpVersion, useASPTags, useShortTags));
+			stInScriptin = org.eclipse.php.internal.core.compiler.ast.parser.php84.CompilerAstLexer.ST_IN_SCRIPTING; // save
+			// the
+			// initial
+			// state
+			// for
+			// reset
+			// operation
+			stWhile = org.eclipse.php.internal.core.ast.scanner.php84.ParserConstants.T_WHILE;
+			stElse = org.eclipse.php.internal.core.ast.scanner.php84.ParserConstants.T_ELSE;
+			stElseIf = org.eclipse.php.internal.core.ast.scanner.php84.ParserConstants.T_ELSEIF;
 		} else {
 			throw new IllegalArgumentException("unrecognized version " //$NON-NLS-1$
 					+ phpVersion);

@@ -104,4 +104,6 @@ public interface ASTNodeKinds {
 	int ENUM_CASE = 85;
 	int REFLECTION_CONSTANT_ACCESS = 86;
 
+	int PROPERTY_HOOK = 87;
+
 }
