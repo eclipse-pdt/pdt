@@ -64,6 +64,9 @@ public class PHPLexerFactory {
 		if (phpVersion == PHPVersion.PHP8_3) {
 			return new org.eclipse.php.internal.core.documentModel.parser.php83.PHPLexer(reader);
 		}
+		if (phpVersion == PHPVersion.PHP8_4) {
+			return new org.eclipse.php.internal.core.documentModel.parser.php84.PHPLexer(reader);
+		}
 		if (phpVersion == null) {
 			throw new IllegalArgumentException(CoreMessages.getString("UnknownPHPVersion_0")); //$NON-NLS-1$
 		} else {

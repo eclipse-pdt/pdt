@@ -11,13 +11,13 @@
 		IBM Corporation - initial API and implementation
 		Zend Technologies
  -->
-<project name="Generates Compiler AST Parser for PHP 8.3" default="generateParser" basedir=".">
+<project name="Generates Compiler AST Parser for PHP 8.4" default="generateParser" basedir=".">
 
 	<target name="checkUpToDate">
 		<uptodate
 			property="upToDate"
 			srcfile="php_compiler_ast_parser.cup"
-			targetfile="../../../../gen/org/eclipse/php/internal/core/compiler/ast/parser/php83/CompilerAstParser.java" />
+			targetfile="../../../../gen/org/eclipse/php/internal/core/compiler/ast/parser/php84/CompilerAstParser.java" />
 	</target>
 
 	<target name="generateParser" depends="checkUpToDate" unless="upToDate">
@@ -42,9 +42,9 @@
 			token="extends java_cup.runtime.lr_parser"
 			value="extends AbstractASTParser"/>
 
-		<move file="CompilerAstParser.java" todir="../../../../gen/org/eclipse/php/internal/core/compiler/ast/parser/php83" />
+		<move file="CompilerAstParser.java" todir="../../../../gen/org/eclipse/php/internal/core/compiler/ast/parser/php84" />
 
-		<move file="CompilerParserConstants.java" todir="../../../../gen/org/eclipse/php/internal/core/compiler/ast/parser/php83" />
+		<move file="CompilerParserConstants.java" todir="../../../../gen/org/eclipse/php/internal/core/compiler/ast/parser/php84" />
 
 	</target>
 

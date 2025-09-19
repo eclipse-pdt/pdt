@@ -1650,4 +1650,33 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 		return false;
 	}
 	// php8.3 ends
+
+	// php8.4
+	@Override
+	public boolean visit(PropertyHook s) throws Exception {
+		Map<String, String> parameters = createInitialParameters(s);
+		parameters.put("arrow", s.isArrow() ? " true" : "false");
+		xmlWriter.startTag("PropertyHook", parameters); //$NON-NLS-1$
+
+		parameters = createInitialParameters(s.getName());
+		parameters.put("name", s.getName().getName());
+		xmlWriter.printSimpleTag("Name", parameters);
+		if (s.getArguments() != null) {
+			xmlWriter.startTag("Arguments", null);
+			for (FormalParameter arg : s.getArguments()) {
+				arg.traverse(this);
+			}
+			xmlWriter.endTag("Arguments");
+		}
+
+		if (s.getBody() != null) {
+			s.getBody().traverse(this);
+		}
+
+		xmlWriter.endTag("PropertyHook"); //$NON-NLS-1$
+
+		return false;
+	}
+
+	// php8.4 ends
 }
