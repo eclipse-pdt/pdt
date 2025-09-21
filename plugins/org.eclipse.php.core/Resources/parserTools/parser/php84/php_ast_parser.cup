@@ -205,7 +205,7 @@ terminal String T_NEW;
 terminal String T_ENDIF;
 terminal String T_ELSEIF;
 terminal String T_ELSE;
-terminal String T_STATIC, T_ABSTRACT, T_FINAL, T_PRIVATE, T_PROTECTED, T_PUBLIC;
+terminal String T_STATIC, T_ABSTRACT, T_FINAL, T_PRIVATE, T_PROTECTED, T_PUBLIC, T_PUBLIC_SET, T_PROTECTED_SET, T_PRIVATE_SET;
 terminal T_OPEN_PARENTHESE,T_CLOSE_PARENTHESE;
 terminal T_NEKUDOTAIM;
 terminal T_DOLLAR;
@@ -474,7 +474,7 @@ precedence nonassoc T_NEW, T_CLONE;
 precedence left T_ELSEIF;
 precedence left T_ELSE;
 precedence left T_ENDIF;
-precedence right T_STATIC, T_ABSTRACT, T_FINAL, T_PRIVATE, T_PROTECTED, T_PUBLIC;
+precedence right T_STATIC, T_ABSTRACT, T_FINAL, T_PRIVATE, T_PROTECTED, T_PUBLIC, T_PUBLIC_SET, T_PROTECTED_SET, T_PRIVATE_SET;
 
 
 thestart ::=

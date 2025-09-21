@@ -620,6 +620,18 @@ NOWDOC_CHARS=([^\n\r]|({NEWLINE}{TABS_AND_SPACES})+[^a-zA-Z_\u0080-\uffff\n\r \t
 	return createFullSymbol(ParserConstants.T_PUBLIC);
 }
 
+<ST_IN_SCRIPTING>"public(set)" {
+	return createFullSymbol(ParserConstants.T_PUBLIC_SET);
+}
+
+<ST_IN_SCRIPTING>"protected(set)" {
+	return createFullSymbol(ParserConstants.T_PROTECTED_SET);
+}
+
+<ST_IN_SCRIPTING>"private(set)" {
+	return createFullSymbol(ParserConstants.T_PRIVATE_SET);
+}
+
 <ST_IN_SCRIPTING>"readonly" {
 	return createFullSymbol(ParserConstants.T_READONLY);
 }

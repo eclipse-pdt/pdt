@@ -15,8 +15,6 @@ package org.eclipse.php.internal.core.compiler.ast.parser.php84;
 
 import java.util.HashMap;
 
-import org.eclipse.php.internal.core.compiler.ast.parser.php81.CompilerParserConstants;
-
 public abstract class PHPTokenNames {
 
 	private static HashMap<Integer, String> token2Name = new HashMap<>();
@@ -157,6 +155,11 @@ public abstract class PHPTokenNames {
 		token2Name.put(CompilerParserConstants.T_READONLY, "readonly"); //$NON-NLS-1$
 		token2Name.put(CompilerParserConstants.T_ENUM, "enum"); //$NON-NLS-1$
 		token2Name.put(CompilerParserConstants.T_REFERENCE_FOLLOWED_BY_VAR_OR_VARARG, "&"); //$NON-NLS-1$
+
+		// PHP8.4
+		token2Name.put(CompilerParserConstants.T_PRIVATE_SET, "private(set)"); //$NON-NLS-1$
+		token2Name.put(CompilerParserConstants.T_PROTECTED_SET, "protected(set)"); //$NON-NLS-1$
+		token2Name.put(CompilerParserConstants.T_PUBLIC_SET, "public(set)"); //$NON-NLS-1$
 	}
 
 	/**

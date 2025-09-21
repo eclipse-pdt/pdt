@@ -204,7 +204,7 @@ terminal String T_NEW;
 terminal String T_ENDIF;
 terminal String T_ELSEIF;
 terminal String T_ELSE;
-terminal CompilerAstLexer.PHPDocBlockSymbolPair T_STATIC, T_ABSTRACT, T_FINAL, T_PRIVATE, T_PROTECTED, T_PUBLIC;
+terminal CompilerAstLexer.PHPDocBlockSymbolPair T_STATIC, T_ABSTRACT, T_FINAL, T_PRIVATE, T_PROTECTED, T_PUBLIC, T_PUBLIC_SET, T_PROTECTED_SET, T_PRIVATE_SET;
 terminal T_OPEN_PARENTHESE,T_CLOSE_PARENTHESE;
 terminal T_NEKUDOTAIM;
 terminal T_DOLLAR;
@@ -288,7 +288,6 @@ non terminal List lexical_var_list;
 non terminal Expression lexical_var;
 non terminal List non_empty_parameter_list;
 non terminal FormalParameter parameter;
-non terminal PHPCallArgumentsList function_call_parameter_list;
 non terminal PHPCallArgumentsList non_empty_argument_list;
 non terminal List simple_variable_list;
 non terminal Expression simple_variable;
@@ -425,9 +424,7 @@ non terminal List unprefixed_use_declarations;
 
 //php8.1
 non terminal String function_name;
-non terminal CompilerAstParser.ModifierDocPair optional_property_modifiers;
-non terminal CompilerAstParser.ModifierDocPair property_modifier;
-non terminal List non_empty_property_modifiers;
+non terminal CompilerAstParser.ModifierDocPair optional_cpp_modifiers;
 non terminal TypeReference enum_backing_type;
 non terminal Expression enum_case_expr;
 non terminal PHPDocBlock enum_entry;
@@ -500,7 +497,7 @@ precedence nonassoc T_NEW, T_CLONE;
 precedence left T_ELSEIF;
 precedence left T_ELSE;
 precedence left T_ENDIF;
-precedence right T_STATIC, T_ABSTRACT, T_FINAL, T_PRIVATE, T_PROTECTED, T_PUBLIC, T_READONLY;
+precedence right T_STATIC, T_ABSTRACT, T_FINAL, T_PRIVATE, T_PROTECTED, T_PUBLIC, T_READONLY, T_PUBLIC_SET, T_PROTECTED_SET, T_PRIVATE_SET;
 
 thestart ::=
 top_statement_list:statementList
@@ -1022,6 +1019,16 @@ statement:statement
 {:
 	setAttributes(statement, attrs);
 	RESULT = statement;
+:}
+
+| T_HALT_COMPILER:start T_OPEN_PARENTHESE:openPar T_CLOSE_PARENTHESE:end
+{:
+    PHPCallArgumentsList parameters = new PHPCallArgumentsList();
+	parameters.setStart(openParright);
+	parameters.setEnd(endleft);
+	SimpleReference name = new SimpleReference(startleft, startright, "__halt_compiler");
+	PHPCallExpression result = new PHPCallExpression(startleft, endright, null, name, parameters);
+	RESULT = result;
 :}
 
 | T_NAMESPACE:start namespace_declaration_name:name
@@ -2375,13 +2382,13 @@ attributes:attrs parameter:param {:
 :}
 ;
 
-optional_property_modifiers ::=
+optional_cpp_modifiers ::=
 /* empty */
 {:
 	RESULT = null;
 :}
 
-| non_empty_property_modifiers:list
+| non_empty_member_modifiers:list
 {:
 	int result = 0;
 	PHPDocBlock docBlock = null;
@@ -2396,47 +2403,8 @@ optional_property_modifiers ::=
 :}
 ;
 
-non_empty_property_modifiers ::=
-property_modifier:modifier
-{:
-	List list = new LinkedList();
-	list.add(modifier);
-	RESULT = list;
-:}
-
-| non_empty_property_modifiers:list property_modifier:modifier
-{:
-	list.add(modifier);
-	RESULT = list;
-:}
-;
-
-property_modifier ::=
-T_PUBLIC:value
-{:
-	RESULT = parser.new ModifierDocPair(Modifiers.AccPublic, value.doc);
-:}
-
-| T_PROTECTED:value
-{:
-	RESULT = parser.new ModifierDocPair(Modifiers.AccProtected, value.doc);
-:}
-
-| T_PRIVATE:value
-{:
-	RESULT = parser.new ModifierDocPair(Modifiers.AccPrivate, value.doc);
-:}
-
-| T_READONLY:value
-{:
-	RESULT = parser.new ModifierDocPair(IPHPModifiers.AccReadonly, value.doc);
-:}
-;
-
-
-
 parameter ::=
-optional_property_modifiers:modifier optional_type_without_static:type is_reference:is_reference is_variadic:is_var T_VARIABLE:var optional_property_hook_list:hooks
+optional_cpp_modifiers:modifier optional_type_without_static:type is_reference:is_reference is_variadic:is_var T_VARIABLE:var optional_property_hook_list:hooks
 {:
 	int start = varleft;
 	if (modifier != null) {
@@ -2457,7 +2425,7 @@ optional_property_modifiers:modifier optional_type_without_static:type is_refere
 	RESULT = parameter;
 :}
 
-| optional_property_modifiers:modifier optional_type_without_static:type is_reference:is_reference is_variadic:is_var T_VARIABLE:var T_EQUAL expr:expr optional_property_hook_list:hooks
+| optional_cpp_modifiers:modifier optional_type_without_static:type is_reference:is_reference is_variadic:is_var T_VARIABLE:var T_EQUAL expr:expr optional_property_hook_list:hooks
 {:
 	int start = varleft;
 	if (modifier != null) {
@@ -3338,7 +3306,22 @@ T_PUBLIC:value
 {:
 	RESULT = parser.new ModifierDocPair(IPHPModifiers.AccReadonly, value.doc);
 :}
-;
+
+| T_PUBLIC_SET:value
+{:
+	RESULT = parser.new ModifierDocPair(IPHPModifiers.AccPublicSet, value.doc);
+:}
+
+| T_PROTECTED_SET:value
+{:
+	RESULT = parser.new ModifierDocPair(IPHPModifiers.AccProtectedSet, value.doc);
+:}
+
+| T_PRIVATE_SET:value
+{:
+	RESULT = parser.new ModifierDocPair(IPHPModifiers.AccPrivateSet, value.doc);
+:}
+; 
 
 property_list ::=
 property_list:list T_COMMA property:var
@@ -4872,16 +4855,6 @@ T_ISSET:start T_OPEN_PARENTHESE:openPar isset_variables:varList possible_comma T
 | T_REQUIRE_ONCE:include expr:expr
 {:
 	Include result = new Include(includeleft, exprright, expr, Include.IT_REQUIRE_ONCE);
-	RESULT = result;
-:}
-
-| T_HALT_COMPILER:start T_OPEN_PARENTHESE:openPar T_CLOSE_PARENTHESE:end
-{:
-    PHPCallArgumentsList parameters = new PHPCallArgumentsList();
-	parameters.setStart(openParright);
-	parameters.setEnd(endleft);
-	SimpleReference name = new SimpleReference(startleft, startright, "__halt_compiler");
-	PHPCallExpression result = new PHPCallExpression(startleft, endright, null, name, parameters);
 	RESULT = result;
 :}
 ;

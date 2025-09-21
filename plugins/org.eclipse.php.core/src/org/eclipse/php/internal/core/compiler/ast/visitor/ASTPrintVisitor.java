@@ -104,6 +104,15 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 			if (PHPFlags.isEnumCase(declaration.getModifiers())) {
 				buf.append(",enum_case"); //$NON-NLS-1$
 			}
+			if (PHPFlags.isPrivateSet(declaration.getModifiers())) {
+				buf.append(",private(set)");
+			}
+			if (PHPFlags.isProtectedSet(declaration.getModifiers())) {
+				buf.append(",protected(set)");
+			}
+			if (PHPFlags.isPublicSet(declaration.getModifiers())) {
+				buf.append(",public(set)");
+			}
 			String modifiers = buf.toString();
 			parameters.put("modifiers", //$NON-NLS-1$
 					modifiers.length() > 0 ? modifiers.substring(1) : modifiers);

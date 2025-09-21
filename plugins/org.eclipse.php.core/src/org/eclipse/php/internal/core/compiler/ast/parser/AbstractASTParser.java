@@ -331,6 +331,9 @@ abstract public class AbstractASTParser extends lr_parser {
 		if ((flags & IPHPModifiers.AccessMask) != 0 && (newFlag & IPHPModifiers.AccessMask) != 0) {
 			reportError(new ASTError(start, end), Messages.AbstractASTParser_MultipleAccessModifiersError);
 		}
+		if ((flags & IPHPModifiers.AccessSetMask) != 0 && (newFlag & IPHPModifiers.AccessSetMask) != 0) {
+			reportError(new ASTError(start, end), Messages.AbstractASTParser_MultipleAccessModifiersError);
+		}
 		if ((flags & IPHPModifiers.AccStatic) != 0 && (newFlag & IPHPModifiers.AccStatic) != 0) {
 			reportError(new ASTError(start, end), Messages.AbstractASTParser_MultipleStaticModifiersError);
 		}
