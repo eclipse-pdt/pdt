@@ -1655,12 +1655,14 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 	@Override
 	public boolean visit(PropertyHook s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
+		parameters.put("name", s.getName());
 		parameters.put("arrow", s.isArrow() ? " true" : "false");
 		xmlWriter.startTag("PropertyHook", parameters); //$NON-NLS-1$
-
-		parameters = createInitialParameters(s.getName());
-		parameters.put("name", s.getName().getName());
-		xmlWriter.printSimpleTag("Name", parameters);
+		if (s.getAttributes() != null) {
+			for (Attribute a : s.getAttributes()) {
+				a.traverse(this);
+			}
+		}
 		if (s.getArguments() != null) {
 			xmlWriter.startTag("Arguments", null);
 			for (FormalParameter arg : s.getArguments()) {

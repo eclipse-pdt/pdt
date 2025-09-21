@@ -1,0 +1,74 @@
+--TEST--
+Static array
+--FILE--
+<?php
+MyClass::$field;
+MyClass::$field[0];
+MyClass::${'fieldName'}['index'];
+MyClass::$$field[0];
+?>
+--EXPECT--
+<ModuleDeclaration start="0" end="131">
+	<ExpressionStatement start="6" end="22">
+		<StaticFieldAccess start="6" end="21">
+			<FullyQualifiedReference start="6" end="13" name="MyClass">
+			</FullyQualifiedReference>
+			<VariableReference start="15" end="21" name="$field">
+			</VariableReference>
+		</StaticFieldAccess>
+	</ExpressionStatement>
+	<ExpressionStatement start="23" end="42">
+		<ReflectionArrayVariableReference start="23" end="41">
+			<StaticFieldAccess start="23" end="38">
+				<FullyQualifiedReference start="23" end="30" name="MyClass">
+				</FullyQualifiedReference>
+				<VariableReference start="32" end="38" name="$field">
+				</VariableReference>
+			</StaticFieldAccess>
+			<Scalar start="39" end="40" type="int" value="0">
+			</Scalar>
+		</ReflectionArrayVariableReference>
+	</ExpressionStatement>
+	<ExpressionStatement start="43" end="72">
+		<ReflectionArrayVariableReference start="43" end="71">
+			<StaticFieldAccess start="43" end="58">
+				<FullyQualifiedReference start="43" end="50" name="MyClass">
+				</FullyQualifiedReference>
+				<VariableReference start="52" end="58" name="$field">
+				</VariableReference>
+			</StaticFieldAccess>
+			<Scalar start="59" end="70" type="string" value="&apos;something&apos;">
+			</Scalar>
+		</ReflectionArrayVariableReference>
+	</ExpressionStatement>
+	<ExpressionStatement start="73" end="106">
+		<ReflectionArrayVariableReference start="73" end="105">
+			<StaticFieldAccess start="73" end="96">
+				<FullyQualifiedReference start="73" end="80" name="MyClass">
+				</FullyQualifiedReference>
+				<ReflectionVariableReference start="82" end="96">
+					<Scalar start="84" end="95" type="string" value="&apos;fieldName&apos;">
+					</Scalar>
+				</ReflectionVariableReference>
+			</StaticFieldAccess>
+			<Scalar start="97" end="104" type="string" value="&apos;index&apos;">
+			</Scalar>
+		</ReflectionArrayVariableReference>
+	</ExpressionStatement>
+	<ExpressionStatement start="107" end="127">
+		<ReflectionArrayVariableReference start="107" end="126">
+			<StaticFieldAccess start="107" end="123">
+				<FullyQualifiedReference start="107" end="114" name="MyClass">
+				</FullyQualifiedReference>
+				<ReflectionVariableReference start="116" end="123">
+					<VariableReference start="117" end="123" name="$field">
+					</VariableReference>
+				</ReflectionVariableReference>
+			</StaticFieldAccess>
+			<Scalar start="124" end="125" type="int" value="0">
+			</Scalar>
+		</ReflectionArrayVariableReference>
+	</ExpressionStatement>
+	<EmptyStatement start="128" end="130">
+	</EmptyStatement>
+</ModuleDeclaration>

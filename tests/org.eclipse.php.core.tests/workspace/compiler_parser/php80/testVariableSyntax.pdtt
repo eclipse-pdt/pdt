@@ -5,20 +5,19 @@ PHP 8.0
 "foo$bar"[0];
 "foo$bar"->baz();
 __FUNCTION__[0];
-FOO{0};
 FOO->length(); 
 Foo::BAR::$baz;
 Foo::BAR::BAZ; 
 (expr)::FOO ;
 new ($x);
 if ($x instanceof ($x)) {
-    
+	
 }
 
 
 ?>
 --EXPECT--
-<ModuleDeclaration start="0" end="173">
+<ModuleDeclaration start="0" end="162">
 	<ExpressionStatement start="6" end="19">
 		<ReflectionArrayVariableReference start="6" end="18">
 			<Quote start="6" end="15" type="quote">
@@ -53,77 +52,68 @@ if ($x instanceof ($x)) {
 			</Scalar>
 		</ReflectionArrayVariableReference>
 	</ExpressionStatement>
-	<ExpressionStatement start="55" end="62">
-		<ReflectionArrayVariableReference start="55" end="61">
+	<ExpressionStatement start="55" end="69">
+		<PHPCallExpression start="55" end="68">
 			<Scalar start="55" end="58" type="string" value="FOO">
 			</Scalar>
-			<Scalar start="59" end="60" type="int" value="0">
-			</Scalar>
-		</ReflectionArrayVariableReference>
-	</ExpressionStatement>
-	<ExpressionStatement start="63" end="77">
-		<PHPCallExpression start="63" end="76">
-			<Scalar start="63" end="66" type="string" value="FOO">
-			</Scalar>
-			<SimpleReference start="68" end="74" name="length">
+			<SimpleReference start="60" end="66" name="length">
 			</SimpleReference>
-			<PHPCallArgumentsList start="75" end="75">
+			<PHPCallArgumentsList start="67" end="67">
 			</PHPCallArgumentsList>
 		</PHPCallExpression>
 	</ExpressionStatement>
-	<ExpressionStatement start="79" end="94">
-		<StaticFieldAccess start="79" end="93">
-			<StaticConstantAccess start="79" end="87">
-				<FullyQualifiedReference start="79" end="82" name="Foo">
+	<ExpressionStatement start="71" end="86">
+		<StaticFieldAccess start="71" end="85">
+			<StaticConstantAccess start="71" end="79">
+				<FullyQualifiedReference start="71" end="74" name="Foo">
 				</FullyQualifiedReference>
-				<ConstantReference start="84" end="87" name="BAR">
+				<ConstantReference start="76" end="79" name="BAR">
 				</ConstantReference>
 			</StaticConstantAccess>
-			<VariableReference start="89" end="93" name="$baz">
+			<VariableReference start="81" end="85" name="$baz">
 			</VariableReference>
 		</StaticFieldAccess>
 	</ExpressionStatement>
-	<ExpressionStatement start="95" end="109">
-		<StaticConstantAccess start="95" end="108">
-			<StaticConstantAccess start="95" end="103">
-				<FullyQualifiedReference start="95" end="98" name="Foo">
+	<ExpressionStatement start="87" end="101">
+		<StaticConstantAccess start="87" end="100">
+			<StaticConstantAccess start="87" end="95">
+				<FullyQualifiedReference start="87" end="90" name="Foo">
 				</FullyQualifiedReference>
-				<ConstantReference start="100" end="103" name="BAR">
+				<ConstantReference start="92" end="95" name="BAR">
 				</ConstantReference>
 			</StaticConstantAccess>
-			<ConstantReference start="105" end="108" name="BAZ">
+			<ConstantReference start="97" end="100" name="BAZ">
 			</ConstantReference>
 		</StaticConstantAccess>
 	</ExpressionStatement>
-	<ExpressionStatement start="111" end="124">
-		<StaticConstantAccess start="111" end="122">
-			<Scalar start="112" end="116" type="string" value="expr">
+	<ExpressionStatement start="103" end="116">
+		<StaticConstantAccess start="103" end="114">
+			<Scalar start="104" end="108" type="string" value="expr">
 			</Scalar>
-			<ConstantReference start="119" end="122" name="FOO">
+			<ConstantReference start="111" end="114" name="FOO">
 			</ConstantReference>
 		</StaticConstantAccess>
 	</ExpressionStatement>
-	<ExpressionStatement start="125" end="134">
-		<ClassInstanceCreation start="125" end="133">
-			<VariableReference start="130" end="132" name="$x">
+	<ExpressionStatement start="117" end="126">
+		<ClassInstanceCreation start="117" end="125">
+			<VariableReference start="122" end="124" name="$x">
 			</VariableReference>
-			<PHPCallArgumentsList start="133" end="133">
+			<PHPCallArgumentsList start="125" end="125">
 			</PHPCallArgumentsList>
 		</ClassInstanceCreation>
 	</ExpressionStatement>
-	<IfStatement start="135" end="167">
+	<IfStatement start="127" end="156">
 		<Condition>
-			<InstanceOfExpression start="139" end="157">
-				<VariableReference start="139" end="141" name="$x">
+			<InstanceOfExpression start="131" end="149">
+				<VariableReference start="131" end="133" name="$x">
 				</VariableReference>
-				<VariableReference start="154" end="156" name="$x">
+				<VariableReference start="146" end="148" name="$x">
 				</VariableReference>
 			</InstanceOfExpression>
 		</Condition>
 		<TrueStatement>
 		</TrueStatement>
 	</IfStatement>
-	<EmptyStatement start="170" end="172">
+	<EmptyStatement start="159" end="161">
 	</EmptyStatement>
 </ModuleDeclaration>
-

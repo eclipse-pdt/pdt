@@ -16,22 +16,28 @@ package org.eclipse.php.core.compiler.ast.nodes;
 import java.util.List;
 
 import org.eclipse.dltk.ast.ASTVisitor;
-import org.eclipse.dltk.ast.references.SimpleReference;
+import org.eclipse.dltk.ast.declarations.Declaration;
 import org.eclipse.dltk.ast.statements.Block;
 import org.eclipse.dltk.ast.statements.Statement;
 import org.eclipse.dltk.utils.CorePrinter;
 import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
 
-public class PropertyHook extends Statement {
+public class PropertyHook extends Declaration implements IAttributed, IPHPDocAwareDeclaration {
 
 	private PHPDocBlock phpDoc;
-	private final SimpleReference name;
+	private List<Attribute> attributes;
+	private final boolean isReference;
 	private final List<FormalParameter> arguments;
 	private final Statement body;
 
-	public PropertyHook(int start, int end, SimpleReference name, List<FormalParameter> arguments, Statement body) {
+	public PropertyHook(int start, int end, int modifiers, boolean isReference, String name, int nameStart, int nameEnd,
+			List<FormalParameter> arguments, Statement body) {
 		super(start, end);
-		this.name = name;
+		setModifiers(modifiers);
+		this.isReference = isReference;
+		setName(name);
+		setNameStart(nameStart);
+		setNameEnd(nameEnd);
 		this.arguments = arguments;
 		this.body = body;
 	}
@@ -39,13 +45,19 @@ public class PropertyHook extends Statement {
 	@Override
 	public void traverse(ASTVisitor pVisitor) throws Exception {
 		if (pVisitor.visit(this)) {
-			name.traverse(pVisitor);
+			if (attributes != null) {
+				for (Attribute attr : attributes) {
+					attr.traverse(pVisitor);
+				}
+			}
 			if (arguments != null) {
 				for (FormalParameter arg : arguments) {
 					arg.traverse(pVisitor);
 				}
 			}
-			body.traverse(pVisitor);
+			if (body != null) {
+				body.traverse(pVisitor);
+			}
 
 			pVisitor.endvisit(this);
 		}
@@ -68,10 +80,6 @@ public class PropertyHook extends Statement {
 		return ASTPrintVisitor.toXMLString(this);
 	}
 
-	public SimpleReference getName() {
-		return name;
-	}
-
 	public List<FormalParameter> getArguments() {
 		return arguments;
 	}
@@ -79,9 +87,30 @@ public class PropertyHook extends Statement {
 	public Statement getBody() {
 		return body;
 	}
-	
+
 	public boolean isArrow() {
 		return !(body instanceof Block);
 	}
 
+	public List<Attribute> getAttributes() {
+		return attributes;
+	}
+
+	public void setAttributes(List<Attribute> attributes) {
+		this.attributes = attributes;
+	}
+
+	@Override
+	public PHPDocBlock getPHPDoc() {
+		return phpDoc;
+	}
+
+	@Override
+	public void setPHPDoc(PHPDocBlock block) {
+		this.phpDoc = block;
+	}
+
+	public boolean isReference() {
+		return isReference;
+	}
 }

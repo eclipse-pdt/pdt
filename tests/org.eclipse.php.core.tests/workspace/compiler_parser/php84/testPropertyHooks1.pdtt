@@ -1,0 +1,65 @@
+--TEST--
+PHP 8.4
+--FILE--
+<?php
+class Foo
+{
+    public string $foo = 'd' {
+        get => $this->foo . ' - ex';
+        set(string $value) {
+            $this->foo = $value . 'ping';
+        }
+    }
+}
+
+--EXPECT--
+<ModuleDeclaration start="0" end="175">
+	<ClassDeclaration start="6" end="174" modifiers="" name="Foo">
+		<PHPFieldDeclaration start="36" end="172" modifiers="public" fieldType="string">
+			<FullyQualifiedReference start="29" end="35" name="string">
+			</FullyQualifiedReference>
+			<SimpleReference start="36" end="40" name="$foo">
+			</SimpleReference>
+			<Scalar start="43" end="46" type="string" value="&apos;d&apos;">
+			</Scalar>
+			<PropertyHook start="48" end="85" modifiers="" name="get" arrow=" true">
+				<InfixExpression start="64" end="84" operator=".">
+					<FieldAccess start="64" end="74">
+						<VariableReference start="64" end="69" name="$this">
+						</VariableReference>
+						<SimpleReference start="71" end="74" name="foo">
+						</SimpleReference>
+					</FieldAccess>
+					<Scalar start="77" end="84" type="string" value="&apos; - ex&apos;">
+					</Scalar>
+				</InfixExpression>
+			</PropertyHook>
+			<PropertyHook start="85" end="166" modifiers="" name="set" arrow="false">
+				<Arguments>
+					<FormalParameter start="98" end="111" modifiers="" isMandatory="true" parameterType="string">
+						<FullyQualifiedReference start="98" end="104" name="string">
+						</FullyQualifiedReference>
+						<VariableReference start="105" end="111" name="$value">
+						</VariableReference>
+					</FormalParameter>
+				</Arguments>
+				<ExpressionStatement start="127" end="156">
+					<Assignment start="127" end="155" operator="=">
+						<FieldAccess start="127" end="137">
+							<VariableReference start="127" end="132" name="$this">
+							</VariableReference>
+							<SimpleReference start="134" end="137" name="foo">
+							</SimpleReference>
+						</FieldAccess>
+						<InfixExpression start="140" end="155" operator=".">
+							<VariableReference start="140" end="146" name="$value">
+							</VariableReference>
+							<Scalar start="149" end="155" type="string" value="&apos;ping&apos;">
+							</Scalar>
+						</InfixExpression>
+					</Assignment>
+				</ExpressionStatement>
+			</PropertyHook>
+		</PHPFieldDeclaration>
+	</ClassDeclaration>
+</ModuleDeclaration>
