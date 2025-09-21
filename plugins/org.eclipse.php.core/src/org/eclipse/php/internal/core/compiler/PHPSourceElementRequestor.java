@@ -918,6 +918,36 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		return true;
 	}
 
+	public boolean visit(PropertyHook hook) {
+		this.fNodes.push(hook);
+
+		ISourceElementRequestor.MethodInfo mi = new ISourceElementRequestor.MethodInfo();
+		mi.modifiers = hook.getModifiers();
+
+		mi.name = hook.getName();
+		mi.nameSourceStart = hook.getNameStart();
+		mi.nameSourceEnd = hook.getNameEnd() - 1;
+		mi.declarationStart = hook.sourceStart();
+		declarations.push(hook);
+
+		processArguments(mi, hook.getArguments(), hook);
+
+		fInfoStack.push(mi);
+		this.fRequestor.enterMethod(mi);
+
+		this.fInMethod = true;
+
+		populateArguments(mi, hook.getArguments());
+		return true;
+	}
+
+	public boolean endvisit(PropertyHook hook) {
+		declarations.pop();
+		fRequestor.exitField(hook.sourceEnd() - 1);
+		fInfoStack.pop();
+		return true;
+	}
+
 	/**
 	 * Update modifiers for "deprecated"
 	 * 
@@ -1245,6 +1275,9 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		if (node instanceof UseStatement) {
 			return visit((UseStatement) node);
 		}
+		if (node instanceof PropertyHook) {
+			return visit((PropertyHook) node);
+		}
 		return true;
 	}
 
@@ -1267,6 +1300,9 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		}
 		if (node instanceof ForEachStatement) {
 			return endvisit((ForEachStatement) node);
+		}
+		if (node instanceof PropertyHook) {
+			return endvisit((PropertyHook) node);
 		}
 		return true;
 	}
