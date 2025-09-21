@@ -20,14 +20,14 @@ Test Halt
 			</PHPCallArgumentsList>
 		</PHPCallExpression>
 	</ExpressionStatement>
-	<ExpressionStatement start="21" end="39">
-		<PHPCallExpression start="21" end="38">
-			<SimpleReference start="21" end="36" name="__halt_compiler">
-			</SimpleReference>
-			<PHPCallArgumentsList start="37" end="37">
-			</PHPCallArgumentsList>
-		</PHPCallExpression>
-	</ExpressionStatement>
+	<PHPCallExpression start="21" end="38">
+		<SimpleReference start="21" end="36" name="__halt_compiler">
+		</SimpleReference>
+		<PHPCallArgumentsList start="37" end="37">
+		</PHPCallArgumentsList>
+	</PHPCallExpression>
+	<EmptyStatement start="38" end="39">
+	</EmptyStatement>
 	<ExpressionStatement start="40" end="45">
 		<PHPCallExpression start="40" end="44">
 			<SimpleReference start="40" end="44" name="exit">

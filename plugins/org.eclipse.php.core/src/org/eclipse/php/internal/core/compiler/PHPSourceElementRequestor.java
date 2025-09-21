@@ -292,7 +292,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		String[] parameters;
 		ISourceElementRequestor.MethodInfo mi = new ISourceElementRequestor.MethodInfo();
 
-		mi.modifiers = Modifiers.AccPublic | IPHPModifiers.AccArrow;
+		mi.modifiers = Modifiers.AccPublic;
 		processArguments(mi, lambdaMethod.getArguments(), lambdaMethod);
 		if (arguments != null) {
 			parameters = new String[arguments.size()];
@@ -781,7 +781,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 							continue;
 						}
 						ISourceElementRequestor.FieldInfo info = new ISourceElementRequestor.FieldInfo();
-						info.modifiers = Modifiers.AccPublic | IPHPModifiers.AccMagicProperty;
+						info.modifiers = Modifiers.AccPublic;
 						info.name = split[1];
 						info.type = split[0];
 

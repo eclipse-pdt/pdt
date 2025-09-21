@@ -15,8 +15,6 @@ package org.eclipse.php.internal.core.compiler.ast.parser.php83;
 
 import java.util.HashMap;
 
-import org.eclipse.php.internal.core.compiler.ast.parser.php81.CompilerParserConstants;
-
 public abstract class PHPTokenNames {
 
 	private static HashMap<Integer, String> token2Name = new HashMap<>();
