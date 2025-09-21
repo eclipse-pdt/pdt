@@ -543,6 +543,18 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
 	return PHP_PUBLIC;
 }
 
+<ST_PHP_IN_SCRIPTING>"public(set)" {
+	return PHP_PUBLIC_SET;
+}
+
+<ST_PHP_IN_SCRIPTING>"protected(set)" {
+	return PHP_PROTECTED_SET;
+}
+
+<ST_PHP_IN_SCRIPTING>"private(set)" {
+	return PHP_PRIVATE_SET;
+}
+
 <ST_PHP_IN_SCRIPTING>"unset" {
 	return PHP_UNSET;
 }

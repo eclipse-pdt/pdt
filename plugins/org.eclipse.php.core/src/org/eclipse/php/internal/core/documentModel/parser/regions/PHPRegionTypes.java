@@ -435,4 +435,8 @@ public interface PHPRegionTypes {
 	 * @since 8.4
 	 */
 	static final String PHP__PROPERTY__ = "PHP__PROPERTY__"; //$NON-NLS-1$
+
+	static final String PHP_PUBLIC_SET = "PHP_PUBLIC_SET"; //$NON-NLS-1$
+	static final String PHP_PRIVATE_SET = "PHP_PRIVATE_SET"; //$NON-NLS-1$
+	static final String PHP_PROTECTED_SET = "PHP_PROTECTED_SET"; //$NON-NLS-1$
 }
