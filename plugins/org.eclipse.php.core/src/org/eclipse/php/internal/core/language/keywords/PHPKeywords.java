@@ -164,9 +164,9 @@ public class PHPKeywords {
 				} else if (PHPVersion.PHP8_3 == version) {
 					instance = new PHPKeywords(new KeywordInitializerPHP_8_3());
 				} else if (PHPVersion.PHP8_4 == version) {
-					instance = new PHPKeywords(new KeywordInitializerPHP_8_3());
-				} else if (PHPVersion.PHP8_5 == version) {
 					instance = new PHPKeywords(new KeywordInitializerPHP_8_4());
+				} else if (PHPVersion.PHP8_5 == version) {
+					instance = new PHPKeywords(new KeywordInitializerPHP_8_5());
 				} else {
 					if (version == null) {
 						throw new IllegalArgumentException(CoreMessages.getString("UnknownPHPVersion_0")); //$NON-NLS-1$

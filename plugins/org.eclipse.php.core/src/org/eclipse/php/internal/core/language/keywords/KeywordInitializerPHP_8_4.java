@@ -19,14 +19,19 @@ import java.util.Collection;
 import org.eclipse.php.internal.core.language.keywords.PHPKeywords.KeywordData;
 
 /**
- * Keywords initializer for PHP 8.3
+ * Keywords initializer for PHP 8.4
  */
 public class KeywordInitializerPHP_8_4 extends KeywordInitializerPHP_8_3 {
 
 	@Override
 	public void initialize(Collection<KeywordData> list) {
 		super.initialize(list);
-
+		list.add(new KeywordData("private(set)", WHITESPACE_SUFFIX, 1, //$NON-NLS-1$
+				PHPKeywords.CLASS_BODY));
+		list.add(new KeywordData("protected(set)", WHITESPACE_SUFFIX, 1, //$NON-NLS-1$
+				PHPKeywords.CLASS_BODY));
+		list.add(new KeywordData("public(set)", WHITESPACE_SUFFIX, 1, //$NON-NLS-1$
+				PHPKeywords.CLASS_BODY));
 	}
 
 	@Override

@@ -19,7 +19,7 @@ import java.util.Collection;
 import org.eclipse.php.internal.core.language.keywords.PHPKeywords.KeywordData;
 
 /**
- * Keywords initializer for PHP 8.3
+ * Keywords initializer for PHP 8.5
  */
 public class KeywordInitializerPHP_8_5 extends KeywordInitializerPHP_8_4 {
 
