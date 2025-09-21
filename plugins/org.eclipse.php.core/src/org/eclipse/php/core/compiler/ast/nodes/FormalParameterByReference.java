@@ -13,11 +13,18 @@
  *******************************************************************************/
 package org.eclipse.php.core.compiler.ast.nodes;
 
+import java.util.List;
+
 import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.ast.references.VariableReference;
 
 public class FormalParameterByReference extends FormalParameter {
+
+	public FormalParameterByReference(int start, int end, SimpleReference type, VariableReference parameterName,
+			Expression defaultValue, boolean isMandatory, boolean isVariadic, List<PropertyHook> hooks) {
+		super(start, end, type, parameterName, defaultValue, isMandatory, isVariadic, hooks);
+	}
 
 	public FormalParameterByReference(int start, int end, SimpleReference type, VariableReference parameterName,
 			Expression defaultValue, boolean isMandatory, boolean isVariadic) {

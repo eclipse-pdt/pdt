@@ -386,4 +386,18 @@ abstract public class AbstractASTParser extends lr_parser {
 
 		return flags;
 	}
+
+	protected int appendPropertyHookModifier(int start, int end, int flags, int newFlag) {
+		flags = appendModifier(start, end, flags, newFlag);
+
+		if ((newFlag & IPHPModifiers.AccAbstract) != 0) {
+			reportError(new ASTError(start, end), Messages.AbstractASTParser_AbstractPropertyError);
+		}
+
+		if ((newFlag & IPHPModifiers.AccFinal) != 0) {
+			reportError(new ASTError(start, end), Messages.AbstractASTParser_FinalPropertyError);
+		}
+
+		return flags;
+	}
 }

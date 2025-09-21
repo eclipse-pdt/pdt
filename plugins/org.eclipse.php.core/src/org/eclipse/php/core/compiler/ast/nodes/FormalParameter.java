@@ -40,6 +40,8 @@ public class FormalParameter extends Argument implements IAttributed {
 	private final VariableReference parameterName;
 
 	private List<Attribute> attributes;
+	private final List<PropertyHook> hooks;
+
 	/**
 	 * @deprecated
 	 */
@@ -47,7 +49,7 @@ public class FormalParameter extends Argument implements IAttributed {
 	private final boolean isVariadic;
 
 	public FormalParameter(int start, int end, SimpleReference type, final VariableReference parameterName,
-			Expression defaultValue, boolean isMandatory, boolean isVariadic) {
+			Expression defaultValue, boolean isMandatory, boolean isVariadic, List<PropertyHook> hooks) {
 		super(parameterName, start, end, defaultValue, 0);
 
 		// XXX: the Argument class constructor does "setEnd(start +
@@ -66,6 +68,7 @@ public class FormalParameter extends Argument implements IAttributed {
 
 		assert parameterName != null;
 
+		this.hooks = hooks;
 		this.parameterType = type;
 		this.parameterName = parameterName;
 		this.isMandatory = isMandatory;
@@ -74,16 +77,21 @@ public class FormalParameter extends Argument implements IAttributed {
 
 	public FormalParameter(int start, int end, SimpleReference type, final VariableReference parameterName,
 			Expression defaultValue) {
-		this(start, end, type, parameterName, defaultValue, false, false);
+		this(start, end, type, parameterName, defaultValue, false, false, null);
 	}
 
 	public FormalParameter(int start, int end, SimpleReference type, final VariableReference parameterName,
 			boolean isMandatory) {
-		this(start, end, type, parameterName, null, isMandatory, false);
+		this(start, end, type, parameterName, null, isMandatory, false, null);
 	}
 
 	public FormalParameter(int start, int end, SimpleReference type, final VariableReference parameterName) {
-		this(start, end, type, parameterName, null, true, false);
+		this(start, end, type, parameterName, null, true, false, null);
+	}
+
+	public FormalParameter(int start, int end, SimpleReference type, final VariableReference parameterName,
+			Expression defaultValue, boolean isMandatory, boolean isVariadic) {
+		this(start, end, type, parameterName, defaultValue, isMandatory, isVariadic, null);
 	}
 
 	@Override
