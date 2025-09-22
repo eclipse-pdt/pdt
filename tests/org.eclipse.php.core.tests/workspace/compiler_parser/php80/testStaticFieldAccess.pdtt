@@ -8,7 +8,7 @@ MyClass::${'fieldName'}['index'];
 MyClass::$$field[0];
 ?>
 --EXPECT--
-<ModuleDeclaration start="0" end="131">
+<ModuleDeclaration start="0" end="101">
 	<ExpressionStatement start="6" end="22">
 		<StaticFieldAccess start="6" end="21">
 			<FullyQualifiedReference start="6" end="13" name="MyClass">
@@ -29,46 +29,34 @@ MyClass::$$field[0];
 			</Scalar>
 		</ReflectionArrayVariableReference>
 	</ExpressionStatement>
-	<ExpressionStatement start="43" end="72">
-		<ReflectionArrayVariableReference start="43" end="71">
-			<StaticFieldAccess start="43" end="58">
+	<ExpressionStatement start="43" end="76">
+		<ReflectionArrayVariableReference start="43" end="75">
+			<StaticFieldAccess start="43" end="66">
 				<FullyQualifiedReference start="43" end="50" name="MyClass">
 				</FullyQualifiedReference>
-				<VariableReference start="52" end="58" name="$field">
-				</VariableReference>
-			</StaticFieldAccess>
-			<Scalar start="59" end="70" type="string" value="&apos;something&apos;">
-			</Scalar>
-		</ReflectionArrayVariableReference>
-	</ExpressionStatement>
-	<ExpressionStatement start="73" end="106">
-		<ReflectionArrayVariableReference start="73" end="105">
-			<StaticFieldAccess start="73" end="96">
-				<FullyQualifiedReference start="73" end="80" name="MyClass">
-				</FullyQualifiedReference>
-				<ReflectionVariableReference start="82" end="96">
-					<Scalar start="84" end="95" type="string" value="&apos;fieldName&apos;">
+				<ReflectionVariableReference start="52" end="66">
+					<Scalar start="54" end="65" type="string" value="&apos;fieldName&apos;">
 					</Scalar>
 				</ReflectionVariableReference>
 			</StaticFieldAccess>
-			<Scalar start="97" end="104" type="string" value="&apos;index&apos;">
+			<Scalar start="67" end="74" type="string" value="&apos;index&apos;">
 			</Scalar>
 		</ReflectionArrayVariableReference>
 	</ExpressionStatement>
-	<ExpressionStatement start="107" end="127">
-		<ReflectionArrayVariableReference start="107" end="126">
-			<StaticFieldAccess start="107" end="123">
-				<FullyQualifiedReference start="107" end="114" name="MyClass">
+	<ExpressionStatement start="77" end="97">
+		<ReflectionArrayVariableReference start="77" end="96">
+			<StaticFieldAccess start="77" end="93">
+				<FullyQualifiedReference start="77" end="84" name="MyClass">
 				</FullyQualifiedReference>
-				<ReflectionVariableReference start="116" end="123">
-					<VariableReference start="117" end="123" name="$field">
+				<ReflectionVariableReference start="86" end="93">
+					<VariableReference start="87" end="93" name="$field">
 					</VariableReference>
 				</ReflectionVariableReference>
 			</StaticFieldAccess>
-			<Scalar start="124" end="125" type="int" value="0">
+			<Scalar start="94" end="95" type="int" value="0">
 			</Scalar>
 		</ReflectionArrayVariableReference>
 	</ExpressionStatement>
-	<EmptyStatement start="128" end="130">
+	<EmptyStatement start="98" end="100">
 	</EmptyStatement>
 </ModuleDeclaration>
