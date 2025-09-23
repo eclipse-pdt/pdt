@@ -45,7 +45,7 @@ This procedure demonstrates how to rename a file:
 2. In the same project, create a second PHP file, called RenFile2, with the following code:
 
     <?php
-    require(RenFile1.php);
+    require_once("RenFile1.php");
     $a = 8;
     ?>
 
@@ -59,7 +59,7 @@ This procedure demonstrates how to rename a file:
 
 The reference to RenFile1 in RenFile2 will have been updated to:
 
-    require(RenFile3.php);
+    require_once("RenFile3.php");
 
 in order to reflect the changes in the file name.
 
