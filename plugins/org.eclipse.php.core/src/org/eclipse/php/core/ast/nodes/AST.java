@@ -1913,12 +1913,23 @@ public class AST {
 	 * @param isMandatory
 	 * @return A new FormalParameter.
 	 */
+	@Deprecated
 	public FormalParameter newFormalParameter(Identifier type, Expression parameterName, Expression defaultValue,
 			boolean isMandatory) {
 		FormalParameter formalParameter = new FormalParameter(this);
 		formalParameter.setParameterType(type);
 		formalParameter.setParameterName(parameterName);
 		formalParameter.setDefaultValue(defaultValue);
+		return formalParameter;
+	}
+
+	public FormalParameter newFormalParameter(Identifier type, Expression parameterName, Expression defaultValue,
+			boolean isMandatory, PropertyHookList hooks) {
+		FormalParameter formalParameter = new FormalParameter(this);
+		formalParameter.setParameterType(type);
+		formalParameter.setParameterName(parameterName);
+		formalParameter.setDefaultValue(defaultValue);
+		formalParameter.setHooks(hooks);
 		return formalParameter;
 	}
 
@@ -2561,10 +2572,19 @@ public class AST {
 	 * @param value
 	 * @return A new SingleFieldDeclaration.
 	 */
+	@Deprecated
 	public SingleFieldDeclaration newSingleFieldDeclaration(Variable name, Expression value) {
 		SingleFieldDeclaration singleFieldDeclaration = new SingleFieldDeclaration(this);
 		singleFieldDeclaration.setName(name);
 		singleFieldDeclaration.setValue(value);
+		return singleFieldDeclaration;
+	}
+
+	public SingleFieldDeclaration newSingleFieldDeclaration(Variable name, Expression value, PropertyHookList hooks) {
+		SingleFieldDeclaration singleFieldDeclaration = new SingleFieldDeclaration(this);
+		singleFieldDeclaration.setName(name);
+		singleFieldDeclaration.setValue(value);
+		singleFieldDeclaration.setHooks(hooks);
 		return singleFieldDeclaration;
 	}
 
@@ -3071,4 +3091,50 @@ public class AST {
 
 		return attribute;
 	}
+
+	public FormalParameterList newFormalParameterList() {
+		FormalParameterList list = new FormalParameterList(this);
+		return list;
+	}
+
+	public FormalParameterList newFormalParameterList(List<FormalParameter> parameters, EmptyExpression expression) {
+		FormalParameterList list = new FormalParameterList(this);
+		list.setEmptyPart(expression);
+		list.parameters().addAll(parameters);
+
+		return list;
+	}
+
+	public PropertyHookList newPropertyHookList() {
+		PropertyHookList list = new PropertyHookList(this);
+
+		return list;
+	}
+
+	public PropertyHookList newPropertyHookList(List<PropertyHook> hooks) {
+		PropertyHookList list = new PropertyHookList(this);
+		list.hooks().addAll(hooks);
+
+		return list;
+	}
+
+	public PropertyHook newPropertyHook() {
+		PropertyHook hook = new PropertyHook(this);
+
+		return hook;
+	}
+
+	public PropertyHook newPropertyHook(int modifier, boolean isReference, Identifier name,
+			FormalParameterList parameters, Expression body, List<AttributeGroup> attributes) {
+		PropertyHook hook = new PropertyHook(this);
+		hook.setModifier(modifier);
+		hook.setIsReference(isReference);
+		hook.setName(name);
+		hook.setParameters(parameters);
+		hook.setBody(body);
+		hook.attributes().addAll(attributes);
+
+		return hook;
+	}
+
 }

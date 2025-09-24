@@ -34,6 +34,7 @@ public class SingleFieldDeclaration extends ASTNode {
 
 	private Variable name;
 	private Expression value;
+	private PropertyHookList hooks;
 
 	/**
 	 * The structural property of this node type.
@@ -42,6 +43,8 @@ public class SingleFieldDeclaration extends ASTNode {
 			SingleFieldDeclaration.class, "name", Variable.class, MANDATORY, NO_CYCLE_RISK); //$NON-NLS-1$
 	public static final ChildPropertyDescriptor VALUE_PROPERTY = new ChildPropertyDescriptor(
 			SingleFieldDeclaration.class, "value", Expression.class, OPTIONAL, CYCLE_RISK); //$NON-NLS-1$
+	public static final ChildPropertyDescriptor HOOKS_PROPERTY = new ChildPropertyDescriptor(
+			SingleFieldDeclaration.class, "hooks", PropertyHookList.class, OPTIONAL, CYCLE_RISK); //$NON-NLS-1$
 
 	/**
 	 * A list of property descriptors (element type:
@@ -49,18 +52,27 @@ public class SingleFieldDeclaration extends ASTNode {
 	 */
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
 
+	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS84;
+
 	static {
 		List<StructuralPropertyDescriptor> propertyList = new ArrayList<>(2);
 		propertyList.add(NAME_PROPERTY);
 		propertyList.add(VALUE_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(propertyList);
+
+		propertyList = new ArrayList<>(3);
+		propertyList.add(NAME_PROPERTY);
+		propertyList.add(VALUE_PROPERTY);
+		propertyList.add(HOOKS_PROPERTY);
+		PROPERTY_DESCRIPTORS84 = Collections.unmodifiableList(propertyList);
 	}
 
 	public SingleFieldDeclaration(AST ast) {
 		super(ast);
 	}
 
-	public SingleFieldDeclaration(int start, int end, AST ast, Variable name, Expression value) {
+	public SingleFieldDeclaration(int start, int end, AST ast, Variable name, Expression value,
+			PropertyHookList hooks) {
 		super(start, end, ast);
 
 		if (name == null) {
@@ -71,6 +83,13 @@ public class SingleFieldDeclaration extends ASTNode {
 		if (value != null) {
 			setValue(value);
 		}
+		if (hooks != null) {
+			setHooks(hooks);
+		}
+	}
+
+	public SingleFieldDeclaration(int start, int end, AST ast, Variable name, Expression value) {
+		this(start, end, ast, name, value, null);
 	}
 
 	@Override
@@ -88,6 +107,9 @@ public class SingleFieldDeclaration extends ASTNode {
 		if (value != null) {
 			value.accept(visitor);
 		}
+		if (hooks != null) {
+			value.accept(visitor);
+		}
 	}
 
 	@Override
@@ -97,12 +119,18 @@ public class SingleFieldDeclaration extends ASTNode {
 		if (value != null) {
 			value.traverseTopDown(visitor);
 		}
+		if (hooks != null) {
+			value.traverseTopDown(visitor);
+		}
 	}
 
 	@Override
 	public void traverseBottomUp(Visitor visitor) {
 		name.accept(visitor);
 		if (value != null) {
+			value.traverseBottomUp(visitor);
+		}
+		if (hooks != null) {
 			value.traverseBottomUp(visitor);
 		}
 		accept(visitor);
@@ -121,7 +149,10 @@ public class SingleFieldDeclaration extends ASTNode {
 			value.toString(buffer, TAB + TAB + tab);
 			buffer.append("\n"); //$NON-NLS-1$
 		}
+		if (hooks != null) {
+		}
 		buffer.append(tab).append(TAB).append("</InitialValue>\n"); //$NON-NLS-1$
+		hooks.toString(buffer, TAB + tab);
 		buffer.append(tab).append("</SingleFieldDeclaration>"); //$NON-NLS-1$
 	}
 
@@ -205,6 +236,14 @@ public class SingleFieldDeclaration extends ASTNode {
 				return null;
 			}
 		}
+		if (property == HOOKS_PROPERTY) {
+			if (get) {
+				return getHooks();
+			} else {
+				setHooks((PropertyHookList) child);
+				return null;
+			}
+		}
 		// allow default implementation to flag the error
 		return super.internalGetSetChildProperty(property, get, child);
 	}
@@ -222,14 +261,30 @@ public class SingleFieldDeclaration extends ASTNode {
 	ASTNode clone0(AST target) {
 		final Variable name = ASTNode.copySubtree(target, getName());
 		final Expression value = ASTNode.copySubtree(target, getValue());
+		final PropertyHookList hooks = ASTNode.copySubtree(target, getHooks());
 
-		final SingleFieldDeclaration result = new SingleFieldDeclaration(getStart(), getEnd(), target, name, value);
+		final SingleFieldDeclaration result = new SingleFieldDeclaration(getStart(), getEnd(), target, name, value,
+				hooks);
 		return result;
+	}
+
+	public PropertyHookList getHooks() {
+		return hooks;
+	}
+
+	public void setHooks(PropertyHookList hooks) {
+		PropertyHookList oldChild = this.hooks;
+		preReplaceChild(oldChild, hooks, HOOKS_PROPERTY);
+		this.hooks = hooks;
+		postReplaceChild(oldChild, hooks, HOOKS_PROPERTY);
 	}
 
 	@Override
 	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(PHPVersion apiLevel) {
-		return PROPERTY_DESCRIPTORS;
+		if (PHPVersion.PHP8_4.isGreaterThan(apiLevel)) {
+			return PROPERTY_DESCRIPTORS;
+		}
+		return PROPERTY_DESCRIPTORS84;
 	}
 
 	public IVariableBinding resolveVariableBinding() {
