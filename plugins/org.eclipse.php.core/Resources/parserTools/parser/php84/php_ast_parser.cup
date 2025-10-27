@@ -17,6 +17,9 @@ parser code {:
 	protected final static Integer PUBLIC = Integer.valueOf(Modifiers.AccPublic);
 	protected final static Integer PRIVATE = Integer.valueOf(Modifiers.AccPrivate);
 	protected final static Integer PROTECTED = Integer.valueOf(Modifiers.AccProtected);
+	protected final static Integer PUBLIC_SET = Integer.valueOf(IPHPModifiers.AccPublicSet);
+	protected final static Integer PRIVATE_SET = Integer.valueOf(IPHPModifiers.AccPrivateSet);
+	protected final static Integer PROTECTED_SET = Integer.valueOf(IPHPModifiers.AccProtectedSet);
 	protected final static Integer ABSTRACT = Integer.valueOf(Modifiers.AccAbstract);
 	protected final static Integer FINAL = Integer.valueOf(Modifiers.AccFinal);
 	protected final static Integer STATIC = Integer.valueOf(Modifiers.AccStatic);
@@ -2826,6 +2829,21 @@ T_PUBLIC
 | T_READONLY
 {:
 	RESULT = PHPAstParser.READONLY;
+:}
+
+| T_PUBLIC_SET:value
+{:
+	RESULT = PHPAstParser.PUBLIC_SET;
+:}
+
+| T_PROTECTED_SET:value
+{:
+	RESULT = PHPAstParser.PROTECTED_SET;
+:}
+
+| T_PRIVATE_SET:value
+{:
+	RESULT = PHPAstParser.PRIVATE_SET;
 :}
 ;
 
