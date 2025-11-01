@@ -67,6 +67,8 @@ public class AddGetterSetterTests {
 
 	static {
 		TESTS.put(PHPVersion.PHP5_3, new String[] { "/workspace/generation/gettersetter" }); //$NON-NLS-1$
+		TESTS.put(PHPVersion.PHP7_4,
+				new String[] { "/workspace/generation/gettersetter", "/workspace/generation/gettersetter_php74" }); //$NON-NLS-1$
 	}
 
 	protected static final char SELECTION_CHAR = '|';
@@ -108,7 +110,10 @@ public class AddGetterSetterTests {
 		IType type = (IType) field.getParent();
 		IField[] input = new IField[] { field };
 		CodeGenerationSettings settings = new CodeGenerationSettings();
-		settings.createComments = true;
+		settings.createComments = !"false".equals(pdttFile.getConfig().get("createComments"));
+		settings.setSelfType = !"false".equals(pdttFile.getConfig().get("setSelfType"));
+		settings.useType = !"false".equals(pdttFile.getConfig().get("useType"));
+		;
 
 		final ASTParser parser = ASTParser.newParser(phpVersion, false, true, type.getSourceModule());
 		Program unit = parser.createAST(new NullProgressMonitor());

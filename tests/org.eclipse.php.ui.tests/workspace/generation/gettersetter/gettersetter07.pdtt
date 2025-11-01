@@ -1,5 +1,8 @@
 --TEST--
 Test method generation
+--CONFIG--
+setSelfType:false
+useType:false
 --FILE--
 <?php
 class Test {

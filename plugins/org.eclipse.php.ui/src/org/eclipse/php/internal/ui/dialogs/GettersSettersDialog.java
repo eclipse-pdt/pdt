@@ -27,11 +27,13 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
+import org.eclipse.php.internal.ui.actions.CodeGenerationSettings;
 import org.eclipse.php.internal.ui.util.PHPPluginImages;
 import org.eclipse.php.ui.util.CodeGenerationUtils;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -49,10 +51,13 @@ public class GettersSettersDialog extends PHPSourceActionDialog {
 	private SettersForFinalFieldsFilter fSettersForFinalFieldsFilter;
 	private ConstantFieldsFilter fConstantFieldFilter;
 	private boolean fSortOrder;
+	private Button fUseTypesButton;
+	private Button fSelfReturnTypeButton;
 
 	public GettersSettersDialog(Shell parent, ILabelProvider labelProvider,
-			GettersSettersContentProvider contentProvider, IType textSelection, TextEditor editor) {
-		super(parent, labelProvider, contentProvider, textSelection, editor);
+			GettersSettersContentProvider contentProvider, IType textSelection, TextEditor editor,
+			CodeGenerationSettings settings) {
+		super(parent, labelProvider, contentProvider, textSelection, editor, settings);
 		fSettersForFinalFieldsFilter = new SettersForFinalFieldsFilter(contentProvider);
 		fConstantFieldFilter = new ConstantFieldsFilter();
 	}
@@ -91,6 +96,55 @@ public class GettersSettersDialog extends PHPSourceActionDialog {
 	}
 
 	@Override
+	protected Composite createCommentSelection(Composite composite) {
+		Composite commentComposite = super.createCommentSelection(composite);
+
+		GridData gd = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
+		gd.horizontalSpan = 2;
+
+		fUseTypesButton = new Button(commentComposite, SWT.CHECK);
+		fUseTypesButton.setText(Messages.GettersSettersDialog_1);
+		fUseTypesButton.addSelectionListener(new SelectionListener() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				boolean isSelected = (((Button) e.widget).getSelection());
+				setUseType(isSelected);
+				if (fSelfReturnTypeButton != null) {
+					fSelfReturnTypeButton.setEnabled(isUseType());
+				}
+			}
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+				widgetSelected(e);
+			}
+		});
+		fUseTypesButton.setSelection(isUseType());
+		fUseTypesButton.setLayoutData(gd);
+
+		fSelfReturnTypeButton = new Button(commentComposite, SWT.CHECK);
+		fSelfReturnTypeButton.setText(Messages.GettersSettersDialog_2);
+		fSelfReturnTypeButton.setEnabled(isUseType());
+		fSelfReturnTypeButton.addSelectionListener(new SelectionListener() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				boolean isSelected = (((Button) e.widget).getSelection());
+				setSetSelfType(isSelected);
+
+			}
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+				widgetSelected(e);
+			}
+		});
+		fSelfReturnTypeButton.setSelection(isSetSelfType());
+		fSelfReturnTypeButton.setLayoutData(gd);
+
+		return commentComposite;
+	}
+
+	@Override
 	protected Composite createSelectionButtons(Composite composite) {
 		Composite buttonComposite = super.createSelectionButtons(composite);
 
@@ -125,7 +179,8 @@ public class GettersSettersDialog extends PHPSourceActionDialog {
 	}
 
 	/*
-	 * @see org.eclipse.jdt.internal.ui.dialogs.SourceActionDialog#createLinkControl
+	 * @see
+	 * org.eclipse.jdt.internal.ui.dialogs.SourceActionDialog#createLinkControl
 	 * (org.eclipse.swt.widgets.Composite)
 	 */
 	@Override
@@ -316,17 +371,46 @@ public class GettersSettersDialog extends PHPSourceActionDialog {
 
 	public static class GetterSetterLabelProvider extends ModelElementLabelProvider {
 
+		private CodeGenerationSettings fSettings;
+
+		public GetterSetterLabelProvider(CodeGenerationSettings settings) {
+			this.fSettings = settings;
+		}
+
 		@Override
 		public String getText(Object element) {
 			if (element instanceof GetterSetterEntry) {
 				GetterSetterEntry entry = (GetterSetterEntry) element;
 				try {
+					StringBuilder sb = new StringBuilder();
 					if (entry.isGetter) {
-						return CodeGenerationUtils.getGetterName(entry.field) + "()"; //$NON-NLS-1$
+						sb.append(CodeGenerationUtils.getGetterName(entry.field));
+
+						sb.append("()"); //$NON-NLS-1$
+						if (fSettings.useType && entry.type != null) {
+							sb.append(" : "); //$NON-NLS-1$
+							sb.append(entry.type);
+						}
 					} else {
-						return CodeGenerationUtils.getSetterName(entry.field) + '(' + entry.field.getElementName()
-								+ ')';
+						sb.append(CodeGenerationUtils.getSetterName(entry.field));
+						sb.append('(');
+						if (fSettings.useType && entry.type != null) {
+							sb.append(entry.type);
+							sb.append(' ');
+						}
+						sb.append(entry.field.getElementName());
+						sb.append(')');
+						if (fSettings.useType) {
+							sb.append(" : "); //$NON-NLS-1$
+							if (fSettings.setSelfType && PHPFlags.isStatic(entry.field.getFlags())) {
+								sb.append("self"); //$NON-NLS-1$
+							} else {
+								sb.append("void"); //$NON-NLS-1$
+							}
+						}
 					}
+
+					return sb.toString();
 				} catch (ModelException e) {
 					PHPUiPlugin.log(e);
 					return ""; //$NON-NLS-1$
@@ -419,9 +503,12 @@ public class GettersSettersDialog extends PHPSourceActionDialog {
 		public final boolean isGetter;
 		public final boolean isFinal;
 		public final boolean isConstant;
+		public final String type;
 
-		public GetterSetterEntry(IField field, boolean isGetterEntry, boolean isFinal, boolean isConstant) {
+		public GetterSetterEntry(IField field, String type, boolean isGetterEntry, boolean isFinal,
+				boolean isConstant) {
 			this.field = field;
+			this.type = type;
 			this.isGetter = isGetterEntry;
 			this.isFinal = isFinal;
 			this.isConstant = isConstant;

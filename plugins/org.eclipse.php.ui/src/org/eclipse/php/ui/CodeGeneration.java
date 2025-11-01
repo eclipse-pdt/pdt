@@ -1182,9 +1182,9 @@ public class CodeGeneration {
 	 * @since 3.0
 	 */
 	public static String getSetterMethodBodyContent(IScriptProject sp, String declaringTypeName, String methodName,
-			String fieldName, String paramName, String lineDelimiter) throws CoreException {
+			String fieldName, String paramName, String lineDelimiter, boolean selfSetType) throws CoreException {
 		return StubUtility.getSetterMethodBodyContent(sp, declaringTypeName, methodName, fieldName, paramName,
-				lineDelimiter);
+				lineDelimiter, selfSetType);
 	}
 
 	/**

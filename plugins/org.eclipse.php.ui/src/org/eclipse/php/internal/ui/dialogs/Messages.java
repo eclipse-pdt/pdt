@@ -35,6 +35,10 @@ public class Messages extends NLS {
 	public static String GettersSettersAction_58;
 	public static String SourceActions_ValidatorText;
 	public static String GettersSettersDialog_0;
+
+	public static String GettersSettersDialog_1;
+
+	public static String GettersSettersDialog_2;
 	public static String GettersSettersDialog_3;
 	public static String OverrideMethodDialog_11;
 	public static String OverrideMethodDialog_7;

@@ -1,0 +1,24 @@
+--TEST--
+Test method generation
+--CONFIG--
+setSelfType:false
+useType:true
+createComments:false
+--FILE--
+<?php
+class MyClass {
+	protected static \DateTime |$field|;
+}
+--EXPECT--
+<?php
+class MyClass {
+	protected static \DateTime $field;
+	public static function getField(): \DateTime {
+		return MyClass::$field;
+	}
+
+	public static function setField(\DateTime $field): void {
+		MyClass::$field = $field;
+	}
+
+}

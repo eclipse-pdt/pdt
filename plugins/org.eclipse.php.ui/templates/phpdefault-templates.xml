@@ -86,6 +86,9 @@ ${body_statement}</template>
 <template name="getterbody" id="org.eclipse.php.ui.editor.templates.php.codetemplates.getterbody" description="%CodeTemplates.getterstub" context="php_getterbody_context" enabled="true">return ${field};</template>
 
 <template name="setterbody" id="org.eclipse.php.ui.editor.templates.php.codetemplates.setterbody" description="%CodeTemplates.setterstub" context="php_setterbody_context" enabled="true">${field} = ${param};</template>
+<template name="setterselfbody" id="org.eclipse.php.ui.editor.templates.php.codetemplates.setterselfbody" description="%CodeTemplates.settersetstub" context="php_setterbody_context" enabled="true">${field} = ${param};
+
+return $$this;</template>
 
 
 <!-- new PHP templates -->

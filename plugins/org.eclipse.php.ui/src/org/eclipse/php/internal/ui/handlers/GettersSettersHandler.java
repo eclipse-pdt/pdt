@@ -61,6 +61,8 @@ public class GettersSettersHandler extends AbstractHandler {
 	private IWorkbenchWindow fWindow;
 	private boolean fSort;
 	private boolean fGenerateComment;
+	private boolean fUseType;
+	private boolean fSetSelfType;
 	private boolean fFinal;
 	private int fVisibility;
 	private int fNumEntries;
@@ -172,8 +174,13 @@ public class GettersSettersHandler extends AbstractHandler {
 		}
 
 		resetNumEntries();
+		IProject project = source.getScriptProject().getProject();
 
-		Map<IField, GetterSetterEntry[]> entries = createGetterSetterMapping(type);
+		Program program = null;
+		IDocument document = editor.getDocumentProvider().getDocument(editor.getEditorInput());
+		program = CodeGenerationUtils.getASTRoot(source, document, project);
+
+		Map<IField, GetterSetterEntry[]> entries = createGetterSetterMapping(type, program);
 
 		// No fields are eligible to generate getter/setter.
 		if (entries.isEmpty()) {
@@ -183,8 +190,11 @@ public class GettersSettersHandler extends AbstractHandler {
 			return;
 		}
 
-		GettersSettersDialog dialog = new GettersSettersDialog(fWindow.getShell(), new GetterSetterLabelProvider(),
-				new GettersSettersContentProvider(entries), type, editor);
+		CodeGenerationSettings settings = new CodeGenerationSettings();
+
+		GettersSettersDialog dialog = new GettersSettersDialog(fWindow.getShell(),
+				new GetterSetterLabelProvider(settings), new GettersSettersContentProvider(entries), type, editor,
+				settings);
 
 		dialog.setTitle(Messages.bind(DIALOG_TITLE, type.getElementName()));
 		String message = Messages.GettersSettersHandler_9;
@@ -213,7 +223,9 @@ public class GettersSettersHandler extends AbstractHandler {
 		fSort = dialog.getSortOrder();
 		fFinal = dialog.isFinal();
 		fVisibility = dialog.getVisibilityModifier();
-		fGenerateComment = dialog.getGenerateComment();
+		fGenerateComment = dialog.isGenerateComment();
+		fUseType = dialog.isUseType();
+		fSetSelfType = dialog.isSetSelfType();
 		IField[] getterFields, setterFields, getterSetterFields;
 		if (fSort) {
 			getterFields = getGetterFields(result, keySet);
@@ -224,12 +236,6 @@ public class GettersSettersHandler extends AbstractHandler {
 			setterFields = getSetterOnlyFields(result, keySet);
 			getterSetterFields = getGetterSetterFields(result, keySet);
 		}
-
-		IProject project = source.getScriptProject().getProject();
-
-		Program program = null;
-		IDocument document = editor.getDocumentProvider().getDocument(editor.getEditorInput());
-		program = CodeGenerationUtils.getASTRoot(source, document, project);
 
 		final IRewriteTarget target = editor.getAdapter(IRewriteTarget.class);
 		if (target != null) {
@@ -275,12 +281,14 @@ public class GettersSettersHandler extends AbstractHandler {
 		try {
 			CodeGenerationSettings settings = new CodeGenerationSettings();
 			settings.createComments = fGenerateComment;
+			settings.setSelfType = fSetSelfType;
+			settings.useType = fUseType;
 
 			AddGetterSetterOperation op = new AddGetterSetterOperation(type, getterFields, setterFields,
 					getterSetterFields, program, document, elementPosition, settings, true);
 			setOperationStatusFields(op);
 
-			IRunnableContext context = PHPUiPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow();
+			IRunnableContext context = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 			if (context == null) {
 				context = new BusyIndicatorRunnableContext();
 			}
@@ -442,24 +450,26 @@ public class GettersSettersHandler extends AbstractHandler {
 	 *             if the type does not exist or if an exception occurs while
 	 *             accessing its corresponding resource
 	 */
-	private Map<IField, GetterSetterEntry[]> createGetterSetterMapping(IType type) throws ModelException {
+	private Map<IField, GetterSetterEntry[]> createGetterSetterMapping(IType type, Program ast) throws ModelException {
 		IField[] fields = type.getFields();
 		Map<IField, GetterSetterEntry[]> result = new LinkedHashMap<>();
+
 		for (IField field : fields) {
 			int flags = field.getFlags();
 
 			if (PHPFlags.isConstant(flags)) {
 				continue;
 			}
+			String fieldType = CodeGenerationUtils.getFieldDefinitionType(field, ast);
 
 			List<GetterSetterEntry> l = new ArrayList<>(2);
 			if (CodeGenerationUtils.getGetter(field) == null) {
-				l.add(new GetterSetterEntry(field, true, Flags.isFinal(flags), PHPFlags.isConstant(flags)));
+				l.add(new GetterSetterEntry(field, fieldType, true, Flags.isFinal(flags), PHPFlags.isConstant(flags)));
 				incNumEntries();
 			}
 
 			if (CodeGenerationUtils.getSetter(field) == null) {
-				l.add(new GetterSetterEntry(field, false, Flags.isFinal(flags), PHPFlags.isConstant(flags)));
+				l.add(new GetterSetterEntry(field, fieldType, false, Flags.isFinal(flags), PHPFlags.isConstant(flags)));
 				incNumEntries();
 			}
 

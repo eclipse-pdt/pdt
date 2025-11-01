@@ -26,6 +26,7 @@ import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.php.core.ast.nodes.ITypeBinding;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
+import org.eclipse.php.internal.ui.actions.CodeGenerationSettings;
 import org.eclipse.php.internal.ui.preferences.PHPCodeTemplatePreferencePage;
 import org.eclipse.php.internal.ui.util.PatternMatcher;
 import org.eclipse.swt.SWT;
@@ -54,6 +55,10 @@ public class PHPSourceActionDialog extends CheckedTreeSelectionDialog {
 
 	private static final String SETTINGS_INSERT_POSITION = "PHPSourceActionDialog.InsertPosition"; //$NON-NLS-1$
 
+	private static final String SETTINGS_USE_TYPE = "PHPSourceActionDialog.UseType"; //$NON-NLS-1$
+
+	private static final String SETTINGS_SET_RETURN_SELF = "PHPSourceActionDialog.SetReturnSelf"; //$NON-NLS-1$
+
 	private static final int INSERT_FIRST_INDEX = 0;
 	private static final int INSERT_LAST_INDEX = 1;
 	private static final int INSERT_POSITION_FROM_EDITOR = 2;
@@ -68,6 +73,8 @@ public class PHPSourceActionDialog extends CheckedTreeSelectionDialog {
 	private IProject fProject;
 
 	private boolean fGenerateComment;
+	private boolean fUseType;
+	private boolean fSetSelfType;
 	private final int fWidth, fHeight;
 	private final String fCommentString;
 	private boolean fEnableInsertPosition = true;
@@ -78,6 +85,8 @@ public class PHPSourceActionDialog extends CheckedTreeSelectionDialog {
 
 	private TextEditor fEditor;
 
+	private CodeGenerationSettings fGenerationSettings;
+
 	public interface IVisibilityChangeListener {
 		void visibilityChanged(int newVisibility);
 
@@ -85,11 +94,12 @@ public class PHPSourceActionDialog extends CheckedTreeSelectionDialog {
 	}
 
 	public PHPSourceActionDialog(Shell parent, ILabelProvider labelProvider, ITreeContentProvider contentProvider,
-			IType type, TextEditor editor) {
+			IType type, TextEditor editor, CodeGenerationSettings settings) {
 		super(parent, labelProvider, contentProvider);
 		fEditor = editor;
 		fContentProvider = contentProvider;
 		fCommentString = Messages.GettersSettersAction_27;
+		fGenerationSettings = settings;
 		setEmptyListMessage(Messages.GettersSettersAction_28);
 
 		fWidth = 60;
@@ -172,7 +182,9 @@ public class PHPSourceActionDialog extends CheckedTreeSelectionDialog {
 	protected void restoreWidgetsValue(IMethod[] methods) throws ModelException {
 		fVisibilityModifier = asInt(fSettings.get(SETTINGS_VISIBILITY_MODIFIER), Flags.AccPublic);
 		fFinal = asBoolean(fSettings.get(SETTINGS_FINAL_MODIFIER), false);
-		fGenerateComment = asBoolean(fSettings.get(SETTINGS_COMMENTS), true);
+		fGenerationSettings.createComments = fGenerateComment = asBoolean(fSettings.get(SETTINGS_COMMENTS), true);
+		fGenerationSettings.setSelfType = fSetSelfType = asBoolean(fSettings.get(SETTINGS_SET_RETURN_SELF), true);
+		fGenerationSettings.useType = fUseType = asBoolean(fSettings.get(SETTINGS_USE_TYPE), true);
 
 		int storedPositionIndex = asInt(fSettings.get(SETTINGS_INSERT_POSITION), INSERT_POSITION_FROM_EDITOR);
 		if (storedPositionIndex == INSERT_POSITION_FROM_EDITOR) {
@@ -372,9 +384,11 @@ public class PHPSourceActionDialog extends CheckedTreeSelectionDialog {
 
 	public void setGenerateComment(boolean comment) {
 		fGenerateComment = comment;
+		fGenerationSettings.createComments = comment;
+		getTreeViewer().refresh();
 	}
 
-	public boolean getGenerateComment() {
+	public boolean isGenerateComment() {
 		return fGenerateComment;
 	}
 
@@ -652,7 +666,7 @@ public class PHPSourceActionDialog extends CheckedTreeSelectionDialog {
 				widgetSelected(e);
 			}
 		});
-		commentButton.setSelection(getGenerateComment());
+		commentButton.setSelection(isGenerateComment());
 		GridData gd = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 		gd.horizontalSpan = 2;
 		commentButton.setLayoutData(gd);
@@ -665,6 +679,8 @@ public class PHPSourceActionDialog extends CheckedTreeSelectionDialog {
 		fSettings.put(SETTINGS_VISIBILITY_MODIFIER, StringConverter.asString(fVisibilityModifier));
 		fSettings.put(SETTINGS_FINAL_MODIFIER, StringConverter.asString(fFinal));
 		fSettings.put(SETTINGS_COMMENTS, fGenerateComment);
+		fSettings.put(SETTINGS_USE_TYPE, fUseType);
+		fSettings.put(SETTINGS_SET_RETURN_SELF, fSetSelfType);
 		if (fHasUserChangedPositionIndex) {
 			if (fCurrentPositionIndex == INSERT_FIRST_INDEX || fCurrentPositionIndex == INSERT_LAST_INDEX) {
 				fSettings.put(SETTINGS_INSERT_POSITION, StringConverter.asString(fCurrentPositionIndex));
@@ -674,6 +690,30 @@ public class PHPSourceActionDialog extends CheckedTreeSelectionDialog {
 		}
 
 		return super.close();
+	}
+
+	public boolean isUseType() {
+		return fUseType;
+	}
+
+	public void setUseType(boolean fUseType) {
+		this.fUseType = fUseType;
+		fGenerationSettings.useType = fUseType;
+		getTreeViewer().refresh();
+	}
+
+	public boolean isSetSelfType() {
+		return fSetSelfType;
+	}
+
+	public void setSetSelfType(boolean fSetSelfType) {
+		this.fSetSelfType = fSetSelfType;
+		fGenerationSettings.setSelfType = fSetSelfType;
+		getTreeViewer().refresh();
+	}
+
+	public CodeGenerationSettings getGenerationSettings() {
+		return fGenerationSettings;
 	}
 
 }
