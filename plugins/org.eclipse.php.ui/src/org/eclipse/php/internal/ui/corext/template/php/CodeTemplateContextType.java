@@ -64,6 +64,7 @@ public class CodeTemplateContextType extends ScriptTemplateContextType {
 	public static final String CONSTRUCTORSTUB_ID = CODETEMPLATES_PREFIX + "constructorbody"; //$NON-NLS-1$
 	public static final String GETTERSTUB_ID = CODETEMPLATES_PREFIX + "getterbody"; //$NON-NLS-1$
 	public static final String SETTERSTUB_ID = CODETEMPLATES_PREFIX + "setterbody"; //$NON-NLS-1$
+	public static final String SETTERSELFSTUB_ID = CODETEMPLATES_PREFIX + "setterselfbody"; //$NON-NLS-1$
 	public static final String FILECOMMENT_ID = CODETEMPLATES_PREFIX + "file" + COMMENT_SUFFIX; //$NON-NLS-1$
 	public static final String TYPECOMMENT_ID = CODETEMPLATES_PREFIX + "type" + COMMENT_SUFFIX; //$NON-NLS-1$
 	public static final String CLASSBODY_ID = CODETEMPLATES_PREFIX + "classbody"; //$NON-NLS-1$
@@ -150,8 +151,8 @@ public class CodeTemplateContextType extends ScriptTemplateContextType {
 	 * PhpTemplateMessages.CodeTemplateContextType_variable_description_todo); }
 	 * 
 	 * protected String resolve(TemplateContext context) { String todoTaskTag=
-	 * StubUtility.getTodoTaskTag(((CodeTemplateContext) context).getJavaProject());
-	 * if (todoTaskTag == null) return "XXX";
+	 * StubUtility.getTodoTaskTag(((CodeTemplateContext)
+	 * context).getJavaProject()); if (todoTaskTag == null) return "XXX";
 	 * 
 	 * 
 	 * return todoTaskTag; } }
@@ -337,16 +338,17 @@ public class CodeTemplateContextType extends ScriptTemplateContextType {
 	}
 
 	/*
-	 * @see org.eclipse.jdt.internal.corext.template.ContextType#validateVariables
+	 * @see
+	 * org.eclipse.jdt.internal.corext.template.ContextType#validateVariables
 	 * (org.eclipse.jdt.internal.corext.template.TemplateVariable[])
 	 */
 	/*
 	 * protected void validateVariables(TemplateVariable[] variables) throws
-	 * TemplateException { ArrayList required= new ArrayList(5); String contextName=
-	 * getId(); if (NEWTYPE_CONTEXTTYPE.equals(contextName)) {
-	 * required.add(PACKAGE_DECLARATION); required.add(TYPE_DECLARATION); } for (int
-	 * i= 0; i < variables.length; i++) { String type= variables[i].getType(); if
-	 * (getResolver(type) == null) { String unknown=
+	 * TemplateException { ArrayList required= new ArrayList(5); String
+	 * contextName= getId(); if (NEWTYPE_CONTEXTTYPE.equals(contextName)) {
+	 * required.add(PACKAGE_DECLARATION); required.add(TYPE_DECLARATION); } for
+	 * (int i= 0; i < variables.length; i++) { String type=
+	 * variables[i].getType(); if (getResolver(type) == null) { String unknown=
 	 * BasicElementLabels.getJavaElementName(type); throw new
 	 * TemplateException(Messages .format(PhpTemplateMessages.
 	 * CodeTemplateContextType_validate_unknownvariable , unknown)); }
@@ -389,7 +391,8 @@ public class CodeTemplateContextType extends ScriptTemplateContextType {
 	}
 
 	/*
-	 * @see org.eclipse.jdt.internal.corext.template.ContextType#validate(java.lang
+	 * @see
+	 * org.eclipse.jdt.internal.corext.template.ContextType#validate(java.lang
 	 * .String)
 	 */
 	@Override

@@ -1,0 +1,26 @@
+--TEST--
+Test method generation
+--CONFIG--
+setSelfType:true
+useType:true
+createComments:false
+--FILE--
+<?php
+class MyClass {
+	protected \DateTime |$field|;
+}
+--EXPECT--
+<?php
+class MyClass {
+	protected \DateTime $field;
+	public function getField(): \DateTime {
+		return $this->field;
+	}
+
+	public function setField(\DateTime $field): self {
+		$this->field = $field;
+		
+		return $this;
+	}
+
+}

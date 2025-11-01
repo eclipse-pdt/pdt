@@ -38,12 +38,14 @@ import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
+import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.ast.nodes.*;
 import org.eclipse.php.core.ast.visitor.AbstractVisitor;
 import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.ast.rewrite.ASTRewrite;
 import org.eclipse.php.internal.core.ast.rewrite.ListRewrite;
+import org.eclipse.php.internal.core.corext.dom.NodeFinder;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.core.typeinference.PHPSimpleTypes;
@@ -65,6 +67,9 @@ import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.texteditor.ITextEditor;
 
 public class CodeGenerationUtils {
+
+	private static final String VOID = "void"; //$NON-NLS-1$
+	private static final String SELF = "self"; //$NON-NLS-1$
 
 	private CodeGenerationUtils() {
 	}
@@ -241,8 +246,9 @@ public class CodeGenerationUtils {
 	 * @throws CoreException
 	 *             when stub creation failed
 	 */
-	public static void createSetterStub(IField field, String setterName, boolean addComments, int flags,
-			ListRewrite rewrite, ASTNode insertion) throws CoreException {
+	public static void createSetterStub(IField field, String fieldType, String setterName, boolean addComments,
+			boolean useType, boolean selfSetType, int flags, ListRewrite rewrite, ASTNode insertion)
+			throws CoreException {
 		String fieldName = field.getElementName();
 		IType parentType = field.getDeclaringType();
 
@@ -295,11 +301,19 @@ public class CodeGenerationUtils {
 
 		method.setModifier(modifiers);
 
+		if (useType && PHPVersion.PHP7_3.isLessThan(ProjectOptions.getPHPVersion(field))) {
+			func.setReturnType(ast.newIdentifier(selfSetType && !isStatic ? SELF : VOID));
+			if (fieldType != null) {
+				param.setParameterType(ast.newIdentifier(fieldType));
+			}
+		}
+
 		Block body = ast.newBlock();
 		func.setBody(body);
 
 		String bodyContent = CodeGeneration.getSetterMethodBodyContent(field.getScriptProject(),
-				parentType.getTypeQualifiedName(), setterName, fieldName, field.getElementName(), lineDelim);
+				parentType.getTypeQualifiedName(), setterName, fieldName, field.getElementName(), lineDelim,
+				selfSetType && !isStatic);
 
 		if (bodyContent != null) {
 			ASTNode todoNode = rewrite.getASTRewrite().createStringPlaceholder(bodyContent, ASTNode.EMPTY_STATEMENT);
@@ -307,7 +321,7 @@ public class CodeGenerationUtils {
 		}
 
 		if (addComments) {
-			String filedType = getFieldType(field);
+			String filedType = fieldType != null ? fieldType : getFieldType(field);
 			String comment = CodeGeneration.getSetterComment(field.getScriptProject(),
 					field.getDeclaringType().getElementName(), setterName, fieldName, filedType, field.getElementName(),
 					field.getElementName(), lineDelim);
@@ -323,6 +337,7 @@ public class CodeGenerationUtils {
 	}
 
 	private static String getFieldType(IField field) throws ModelException {
+
 		String fieldType = field.getType();
 		IType type = field.getDeclaringType();
 		PHPClassType classType = PHPClassType.fromIType(type);
@@ -409,8 +424,8 @@ public class CodeGenerationUtils {
 	 * @throws CoreException
 	 *             when stub creation failed
 	 */
-	public static void createGetterStub(IField field, String getterName, boolean addComments, int flags, IType type,
-			ListRewrite rewrite, ASTNode insertion) throws CoreException {
+	public static void createGetterStub(IField field, String fieldType, String getterName, boolean addComments,
+			boolean useType, int flags, IType type, ListRewrite rewrite, ASTNode insertion) throws CoreException {
 		String fieldName = field.getElementName();
 		IType parentType = field.getDeclaringType();
 		String lineDelim = StubUtility.getLineDelimiterUsed(field.getScriptProject());
@@ -422,6 +437,11 @@ public class CodeGenerationUtils {
 		FunctionDeclaration func = ast.newFunctionDeclaration();
 
 		func.setFunctionName(ast.newIdentifier(getGetterName(field)));
+		if (useType && PHPVersion.PHP7_3.isLessThan(ProjectOptions.getPHPVersion(type))) {
+			if (fieldType != null) {
+				func.setReturnType(ast.newIdentifier(fieldType));
+			}
+		}
 
 		method.setFunction(func);
 
@@ -1133,5 +1153,22 @@ public class CodeGenerationUtils {
 		public MethodDeclarationStub(AST ast) {
 			super(ast);
 		}
+	}
+
+	public static String getFieldDefinitionType(IField field, Program astRoot) throws ModelException {
+		SingleFieldDeclaration declaration = (SingleFieldDeclaration) ASTNodes.getParent(
+				NodeFinder.perform(astRoot, field.getNameRange().getOffset(), field.getNameRange().getLength()),
+				SingleFieldDeclaration.class);
+		if (declaration != null) {
+			FieldsDeclaration parent = (FieldsDeclaration) declaration.getParent();
+			if (parent.getFieldsType() != null) {
+				Expression fieldTypeExpr = parent.getFieldsType();
+				if (fieldTypeExpr instanceof Identifier) {
+					return ((Identifier) fieldTypeExpr).getName();
+				}
+			}
+		}
+
+		return null;
 	}
 }

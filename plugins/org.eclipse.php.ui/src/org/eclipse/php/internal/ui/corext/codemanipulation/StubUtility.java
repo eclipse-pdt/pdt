@@ -256,8 +256,9 @@ public class StubUtility {
 	 * Don't use this method directly, use CodeGeneration.
 	 */
 	public static String getSetterMethodBodyContent(IScriptProject project, String destTypeName, String methodName,
-			String fieldName, String paramName, String lineDelimiter) throws CoreException {
-		String templateName = CodeTemplateContextType.SETTERSTUB_ID;
+			String fieldName, String paramName, String lineDelimiter, boolean selfSetType) throws CoreException {
+		String templateName = selfSetType ? CodeTemplateContextType.SETTERSELFSTUB_ID
+				: CodeTemplateContextType.SETTERSTUB_ID;
 		Template template = getCodeTemplate(templateName, project);
 		if (template == null) {
 			return null;

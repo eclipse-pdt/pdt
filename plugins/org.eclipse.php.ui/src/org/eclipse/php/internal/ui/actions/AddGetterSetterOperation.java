@@ -96,8 +96,8 @@ public final class AddGetterSetterOperation implements IWorkspaceRunnable {
 	 *            <code>true</code> if the resulting edit should be applied,
 	 *            <code>false</code> otherwise
 	 * @param save
-	 *            <code>true</code> if the changed compilation unit should be saved,
-	 *            <code>false</code> otherwise
+	 *            <code>true</code> if the changed compilation unit should be
+	 *            saved, <code>false</code> otherwise
 	 */
 	public AddGetterSetterOperation(final IType type, final IField[] getters, final IField[] setters,
 			final IField[] accessors, final Program unit, final IDocument document, final IMethod insert,
@@ -136,8 +136,9 @@ public final class AddGetterSetterOperation implements IWorkspaceRunnable {
 		if (existing == null) {
 			IModelElement sibling = fInsert;
 			ASTNode insertion = CodeGenerationUtils.getNodeToInsertBefore(rewrite, sibling);
+			String fieldType = CodeGenerationUtils.getFieldDefinitionType(field, fASTRoot);
 
-			CodeGenerationUtils.createGetterStub(field, name, fSettings.createComments,
+			CodeGenerationUtils.createGetterStub(field, fieldType, name, fSettings.createComments, fSettings.useType,
 					fVisibility | (field.getFlags() & Flags.AccStatic), type, rewrite, insertion);
 		}
 	}
@@ -163,8 +164,10 @@ public final class AddGetterSetterOperation implements IWorkspaceRunnable {
 		if (existing == null) {
 			IModelElement sibling = fInsert;
 			ASTNode insertion = CodeGenerationUtils.getNodeToInsertBefore(rewrite, sibling);
-			CodeGenerationUtils.createSetterStub(field, name, fSettings.createComments,
-					fVisibility | (field.getFlags() & Flags.AccStatic), rewrite, insertion);
+			String fieldType = CodeGenerationUtils.getFieldDefinitionType(field, fASTRoot);
+
+			CodeGenerationUtils.createSetterStub(field, fieldType, name, fSettings.createComments, fSettings.useType,
+					fSettings.setSelfType, fVisibility | (field.getFlags() & Flags.AccStatic), rewrite, insertion);
 		}
 	}
 

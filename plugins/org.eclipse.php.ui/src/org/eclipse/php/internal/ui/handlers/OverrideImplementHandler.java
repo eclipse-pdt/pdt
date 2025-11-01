@@ -39,6 +39,7 @@ import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.actions.AddUnimplementedMethodsOperation;
+import org.eclipse.php.internal.ui.actions.CodeGenerationSettings;
 import org.eclipse.php.internal.ui.actions.WorkbenchRunnableAdapter;
 import org.eclipse.php.internal.ui.dialogs.OverrideMethodDialog;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
@@ -149,7 +150,8 @@ public class OverrideImplementHandler extends AbstractHandler {
 			return;
 		}
 
-		OverrideMethodDialog dialog = new OverrideMethodDialog(fWindow.getShell(), editor, type, false);
+		OverrideMethodDialog dialog = new OverrideMethodDialog(fWindow.getShell(), editor, type, false,
+				new CodeGenerationSettings());
 		dialog.setProject(source.getScriptProject().getProject());
 
 		if (!dialog.hasMethodsToOverride()) {
@@ -187,7 +189,7 @@ public class OverrideImplementHandler extends AbstractHandler {
 
 			IDocument document = editor.getDocumentProvider().getDocument(editor.getEditorInput());
 			AddUnimplementedMethodsOperation operation = createRunnable(astRoot, type, typeBinding, methodToOverride,
-					insertPos, dialog.getGenerateComment(), document);
+					insertPos, dialog.isGenerateComment(), document);
 			IRunnableContext context = PHPUiPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow();
 			if (context == null) {
 				context = new BusyIndicatorRunnableContext();

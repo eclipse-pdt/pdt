@@ -15,6 +15,8 @@ package org.eclipse.php.internal.ui.actions;
 public class CodeGenerationSettings {
 
 	public boolean createComments = true;
+	public boolean useType = true;
+	public boolean setSelfType = true;
 
 	public int tabWidth;
 	public int indentWidth;

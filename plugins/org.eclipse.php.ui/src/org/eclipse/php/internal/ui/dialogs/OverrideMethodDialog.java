@@ -31,6 +31,7 @@ import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.php.core.ast.nodes.*;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
+import org.eclipse.php.internal.ui.actions.CodeGenerationSettings;
 import org.eclipse.php.internal.ui.viewsupport.BindingLabelProvider;
 import org.eclipse.php.ui.util.CodeGenerationUtils;
 import org.eclipse.swt.SWT;
@@ -178,8 +179,9 @@ public class OverrideMethodDialog extends PHPSourceActionDialog {
 
 	private Program fUnit = null;
 
-	public OverrideMethodDialog(Shell shell, TextEditor editor, IType type, boolean isSubType) throws ModelException {
-		super(shell, new BindingLabelProvider(), new OverrideMethodContentProvider(), type, editor);
+	public OverrideMethodDialog(Shell shell, TextEditor editor, IType type, boolean isSubType,
+			CodeGenerationSettings settings) throws ModelException {
+		super(shell, new BindingLabelProvider(), new OverrideMethodContentProvider(), type, editor, settings);
 
 		IDocument document = editor.getDocumentProvider().getDocument(editor.getEditorInput());
 		fUnit = CodeGenerationUtils.getASTRoot(type.getSourceModule(), document, type.getScriptProject().getProject());
