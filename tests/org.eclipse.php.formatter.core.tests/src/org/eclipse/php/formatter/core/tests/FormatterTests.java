@@ -24,6 +24,7 @@ import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
@@ -125,19 +126,30 @@ public class FormatterTests {
 
 	@BeforeList
 	public void setUpSuite() throws Exception {
+		setDefaultFormatter(scopeContext, profileManager);
 		TestUtils.disableColliders(ColliderType.ALL);
 		project = TestUtils.createProject("FormatterTests_" + suiteCounter++);
 		TestUtils.setProjectPHPVersion(project, phpVersion, true, true);
 		// Create files to format
-		for (String fileName : fileNames) {
-			PdttFile pdttFile = new PdttFile(getContext(), fileName);
-			IFile file = createFile(pdttFile.getFile().trim());
-			files.put(fileName, file);
-			pdttFiles.put(fileName, pdttFile);
-		}
+		ResourcesPlugin.getWorkspace().run((m) -> {
+			for (String fileName : fileNames) {
+				PdttFile pdttFile;
+				try {
+					pdttFile = new PdttFile(getContext(), fileName);
+					IFile file = createFile(pdttFile.getFile().trim());
+					files.put(fileName, file);
+					pdttFiles.put(fileName, pdttFile);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+
+			}
+		}, null);
+
 		// Wait for indexer...
 		profileManager.clearAllSettings(scopeContext);
 		profileManager.commitChanges(scopeContext);
+
 		if (xmlFile != null) {
 			// apply configuration to the formatter configuration
 			// manager

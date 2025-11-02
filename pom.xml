@@ -14,7 +14,7 @@
 		<tycho-version>5.0.0</tycho-version>
 		<antrun-version>3.1.0</antrun-version>
 		<maven.test.failure.ignore>true</maven.test.failure.ignore>
-		<test.vmargs>-server</test.vmargs>
+		<test.vmargs>-server -Declipse.consoleLog=true</test.vmargs>
 		<test.proxy />
 		
 		<sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
@@ -210,7 +210,7 @@
 				</os>
 			</activation>
 			<properties>
-				<test.vmargs>-XstartOnFirstThread -server</test.vmargs>
+				<test.vmargs>-XstartOnFirstThread -server -Declipse.consoleLog=true</test.vmargs>
 			</properties>
 		</profile>
 		<profile>
