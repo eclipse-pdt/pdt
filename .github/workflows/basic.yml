@@ -101,7 +101,7 @@ jobs:
     - name: Stage repository
       run: mkdir repository && cp -r dev/org.eclipse.php-repository/target/repository/* repository
     - name: Upload repository
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       with:
         name: repository
         path: repository
