@@ -480,7 +480,7 @@ public class CodeGenerationUtils {
 		}
 
 		if (addComments) {
-			String filedType = getFieldType(field);
+			String filedType = fieldType != null ? fieldType : getFieldType(field);
 			String comment = CodeGeneration.getGetterComment(field.getScriptProject(),
 					field.getDeclaringType().getElementName(), getterName, fieldName, filedType, field.getElementName(),
 					lineDelim);
@@ -1156,16 +1156,36 @@ public class CodeGenerationUtils {
 	}
 
 	public static String getFieldDefinitionType(IField field, Program astRoot) throws ModelException {
-		SingleFieldDeclaration declaration = (SingleFieldDeclaration) ASTNodes.getParent(
+		ASTNode declaration = ASTNodes.getParent(
 				NodeFinder.perform(astRoot, field.getNameRange().getOffset(), field.getNameRange().getLength()),
 				SingleFieldDeclaration.class);
-		if (declaration != null) {
+
+		if (declaration == null) {
+			declaration = ASTNodes.getParent(
+					NodeFinder.perform(astRoot, field.getNameRange().getOffset(), field.getNameRange().getLength() - 1),
+					FormalParameter.class);
+		}
+
+		if (declaration == null) {
+			return null;
+		}
+
+		Expression fieldTypeExpr = null;
+
+		if (declaration instanceof SingleFieldDeclaration) {
 			FieldsDeclaration parent = (FieldsDeclaration) declaration.getParent();
-			if (parent.getFieldsType() != null) {
-				Expression fieldTypeExpr = parent.getFieldsType();
-				if (fieldTypeExpr instanceof Identifier) {
-					return ((Identifier) fieldTypeExpr).getName();
-				}
+			fieldTypeExpr = parent.getFieldsType();
+
+		} else if (declaration instanceof FormalParameter) {
+			fieldTypeExpr = ((FormalParameter) declaration).getParameterType();
+		}
+		if (fieldTypeExpr != null) {
+			String prefix = ""; //$NON-NLS-1$
+			if (fieldTypeExpr instanceof NamespaceName && ((NamespaceName) fieldTypeExpr).isNullable()) {
+				prefix = "?"; //$NON-NLS-1$
+			}
+			if (fieldTypeExpr instanceof Identifier) {
+				return prefix + ((Identifier) fieldTypeExpr).getName();
 			}
 		}
 
