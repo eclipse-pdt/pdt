@@ -292,7 +292,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		String[] parameters;
 		ISourceElementRequestor.MethodInfo mi = new ISourceElementRequestor.MethodInfo();
 
-		mi.modifiers = Modifiers.AccPublic | IPHPModifiers.AccArrow;
+		mi.modifiers = Modifiers.AccPublic;
 		processArguments(mi, lambdaMethod.getArguments(), lambdaMethod);
 		if (arguments != null) {
 			parameters = new String[arguments.size()];
@@ -779,7 +779,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 							continue;
 						}
 						ISourceElementRequestor.FieldInfo info = new ISourceElementRequestor.FieldInfo();
-						info.modifiers = Modifiers.AccPublic | IPHPModifiers.AccMagicProperty;
+						info.modifiers = Modifiers.AccPublic;
 						info.name = split[1];
 						info.type = split[0];
 
@@ -913,6 +913,36 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		}
 		fInfoStack.push(info);
 		fRequestor.enterField(info);
+		return true;
+	}
+
+	public boolean visit(PropertyHook hook) {
+		this.fNodes.push(hook);
+
+		ISourceElementRequestor.MethodInfo mi = new ISourceElementRequestor.MethodInfo();
+		mi.modifiers = hook.getModifiers();
+
+		mi.name = hook.getName();
+		mi.nameSourceStart = hook.getNameStart();
+		mi.nameSourceEnd = hook.getNameEnd() - 1;
+		mi.declarationStart = hook.sourceStart();
+		declarations.push(hook);
+
+		processArguments(mi, hook.getArguments(), hook);
+
+		fInfoStack.push(mi);
+		this.fRequestor.enterMethod(mi);
+
+		this.fInMethod = true;
+
+		populateArguments(mi, hook.getArguments());
+		return true;
+	}
+
+	public boolean endvisit(PropertyHook hook) {
+		declarations.pop();
+		fRequestor.exitField(hook.sourceEnd() - 1);
+		fInfoStack.pop();
 		return true;
 	}
 
@@ -1243,6 +1273,9 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		if (node instanceof UseStatement) {
 			return visit((UseStatement) node);
 		}
+		if (node instanceof PropertyHook) {
+			return visit((PropertyHook) node);
+		}
 		return true;
 	}
 
@@ -1265,6 +1298,9 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		}
 		if (node instanceof ForEachStatement) {
 			return endvisit((ForEachStatement) node);
+		}
+		if (node instanceof PropertyHook) {
+			return endvisit((PropertyHook) node);
 		}
 		return true;
 	}

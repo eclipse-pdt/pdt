@@ -28,6 +28,7 @@ public class AnonymousClassDeclaration extends Expression implements IRecoverabl
 	private Block body;
 	private boolean isRecovered;
 	private List<Attribute> attributes;
+	private int modifiers;
 
 	public AnonymousClassDeclaration(int start, int end, TypeReference superClass, List<TypeReference> interfaceList,
 			Block body) {
@@ -108,6 +109,14 @@ public class AnonymousClassDeclaration extends Expression implements IRecoverabl
 	@Override
 	public void setAttributes(List<Attribute> attributes) {
 		this.attributes = attributes;
+	}
+
+	public int getModifiers() {
+		return modifiers;
+	}
+
+	public void setModifiers(int modifiers) {
+		this.modifiers = modifiers;
 	}
 
 }

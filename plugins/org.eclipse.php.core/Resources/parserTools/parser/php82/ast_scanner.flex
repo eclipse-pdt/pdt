@@ -82,7 +82,7 @@ import java_cup.runtime.Symbol;
 
 	@Override
 	public PHPVersion getPHPVersion() {
-		return PHPVersion.PHP8_1;
+		return PHPVersion.PHP8_2;
 	}
 
 	@Override

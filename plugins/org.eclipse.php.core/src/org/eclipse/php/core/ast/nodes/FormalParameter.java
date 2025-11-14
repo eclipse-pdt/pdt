@@ -38,6 +38,8 @@ public class FormalParameter extends BodyDeclaration {
 
 	private boolean isVariadic;
 
+	private PropertyHookList hooks;
+
 	/**
 	 * The structural property of this node type.
 	 */
@@ -53,6 +55,8 @@ public class FormalParameter extends BodyDeclaration {
 			"modifier", Integer.class, OPTIONAL); //$NON-NLS-1$
 	public static final ChildListPropertyDescriptor ATTRIBUTES_PROPERTY = new ChildListPropertyDescriptor(
 			FormalParameter.class, "attributes", AttributeGroup.class, CYCLE_RISK); //$NON-NLS-1$
+	public static final ChildPropertyDescriptor HOOKS_PROPERTY = new ChildPropertyDescriptor(FormalParameter.class,
+			"hooks", PropertyHookList.class, OPTIONAL, CYCLE_RISK); //$NON-NLS-1$
 
 	/**
 	 * A list of property descriptors (element type:
@@ -61,6 +65,8 @@ public class FormalParameter extends BodyDeclaration {
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS_PHP5;
 
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS_PHP8;
+
+	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS_PHP84;
 
 	static {
 		List<StructuralPropertyDescriptor> properyList = new ArrayList<>(4);
@@ -76,8 +82,17 @@ public class FormalParameter extends BodyDeclaration {
 		properyList.add(IS_VARIADIC_PROPERTY);
 		properyList.add(MODIFIER_PROPERTY);
 		properyList.add(ATTRIBUTES_PROPERTY);
-
 		PROPERTY_DESCRIPTORS_PHP8 = Collections.unmodifiableList(properyList);
+
+		properyList = new ArrayList<>(7);
+		properyList.add(PARAMETER_TYPE_PROPERTY);
+		properyList.add(PARAMETER_NAME_PROPERTY);
+		properyList.add(DEFAULT_VALUE_PROPERTY);
+		properyList.add(IS_VARIADIC_PROPERTY);
+		properyList.add(MODIFIER_PROPERTY);
+		properyList.add(ATTRIBUTES_PROPERTY);
+		properyList.add(HOOKS_PROPERTY);
+		PROPERTY_DESCRIPTORS_PHP84 = Collections.unmodifiableList(properyList);
 	}
 
 	@Override
@@ -85,7 +100,11 @@ public class FormalParameter extends BodyDeclaration {
 		if (PHPVersion.PHP8_0.isGreaterThan(apiLevel)) {
 			return PROPERTY_DESCRIPTORS_PHP5;
 		}
-		return PROPERTY_DESCRIPTORS_PHP8;
+		if (PHPVersion.PHP8_4.isGreaterThan(apiLevel)) {
+			return PROPERTY_DESCRIPTORS_PHP8;
+		}
+
+		return PROPERTY_DESCRIPTORS_PHP84;
 	}
 
 	public FormalParameter(AST ast) {
@@ -93,7 +112,7 @@ public class FormalParameter extends BodyDeclaration {
 	}
 
 	public FormalParameter(int start, int end, AST ast, Expression type, final Expression parameterName,
-			Expression defaultValue, boolean isVariadic, int modifier) {
+			Expression defaultValue, boolean isVariadic, int modifier, PropertyHookList hooks) {
 		super(start, end, ast, modifier);
 
 		if (parameterName == null) {
@@ -107,6 +126,12 @@ public class FormalParameter extends BodyDeclaration {
 			setDefaultValue(defaultValue);
 		}
 		setIsVariadic(isVariadic);
+		setHooks(hooks);
+	}
+
+	public FormalParameter(int start, int end, AST ast, Expression type, final Expression parameterName,
+			Expression defaultValue, boolean isVariadic, int modifier) {
+		this(start, end, ast, type, parameterName, defaultValue, isVariadic, modifier, null);
 	}
 
 	@Deprecated
@@ -164,6 +189,9 @@ public class FormalParameter extends BodyDeclaration {
 		if (defaultValue != null) {
 			defaultValue.accept(visitor);
 		}
+		if (hooks != null) {
+			hooks.accept(visitor);
+		}
 	}
 
 	@Override
@@ -179,6 +207,9 @@ public class FormalParameter extends BodyDeclaration {
 		if (defaultValue != null) {
 			defaultValue.traverseTopDown(visitor);
 		}
+		if (hooks != null) {
+			hooks.traverseTopDown(visitor);
+		}
 	}
 
 	@Override
@@ -192,6 +223,9 @@ public class FormalParameter extends BodyDeclaration {
 		parameterName.traverseBottomUp(visitor);
 		if (defaultValue != null) {
 			defaultValue.traverseBottomUp(visitor);
+		}
+		if (hooks != null) {
+			hooks.traverseBottomUp(visitor);
 		}
 		accept(visitor);
 	}
@@ -224,6 +258,9 @@ public class FormalParameter extends BodyDeclaration {
 			buffer.append("\n"); //$NON-NLS-1$
 		}
 		buffer.append(TAB).append(tab).append("</DefaultValue>\n"); //$NON-NLS-1$
+		if (hooks != null) {
+			hooks.toString(buffer, TAB + tab);
+		}
 		buffer.append(tab).append("</FormalParameter>"); //$NON-NLS-1$
 	}
 
@@ -375,6 +412,14 @@ public class FormalParameter extends BodyDeclaration {
 				return null;
 			}
 		}
+		if (property == HOOKS_PROPERTY) {
+			if (get) {
+				return getHooks();
+			} else {
+				setHooks((PropertyHookList) child);
+				return null;
+			}
+		}
 		// allow default implementation to flag the error
 		return super.internalGetSetChildProperty(property, get, child);
 	}
@@ -413,8 +458,9 @@ public class FormalParameter extends BodyDeclaration {
 		final Expression value = ASTNode.copySubtree(target, this.getDefaultValue());
 		final boolean isVariadic = this.isVariadic();
 		final int modifier = this.getModifier();
+		final PropertyHookList hooks = ASTNode.copySubtree(target, this.getHooks());
 		final FormalParameter result = new FormalParameter(this.getStart(), this.getEnd(), target, type, name, value,
-				isVariadic, modifier);
+				isVariadic, modifier, hooks);
 		return result;
 	}
 
@@ -446,5 +492,16 @@ public class FormalParameter extends BodyDeclaration {
 	@Override
 	protected ChildListPropertyDescriptor getAttributesProperty() {
 		return ATTRIBUTES_PROPERTY;
+	}
+
+	public PropertyHookList getHooks() {
+		return hooks;
+	}
+
+	public void setHooks(PropertyHookList hooks) {
+		PropertyHookList oldChild = this.hooks;
+		preReplaceChild(oldChild, hooks, HOOKS_PROPERTY);
+		this.hooks = hooks;
+		postReplaceChild(oldChild, hooks, HOOKS_PROPERTY);
 	}
 }
