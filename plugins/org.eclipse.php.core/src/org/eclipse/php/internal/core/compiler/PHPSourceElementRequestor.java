@@ -403,11 +403,13 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 				info.name = arg.getName();
 				info.modifiers = flags[a];
 				info.nameSourceStart = arg.getNameStart();
-				info.nameSourceEnd = arg.getNameEnd();
+				info.nameSourceEnd = arg.getNameEnd() - 1;
 				info.declarationStart = arg.sourceStart();
 				info.type = types[a];
+				fInfoStack.push(info);
 				fRequestor.enterField(info);
-				fRequestor.exitField(arg.sourceEnd());
+				fRequestor.exitField(arg.sourceEnd() - 1);
+				fInfoStack.pop();
 			}
 			a++;
 		}

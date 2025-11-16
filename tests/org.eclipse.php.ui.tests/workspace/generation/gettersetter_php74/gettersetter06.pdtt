@@ -1,0 +1,28 @@
+--TEST--
+Test method generation
+--CONFIG--
+setSelfType:true
+useType:true
+createComments:false
+--FILE--
+<?php
+use DateTime as MyAliasedType;
+class MyClass {
+	protected ?MyAliasedType |$field|;
+}
+--EXPECT--
+<?php
+use DateTime as MyAliasedType;
+class MyClass {
+	protected ?MyAliasedType $field;
+	public function getField(): ?MyAliasedType {
+		return $this->field;
+	}
+
+	public function setField(?MyAliasedType $field): self {
+		$this->field = $field;
+		
+		return $this;
+	}
+
+}

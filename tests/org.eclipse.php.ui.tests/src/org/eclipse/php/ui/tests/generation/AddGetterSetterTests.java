@@ -68,7 +68,9 @@ public class AddGetterSetterTests {
 	static {
 		TESTS.put(PHPVersion.PHP5_3, new String[] { "/workspace/generation/gettersetter" }); //$NON-NLS-1$
 		TESTS.put(PHPVersion.PHP7_4,
-				new String[] { "/workspace/generation/gettersetter", "/workspace/generation/gettersetter_php74" }); //$NON-NLS-1$
+				new String[] { "/workspace/generation/gettersetter", "/workspace/generation/gettersetter_php74" }); //$NON-NLS-1$ //$NON-NLS-2$
+		TESTS.put(PHPVersion.PHP8_0, new String[] { "/workspace/generation/gettersetter", //$NON-NLS-1$
+				"/workspace/generation/gettersetter_php74", "/workspace/generation/gettersetter_php80" }); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	protected static final char SELECTION_CHAR = '|';
@@ -177,10 +179,11 @@ public class AddGetterSetterTests {
 		TestUtils.waitForIndexer();
 
 		ISourceModule sourceModule = DLTKCore.createSourceModuleFrom(testFile);
+
 		IModelElement[] elements = sourceModule.codeSelect(left, right - left);
 
 		for (IModelElement modelElement : elements) {
-			if (modelElement instanceof IField) {
+			if (modelElement instanceof IField && modelElement.getParent() instanceof IType) {
 				return (IField) modelElement;
 			}
 		}

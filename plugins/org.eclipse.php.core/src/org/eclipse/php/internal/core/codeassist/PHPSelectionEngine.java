@@ -830,7 +830,20 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 
 				}
 
-				return getGlobalOrMethodFields(sourceModule, offset, elementName);
+				IModelElement[] globalOrMethodFields = getGlobalOrMethodFields(sourceModule, offset, elementName);
+				if (currentMethod != null && currentMethod.isConstructor()) {
+					List<IModelElement> result = new ArrayList<>();
+					for (IModelElement globOrderMethod : globalOrMethodFields) {
+						if (globOrderMethod instanceof IField
+								&& !PHPFlags.isDefault(((IField) globOrderMethod).getFlags())) {
+							result.addAll(Arrays.asList(PHPModelUtils.getTypeField(containerType, elementName, true)));
+						}
+						result.add(globOrderMethod);
+					}
+					return result.toArray(new IModelElement[0]);
+				}
+
+				return globalOrMethodFields;
 			}
 
 			// If we are at class constant definition:
