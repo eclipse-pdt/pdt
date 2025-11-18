@@ -1,0 +1,71 @@
+--TEST--
+PHP 8.4
+--FILE--
+<?php
+class Book
+{
+    public function __construct(
+        public private(set) string $title,
+        public protected(set) string $author,
+        protected private(set) int $pubYear,
+    ) {}
+}
+
+class Book2
+{
+	public private(set) string $title;
+    public protected(set) string $author;
+   	protected private(set) int $pubYear;
+    
+    public function __construct(
+    ) {}
+}
+
+--EXPECT--
+<ModuleDeclaration start="0" end="380">
+	<ClassDeclaration start="6" end="196" modifiers="" name="Book">
+		<PHPMethodDeclaration start="23" end="194" modifiers="public" name="__construct">
+			<FormalParameter start="60" end="93" modifiers="public,private(set)" isMandatory="true" parameterType="string">
+				<FullyQualifiedReference start="80" end="86" name="string">
+				</FullyQualifiedReference>
+				<VariableReference start="87" end="93" name="$title">
+				</VariableReference>
+			</FormalParameter>
+			<FormalParameter start="103" end="139" modifiers="public,protected(set)" isMandatory="true" parameterType="string">
+				<FullyQualifiedReference start="125" end="131" name="string">
+				</FullyQualifiedReference>
+				<VariableReference start="132" end="139" name="$author">
+				</VariableReference>
+			</FormalParameter>
+			<FormalParameter start="149" end="184" modifiers="protected,private(set)" isMandatory="true" parameterType="int">
+				<FullyQualifiedReference start="172" end="175" name="int">
+				</FullyQualifiedReference>
+				<VariableReference start="176" end="184" name="$pubYear">
+				</VariableReference>
+			</FormalParameter>
+		</PHPMethodDeclaration>
+	</ClassDeclaration>
+	<ClassDeclaration start="198" end="379" modifiers="" name="Book2">
+		<PHPFieldDeclaration start="240" end="246" modifiers="public,private(set)" fieldType="string">
+			<FullyQualifiedReference start="233" end="239" name="string">
+			</FullyQualifiedReference>
+			<SimpleReference start="240" end="246" name="$title">
+			</SimpleReference>
+		</PHPFieldDeclaration>
+		<PHPFieldDeclaration start="281" end="288" modifiers="public,protected(set)" fieldType="string">
+			<FullyQualifiedReference start="274" end="280" name="string">
+			</FullyQualifiedReference>
+			<SimpleReference start="281" end="288" name="$author">
+			</SimpleReference>
+		</PHPFieldDeclaration>
+		<PHPFieldDeclaration start="321" end="329" modifiers="protected,private(set)" fieldType="int">
+			<FullyQualifiedReference start="317" end="320" name="int">
+			</FullyQualifiedReference>
+			<SimpleReference start="321" end="329" name="$pubYear">
+			</SimpleReference>
+		</PHPFieldDeclaration>
+		<PHPMethodDeclaration start="340" end="377" modifiers="public" name="__construct">
+		</PHPMethodDeclaration>
+	</ClassDeclaration>
+</ModuleDeclaration>
+

@@ -1,0 +1,32 @@
+--TEST--
+PHP 8.4
+--FILE--
+<?php
+class Example
+{
+    public function __construct(
+        public private(set) Type $bar {
+            set (string|Type $value) {
+                if (is_string($value)) {
+                    $value = new Type($value);
+                }
+                $this->bar = $value;
+            }
+        },
+    ) {
+    }
+}
+
+--EXPECT--
+<ModuleDeclaration start="0" end="318">
+	<ClassDeclaration start="6" end="317" modifiers="" name="Example">
+		<PHPMethodDeclaration start="26" end="315" modifiers="public" name="__construct">
+			<FormalParameter start="63" end="92" modifiers="public,private(set)" isMandatory="true" parameterType="Type">
+				<FullyQualifiedReference start="83" end="87" name="Type">
+				</FullyQualifiedReference>
+				<VariableReference start="88" end="92" name="$bar">
+				</VariableReference>
+			</FormalParameter>
+		</PHPMethodDeclaration>
+	</ClassDeclaration>
+</ModuleDeclaration>

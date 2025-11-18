@@ -28,7 +28,8 @@ public class PHPFlags extends Flags implements IPHPModifiers {
 	 *         included
 	 */
 	public static boolean isDefault(int flags) {
-		return !isPrivate(flags) && !isProtected(flags) && !isPublic(flags);
+		return !isPrivate(flags) && !isProtected(flags) && !isPublic(flags) && !isPrivateSet(flags)
+				&& !isProtectedSet(flags) && !isPublicSet(flags);
 	}
 
 	/**
@@ -55,10 +56,6 @@ public class PHPFlags extends Flags implements IPHPModifiers {
 	 */
 	public static boolean isTrait(int flags) {
 		return (flags & AccTrait) != 0;
-	}
-
-	public static boolean isMagicProperty(int flags) {
-		return (flags & AccMagicProperty) != 0;
 	}
 
 	/**
@@ -176,4 +173,17 @@ public class PHPFlags extends Flags implements IPHPModifiers {
 	public static boolean isEnumCase(int flags) {
 		return (flags & AccEnumCase) != 0;
 	}
+
+	public static boolean isPrivateSet(int flags) {
+		return (flags & AccPrivateSet) != 0;
+	}
+
+	public static boolean isProtectedSet(int flags) {
+		return (flags & AccProtectedSet) != 0;
+	}
+
+	public static boolean isPublicSet(int flags) {
+		return (flags & AccPublicSet) != 0;
+	}
+
 }

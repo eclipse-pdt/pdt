@@ -1044,6 +1044,10 @@ public abstract class PHPASTVisitor extends ASTVisitor {
 		if (nodeClass.equals(ReflectionConstantAccess.class)) {
 			return endvisit((ReflectionConstantAccess) s);
 		}
+		// php8.4
+		if (nodeClass.equals(PropertyHook.class)) {
+			return endvisit((PropertyHook) s);
+		}
 		return true;
 	}
 
@@ -1381,6 +1385,10 @@ public abstract class PHPASTVisitor extends ASTVisitor {
 		if (nodeClass.equals(ReflectionConstantAccess.class)) {
 			return visit((ReflectionConstantAccess) s);
 		}
+		// php8.4
+		if (nodeClass.equals(PropertyHook.class)) {
+			return visit((PropertyHook) s);
+		}
 		return true;
 	}
 
@@ -1538,6 +1546,17 @@ public abstract class PHPASTVisitor extends ASTVisitor {
 		return false;
 	}
 	// php8.3 ends
+
+	// php8.4
+	public boolean visit(PropertyHook s) throws Exception {
+		return visitGeneral(s);
+	}
+
+	public boolean endvisit(PropertyHook s) throws Exception {
+		endvisitGeneral(s);
+		return false;
+	}
+	// php8.4 ends
 
 	@Override
 	public boolean visit(Expression s) throws Exception {
