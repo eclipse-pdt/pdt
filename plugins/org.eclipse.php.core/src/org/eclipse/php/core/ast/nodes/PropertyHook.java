@@ -37,7 +37,7 @@ public class PropertyHook extends BodyDeclaration {
 	private boolean isReference;
 	private Identifier name;
 	private FormalParameterList parameters;
-	private Expression body;
+	private ASTNode body;
 
 	/**
 	 * The structural property of this node type.
@@ -56,7 +56,7 @@ public class PropertyHook extends BodyDeclaration {
 			Identifier.class, MANDATORY, NO_CYCLE_RISK);
 
 	public static final ChildPropertyDescriptor BODY_PROPERTY = new ChildPropertyDescriptor(PropertyHook.class, "body", //$NON-NLS-1$
-			Expression.class, OPTIONAL, CYCLE_RISK);
+			ASTNode.class, OPTIONAL, CYCLE_RISK);
 
 	public static final ChildListPropertyDescriptor ATTRIBUTES_PROPERTY = new ChildListPropertyDescriptor(
 			PropertyHook.class, "attributes", AttributeGroup.class, //$NON-NLS-1$
@@ -81,7 +81,7 @@ public class PropertyHook extends BodyDeclaration {
 	}
 
 	public PropertyHook(int start, int end, AST ast, int modifier, boolean isReference, Identifier name,
-			FormalParameterList parameters, Expression body, List<AttributeGroup> attributes) {
+			FormalParameterList parameters, ASTNode body, List<AttributeGroup> attributes) {
 		super(start, end, ast, modifier);
 		if (attributes != null) {
 			attributes().addAll(attributes);
@@ -189,7 +189,7 @@ public class PropertyHook extends BodyDeclaration {
 	 * 
 	 * @return Expression of this function declaration
 	 */
-	public Expression body() {
+	public ASTNode body() {
 		return body;
 	}
 
@@ -207,7 +207,7 @@ public class PropertyHook extends BodyDeclaration {
 	 *                <li>a cycle in would be created</li>
 	 *                </ul>
 	 */
-	public void setBody(Expression body) {
+	public void setBody(ASTNode body) {
 		ASTNode oldChild = this.body;
 		preReplaceChild(oldChild, body, BODY_PROPERTY);
 		this.body = body;
@@ -327,7 +327,7 @@ public class PropertyHook extends BodyDeclaration {
 
 	@Override
 	ASTNode clone0(AST target) {
-		final Expression body = ASTNode.copySubtree(target, body());
+		final ASTNode body = ASTNode.copySubtree(target, body());
 		final FormalParameterList formalParams = ASTNode.copySubtree(target, parameters());
 		final boolean isRef = isReference();
 		final int modifier = getModifier();

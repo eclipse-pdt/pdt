@@ -1013,7 +1013,7 @@ public class ASTMatcher {
 
 		return (safeSubtreeMatch(node.getBody(), o.getBody())
 				&& safeSubtreeListMatch(node.getInterfaces(), o.getInterfaces())
-				&& safeSubtreeMatch(node.getSuperClass(), o.getSuperClass()));
+				&& safeSubtreeMatch(node.getSuperClass(), o.getSuperClass())) && node.getModifier() == o.getModifier();
 	}
 
 	public boolean match(TraitUseStatement node, Object other) {

@@ -2177,6 +2177,19 @@ T_NEKUDOTAIM
 | T_SEMICOLON
 ;
 
+while_statement ::=
+statement:statement
+{:
+	RESULT = statement;
+:}
+
+| T_NEKUDOTAIM:colon inner_statement_list:statementList T_ENDWHILE T_SEMICOLON
+{:
+	Block block = new Block(colonleft, statementListright, statementList);
+	RESULT = block;
+:}
+;
+
 match ::=
 T_MATCH:start T_OPEN_PARENTHESE expr:expr T_CLOSE_PARENTHESE T_CURLY_OPEN:bstart match_arm_list:list T_CURLY_CLOSE:bend
 {:
@@ -2237,19 +2250,6 @@ match_arm_cond_list:list T_COMMA expr:expr
 	list.add(expr);
 	
 	RESULT = list;
-:}
-;
-
-while_statement ::=
-statement:statement
-{:
-	RESULT = statement;
-:}
-
-| T_NEKUDOTAIM:colon inner_statement_list:statementList T_ENDWHILE T_SEMICOLON
-{:
-	Block block = new Block(colonleft, statementListright, statementList);
-	RESULT = block;
 :}
 ;
 
