@@ -181,18 +181,6 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 	}
 
 	@Override
-	public boolean endvisit(MethodDeclaration method) throws Exception {
-		methodGlobalVars.pop();
-		declarations.pop();
-
-		for (PHPSourceElementRequestorExtension visitor : extensions) {
-			visitor.endvisit(method);
-		}
-		this.fRequestor.exitMethod(method.end() - 1);
-		return super.endvisit(method);
-	}
-
-	@Override
 	public boolean endvisit(TypeDeclaration type) throws Exception {
 		if (type instanceof NamespaceDeclaration) {
 			NamespaceDeclaration namespaceDecl = (NamespaceDeclaration) type;
@@ -555,7 +543,23 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		}
 
 		return visitMethodDeclaration(method);
+	}
 
+	@Override
+	public boolean endvisit(MethodDeclaration method) throws Exception {
+		methodGlobalVars.pop();
+		declarations.pop();
+
+		for (PHPSourceElementRequestorExtension visitor : extensions) {
+			visitor.endvisit(method);
+		}
+		this.fRequestor.exitMethod(method.end() - 1);
+		this.fInMethod = false;
+		this.fCurrentMethod = null;
+
+		this.onEndVisitMethod(method);
+		this.fNodes.pop();
+		return false;
 	}
 
 	private boolean visitMethodDeclaration(MethodDeclaration method) throws Exception {
@@ -575,14 +579,6 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		fInfoStack.push(mi);
 		this.fRequestor.enterMethod(mi);
 
-		this.fInMethod = true;
-		this.fCurrentMethod = method;
-
-		populateArguments(mi, method.getArguments());
-
-		if (method.getBody() != null) {
-			method.getBody().traverse(this);
-		}
 		endvisit(method);
 		return false;
 	}

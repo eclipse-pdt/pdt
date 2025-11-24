@@ -26,6 +26,60 @@ class Example
 				</FullyQualifiedReference>
 				<VariableReference start="88" end="92" name="$bar">
 				</VariableReference>
+				<PropertyHook start="94" end="290" modifiers="" name="set" arrow="false">
+					<Arguments>
+						<FormalParameter start="112" end="130" modifiers="" isMandatory="true" parameterType="string|Type">
+							<DNFTypeReference start="112" end="123" type="1">
+								<FullyQualifiedReference start="112" end="118" name="string">
+								</FullyQualifiedReference>
+								<FullyQualifiedReference start="119" end="123" name="Type">
+								</FullyQualifiedReference>
+							</DNFTypeReference>
+							<VariableReference start="124" end="130" name="$value">
+							</VariableReference>
+						</FormalParameter>
+					</Arguments>
+					<IfStatement start="150" end="239">
+						<Condition>
+							<PHPCallExpression start="154" end="171">
+								<FullyQualifiedReference start="154" end="163" name="is_string">
+								</FullyQualifiedReference>
+								<PHPCallArgumentsList start="164" end="170">
+									<VariableReference start="164" end="170" name="$value">
+									</VariableReference>
+								</PHPCallArgumentsList>
+							</PHPCallExpression>
+						</Condition>
+						<TrueStatement>
+							<ExpressionStatement start="195" end="221">
+								<Assignment start="195" end="220" operator="=">
+									<VariableReference start="195" end="201" name="$value">
+									</VariableReference>
+									<ClassInstanceCreation start="204" end="220">
+										<FullyQualifiedReference start="208" end="212" name="Type">
+										</FullyQualifiedReference>
+										<PHPCallArgumentsList start="213" end="219">
+											<VariableReference start="213" end="219" name="$value">
+											</VariableReference>
+										</PHPCallArgumentsList>
+									</ClassInstanceCreation>
+								</Assignment>
+							</ExpressionStatement>
+						</TrueStatement>
+					</IfStatement>
+					<ExpressionStatement start="256" end="276">
+						<Assignment start="256" end="275" operator="=">
+							<FieldAccess start="256" end="266">
+								<VariableReference start="256" end="261" name="$this">
+								</VariableReference>
+								<SimpleReference start="263" end="266" name="bar">
+								</SimpleReference>
+							</FieldAccess>
+							<VariableReference start="269" end="275" name="$value">
+							</VariableReference>
+						</Assignment>
+					</ExpressionStatement>
+				</PropertyHook>
 			</FormalParameter>
 		</PHPMethodDeclaration>
 	</ClassDeclaration>
