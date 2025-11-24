@@ -3644,8 +3644,10 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	public boolean visit(FieldsDeclaration fieldsDeclaration) {
 		int lastPosition = handleAttributes(fieldsDeclaration, true);
 		boolean isFirst = true;
+
 		Variable[] variableNames = fieldsDeclaration.getVariableNames();
 		Expression[] initialValues = fieldsDeclaration.getInitialValues();
+		PropertyHookList[] hooks = fieldsDeclaration.getHooks();
 
 		// handle field modifiers
 		String modifier = fieldsDeclaration.getModifierString();
@@ -3713,9 +3715,20 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 				lastPosition = initialValues[i].getEnd();
 			}
 			isFirst = false;
+
+			if (hooks[i] != null) {
+				handleHooks(lastPosition, hooks[i]);
+				lastPosition = hooks[i].getEnd();
+			}
+
 		}
 		handleSemicolon(lastPosition, fieldsDeclaration.getEnd());
 		return false;
+	}
+
+	private void handleHooks(int lastPosition, PropertyHookList hooks) {
+		throw new RuntimeException("Hooks are not supported jet");
+		// handleCharsWithoutComments(lastPosition, hooks.getEnd());
 	}
 
 	@Override

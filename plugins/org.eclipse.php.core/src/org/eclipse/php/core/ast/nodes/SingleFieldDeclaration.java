@@ -108,7 +108,7 @@ public class SingleFieldDeclaration extends ASTNode {
 			value.accept(visitor);
 		}
 		if (hooks != null) {
-			value.accept(visitor);
+			hooks.accept(visitor);
 		}
 	}
 
@@ -120,7 +120,7 @@ public class SingleFieldDeclaration extends ASTNode {
 			value.traverseTopDown(visitor);
 		}
 		if (hooks != null) {
-			value.traverseTopDown(visitor);
+			hooks.traverseTopDown(visitor);
 		}
 	}
 
@@ -131,7 +131,7 @@ public class SingleFieldDeclaration extends ASTNode {
 			value.traverseBottomUp(visitor);
 		}
 		if (hooks != null) {
-			value.traverseBottomUp(visitor);
+			hooks.traverseBottomUp(visitor);
 		}
 		accept(visitor);
 	}

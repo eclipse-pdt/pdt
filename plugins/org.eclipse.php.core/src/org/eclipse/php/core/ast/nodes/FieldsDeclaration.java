@@ -269,6 +269,15 @@ public class FieldsDeclaration extends BodyDeclaration {
 		}
 		return result;
 	}
+	
+	public PropertyHookList[] getHooks() {
+		PropertyHookList[] result = new PropertyHookList[this.fields.size()];
+		int i = 0;
+		for (SingleFieldDeclaration field : this.fields) {
+			result[i++] = field.getHooks();
+		}
+		return result;
+	}
 
 	@Override
 	final List<? extends ASTNode> internalGetChildListProperty(ChildListPropertyDescriptor property) {

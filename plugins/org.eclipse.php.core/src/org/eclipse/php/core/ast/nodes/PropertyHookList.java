@@ -75,7 +75,7 @@ public class PropertyHookList extends Statement {
 
 	@Override
 	public void childrenAccept(Visitor visitor) {
-		for (ASTNode node : this.hooks) {
+		for (PropertyHook node : this.hooks) {
 			node.accept(visitor);
 		}
 	}
@@ -83,14 +83,14 @@ public class PropertyHookList extends Statement {
 	@Override
 	public void traverseTopDown(Visitor visitor) {
 		accept(visitor);
-		for (ASTNode node : this.hooks) {
+		for (PropertyHook node : this.hooks) {
 			node.traverseTopDown(visitor);
 		}
 	}
 
 	@Override
 	public void traverseBottomUp(Visitor visitor) {
-		for (ASTNode node : this.hooks) {
+		for (PropertyHook node : this.hooks) {
 			node.traverseBottomUp(visitor);
 		}
 		accept(visitor);
