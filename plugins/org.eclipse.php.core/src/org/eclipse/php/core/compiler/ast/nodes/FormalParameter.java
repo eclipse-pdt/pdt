@@ -110,6 +110,11 @@ public class FormalParameter extends Argument implements IAttributed {
 			if (defaultValue != null) {
 				defaultValue.traverse(visitor);
 			}
+			if (hooks != null) {
+				for (PropertyHook h : hooks) {
+					h.traverse(visitor);
+				}
+			}
 			visitor.endvisit(this);
 		}
 	}
@@ -162,5 +167,9 @@ public class FormalParameter extends Argument implements IAttributed {
 
 	public boolean isReadonly() {
 		return (this.modifiers & IPHPModifiers.AccReadonly) != 0;
+	}
+
+	public List<PropertyHook> getHooks() {
+		return hooks;
 	}
 }

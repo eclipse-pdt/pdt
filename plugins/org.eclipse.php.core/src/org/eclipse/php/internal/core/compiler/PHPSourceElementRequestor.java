@@ -188,6 +188,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		for (PHPSourceElementRequestorExtension visitor : extensions) {
 			visitor.endvisit(method);
 		}
+		this.fRequestor.exitMethod(method.end() - 1);
 		return super.endvisit(method);
 	}
 
@@ -334,7 +335,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		return true;
 	}
 
-	private void processArguments(MethodInfo mi, Collection<? extends Argument> args, ASTNode node) {
+	private void processArguments(MethodInfo mi, Collection<? extends Argument> args, ASTNode node) throws Exception {
 		if (args == null) {
 			args = new ArrayList<>();
 		}
@@ -406,10 +407,19 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 				info.nameSourceEnd = arg.getNameEnd() - 1;
 				info.declarationStart = arg.sourceStart();
 				info.type = types[a];
-				fInfoStack.push(info);
 				fRequestor.enterField(info);
-				fRequestor.exitField(arg.sourceEnd() - 1);
+				fInfoStack.push(info);
+				if (arg instanceof FormalParameter) {
+					FormalParameter farg = (FormalParameter) arg;
+					if (farg.getHooks() != null) {
+						for (PropertyHook h : ((FormalParameter) arg).getHooks()) {
+							h.traverse(this);
+						}
+					}
+				}
 				fInfoStack.pop();
+				fRequestor.exitField(arg.sourceEnd() - 1);
+
 			}
 			a++;
 		}
@@ -544,9 +554,8 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 			visitor.visit(method);
 		}
 
-		boolean visit = visitMethodDeclaration(method);
+		return visitMethodDeclaration(method);
 
-		return visit;
 	}
 
 	private boolean visitMethodDeclaration(MethodDeclaration method) throws Exception {
@@ -571,7 +580,11 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 
 		populateArguments(mi, method.getArguments());
 
-		return true;
+		if (method.getBody() != null) {
+			method.getBody().traverse(this);
+		}
+		endvisit(method);
+		return false;
 	}
 
 	@Override
@@ -918,33 +931,54 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		return true;
 	}
 
-	public boolean visit(PropertyHook hook) {
+	public boolean visit(PropertyHook hook) throws Exception {
+
 		this.fNodes.push(hook);
 
 		ISourceElementRequestor.MethodInfo mi = new ISourceElementRequestor.MethodInfo();
 		mi.modifiers = hook.getModifiers();
-
 		mi.name = hook.getName();
+
+		if (PHPFlags.isDefault(mi.modifiers)) {
+			ElementInfo parent = fInfoStack.peek();
+			if (parent != null) {
+				mi.modifiers = parent.modifiers;
+			}
+		}
+
 		mi.nameSourceStart = hook.getNameStart();
 		mi.nameSourceEnd = hook.getNameEnd() - 1;
 		mi.declarationStart = hook.sourceStart();
-		declarations.push(hook);
 
-		processArguments(mi, hook.getArguments(), hook);
+		declarations.push(hook);
+		if (hook.getArguments() != null) {
+			processArguments(mi, hook.getArguments(), hook);
+		}
 
 		fInfoStack.push(mi);
 		this.fRequestor.enterMethod(mi);
 
 		this.fInMethod = true;
 
-		populateArguments(mi, hook.getArguments());
-		return true;
+		if (hook.getArguments() != null) {
+			populateArguments(mi, hook.getArguments());
+		}
+
+		if (hook.getBody() != null) {
+			hook.getBody().traverse(this);
+		}
+
+		endvisit(hook);
+
+		return false;
 	}
 
-	public boolean endvisit(PropertyHook hook) {
+	public boolean endvisit(PropertyHook hook) throws Exception {
+		this.fNodes.pop();
 		declarations.pop();
-		fRequestor.exitField(hook.sourceEnd() - 1);
+		fRequestor.exitMethod(hook.sourceEnd() - 1);
 		fInfoStack.pop();
+		this.fInMethod = false;
 		return true;
 	}
 

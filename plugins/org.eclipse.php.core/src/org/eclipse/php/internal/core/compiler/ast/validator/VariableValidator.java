@@ -50,6 +50,7 @@ public class VariableValidator implements IValidatorExtension {
 	private int inClassDecl = -1;
 
 	final private static String THIS_VAR = "$this"; //$NON-NLS-1$
+	final private static String VALUE_VAR = "$value"; //$NON-NLS-1$
 	final private static char DOLLAR = '$';
 	final private static char AMP = '&';
 	final private static String COMPACT = "compact"; // $NON-NLS-N$
@@ -275,6 +276,32 @@ public class VariableValidator implements IValidatorExtension {
 
 		@Override
 		public boolean endvisit(ModuleDeclaration s) throws Exception {
+			popScope();
+			return false;
+		}
+
+		@Override
+		public boolean visit(PropertyHook s) throws Exception {
+			if (s.getBody() == null) {
+				return false;
+			}
+			pushScope(s.sourceStart(), s.sourceEnd());
+			Variable v = new ImportedVariable(s);
+			v.setInitialized(s.start());
+			current.variables.put(THIS_VAR, v);
+
+			if (s.getArguments() != null) {
+				for (FormalParameter par : s.getArguments()) {
+					v = new ImportedVariable(par);
+					v.setInitialized(par.start());
+					current.variables.put(par.getName(), v);
+				}
+			} else {
+				v = new ImportedVariable(s);
+				v.setInitialized(s.start());
+				current.variables.put(VALUE_VAR, v);
+			}
+			s.getBody().traverse(this);
 			popScope();
 			return false;
 		}

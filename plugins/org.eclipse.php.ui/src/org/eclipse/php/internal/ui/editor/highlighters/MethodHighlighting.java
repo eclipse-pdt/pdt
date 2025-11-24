@@ -28,6 +28,13 @@ import org.eclipse.php.internal.ui.editor.highlighter.AbstractSemanticHighlighti
 public class MethodHighlighting extends AbstractSemanticHighlighting {
 
 	protected class MethodApply extends AbstractSemanticApply {
+
+		@Override
+		public boolean visit(PropertyHook hook) {
+			highlight(hook.name());
+			return true;
+		}
+
 		@Override
 		public boolean visit(MethodDeclaration classMethodDeclaration) {
 			Identifier functionName = classMethodDeclaration.getFunction().getFunctionName();

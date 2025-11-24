@@ -917,4 +917,31 @@ public abstract class AbstractVisitor implements Visitor {
 	@Override
 	public void endvisit(ReflectionConstantAccess asCallableExpression) {
 	}
+
+	@Override
+	public boolean visit(PropertyHook hook) {
+		return true;
+	}
+
+	@Override
+	public void endvisit(PropertyHook hook) {
+	}
+
+	@Override
+	public boolean visit(PropertyHookList hookList) {
+		return true;
+	}
+
+	@Override
+	public void endvisit(PropertyHookList hookList) {
+	}
+
+	@Override
+	public boolean visit(FormalParameterList parameterList) {
+		return true;
+	}
+
+	@Override
+	public void endvisit(FormalParameterList parameterList) {
+	}
 }
