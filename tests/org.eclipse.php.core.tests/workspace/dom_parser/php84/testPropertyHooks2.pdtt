@@ -1,0 +1,139 @@
+--TEST--
+PHP 8.4
+--FILE--
+<?php
+class Example
+{
+    public function __construct(
+        public private(set) Type $bar {
+            set (string|Type $value) {
+                if (is_string($value)) {
+                    $value = new Type($value);
+                }
+                $this->bar = $value;
+            }
+        },
+    ) {
+    }
+}
+
+--EXPECT--
+<Program start='0' length='317'>
+	<Statements>
+		<ClassDeclaration start='6' length='311' modifier=''>
+			<ClassName>
+				<Identifier start='12' length='7' name='Example'/>
+			</ClassName>
+			<SuperClassName>
+			</SuperClassName>
+			<Interfaces>
+			</Interfaces>
+			<Block start='20' length='297' isCurly='true'>
+				<MethodDeclaration start='26' length='289' modifier='public'>
+					<FunctionDeclaration start='33' length='282' isReference='false'>
+						<FunctionName>
+							<Identifier start='42' length='11' name='__construct'/>
+						</FunctionName>
+						<FormalParameters>
+							<FormalParameter start='63' length='29' isMandatory='false modifier='public private(set)''>
+								<Type>
+									<NamespaceName start='83' length='4' global='false' current='false'>
+										<Identifier start='83' length='4' name='Type'/>
+									</NamespaceName>
+								</Type>
+								<ParameterName>
+									<Variable start='88' length='4' isDollared='true'>
+										<Identifier start='89' length='3' name='bar'/>
+									</Variable>
+								</ParameterName>
+								<DefaultValue>
+								</DefaultValue>
+								<PropertyHookList start='93' length='207'>
+									<PropertyHook start='94' length='196' isReference='false modifier=''>
+										<Identifier start='107' length='3' name='set'/>
+										<FormalParameterList start='111' length='20'>
+										</FormalParameterList>
+										<HookBody>
+											<Block start='132' length='158' isCurly='true'>
+												<IfStatement start='150' length='89'>
+													<Condition>
+														<FunctionInvocation start='154' length='17'>
+															<FunctionName start='154' length='9'>
+																<NamespaceName start='154' length='9' global='false' current='false'>
+																	<Identifier start='154' length='9' name='is_string'/>
+																</NamespaceName>
+															</FunctionName>
+															<Parameters>
+																<Variable start='164' length='6' isDollared='true'>
+																	<Identifier start='165' length='5' name='value'/>
+																</Variable>
+															</Parameters>
+														</FunctionInvocation>
+													</Condition>
+													<TrueStatement>
+														<Block start='173' length='66' isCurly='true'>
+															<ExpressionStatement start='195' length='26'>
+																<Assignment start='195' length='25' operator='='>
+																	<Variable start='195' length='6' isDollared='true'>
+																		<Identifier start='196' length='5' name='value'/>
+																	</Variable>
+																	<Value>
+																		<ClassInstanceCreation start='204' length='16'>
+																			<ClassName start='208' length='4'>
+																				<NamespaceName start='208' length='4' global='false' current='false'>
+																					<Identifier start='208' length='4' name='Type'/>
+																				</NamespaceName>
+																			</ClassName>
+																			<ConstructorParameters>
+																				<Variable start='213' length='6' isDollared='true'>
+																					<Identifier start='214' length='5' name='value'/>
+																				</Variable>
+																			</ConstructorParameters>
+																		</ClassInstanceCreation>
+																	</Value>
+																</Assignment>
+															</ExpressionStatement>
+														</Block>
+													</TrueStatement>
+													<FalseStatement>
+													</FalseStatement>
+												</IfStatement>
+												<ExpressionStatement start='256' length='20'>
+													<Assignment start='256' length='19' operator='='>
+														<FieldAccess start='256' length='10'>
+															<Dispatcher>
+																<Variable start='256' length='5' isDollared='true'>
+																	<Identifier start='257' length='4' name='this'/>
+																</Variable>
+															</Dispatcher>
+															<Property>
+																<Variable start='263' length='3' isDollared='false'>
+																	<Identifier start='263' length='3' name='bar'/>
+																</Variable>
+															</Property>
+														</FieldAccess>
+														<Value>
+															<Variable start='269' length='6' isDollared='true'>
+																<Identifier start='270' length='5' name='value'/>
+															</Variable>
+														</Value>
+													</Assignment>
+												</ExpressionStatement>
+											</Block>
+										</HookBody>
+									</PropertyHook>
+								</PropertyHookList>
+							</FormalParameter>
+						</FormalParameters>
+						<FunctionBody>
+							<Block start='308' length='7' isCurly='true'>
+							</Block>
+						</FunctionBody>
+					</FunctionDeclaration>
+				</MethodDeclaration>
+			</Block>
+		</ClassDeclaration>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

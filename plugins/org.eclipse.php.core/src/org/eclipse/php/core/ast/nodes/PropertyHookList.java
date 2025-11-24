@@ -107,7 +107,7 @@ public class PropertyHookList extends Statement {
 			part.toString(buffer, TAB + tab);
 			buffer.append("\n"); //$NON-NLS-1$
 		}
-		buffer.append(tab).append("</PropertyHookList>"); //$NON-NLS-1$
+		buffer.append(tab).append("</PropertyHookList>\n"); //$NON-NLS-1$
 	}
 
 	@Override

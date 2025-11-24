@@ -1,0 +1,70 @@
+--TEST--
+Test Halt
+--FILE--
+<?php exit(); die(); __halt_compiler(); exit; exit(2); {__halt_compiler();} ?>
+--EXPECT--
+<Program start='0' length='78'>
+	<Statements>
+		<ExpressionStatement start='6' length='7'>
+			<FunctionInvocation start='6' length='6'>
+				<FunctionName start='6' length='4'>
+					<Identifier start='6' length='4' name='exit'/>
+				</FunctionName>
+				<Parameters>
+				</Parameters>
+			</FunctionInvocation>
+		</ExpressionStatement>
+		<ExpressionStatement start='14' length='6'>
+			<FunctionInvocation start='14' length='5'>
+				<FunctionName start='14' length='3'>
+					<Identifier start='14' length='3' name='die'/>
+				</FunctionName>
+				<Parameters>
+				</Parameters>
+			</FunctionInvocation>
+		</ExpressionStatement>
+		<ExpressionStatement start='21' length='17'>
+			<FunctionInvocation start='21' length='17'>
+				<FunctionName start='21' length='15'>
+					<Identifier start='21' length='15' name='__halt_compiler'/>
+				</FunctionName>
+				<Parameters>
+				</Parameters>
+			</FunctionInvocation>
+		</ExpressionStatement>
+		<EmptyStatement start='38' length='1'/>
+		<ExpressionStatement start='40' length='5'>
+			<FunctionInvocation start='40' length='4'>
+				<FunctionName start='40' length='4'>
+					<Identifier start='40' length='4' name='exit'/>
+				</FunctionName>
+				<Parameters>
+				</Parameters>
+			</FunctionInvocation>
+		</ExpressionStatement>
+		<ExpressionStatement start='46' length='8'>
+			<FunctionInvocation start='46' length='7'>
+				<FunctionName start='46' length='4'>
+					<Identifier start='46' length='4' name='exit'/>
+				</FunctionName>
+				<Parameters>
+				</Parameters>
+			</FunctionInvocation>
+		</ExpressionStatement>
+		<Block start='55' length='20' isCurly='true'>
+			<ExpressionStatement start='56' length='17'>
+				<FunctionInvocation start='56' length='17'>
+					<FunctionName start='56' length='15'>
+						<Identifier start='56' length='15' name='__halt_compiler'/>
+					</FunctionName>
+					<Parameters>
+					</Parameters>
+				</FunctionInvocation>
+			</ExpressionStatement>
+			<EmptyStatement start='73' length='1'/>
+		</Block>
+		<EmptyStatement start='76' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

@@ -292,7 +292,6 @@ non terminal List lexical_var_list;
 non terminal Expression lexical_var;
 non terminal List non_empty_parameter_list;
 non terminal FormalParameter parameter;
-non terminal List function_call_parameter_list;
 non terminal List non_empty_argument_list;
 non terminal List simple_variable_list;
 non terminal Variable simple_variable;
@@ -315,7 +314,6 @@ non terminal VariableBase variable_class_name;
 non terminal Expression optional_expr;
 non terminal Expression member_name;
 non terminal Variable property_name;
-non terminal List assignment_list;
 non terminal Expression possible_array_pair;
 non terminal Expression array_pair;
 non terminal List array_pair_list;
@@ -448,7 +446,7 @@ non terminal PropertyHookList optional_property_hook_list;
 non terminal Integer property_hook_modifiers;
 non terminal Object[] property_hook;
 non terminal ASTNode property_hook_body;
-non terminal List optional_parameter_list;
+non terminal FormalParameterList optional_parameter_list;
 
 non terminal Integer anonymous_class_modifiers_optional;
 non terminal Integer anonymous_class_modifiers;
@@ -830,6 +828,10 @@ class_name:name
 :}
 | class_name:name argument_list:paramsList
 {:
+    if (paramsList.isEmpty()) {
+    	// XXX compatibility! Change AST!
+		paramsList.add(new EmptyExpression(paramsListleft+1, parser.ast));
+	}
 	RESULT = new Attribute(nameleft, paramsListright, ast, name, paramsList);
 :}
 ;
@@ -1206,6 +1208,13 @@ statement:statement
 {:
 	setAttributes(statement, attrs);
 	RESULT = statement;
+:}
+
+| T_HALT_COMPILER:s T_OPEN_PARENTHESE T_CLOSE_PARENTHESE:e
+{:
+	RESULT =  new ExpressionStatement(sleft, eright, parser.ast,new FunctionInvocation(sleft, eright, parser.ast,
+		new FunctionName(sleft, sright, parser.ast,
+			new Identifier(sleft, sright, parser.ast, "__halt_compiler")), new ArrayList<Expression>()));
 :}
 ;
 
@@ -1693,7 +1702,7 @@ class_modifier:value
 anonymous_class_modifiers_optional ::=
 /* empty */
 {:
-    RESULT = null;
+    RESULT = 0;
 :}
 
 | anonymous_class_modifiers:list
@@ -1789,7 +1798,7 @@ variable:var
 	RESULT = new Reference (sleft, varright, parser.ast, var);
 :}
 
-| T_LIST:start T_OPEN_PARENTHESE assignment_list:list T_CLOSE_PARENTHESE:end
+| T_LIST:start T_OPEN_PARENTHESE array_pair_list:list T_CLOSE_PARENTHESE:end
 {:
 	RESULT = new ListVariable(startleft, endright, parser.ast, list);
 :}
@@ -2830,11 +2839,6 @@ T_PUBLIC:value
 	RESULT = PRIVATE;
 :}
 
-| T_READONLY:value
-{:
-	RESULT = READONLY;
-:}
-
 | T_STATIC:value
 {:
 	RESULT = STATIC;
@@ -3000,9 +3004,10 @@ T_SEMICOLON
 ;
 
 optional_parameter_list ::=
-T_OPEN_PARENTHESE parameter_list:list T_CLOSE_PARENTHESE
+T_OPEN_PARENTHESE:start parameter_list:list T_CLOSE_PARENTHESE:end
 {:
-    RESULT = list;
+	// XXX: SAVE INFORMATION ABOUT TRAILING COMMA
+    RESULT = new FormalParameterList(startleft, endright, parser.ast, list, null);
 :}
 
 | /* empty */
@@ -3128,7 +3133,7 @@ T_NEW:start class_name_reference:className
 
 
 expr_without_variable ::=
-T_LIST:s T_OPEN_PARENTHESE assignment_list:varList T_CLOSE_PARENTHESE:close T_EQUAL expr:expr
+T_LIST:s T_OPEN_PARENTHESE array_pair_list:varList T_CLOSE_PARENTHESE:close T_EQUAL expr:expr
 {:
 	ListVariable vars = new ListVariable(sleft, closeright, parser.ast, varList);
 	RESULT = new Assignment(sleft, exprright, parser.ast, vars, Assignment.OP_EQUAL, expr);
@@ -3612,35 +3617,35 @@ T_VARIABLE:var
 ;
 
 function_call ::=
-name:list T_OPEN_PARENTHESE function_call_parameter_list:parameters T_CLOSE_PARENTHESE:e
+name:list argument_list:parameters
 {:
-	RESULT = new FunctionInvocation(listleft, eright, parser.ast,
+	RESULT = new FunctionInvocation(listleft, parametersright, parser.ast,
 		new FunctionName(listleft, listright, parser.ast, list), parameters);
 :}
 
-| T_READONLY:list T_OPEN_PARENTHESE function_call_parameter_list:parameters T_CLOSE_PARENTHESE:e
+| T_READONLY:list argument_list:parameters
 {:
-	RESULT = new FunctionInvocation(listleft, eright, parser.ast,
+	RESULT = new FunctionInvocation(listleft, parametersright, parser.ast,
 		new FunctionName(listleft, listright, parser.ast, new NamespaceName(listleft, listright, ast, list, false, false)), parameters);
 :}
 
-| class_name:className T_PAAMAYIM_NEKUDOTAYIM member_name:reflectionName T_OPEN_PARENTHESE function_call_parameter_list:parameters T_CLOSE_PARENTHESE:e
+| class_name:className T_PAAMAYIM_NEKUDOTAYIM member_name:reflectionName argument_list:parameters
 {:
-	RESULT = new StaticMethodInvocation(classNameleft, eright, parser.ast, className,
-		new FunctionInvocation(reflectionNameleft, eright, parser.ast,
+	RESULT = new StaticMethodInvocation(classNameleft, parametersright, parser.ast, className,
+		new FunctionInvocation(reflectionNameleft, parametersright, parser.ast,
 			new FunctionName(reflectionNameleft, reflectionNameright, parser.ast, reflectionName), parameters));
 :}
 
-| variable_class_name:className T_PAAMAYIM_NEKUDOTAYIM member_name:reflectionName T_OPEN_PARENTHESE function_call_parameter_list:parameters T_CLOSE_PARENTHESE:e
+| variable_class_name:className T_PAAMAYIM_NEKUDOTAYIM member_name:reflectionName argument_list:parameters
 {:
-	RESULT = new StaticMethodInvocation(classNameleft, eright, parser.ast, className,
-		new FunctionInvocation(reflectionNameleft, eright, parser.ast,
+	RESULT = new StaticMethodInvocation(classNameleft, parametersright, parser.ast, className,
+		new FunctionInvocation(reflectionNameleft, parametersright, parser.ast,
 			new FunctionName(reflectionNameleft, reflectionNameright, parser.ast, reflectionName), parameters));
 :}
 
-| callable_expr:expr T_OPEN_PARENTHESE function_call_parameter_list:parameters T_CLOSE_PARENTHESE:e
+| callable_expr:expr argument_list:parameters
 {:
-	RESULT = new FunctionInvocation(exprleft, eright, parser.ast,
+	RESULT = new FunctionInvocation(exprleft, parametersright, parser.ast,
 		new FunctionName(exprleft, exprright, parser.ast, expr), parameters);
 :}
 ;
@@ -3842,15 +3847,15 @@ simple_variable:var
 	RESULT = new ArrayAccess(dleft, eright, parser.ast, d, dim, ArrayAccess.VARIABLE_ARRAY);
 :}
 
-| array_object_dereferencable:ch T_OBJECT_OPERATOR property_name:memberProperty T_OPEN_PARENTHESE:start function_call_parameter_list:paramsList T_CLOSE_PARENTHESE:end
+| array_object_dereferencable:ch T_OBJECT_OPERATOR property_name:memberProperty argument_list:paramsList
 {:
-	RESULT = new MethodInvocation(chleft, endright, parser.ast, ch, new FunctionInvocation(memberPropertyleft, endright, parser.ast,
+	RESULT = new MethodInvocation(chleft, paramsListright, parser.ast, ch, new FunctionInvocation(memberPropertyleft, paramsListright, parser.ast,
 			new FunctionName(memberPropertyleft, memberPropertyright, parser.ast, memberProperty), paramsList));
 :}
 
-| array_object_dereferencable:ch T_NULLSAFE_OBJECT_OPERATOR property_name:memberProperty T_OPEN_PARENTHESE:start function_call_parameter_list:paramsList T_CLOSE_PARENTHESE:end
+| array_object_dereferencable:ch T_NULLSAFE_OBJECT_OPERATOR property_name:memberProperty argument_list:paramsList
 {:
-	RESULT = new MethodInvocation(chleft, endright, parser.ast, ch, new FunctionInvocation(memberPropertyleft, endright, parser.ast,
+	RESULT = new MethodInvocation(chleft, paramsListright, parser.ast, ch, new FunctionInvocation(memberPropertyleft, paramsListright, parser.ast,
 			new FunctionName(memberPropertyleft, memberPropertyright, parser.ast, memberProperty), paramsList), true);
 :}
 
@@ -4153,13 +4158,13 @@ expr:key T_DOUBLE_ARROW expr:value
 	RESULT = new ArraySpreadElement(sleft, exprright, parser.ast, expr);
 :}
 
-| expr:expr T_DOUBLE_ARROW T_LIST:start T_OPEN_PARENTHESE assignment_list:list T_CLOSE_PARENTHESE:end
+| expr:expr T_DOUBLE_ARROW T_LIST:start T_OPEN_PARENTHESE array_pair_list:list T_CLOSE_PARENTHESE:end
 {:
 	ListVariable listVariable = new ListVariable(startleft, endright, parser.ast, list);
 	RESULT = new ArrayElement(exprleft, endright, parser.ast, expr, listVariable);
 :}
 
-| T_LIST:start T_OPEN_PARENTHESE assignment_list:list T_CLOSE_PARENTHESE:end
+| T_LIST:start T_OPEN_PARENTHESE array_pair_list:list T_CLOSE_PARENTHESE:end
 {:
 	RESULT = new ListVariable(startleft, endright, parser.ast, list);
 :}

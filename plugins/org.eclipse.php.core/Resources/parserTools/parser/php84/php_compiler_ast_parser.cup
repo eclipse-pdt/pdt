@@ -1311,6 +1311,16 @@ statement:statement
 	setAttributes(statement, attrs);
 	RESULT = statement;
 :}
+
+| T_HALT_COMPILER:start T_OPEN_PARENTHESE:openPar T_CLOSE_PARENTHESE:end
+{:
+    PHPCallArgumentsList parameters = new PHPCallArgumentsList();
+	parameters.setStart(openParright);
+	parameters.setEnd(endleft);
+	SimpleReference name = new SimpleReference(startleft, startright, "__halt_compiler");
+	PHPCallExpression result = new PHPCallExpression(startleft, endright, null, name, parameters);
+	RESULT = result;
+:}
 ;
 
 statement ::=

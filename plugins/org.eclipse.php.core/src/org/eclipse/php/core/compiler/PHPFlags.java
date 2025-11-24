@@ -109,6 +109,15 @@ public class PHPFlags extends Flags implements IPHPModifiers {
 		if ((mod & AccReadonly) != 0) {
 			sb.append("readonly "); //$NON-NLS-1$
 		}
+		if ((mod & AccProtectedSet) != 0) {
+			sb.append("protected(set) "); //$NON-NLS-1$
+		}
+		if ((mod & AccPrivateSet) != 0) {
+			sb.append("private(set) "); //$NON-NLS-1$
+		}
+		if ((mod & AccPublicSet) != 0) {
+			sb.append("public(set) "); //$NON-NLS-1$
+		}
 
 		int len;
 		if ((len = sb.length()) > 0) { /* trim trailing space */

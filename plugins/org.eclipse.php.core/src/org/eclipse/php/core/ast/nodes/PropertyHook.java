@@ -163,11 +163,13 @@ public class PropertyHook extends BodyDeclaration {
 		buffer.append(" isReference='").append(isReference()); //$NON-NLS-1$
 		buffer.append(" modifier='").append(PHPFlags.toString(getModifier())).append("'>\n"); //$NON-NLS-1$ //$NON-NLS-2$
 
-		buffer.append("'>\n"); //$NON-NLS-1$
 		name.toString(buffer, tab + TAB);
+		buffer.append("\n"); //$NON-NLS-1$
 		toStringAttributes(buffer, tab + TAB);
+		buffer.append("\n"); //$NON-NLS-1$
 		if (parameters != null) {
 			parameters.toString(buffer, tab + TAB);
+			buffer.append("\n"); //$NON-NLS-1$
 		}
 
 		buffer.append(TAB).append(tab).append("<HookBody>\n"); //$NON-NLS-1$
@@ -176,7 +178,7 @@ public class PropertyHook extends BodyDeclaration {
 			buffer.append("\n"); //$NON-NLS-1$
 		}
 		buffer.append(TAB).append(tab).append("</HookBody>\n"); //$NON-NLS-1$
-		buffer.append(tab).append("</PropertyHook>"); //$NON-NLS-1$
+		buffer.append(tab).append("</PropertyHook>\n"); //$NON-NLS-1$
 	}
 
 	@Override

@@ -5,20 +5,20 @@ PHP 8.0
 "foo$bar"[0];
 "foo$bar"->baz();
 __FUNCTION__[0];
-FOO{0};
 FOO->length(); 
 Foo::BAR::$baz;
 Foo::BAR::BAZ; 
 (expr)::FOO ;
 new ($x);
 if ($x instanceof ($x)) {
-    
+	
 }
+
 
 
 ?>
 --EXPECT--
-<Program start='0' length='172'>
+<Program start='0' length='162'>
 	<Statements>
 		<ExpressionStatement start='6' length='13'>
 			<ArrayAccess start='6' length='12' type='array'>
@@ -64,24 +64,16 @@ if ($x instanceof ($x)) {
 				</Index>
 			</ArrayAccess>
 		</ExpressionStatement>
-		<ExpressionStatement start='55' length='7'>
-			<ArrayAccess start='55' length='6' type='hashtable'>
-				<Scalar start='55' length='3' type='string' value='FOO'/>
-				<Index>
-					<Scalar start='59' length='1' type='int' value='0'/>
-				</Index>
-			</ArrayAccess>
-		</ExpressionStatement>
-		<ExpressionStatement start='63' length='14'>
-			<MethodInvocation start='63' length='13'>
+		<ExpressionStatement start='55' length='14'>
+			<MethodInvocation start='55' length='13'>
 				<Dispatcher>
-					<Scalar start='63' length='3' type='string' value='FOO'/>
+					<Scalar start='55' length='3' type='string' value='FOO'/>
 				</Dispatcher>
 				<Property>
-					<FunctionInvocation start='68' length='8'>
-						<FunctionName start='68' length='6'>
-							<Variable start='68' length='6' isDollared='false'>
-								<Identifier start='68' length='6' name='length'/>
+					<FunctionInvocation start='60' length='8'>
+						<FunctionName start='60' length='6'>
+							<Variable start='60' length='6' isDollared='false'>
+								<Identifier start='60' length='6' name='length'/>
 							</Variable>
 						</FunctionName>
 						<Parameters>
@@ -90,62 +82,62 @@ if ($x instanceof ($x)) {
 				</Property>
 			</MethodInvocation>
 		</ExpressionStatement>
-		<ExpressionStatement start='79' length='15'>
-			<StaticFieldAccess start='79' length='14'>
+		<ExpressionStatement start='71' length='15'>
+			<StaticFieldAccess start='71' length='14'>
 				<ClassName>
-					<StaticConstantAccess start='79' length='8'>
+					<StaticConstantAccess start='71' length='8'>
 						<ClassName>
-							<NamespaceName start='79' length='3' global='false' current='false'>
-								<Identifier start='79' length='3' name='Foo'/>
+							<NamespaceName start='71' length='3' global='false' current='false'>
+								<Identifier start='71' length='3' name='Foo'/>
 							</NamespaceName>
 						</ClassName>
 						<Constant>
-							<Identifier start='84' length='3' name='BAR'/>
+							<Identifier start='76' length='3' name='BAR'/>
 						</Constant>
 					</StaticConstantAccess>
 				</ClassName>
-				<Variable start='89' length='4' isDollared='true'>
-					<Identifier start='90' length='3' name='baz'/>
+				<Variable start='81' length='4' isDollared='true'>
+					<Identifier start='82' length='3' name='baz'/>
 				</Variable>
 			</StaticFieldAccess>
 		</ExpressionStatement>
-		<ExpressionStatement start='95' length='14'>
-			<StaticConstantAccess start='95' length='13'>
+		<ExpressionStatement start='87' length='14'>
+			<StaticConstantAccess start='87' length='13'>
 				<ClassName>
-					<StaticConstantAccess start='95' length='8'>
+					<StaticConstantAccess start='87' length='8'>
 						<ClassName>
-							<NamespaceName start='95' length='3' global='false' current='false'>
-								<Identifier start='95' length='3' name='Foo'/>
+							<NamespaceName start='87' length='3' global='false' current='false'>
+								<Identifier start='87' length='3' name='Foo'/>
 							</NamespaceName>
 						</ClassName>
 						<Constant>
-							<Identifier start='100' length='3' name='BAR'/>
+							<Identifier start='92' length='3' name='BAR'/>
 						</Constant>
 					</StaticConstantAccess>
 				</ClassName>
 				<Constant>
-					<Identifier start='105' length='3' name='BAZ'/>
+					<Identifier start='97' length='3' name='BAZ'/>
 				</Constant>
 			</StaticConstantAccess>
 		</ExpressionStatement>
-		<ExpressionStatement start='111' length='13'>
-			<StaticConstantAccess start='111' length='11'>
+		<ExpressionStatement start='103' length='13'>
+			<StaticConstantAccess start='103' length='11'>
 				<ClassName>
-					<ParenthesisExpression start='111' length='6'>
-						<Scalar start='112' length='4' type='string' value='expr'/>
+					<ParenthesisExpression start='103' length='6'>
+						<Scalar start='104' length='4' type='string' value='expr'/>
 					</ParenthesisExpression>
 				</ClassName>
 				<Constant>
-					<Identifier start='119' length='3' name='FOO'/>
+					<Identifier start='111' length='3' name='FOO'/>
 				</Constant>
 			</StaticConstantAccess>
 		</ExpressionStatement>
-		<ExpressionStatement start='125' length='9'>
-			<ClassInstanceCreation start='125' length='8'>
-				<ClassName start='129' length='4'>
-					<ParenthesisExpression start='129' length='4'>
-						<Variable start='130' length='2' isDollared='true'>
-							<Identifier start='131' length='1' name='x'/>
+		<ExpressionStatement start='117' length='9'>
+			<ClassInstanceCreation start='117' length='8'>
+				<ClassName start='121' length='4'>
+					<ParenthesisExpression start='121' length='4'>
+						<Variable start='122' length='2' isDollared='true'>
+							<Identifier start='123' length='1' name='x'/>
 						</Variable>
 					</ParenthesisExpression>
 				</ClassName>
@@ -153,29 +145,29 @@ if ($x instanceof ($x)) {
 				</ConstructorParameters>
 			</ClassInstanceCreation>
 		</ExpressionStatement>
-		<IfStatement start='135' length='32'>
+		<IfStatement start='127' length='29'>
 			<Condition>
-				<InstanceofExpression start='139' length='18'>
-					<Variable start='139' length='2' isDollared='true'>
-						<Identifier start='140' length='1' name='x'/>
+				<InstanceofExpression start='131' length='18'>
+					<Variable start='131' length='2' isDollared='true'>
+						<Identifier start='132' length='1' name='x'/>
 					</Variable>
-					<ClassName start='153' length='4'>
-						<ParenthesisExpression start='153' length='4'>
-							<Variable start='154' length='2' isDollared='true'>
-								<Identifier start='155' length='1' name='x'/>
+					<ClassName start='145' length='4'>
+						<ParenthesisExpression start='145' length='4'>
+							<Variable start='146' length='2' isDollared='true'>
+								<Identifier start='147' length='1' name='x'/>
 							</Variable>
 						</ParenthesisExpression>
 					</ClassName>
 				</InstanceofExpression>
 			</Condition>
 			<TrueStatement>
-				<Block start='159' length='8' isCurly='true'>
+				<Block start='151' length='5' isCurly='true'>
 				</Block>
 			</TrueStatement>
 			<FalseStatement>
 			</FalseStatement>
 		</IfStatement>
-		<EmptyStatement start='170' length='2'/>
+		<EmptyStatement start='160' length='2'/>
 	</Statements>
 	<Comments>
 	</Comments>
