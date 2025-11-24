@@ -579,6 +579,13 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		fInfoStack.push(mi);
 		this.fRequestor.enterMethod(mi);
 
+		this.fInMethod = true;
+		this.fCurrentMethod = method;
+
+		if (method.getBody() != null) {
+			method.getBody().traverse(this);
+		}
+
 		endvisit(method);
 		return false;
 	}
