@@ -210,6 +210,9 @@ terminal T_NEKUDOTAIM;
 terminal T_DOLLAR;
 terminal T_QUATE,T_BACKQUATE,T_SINGLE_QUATE;
 
+//php 8.5
+terminal T_PIPE; 
+
 
 //php 5.4
 terminal String T_INSTEADOF;
@@ -486,6 +489,7 @@ precedence right T_YIELD_FROM;
 precedence nonassoc T_IS_EQUAL,T_IS_NOT_EQUAL,T_IS_IDENTICAL,T_IS_NOT_IDENTICAL;
 precedence nonassoc T_RGREATER,T_IS_SMALLER_OR_EQUAL,T_LGREATER,T_IS_GREATER_OR_EQUAL;
 precedence nonassoc T_SPACESHIP;
+precedence left T_PIPE;
 precedence left T_SL,T_SR;
 precedence left T_PLUS,T_MINUS,T_NEKUDA;
 precedence left T_POW,T_TIMES,T_DIV,T_PRECENT;
@@ -3831,6 +3835,11 @@ T_LIST:start T_OPEN_PARENTHESE array_pair_list:list T_CLOSE_PARENTHESE:end T_EQU
 | expr:expr1 T_IS_NOT_EQUAL expr:expr2
 {:
 	RESULT = new InfixExpression(expr1left, expr2right, expr1, InfixExpression.OP_IS_NOT_EQUAL, expr2);
+:}
+
+| expr:expr1 T_PIPE expr:expr2
+{:
+	RESULT = new InfixExpression(expr1left, expr2right, expr1, InfixExpression.OP_PIPE, expr2);
 :}
 
 | expr:expr1 T_RGREATER expr:expr2

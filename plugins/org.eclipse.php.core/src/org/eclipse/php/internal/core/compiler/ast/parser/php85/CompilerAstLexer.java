@@ -18,7 +18,7 @@ import org.eclipse.php.core.ast.nodes.IDocumentorLexer;
 import org.eclipse.php.core.compiler.ast.nodes.Comment;
 import org.eclipse.php.core.compiler.ast.nodes.PHPDocBlock;
 import org.eclipse.php.core.compiler.ast.nodes.VarComment;
-import org.eclipse.php.internal.core.ast.scanner.php84.ParserConstants;
+import org.eclipse.php.internal.core.ast.scanner.php85.ParserConstants;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
 import org.eclipse.php.internal.core.compiler.ast.parser.DocumentorLexer;
 

@@ -160,6 +160,9 @@ public abstract class PHPTokenNames {
 		token2Name.put(CompilerParserConstants.T_PRIVATE_SET, "private(set)"); //$NON-NLS-1$
 		token2Name.put(CompilerParserConstants.T_PROTECTED_SET, "protected(set)"); //$NON-NLS-1$
 		token2Name.put(CompilerParserConstants.T_PUBLIC_SET, "public(set)"); //$NON-NLS-1$
+
+		// PHP8.5
+		token2Name.put(CompilerParserConstants.T_PIPE, "|>"); //$NON-NLS-1$
 	}
 
 	/**

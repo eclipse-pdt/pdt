@@ -1,0 +1,61 @@
+--TEST--
+Test Ppe
+--FILE--
+<?php 
+$result = "Hello World"
+    |> strtoupper(...)
+    |> str_shuffle(...)
+    |> trim(...);
+--EXPECT--
+<Program start='0' length='95'>
+	<Statements>
+		<ExpressionStatement start='7' length='88'>
+			<Assignment start='7' length='87' operator='='>
+				<Variable start='7' length='7' isDollared='true'>
+					<Identifier start='8' length='6' name='result'/>
+				</Variable>
+				<Value>
+					<InfixExpression start='17' length='77' operator='|&gt;'>
+						<InfixExpression start='17' length='60' operator='|&gt;'>
+							<InfixExpression start='17' length='36' operator='|&gt;'>
+								<Scalar start='17' length='13' type='string' value='"Hello World"'/>
+								<FunctionInvocation start='38' length='15'>
+									<FunctionName start='38' length='10'>
+										<NamespaceName start='38' length='10' global='false' current='false'>
+											<Identifier start='38' length='10' name='strtoupper'/>
+										</NamespaceName>
+									</FunctionName>
+									<Parameters>
+										<AsCallableExpression start='49' length='3'/>
+									</Parameters>
+								</FunctionInvocation>
+							</InfixExpression>
+							<FunctionInvocation start='61' length='16'>
+								<FunctionName start='61' length='11'>
+									<NamespaceName start='61' length='11' global='false' current='false'>
+										<Identifier start='61' length='11' name='str_shuffle'/>
+									</NamespaceName>
+								</FunctionName>
+								<Parameters>
+									<AsCallableExpression start='73' length='3'/>
+								</Parameters>
+							</FunctionInvocation>
+						</InfixExpression>
+						<FunctionInvocation start='85' length='9'>
+							<FunctionName start='85' length='4'>
+								<NamespaceName start='85' length='4' global='false' current='false'>
+									<Identifier start='85' length='4' name='trim'/>
+								</NamespaceName>
+							</FunctionName>
+							<Parameters>
+								<AsCallableExpression start='90' length='3'/>
+							</Parameters>
+						</FunctionInvocation>
+					</InfixExpression>
+				</Value>
+			</Assignment>
+		</ExpressionStatement>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>
