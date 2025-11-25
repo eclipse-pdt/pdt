@@ -259,6 +259,16 @@ public class AST {
 			lexer83.setUseAspTagsAsPHP(aspTagsAsPhp);
 			lexer83.setUseShortTags(useShortTags);
 			return lexer83;
+		} else if (PHPVersion.PHP8_4 == phpVersion) {
+			final AstLexer lexer84 = getLexer84(reader);
+			lexer84.setUseAspTagsAsPHP(aspTagsAsPhp);
+			lexer84.setUseShortTags(useShortTags);
+			return lexer84;
+		} else if (PHPVersion.PHP8_5 == phpVersion) {
+			final AstLexer lexer85 = getLexer85(reader);
+			lexer85.setUseAspTagsAsPHP(aspTagsAsPhp);
+			lexer85.setUseShortTags(useShortTags);
+			return lexer85;
 		} else {
 			if (phpVersion == null) {
 				throw new IllegalArgumentException(CoreMessages.getString("UnknownPHPVersion_0")); //$NON-NLS-1$
@@ -267,6 +277,20 @@ public class AST {
 						Messages.format(CoreMessages.getString("UnknownPHPVersion_1"), phpVersion)); //$NON-NLS-1$
 			}
 		}
+	}
+
+	private AstLexer getLexer85(Reader reader) throws IOException {
+		final org.eclipse.php.internal.core.ast.scanner.php85.PHPAstLexer phpAstLexer = new org.eclipse.php.internal.core.ast.scanner.php85.PHPAstLexer(
+				reader);
+		phpAstLexer.setAST(this);
+		return phpAstLexer;
+	}
+
+	private AstLexer getLexer84(Reader reader) throws IOException {
+		final org.eclipse.php.internal.core.ast.scanner.php84.PHPAstLexer phpAstLexer = new org.eclipse.php.internal.core.ast.scanner.php84.PHPAstLexer(
+				reader);
+		phpAstLexer.setAST(this);
+		return phpAstLexer;
 	}
 
 	private AstLexer getLexer83(Reader reader) throws IOException {
@@ -435,6 +459,16 @@ public class AST {
 			return parser;
 		} else if (PHPVersion.PHP8_3 == phpVersion) {
 			final org.eclipse.php.internal.core.ast.scanner.php83.PHPAstParser parser = new org.eclipse.php.internal.core.ast.scanner.php83.PHPAstParser(
+					lexer);
+			parser.setAST(this);
+			return parser;
+		} else if (PHPVersion.PHP8_4 == phpVersion) {
+			final org.eclipse.php.internal.core.ast.scanner.php84.PHPAstParser parser = new org.eclipse.php.internal.core.ast.scanner.php84.PHPAstParser(
+					lexer);
+			parser.setAST(this);
+			return parser;
+		} else if (PHPVersion.PHP8_5 == phpVersion) {
+			final org.eclipse.php.internal.core.ast.scanner.php85.PHPAstParser parser = new org.eclipse.php.internal.core.ast.scanner.php85.PHPAstParser(
 					lexer);
 			parser.setAST(this);
 			return parser;
@@ -1896,12 +1930,23 @@ public class AST {
 	 * @param isMandatory
 	 * @return A new FormalParameter.
 	 */
+	@Deprecated
 	public FormalParameter newFormalParameter(Identifier type, Expression parameterName, Expression defaultValue,
 			boolean isMandatory) {
 		FormalParameter formalParameter = new FormalParameter(this);
 		formalParameter.setParameterType(type);
 		formalParameter.setParameterName(parameterName);
 		formalParameter.setDefaultValue(defaultValue);
+		return formalParameter;
+	}
+
+	public FormalParameter newFormalParameter(Identifier type, Expression parameterName, Expression defaultValue,
+			boolean isMandatory, PropertyHookList hooks) {
+		FormalParameter formalParameter = new FormalParameter(this);
+		formalParameter.setParameterType(type);
+		formalParameter.setParameterName(parameterName);
+		formalParameter.setDefaultValue(defaultValue);
+		formalParameter.setHooks(hooks);
 		return formalParameter;
 	}
 
@@ -2544,10 +2589,19 @@ public class AST {
 	 * @param value
 	 * @return A new SingleFieldDeclaration.
 	 */
+	@Deprecated
 	public SingleFieldDeclaration newSingleFieldDeclaration(Variable name, Expression value) {
 		SingleFieldDeclaration singleFieldDeclaration = new SingleFieldDeclaration(this);
 		singleFieldDeclaration.setName(name);
 		singleFieldDeclaration.setValue(value);
+		return singleFieldDeclaration;
+	}
+
+	public SingleFieldDeclaration newSingleFieldDeclaration(Variable name, Expression value, PropertyHookList hooks) {
+		SingleFieldDeclaration singleFieldDeclaration = new SingleFieldDeclaration(this);
+		singleFieldDeclaration.setName(name);
+		singleFieldDeclaration.setValue(value);
+		singleFieldDeclaration.setHooks(hooks);
 		return singleFieldDeclaration;
 	}
 
@@ -3054,4 +3108,50 @@ public class AST {
 
 		return attribute;
 	}
+
+	public FormalParameterList newFormalParameterList() {
+		FormalParameterList list = new FormalParameterList(this);
+		return list;
+	}
+
+	public FormalParameterList newFormalParameterList(List<FormalParameter> parameters, EmptyExpression expression) {
+		FormalParameterList list = new FormalParameterList(this);
+		list.setEmptyPart(expression);
+		list.parameters().addAll(parameters);
+
+		return list;
+	}
+
+	public PropertyHookList newPropertyHookList() {
+		PropertyHookList list = new PropertyHookList(this);
+
+		return list;
+	}
+
+	public PropertyHookList newPropertyHookList(List<PropertyHook> hooks) {
+		PropertyHookList list = new PropertyHookList(this);
+		list.hooks().addAll(hooks);
+
+		return list;
+	}
+
+	public PropertyHook newPropertyHook() {
+		PropertyHook hook = new PropertyHook(this);
+
+		return hook;
+	}
+
+	public PropertyHook newPropertyHook(int modifier, boolean isReference, Identifier name,
+			FormalParameterList parameters, Expression body, List<AttributeGroup> attributes) {
+		PropertyHook hook = new PropertyHook(this);
+		hook.setModifier(modifier);
+		hook.setIsReference(isReference);
+		hook.setName(name);
+		hook.setParameters(parameters);
+		hook.setBody(body);
+		hook.attributes().addAll(attributes);
+
+		return hook;
+	}
+
 }

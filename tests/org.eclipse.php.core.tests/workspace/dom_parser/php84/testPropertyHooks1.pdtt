@@ -1,0 +1,47 @@
+--TEST--
+PHP 8.4
+--FILE--
+<?php
+class Foo
+{
+    public string $foo = 'd' {
+        get => $this->foo . ' - ex';
+        set(string $value) {
+            $this->foo = $value . 'ping';
+        }
+    }
+}
+
+--EXPECT--
+<Program start='0' length='174'>
+	<Statements>
+		<ClassDeclaration start='6' length='168' modifier=''>
+			<ClassName>
+				<Identifier start='12' length='3' name='Foo'/>
+			</ClassName>
+			<SuperClassName>
+			</SuperClassName>
+			<Interfaces>
+			</Interfaces>
+			<Block start='16' length='158' isCurly='true'>
+				<FieldsDeclaration start='22' length='150' modifier='public'>
+					<Type>
+						<NamespaceName start='29' length='6' global='false' current='false'>
+							<Identifier start='29' length='6' name='string'/>
+						</NamespaceName>
+					</Type>
+					<VariableName>
+						<Variable start='36' length='4' isDollared='true'>
+							<Identifier start='37' length='3' name='foo'/>
+						</Variable>
+					</VariableName>
+					<InitialValue>
+						<Scalar start='43' length='3' type='string' value='&apos;d&apos;'/>
+					</InitialValue>
+				</FieldsDeclaration>
+			</Block>
+		</ClassDeclaration>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

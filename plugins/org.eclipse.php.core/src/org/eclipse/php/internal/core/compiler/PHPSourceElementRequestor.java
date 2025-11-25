@@ -181,17 +181,6 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 	}
 
 	@Override
-	public boolean endvisit(MethodDeclaration method) throws Exception {
-		methodGlobalVars.pop();
-		declarations.pop();
-
-		for (PHPSourceElementRequestorExtension visitor : extensions) {
-			visitor.endvisit(method);
-		}
-		return super.endvisit(method);
-	}
-
-	@Override
 	public boolean endvisit(TypeDeclaration type) throws Exception {
 		if (type instanceof NamespaceDeclaration) {
 			NamespaceDeclaration namespaceDecl = (NamespaceDeclaration) type;
@@ -292,7 +281,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		String[] parameters;
 		ISourceElementRequestor.MethodInfo mi = new ISourceElementRequestor.MethodInfo();
 
-		mi.modifiers = Modifiers.AccPublic | IPHPModifiers.AccArrow;
+		mi.modifiers = Modifiers.AccPublic;
 		processArguments(mi, lambdaMethod.getArguments(), lambdaMethod);
 		if (arguments != null) {
 			parameters = new String[arguments.size()];
@@ -334,7 +323,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		return true;
 	}
 
-	private void processArguments(MethodInfo mi, Collection<? extends Argument> args, ASTNode node) {
+	private void processArguments(MethodInfo mi, Collection<? extends Argument> args, ASTNode node) throws Exception {
 		if (args == null) {
 			args = new ArrayList<>();
 		}
@@ -406,10 +395,19 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 				info.nameSourceEnd = arg.getNameEnd() - 1;
 				info.declarationStart = arg.sourceStart();
 				info.type = types[a];
-				fInfoStack.push(info);
 				fRequestor.enterField(info);
-				fRequestor.exitField(arg.sourceEnd() - 1);
+				fInfoStack.push(info);
+				if (arg instanceof FormalParameter) {
+					FormalParameter farg = (FormalParameter) arg;
+					if (farg.getHooks() != null) {
+						for (PropertyHook h : ((FormalParameter) arg).getHooks()) {
+							h.traverse(this);
+						}
+					}
+				}
 				fInfoStack.pop();
+				fRequestor.exitField(arg.sourceEnd() - 1);
+
 			}
 			a++;
 		}
@@ -544,9 +542,24 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 			visitor.visit(method);
 		}
 
-		boolean visit = visitMethodDeclaration(method);
+		return visitMethodDeclaration(method);
+	}
 
-		return visit;
+	@Override
+	public boolean endvisit(MethodDeclaration method) throws Exception {
+		methodGlobalVars.pop();
+		declarations.pop();
+
+		for (PHPSourceElementRequestorExtension visitor : extensions) {
+			visitor.endvisit(method);
+		}
+		this.fRequestor.exitMethod(method.end() - 1);
+		this.fInMethod = false;
+		this.fCurrentMethod = null;
+
+		this.onEndVisitMethod(method);
+		this.fNodes.pop();
+		return false;
 	}
 
 	private boolean visitMethodDeclaration(MethodDeclaration method) throws Exception {
@@ -565,13 +578,17 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 
 		fInfoStack.push(mi);
 		this.fRequestor.enterMethod(mi);
+		populateArguments(mi, method.getArguments());
 
 		this.fInMethod = true;
 		this.fCurrentMethod = method;
 
-		populateArguments(mi, method.getArguments());
+		if (method.getBody() != null) {
+			method.getBody().traverse(this);
+		}
 
-		return true;
+		endvisit(method);
+		return false;
 	}
 
 	@Override
@@ -781,7 +798,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 							continue;
 						}
 						ISourceElementRequestor.FieldInfo info = new ISourceElementRequestor.FieldInfo();
-						info.modifiers = Modifiers.AccPublic | IPHPModifiers.AccMagicProperty;
+						info.modifiers = Modifiers.AccPublic;
 						info.name = split[1];
 						info.type = split[0];
 
@@ -915,6 +932,57 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		}
 		fInfoStack.push(info);
 		fRequestor.enterField(info);
+		return true;
+	}
+
+	public boolean visit(PropertyHook hook) throws Exception {
+
+		this.fNodes.push(hook);
+
+		ISourceElementRequestor.MethodInfo mi = new ISourceElementRequestor.MethodInfo();
+		mi.modifiers = hook.getModifiers();
+		mi.name = hook.getName();
+
+		if (PHPFlags.isDefault(mi.modifiers)) {
+			ElementInfo parent = fInfoStack.peek();
+			if (parent != null) {
+				mi.modifiers = parent.modifiers;
+			}
+		}
+
+		mi.nameSourceStart = hook.getNameStart();
+		mi.nameSourceEnd = hook.getNameEnd() - 1;
+		mi.declarationStart = hook.sourceStart();
+
+		declarations.push(hook);
+		if (hook.getArguments() != null) {
+			processArguments(mi, hook.getArguments(), hook);
+		}
+
+		fInfoStack.push(mi);
+		this.fRequestor.enterMethod(mi);
+
+		this.fInMethod = true;
+
+		if (hook.getArguments() != null) {
+			populateArguments(mi, hook.getArguments());
+		}
+
+		if (hook.getBody() != null) {
+			hook.getBody().traverse(this);
+		}
+
+		endvisit(hook);
+
+		return false;
+	}
+
+	public boolean endvisit(PropertyHook hook) throws Exception {
+		this.fNodes.pop();
+		declarations.pop();
+		fRequestor.exitMethod(hook.sourceEnd() - 1);
+		fInfoStack.pop();
+		this.fInMethod = false;
 		return true;
 	}
 
@@ -1245,6 +1313,9 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		if (node instanceof UseStatement) {
 			return visit((UseStatement) node);
 		}
+		if (node instanceof PropertyHook) {
+			return visit((PropertyHook) node);
+		}
 		return true;
 	}
 
@@ -1267,6 +1338,9 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		}
 		if (node instanceof ForEachStatement) {
 			return endvisit((ForEachStatement) node);
+		}
+		if (node instanceof PropertyHook) {
+			return endvisit((PropertyHook) node);
 		}
 		return true;
 	}

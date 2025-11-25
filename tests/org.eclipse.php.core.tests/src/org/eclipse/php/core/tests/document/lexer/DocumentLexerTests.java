@@ -72,6 +72,16 @@ public class DocumentLexerTests {
 				"/workspace/document_lexer/php74", "/workspace/document_lexer/php80", "/workspace/document_lexer/php81",
 				"/workspace/document_lexer/php82", "/workspace/document_lexer/php83" });
 
+		TESTS.put(PHPVersion.PHP8_4,
+				new String[] { "/workspace/document_lexer/php7", "/workspace/document_lexer/php73",
+						"/workspace/document_lexer/php74", "/workspace/document_lexer/php80",
+						"/workspace/document_lexer/php81", "/workspace/document_lexer/php82",
+						"/workspace/document_lexer/php83", "/workspace/document_lexer/php84" });
+		TESTS.put(PHPVersion.PHP8_5, new String[] { "/workspace/document_lexer/php7", "/workspace/document_lexer/php73",
+				"/workspace/document_lexer/php74", "/workspace/document_lexer/php80", "/workspace/document_lexer/php81",
+				"/workspace/document_lexer/php82", "/workspace/document_lexer/php83", "/workspace/document_lexer/php84",
+				"/workspace/document_lexer/php85/" });
+
 	};
 
 	private final PHPVersion version;

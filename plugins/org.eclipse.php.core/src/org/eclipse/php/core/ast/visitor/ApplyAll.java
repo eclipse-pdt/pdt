@@ -988,4 +988,34 @@ public abstract class ApplyAll extends AbstractVisitor {
 		endVisitNode(node);
 	}
 
+	@Override
+	public boolean visit(PropertyHook node) {
+		return apply(node);
+	}
+
+	@Override
+	public void endvisit(PropertyHook node) {
+		endVisitNode(node);
+	}
+
+	@Override
+	public boolean visit(PropertyHookList node) {
+		return apply(node);
+	}
+
+	@Override
+	public void endvisit(PropertyHookList node) {
+		endVisitNode(node);
+	}
+
+	@Override
+	public boolean visit(FormalParameterList node) {
+		return apply(node);
+	}
+
+	@Override
+	public void endvisit(FormalParameterList node) {
+		endVisitNode(node);
+	}
+
 }

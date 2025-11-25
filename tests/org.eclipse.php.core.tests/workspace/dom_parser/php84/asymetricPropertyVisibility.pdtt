@@ -1,0 +1,162 @@
+--TEST--
+PHP 8.4
+--FILE--
+<?php
+class Book
+{
+    public function __construct(
+        public private(set) string $title,
+        public protected(set) string $author,
+        protected private(set) int $pubYear,
+    ) {}
+}
+
+class Book2
+{
+	public private(set) string $title;
+    public protected(set) string $author;
+   	protected private(set) int $pubYear;
+    
+    public function __construct(
+    ) {}
+}
+
+--EXPECT--
+<Program start='0' length='379'>
+	<Statements>
+		<ClassDeclaration start='6' length='190' modifier=''>
+			<ClassName>
+				<Identifier start='12' length='4' name='Book'/>
+			</ClassName>
+			<SuperClassName>
+			</SuperClassName>
+			<Interfaces>
+			</Interfaces>
+			<Block start='17' length='179' isCurly='true'>
+				<MethodDeclaration start='23' length='171' modifier='public'>
+					<FunctionDeclaration start='30' length='164' isReference='false'>
+						<FunctionName>
+							<Identifier start='39' length='11' name='__construct'/>
+						</FunctionName>
+						<FormalParameters>
+							<FormalParameter start='60' length='33' isMandatory='false modifier='public private(set)''>
+								<Type>
+									<NamespaceName start='80' length='6' global='false' current='false'>
+										<Identifier start='80' length='6' name='string'/>
+									</NamespaceName>
+								</Type>
+								<ParameterName>
+									<Variable start='87' length='6' isDollared='true'>
+										<Identifier start='88' length='5' name='title'/>
+									</Variable>
+								</ParameterName>
+								<DefaultValue>
+								</DefaultValue>
+							</FormalParameter>
+							<FormalParameter start='103' length='36' isMandatory='false modifier='public protected(set)''>
+								<Type>
+									<NamespaceName start='125' length='6' global='false' current='false'>
+										<Identifier start='125' length='6' name='string'/>
+									</NamespaceName>
+								</Type>
+								<ParameterName>
+									<Variable start='132' length='7' isDollared='true'>
+										<Identifier start='133' length='6' name='author'/>
+									</Variable>
+								</ParameterName>
+								<DefaultValue>
+								</DefaultValue>
+							</FormalParameter>
+							<FormalParameter start='149' length='35' isMandatory='false modifier='protected private(set)''>
+								<Type>
+									<NamespaceName start='172' length='3' global='false' current='false'>
+										<Identifier start='172' length='3' name='int'/>
+									</NamespaceName>
+								</Type>
+								<ParameterName>
+									<Variable start='176' length='8' isDollared='true'>
+										<Identifier start='177' length='7' name='pubYear'/>
+									</Variable>
+								</ParameterName>
+								<DefaultValue>
+								</DefaultValue>
+							</FormalParameter>
+						</FormalParameters>
+						<FunctionBody>
+							<Block start='192' length='2' isCurly='true'>
+							</Block>
+						</FunctionBody>
+					</FunctionDeclaration>
+				</MethodDeclaration>
+			</Block>
+		</ClassDeclaration>
+		<ClassDeclaration start='198' length='181' modifier=''>
+			<ClassName>
+				<Identifier start='204' length='5' name='Book2'/>
+			</ClassName>
+			<SuperClassName>
+			</SuperClassName>
+			<Interfaces>
+			</Interfaces>
+			<Block start='210' length='169' isCurly='true'>
+				<FieldsDeclaration start='213' length='34' modifier='public private(set)'>
+					<Type>
+						<NamespaceName start='233' length='6' global='false' current='false'>
+							<Identifier start='233' length='6' name='string'/>
+						</NamespaceName>
+					</Type>
+					<VariableName>
+						<Variable start='240' length='6' isDollared='true'>
+							<Identifier start='241' length='5' name='title'/>
+						</Variable>
+					</VariableName>
+					<InitialValue>
+					</InitialValue>
+				</FieldsDeclaration>
+				<FieldsDeclaration start='252' length='37' modifier='public protected(set)'>
+					<Type>
+						<NamespaceName start='274' length='6' global='false' current='false'>
+							<Identifier start='274' length='6' name='string'/>
+						</NamespaceName>
+					</Type>
+					<VariableName>
+						<Variable start='281' length='7' isDollared='true'>
+							<Identifier start='282' length='6' name='author'/>
+						</Variable>
+					</VariableName>
+					<InitialValue>
+					</InitialValue>
+				</FieldsDeclaration>
+				<FieldsDeclaration start='294' length='36' modifier='protected private(set)'>
+					<Type>
+						<NamespaceName start='317' length='3' global='false' current='false'>
+							<Identifier start='317' length='3' name='int'/>
+						</NamespaceName>
+					</Type>
+					<VariableName>
+						<Variable start='321' length='8' isDollared='true'>
+							<Identifier start='322' length='7' name='pubYear'/>
+						</Variable>
+					</VariableName>
+					<InitialValue>
+					</InitialValue>
+				</FieldsDeclaration>
+				<MethodDeclaration start='340' length='37' modifier='public'>
+					<FunctionDeclaration start='347' length='30' isReference='false'>
+						<FunctionName>
+							<Identifier start='356' length='11' name='__construct'/>
+						</FunctionName>
+						<FormalParameters>
+						</FormalParameters>
+						<FunctionBody>
+							<Block start='375' length='2' isCurly='true'>
+							</Block>
+						</FunctionBody>
+					</FunctionDeclaration>
+				</MethodDeclaration>
+			</Block>
+		</ClassDeclaration>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

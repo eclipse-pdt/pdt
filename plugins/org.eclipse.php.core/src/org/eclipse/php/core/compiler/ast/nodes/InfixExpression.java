@@ -81,6 +81,8 @@ public class InfixExpression extends Expression {
 	public static final int OP_POW = 24;
 	// '<=>'
 	public static final int OP_SPACESHIP = 25;
+	// '|>'
+	public static final int OP_PIPE = 26;
 
 	private final Expression right;
 	private final int operator;
@@ -150,6 +152,8 @@ public class InfixExpression extends Expression {
 			return "**"; //$NON-NLS-1$
 		case OP_SPACESHIP:
 			return "<=>"; //$NON-NLS-1$
+		case OP_PIPE:
+			return "|>"; //$NON-NLS-1$
 		default:
 			throw new IllegalArgumentException();
 		}

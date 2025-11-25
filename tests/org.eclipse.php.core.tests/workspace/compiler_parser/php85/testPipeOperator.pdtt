@@ -1,0 +1,43 @@
+--TEST--
+Test Ppe
+--FILE--
+<?php 
+$result = "Hello World"
+    |> strtoupper(...)
+    |> str_shuffle(...)
+    |> trim(...);
+--EXPECT--
+<ModuleDeclaration start="0" end="96">
+	<ExpressionStatement start="7" end="95">
+		<Assignment start="7" end="94" operator="=">
+			<VariableReference start="7" end="14" name="$result">
+			</VariableReference>
+			<InfixExpression start="17" end="94" operator="|&gt;">
+				<InfixExpression start="17" end="77" operator="|&gt;">
+					<InfixExpression start="17" end="53" operator="|&gt;">
+						<Scalar start="17" end="30" type="string" value="&quot;Hello World&quot;">
+						</Scalar>
+						<PHPCallExpression start="38" end="53">
+							<FullyQualifiedReference start="38" end="48" name="strtoupper">
+							</FullyQualifiedReference>
+							<PHPAsCallableArgumentsList start="49" end="52">
+							</PHPAsCallableArgumentsList>
+						</PHPCallExpression>
+					</InfixExpression>
+					<PHPCallExpression start="61" end="77">
+						<FullyQualifiedReference start="61" end="72" name="str_shuffle">
+						</FullyQualifiedReference>
+						<PHPAsCallableArgumentsList start="73" end="76">
+						</PHPAsCallableArgumentsList>
+					</PHPCallExpression>
+				</InfixExpression>
+				<PHPCallExpression start="85" end="94">
+					<FullyQualifiedReference start="85" end="89" name="trim">
+					</FullyQualifiedReference>
+					<PHPAsCallableArgumentsList start="90" end="93">
+					</PHPAsCallableArgumentsList>
+				</PHPCallExpression>
+			</InfixExpression>
+		</Assignment>
+	</ExpressionStatement>
+</ModuleDeclaration>

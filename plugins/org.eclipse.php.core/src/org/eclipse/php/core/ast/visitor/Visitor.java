@@ -451,4 +451,17 @@ public interface Visitor {
 	boolean visit(ReflectionConstantAccess constantAccess);
 
 	void endvisit(ReflectionConstantAccess constantAccess);
+
+	// php8.4
+	boolean visit(PropertyHook hook);
+
+	void endvisit(PropertyHook hook);
+
+	boolean visit(PropertyHookList hookList);
+
+	void endvisit(PropertyHookList hookList);
+
+	boolean visit(FormalParameterList parameterList);
+
+	void endvisit(FormalParameterList parameterList);
 }

@@ -32,9 +32,10 @@ public class PHPFieldDeclaration extends FieldDeclaration implements IPHPDocAwar
 	private Expression initializer;
 	private PHPDocBlock phpDoc;
 	private List<Attribute> attributes;
+	private final List<PropertyHook> hooks;
 
 	public PHPFieldDeclaration(VariableReference variable, SimpleReference variableType, Expression initializer,
-			int start, int end, int modifiers, int declStart, PHPDocBlock phpDoc) {
+			int start, int end, int modifiers, int declStart, PHPDocBlock phpDoc, List<PropertyHook> hooks) {
 		super(variable.getName(), variable.sourceStart(), variable.sourceEnd(), start, end);
 
 		if ((modifiers & Modifiers.AccPrivate) == 0 && (modifiers & Modifiers.AccProtected) == 0) {
@@ -46,6 +47,7 @@ public class PHPFieldDeclaration extends FieldDeclaration implements IPHPDocAwar
 		this.initializer = initializer;
 		this.declStart = declStart;
 		this.phpDoc = phpDoc;
+		this.hooks = hooks;
 	}
 
 	/**
@@ -54,6 +56,14 @@ public class PHPFieldDeclaration extends FieldDeclaration implements IPHPDocAwar
 	public PHPFieldDeclaration(VariableReference variable, Expression initializer, int start, int end, int modifiers,
 			int declStart, PHPDocBlock phpDoc) {
 		this(variable, null, initializer, start, end, modifiers, declStart, phpDoc);
+	}
+
+	/**
+	 * @since PHP 8.4
+	 */
+	public PHPFieldDeclaration(VariableReference variable, SimpleReference variableType, Expression initializer,
+			int start, int end, int modifiers, int declStart, PHPDocBlock phpDoc) {
+		this(variable, variableType, initializer, start, end, modifiers, declStart, phpDoc, null);
 	}
 
 	@Override
@@ -75,6 +85,11 @@ public class PHPFieldDeclaration extends FieldDeclaration implements IPHPDocAwar
 			getRef().traverse(visitor);
 			if (initializer != null) {
 				initializer.traverse(visitor);
+			}
+			if (hooks != null) {
+				for (PropertyHook hook : hooks) {
+					hook.traverse(visitor);
+				}
 			}
 			visitor.endvisit(this);
 		}
@@ -126,5 +141,9 @@ public class PHPFieldDeclaration extends FieldDeclaration implements IPHPDocAwar
 	@Override
 	public void setPHPDoc(PHPDocBlock block) {
 		this.phpDoc = block;
+	}
+
+	public List<PropertyHook> getHooks() {
+		return hooks;
 	}
 }

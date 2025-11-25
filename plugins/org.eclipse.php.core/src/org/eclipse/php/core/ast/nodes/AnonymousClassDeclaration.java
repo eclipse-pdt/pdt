@@ -20,12 +20,14 @@ import java.util.List;
 import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.ast.match.ASTMatcher;
 import org.eclipse.php.core.ast.visitor.Visitor;
+import org.eclipse.php.core.compiler.PHPFlags;
 
 public class AnonymousClassDeclaration extends AttributedExpression {
 
 	private Expression superClass;
 	protected ASTNode.NodeList<Identifier> interfaces = new ASTNode.NodeList<>(INTERFACES_PROPERTY);
 	private Block body;
+	private int modifier;
 
 	/**
 	 * The structural property of this node type.
@@ -43,6 +45,9 @@ public class AnonymousClassDeclaration extends AttributedExpression {
 			AnonymousClassDeclaration.class, "attributes", AttributeGroup.class, //$NON-NLS-1$
 			CYCLE_RISK);
 
+	public static final SimplePropertyDescriptor MODIFIER_PROPERTY = new SimplePropertyDescriptor(
+			AnonymousClassDeclaration.class, "modifier", Integer.class, OPTIONAL); //$NON-NLS-1$
+
 	/**
 	 * A list of property descriptors (element type:
 	 * {@link StructuralPropertyDescriptor}), or null if uninitialized.
@@ -50,6 +55,8 @@ public class AnonymousClassDeclaration extends AttributedExpression {
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
 
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS_PHP8;
+
+	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS_PHP83;
 
 	static {
 		List<StructuralPropertyDescriptor> propertyList = new ArrayList<>(3);
@@ -64,6 +71,14 @@ public class AnonymousClassDeclaration extends AttributedExpression {
 		propertyList.add(BODY_PROPERTY);
 		propertyList.add(ATTRIBUTES_PROPERTY);
 		PROPERTY_DESCRIPTORS_PHP8 = Collections.unmodifiableList(propertyList);
+
+		propertyList = new ArrayList<>(5);
+		propertyList.add(SUPER_CLASS_PROPERTY);
+		propertyList.add(INTERFACES_PROPERTY);
+		propertyList.add(BODY_PROPERTY);
+		propertyList.add(ATTRIBUTES_PROPERTY);
+		propertyList.add(MODIFIER_PROPERTY);
+		PROPERTY_DESCRIPTORS_PHP83 = Collections.unmodifiableList(propertyList);
 	}
 
 	public AnonymousClassDeclaration(AST ast) {
@@ -72,7 +87,14 @@ public class AnonymousClassDeclaration extends AttributedExpression {
 
 	public AnonymousClassDeclaration(int start, int end, AST ast, Expression superClass, List<Identifier> interfaces,
 			Block body, List<AttributeGroup> attributes) {
+		this(start, end, ast, 0, superClass, interfaces, body, attributes);
+	}
+
+	public AnonymousClassDeclaration(int start, int end, AST ast, int modifier, Expression superClass,
+			List<Identifier> interfaces, Block body, List<AttributeGroup> attributes) {
 		super(start, end, ast);
+
+		setModifier(modifier);
 
 		setSuperClass(superClass);
 		if (interfaces != null) {
@@ -166,6 +188,9 @@ public class AnonymousClassDeclaration extends AttributedExpression {
 	public void toString(StringBuilder buffer, String tab) {
 		buffer.append(tab).append("<AnonymousClassDeclaration"); //$NON-NLS-1$
 		appendInterval(buffer);
+		if (modifier != 0) {
+			buffer.append("modifier=\"").append(getModifierString()).append("\""); //$NON-NLS-1$ //$NON-NLS-2$
+		}
 		buffer.append(">\n"); //$NON-NLS-1$
 		toStringAttributes(buffer, tab + TAB);
 		buffer.append(TAB).append(tab).append("<SuperClass>\n"); //$NON-NLS-1$
@@ -221,7 +246,9 @@ public class AnonymousClassDeclaration extends AttributedExpression {
 		final List<Identifier> interfaces = ASTNode.copySubtrees(target, getInterfaces());
 		final Block body = ASTNode.copySubtree(target, getBody());
 		final List<AttributeGroup> attributes = ASTNode.copySubtrees(target, attributes());
-		return new AnonymousClassDeclaration(getStart(), getEnd(), target, superClass, interfaces, body, attributes);
+		final int modifier = this.modifier;
+		return new AnonymousClassDeclaration(getStart(), getEnd(), target, modifier, superClass, interfaces, body,
+				attributes);
 	}
 
 	@Override
@@ -265,7 +292,10 @@ public class AnonymousClassDeclaration extends AttributedExpression {
 		if (PHPVersion.PHP8_0.isGreaterThan(apiLevel)) {
 			return PROPERTY_DESCRIPTORS;
 		}
-		return PROPERTY_DESCRIPTORS_PHP8;
+		if (PHPVersion.PHP8_3.isGreaterThan(apiLevel)) {
+			return PROPERTY_DESCRIPTORS_PHP8;
+		}
+		return PROPERTY_DESCRIPTORS_PHP83;
 	}
 
 	@Override
@@ -273,4 +303,31 @@ public class AnonymousClassDeclaration extends AttributedExpression {
 		return ATTRIBUTES_PROPERTY;
 	}
 
+	public final void setModifier(int value) {
+		preValueChange(MODIFIER_PROPERTY);
+		this.modifier = value;
+		postValueChange(MODIFIER_PROPERTY);
+	}
+
+	public int getModifier() {
+		return modifier;
+	}
+
+	@Override
+	final int internalGetSetIntProperty(SimplePropertyDescriptor property, boolean get, int child) {
+		if (property == MODIFIER_PROPERTY) {
+			if (get) {
+				return getModifier();
+			} else {
+				setModifier(child);
+				return 0;
+			}
+		}
+		// allow default implementation to flag the error
+		return super.internalGetSetIntProperty(property, get, child);
+	}
+
+	public String getModifierString() {
+		return PHPFlags.toString(modifier);
+	}
 }

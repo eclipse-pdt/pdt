@@ -431,4 +431,12 @@ public interface PHPRegionTypes {
 	static final String PHP_NEVER = "PHP_NEVER"; //$NON-NLS-1$
 	static final String PHP_MIXED = "PHP_MIXED"; //$NON-NLS-1$
 
+	/**
+	 * @since 8.4
+	 */
+	static final String PHP__PROPERTY__ = "PHP__PROPERTY__"; //$NON-NLS-1$
+
+	static final String PHP_PUBLIC_SET = "PHP_PUBLIC_SET"; //$NON-NLS-1$
+	static final String PHP_PRIVATE_SET = "PHP_PRIVATE_SET"; //$NON-NLS-1$
+	static final String PHP_PROTECTED_SET = "PHP_PROTECTED_SET"; //$NON-NLS-1$
 }

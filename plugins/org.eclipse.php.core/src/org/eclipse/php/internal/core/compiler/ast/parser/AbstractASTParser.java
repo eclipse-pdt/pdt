@@ -331,6 +331,9 @@ abstract public class AbstractASTParser extends lr_parser {
 		if ((flags & IPHPModifiers.AccessMask) != 0 && (newFlag & IPHPModifiers.AccessMask) != 0) {
 			reportError(new ASTError(start, end), Messages.AbstractASTParser_MultipleAccessModifiersError);
 		}
+		if ((flags & IPHPModifiers.AccessSetMask) != 0 && (newFlag & IPHPModifiers.AccessSetMask) != 0) {
+			reportError(new ASTError(start, end), Messages.AbstractASTParser_MultipleAccessModifiersError);
+		}
 		if ((flags & IPHPModifiers.AccStatic) != 0 && (newFlag & IPHPModifiers.AccStatic) != 0) {
 			reportError(new ASTError(start, end), Messages.AbstractASTParser_MultipleStaticModifiersError);
 		}
@@ -382,6 +385,20 @@ abstract public class AbstractASTParser extends lr_parser {
 
 		if ((flags & IPHPModifiers.AccAbstract) != 0 && (flags & IPHPModifiers.AccFinal) != 0) {
 			reportError(new ASTError(start, end), Messages.AbstractASTParser_AbstractAsFinalError);
+		}
+
+		return flags;
+	}
+
+	protected int appendPropertyHookModifier(int start, int end, int flags, int newFlag) {
+		flags = appendModifier(start, end, flags, newFlag);
+
+		if ((newFlag & IPHPModifiers.AccAbstract) != 0) {
+			reportError(new ASTError(start, end), Messages.AbstractASTParser_AbstractPropertyError);
+		}
+
+		if ((newFlag & IPHPModifiers.AccFinal) != 0) {
+			reportError(new ASTError(start, end), Messages.AbstractASTParser_FinalPropertyError);
 		}
 
 		return flags;

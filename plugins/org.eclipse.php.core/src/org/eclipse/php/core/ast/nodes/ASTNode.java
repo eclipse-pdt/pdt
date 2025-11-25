@@ -140,6 +140,11 @@ public abstract class ASTNode implements Visitable {
 	// php8.3
 	public static final int REFLECTION_CONSTANT_ACCESS = 92;
 
+	// php8.4
+	public static final int FORMAL_PARAMETER_LIST = 93;
+	public static final int PROPERTY_HOOK_LIST = 94;
+	public static final int PROPERTY_HOOK = 95;
+
 	/**
 	 * Internal convenience constant indicating that there is definite risk of
 	 * cycles.

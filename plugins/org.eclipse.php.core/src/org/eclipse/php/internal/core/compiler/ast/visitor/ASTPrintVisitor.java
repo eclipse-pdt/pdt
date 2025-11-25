@@ -104,6 +104,15 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 			if (PHPFlags.isEnumCase(declaration.getModifiers())) {
 				buf.append(",enum_case"); //$NON-NLS-1$
 			}
+			if (PHPFlags.isPrivateSet(declaration.getModifiers())) {
+				buf.append(",private(set)");
+			}
+			if (PHPFlags.isProtectedSet(declaration.getModifiers())) {
+				buf.append(",protected(set)");
+			}
+			if (PHPFlags.isPublicSet(declaration.getModifiers())) {
+				buf.append(",public(set)");
+			}
 			String modifiers = buf.toString();
 			parameters.put("modifiers", //$NON-NLS-1$
 					modifiers.length() > 0 ? modifiers.substring(1) : modifiers);
@@ -1650,4 +1659,35 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 		return false;
 	}
 	// php8.3 ends
+
+	// php8.4
+	@Override
+	public boolean visit(PropertyHook s) throws Exception {
+		Map<String, String> parameters = createInitialParameters(s);
+		parameters.put("name", s.getName());
+		parameters.put("arrow", s.isArrow() ? " true" : "false");
+		xmlWriter.startTag("PropertyHook", parameters); //$NON-NLS-1$
+		if (s.getAttributes() != null) {
+			for (Attribute a : s.getAttributes()) {
+				a.traverse(this);
+			}
+		}
+		if (s.getArguments() != null) {
+			xmlWriter.startTag("Arguments", null);
+			for (FormalParameter arg : s.getArguments()) {
+				arg.traverse(this);
+			}
+			xmlWriter.endTag("Arguments");
+		}
+
+		if (s.getBody() != null) {
+			s.getBody().traverse(this);
+		}
+
+		xmlWriter.endTag("PropertyHook"); //$NON-NLS-1$
+
+		return false;
+	}
+
+	// php8.4 ends
 }

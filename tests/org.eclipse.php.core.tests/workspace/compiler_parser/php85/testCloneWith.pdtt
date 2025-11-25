@@ -1,0 +1,28 @@
+--TEST--
+Test clone with
+--FILE--
+<?php 
+clone($obj, [
+    'alpha' => $alpha,
+]);
+--EXPECT--
+<ModuleDeclaration start="0" end="48">
+	<ExpressionStatement start="7" end="47">
+		<PHPCallExpression start="7" end="46">
+			<SimpleReference start="7" end="12" name="clone">
+			</SimpleReference>
+			<PHPCallArgumentsList start="13" end="45">
+				<VariableReference start="13" end="17" name="$obj">
+				</VariableReference>
+				<ArrayCreation start="19" end="45">
+					<ArrayElement start="25" end="42">
+						<Scalar start="25" end="32" type="string" value="&apos;alpha&apos;">
+						</Scalar>
+						<VariableReference start="36" end="42" name="$alpha">
+						</VariableReference>
+					</ArrayElement>
+				</ArrayCreation>
+			</PHPCallArgumentsList>
+		</PHPCallExpression>
+	</ExpressionStatement>
+</ModuleDeclaration>

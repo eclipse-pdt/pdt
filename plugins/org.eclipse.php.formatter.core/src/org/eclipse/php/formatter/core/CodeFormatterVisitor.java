@@ -536,6 +536,34 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			stWhile = org.eclipse.php.internal.core.ast.scanner.php83.ParserConstants.T_WHILE;
 			stElse = org.eclipse.php.internal.core.ast.scanner.php83.ParserConstants.T_ELSE;
 			stElseIf = org.eclipse.php.internal.core.ast.scanner.php83.ParserConstants.T_ELSEIF;
+		} else if (PHPVersion.PHP8_4.equals(phpVersion)) {
+			result = new org.eclipse.php.internal.core.compiler.ast.parser.php84.CompilerAstLexer(reader);
+			((org.eclipse.php.internal.core.compiler.ast.parser.php84.CompilerAstLexer) result)
+					.setAST(new AST(reader, phpVersion, useASPTags, useShortTags));
+			stInScriptin = org.eclipse.php.internal.core.compiler.ast.parser.php84.CompilerAstLexer.ST_IN_SCRIPTING; // save
+			// the
+			// initial
+			// state
+			// for
+			// reset
+			// operation
+			stWhile = org.eclipse.php.internal.core.ast.scanner.php84.ParserConstants.T_WHILE;
+			stElse = org.eclipse.php.internal.core.ast.scanner.php84.ParserConstants.T_ELSE;
+			stElseIf = org.eclipse.php.internal.core.ast.scanner.php84.ParserConstants.T_ELSEIF;
+		} else if (PHPVersion.PHP8_5.equals(phpVersion)) {
+			result = new org.eclipse.php.internal.core.compiler.ast.parser.php85.CompilerAstLexer(reader);
+			((org.eclipse.php.internal.core.compiler.ast.parser.php85.CompilerAstLexer) result)
+					.setAST(new AST(reader, phpVersion, useASPTags, useShortTags));
+			stInScriptin = org.eclipse.php.internal.core.compiler.ast.parser.php85.CompilerAstLexer.ST_IN_SCRIPTING; // save
+			// the
+			// initial
+			// state
+			// for
+			// reset
+			// operation
+			stWhile = org.eclipse.php.internal.core.ast.scanner.php85.ParserConstants.T_WHILE;
+			stElse = org.eclipse.php.internal.core.ast.scanner.php85.ParserConstants.T_ELSE;
+			stElseIf = org.eclipse.php.internal.core.ast.scanner.php85.ParserConstants.T_ELSEIF;
 		} else {
 			throw new IllegalArgumentException("unrecognized version " //$NON-NLS-1$
 					+ phpVersion);
@@ -3630,8 +3658,10 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	public boolean visit(FieldsDeclaration fieldsDeclaration) {
 		int lastPosition = handleAttributes(fieldsDeclaration, true);
 		boolean isFirst = true;
+
 		Variable[] variableNames = fieldsDeclaration.getVariableNames();
 		Expression[] initialValues = fieldsDeclaration.getInitialValues();
+		PropertyHookList[] hooks = fieldsDeclaration.getHooks();
 
 		// handle field modifiers
 		String modifier = fieldsDeclaration.getModifierString();
@@ -3699,9 +3729,20 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 				lastPosition = initialValues[i].getEnd();
 			}
 			isFirst = false;
+
+			if (hooks[i] != null) {
+				handleHooks(lastPosition, hooks[i]);
+				lastPosition = hooks[i].getEnd();
+			}
+
 		}
 		handleSemicolon(lastPosition, fieldsDeclaration.getEnd());
 		return false;
+	}
+
+	private void handleHooks(int lastPosition, PropertyHookList hooks) {
+		throw new RuntimeException("Hooks are not supported jet");
+		// handleCharsWithoutComments(lastPosition, hooks.getEnd());
 	}
 
 	@Override

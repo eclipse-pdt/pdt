@@ -47,7 +47,7 @@ public class ASTMatcherTests {
 	public static TestWatcher watcher = new TestSuiteWatcher();
 
 	public void performMatching(String matchingStr, String notMatchingStr) throws Exception {
-		performMatching(matchingStr, notMatchingStr, PHPVersion.PHP8_3);
+		performMatching(matchingStr, notMatchingStr, PHPVersion.getLatestVersion());
 	}
 
 	public void performMatching(String matchingStr, String notMatchingStr, PHPVersion phpVersion) throws Exception {

@@ -544,7 +544,8 @@ public class ASTMatcher {
 		return (safeEquals(node.getModifier(), o.getModifier()) && safeEquals(node.isVariadic(), o.isVariadic())
 				&& safeSubtreeMatch(node.getParameterType(), o.getParameterType())
 				&& safeSubtreeMatch(node.getParameterName(), o.getParameterName())
-				&& safeSubtreeMatch(node.getDefaultValue(), o.getDefaultValue()));
+				&& safeSubtreeMatch(node.getDefaultValue(), o.getDefaultValue())
+				&& safeSubtreeMatch(node.getHooks(), o.getHooks()));
 	}
 
 	public boolean match(ForStatement node, Object other) {
@@ -805,7 +806,8 @@ public class ASTMatcher {
 		}
 		SingleFieldDeclaration o = (SingleFieldDeclaration) other;
 
-		return (safeSubtreeMatch(node.getName(), o.getName()) && safeSubtreeMatch(node.getValue(), o.getValue()));
+		return (safeSubtreeMatch(node.getName(), o.getName()) && safeSubtreeMatch(node.getValue(), o.getValue())
+				&& safeSubtreeMatch(node.getValue(), o.getValue()));
 	}
 
 	public boolean match(StaticConstantAccess node, Object other) {
@@ -1011,7 +1013,7 @@ public class ASTMatcher {
 
 		return (safeSubtreeMatch(node.getBody(), o.getBody())
 				&& safeSubtreeListMatch(node.getInterfaces(), o.getInterfaces())
-				&& safeSubtreeMatch(node.getSuperClass(), o.getSuperClass()));
+				&& safeSubtreeMatch(node.getSuperClass(), o.getSuperClass())) && node.getModifier() == o.getModifier();
 	}
 
 	public boolean match(TraitUseStatement node, Object other) {
@@ -1154,6 +1156,36 @@ public class ASTMatcher {
 		}
 
 		return true;
+	}
+
+	// php8.4
+	public boolean match(FormalParameterList node, Object other) {
+		if (!(other instanceof FormalParameterList)) {
+			return false;
+		}
+		FormalParameterList o = (FormalParameterList) other;
+
+		return (safeSubtreeListMatch(node.parameters(), o.parameters()) && safeEquals(node.emptyPart(), o.emptyPart()));
+	}
+
+	public boolean match(PropertyHookList node, Object other) {
+		if (!(other instanceof PropertyHookList)) {
+			return false;
+		}
+		PropertyHookList o = (PropertyHookList) other;
+
+		return (safeSubtreeListMatch(node.hooks(), o.hooks()));
+	}
+
+	public boolean match(PropertyHook node, Object other) {
+		if (!(other instanceof PropertyHook)) {
+			return false;
+		}
+		PropertyHook o = (PropertyHook) other;
+
+		return safeSubtreeListMatch(node.attributes(), o.attributes()) && safeSubtreeMatch(node.name(), o.name())
+				&& safeEquals(node.getModifier(), o.getModifier()) && safeEquals(node.isReference(), o.isReference())
+				&& safeSubtreeMatch(node.body(), o.body());
 	}
 
 }

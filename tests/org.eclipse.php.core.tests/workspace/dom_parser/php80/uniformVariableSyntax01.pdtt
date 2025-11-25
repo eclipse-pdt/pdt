@@ -1,0 +1,280 @@
+--TEST--
+Test Uniform Variable Syntax
+--FILE--
+<?php
+$foo()['bar']();
+[$obj1, $obj2][0]->prop;
+getStr()[0];
+ 
+$foo['bar']::$baz;
+$foo::$bar::$baz;
+$foo->bar()::baz();
+
+foo()();
+$foo->bar()();
+Foo::bar()();
+$foo()();
+
+(new DateTime())->call();
+--EXPECT--
+<Program start='0' length='195'>
+	<Statements>
+		<ExpressionStatement start='6' length='16'>
+			<FunctionInvocation start='6' length='15'>
+				<FunctionName start='6' length='13'>
+					<ArrayAccess start='6' length='13' type='array'>
+						<FunctionInvocation start='6' length='6'>
+							<FunctionName start='6' length='4'>
+								<Variable start='6' length='4' isDollared='true'>
+									<Identifier start='7' length='3' name='foo'/>
+								</Variable>
+							</FunctionName>
+							<Parameters>
+							</Parameters>
+						</FunctionInvocation>
+						<Index>
+							<Scalar start='13' length='5' type='string' value='&apos;bar&apos;'/>
+						</Index>
+					</ArrayAccess>
+				</FunctionName>
+				<Parameters>
+				</Parameters>
+			</FunctionInvocation>
+		</ExpressionStatement>
+		<ExpressionStatement start='23' length='24'>
+			<FieldAccess start='23' length='23'>
+				<Dispatcher>
+					<ArrayAccess start='23' length='17' type='array'>
+						<ArrayCreation start='23' length='14'>
+							<ArrayElement start='24' length='5'>
+								<Key>
+								</Key>
+								<Value>
+									<Variable start='24' length='5' isDollared='true'>
+										<Identifier start='25' length='4' name='obj1'/>
+									</Variable>
+								</Value>
+							</ArrayElement>
+							<ArrayElement start='31' length='5'>
+								<Key>
+								</Key>
+								<Value>
+									<Variable start='31' length='5' isDollared='true'>
+										<Identifier start='32' length='4' name='obj2'/>
+									</Variable>
+								</Value>
+							</ArrayElement>
+						</ArrayCreation>
+						<Index>
+							<Scalar start='38' length='1' type='int' value='0'/>
+						</Index>
+					</ArrayAccess>
+				</Dispatcher>
+				<Property>
+					<Variable start='42' length='4' isDollared='false'>
+						<Identifier start='42' length='4' name='prop'/>
+					</Variable>
+				</Property>
+			</FieldAccess>
+		</ExpressionStatement>
+		<ExpressionStatement start='48' length='12'>
+			<ArrayAccess start='48' length='11' type='array'>
+				<FunctionInvocation start='48' length='8'>
+					<FunctionName start='48' length='6'>
+						<NamespaceName start='48' length='6' global='false' current='false'>
+							<Identifier start='48' length='6' name='getStr'/>
+						</NamespaceName>
+					</FunctionName>
+					<Parameters>
+					</Parameters>
+				</FunctionInvocation>
+				<Index>
+					<Scalar start='57' length='1' type='int' value='0'/>
+				</Index>
+			</ArrayAccess>
+		</ExpressionStatement>
+		<ExpressionStatement start='63' length='18'>
+			<StaticFieldAccess start='63' length='17'>
+				<ClassName>
+					<ArrayAccess start='63' length='11' type='array'>
+						<Variable start='63' length='4' isDollared='true'>
+							<Identifier start='64' length='3' name='foo'/>
+						</Variable>
+						<Index>
+							<Scalar start='68' length='5' type='string' value='&apos;bar&apos;'/>
+						</Index>
+					</ArrayAccess>
+				</ClassName>
+				<Variable start='76' length='4' isDollared='true'>
+					<Identifier start='77' length='3' name='baz'/>
+				</Variable>
+			</StaticFieldAccess>
+		</ExpressionStatement>
+		<ExpressionStatement start='82' length='17'>
+			<StaticFieldAccess start='82' length='16'>
+				<ClassName>
+					<StaticFieldAccess start='82' length='10'>
+						<ClassName>
+							<Variable start='82' length='4' isDollared='true'>
+								<Identifier start='83' length='3' name='foo'/>
+							</Variable>
+						</ClassName>
+						<Variable start='88' length='4' isDollared='true'>
+							<Identifier start='89' length='3' name='bar'/>
+						</Variable>
+					</StaticFieldAccess>
+				</ClassName>
+				<Variable start='94' length='4' isDollared='true'>
+					<Identifier start='95' length='3' name='baz'/>
+				</Variable>
+			</StaticFieldAccess>
+		</ExpressionStatement>
+		<ExpressionStatement start='100' length='19'>
+			<StaticMethodInvocation start='100' length='18'>
+				<ClassName>
+					<MethodInvocation start='100' length='11'>
+						<Dispatcher>
+							<Variable start='100' length='4' isDollared='true'>
+								<Identifier start='101' length='3' name='foo'/>
+							</Variable>
+						</Dispatcher>
+						<Property>
+							<FunctionInvocation start='106' length='5'>
+								<FunctionName start='106' length='3'>
+									<Variable start='106' length='3' isDollared='false'>
+										<Identifier start='106' length='3' name='bar'/>
+									</Variable>
+								</FunctionName>
+								<Parameters>
+								</Parameters>
+							</FunctionInvocation>
+						</Property>
+					</MethodInvocation>
+				</ClassName>
+				<FunctionInvocation start='113' length='5'>
+					<FunctionName start='113' length='3'>
+						<Variable start='113' length='3' isDollared='false'>
+							<Identifier start='113' length='3' name='baz'/>
+						</Variable>
+					</FunctionName>
+					<Parameters>
+					</Parameters>
+				</FunctionInvocation>
+			</StaticMethodInvocation>
+		</ExpressionStatement>
+		<ExpressionStatement start='121' length='8'>
+			<FunctionInvocation start='121' length='7'>
+				<FunctionName start='121' length='5'>
+					<FunctionInvocation start='121' length='5'>
+						<FunctionName start='121' length='3'>
+							<NamespaceName start='121' length='3' global='false' current='false'>
+								<Identifier start='121' length='3' name='foo'/>
+							</NamespaceName>
+						</FunctionName>
+						<Parameters>
+						</Parameters>
+					</FunctionInvocation>
+				</FunctionName>
+				<Parameters>
+				</Parameters>
+			</FunctionInvocation>
+		</ExpressionStatement>
+		<ExpressionStatement start='130' length='14'>
+			<FunctionInvocation start='130' length='13'>
+				<FunctionName start='130' length='11'>
+					<MethodInvocation start='130' length='11'>
+						<Dispatcher>
+							<Variable start='130' length='4' isDollared='true'>
+								<Identifier start='131' length='3' name='foo'/>
+							</Variable>
+						</Dispatcher>
+						<Property>
+							<FunctionInvocation start='136' length='5'>
+								<FunctionName start='136' length='3'>
+									<Variable start='136' length='3' isDollared='false'>
+										<Identifier start='136' length='3' name='bar'/>
+									</Variable>
+								</FunctionName>
+								<Parameters>
+								</Parameters>
+							</FunctionInvocation>
+						</Property>
+					</MethodInvocation>
+				</FunctionName>
+				<Parameters>
+				</Parameters>
+			</FunctionInvocation>
+		</ExpressionStatement>
+		<ExpressionStatement start='145' length='13'>
+			<FunctionInvocation start='145' length='12'>
+				<FunctionName start='145' length='10'>
+					<StaticMethodInvocation start='145' length='10'>
+						<ClassName>
+							<NamespaceName start='145' length='3' global='false' current='false'>
+								<Identifier start='145' length='3' name='Foo'/>
+							</NamespaceName>
+						</ClassName>
+						<FunctionInvocation start='150' length='5'>
+							<FunctionName start='150' length='3'>
+								<Variable start='150' length='3' isDollared='false'>
+									<Identifier start='150' length='3' name='bar'/>
+								</Variable>
+							</FunctionName>
+							<Parameters>
+							</Parameters>
+						</FunctionInvocation>
+					</StaticMethodInvocation>
+				</FunctionName>
+				<Parameters>
+				</Parameters>
+			</FunctionInvocation>
+		</ExpressionStatement>
+		<ExpressionStatement start='159' length='9'>
+			<FunctionInvocation start='159' length='8'>
+				<FunctionName start='159' length='6'>
+					<FunctionInvocation start='159' length='6'>
+						<FunctionName start='159' length='4'>
+							<Variable start='159' length='4' isDollared='true'>
+								<Identifier start='160' length='3' name='foo'/>
+							</Variable>
+						</FunctionName>
+						<Parameters>
+						</Parameters>
+					</FunctionInvocation>
+				</FunctionName>
+				<Parameters>
+				</Parameters>
+			</FunctionInvocation>
+		</ExpressionStatement>
+		<ExpressionStatement start='170' length='25'>
+			<MethodInvocation start='170' length='24'>
+				<Dispatcher>
+					<ParenthesisExpression start='170' length='16'>
+						<ClassInstanceCreation start='171' length='14'>
+							<ClassName start='175' length='8'>
+								<NamespaceName start='175' length='8' global='false' current='false'>
+									<Identifier start='175' length='8' name='DateTime'/>
+								</NamespaceName>
+							</ClassName>
+							<ConstructorParameters>
+							</ConstructorParameters>
+						</ClassInstanceCreation>
+					</ParenthesisExpression>
+				</Dispatcher>
+				<Property>
+					<FunctionInvocation start='188' length='6'>
+						<FunctionName start='188' length='4'>
+							<Variable start='188' length='4' isDollared='false'>
+								<Identifier start='188' length='4' name='call'/>
+							</Variable>
+						</FunctionName>
+						<Parameters>
+						</Parameters>
+					</FunctionInvocation>
+				</Property>
+			</MethodInvocation>
+		</ExpressionStatement>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

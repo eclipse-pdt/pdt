@@ -28,7 +28,8 @@ public class PHPFlags extends Flags implements IPHPModifiers {
 	 *         included
 	 */
 	public static boolean isDefault(int flags) {
-		return !isPrivate(flags) && !isProtected(flags) && !isPublic(flags);
+		return !isPrivate(flags) && !isProtected(flags) && !isPublic(flags) && !isPrivateSet(flags)
+				&& !isProtectedSet(flags) && !isPublicSet(flags);
 	}
 
 	/**
@@ -55,10 +56,6 @@ public class PHPFlags extends Flags implements IPHPModifiers {
 	 */
 	public static boolean isTrait(int flags) {
 		return (flags & AccTrait) != 0;
-	}
-
-	public static boolean isMagicProperty(int flags) {
-		return (flags & AccMagicProperty) != 0;
 	}
 
 	/**
@@ -111,6 +108,15 @@ public class PHPFlags extends Flags implements IPHPModifiers {
 		}
 		if ((mod & AccReadonly) != 0) {
 			sb.append("readonly "); //$NON-NLS-1$
+		}
+		if ((mod & AccProtectedSet) != 0) {
+			sb.append("protected(set) "); //$NON-NLS-1$
+		}
+		if ((mod & AccPrivateSet) != 0) {
+			sb.append("private(set) "); //$NON-NLS-1$
+		}
+		if ((mod & AccPublicSet) != 0) {
+			sb.append("public(set) "); //$NON-NLS-1$
 		}
 
 		int len;
@@ -176,4 +182,17 @@ public class PHPFlags extends Flags implements IPHPModifiers {
 	public static boolean isEnumCase(int flags) {
 		return (flags & AccEnumCase) != 0;
 	}
+
+	public static boolean isPrivateSet(int flags) {
+		return (flags & AccPrivateSet) != 0;
+	}
+
+	public static boolean isProtectedSet(int flags) {
+		return (flags & AccProtectedSet) != 0;
+	}
+
+	public static boolean isPublicSet(int flags) {
+		return (flags & AccPublicSet) != 0;
+	}
+
 }

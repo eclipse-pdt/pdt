@@ -33,6 +33,7 @@ public class Messages extends NLS {
 	public static String AbstractASTParser_FinalPropertyError;
 	public static String AbstractASTParser_MultipleAbstractModifierError;
 	public static String AbstractASTParser_MultipleAccessModifiersError;
+	public static String AbstractASTParser_MultipleAccessSetModifiersError;
 	public static String AbstractASTParser_MultipleFinalModifierError;
 	public static String AbstractASTParser_MultipleStaticModifiersError;
 

@@ -1,0 +1,15 @@
+--TEST--
+Static closures, only second expression is invalid
+--FILE--
+<?php
+class Attr {}
+
+
+#[Attr(static function ($req):bool  { $req->doSomething(); } )]
+#[Attr(function ($req):bool  { $req->doSomething(); } )]
+class Service 
+{
+}
+?>
+--EXPECT--
+[line=6, start=93, end=139] Constant expression contains invalid operations
