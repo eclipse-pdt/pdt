@@ -32,7 +32,7 @@
    </license>
 
    <url>
-      <discovery label="Eclipse PDT Website" url="http://eclipse.org/pdt/"/>
+      <discovery label="Eclipse PDT Website" url="https://eclipse.dev/pdt/"/>
    </url>
 
    <requires>

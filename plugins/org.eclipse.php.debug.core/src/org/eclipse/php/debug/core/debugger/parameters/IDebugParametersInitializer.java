@@ -30,7 +30,7 @@ public interface IDebugParametersInitializer {
 	 * 
 	 * @param launch
 	 *            The {@link ILaunch}
-	 * @return The request url (e.g. http://www.eclipse.org/pdt/main.php).
+	 * @return The request url (e.g. https://eclipse.dev/pdt/main.php).
 	 */
 	public URL getRequestURL(ILaunch launch);
 

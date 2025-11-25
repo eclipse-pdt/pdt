@@ -41,7 +41,7 @@
 		<p2.mirrorsURL>https://www.eclipse.org/downloads/download.php?format=xml&amp;file=${p2.mirrorsPrefix}</p2.mirrorsURL>
 		<p2.statsTrackedArtifacts>org.eclipse.php,org.eclipse.php.mylyn,org.eclipse.php.composer</p2.statsTrackedArtifacts>
 	</properties>
-	<url>https://eclipse.org/pdt</url>
+	<url>https://eclipse.dev/pdt</url>
 	<ciManagement>
 		<system>GitHub actions</system>
 		<url>https://github.com/eclipse/pdt/actions</url>

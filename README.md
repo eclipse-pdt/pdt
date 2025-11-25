@@ -1,24 +1,24 @@
 <p align="center">
-<a href="https://www.eclipse.org/pdt/"><img src="https://projects.eclipse.org/sites/default/files/phplogo.png" alt="Eclipse PDT" align="middle" width="175" height="164" /></a>
+<a href="https://eclipse.dev/pdt/"><img src="https://projects.eclipse.org/sites/default/files/phplogo.png" alt="Eclipse PDT" align="middle" width="175" height="164" /></a>
 <p>
 
 # Welcome to PHP Development Tools
 
 ![master](https://github.com/eclipse/pdt/workflows/Tycho%20build/badge.svg)
-[![Sonarcloud Status](https://sonarcloud.io/api/project_badges/measure?project=eclipse-tools.pdt.main&metric=alert_status)](https://sonarcloud.io/dashboard?id=eclipse-tools.pdt.main)
+
 [![License](https://img.shields.io/badge/License-EPL%202.0-green.svg)](https://opensource.org/licenses/EPL-2.0)
 <a href="https://marketplace.eclipse.org/marketplace-client-intro?mpc_install=1944539" class="drag" title="Drag to your running Eclipse* workspace. *Requires Eclipse Marketplace Client"><img typeof="foaf:Image" class="img-responsive" src="https://marketplace.eclipse.org/sites/all/themes/solstice/public/images/marketplace/btn-install.png" align="right" height="26" alt="Drag to your running Eclipse* workspace. *Requires Eclipse Marketplace Client" /></a>
 
 
-The [Eclipse PHP Development Tools](https://www.eclipse.org/pdt/) project delivers a PHP Integrated Development Environment
+The [Eclipse PHP Development Tools](https://eclipse.dev/pdt/) project delivers a PHP Integrated Development Environment
 framework for the Eclipse platform. This project encompasses the development
 components necessary to develop PHP-based Web Applications and facilitates
 extensibility. It leverages the existing Web Tools Project in providing
 developers with PHP capabilities.
 
 <p align="center">
-<img src="https://www.eclipse.org/pdt/img/shot1-min.png" alt="PHP Editor" width="450" />
-<img src="https://www.eclipse.org/pdt/img/shot5-min.png" alt="PHP Dark Editor" width="450" />
+<img src="https://eclipse.dev/pdt/img/shot1-min.png" alt="PHP Editor" width="450" />
+<img src="https://eclipse.dev/pdt/img/shot5-min.png" alt="PHP Dark Editor" width="450" />
 </p>
 
 ## Developer resources
