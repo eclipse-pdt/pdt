@@ -1,0 +1,45 @@
+--TEST--
+Test clone with
+--FILE--
+<?php 
+clone($obj, [
+    'alpha' => $alpha,
+]);
+--EXPECT--
+<Program start='0' length='47'>
+	<Statements>
+		<ExpressionStatement start='7' length='40'>
+			<FunctionInvocation start='7' length='39'>
+				<FunctionName start='7' length='5'>
+					<Identifier start='7' length='5' name='clone'/>
+				</FunctionName>
+				<Parameters>
+					<Variable start='13' length='4' isDollared='true'>
+						<Identifier start='14' length='3' name='obj'/>
+					</Variable>
+					<ArrayCreation start='19' length='26'>
+						<ArrayElement start='25' length='17'>
+							<Key>
+								<Scalar start='25' length='7' type='string' value='&apos;alpha&apos;'/>
+							</Key>
+							<Value>
+								<Variable start='36' length='6' isDollared='true'>
+									<Identifier start='37' length='5' name='alpha'/>
+								</Variable>
+							</Value>
+						</ArrayElement>
+						<ArrayElement start='43' length='0'>
+							<Key>
+							</Key>
+							<Value>
+								<EmptyExpression start='43' length='0'/>
+							</Value>
+						</ArrayElement>
+					</ArrayCreation>
+				</Parameters>
+			</FunctionInvocation>
+		</ExpressionStatement>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

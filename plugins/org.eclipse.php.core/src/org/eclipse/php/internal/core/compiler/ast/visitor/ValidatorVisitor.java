@@ -1292,6 +1292,13 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 			}
 		} else if (astNode instanceof NamedExpression) {
 			validateConstantExpression(((NamedExpression) astNode).getVariable(), modifier);
+		} else if (astNode instanceof LambdaFunctionDeclaration) {
+			LambdaFunctionDeclaration lambda = (LambdaFunctionDeclaration) astNode;
+			if (!version.isGreaterThan(PHPVersion.PHP8_4) || !lambda.isStatic()) {
+				reportProblem(astNode, Messages.InvalidConstantExpression,
+						PHPProblemIdentifier.InvalidConstantExpression, ProblemSeverities.Error);
+			}
+		} else if (astNode instanceof PHPCallArgumentsList) {
 		} else {
 			reportProblem(astNode, Messages.InvalidConstantExpression, PHPProblemIdentifier.InvalidConstantExpression,
 					ProblemSeverities.Error);

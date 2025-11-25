@@ -248,6 +248,7 @@ terminal String T_ONUMBER;
 //php 8.4
 terminal CompilerAstLexer.PHPDocBlockSymbolPair T_PROPERTY_C;
 
+
 /* Non terminals */
 
 non terminal ModuleDeclaration thestart;
@@ -463,6 +464,11 @@ non terminal CompilerAstParser.ModifierDocPair anonymous_class_modifiers;
 non terminal PHPCallArgumentsList argument_list;
 
 non terminal ClassInstanceCreation new_non_dereferenceable;
+
+//php 8.5
+non terminal PHPCallArgumentsList non_empty_clone_argument_list;
+non terminal PHPCallArgumentsList clone_argument_list;
+non terminal Expression argument_no_expr;
 
 
 precedence left T_THROW;
@@ -2520,6 +2526,86 @@ argument:argument
 :}
 ;
 
+clone_argument_list ::=
+T_OPEN_PARENTHESE:start T_CLOSE_PARENTHESE:end
+{:
+    PHPCallArgumentsList paramsList = new PHPCallArgumentsList();
+    paramsList.setStart(startright);
+    paramsList.setEnd(endleft);
+    
+    RESULT = paramsList;
+:}
+
+| T_OPEN_PARENTHESE:start non_empty_clone_argument_list:paramsList possible_comma T_CLOSE_PARENTHESE:end
+{:
+    paramsList.setStart(startright);
+    paramsList.setEnd(endleft);
+    RESULT = paramsList;
+:}
+
+| T_OPEN_PARENTHESE:start expr:expr T_COMMA T_CLOSE_PARENTHESE:end
+{:
+    PHPCallArgumentsList paramsList = new PHPCallArgumentsList();
+    paramsList.setStart(startright);
+    paramsList.setEnd(endleft);
+    paramsList.addNode(expr);
+    RESULT = paramsList;
+:}
+
+| T_OPEN_PARENTHESE:start T_ELLIPSIS T_CLOSE_PARENTHESE:end
+{:
+    PHPAsCallableArgumentsList paramsList = new PHPAsCallableArgumentsList();
+    paramsList.setStart(startright);
+    paramsList.setEnd(endleft);
+    RESULT = paramsList;
+:}
+;
+
+non_empty_clone_argument_list ::=
+expr:expr T_COMMA argument:argument
+{:
+	PHPCallArgumentsList paramsList = new PHPCallArgumentsList(exprleft, argumentright);
+	paramsList.addNode(expr);
+	paramsList.addNode(argument);
+	RESULT = paramsList;
+:}
+
+| argument_no_expr:expr
+{:
+	PHPCallArgumentsList paramsList = new PHPCallArgumentsList(exprleft, exprright);
+	paramsList.addNode(expr);
+	RESULT = paramsList;
+:}
+
+| non_empty_clone_argument_list:paramsList T_COMMA argument:var
+{:
+	paramsList.addNode(var);
+	if (paramsList.getChilds().size() > 1) {
+		ASTNode previousNode = paramsList.getChilds().get((paramsList.getChilds().size() - 2));
+		if (!(var instanceof PrefixExpression) && previousNode instanceof PrefixExpression) {
+			PrefixExpression pExpression = (PrefixExpression) previousNode;
+			if (pExpression.getOperatorType() == PrefixExpression.OP_UNPACK) {
+				parser.reportError(new ASTError(var.start(), var.end()), "Cannot use positional argument after argument unpacking");
+			}
+		}
+	}
+	paramsList.setEnd(varright);
+	RESULT = paramsList;
+:}
+;
+
+argument_no_expr ::=
+identifier:ident T_NEKUDOTAIM expr:expr
+{:
+	RESULT = new NamedExpression(identleft, exprright, ident, expr);
+:}
+
+| T_ELLIPSIS:ell expr:expr
+{:
+	RESULT = new PrefixExpression(ellleft, exprright, expr, PrefixExpression.OP_UNPACK);
+:}
+;
+
 argument ::=
 expr:expr
 {:
@@ -3615,6 +3701,13 @@ T_LIST:start T_OPEN_PARENTHESE array_pair_list:list T_CLOSE_PARENTHESE:end T_EQU
 | variable:var T_EQUAL reference:reftoken variable:refvar
 {:
 	RESULT = new Assignment(varleft, refvarright, var, Assignment.OP_REF_EQUAL, refvar);
+:}
+
+| T_CLONE:start clone_argument_list:list
+{:
+	SimpleReference functionName = new SimpleReference(startleft, startright, start);
+	PHPCallExpression result = new PHPCallExpression(startleft, listright, null, functionName, list);
+	RESULT = result;
 :}
 
 | T_CLONE:start expr:expr

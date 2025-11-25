@@ -458,6 +458,11 @@ non terminal List argument_list;
 
 non terminal ClassInstanceCreation new_non_dereferenceable;
 
+//php 8.5
+non terminal List non_empty_clone_argument_list;
+non terminal List clone_argument_list;
+non terminal Expression argument_no_expr;
+
 
 precedence left PREC_ARROW_FUNCTION;
 precedence left T_THROW;
@@ -2224,6 +2229,72 @@ argument:argument
 :}
 ;
 
+clone_argument_list ::=
+T_OPEN_PARENTHESE:start T_CLOSE_PARENTHESE:end
+{:
+    RESULT = new LinkedList();
+:}
+
+| T_OPEN_PARENTHESE:start non_empty_clone_argument_list:paramsList possible_comma:comma T_CLOSE_PARENTHESE:end
+{:
+    if (comma != null) {
+		paramsList.add(new EmptyExpression(commaright, parser.ast));
+	}
+	RESULT = paramsList;
+:}
+
+| T_OPEN_PARENTHESE:start expr:expr T_COMMA:comma T_CLOSE_PARENTHESE:end
+{:
+    List paramsList = new LinkedList();
+    paramsList.add(expr);
+    paramsList.add(new EmptyExpression(commaright, parser.ast));
+    
+    RESULT = paramsList;
+:}
+
+| T_OPEN_PARENTHESE:start T_ELLIPSIS:e T_CLOSE_PARENTHESE:end
+{:
+    LinkedList nodes = new LinkedList();
+	nodes.add(new AsCallableExpression(eleft, parser.ast));
+	RESULT = nodes;
+:}
+;
+
+non_empty_clone_argument_list ::=
+expr:expr T_COMMA argument:argument
+{:
+	LinkedList nodes = new LinkedList();
+	nodes.add(expr);
+	nodes.add(argument);
+	RESULT = nodes;
+:}
+
+| argument_no_expr:expr
+{:
+	LinkedList nodes = new LinkedList();
+	nodes.add(expr);
+	RESULT = nodes;
+:}
+
+| non_empty_clone_argument_list:paramsList T_COMMA argument:var
+{:
+	paramsList.add(var);
+	RESULT = paramsList;
+:}
+;
+
+argument_no_expr ::=
+identifier:ident T_NEKUDOTAIM expr:expr
+{:
+	RESULT = new NamedExpression(identleft, exprright, parser.ast, ident, expr);
+:}
+
+| T_ELLIPSIS:ell expr:expr
+{:
+	RESULT = new PrefixExpression(ellleft, exprright, parser.ast, expr, PrefixExpression.OP_UNPACK);
+:}
+;
+
 argument ::=
 expr:expr
 {:
@@ -3157,6 +3228,13 @@ T_LIST:s T_OPEN_PARENTHESE array_pair_list:varList T_CLOSE_PARENTHESE:close T_EQ
 | variable:var T_EQUAL reference:reftoken variable:refvar
 {:
 	RESULT = new Assignment(varleft, refvarright, parser.ast, var, Assignment.OP_EQUAL, new Reference(reftokenleft, refvarright, parser.ast, refvar));
+:}
+
+| T_CLONE:s clone_argument_list:list
+{:
+	RESULT = new FunctionInvocation(sleft, listright, parser.ast,
+		new FunctionName(sleft, sright, parser.ast,
+			new Identifier(sleft, sright, parser.ast, s)), list);
 :}
 
 | T_CLONE:s expr:expr
