@@ -910,31 +910,14 @@ class ZendPHPUnitErrorHandlerTracer extends ZendPHPUnitErrorHandler
         return self::$ZendPHPUnitErrorHandlerTracer;
     }
 
-    public static $errorCodes = array(
-        E_ERROR => 'Error',
-        E_WARNING => 'Warning',
-        E_PARSE => 'Parsing Error',
-        E_NOTICE => 'Notice',
-        E_CORE_ERROR => 'Core Error',
-        E_CORE_WARNING => 'Core Warning',
-        E_COMPILE_ERROR => 'Compile Error',
-        E_COMPILE_WARNING => 'Compile Warning',
-        E_USER_ERROR => 'User Error',
-        E_USER_WARNING => 'User Warning',
-        E_USER_NOTICE => 'User Notice',
-        E_STRICT => 'Runtime Notice',
-        E_RECOVERABLE_ERROR => 'Recoverable Error',
-        E_DEPRECATED => 'Deprecated',
-        E_USER_DEPRECATED => 'User Deprecated'
-    );
-
     protected $warnings;
 
     public function handle($errno, $errstr, $errfile, $errline)
     {
         parent::handle($errno, $errstr, $errfile, $errline);
+		$errorCodes = self::getErrorCodes();
         $warning = array(
-            'code' => isset(self::$errorCodes[$errno]) ? self::$errorCodes[$errno] : $errno,
+            'code' => isset($errorCodes[$errno]) ? $errorCodes[$errno] : $errno,
             'message' => $errstr,
             'file' => $errfile,
             'line' => $errline,
@@ -964,6 +947,34 @@ class ZendPHPUnitErrorHandlerTracer extends ZendPHPUnitErrorHandler
         $this->warnings = array();
         return $return;
     }
+
+	public static function getErrorCodes()
+	{
+		static $result;
+		if ($result === null) {
+			$result = array(
+			    E_ERROR => 'Error',
+			    E_WARNING => 'Warning',
+			    E_PARSE => 'Parsing Error',
+			    E_NOTICE => 'Notice',
+			    E_CORE_ERROR => 'Core Error',
+			    E_CORE_WARNING => 'Core Warning',
+			    E_COMPILE_ERROR => 'Compile Error',
+			    E_COMPILE_WARNING => 'Compile Warning',
+			    E_USER_ERROR => 'User Error',
+			    E_USER_WARNING => 'User Warning',
+			    E_USER_NOTICE => 'User Notice',
+			    E_RECOVERABLE_ERROR => 'Recoverable Error',
+			    E_DEPRECATED => 'Deprecated',
+			    E_USER_DEPRECATED => 'User Deprecated'
+			);
+			// E_STRICT is deprecated since PHP 8.4
+			if (!defined('PHP_VERSION_ID') || PHP_VERSION_ID < 80400) {
+				$result[E_STRICT] = 'Runtime Notice';
+			}
+		}
+		return $result;
+	}
 }
 
 class ZendPHPUnitErrorHandler
@@ -1001,7 +1012,7 @@ class ZendPHPUnitErrorHandler
         // handle errors same as PHPUnit_Util_ErrorHandler
         if ($errfile === __FILE__ || (stripos($errfile, dirname(dirname(__FILE__))) === 0 && $errno !== E_USER_NOTICE)) {
             return true;
-        } elseif ($errno === E_NOTICE || $errno === E_USER_NOTICE || $errno === E_STRICT) {
+        } elseif ($errno === E_NOTICE || $errno === E_USER_NOTICE || ((!defined('PHP_VERSION_ID') || PHP_VERSION_ID < 80400) && $errno === E_STRICT)) {
             if (! $this->convertNotices) {
                 return false;
             }
