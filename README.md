@@ -1,6 +1,4 @@
-<p align="center">
-<a href="https://eclipse.dev/pdt/"><img src="https://projects.eclipse.org/sites/default/files/phplogo.png" alt="Eclipse PDT" align="middle" width="175" height="164" /></a>
-<p>
+<p align="center"><a href="https://eclipse.dev/pdt/"><img src="https://projects.eclipse.org/sites/default/files/phplogo.png" alt="Eclipse PDT" align="middle" width="175" height="164" /></a><p>
 
 # Welcome to PHP Development Tools
 
