@@ -3,12 +3,16 @@
 name: License vetting status check
 
 on:
-  push:
-    branches: 
-      - 'master'
-  pull_request:
-    branches: 
-     - 'master'
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: "PR #"
+        type: number
+        required: false
+      branch:
+        description: "branch"
+        type: string
+        required: false
   issue_comment:
     types: [created]
     
@@ -16,6 +20,12 @@ jobs:
   call-mvn-license-check:
     uses: eclipse-dash/dash-licenses/.github/workflows/mavenLicenseCheck.yml@master
     with:
+      ref: >
+        ${{
+          inputs.pr_number && format('refs/pull/{0}/head', inputs.pr_number) ||
+          inputs.branch ||
+          github.ref
+        }}
       projectId: tools.pdt
       javaVersion: 21
     secrets:
