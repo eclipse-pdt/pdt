@@ -3,44 +3,19 @@
 name: License vetting status check
 
 on:
-  workflow_dispatch:
-    inputs:
-      pr_number:
-        description: "PR #"
-        type: number
-        required: false
-      branch:
-        description: "branch"
-        type: string
-        required: false
+  push:
+    branches: 
+      - 'master'
+  pull_request:
+    branches: 
+     - 'master'
   issue_comment:
     types: [created]
     
 jobs:
-  set_ref:
-    runs-on: ubuntu-latest
-    outputs: 
-      ref: ${{ steps.set_ref.outputs.ref }}
-    steps:
-      - name: Determine ref
-        id: set_ref
-        run: |
-          if [ -n "${{ github.event.inputs.pr_number }}" ]; then
-            REF="refs/pull/${{ github.event.inputs.pr_number }}/head"
-            echo "Using PR #${{ github.event.inputs.pr_number }} as ref"
-          elif [ -n "${{ github.event.inputs.branch }}" ]; then
-            REF="${{ github.event.inputs.branch }}"
-            echo "Using branch $REF as ref"
-          else
-            REF="master"
-            echo "No PR or branch provided, using master"
-          fi
-          echo "::set-output name=ref::$REF"
   call-mvn-license-check:
-    needs: set_ref
     uses: eclipse-dash/dash-licenses/.github/workflows/mavenLicenseCheck.yml@master
     with:
-      ref: needs.set_ref.outputs.ref
       projectId: tools.pdt
       javaVersion: 21
     secrets:
