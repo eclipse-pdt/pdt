@@ -61,7 +61,7 @@ public class FormalParameterList extends Statement {
 		super(ast);
 	}
 
-	public FormalParameterList(int start, int end, AST ast, List<FormalParameter> attributes, EmptyExpression empty) {
+	public FormalParameterList(int start, int end, AST ast, List<FormalParameter> parameters, EmptyExpression empty) {
 		super(start, end, ast);
 
 		for (FormalParameter a : parameters) {

@@ -1,0 +1,33 @@
+--TEST--
+PHP 8.4
+--FILE--
+<?php
+class Example
+{
+    public function __construct(
+        public Type $bar {
+    set (string|Type $value) {
+        if (is_string($value)) {
+                    $value =
+                     new Type($value);
+                }
+$this->bar = $value;
+    }
+},
+) {
+}
+}
+
+--EXPECT--
+<?php
+class Example {
+	public function __construct(public Type $bar {
+		set(string|Type $value) {
+			if (is_string ( $value )) {
+				$value = new Type ( $value );
+			}
+			$this->bar = $value;
+		}
+	}) {
+	}
+}
