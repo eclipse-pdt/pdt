@@ -1,0 +1,29 @@
+--TEST--
+PHP 8.4
+--FILE--
+<?php
+class Foo
+{
+    public string $foo = 'd' {
+get => $this->foo . ' - ex';
+set(string $value
+) {
+   
+   
+   
+   
+    $this->foo = $value . 'ping';
+        }
+}
+}
+
+--EXPECT--
+<?php
+class Foo {
+	public string $foo = 'd' {
+		get => $this->foo . ' - ex';
+		set(string $value) {
+			$this->foo = $value . 'ping';
+		}
+	}
+}

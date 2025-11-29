@@ -2155,7 +2155,7 @@ optional_cpp_modifiers:modifier optional_type_without_static:type is_reference:r
 	if (ref) {
 		v= new Reference (refleft, varright, parser.ast, (VariableBase)v);
 	}
-	RESULT = new FormalParameter(s, varright, parser.ast, type, v, null, e, modifier, hooks);
+	RESULT = new FormalParameter(s, hooks == null ? varright : hooksright, parser.ast, type, v, null, e, modifier, hooks);
 	
 :}
 
@@ -2176,7 +2176,7 @@ optional_cpp_modifiers:modifier optional_type_without_static:type is_reference:r
 	if (ref) {
 		v= new Reference (refleft, varright, parser.ast, (VariableBase)v);
 	}
-	RESULT = new FormalParameter(s, exprright, parser.ast, type, v, expr, false, modifier, hooks);
+	RESULT = new FormalParameter(s, hooks == null ? exprright : hooksright, parser.ast, type, v, expr, false, modifier, hooks);
 :}
 ;
 

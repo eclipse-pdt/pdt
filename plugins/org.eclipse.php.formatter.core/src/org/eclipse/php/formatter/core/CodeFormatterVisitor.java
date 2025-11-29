@@ -3699,6 +3699,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		handleChars(lastPosition, variableNames[0].getStart());
 		lastPosition = variableNames[0].getStart();
 
+		boolean hasHooks = false;
 		for (int i = 0; i < variableNames.length; i++) {
 			// handle comma between variables
 			if (!isFirst) {
@@ -3733,16 +3734,123 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			if (hooks[i] != null) {
 				handleHooks(lastPosition, hooks[i]);
 				lastPosition = hooks[i].getEnd();
+				hasHooks = true;
 			}
 
 		}
-		handleSemicolon(lastPosition, fieldsDeclaration.getEnd());
+		if (!hasHooks) {
+			handleSemicolon(lastPosition, fieldsDeclaration.getEnd());
+		}
 		return false;
 	}
 
 	private void handleHooks(int lastPosition, PropertyHookList hooks) {
-		throw new RuntimeException("Hooks are not supported jet");
-		// handleCharsWithoutComments(lastPosition, hooks.getEnd());
+		insertSpace();
+		handleChars(lastPosition, hooks.getStart());
+		hooks.accept(this);
+	}
+
+	@Override
+	public boolean visit(PropertyHookList hookList) {
+		int lastPosition = hookList.getStart();
+		boolean isIndentationAdded = handleBlockOpenBrace(this.preferences.brace_position_for_block,
+				this.preferences.insert_space_before_opening_brace_in_block);
+		appendToBuffer(OPEN_CURLY);
+		if (this.preferences.indent_statements_within_type_declaration) {
+			indentationLevel++;
+		}
+		insertNewLine();
+		for (PropertyHook hook : hookList.hooks()) {
+			handleChars(lastPosition, hook.getStart());
+			indent();
+			hook.accept(this);
+			lastPosition = hook.getEnd();
+		}
+
+		if (isIndentationAdded) {
+			indentationLevel--;
+			indentationLevelDescending = true;
+		}
+		if (this.preferences.indent_statements_within_type_declaration) {
+			indentationLevel--;
+		}
+		handleChars(lastPosition, hookList.getEnd());
+		indent();
+		appendToBuffer(CLOSE_CURLY);
+
+		return false;
+	}
+
+	@Override
+	public boolean visit(PropertyHook hook) {
+		handleChars(hook.getStart(), hook.name().getStart());
+		hook.name().accept(this);
+		int lastPosition = hook.name().getEnd();
+		if (hook.parameters() != null) {
+			if (this.preferences.insert_space_before_opening_paren_in_function_declaration) {
+				insertSpace();
+			}
+			appendToBuffer(OPEN_PARN);
+			handleChars(lastPosition, hook.parameters().getStart());
+			lastPosition = hook.parameters().getStart();
+			if (hook.parameters().parameters().size() > 0) {
+				if (this.preferences.insert_space_after_opening_paren_in_function_declaration) {
+					insertSpace();
+				}
+				int indentationGap = calculateIndentGap(
+						this.preferences.line_wrap_parameters_in_method_declaration_indent_policy,
+						this.preferences.line_wrap_wrapped_lines_indentation);
+
+				List<FormalParameter> parameterList = hook.parameters().parameters();
+				FormalParameter[] parameters = new FormalParameter[parameterList.size()];
+				parameters = parameterList.toArray(parameters);
+
+				lastPosition = handleCommaList(parameters, lastPosition,
+						this.preferences.line_keep_trailing_comma_in_list,
+						this.preferences.insert_space_before_comma_in_function_declaration,
+						this.preferences.insert_space_after_comma_in_function_declaration,
+						this.preferences.line_wrap_parameters_in_method_declaration_line_wrap_policy, indentationGap,
+						this.preferences.line_wrap_parameters_in_method_declaration_force_split);
+
+				if (this.preferences.insert_space_before_closing_paren_in_function_declaration) {
+					insertSpace();
+				}
+			} else {
+				if (this.preferences.insert_space_between_empty_paren_in_function_declaration) {
+					insertSpace();
+				}
+			}
+			appendToBuffer(CLOSE_PARN);
+			handleChars(lastPosition, hook.parameters().getEnd());
+			lastPosition = hook.parameters().getEnd();
+		}
+
+		if (hook.body() instanceof Block) {
+			boolean isIndentationAdded = handleBlockOpenBrace(this.preferences.brace_position_for_block,
+					this.preferences.insert_space_before_opening_brace_in_block);
+			handleChars(lastPosition, hook.body().getStart());
+
+			hook.body().accept(this);
+			if (isIndentationAdded) {
+				indentationLevel--;
+				indentationLevelDescending = true;
+			}
+		} else {
+			if (this.preferences.insert_space_before_arrow_in_array) {
+				insertSpace();
+			}
+			appendToBuffer(KEY_VALUE_OPERATOR);
+			if (this.preferences.insert_space_after_arrow_in_array) {
+				insertSpace();
+			}
+			handleChars(lastPosition, hook.body().getStart());
+			hook.body().accept(this);
+			handleSemicolon(hook.body().getEnd(), hook.getEnd());
+		}
+
+		insertNewLines(1);
+
+		return false;
 	}
 
 	@Override
@@ -3813,6 +3921,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		handleChars(lastPosition, formalParameter.getParameterName().getStart());
 
 		formalParameter.getParameterName().accept(this);
+		lastPosition = formalParameter.getParameterName().getEnd();
 		if (formalParameter.hasDefaultValue()) {
 			if (this.preferences.insert_space_before_assignment) {
 				insertSpace();
@@ -3825,6 +3934,10 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			// handle the chars between the variable to the value
 			handleChars(formalParameter.getParameterName().getEnd(), formalParameter.getDefaultValue().getStart());
 			formalParameter.getDefaultValue().accept(this);
+			lastPosition = formalParameter.getDefaultValue().getEnd();
+		}
+		if (formalParameter.getHooks() != null) {
+			handleHooks(lastPosition, formalParameter.getHooks());
 		}
 		return false;
 	}
