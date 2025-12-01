@@ -135,6 +135,12 @@ public class PHPFacets {
 				if (PHPFacetsConstants.PHP_COMPONENT_VERSION_8_3.equals(version.getVersionString())) {
 					return PHPVersion.PHP8_3;
 				}
+				if (PHPFacetsConstants.PHP_COMPONENT_VERSION_8_4.equals(version.getVersionString())) {
+					return PHPVersion.PHP8_4;
+				}
+				if (PHPFacetsConstants.PHP_COMPONENT_VERSION_8_5.equals(version.getVersionString())) {
+					return PHPVersion.PHP8_5;
+				}
 			}
 		} catch (CoreException ex) {
 			// silently ignore
@@ -180,8 +186,12 @@ public class PHPFacets {
 		case PHP8_2:
 			return phpFacet.getVersion(PHPFacetsConstants.PHP_COMPONENT_VERSION_8_2);
 		case PHP8_3:
-		default:
 			return phpFacet.getVersion(PHPFacetsConstants.PHP_COMPONENT_VERSION_8_3);
+		case PHP8_4:
+			return phpFacet.getVersion(PHPFacetsConstants.PHP_COMPONENT_VERSION_8_4);
+		case PHP8_5:
+		default:
+			return phpFacet.getVersion(PHPFacetsConstants.PHP_COMPONENT_VERSION_8_5);
 		}
 	}
 

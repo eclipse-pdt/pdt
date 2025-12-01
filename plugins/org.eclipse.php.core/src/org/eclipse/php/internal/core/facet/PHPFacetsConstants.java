@@ -32,4 +32,6 @@ public class PHPFacetsConstants {
 	public static final String PHP_COMPONENT_VERSION_8_1 = "8.1"; //$NON-NLS-1$
 	public static final String PHP_COMPONENT_VERSION_8_2 = "8.2"; //$NON-NLS-1$
 	public static final String PHP_COMPONENT_VERSION_8_3 = "8.3"; //$NON-NLS-1$
+	public static final String PHP_COMPONENT_VERSION_8_4 = "8.4"; //$NON-NLS-1$
+	public static final String PHP_COMPONENT_VERSION_8_5 = "8.5"; //$NON-NLS-1$
 }
