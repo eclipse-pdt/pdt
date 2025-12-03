@@ -11,7 +11,7 @@
 
 	<!-- this is the parent POM from which all modules inherit common settings -->
 	<properties>
-		<tycho-version>5.0.0</tycho-version>
+		<tycho-version>5.0.1</tycho-version>
 		<antrun-version>3.2.0</antrun-version>
 		<maven.test.failure.ignore>true</maven.test.failure.ignore>
 		<test.vmargs>-server -Declipse.consoleLog=true</test.vmargs>
