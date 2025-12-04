@@ -16,9 +16,6 @@ package org.eclipse.php.internal.ui.editor;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
 import org.eclipse.dltk.internal.ui.editor.SourceModuleDocumentProvider.SourceModuleAnnotationModel;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.Position;
@@ -31,8 +28,6 @@ import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.texteditor.MarkerAnnotation;
 import org.eclipse.ui.texteditor.MarkerUtilities;
-import org.eclipse.wst.sse.ui.internal.provisional.extensions.breakpoint.IBreakpointConstants;
-import org.eclipse.wst.sse.ui.internal.reconcile.TemporaryAnnotation;
 
 /**
  * Overrides class
@@ -60,7 +55,8 @@ public class PHPResourceMarkerAnnotationModel extends SourceModuleAnnotationMode
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.ui.texteditor.AbstractMarkerAnnotationModel#isAcceptable(
+	 * @see
+	 * org.eclipse.ui.texteditor.AbstractMarkerAnnotationModel#isAcceptable(
 	 * org.eclipse.core.resources.IMarker)
 	 */
 	@Override
@@ -68,29 +64,24 @@ public class PHPResourceMarkerAnnotationModel extends SourceModuleAnnotationMode
 		if (marker == null) {
 			return false;
 		}
-		try {
-			Object attr = marker.getAttribute(IBreakpointConstants.ATTR_HIDDEN);
-			if (attr != null && ((Boolean) attr).equals(Boolean.TRUE)) {
-				return false;
-			}
-		} catch (CoreException e) {
-			// ignore
-		}
 
 		if (fSecondaryMarkerAttributeValue == null) {
 			return super.isAcceptable(marker);
 		}
 
-		String secondaryId = marker.getAttribute(SECONDARY_ID_KEY, ""); //$NON-NLS-1$
-		IPath path = Path.fromPortableString(secondaryId);
-		path = EnvironmentPathUtils.getLocalPath(path);
+		// String secondaryId = marker.getAttribute(SECONDARY_ID_KEY, "");
+		// //$NON-NLS-1$
+		// IPath path = Path.fromPortableString(secondaryId);
 
-		boolean isSameFile = Path.fromPortableString(fSecondaryMarkerAttributeValue).equals(path);
+		// path = EnvironmentPathUtils.getLocalPath(path);
+		// boolean isSameFile =
+		// Path.fromPortableString(fSecondaryMarkerAttributeValue).equals(path);
 
-		return getResource().equals(marker.getResource()) && isSameFile;
+		return getResource().equals(marker.getResource());
 	}
 
-	public final static String SECONDARY_ID_KEY = IBreakpointConstants.RESOURCE_PATH;
+	// ublic final static String SECONDARY_ID_KEY =
+	// IBreakpointConstants.RESOURCE_PATH;
 
 	protected IResource fMarkerResource;
 	protected String fSecondaryMarkerAttributeValue;
@@ -104,9 +95,9 @@ public class PHPResourceMarkerAnnotationModel extends SourceModuleAnnotationMode
 	@Override
 	protected MarkerAnnotation createMarkerAnnotation(IMarker marker) {
 		/*
-		 * We need to do some special processing if marker is a validation (aka problem)
-		 * marker or if marker is a breakpoint marker so create a special marker
-		 * annotation for those markers. Otherwise, use default.
+		 * We need to do some special processing if marker is a validation (aka
+		 * problem) marker or if marker is a breakpoint marker so create a
+		 * special marker annotation for those markers. Otherwise, use default.
 		 */
 		if (MarkerUtilities.isMarkerType(marker, IMarker.PROBLEM)) {
 			return new StructuredMarkerAnnotation(marker);
@@ -150,7 +141,8 @@ public class PHPResourceMarkerAnnotationModel extends SourceModuleAnnotationMode
 		}
 
 		/**
-		 * Eventually will have to use IAnnotationPresentation & IAnnotationExtension
+		 * Eventually will have to use IAnnotationPresentation &
+		 * IAnnotationExtension
 		 * 
 		 * @see org.eclipse.ui.texteditor.MarkerAnnotation#getImage(org.eclipse.swt.widgets.Display)
 		 */
@@ -197,8 +189,8 @@ public class PHPResourceMarkerAnnotationModel extends SourceModuleAnnotationMode
 		}
 
 		/**
-		 * Initializes the annotation's icon representation and its drawing layer based
-		 * upon the properties of the underlying marker.
+		 * Initializes the annotation's icon representation and its drawing
+		 * layer based upon the properties of the underlying marker.
 		 */
 		protected void initAnnotationType() {
 
