@@ -20,7 +20,6 @@ import java.util.ResourceBundle;
 
 import org.eclipse.dltk.internal.ui.editor.DLTKEditorMessages;
 import org.eclipse.dltk.ui.actions.IScriptEditorActionDefinitionIds;
-import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
@@ -31,12 +30,11 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.actions.RetargetAction;
+import org.eclipse.ui.editors.text.TextEditorActionContributor;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.texteditor.ITextEditorActionConstants;
 import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
 import org.eclipse.ui.texteditor.RetargetTextEditorAction;
-import org.eclipse.wst.html.ui.internal.edit.ui.ActionContributorHTML;
-import org.eclipse.wst.sse.ui.internal.actions.StructuredTextEditorActionConstants;
 
 /**
  * A PHPEditorActionBarContributor, which is a simple extension for
@@ -50,10 +48,9 @@ import org.eclipse.wst.sse.ui.internal.actions.StructuredTextEditorActionConstan
  * 
  * Note that this class is still valid for single page editor.
  */
-public class ActionContributorForPHP extends ActionContributorHTML {
+public class ActionContributorForPHP extends TextEditorActionContributor {
 
-	private static final String[] EDITOR_IDS = { "org.eclipse.php.core.phpsource", //$NON-NLS-1$
-			"org.eclipse.wst.sse.ui.StructuredTextEditor" }; //$NON-NLS-1$
+	private static final String[] EDITOR_IDS = { "org.eclipse.php.core.phpsource" }; //$NON-NLS-1$
 
 	private List<RetargetAction> fPartListeners = new ArrayList<>();
 	private RetargetTextEditorAction fShowPHPDoc;
@@ -111,9 +108,7 @@ public class ActionContributorForPHP extends ActionContributorHTML {
 		fMarkOccurrencesAction = new ToggleMarkOccurrencesAction(resourceBundle);
 	}
 
-	@Override
 	protected void addToMenu(IMenuManager menu) {
-		super.addToMenu(menu);
 		// source commands
 		String sourceMenuLabel = PHPUIMessages.SourceMenu_label;
 		String sourceMenuId = "sourceMenuId"; //$NON-NLS-1$
@@ -144,11 +139,6 @@ public class ActionContributorForPHP extends ActionContributorHTML {
 			navigateMenu.appendToGroup(IWorkbenchActionConstants.OPEN_EXT, fOpenDeclaration);
 			navigateMenu.appendToGroup(IWorkbenchActionConstants.SHOW_EXT, fOpenHierarchy);
 
-			// Work around for Bug 251074
-			// The SSE's action contributor append the fOpentFileAction with the
-			// same name "Open Declaration".
-			// Do we really want to extends from SSE's action contributor?
-			navigateMenu.remove(new ActionContributionItem(fOpenFileAction));
 		}
 
 		IMenuManager editMenu = menu.findMenuUsingPath(IWorkbenchActionConstants.M_EDIT);
@@ -196,11 +186,15 @@ public class ActionContributorForPHP extends ActionContributorHTML {
 		getActionBars().setGlobalActionHandler(PHPActionConstants.OPEN_CALL_HIERARCHY,
 				getAction(editor, IPHPEditorActionDefinitionIds.OPEN_CALL_HIERARCHY));
 
-		fToggleComment.setAction(getAction(editor, StructuredTextEditorActionConstants.ACTION_NAME_TOGGLE_COMMENT));
-		fAddBlockComment
-				.setAction(getAction(editor, StructuredTextEditorActionConstants.ACTION_NAME_ADD_BLOCK_COMMENT));
-		fRemoveBlockComment
-				.setAction(getAction(editor, StructuredTextEditorActionConstants.ACTION_NAME_REMOVE_BLOCK_COMMENT));
+		/*
+		 * fToggleComment.setAction(getAction(editor,
+		 * StructuredTextEditorActionConstants.ACTION_NAME_TOGGLE_COMMENT));
+		 * fAddBlockComment .setAction(getAction(editor,
+		 * StructuredTextEditorActionConstants.ACTION_NAME_ADD_BLOCK_COMMENT));
+		 * fRemoveBlockComment .setAction(getAction(editor,
+		 * StructuredTextEditorActionConstants.ACTION_NAME_REMOVE_BLOCK_COMMENT)
+		 * );
+		 */
 		fToggleComment.setEnabled(editor != null && editor.isEditable());
 		fAddBlockComment.setEnabled(editor != null && editor.isEditable());
 		fRemoveBlockComment.setEnabled(editor != null && editor.isEditable());
@@ -227,8 +221,4 @@ public class ActionContributorForPHP extends ActionContributorHTML {
 		super.dispose();
 	}
 
-	@Override
-	protected String[] getExtensionIDs() {
-		return EDITOR_IDS;
-	}
 }
