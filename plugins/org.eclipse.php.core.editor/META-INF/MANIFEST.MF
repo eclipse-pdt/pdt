@@ -1,0 +1,19 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: %pluginName
+Bundle-SymbolicName: org.eclipse.php.core.editor;singleton:=true
+Automatic-Module-Name: org.eclipse.php.core.editor
+Bundle-Version: 1.0.0.qualifier
+Bundle-ClassPath: .
+Bundle-Activator: PHP.presentation.PHPEditorPlugin$Implementation
+Bundle-Vendor: %providerName
+Bundle-Localization: plugin
+Bundle-RequiredExecutionEnvironment: JavaSE-17
+Export-Package: PHP.presentation
+Require-Bundle: org.eclipse.core.runtime,org.eclipse.core.resources;visi
+ bility:=reexport,org.eclipse.php.core.edit;visibility:=reexport,org.ecl
+ ipse.emf.ecore.xmi;visibility:=reexport,org.eclipse.emf.edit.ui;visibil
+ ity:=reexport,org.eclipse.ui.ide;visibility:=reexport,org.eclipse.emffo
+ rms.editor;bundle-version="1.8.0"
+Bundle-ActivationPolicy: lazy
+

@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: %pluginName
+Bundle-SymbolicName: org.eclipse.php.core.edit;singleton:=true
+Automatic-Module-Name: org.eclipse.php.core.edit
+Bundle-Version: 1.0.0.qualifier
+Bundle-ClassPath: .
+Bundle-Activator: PHP.provider.PHPEditPlugin$Implementation$Activator
+Bundle-Vendor: %providerName
+Bundle-Localization: plugin
+Bundle-RequiredExecutionEnvironment: JavaSE-17
+Export-Package: PHP.provider
+Require-Bundle: org.eclipse.core.runtime;resolution:=optional;x-installation:=greedy,
+ org.eclipse.php.core;visibility:=reexport,
+ org.eclipse.emf.edit;visibility:=reexport
+Import-Package: org.osgi.framework
+Bundle-ActivationPolicy: lazy

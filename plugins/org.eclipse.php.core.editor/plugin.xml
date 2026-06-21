@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><?eclipse version="3.0"?><!--
+--><plugin>
+
+<extension point="org.eclipse.ui.editors"><editor class="org.eclipse.emfforms.spi.editor.GenericEditor" default="false" extensions="php" icon="icons/full/obj16/PHPModelFile.gif" id="org.eclipse.php.core.editor.PHP.emfformseditor" name="EMFForms Editor"/></extension></plugin>
